@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -819,7 +820,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_chdfs_access_groups":                          chdfs.DataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                           chdfs.DataSourceTencentCloudChdfsMountPoints(),
 			"tencentcloud_chdfs_file_systems":                           chdfs.DataSourceTencentCloudChdfsFileSystems(),
-			"tencentcloud_tcm_mesh":                                     dataSourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_mesh":                                     tcm.DataSourceTencentCloudTcmMesh(),
 			"tencentcloud_lighthouse_firewall_rules_template":           lighthouse.DataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 			"tencentcloud_cvm_instance_vnc_url":                         cvm.DataSourceTencentCloudCvmInstanceVncUrl(),
 			"tencentcloud_cvm_disaster_recover_group_quota":             cvm.DataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
@@ -1513,11 +1514,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_acceleration_domain":                             resourceTencentCloudTeoAccelerationDomain(),
 			"tencentcloud_teo_application_proxy":                               resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                          resourceTencentCloudTeoApplicationProxyRule(),
-			"tencentcloud_tcm_mesh":                                            resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment":                              resourceTencentCloudTcmClusterAttachment(),
-			"tencentcloud_tcm_prometheus_attachment":                           resourceTencentCloudTcmPrometheusAttachment(),
-			"tencentcloud_tcm_tracing_config":                                  resourceTencentCloudTcmTracingConfig(),
-			"tencentcloud_tcm_access_log_config":                               resourceTencentCloudTcmAccessLogConfig(),
+			"tencentcloud_tcm_mesh":                                            tcm.ResourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":                              tcm.ResourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_tcm_prometheus_attachment":                           tcm.ResourceTencentCloudTcmPrometheusAttachment(),
+			"tencentcloud_tcm_tracing_config":                                  tcm.ResourceTencentCloudTcmTracingConfig(),
+			"tencentcloud_tcm_access_log_config":                               tcm.ResourceTencentCloudTcmAccessLogConfig(),
 			"tencentcloud_ses_domain":                                          ses.ResourceTencentCloudSesDomain(),
 			"tencentcloud_ses_template":                                        ses.ResourceTencentCloudSesTemplate(),
 			"tencentcloud_ses_email_address":                                   ses.ResourceTencentCloudSesEmailAddress(),

@@ -1,17 +1,20 @@
-package tencentcloud
+package tcm
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTcmAccessLogConfig() *schema.Resource {
+func ResourceTencentCloudTcmAccessLogConfig() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTcmAccessLogConfigRead,
 		Create: resourceTencentCloudTcmAccessLogConfigCreate,
@@ -137,8 +140,8 @@ func resourceTencentCloudTcmAccessLogConfig() *schema.Resource {
 }
 
 func resourceTencentCloudTcmAccessLogConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_access_log_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_access_log_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var meshName string
 	if v, ok := d.GetOk("mesh_name"); ok {
@@ -149,13 +152,13 @@ func resourceTencentCloudTcmAccessLogConfigCreate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudTcmAccessLogConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_access_log_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_access_log_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	meshName := d.Id()
 
@@ -243,10 +246,10 @@ func resourceTencentCloudTcmAccessLogConfigRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudTcmAccessLogConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_access_log_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_access_log_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tcm.NewModifyAccessLogConfigRequest()
 
@@ -323,10 +326,10 @@ func resourceTencentCloudTcmAccessLogConfigUpdate(d *schema.ResourceData, meta i
 		request.Address = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcmClient().ModifyAccessLogConfig(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTcmClient().ModifyAccessLogConfig(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -343,8 +346,8 @@ func resourceTencentCloudTcmAccessLogConfigUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudTcmAccessLogConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_access_log_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_access_log_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

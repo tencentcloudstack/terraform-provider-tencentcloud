@@ -1,17 +1,20 @@
-package tencentcloud
+package tcm
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTcmMesh() *schema.Resource {
+func ResourceTencentCloudTcmMesh() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTcmMeshRead,
 		Create: resourceTencentCloudTcmMeshCreate,
@@ -421,10 +424,10 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 }
 
 func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_mesh.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_mesh.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = tcm.NewCreateMeshRequest()
@@ -638,10 +641,10 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcmClient().CreateMesh(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTcmClient().CreateMesh(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -656,12 +659,12 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 
 	meshId = *response.Response.MeshId
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *mesh.Mesh.State == "PENDING" || *mesh.Mesh.State == "CREATING" || *mesh.Mesh.State != "RUNNING" {
 			return resource.RetryableError(fmt.Errorf("mesh status is %v, retry...", *mesh.Mesh.State))
@@ -677,13 +680,13 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_mesh.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_mesh.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	meshId := d.Id()
 
@@ -953,10 +956,10 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceTencentCloudTcmMeshUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_mesh.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_mesh.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := tcm.NewModifyMeshRequest()
 
 	meshId := d.Id()
@@ -1154,10 +1157,10 @@ func resourceTencentCloudTcmMeshUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcmClient().ModifyMesh(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTcmClient().ModifyMesh(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -1173,13 +1176,13 @@ func resourceTencentCloudTcmMeshUpdate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudTcmMeshDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_mesh.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_mesh.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	meshId := d.Id()
 
@@ -1187,13 +1190,13 @@ func resourceTencentCloudTcmMeshDelete(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
 		if errRet != nil {
-			if isExpectError(errRet, []string{"ResourceNotFound"}) {
+			if tccommon.IsExpectError(errRet, []string{"ResourceNotFound"}) {
 				return nil
 			}
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if mesh != nil {
 			if *mesh.Mesh.State == "DELETING" {

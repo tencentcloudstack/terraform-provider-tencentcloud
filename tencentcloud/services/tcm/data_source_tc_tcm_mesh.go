@@ -1,15 +1,18 @@
-package tencentcloud
+package tcm
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudTcmMesh() *schema.Resource {
+func DataSourceTencentCloudTcmMesh() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTcmMeshRead,
 		Schema: map[string]*schema.Schema{
@@ -170,12 +173,12 @@ func dataSourceTencentCloudTcmMesh() *schema.Resource {
 }
 
 func dataSourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tcm_mesh.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_tcm_mesh.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string][]*string)
 	if v, ok := d.GetOk("mesh_id"); ok {
@@ -198,14 +201,14 @@ func dataSourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{})
 		paramMap["MeshCluster"] = helper.InterfacesStringsPoint(meshClusterSet)
 	}
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var meshList []*tcm.Mesh
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTcmMeshByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		meshList = result
 		return nil
@@ -315,7 +318,7 @@ func dataSourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{})
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

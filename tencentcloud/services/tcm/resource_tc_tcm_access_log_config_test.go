@@ -1,9 +1,13 @@
-package tencentcloud
+package tcm_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctcm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcm"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -13,8 +17,8 @@ import (
 func TestAccTencentCloudTcmAccessLogConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckPrometheusAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -47,15 +51,15 @@ func TestAccTencentCloudTcmAccessLogConfigResource_basic(t *testing.T) {
 
 func testAccCheckTcmAccessLogConfigExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := TcmService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctcm.NewTcmService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		mesh, err := service.DescribeTcmMesh(ctx, rs.Primary.ID)
 		if mesh.Mesh.Config.AccessLog == nil {
 			return fmt.Errorf("tcm accessLog %s is not found", rs.Primary.ID)

@@ -1,4 +1,4 @@
-package tencentcloud
+package tcm
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
+func ResourceTencentCloudTcmClusterAttachment() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTcmClusterAttachmentRead,
 		Create: resourceTencentCloudTcmClusterAttachmentCreate,
@@ -75,12 +78,12 @@ func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_cluster_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_cluster_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request   = tcm.NewLinkClusterListRequest()
 		meshId    string
 		clusterId string
@@ -119,10 +122,10 @@ func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcmClient().LinkClusterList(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTcmClient().LinkClusterList(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -135,11 +138,11 @@ func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		clusterList := mesh.Mesh.ClusterList
 		if len(clusterList) < 1 {
@@ -164,20 +167,20 @@ func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	d.SetId(strings.Join([]string{meshId, clusterId}, FILED_SP))
+	d.SetId(strings.Join([]string{meshId, clusterId}, tccommon.FILED_SP))
 	return resourceTencentCloudTcmClusterAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudTcmClusterAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_cluster_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_cluster_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	ids := strings.Split(d.Id(), FILED_SP)
+	ids := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(ids) != 2 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
@@ -234,15 +237,15 @@ func resourceTencentCloudTcmClusterAttachmentRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudTcmClusterAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_cluster_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_cluster_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	ids := strings.Split(d.Id(), FILED_SP)
+	ids := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(ids) != 2 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
@@ -254,10 +257,10 @@ func resourceTencentCloudTcmClusterAttachmentDelete(d *schema.ResourceData, meta
 		return err
 	}
 
-	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		clusterList := mesh.Mesh.ClusterList
 		if len(clusterList) < 1 {

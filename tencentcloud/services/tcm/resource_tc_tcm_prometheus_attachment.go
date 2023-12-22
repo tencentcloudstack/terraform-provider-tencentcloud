@@ -1,17 +1,20 @@
-package tencentcloud
+package tcm
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTcmPrometheusAttachment() *schema.Resource {
+func ResourceTencentCloudTcmPrometheusAttachment() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTcmPrometheusAttachmentRead,
 		Create: resourceTencentCloudTcmPrometheusAttachmentCreate,
@@ -113,10 +116,10 @@ func resourceTencentCloudTcmPrometheusAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudTcmPrometheusAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_prometheus_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_prometheus_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request = tcm.NewLinkPrometheusRequest()
@@ -168,10 +171,10 @@ func resourceTencentCloudTcmPrometheusAttachmentCreate(d *schema.ResourceData, m
 		request.Prometheus = &prometheusConfig
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcmClient().LinkPrometheus(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTcmClient().LinkPrometheus(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -186,12 +189,12 @@ func resourceTencentCloudTcmPrometheusAttachmentCreate(d *schema.ResourceData, m
 
 	d.SetId(meshID)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		mesh, errRet := service.DescribeTcmMesh(ctx, meshID)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if mesh.Mesh.Status == nil || mesh.Mesh.Status.TPS == nil {
 			return nil
@@ -209,13 +212,13 @@ func resourceTencentCloudTcmPrometheusAttachmentCreate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudTcmPrometheusAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_prometheus_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_prometheus_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	meshId := d.Id()
 
@@ -299,13 +302,13 @@ func resourceTencentCloudTcmPrometheusAttachmentRead(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudTcmPrometheusAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcm_prometheus_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcm_prometheus_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	meshID := d.Id()
 

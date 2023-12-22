@@ -1,7 +1,9 @@
-package tencentcloud
+package tcm_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,14 +13,14 @@ func TestAccTencentCloudTcmMeshDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTcmMeshDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tcm_mesh.mesh"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_tcm_mesh.mesh"),
 					resource.TestCheckResourceAttr("data.tencentcloud_tcm_mesh.mesh", "mesh_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tcm_mesh.mesh", "mesh_list.0.display_name"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tcm_mesh.mesh", "mesh_list.0.version"),

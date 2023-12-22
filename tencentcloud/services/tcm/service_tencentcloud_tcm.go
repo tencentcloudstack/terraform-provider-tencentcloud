@@ -1,14 +1,21 @@
-package tencentcloud
+package tcm
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewTcmService(client *connectivity.TencentCloudClient) TcmService {
+	return TcmService{client: client}
+}
 
 type TcmService struct {
 	client *connectivity.TencentCloudClient
@@ -16,7 +23,7 @@ type TcmService struct {
 
 func (me *TcmService) DescribeTcmMesh(ctx context.Context, meshId string) (mesh *tcm.DescribeMeshResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tcm.NewDescribeMeshRequest()
 	)
 
@@ -42,7 +49,7 @@ func (me *TcmService) DescribeTcmMesh(ctx context.Context, meshId string) (mesh 
 }
 
 func (me *TcmService) DeleteTcmMeshById(ctx context.Context, meshId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcm.NewDeleteMeshRequest()
 
@@ -68,7 +75,7 @@ func (me *TcmService) DeleteTcmMeshById(ctx context.Context, meshId string) (err
 }
 
 func (me *TcmService) DeleteTcmClusterAttachmentById(ctx context.Context, meshId, clusterId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcm.NewUnlinkClusterRequest()
 
@@ -95,7 +102,7 @@ func (me *TcmService) DeleteTcmClusterAttachmentById(ctx context.Context, meshId
 }
 
 func (me *TcmService) DeleteTcmPrometheusAttachmentById(ctx context.Context, meshID string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcm.NewUnlinkPrometheusRequest()
 
@@ -122,7 +129,7 @@ func (me *TcmService) DeleteTcmPrometheusAttachmentById(ctx context.Context, mes
 
 func (me *TcmService) DescribeTcmAccessLogConfig(ctx context.Context, meshName string) (accessLogConfig *tcm.DescribeAccessLogConfigResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tcm.NewDescribeAccessLogConfigRequest()
 	)
 
@@ -149,7 +156,7 @@ func (me *TcmService) DescribeTcmAccessLogConfig(ctx context.Context, meshName s
 
 func (me *TcmService) DescribeTcmMeshByFilter(ctx context.Context, param map[string][]*string) (meshs []*tcm.Mesh, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tcm.NewDescribeMeshListRequest()
 	)
 
