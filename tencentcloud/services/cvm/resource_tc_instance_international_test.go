@@ -7,7 +7,7 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudInstanceResource_basic(t *testing.T) {
+func TestAccTencentCloudInternationalCvmResource_instance(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.cvm_basic"

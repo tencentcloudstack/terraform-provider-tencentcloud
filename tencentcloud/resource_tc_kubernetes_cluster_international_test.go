@@ -9,7 +9,7 @@ import (
 var testInternationalTkeClusterName = "tencentcloud_kubernetes_cluster"
 var testInternationalTkeClusterResourceKey = testInternationalTkeClusterName + ".managed_cluster"
 
-func TestAccInternationalTencentCloudKubernetesResource_cluster(t *testing.T) {
+func TestAccTencentCloudInternationalKubernetesResource_cluster(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
