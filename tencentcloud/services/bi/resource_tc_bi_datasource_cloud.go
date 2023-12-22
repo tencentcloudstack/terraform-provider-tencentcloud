@@ -147,6 +147,12 @@ func ResourceTencentCloudBiDatasourceCloud() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Third-party datasource project id, this parameter can be ignored.",
 			},
+
+			"cluster_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Cluster id.",
+			},
 		},
 	}
 }
@@ -235,6 +241,10 @@ func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("data_origin_datasource_id"); ok {
 		request.DataOriginDatasourceId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		request.ClusterId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -357,6 +367,9 @@ func resourceTencentCloudBiDatasourceCloudRead(d *schema.ResourceData, meta inte
 		_ = d.Set("data_origin_datasource_id", datasourceCloud.DataOriginDatasourceId)
 	}
 
+	if datasourceCloud.ClusterId != nil {
+		_ = d.Set("cluster_id", datasourceCloud.ClusterId)
+	}
 	return nil
 }
 
@@ -455,6 +468,12 @@ func resourceTencentCloudBiDatasourceCloudUpdate(d *schema.ResourceData, meta in
 	if d.HasChange("data_origin_datasource_id") {
 		if v, ok := d.GetOk("data_origin_datasource_id"); ok {
 			request.DataOriginDatasourceId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("cluster_id") {
+		if v, ok := d.GetOk("cluster_id"); ok {
+			request.ClusterId = helper.String(v.(string))
 		}
 	}
 

@@ -47,6 +47,7 @@ The following arguments are supported:
 * `service_type` - (Required, List) Service type, Own or Cloud.
 * `source_name` - (Required, String) Datasource name in BI.
 * `vpc_id` - (Required, String) Vpc identification.
+* `cluster_id` - (Optional, String) Cluster id.
 * `data_origin_datasource_id` - (Optional, String) Third-party datasource project id, this parameter can be ignored.
 * `data_origin_project_id` - (Optional, String) Third-party datasource project id, this parameter can be ignored.
 * `data_origin` - (Optional, String) Third-party datasource identification, this parameter can be ignored.
