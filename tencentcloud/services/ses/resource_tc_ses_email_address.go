@@ -1,17 +1,20 @@
-package tencentcloud
+package ses
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSesEmailAddress() *schema.Resource {
+func ResourceTencentCloudSesEmailAddress() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudSesEmailAddressRead,
 		Create: resourceTencentCloudSesEmailAddressCreate,
@@ -38,10 +41,10 @@ func resourceTencentCloudSesEmailAddress() *schema.Resource {
 }
 
 func resourceTencentCloudSesEmailAddressCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_email_address.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_email_address.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request      = ses.NewCreateEmailAddressRequest()
@@ -57,10 +60,10 @@ func resourceTencentCloudSesEmailAddressCreate(d *schema.ResourceData, meta inte
 		request.EmailSenderName = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().CreateEmailAddress(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().CreateEmailAddress(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -78,13 +81,13 @@ func resourceTencentCloudSesEmailAddressCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudSesEmailAddressRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_email_address.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_email_address.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	emailAddress := d.Id()
 
@@ -111,13 +114,13 @@ func resourceTencentCloudSesEmailAddressRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudSesEmailAddressDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_email_address.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_email_address.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	emailAddressId := d.Id()
 

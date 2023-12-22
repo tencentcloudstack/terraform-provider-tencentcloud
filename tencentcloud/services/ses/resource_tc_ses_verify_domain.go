@@ -1,16 +1,19 @@
-package tencentcloud
+package ses
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSesVerifyDomain() *schema.Resource {
+func ResourceTencentCloudSesVerifyDomain() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSesVerifyDomainCreate,
 		Read:   resourceTencentCloudSesVerifyDomainRead,
@@ -30,11 +33,11 @@ func resourceTencentCloudSesVerifyDomain() *schema.Resource {
 }
 
 func resourceTencentCloudSesVerifyDomainCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_verify_domain.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_verify_domain.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
 		request       = ses.NewUpdateEmailIdentityRequest()
@@ -45,10 +48,10 @@ func resourceTencentCloudSesVerifyDomainCreate(d *schema.ResourceData, meta inte
 		request.EmailIdentity = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().UpdateEmailIdentity(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().UpdateEmailIdentity(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -61,7 +64,7 @@ func resourceTencentCloudSesVerifyDomainCreate(d *schema.ResourceData, meta inte
 
 	d.SetId(emailIdentity)
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	if err := service.CheckEmailIdentityById(ctx, emailIdentity); err != nil {
 		return err
 	}
@@ -70,15 +73,15 @@ func resourceTencentCloudSesVerifyDomainCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudSesVerifyDomainRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_verify_domain.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_verify_domain.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSesVerifyDomainDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_verify_domain.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_verify_domain.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

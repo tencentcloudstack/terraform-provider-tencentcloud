@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ses"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/scf"
 	"encoding/json"
 	"fmt"
@@ -907,12 +908,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_vpc_fw_switches":                          cfw.DataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                         cfw.DataSourceTencentCloudCfwEdgeFwSwitches(),
 			"tencentcloud_cwp_machines_simple":                          cwp.DataSourceTencentCloudCwpMachinesSimple(),
-			"tencentcloud_ses_receivers":                                dataSourceTencentCloudSesReceivers(),
-			"tencentcloud_ses_send_tasks":                               dataSourceTencentCloudSesSendTasks(),
-			"tencentcloud_ses_email_identities":                         dataSourceTencentCloudSesEmailIdentities(),
-			"tencentcloud_ses_black_email_address":                      dataSourceTencentCloudSesBlackEmailAddress(),
-			"tencentcloud_ses_statistics_report":                        dataSourceTencentCloudSesStatisticsReport(),
-			"tencentcloud_ses_send_email_status":                        dataSourceTencentCloudSesSendEmailStatus(),
+			"tencentcloud_ses_receivers":                                ses.DataSourceTencentCloudSesReceivers(),
+			"tencentcloud_ses_send_tasks":                               ses.DataSourceTencentCloudSesSendTasks(),
+			"tencentcloud_ses_email_identities":                         ses.DataSourceTencentCloudSesEmailIdentities(),
+			"tencentcloud_ses_black_email_address":                      ses.DataSourceTencentCloudSesBlackEmailAddress(),
+			"tencentcloud_ses_statistics_report":                        ses.DataSourceTencentCloudSesStatisticsReport(),
+			"tencentcloud_ses_send_email_status":                        ses.DataSourceTencentCloudSesSendEmailStatus(),
 			"tencentcloud_organization_org_financial_by_member":         dataSourceTencentCloudOrganizationOrgFinancialByMember(),
 			"tencentcloud_organization_org_financial_by_month":          dataSourceTencentCloudOrganizationOrgFinancialByMonth(),
 			"tencentcloud_organization_org_financial_by_product":        dataSourceTencentCloudOrganizationOrgFinancialByProduct(),
@@ -1509,14 +1510,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcm_prometheus_attachment":                           resourceTencentCloudTcmPrometheusAttachment(),
 			"tencentcloud_tcm_tracing_config":                                  resourceTencentCloudTcmTracingConfig(),
 			"tencentcloud_tcm_access_log_config":                               resourceTencentCloudTcmAccessLogConfig(),
-			"tencentcloud_ses_domain":                                          resourceTencentCloudSesDomain(),
-			"tencentcloud_ses_template":                                        resourceTencentCloudSesTemplate(),
-			"tencentcloud_ses_email_address":                                   resourceTencentCloudSesEmailAddress(),
-			"tencentcloud_ses_receiver":                                        resourceTencentCloudSesReceiver(),
-			"tencentcloud_ses_send_email":                                      resourceTencentCloudSesSendEmail(),
-			"tencentcloud_ses_batch_send_email":                                resourceTencentCloudSesBatchSendEmail(),
-			"tencentcloud_ses_verify_domain":                                   resourceTencentCloudSesVerifyDomain(),
-			"tencentcloud_ses_black_list_delete":                               resourceTencentCloudSesBlackListDelete(),
+			"tencentcloud_ses_domain":                                          ses.ResourceTencentCloudSesDomain(),
+			"tencentcloud_ses_template":                                        ses.ResourceTencentCloudSesTemplate(),
+			"tencentcloud_ses_email_address":                                   ses.ResourceTencentCloudSesEmailAddress(),
+			"tencentcloud_ses_receiver":                                        ses.ResourceTencentCloudSesReceiver(),
+			"tencentcloud_ses_send_email":                                      ses.ResourceTencentCloudSesSendEmail(),
+			"tencentcloud_ses_batch_send_email":                                ses.ResourceTencentCloudSesBatchSendEmail(),
+			"tencentcloud_ses_verify_domain":                                   ses.ResourceTencentCloudSesVerifyDomain(),
+			"tencentcloud_ses_black_list_delete":                               ses.ResourceTencentCloudSesBlackListDelete(),
 			"tencentcloud_sms_sign":                                            resourceTencentCloudSmsSign(),
 			"tencentcloud_sms_template":                                        resourceTencentCloudSmsTemplate(),
 			"tencentcloud_dcdb_account":                                        dcdb.ResourceTencentCloudDcdbAccount(),

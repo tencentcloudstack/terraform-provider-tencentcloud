@@ -1,15 +1,18 @@
-package tencentcloud
+package ses
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSesBlackListDelete() *schema.Resource {
+func ResourceTencentCloudSesBlackListDelete() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSesBlackListDeleteCreate,
 		Read:   resourceTencentCloudSesBlackListDeleteRead,
@@ -29,10 +32,10 @@ func resourceTencentCloudSesBlackListDelete() *schema.Resource {
 }
 
 func resourceTencentCloudSesBlackListDeleteCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_black_list_delete.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_black_list_delete.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request      = ses.NewDeleteBlackListRequest()
@@ -43,10 +46,10 @@ func resourceTencentCloudSesBlackListDeleteCreate(d *schema.ResourceData, meta i
 		request.EmailAddressList = append(request.EmailAddressList, helper.String(v.(string)))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().DeleteBlackList(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().DeleteBlackList(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -63,15 +66,15 @@ func resourceTencentCloudSesBlackListDeleteCreate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudSesBlackListDeleteRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_black_list_delete.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_black_list_delete.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSesBlackListDeleteDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_black_list_delete.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_black_list_delete.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

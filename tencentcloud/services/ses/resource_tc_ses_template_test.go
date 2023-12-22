@@ -1,7 +1,9 @@
-package tencentcloud
+package ses_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,8 +13,8 @@ func TestAccTencentCloudSesTemplate_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckBusiness(t, ACCOUNT_TYPE_SES) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheckBusiness(t, tcacctest.ACCOUNT_TYPE_SES) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSesTemplate,

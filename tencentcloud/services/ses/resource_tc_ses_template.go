@@ -1,4 +1,4 @@
-package tencentcloud
+package ses
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSesTemplate() *schema.Resource {
+func ResourceTencentCloudSesTemplate() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudSesTemplateRead,
 		Create: resourceTencentCloudSesTemplateCreate,
@@ -54,10 +57,10 @@ func resourceTencentCloudSesTemplate() *schema.Resource {
 }
 
 func resourceTencentCloudSesTemplateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_template.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_template.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = ses.NewCreateEmailTemplateRequest()
@@ -82,10 +85,10 @@ func resourceTencentCloudSesTemplateCreate(d *schema.ResourceData, meta interfac
 		request.TemplateContent = &prometheusTemp
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().CreateEmailTemplate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().CreateEmailTemplate(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -106,13 +109,13 @@ func resourceTencentCloudSesTemplateCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudSesTemplateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_template.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_template.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	templateID := d.Id()
 	templateId, ee := strconv.Atoi(templateID)
@@ -163,10 +166,10 @@ func resourceTencentCloudSesTemplateRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudSesTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_template.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_template.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := ses.NewUpdateEmailTemplateRequest()
 
@@ -194,10 +197,10 @@ func resourceTencentCloudSesTemplateUpdate(d *schema.ResourceData, meta interfac
 		request.TemplateContent = &prometheusTemp
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().UpdateEmailTemplate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().UpdateEmailTemplate(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -214,13 +217,13 @@ func resourceTencentCloudSesTemplateUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudSesTemplateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_template.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_template.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	templateID, ee := strconv.Atoi(d.Id())
 	if ee != nil {

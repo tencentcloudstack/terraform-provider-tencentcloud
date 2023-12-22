@@ -1,7 +1,9 @@
-package tencentcloud
+package ses_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,15 +13,15 @@ func TestAccTencentCloudSesSendEmailStatusDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccStepSetRegion(t, "ap-hongkong")
-			testAccPreCheckBusiness(t, ACCOUNT_TYPE_SES)
+			tcacctest.AccStepSetRegion(t, "ap-hongkong")
+			tcacctest.AccPreCheckBusiness(t, tcacctest.ACCOUNT_TYPE_SES)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSesSendEmailStatusDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ses_send_email_status.send_email_status"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_ses_send_email_status.send_email_status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ses_send_email_status.send_email_status", "email_status_list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ses_send_email_status.send_email_status", "email_status_list.0.deliver_status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ses_send_email_status.send_email_status", "email_status_list.0.deliver_time"),

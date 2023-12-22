@@ -1,7 +1,9 @@
-package tencentcloud
+package ses_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,15 +13,15 @@ func TestAccTencentCloudSesStatisticsReportDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccStepSetRegion(t, "ap-hongkong")
-			testAccPreCheckBusiness(t, ACCOUNT_TYPE_SES)
+			tcacctest.AccStepSetRegion(t, "ap-hongkong")
+			tcacctest.AccPreCheckBusiness(t, tcacctest.ACCOUNT_TYPE_SES)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSesStatisticsReportDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ses_statistics_report.statistics_report"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_ses_statistics_report.statistics_report"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ses_statistics_report.statistics_report", "daily_volumes.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ses_statistics_report.statistics_report", "daily_volumes.0.accepted_count"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ses_statistics_report.statistics_report", "daily_volumes.0.bounce_count"),

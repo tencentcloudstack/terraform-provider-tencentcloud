@@ -1,17 +1,20 @@
-package tencentcloud
+package ses
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSesReceiver() *schema.Resource {
+func ResourceTencentCloudSesReceiver() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSesReceiverCreate,
 		Read:   resourceTencentCloudSesReceiverRead,
@@ -61,10 +64,10 @@ func resourceTencentCloudSesReceiver() *schema.Resource {
 }
 
 func resourceTencentCloudSesReceiverCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_receiver.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_receiver.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = ses.NewCreateReceiverRequest()
@@ -79,10 +82,10 @@ func resourceTencentCloudSesReceiverCreate(d *schema.ResourceData, meta interfac
 		request.Desc = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().CreateReceiver(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().CreateReceiver(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -125,10 +128,10 @@ func resourceTencentCloudSesReceiverCreate(d *schema.ResourceData, meta interfac
 			request := ses.NewCreateReceiverDetailWithDataRequest()
 			request.ReceiverId = &receiverId
 			request.Datas = dataList
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().CreateReceiverDetailWithData(request)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().CreateReceiverDetailWithData(request)
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
@@ -143,10 +146,10 @@ func resourceTencentCloudSesReceiverCreate(d *schema.ResourceData, meta interfac
 			request := ses.NewCreateReceiverDetailRequest()
 			request.ReceiverId = &receiverId
 			request.Emails = emilList
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseSesClient().CreateReceiverDetail(request)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().CreateReceiverDetail(request)
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
@@ -165,14 +168,14 @@ func resourceTencentCloudSesReceiverCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudSesReceiverRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_receiver.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_receiver.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	receiverId := d.Id()
 	receiver, err := service.DescribeSesReceiverById(ctx, receiverId)
@@ -221,13 +224,13 @@ func resourceTencentCloudSesReceiverRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudSesReceiverDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_receiver.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_receiver.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	receiverId := d.Id()
 
 	if err := service.DeleteSesReceiverById(ctx, receiverId); err != nil {

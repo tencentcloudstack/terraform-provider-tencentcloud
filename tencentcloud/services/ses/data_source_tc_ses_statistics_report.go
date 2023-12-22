@@ -1,15 +1,18 @@
-package tencentcloud
+package ses
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSesStatisticsReport() *schema.Resource {
+func DataSourceTencentCloudSesStatisticsReport() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSesStatisticsReportRead,
 		Schema: map[string]*schema.Schema{
@@ -147,12 +150,12 @@ func dataSourceTencentCloudSesStatisticsReport() *schema.Resource {
 }
 
 func dataSourceTencentCloudSesStatisticsReportRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ses_statistics_report.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ses_statistics_report.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("start_date"); ok {
@@ -171,13 +174,13 @@ func dataSourceTencentCloudSesStatisticsReportRead(d *schema.ResourceData, meta 
 		paramMap["ReceivingMailboxType"] = helper.String(v.(string))
 	}
 
-	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SesService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var statisticsReport *ses.GetStatisticsReportResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSesStatisticsReportByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		statisticsReport = result
 		return nil
@@ -274,7 +277,7 @@ func dataSourceTencentCloudSesStatisticsReportRead(d *schema.ResourceData, meta 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

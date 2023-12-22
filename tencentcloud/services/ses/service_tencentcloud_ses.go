@@ -1,4 +1,4 @@
-package tencentcloud
+package ses
 
 import (
 	"context"
@@ -6,12 +6,19 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewSesService(client *connectivity.TencentCloudClient) SesService {
+	return SesService{client: client}
+}
 
 type SesService struct {
 	client *connectivity.TencentCloudClient
@@ -19,7 +26,7 @@ type SesService struct {
 
 func (me *SesService) DescribeSesTemplateMetadata(ctx context.Context, templateId uint64) (templatesMetadata *ses.TemplatesMetadata, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewListEmailTemplatesRequest()
 	)
 
@@ -73,7 +80,7 @@ func (me *SesService) DescribeSesTemplateMetadata(ctx context.Context, templateI
 
 func (me *SesService) DescribeSesTemplate(ctx context.Context, templateId uint64) (templateResponse *ses.GetEmailTemplateResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewGetEmailTemplateRequest()
 	)
 
@@ -100,7 +107,7 @@ func (me *SesService) DescribeSesTemplate(ctx context.Context, templateId uint64
 }
 
 func (me *SesService) DeleteSesTemplateById(ctx context.Context, templateID uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ses.NewDeleteEmailTemplateRequest()
 
@@ -127,7 +134,7 @@ func (me *SesService) DeleteSesTemplateById(ctx context.Context, templateID uint
 
 func (me *SesService) DescribeSesEmailAddress(ctx context.Context, emailAddress string) (emailSender *ses.EmailSender, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewListEmailAddressRequest()
 	)
 
@@ -162,7 +169,7 @@ func (me *SesService) DescribeSesEmailAddress(ctx context.Context, emailAddress 
 }
 
 func (me *SesService) DeleteSesEmail_addressById(ctx context.Context, emailAddress string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ses.NewDeleteEmailAddressRequest()
 
@@ -189,7 +196,7 @@ func (me *SesService) DeleteSesEmail_addressById(ctx context.Context, emailAddre
 
 func (me *SesService) DescribeSesDomain(ctx context.Context, emailIdentity string) (attributes []*ses.DNSAttributes, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewGetEmailIdentityRequest()
 	)
 
@@ -218,7 +225,7 @@ func (me *SesService) DescribeSesDomain(ctx context.Context, emailIdentity strin
 }
 
 func (me *SesService) DeleteSesDomainById(ctx context.Context, emailIdentity string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ses.NewDeleteEmailIdentityRequest()
 
@@ -245,7 +252,7 @@ func (me *SesService) DeleteSesDomainById(ctx context.Context, emailIdentity str
 
 func (me *SesService) DescribeSesReceiversByFilter(ctx context.Context, param map[string]interface{}) (receivers []*ses.ReceiverData, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewListReceiversRequest()
 	)
 
@@ -296,7 +303,7 @@ func (me *SesService) DescribeSesReceiversByFilter(ctx context.Context, param ma
 
 func (me *SesService) DescribeSesSendTasksByFilter(ctx context.Context, param map[string]interface{}) (sendTasks []*ses.SendTaskData, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewListSendTasksRequest()
 	)
 
@@ -350,7 +357,7 @@ func (me *SesService) DescribeSesSendTasksByFilter(ctx context.Context, param ma
 
 func (me *SesService) DescribeSesEmailIdentitiesByFilter(ctx context.Context) (emailIdentities *ses.ListEmailIdentitiesResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewListEmailIdentitiesRequest()
 	)
 
@@ -379,7 +386,7 @@ func (me *SesService) DescribeSesEmailIdentitiesByFilter(ctx context.Context) (e
 
 func (me *SesService) DescribeSesBlackEmailAddressByFilter(ctx context.Context, param map[string]interface{}) (blackEmailAddress []*ses.BlackEmailAddress, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewListBlackEmailAddressRequest()
 	)
 
@@ -436,7 +443,7 @@ func (me *SesService) DescribeSesBlackEmailAddressByFilter(ctx context.Context, 
 
 func (me *SesService) DescribeSesStatisticsReportByFilter(ctx context.Context, param map[string]interface{}) (statisticsReport *ses.GetStatisticsReportResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewGetStatisticsReportRequest()
 	)
 
@@ -480,7 +487,7 @@ func (me *SesService) DescribeSesStatisticsReportByFilter(ctx context.Context, p
 
 func (me *SesService) DescribeSesSendEmailStatusByFilter(ctx context.Context, param map[string]interface{}) (sendEmailStatus []*ses.SendEmailStatus, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewGetSendEmailStatusRequest()
 	)
 
@@ -534,7 +541,7 @@ func (me *SesService) DescribeSesSendEmailStatusByFilter(ctx context.Context, pa
 }
 
 func (me *SesService) DescribeSesReceiverById(ctx context.Context, receiverId string) (Receiver *ses.ReceiverData, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	id, err := strconv.Atoi(receiverId)
 	if err != nil {
@@ -587,7 +594,7 @@ func (me *SesService) DescribeSesReceiverById(ctx context.Context, receiverId st
 }
 
 func (me *SesService) DescribeSesReceiverDetailById(ctx context.Context, receiverId string) (receiverDetail []*ses.ReceiverDetail, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	id, err := strconv.Atoi(receiverId)
 	if err != nil {
@@ -635,7 +642,7 @@ func (me *SesService) DescribeSesReceiverDetailById(ctx context.Context, receive
 }
 
 func (me *SesService) DeleteSesReceiverById(ctx context.Context, receiverId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	id, _ := strconv.Atoi(receiverId)
 
@@ -661,7 +668,7 @@ func (me *SesService) DeleteSesReceiverById(ctx context.Context, receiverId stri
 }
 
 func (me *SesService) DescribeSesVerifyDomainById(ctx context.Context, emailIdentity string) (verifyDomain *ses.GetEmailIdentityResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ses.NewGetEmailIdentityRequest()
 	request.EmailIdentity = &emailIdentity
@@ -690,9 +697,9 @@ func (me *SesService) DescribeSesVerifyDomainById(ctx context.Context, emailIden
 }
 
 func (me *SesService) CheckEmailIdentityById(ctx context.Context, emailIdentity string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
-	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		verifyDomain, e := me.DescribeSesVerifyDomainById(ctx, emailIdentity)
 		if e != nil {
 			return resource.NonRetryableError(e)

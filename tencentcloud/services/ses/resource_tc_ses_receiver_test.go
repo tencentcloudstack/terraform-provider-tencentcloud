@@ -1,9 +1,13 @@
-package tencentcloud
+package ses_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcses "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ses"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -15,10 +19,10 @@ func TestAccTencentCloudSesReceiverResource_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccStepSetRegion(t, "ap-hongkong")
-			testAccPreCheckBusiness(t, ACCOUNT_TYPE_SES)
+			tcacctest.AccStepSetRegion(t, "ap-hongkong")
+			tcacctest.AccPreCheckBusiness(t, tcacctest.ACCOUNT_TYPE_SES)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckSesReceiverDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -43,9 +47,9 @@ func TestAccTencentCloudSesReceiverResource_basic(t *testing.T) {
 }
 
 func testAccCheckSesReceiverDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := SesService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcses.NewSesService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_ses_receiver" {
 			continue
@@ -65,15 +69,15 @@ func testAccCheckSesReceiverDestroy(s *terraform.State) error {
 
 func testAccCheckSesReceiverExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := SesService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcses.NewSesService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		res, err := service.DescribeSesReceiverById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
