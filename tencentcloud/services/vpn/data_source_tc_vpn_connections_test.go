@@ -1,7 +1,9 @@
-package tencentcloud
+package vpn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,13 +11,13 @@ import (
 func TestAccTencentCloudVpnConnectionsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudVpnConnectionsDataSourceConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpn_connections.connections"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_vpn_connections.connections"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_connections.connections", "connection_list.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_connections.connections", "connection_list.0.name", "vpn_connection_test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_connections.connections", "connection_list.0.ike_proto_authen_algorithm", "MD5"),

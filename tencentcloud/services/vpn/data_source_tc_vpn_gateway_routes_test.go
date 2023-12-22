@@ -1,7 +1,9 @@
-package tencentcloud
+package vpn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,13 +11,13 @@ import (
 func TestAccTencentCloudNeedFixVpnGatewayRoutesDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudVpnGatewayRoutesDataSourceConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpn_gateway_routes.routes"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_vpn_gateway_routes.routes"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_gateway_routes.routes", "vpn_gateway_route_list.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_gateway_routes.routes", "vpn_gateway_route_list.0.destination_cidr_block", "10.0.0.0/16"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_gateway_routes.routes", "vpn_gateway_route_list.0.instance_type", "VPNCONN"),
@@ -29,7 +31,7 @@ func TestAccTencentCloudNeedFixVpnGatewayRoutesDataSource(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudVpnGatewayRoutesDataSourceConfig_basic = defaultVpnDataSource + `
+const testAccTencentCloudVpnGatewayRoutesDataSourceConfig_basic = tcacctest.DefaultVpnDataSource + `
 resource "tencentcloud_vpn_gateway_route" "route1" {
   vpn_gateway_id = data.tencentcloud_vpn_gateways.foo.gateway_list.0.id
   destination_cidr_block = "10.0.0.0/18"

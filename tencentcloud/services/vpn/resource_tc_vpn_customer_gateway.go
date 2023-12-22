@@ -1,6 +1,10 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"fmt"
 	"log"
@@ -9,10 +13,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnCustomerGateway() *schema.Resource {
+func ResourceTencentCloudVpnCustomerGateway() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnCustomerGatewayCreate,
 		Read:   resourceTencentCloudVpnCustomerGatewayRead,
@@ -26,14 +31,14 @@ func resourceTencentCloudVpnCustomerGateway() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the customer gateway. The length of character is limited to 1-60.",
 			},
 			"public_ip_address": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateIp,
+				ValidateFunc: tccommon.ValidateIp,
 				Description:  "Public IP of the customer gateway.",
 			},
 			"tags": {
@@ -51,21 +56,21 @@ func resourceTencentCloudVpnCustomerGateway() *schema.Resource {
 }
 
 func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_customer_gateway.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := vpc.NewCreateCustomerGatewayRequest()
 	request.CustomerGatewayName = helper.String(d.Get("name").(string))
 	request.IpAddress = helper.String(d.Get("public_ip_address").(string))
 	var response *vpc.CreateCustomerGatewayResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateCustomerGateway(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().CreateCustomerGateway(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -83,12 +88,12 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 	// must wait for finishing creating customer gateway
 	statRequest := vpc.NewDescribeCustomerGatewaysRequest()
 	statRequest.CustomerGatewayIds = []*string{response.Response.CustomerGateway.CustomerGatewayId}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(statRequest)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeCustomerGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			//if not, quit
 			if len(result.Response.CustomerGatewaySet) != 1 {
@@ -105,10 +110,10 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("vpc", "cgw", region, customerGatewayId)
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("vpc", "cgw", region, customerGatewayId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -119,31 +124,31 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_customer_gateway.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	customerGatewayId := d.Id()
 	request := vpc.NewDescribeCustomerGatewaysRequest()
 	request.CustomerGatewayIds = []*string{&customerGatewayId}
 	var response *vpc.DescribeCustomerGatewaysResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeCustomerGateways(request)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)
 			if !ok {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
-			if ee.Code == VPCNotFound {
+			if ee.Code == svcvpc.VPCNotFound {
 				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
 				return nil
 			} else {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 		}
 		response = result
@@ -165,8 +170,8 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 	_ = d.Set("create_time", *gateway.CreatedTime)
 
 	//tags
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "cgw", region, customerGatewayId)
 	if err != nil {
 		return err
@@ -177,10 +182,10 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_customer_gateway.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	d.Partial(true)
 	customerGatewayId := d.Id()
@@ -188,12 +193,12 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 	request.CustomerGatewayId = &customerGatewayId
 	if d.HasChange("name") {
 		request.CustomerGatewayName = helper.String(d.Get("name").(string))
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyCustomerGatewayAttribute(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCustomerGatewayAttribute(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -206,12 +211,10 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 	//tag
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(*TencentCloudClient).apiV3Conn,
-		}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("vpc", "cgw", region, customerGatewayId)
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("vpc", "cgw", region, customerGatewayId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -223,9 +226,9 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_customer_gateway.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.delete")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	customerGatewayId := d.Id()
 
@@ -245,13 +248,13 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 	offset := uint64(0)
 	tRequest.Offset = &offset
 
-	tErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(tRequest)
+	tErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(tRequest)
 
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, tRequest.GetAction(), tRequest.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			if len(result.Response.VpnConnectionSet) == 0 {
 				return nil
@@ -267,12 +270,12 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 
 	request := vpc.NewDeleteCustomerGatewayRequest()
 	request.CustomerGatewayId = &customerGatewayId
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteCustomerGateway(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DeleteCustomerGateway(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -283,21 +286,21 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 	//to get the status of customer gateway
 	statRequest := vpc.NewDescribeCustomerGatewaysRequest()
 	statRequest.CustomerGatewayIds = []*string{&customerGatewayId}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(statRequest)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeCustomerGateways(statRequest)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)
 			if !ok {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
-			if ee.Code == VPCNotFound {
+			if ee.Code == svcvpc.VPCNotFound {
 				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
 				return nil
 			} else {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 		} else {
 			//if not, quit

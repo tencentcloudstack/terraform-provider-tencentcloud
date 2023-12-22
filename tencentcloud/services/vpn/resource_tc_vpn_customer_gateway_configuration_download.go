@@ -1,15 +1,18 @@
-package tencentcloud
+package vpn
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnCustomerGatewayConfigurationDownload() *schema.Resource {
+func ResourceTencentCloudVpnCustomerGatewayConfigurationDownload() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnCustomerGatewayConfigurationDownloadCreate,
 		Read:   resourceTencentCloudVpnCustomerGatewayConfigurationDownloadRead,
@@ -76,10 +79,10 @@ func resourceTencentCloudVpnCustomerGatewayConfigurationDownload() *schema.Resou
 }
 
 func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vpn_customer_gateway_configuration_download.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vpn_customer_gateway_configuration_download.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request         = vpc.NewDownloadCustomerGatewayConfigurationRequest()
@@ -115,10 +118,10 @@ func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadCreate(d *schema
 		request.InterfaceName = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DownloadCustomerGatewayConfiguration(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DownloadCustomerGatewayConfiguration(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -130,7 +133,7 @@ func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadCreate(d *schema
 		return nil
 	}
 
-	d.SetId(vpnGatewayId + FILED_SP + vpnConnectionId)
+	d.SetId(vpnGatewayId + tccommon.FILED_SP + vpnConnectionId)
 
 	_ = d.Set("customer_gateway_configuration", response.Response.CustomerGatewayConfiguration)
 
@@ -138,15 +141,15 @@ func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadCreate(d *schema
 }
 
 func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_customer_gateway_configuration_download.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway_configuration_download.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_customer_gateway_configuration_download.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway_configuration_download.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

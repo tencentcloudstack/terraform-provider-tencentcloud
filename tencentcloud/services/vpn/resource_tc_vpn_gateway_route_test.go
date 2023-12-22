@@ -1,4 +1,4 @@
-package tencentcloud
+package vpn_test
 
 import (
 	"context"
@@ -6,6 +6,10 @@ import (
 	"log"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -15,8 +19,8 @@ import (
 func TestAccTencentCloudVpnGatewayRoute_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckVpnGatewayRouteDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -48,15 +52,15 @@ func TestAccTencentCloudVpnGatewayRoute_basic(t *testing.T) {
 }
 
 func testAccCheckVpnGatewayRouteDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	vpcService := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	vpcService := svcvpc.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_vpn_gateway_route" {
 			continue
 		}
-		ids := strings.Split(rs.Primary.ID, FILED_SP)
+		ids := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		err, result := vpcService.DescribeVpnGatewayRoutes(ctx, ids[0], nil)
 		if err != nil {
 			log.Printf("[CRITAL]%s read VPN gateway route failed, reason:%s\n", logId, err.Error())
@@ -64,7 +68,7 @@ func testAccCheckVpnGatewayRouteDestroy(s *terraform.State) error {
 			if !ok {
 				return err
 			}
-			if ee.Code == VPCNotFound {
+			if ee.Code == svcvpc.VPCNotFound {
 				return nil
 			} else {
 				return err
@@ -80,9 +84,9 @@ func testAccCheckVpnGatewayRouteDestroy(s *terraform.State) error {
 
 func testAccCheckVpnGatewayRouteExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		vpcService := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		vpcService := svcvpc.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -91,7 +95,7 @@ func testAccCheckVpnGatewayRouteExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("VPN gateway route id is not set")
 		}
-		ids := strings.Split(rs.Primary.ID, FILED_SP)
+		ids := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		err, result := vpcService.DescribeVpnGatewayRoutes(ctx, ids[0], nil)
 		if err != nil {
 			log.Printf("[CRITAL]%s read VPN gateway failed, reason:%s\n", logId, err.Error())
@@ -104,7 +108,7 @@ func testAccCheckVpnGatewayRouteExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testVpnGatewayRouteCreate = defaultVpnDataSource + `
+const testVpnGatewayRouteCreate = tcacctest.DefaultVpnDataSource + `
 # Create VPC
 data "tencentcloud_vpc_instances" "foo" {
   name = "Default-VPC"
@@ -119,7 +123,7 @@ resource "tencentcloud_vpn_gateway_route" "route1" {
   status = "ENABLE"
 }
 `
-const testVpnGatewayRouteUpdate = defaultVpnDataSource + `
+const testVpnGatewayRouteUpdate = tcacctest.DefaultVpnDataSource + `
 # Create VPC
 data "tencentcloud_vpc_instances" "foo" {
   name = "Default-VPC"

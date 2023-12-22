@@ -1,16 +1,20 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnGatewaySslClientCert() *schema.Resource {
+func ResourceTencentCloudVpnGatewaySslClientCert() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnGatewaySslClientCertCreate,
 		Read:   resourceTencentCloudVpnGatewaySslClientCertRead,
@@ -30,7 +34,7 @@ func resourceTencentCloudVpnGatewaySslClientCert() *schema.Resource {
 				Optional:     true,
 				Type:         schema.TypeString,
 				Default:      "on",
-				ValidateFunc: validateAllowedStringValue([]string{"on", "off"}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"on", "off"}),
 				Description:  "`on`: Enable, `off`: Disable.",
 			},
 		},
@@ -38,8 +42,8 @@ func resourceTencentCloudVpnGatewaySslClientCert() *schema.Resource {
 }
 
 func resourceTencentCloudVpnGatewaySslClientCertCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	sslVpnClientId := d.Get("ssl_vpn_client_id").(string)
 	d.SetId(sslVpnClientId)
@@ -48,14 +52,14 @@ func resourceTencentCloudVpnGatewaySslClientCertCreate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudVpnGatewaySslClientCertRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	sslVpnClientId := d.Id()
 
@@ -87,12 +91,12 @@ func resourceTencentCloudVpnGatewaySslClientCertRead(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudVpnGatewaySslClientCertUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var taskId *uint64
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	sslVpnClientId := d.Id()
 
@@ -106,10 +110,10 @@ func resourceTencentCloudVpnGatewaySslClientCertUpdate(d *schema.ResourceData, m
 
 		request.SslVpnClientId = &sslVpnClientId
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().EnableVpnGatewaySslClientCert(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().EnableVpnGatewaySslClientCert(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -129,10 +133,10 @@ func resourceTencentCloudVpnGatewaySslClientCertUpdate(d *schema.ResourceData, m
 
 		request.SslVpnClientId = &sslVpnClientId
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisableVpnGatewaySslClientCert(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DisableVpnGatewaySslClientCert(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -145,8 +149,8 @@ func resourceTencentCloudVpnGatewaySslClientCertUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	err := service.DescribeVpcTaskResult(ctx, helper.String(helper.UInt64ToStr(*taskId)))
 	if err != nil {
@@ -157,8 +161,8 @@ func resourceTencentCloudVpnGatewaySslClientCertUpdate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudVpnGatewaySslClientCertDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ssl_client_cert.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

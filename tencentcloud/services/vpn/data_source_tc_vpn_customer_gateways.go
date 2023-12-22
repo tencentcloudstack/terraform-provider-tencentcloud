@@ -1,6 +1,10 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"log"
 	"reflect"
@@ -8,10 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
+func DataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudVpnCustomerGatewaysRead,
 
@@ -19,7 +24,7 @@ func dataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the customer gateway. The length of character is limited to 1-60.",
 			},
 			"id": {
@@ -30,7 +35,7 @@ func dataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
 			"public_ip_address": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateIp,
+				ValidateFunc: tccommon.ValidateIp,
 				Description:  "Public ip address of the VPN customer gateway.",
 			},
 			"tags": {
@@ -84,13 +89,13 @@ func dataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_customer_gateways.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_customer_gateways.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 
 	request := vpc.NewDescribeCustomerGatewaysRequest()
 
@@ -117,16 +122,16 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 	offset := uint64(0)
 	request.Offset = &offset
 	result := make([]*vpc.CustomerGateway, 0)
-	limit := uint64(VPN_DESCRIBE_LIMIT)
+	limit := uint64(svcvpc.VPN_DESCRIBE_LIMIT)
 	request.Limit = &limit
 	for {
 		var response *vpc.DescribeCustomerGatewaysResponse
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeCustomerGateways(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			response = result
 			return nil
@@ -136,7 +141,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 			return err
 		} else {
 			result = append(result, response.Response.CustomerGatewaySet...)
-			if len(response.Response.CustomerGatewaySet) < VPN_DESCRIBE_LIMIT {
+			if len(response.Response.CustomerGatewaySet) < svcvpc.VPN_DESCRIBE_LIMIT {
 				break
 			} else {
 				offset = offset + limit
@@ -175,7 +180,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), gatewayList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), gatewayList); e != nil {
 			return e
 		}
 	}

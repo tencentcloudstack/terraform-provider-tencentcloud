@@ -1,6 +1,10 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"log"
 	"reflect"
@@ -8,10 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudVpnConnections() *schema.Resource {
+func DataSourceTencentCloudVpnConnections() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudVpnConnectionsRead,
 
@@ -19,7 +24,7 @@ func dataSourceTencentCloudVpnConnections() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the VPN connection. The length of character is limited to 1-60.",
 			},
 			"id": {
@@ -238,13 +243,13 @@ func dataSourceTencentCloudVpnConnections() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vpn_connections.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vpn_connections.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 
 	request := vpc.NewDescribeVpnConnectionsRequest()
 
@@ -278,16 +283,16 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 	offset := uint64(0)
 	request.Offset = &offset
 	result := make([]*vpc.VpnConnection, 0)
-	limit := uint64(VPN_DESCRIBE_LIMIT)
+	limit := uint64(svcvpc.VPN_DESCRIBE_LIMIT)
 	request.Limit = &limit
 	for {
 		var response *vpc.DescribeVpnConnectionsResponse
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			response = result
 			return nil
@@ -297,7 +302,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 			return err
 		} else {
 			result = append(result, response.Response.VpnConnectionSet...)
-			if len(response.Response.VpnConnectionSet) < VPN_DESCRIBE_LIMIT {
+			if len(response.Response.VpnConnectionSet) < svcvpc.VPN_DESCRIBE_LIMIT {
 				break
 			} else {
 				offset = offset + limit
@@ -340,7 +345,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 			"ipsec_integrity_algorithm":  *connection.IPSECOptionsSpecification.IntegrityAlgorith,
 			"ipsec_pfs_dh_group":         *connection.IPSECOptionsSpecification.PfsDhGroup,
 			"ipsec_sa_lifetime_traffic":  int(*connection.IPSECOptionsSpecification.IPSECSaLifetimeTraffic),
-			"security_group_policy":      flattenVpnSPDList(connection.SecurityPolicyDatabaseSet),
+			"security_group_policy":      svcvpc.FlattenVpnSPDList(connection.SecurityPolicyDatabaseSet),
 			"net_status":                 *connection.NetStatus,
 			"state":                      *connection.State,
 			"create_time":                *connection.CreatedTime,
@@ -360,7 +365,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), connectionList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), connectionList); e != nil {
 			return e
 		}
 	}

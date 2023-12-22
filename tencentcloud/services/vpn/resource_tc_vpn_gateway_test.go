@@ -1,4 +1,4 @@
-package tencentcloud
+package vpn_test
 
 import (
 	"context"
@@ -7,6 +7,10 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -22,18 +26,16 @@ func init() {
 }
 
 func testSweepVpnGateway(region string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	sharedClient, err := sharedClientForRegion(region)
+	sharedClient, err := tcacctest.SharedClientForRegion(region)
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(*TencentCloudClient)
+	client := sharedClient.(tccommon.ProviderMeta)
 
-	vpcService := VpcService{
-		client: client.apiV3Conn,
-	}
+	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
 
 	instances, err := vpcService.DescribeVpnGwByFilter(ctx, nil)
 	if err != nil {
@@ -45,14 +47,14 @@ func testSweepVpnGateway(region string) error {
 		vpnGwId := *v.VpnGatewayId
 		vpnName := *v.VpnGatewayName
 		now := time.Now()
-		createTime := stringTotime(*v.CreatedTime)
+		createTime := tccommon.StringToTime(*v.CreatedTime)
 		interval := now.Sub(createTime).Minutes()
 
-		if strings.HasPrefix(vpnName, keepResource) || strings.HasPrefix(vpnName, defaultResource) {
+		if strings.HasPrefix(vpnName, tcacctest.KeepResource) || strings.HasPrefix(vpnName, tcacctest.DefaultResource) {
 			continue
 		}
 
-		if needProtect == 1 && int64(interval) < 30 {
+		if tccommon.NeedProtect == 1 && int64(interval) < 30 {
 			continue
 		}
 
@@ -67,8 +69,8 @@ func testSweepVpnGateway(region string) error {
 func TestAccTencentCloudVpnGatewayResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckVpnGatewayDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -109,9 +111,9 @@ func TestAccTencentCloudVpnGatewayResource_basic(t *testing.T) {
 }
 
 func testAccCheckVpnGatewayDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
+	conn := tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn()
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_vpn_gateway" {
 			continue
@@ -119,12 +121,12 @@ func testAccCheckVpnGatewayDestroy(s *terraform.State) error {
 		request := vpc.NewDescribeVpnGatewaysRequest()
 		request.VpnGatewayIds = []*string{&rs.Primary.ID}
 		var response *vpc.DescribeVpnGatewaysResponse
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeVpnGateways(request)
 			if e != nil {
 				ee, ok := e.(*errors.TencentCloudSDKError)
 				if !ok {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				}
 				if ee.Code == "ResourceNotFound" {
 					log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
@@ -133,7 +135,7 @@ func testAccCheckVpnGatewayDestroy(s *terraform.State) error {
 				} else {
 					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 						logId, request.GetAction(), request.ToJsonString(), e.Error())
-					return retryError(e)
+					return tccommon.RetryError(e)
 				}
 			}
 			response = result
@@ -145,7 +147,7 @@ func testAccCheckVpnGatewayDestroy(s *terraform.State) error {
 			if !ok {
 				return err
 			}
-			if ee.Code == VPCNotFound {
+			if ee.Code == svcvpc.VPCNotFound {
 				return nil
 			} else {
 				return err
@@ -162,7 +164,7 @@ func testAccCheckVpnGatewayDestroy(s *terraform.State) error {
 
 func testAccCheckVpnGatewayExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -171,16 +173,16 @@ func testAccCheckVpnGatewayExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("VPN gateway id is not set")
 		}
-		conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
+		conn := tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn()
 		request := vpc.NewDescribeVpnGatewaysRequest()
 		request.VpnGatewayIds = []*string{&rs.Primary.ID}
 		var response *vpc.DescribeVpnGatewaysResponse
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeVpnGateways(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			response = result
 			return nil

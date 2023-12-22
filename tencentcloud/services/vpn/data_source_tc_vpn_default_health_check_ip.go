@@ -1,15 +1,19 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudVpnDefaultHealthCheckIp() *schema.Resource {
+func DataSourceTencentCloudVpnDefaultHealthCheckIp() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudVpnDefaultHealthCheckIpRead,
 		Schema: map[string]*schema.Schema{
@@ -41,12 +45,12 @@ func dataSourceTencentCloudVpnDefaultHealthCheckIp() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpnDefaultHealthCheckIpRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vpn_default_health_check_ip.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vpn_default_health_check_ip.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var vpnGwId string
 	res := make(map[string]interface{})
@@ -57,14 +61,14 @@ func dataSourceTencentCloudVpnDefaultHealthCheckIpRead(d *schema.ResourceData, m
 		paramMap["VpnGatewayId"] = helper.String(v.(string))
 	}
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	var defaultHealthCheck *vpc.GenerateVpnConnectionDefaultHealthCheckIpResponseParams
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeVpnDefaultHealthCheckIp(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		defaultHealthCheck = result
 		return nil
@@ -86,7 +90,7 @@ func dataSourceTencentCloudVpnDefaultHealthCheckIpRead(d *schema.ResourceData, m
 	d.SetId(vpnGwId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), res); e != nil {
+		if e := tccommon.WriteToFile(output.(string), res); e != nil {
 			return e
 		}
 	}

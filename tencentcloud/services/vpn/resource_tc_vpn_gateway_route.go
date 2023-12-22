@@ -1,6 +1,9 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"errors"
 	"fmt"
@@ -8,10 +11,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnGatewayRoute() *schema.Resource {
+func ResourceTencentCloudVpnGatewayRoute() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnGatewayRouteCreate,
 		Read:   resourceTencentCloudVpnGatewayRouteRead,
@@ -86,10 +90,10 @@ func VpnGatewayRoutePara() map[string]*schema.Schema {
 }
 
 func resourceTencentCloudVpnGatewayRouteCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_route.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_route.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	vpnGatewayId := d.Get("vpn_gateway_id").(string)
 	priority := int64(d.Get("priority").(int))
@@ -104,7 +108,7 @@ func resourceTencentCloudVpnGatewayRouteCreate(d *schema.ResourceData, meta inte
 		route.Type = helper.String(routeType.(string))
 	}
 
-	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	vpcService := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	err, routeList := vpcService.CreateVpnGatewayRoute(ctx, vpnGatewayId, []*vpc.VpnGatewayRoute{route})
 	if err != nil {
 		log.Printf("[CRITAL]%s create VPN gateway route failed, reason:%s\n", logId, err.Error())
@@ -121,13 +125,13 @@ func resourceTencentCloudVpnGatewayRouteCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudVpnGatewayRouteRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_route.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_route.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		id      = d.Id()
 	)
 	compositeId := helper.IdParse(id)
@@ -156,12 +160,12 @@ func resourceTencentCloudVpnGatewayRouteRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudVpnGatewayRouteUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_route.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_route.update")()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		id      = d.Id()
 	)
 	compositeId := helper.IdParse(id)
@@ -186,12 +190,12 @@ func resourceTencentCloudVpnGatewayRouteUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudVpnGatewayRouteDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_route.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_route.delete")()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		id      = d.Id()
 	)
 	compositeId := helper.IdParse(id)

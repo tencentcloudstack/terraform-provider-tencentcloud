@@ -1,6 +1,10 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"fmt"
 	"log"
@@ -10,10 +14,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnGateway() *schema.Resource {
+func ResourceTencentCloudVpnGateway() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnGatewayCreate,
 		Read:   resourceTencentCloudVpnGatewayRead,
@@ -27,7 +32,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the VPN gateway. The length of character is limited to 1-60.",
 			},
 			"vpc_id": {
@@ -67,20 +72,20 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			"prepaid_renew_flag": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_PERIOD_PREPAID_RENEW_FLAG_AUTO_NOTIFY,
+				Default:     svcvpc.VPN_PERIOD_PREPAID_RENEW_FLAG_AUTO_NOTIFY,
 				Description: "Flag indicates whether to renew or not. Valid value: `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW`.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1,
-				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
 				Description:  "Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be changed on `IPSEC` vpn gateway.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_CHARGE_TYPE_POSTPAID_BY_HOUR,
+				Default:     svcvpc.VPN_CHARGE_TYPE_POSTPAID_BY_HOUR,
 				Description: "Charge Type of the VPN gateway. Valid value: `PREPAID`, `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.",
 			},
 			"cdc_id": {
@@ -137,10 +142,10 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 }
 
 func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := vpc.NewCreateVpnGatewayRequest()
 	request.VpnGatewayName = helper.String(d.Get("name").(string))
@@ -154,7 +159,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	}
 
 	//only support change renew_flag when charge type is pre-paid
-	if chargeType == VPN_CHARGE_TYPE_PREPAID {
+	if chargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID {
 		var preChargePara vpc.InstanceChargePrepaid
 		preChargePara.Period = helper.IntUint64(d.Get("prepaid_period").(int))
 		preChargePara.RenewFlag = helper.String(d.Get("prepaid_renew_flag").(string))
@@ -190,12 +195,12 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	}
 
 	var response *vpc.CreateVpnGatewayResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpnGateway(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().CreateVpnGateway(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -214,18 +219,18 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	// must wait for creating gateway finished
 	statRequest := vpc.NewDescribeVpnGatewaysRequest()
 	statRequest.VpnGatewayIds = []*string{helper.String(gatewayId)}
-	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(statRequest)
+	err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, statRequest.GetAction(), statRequest.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			//if not, quit
 			if len(result.Response.VpnGatewaySet) != 1 {
 				return resource.NonRetryableError(fmt.Errorf("creating error"))
 			} else {
-				if *result.Response.VpnGatewaySet[0].State == VPN_STATE_AVAILABLE {
+				if *result.Response.VpnGatewaySet[0].State == svcvpc.VPN_STATE_AVAILABLE {
 					return nil
 				} else {
 					return resource.RetryableError(fmt.Errorf("State is not available: %s, wait for state to be AVAILABLE.", *result.Response.VpnGatewaySet[0].State))
@@ -240,10 +245,10 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("vpc", "vpngw", region, gatewayId)
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("vpc", "vpngw", region, gatewayId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -254,13 +259,13 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		gatewayId = d.Id()
 	)
 
@@ -290,8 +295,8 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("cdc_id", gateway.CdcId)
 	_ = d.Set("max_connection", gateway.MaxConnection)
 	//tags
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "vpngw", region, gatewayId)
 	if err != nil {
 		return err
@@ -302,10 +307,10 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	d.Partial(true)
 	gatewayId := d.Id()
@@ -322,7 +327,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("prepaid_period") {
 		chargeType := d.Get("charge_type").(string)
 		period := d.Get("prepaid_period").(int)
-		if chargeType != VPN_CHARGE_TYPE_PREPAID {
+		if chargeType != svcvpc.VPN_CHARGE_TYPE_PREPAID {
 			return fmt.Errorf("Invalid renew flag change. Only support pre-paid vpn.")
 		}
 		request := vpc.NewRenewVpnGatewayRequest()
@@ -331,12 +336,12 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		preChargePara.Period = helper.IntUint64(period)
 		request.InstanceChargePrepaid = &preChargePara
 
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().RenewVpnGateway(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().RenewVpnGateway(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -349,7 +354,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("prepaid_renew_flag") {
 		chargeType := d.Get("charge_type").(string)
 		renewFlag := d.Get("prepaid_renew_flag").(string)
-		if chargeType != VPN_CHARGE_TYPE_PREPAID {
+		if chargeType != svcvpc.VPN_CHARGE_TYPE_PREPAID {
 			return fmt.Errorf("Invalid renew flag change. Only support pre-paid vpn.")
 		}
 		request := vpc.NewSetVpnGatewaysRenewFlagRequest()
@@ -360,12 +365,12 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			request.AutoRenewFlag = helper.IntInt64(0)
 		}
 
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().SetVpnGatewaysRenewFlag(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().SetVpnGatewaysRenewFlag(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -384,17 +389,17 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		request := vpc.NewModifyVpnGatewayAttributeRequest()
 		request.VpnGatewayId = &gatewayId
 		request.VpnGatewayName = helper.String(d.Get("name").(string))
-		if oldChargeType == VPN_CHARGE_TYPE_PREPAID && newChargeType == VPN_CHARGE_TYPE_POSTPAID_BY_HOUR {
+		if oldChargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID && newChargeType == svcvpc.VPN_CHARGE_TYPE_POSTPAID_BY_HOUR {
 			request.InstanceChargeType = &newChargeType
-		} else if oldChargeType == VPN_CHARGE_TYPE_POSTPAID_BY_HOUR && newChargeType == VPN_CHARGE_TYPE_PREPAID {
+		} else if oldChargeType == svcvpc.VPN_CHARGE_TYPE_POSTPAID_BY_HOUR && newChargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID {
 			return fmt.Errorf("Invalid charge type change. Only support pre-paid to post-paid way.")
 		}
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyVpnGatewayAttribute(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyVpnGatewayAttribute(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -411,12 +416,12 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		bandwidth := d.Get("bandwidth").(int)
 		bandwidth64 := uint64(bandwidth)
 		request.InternetMaxBandwidthOut = &bandwidth64
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ResetVpnGatewayInternetMaxBandwidth(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ResetVpnGatewayInternetMaxBandwidth(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -430,12 +435,10 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	//tag
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(*TencentCloudClient).apiV3Conn,
-		}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("vpc", "vpngw", region, gatewayId)
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("vpc", "vpngw", region, gatewayId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -453,9 +456,9 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway.delete")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	gatewayId := d.Id()
 
@@ -465,16 +468,16 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 	//to get the type and networkinstanceid of gateway
 	vpngwRequest := vpc.NewDescribeVpnGatewaysRequest()
 	vpngwRequest.VpnGatewayIds = []*string{&gatewayId}
-	vpngwErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(vpngwRequest)
+	vpngwErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnGateways(vpngwRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			//if deleted, quit
 			if len(result.Response.VpnGatewaySet) == 0 {
 				return nil
 			}
-			if result.Response.VpnGatewaySet[0].ExpiredTime != nil && *result.Response.VpnGatewaySet[0].InstanceChargeType == VPN_CHARGE_TYPE_PREPAID {
+			if result.Response.VpnGatewaySet[0].ExpiredTime != nil && *result.Response.VpnGatewaySet[0].InstanceChargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID {
 				expiredTime := *result.Response.VpnGatewaySet[0].ExpiredTime
 				if expiredTime != "0000-00-00 00:00:00" {
 					t, err := time.Parse("2006-01-02 15:04:05", expiredTime)
@@ -486,7 +489,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 					}
 				}
 			}
-			if *result.Response.VpnGatewaySet[0].Type == GATE_WAY_TYPE_CCN && *result.Response.VpnGatewaySet[0].NetworkInstanceId != "" {
+			if *result.Response.VpnGatewaySet[0].Type == svcvpc.GATE_WAY_TYPE_CCN && *result.Response.VpnGatewaySet[0].NetworkInstanceId != "" {
 				return resource.NonRetryableError(fmt.Errorf("Delete operation is unsupported when VPN gateway is attached to CCN instance."))
 			}
 			return nil
@@ -517,13 +520,13 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 	offset := uint64(0)
 	tRequest.Offset = &offset
 
-	tErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(tRequest)
+	tErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(tRequest)
 
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, tRequest.GetAction(), tRequest.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			if len(result.Response.VpnConnectionSet) == 0 {
 				return nil
@@ -540,12 +543,12 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 	request := vpc.NewDeleteVpnGatewayRequest()
 	request.VpnGatewayId = &gatewayId
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteVpnGateway(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DeleteVpnGateway(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -556,21 +559,21 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 	//to get the status of gateway
 	statRequest := vpc.NewDescribeVpnGatewaysRequest()
 	statRequest.VpnGatewayIds = []*string{&gatewayId}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(statRequest)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnGateways(statRequest)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)
 			if !ok {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
-			if ee.Code == VPCNotFound {
+			if ee.Code == svcvpc.VPCNotFound {
 				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
 				return nil
 			} else {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 		} else {
 			//if not, quit

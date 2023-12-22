@@ -1,7 +1,9 @@
-package tencentcloud
+package vpn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,13 +11,13 @@ import (
 func TestAccTencentCloudVpnCustomerGatewaysDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudVpnCustomerGatewaysDataSourceConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpn_customer_gateways.cgws"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_vpn_customer_gateways.cgws"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_customer_gateways.cgws", "gateway_list.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_customer_gateways.cgws", "gateway_list.0.name", "terraform_test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpn_customer_gateways.cgws", "gateway_list.0.public_ip_address", "1.1.1.3"),

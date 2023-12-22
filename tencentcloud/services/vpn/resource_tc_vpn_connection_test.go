@@ -1,6 +1,10 @@
-package tencentcloud
+package vpn_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"fmt"
 	"log"
 	"testing"
@@ -14,8 +18,8 @@ import (
 func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckVpnConnectionDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -150,9 +154,9 @@ func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
 }
 
 func testAccCheckVpnConnectionDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
+	conn := tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn()
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_vpn_connection" {
 			continue
@@ -160,21 +164,21 @@ func testAccCheckVpnConnectionDestroy(s *terraform.State) error {
 		request := vpc.NewDescribeVpnConnectionsRequest()
 		request.VpnConnectionIds = []*string{&rs.Primary.ID}
 		var response *vpc.DescribeVpnConnectionsResponse
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeVpnConnections(request)
 			if e != nil {
 				ee, ok := e.(*errors.TencentCloudSDKError)
 				if !ok {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				}
-				if ee.Code == VPCNotFound {
+				if ee.Code == svcvpc.VPCNotFound {
 					log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
 						logId, request.GetAction(), request.ToJsonString(), e.Error())
 					return resource.NonRetryableError(e)
 				} else {
 					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 						logId, request.GetAction(), request.ToJsonString(), e.Error())
-					return retryError(e)
+					return tccommon.RetryError(e)
 				}
 			}
 			response = result
@@ -203,7 +207,7 @@ func testAccCheckVpnConnectionDestroy(s *terraform.State) error {
 
 func testAccCheckVpnConnectionExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -212,16 +216,16 @@ func testAccCheckVpnConnectionExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("VPN connection id is not set")
 		}
-		conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
+		conn := tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn()
 		request := vpc.NewDescribeVpnConnectionsRequest()
 		request.VpnConnectionIds = []*string{&rs.Primary.ID}
 		var response *vpc.DescribeVpnConnectionsResponse
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeVpnConnections(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			response = result
 			return nil

@@ -1,15 +1,19 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudVpnGatewayRoutes() *schema.Resource {
+func DataSourceTencentCloudVpnGatewayRoutes() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudVpnGatewayRoutesRead,
 
@@ -54,13 +58,13 @@ func dataSourceTencentCloudVpnGatewayRoutes() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpnGatewayRoutesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vpn_gateway_routes.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vpn_gateway_routes.read")()
 
 	var (
-		logId        = getLogId(contextNil)
-		ctx          = context.WithValue(context.TODO(), logIdKey, logId)
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		ctx          = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		vpnGatewayId = d.Get("vpn_gateway_id").(string)
-		vpcService   = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		vpcService   = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	)
 
 	params := make(map[string]string)
@@ -101,7 +105,7 @@ func dataSourceTencentCloudVpnGatewayRoutesRead(d *schema.ResourceData, meta int
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), routeList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), routeList); e != nil {
 			return e
 		}
 	}

@@ -1,6 +1,9 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"fmt"
 	"log"
@@ -9,10 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnGatewayCcnRoutes() *schema.Resource {
+func ResourceTencentCloudVpnGatewayCcnRoutes() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnGatewayCcnRoutesCreate,
 		Read:   resourceTencentCloudVpnGatewayCcnRoutesRead,
@@ -50,8 +54,8 @@ func resourceTencentCloudVpnGatewayCcnRoutes() *schema.Resource {
 }
 
 func resourceTencentCloudVpnGatewayCcnRoutesCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
 		vpnGwId string
@@ -66,22 +70,22 @@ func resourceTencentCloudVpnGatewayCcnRoutesCreate(d *schema.ResourceData, meta 
 		routeId = v.(string)
 	}
 
-	d.SetId(vpnGwId + FILED_SP + routeId)
+	d.SetId(vpnGwId + tccommon.FILED_SP + routeId)
 
 	return resourceTencentCloudVpnGatewayCcnRoutesUpdate(d, meta)
 }
 
 func resourceTencentCloudVpnGatewayCcnRoutesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -108,14 +112,14 @@ func resourceTencentCloudVpnGatewayCcnRoutesRead(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudVpnGatewayCcnRoutesUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := vpc.NewModifyVpnGatewayCcnRoutesRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -129,10 +133,10 @@ func resourceTencentCloudVpnGatewayCcnRoutesUpdate(d *schema.ResourceData, meta 
 	route.DestinationCidrBlock = helper.String(d.Get("destination_cidr_block").(string))
 	request.Routes = append(request.Routes, &route)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyVpnGatewayCcnRoutes(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyVpnGatewayCcnRoutes(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -147,8 +151,8 @@ func resourceTencentCloudVpnGatewayCcnRoutesUpdate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudVpnGatewayCcnRoutesDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_gateway_ccn_routes.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

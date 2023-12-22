@@ -1,15 +1,18 @@
-package tencentcloud
+package vpn
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnConnectionReset() *schema.Resource {
+func ResourceTencentCloudVpnConnectionReset() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnConnectionResetCreate,
 		Read:   resourceTencentCloudVpnConnectionResetRead,
@@ -33,10 +36,10 @@ func resourceTencentCloudVpnConnectionReset() *schema.Resource {
 }
 
 func resourceTencentCloudVpnConnectionResetCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vpn_connection_reset.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vpn_connection_reset.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request         = vpc.NewResetVpnConnectionRequest()
@@ -53,10 +56,10 @@ func resourceTencentCloudVpnConnectionResetCreate(d *schema.ResourceData, meta i
 		request.VpnConnectionId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ResetVpnConnection(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ResetVpnConnection(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -67,21 +70,21 @@ func resourceTencentCloudVpnConnectionResetCreate(d *schema.ResourceData, meta i
 		return nil
 	}
 
-	d.SetId(vpnGatewayId + FILED_SP + vpnConnectionId)
+	d.SetId(vpnGatewayId + tccommon.FILED_SP + vpnConnectionId)
 
 	return resourceTencentCloudVpnConnectionResetRead(d, meta)
 }
 
 func resourceTencentCloudVpnConnectionResetRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_connection_reset.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_connection_reset.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudVpnConnectionResetDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_connection_reset.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_connection_reset.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

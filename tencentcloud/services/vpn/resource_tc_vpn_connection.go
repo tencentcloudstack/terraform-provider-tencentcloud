@@ -1,6 +1,10 @@
-package tencentcloud
+package vpn
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+
 	"context"
 	"fmt"
 	"log"
@@ -11,10 +15,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpnConnection() *schema.Resource {
+func ResourceTencentCloudVpnConnection() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnConnectionCreate,
 		Read:   resourceTencentCloudVpnConnectionRead,
@@ -28,7 +33,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the VPN connection. The length of character is limited to 1-60.",
 			},
 			"vpc_id": {
@@ -89,31 +94,31 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 			"ike_proto_encry_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IKE_PROPO_ENCRY_ALGORITHM_3DESCBC,
+				Default:     svcvpc.VPN_IKE_PROPO_ENCRY_ALGORITHM_3DESCBC,
 				Description: "Proto encrypt algorithm of the IKE operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-192`, `AES-CBC-256`, `DES-CBC`, `SM4`, `AES128GCM128`, `AES192GCM128`, `AES256GCM128`,`AES128GCM128`, `AES192GCM128`, `AES256GCM128`. Default value is `3DES-CBC`.",
 			},
 			"ike_proto_authen_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IKE_PROPO_AUTHEN_ALGORITHM_MD5,
+				Default:     svcvpc.VPN_IKE_PROPO_AUTHEN_ALGORITHM_MD5,
 				Description: "Proto authenticate algorithm of the IKE operation specification. Valid values: `MD5`, `SHA`, `SHA-256`. Default Value is `MD5`.",
 			},
 			"ike_exchange_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IKE_EXCHANGE_MODE_MAIN,
+				Default:     svcvpc.VPN_IKE_EXCHANGE_MODE_MAIN,
 				Description: "Exchange mode of the IKE operation specification. Valid values: `AGGRESSIVE`, `MAIN`. Default value is `MAIN`.",
 			},
 			"ike_local_identity": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IKE_IDENTITY_ADDRESS,
+				Default:     svcvpc.VPN_IKE_IDENTITY_ADDRESS,
 				Description: "Local identity way of IKE operation specification. Valid values: `ADDRESS`, `FQDN`. Default value is `ADDRESS`.",
 			},
 			"ike_remote_identity": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IKE_IDENTITY_ADDRESS,
+				Default:     svcvpc.VPN_IKE_IDENTITY_ADDRESS,
 				Description: "Remote identity way of IKE operation specification. Valid values: `ADDRESS`, `FQDN`. Default value is `ADDRESS`.",
 			},
 			"ike_local_address": {
@@ -143,14 +148,14 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 			"ike_dh_group_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IKE_DH_GROUP_NAME_GROUP1,
+				Default:     svcvpc.VPN_IKE_DH_GROUP_NAME_GROUP1,
 				Description: "DH group name of the IKE operation specification. Valid values: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`. Default value is `GROUP1`.",
 			},
 			"ike_sa_lifetime_seconds": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      86400,
-				ValidateFunc: validateIntegerInRange(60, 604800),
+				ValidateFunc: tccommon.ValidateIntegerInRange(60, 604800),
 				Description:  "SA lifetime of the IKE operation specification, unit is `second`. The value ranges from 60 to 604800. Default value is 86400 seconds.",
 			},
 			"ike_version": {
@@ -162,20 +167,20 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 			"ipsec_encrypt_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
+				Default:     svcvpc.VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
 				Description: "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-192`, `AES-CBC-256`, `DES-CBC`, `SM4`, `NULL`, `AES128GCM128`, `AES192GCM128`, `AES256GCM128`. Default value is `3DES-CBC`.",
 			},
 			"ipsec_integrity_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_IPSEC_INTEGRITY_ALGORITHM_MD5,
+				Default:     svcvpc.VPN_IPSEC_INTEGRITY_ALGORITHM_MD5,
 				Description: "Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`, `SHA-256`. Default value is `MD5`.",
 			},
 			"ipsec_sa_lifetime_seconds": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      3600,
-				ValidateFunc: validateIntegerInRange(180, 604800),
+				ValidateFunc: tccommon.ValidateIntegerInRange(180, 604800),
 				Description:  "SA lifetime of the IPSEC operation specification, unit is second. Valid value ranges: [180~604800]. Default value is 3600 seconds.",
 			},
 			"ipsec_pfs_dh_group": {
@@ -188,7 +193,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1843200,
-				ValidateFunc: validateIntegerMin(2560),
+				ValidateFunc: tccommon.ValidateIntegerMin(2560),
 				Description:  "SA lifetime of the IPSEC operation specification, unit is KB. The value should not be less then 2560. Default value is 1843200.",
 			},
 			"tags": {
@@ -200,21 +205,21 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: tccommon.ValidateIntegerInRange(0, 1),
 				Description:  "Specifies whether to enable DPD. Valid values: 0 (disable) and 1 (enable).",
 			},
 			"dpd_timeout": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validateIntegerInRange(30, 60),
+				ValidateFunc: tccommon.ValidateIntegerInRange(30, 60),
 				Description:  "DPD timeout period.Valid value ranges: [30~60], Default: 30; unit: second. If the request is not responded within this period, the peer end is considered not exists. This parameter is valid when the value of DpdEnable is 1.",
 			},
 			"dpd_action": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validateAllowedStringValue(DPD_ACTIONS),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(svcvpc.DPD_ACTIONS),
 				Description:  "The action after DPD timeout. Valid values: clear (disconnect) and restart (try again). It is valid when DpdEnable is 1.",
 			},
 			"create_time": {
@@ -237,7 +242,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(VPN_CONNECTION_ROUTE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(svcvpc.VPN_CONNECTION_ROUTE_TYPE),
 				Description:  "Route type of the VPN connection. Valid value: `STATIC`, `StaticRoute`, `Policy`.",
 			},
 			"state": {
@@ -273,12 +278,12 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 }
 
 func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_connection.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_connection.create")()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	)
 
 	// pre check vpn gateway id
@@ -348,7 +353,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	ikeOptionsSpecification.ExchangeMode = helper.String(d.Get("ike_exchange_mode").(string))
 	ikeOptionsSpecification.LocalIdentity = helper.String(d.Get("ike_local_identity").(string))
 	ikeOptionsSpecification.RemoteIdentity = helper.String(d.Get("ike_remote_identity").(string))
-	if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
+	if *ikeOptionsSpecification.LocalIdentity == svcvpc.VPN_IKE_IDENTITY_ADDRESS {
 		if v, ok := d.GetOk("ike_local_address"); ok {
 			ikeOptionsSpecification.LocalAddress = helper.String(v.(string))
 		} else {
@@ -361,7 +366,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 			return fmt.Errorf("ike_local_fqdn_name need to be set when ike_local_identity is `FQDN`")
 		}
 	}
-	if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
+	if *ikeOptionsSpecification.LocalIdentity == svcvpc.VPN_IKE_IDENTITY_ADDRESS {
 		if v, ok := d.GetOk("ike_remote_address"); ok {
 			ikeOptionsSpecification.RemoteAddress = helper.String(v.(string))
 		} else {
@@ -405,12 +410,12 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	}
 
 	var response *vpc.CreateVpnConnectionResponse
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpnConnection(request)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().CreateVpnConnection(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -449,13 +454,13 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		offset := uint64(0)
 		idRequest.Offset = &offset
 
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(idRequest)
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(idRequest)
 
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, idRequest.GetAction(), idRequest.ToJsonString(), e.Error())
-				return retryError(e, InternalError)
+				return tccommon.RetryError(e, tccommon.InternalError)
 			} else {
 				if len(result.Response.VpnConnectionSet) == 0 || *result.Response.VpnConnectionSet[0].VpnConnectionId == "" {
 					return resource.RetryableError(fmt.Errorf("Id is creating, wait..."))
@@ -480,18 +485,18 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	// must wait for finishing creating connection
 	statRequest := vpc.NewDescribeVpnConnectionsRequest()
 	statRequest.VpnConnectionIds = []*string{&vpnConnectionId}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, statRequest.GetAction(), statRequest.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			//if not, quit
 			if len(result.Response.VpnConnectionSet) != 1 {
 				return resource.NonRetryableError(fmt.Errorf("creating error"))
 			} else {
-				if *result.Response.VpnConnectionSet[0].State == VPN_STATE_AVAILABLE {
+				if *result.Response.VpnConnectionSet[0].State == svcvpc.VPN_STATE_AVAILABLE {
 					return nil
 				} else {
 					return resource.RetryableError(fmt.Errorf("State is not available: %s, wait for state to be AVAILABLE.", *result.Response.VpnConnectionSet[0].State))
@@ -506,10 +511,10 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("vpc", "vpnx", region, vpnConnectionId)
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("vpc", "vpnx", region, vpnConnectionId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -520,29 +525,29 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_connection.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_connection.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	)
 
 	connectionId := d.Id()
 	request := vpc.NewDescribeVpnConnectionsRequest()
 	request.VpnConnectionIds = []*string{&connectionId}
 	var response *vpc.DescribeVpnConnectionsResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
-			if ok && ee.Code == VPCNotFound {
+			if ok && ee.Code == svcvpc.VPCNotFound {
 				return nil
 			}
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		response = result
@@ -580,8 +585,8 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("customer_gateway_id", *connection.CustomerGatewayId)
 	_ = d.Set("pre_share_key", *connection.PreShareKey)
 	//set up SPD
-	if *connection.RouteType != ROUTE_TYPE_STATIC_ROUTE {
-		_ = d.Set("security_group_policy", flattenVpnSPDList(connection.SecurityPolicyDatabaseSet))
+	if *connection.RouteType != svcvpc.ROUTE_TYPE_STATIC_ROUTE {
+		_ = d.Set("security_group_policy", svcvpc.FlattenVpnSPDList(connection.SecurityPolicyDatabaseSet))
 	}
 
 	//set up IKE
@@ -636,8 +641,8 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("dpd_action", *connection.DpdAction)
 
 	//tags
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "vpnx", region, connectionId)
 	if err != nil {
 		return err
@@ -648,10 +653,10 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_connection.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_connection.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	d.Partial(true)
 	connectionId := d.Id()
@@ -748,7 +753,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		ikeOptionsSpecification.ExchangeMode = helper.String(d.Get("ike_exchange_mode").(string))
 		ikeOptionsSpecification.LocalIdentity = helper.String(d.Get("ike_local_identity").(string))
 		ikeOptionsSpecification.RemoteIdentity = helper.String(d.Get("ike_remote_identity").(string))
-		if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
+		if *ikeOptionsSpecification.LocalIdentity == svcvpc.VPN_IKE_IDENTITY_ADDRESS {
 			if v, ok := d.GetOk("ike_local_address"); ok {
 				ikeOptionsSpecification.LocalAddress = helper.String(v.(string))
 			} else {
@@ -761,7 +766,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 				return fmt.Errorf("ike_local_fqdn_name need to be set when ike_local_identity is `FQDN`")
 			}
 		}
-		if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
+		if *ikeOptionsSpecification.LocalIdentity == svcvpc.VPN_IKE_IDENTITY_ADDRESS {
 			if v, ok := d.GetOk("ike_remote_address"); ok {
 				ikeOptionsSpecification.RemoteAddress = helper.String(v.(string))
 			} else {
@@ -812,12 +817,12 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		changeFlag = true
 	}
 	if changeFlag {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyVpnConnectionAttribute(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyVpnConnectionAttribute(request)
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -831,12 +836,10 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	//tag
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(*TencentCloudClient).apiV3Conn,
-		}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("vpc", "vpnx", region, connectionId)
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("vpc", "vpnx", region, connectionId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -848,9 +851,9 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpn_connection.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_connection.delete")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	connectionId := d.Id()
 	vpnGatewayId := d.Get("vpn_gateway_id").(string)
@@ -858,8 +861,8 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	request := vpc.NewDeleteVpnConnectionRequest()
 	request.VpnConnectionId = &connectionId
 	request.VpnGatewayId = &vpnGatewayId
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteVpnConnection(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DeleteVpnConnection(request)
 		if e != nil {
 			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if ee.GetCode() == "UnsupportedOperation.InvalidState" {
@@ -868,7 +871,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 			}
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -879,21 +882,21 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	//to get the status of vpn connection
 	statRequest := vpc.NewDescribeVpnConnectionsRequest()
 	statRequest.VpnConnectionIds = []*string{&connectionId}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
-			if ee.Code == VPCNotFound {
+			if ee.Code == svcvpc.VPCNotFound {
 				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
 				return nil
 			} else {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 		} else {
 			//if not, quit

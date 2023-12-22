@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
@@ -306,12 +307,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_tree_resources":                       oceanus.DataSourceTencentCloudOceanusTreeResources(),
 			"tencentcloud_oceanus_job_submission_log":                   oceanus.DataSourceTencentCloudOceanusJobSubmissionLog(),
 			"tencentcloud_oceanus_check_savepoint":                      oceanus.DataSourceTencentCloudOceanusCheckSavepoint(),
-			"tencentcloud_vpn_customer_gateways":                        dataSourceTencentCloudVpnCustomerGateways(),
-			"tencentcloud_vpn_gateways":                                 dataSourceTencentCloudVpnGateways(),
-			"tencentcloud_vpn_gateway_routes":                           dataSourceTencentCloudVpnGatewayRoutes(),
-			"tencentcloud_vpn_connections":                              dataSourceTencentCloudVpnConnections(),
-			"tencentcloud_vpn_customer_gateway_vendors":                 dataSourceTencentCloudVpnCustomerGatewayVendors(),
-			"tencentcloud_vpn_default_health_check_ip":                  dataSourceTencentCloudVpnDefaultHealthCheckIp(),
+			"tencentcloud_vpn_customer_gateways":                        vpn.DataSourceTencentCloudVpnCustomerGateways(),
+			"tencentcloud_vpn_gateways":                                 vpn.DataSourceTencentCloudVpnGateways(),
+			"tencentcloud_vpn_gateway_routes":                           vpn.DataSourceTencentCloudVpnGatewayRoutes(),
+			"tencentcloud_vpn_connections":                              vpn.DataSourceTencentCloudVpnConnections(),
+			"tencentcloud_vpn_customer_gateway_vendors":                 vpn.DataSourceTencentCloudVpnCustomerGatewayVendors(),
+			"tencentcloud_vpn_default_health_check_ip":                  vpn.DataSourceTencentCloudVpnDefaultHealthCheckIp(),
 			"tencentcloud_ha_vips":                                      vpc.DataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                       vpc.DataSourceTencentCloudHaVipEipAttachments(),
 			"tencentcloud_ccn_instances":                                ccn.DataSourceTencentCloudCcnInstances(),
@@ -1059,16 +1060,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_dc_gateway":                                          dcg.ResourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":                                dcg.ResourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_dc_gateway_attachment":                               dcg.ResourceTencentCloudDcGatewayAttachment(),
-			"tencentcloud_vpn_customer_gateway":                                resourceTencentCloudVpnCustomerGateway(),
-			"tencentcloud_vpn_gateway":                                         resourceTencentCloudVpnGateway(),
-			"tencentcloud_vpn_gateway_route":                                   resourceTencentCloudVpnGatewayRoute(),
-			"tencentcloud_vpn_connection":                                      resourceTencentCloudVpnConnection(),
-			"tencentcloud_vpn_ssl_server":                                      resourceTencentCloudVpnSslServer(),
-			"tencentcloud_vpn_ssl_client":                                      resourceTencentCloudVpnSslClient(),
-			"tencentcloud_vpn_connection_reset":                                resourceTencentCloudVpnConnectionReset(),
-			"tencentcloud_vpn_customer_gateway_configuration_download":         resourceTencentCloudVpnCustomerGatewayConfigurationDownload(),
-			"tencentcloud_vpn_gateway_ssl_client_cert":                         resourceTencentCloudVpnGatewaySslClientCert(),
-			"tencentcloud_vpn_gateway_ccn_routes":                              resourceTencentCloudVpnGatewayCcnRoutes(),
+			"tencentcloud_vpn_customer_gateway":                                vpn.ResourceTencentCloudVpnCustomerGateway(),
+			"tencentcloud_vpn_gateway":                                         vpn.ResourceTencentCloudVpnGateway(),
+			"tencentcloud_vpn_gateway_route":                                   vpn.ResourceTencentCloudVpnGatewayRoute(),
+			"tencentcloud_vpn_connection":                                      vpn.ResourceTencentCloudVpnConnection(),
+			"tencentcloud_vpn_ssl_server":                                      vpn.ResourceTencentCloudVpnSslServer(),
+			"tencentcloud_vpn_ssl_client":                                      vpn.ResourceTencentCloudVpnSslClient(),
+			"tencentcloud_vpn_connection_reset":                                vpn.ResourceTencentCloudVpnConnectionReset(),
+			"tencentcloud_vpn_customer_gateway_configuration_download":         vpn.ResourceTencentCloudVpnCustomerGatewayConfigurationDownload(),
+			"tencentcloud_vpn_gateway_ssl_client_cert":                         vpn.ResourceTencentCloudVpnGatewaySslClientCert(),
+			"tencentcloud_vpn_gateway_ccn_routes":                              vpn.ResourceTencentCloudVpnGatewayCcnRoutes(),
 			"tencentcloud_ha_vip":                                              vpc.ResourceTencentCloudHaVip(),
 			"tencentcloud_ha_vip_eip_attachment":                               vpc.ResourceTencentCloudHaVipEipAttachment(),
 			"tencentcloud_security_group":                                      vpc.ResourceTencentCloudSecurityGroup(),
