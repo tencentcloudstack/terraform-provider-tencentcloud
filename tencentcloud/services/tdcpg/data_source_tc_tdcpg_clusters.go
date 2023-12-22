@@ -1,16 +1,19 @@
-package tencentcloud
+package tdcpg
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudTdcpgClusters() *schema.Resource {
+func DataSourceTencentCloudTdcpgClusters() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTdcpgClustersRead,
 		Schema: map[string]*schema.Schema{
@@ -223,11 +226,11 @@ func dataSourceTencentCloudTdcpgClusters() *schema.Resource {
 }
 
 func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tdcpg_clusters.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_tdcpg_clusters.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -250,13 +253,13 @@ func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interf
 		paramMap["project_id"] = helper.IntInt64(v.(int))
 	}
 
-	tdcpgService := TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tdcpgService := TdcpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var clusterSet []*tdcpg.Cluster
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := tdcpgService.DescribeTdcpgClustersByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		clusterSet = results
 		return nil
@@ -383,7 +386,7 @@ func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interf
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), clusterList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), clusterList); e != nil {
 			return e
 		}
 	}

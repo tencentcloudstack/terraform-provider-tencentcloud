@@ -1,12 +1,15 @@
-package tencentcloud
+package tdcpg
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -26,6 +29,10 @@ const (
 	TDCPG_INSTANCE_FILTER_TYPE        = "InstanceType"
 )
 
+func NewTdcpgService(client *connectivity.TencentCloudClient) TdcpgService {
+	return TdcpgService{client: client}
+}
+
 type TdcpgService struct {
 	client *connectivity.TencentCloudClient
 }
@@ -33,7 +40,7 @@ type TdcpgService struct {
 // tdcpg resource
 func (me *TdcpgService) DescribeTdcpgCluster(ctx context.Context, clusterId *string) (cluster *tdcpg.DescribeClustersResponseParams, errRet error) {
 	var (
-		logId = getLogId(ctx)
+		logId = tccommon.GetLogId(ctx)
 	)
 
 	defer func() {
@@ -57,7 +64,7 @@ func (me *TdcpgService) DescribeTdcpgCluster(ctx context.Context, clusterId *str
 }
 
 func (me *TdcpgService) IsolateTdcpgInstanceById(ctx context.Context, clusterId, instanceId *string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tdcpg.NewIsolateClusterInstancesRequest()
 	request.ClusterId = clusterId
@@ -83,17 +90,17 @@ func (me *TdcpgService) IsolateTdcpgInstanceById(ctx context.Context, clusterId,
 }
 
 func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	var status string
 	if err := me.IsolateTdcpgClusterById(ctx, clusterId); err != nil {
 		return err
 	}
 
 	// polling the cluster's status to isolated
-	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgCluster(ctx, clusterId)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if result != nil {
 			status = *result.ClusterSet[0].Status
@@ -133,10 +140,10 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *s
 	}
 
 	// wait the cluster to be deleted
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgCluster(ctx, clusterId)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if result != nil {
 			status = *result.ClusterSet[0].Status
@@ -159,7 +166,7 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *s
 
 func (me *TdcpgService) DescribeTdcpgInstance(ctx context.Context, clusterId, instanceId *string) (instance *tdcpg.DescribeClusterInstancesResponseParams, errRet error) {
 	var (
-		logId = getLogId(ctx)
+		logId = tccommon.GetLogId(ctx)
 	)
 
 	defer func() {
@@ -184,7 +191,7 @@ func (me *TdcpgService) DescribeTdcpgInstance(ctx context.Context, clusterId, in
 
 func (me *TdcpgService) DescribeTdcpgResourceByDealName(ctx context.Context, dealNames []*string) (resourceInfo []*tdcpg.ResourceIdInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tdcpg.NewDescribeResourcesByDealNameRequest()
 	)
 
@@ -216,7 +223,7 @@ func (me *TdcpgService) DescribeTdcpgResourceByDealName(ctx context.Context, dea
 }
 
 func (me *TdcpgService) IsolateTdcpgClusterById(ctx context.Context, clusterId *string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tdcpg.NewIsolateClusterRequest()
 	request.ClusterId = clusterId
@@ -241,17 +248,17 @@ func (me *TdcpgService) IsolateTdcpgClusterById(ctx context.Context, clusterId *
 }
 
 func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, instanceId *string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	var status string
 	if err := me.IsolateTdcpgInstanceById(ctx, clusterId, instanceId); err != nil {
 		return err
 	}
 
 	// polling the instance's status to isolated
-	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgInstance(ctx, clusterId, instanceId)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if result != nil {
 			status = *result.InstanceSet[0].Status
@@ -294,10 +301,10 @@ func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, 
 	}
 
 	// wait the instance to be deleted
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgInstance(ctx, clusterId, instanceId)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if result != nil {
 			status = *result.InstanceSet[0].Status
@@ -321,7 +328,7 @@ func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, 
 // tdcpg data-source
 func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param map[string]interface{}) (clusters []*tdcpg.Cluster, errRet error) {
 	var (
-		logId      = getLogId(ctx)
+		logId      = tccommon.GetLogId(ctx)
 		request    = tdcpg.NewDescribeClustersRequest()
 		indx       = 0
 		currNumber = 1
@@ -413,7 +420,7 @@ func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param
 
 func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clusterId *string, param map[string]interface{}) (instances []*tdcpg.Instance, errRet error) {
 	var (
-		logId      = getLogId(ctx)
+		logId      = tccommon.GetLogId(ctx)
 		request    = tdcpg.NewDescribeClusterInstancesRequest()
 		indx       = 0
 		currNumber = 1

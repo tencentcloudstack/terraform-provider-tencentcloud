@@ -1,16 +1,19 @@
-package tencentcloud
+package tdcpg
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudTdcpgInstances() *schema.Resource {
+func DataSourceTencentCloudTdcpgInstances() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTdcpgInstancesRead,
 		Schema: map[string]*schema.Schema{
@@ -149,12 +152,12 @@ func dataSourceTencentCloudTdcpgInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tdcpg_instances.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_tdcpg_instances.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		clusterId *string
 	)
 
@@ -179,13 +182,13 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 		paramMap["instance_type"] = helper.String(v.(string))
 	}
 
-	tdcpgService := TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tdcpgService := TdcpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var instanceSet []*tdcpg.Instance
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := tdcpgService.DescribeTdcpgInstancesByFilter(ctx, clusterId, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		instanceSet = results
 		return nil
@@ -251,7 +254,7 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 			if instance.DBKernelVersion != nil {
 				instanceSetMap["db_kernel_version"] = instance.DBKernelVersion
 			}
-			ids = append(ids, *instance.ClusterId+FILED_SP+*instance.InstanceId)
+			ids = append(ids, *instance.ClusterId+tccommon.FILED_SP+*instance.InstanceId)
 			instanceList = append(instanceList, instanceSetMap)
 		}
 		d.SetId(helper.DataResourceIdsHash(ids))
@@ -264,7 +267,7 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), instanceList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), instanceList); e != nil {
 			return e
 		}
 	}

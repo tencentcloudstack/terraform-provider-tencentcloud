@@ -1,4 +1,4 @@
-package tencentcloud
+package tdcpg
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTdcpgInstance() *schema.Resource {
+func ResourceTencentCloudTdcpgInstance() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTdcpgInstanceRead,
 		Create: resourceTencentCloudTdcpgInstanceCreate,
@@ -56,16 +59,16 @@ func resourceTencentCloudTdcpgInstance() *schema.Resource {
 }
 
 func resourceTencentCloudTdcpgInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdcpg_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tdcpg_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = tdcpg.NewCreateClusterInstancesRequest()
 		response   *tdcpg.CreateClusterInstancesResponse
-		service    = TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = TdcpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		clusterId  string
 		instanceId string
 		dealNames  []*string
@@ -87,10 +90,10 @@ func resourceTencentCloudTdcpgInstanceCreate(d *schema.ResourceData, meta interf
 		request.InstanceName = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdcpgClient().CreateClusterInstances(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdcpgClient().CreateClusterInstances(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -104,12 +107,12 @@ func resourceTencentCloudTdcpgInstanceCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		dealNames = response.Response.DealNameSet
 		resources, e := service.DescribeTdcpgResourceByDealName(ctx, dealNames)
 
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s call api[%s] success, request body [%s], resources [%v]\n",
 				logId, "DescribeTdcpgResourceByDealName", request.ToJsonString(), resources)
@@ -124,29 +127,29 @@ func resourceTencentCloudTdcpgInstanceCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	d.SetId(clusterId + FILED_SP + instanceId)
+	d.SetId(clusterId + tccommon.FILED_SP + instanceId)
 	return resourceTencentCloudTdcpgInstanceRead(d, meta)
 }
 
 func resourceTencentCloudTdcpgInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdcpg_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tdcpg_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = TdcpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		instance   *tdcpg.Instance
-		ids        = strings.Split(d.Id(), FILED_SP)
+		ids        = strings.Split(d.Id(), tccommon.FILED_SP)
 		clusterId  = ids[0]
 		instanceId = ids[1]
 	)
 
 	// query the instance of cluster
-	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instances, e := service.DescribeTdcpgInstance(ctx, &clusterId, &instanceId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if instances != nil && instances.InstanceSet != nil {
@@ -193,15 +196,15 @@ func resourceTencentCloudTdcpgInstanceRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdcpg_instance.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tdcpg_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = TdcpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request    = tdcpg.NewModifyClusterInstancesSpecRequest()
-		ids        = strings.Split(d.Id(), FILED_SP)
+		ids        = strings.Split(d.Id(), tccommon.FILED_SP)
 		clusterId  = ids[0]
 		instanceId = ids[1]
 	)
@@ -221,10 +224,10 @@ func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interf
 		request.OperationTiming = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdcpgClient().ModifyClusterInstancesSpec(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdcpgClient().ModifyClusterInstancesSpec(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -238,10 +241,10 @@ func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interf
 	}
 
 	// check the instance value to make sure modify successfully.
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instances, e := service.DescribeTdcpgInstance(ctx, &clusterId, &instanceId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if instances != nil && instances.InstanceSet != nil {
@@ -266,14 +269,14 @@ func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudTdcpgInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdcpg_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tdcpg_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
-		ids        = strings.Split(d.Id(), FILED_SP)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = TdcpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		ids        = strings.Split(d.Id(), tccommon.FILED_SP)
 		clusterId  = ids[0]
 		instanceId = ids[1]
 	)

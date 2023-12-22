@@ -1,4 +1,4 @@
-package tencentcloud
+package tdcpg_test
 
 import (
 	"context"
@@ -6,6 +6,10 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctdcpg "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -20,10 +24,10 @@ func init() {
 
 // go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tdcpg_cluster
 func testSweepTdcpgCluster(r string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cli, _ := sharedClientForRegion(r)
-	tdcpgService := TdcpgService{client: cli.(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cli, _ := tcacctest.SharedClientForRegion(r)
+	tdcpgService := svctdcpg.NewTdcpgService(cli.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	clusters, err := tdcpgService.DescribeTdcpgClustersByFilter(ctx, nil)
 	if err != nil {
@@ -42,11 +46,11 @@ func testSweepTdcpgCluster(r string) error {
 		if status == "deleted" {
 			continue
 		}
-		if strings.HasPrefix(*delName, defaultTdcpgTestNamePrefix) {
-			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		if strings.HasPrefix(*delName, tcacctest.DefaultTdcpgTestNamePrefix) {
+			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				err := tdcpgService.DeleteTdcpgClusterById(ctx, delId)
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -62,22 +66,22 @@ func TestAccTencentCloudTdcpgClusterResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTdcpgClusterDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTdcpgCluster_postpaid, defaultTdcpgZone, defaultTdcpgTestNamePrefix),
+				Config: fmt.Sprintf(testAccTdcpgCluster_postpaid, tcacctest.DefaultTdcpgZone, tcacctest.DefaultTdcpgTestNamePrefix),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdcpgClusterExists("tencentcloud_tdcpg_cluster.cluster"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdcpg_cluster.cluster", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tdcpg_cluster.cluster", "zone", defaultTdcpgZone),
+					resource.TestCheckResourceAttr("tencentcloud_tdcpg_cluster.cluster", "zone", tcacctest.DefaultTdcpgZone),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_cluster.cluster", "cpu", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_cluster.cluster", "memory", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdcpg_cluster.cluster", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdcpg_cluster.cluster", "subnet_id"),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_cluster.cluster", "pay_mode", "POSTPAID_BY_HOUR"),
-					resource.TestMatchResourceAttr("tencentcloud_tdcpg_cluster.cluster", "cluster_name", regexp.MustCompile(defaultTdcpgTestNamePrefix)),
+					resource.TestMatchResourceAttr("tencentcloud_tdcpg_cluster.cluster", "cluster_name", regexp.MustCompile(tcacctest.DefaultTdcpgTestNamePrefix)),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_cluster.cluster", "db_version", "10.17"),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_cluster.cluster", "instance_count", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdcpg_cluster.cluster", "period"),
@@ -96,10 +100,10 @@ func TestAccTencentCloudTdcpgClusterResource_basic(t *testing.T) {
 }
 
 func testAccCheckTdcpgClusterDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tdcpgService := TdcpgService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	tdcpgService := svctdcpg.NewTdcpgService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_tdcpg_cluster" {
 			continue
@@ -123,8 +127,8 @@ func testAccCheckTdcpgClusterDestroy(s *terraform.State) error {
 
 func testAccCheckTdcpgClusterExists(re string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[re]
 		if !ok {
@@ -134,7 +138,7 @@ func testAccCheckTdcpgClusterExists(re string) resource.TestCheckFunc {
 			return fmt.Errorf("tdcpg cluster instance id is not set")
 		}
 
-		tdcpgService := TdcpgService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		tdcpgService := svctdcpg.NewTdcpgService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		ret, err := tdcpgService.DescribeTdcpgCluster(ctx, &rs.Primary.ID)
 		if err != nil {
 			return err

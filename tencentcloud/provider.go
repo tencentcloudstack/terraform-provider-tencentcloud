@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"encoding/json"
@@ -698,8 +699,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_parse_live_stream_process_notification":   mps.DataSourceTencentCloudMpsParseLiveStreamProcessNotification(),
 			"tencentcloud_mps_parse_notification":                       mps.DataSourceTencentCloudMpsParseNotification(),
 			"tencentcloud_mps_media_meta_data":                          mps.DataSourceTencentCloudMpsMediaMetaData(),
-			"tencentcloud_tdcpg_clusters":                               dataSourceTencentCloudTdcpgClusters(),
-			"tencentcloud_tdcpg_instances":                              dataSourceTencentCloudTdcpgInstances(),
+			"tencentcloud_tdcpg_clusters":                               tdcpg.DataSourceTencentCloudTdcpgClusters(),
+			"tencentcloud_tdcpg_instances":                              tdcpg.DataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                               cat.DataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                     cat.DataSourceTencentCloudCatNode(),
 			"tencentcloud_cat_metric_data":                              cat.DataSourceTencentCloudCatMetricData(),
@@ -1566,8 +1567,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_restart_instance":                            mariadb.ResourceTencentCloudMariadbRestartInstance(),
 			"tencentcloud_mariadb_renew_instance":                              mariadb.ResourceTencentCloudMariadbRenewInstance(),
 			"tencentcloud_mariadb_instance_config":                             mariadb.ResourceTencentCloudMariadbInstanceConfig(),
-			"tencentcloud_tdcpg_cluster":                                       resourceTencentCloudTdcpgCluster(),
-			"tencentcloud_tdcpg_instance":                                      resourceTencentCloudTdcpgInstance(),
+			"tencentcloud_tdcpg_cluster":                                       tdcpg.ResourceTencentCloudTdcpgCluster(),
+			"tencentcloud_tdcpg_instance":                                      tdcpg.ResourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                                       css.ResourceTencentCloudCssWatermark(),
 			"tencentcloud_css_watermark_rule_attachment":                       css.ResourceTencentCloudCssWatermarkRuleAttachment(),
 			"tencentcloud_css_pull_stream_task":                                css.ResourceTencentCloudCssPullStreamTask(),
