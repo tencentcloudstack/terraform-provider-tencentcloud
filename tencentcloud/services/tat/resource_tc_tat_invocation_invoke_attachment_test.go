@@ -1,7 +1,9 @@
-package tencentcloud
+package tat_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,20 +13,20 @@ func TestAccTencentCloudTatInvocationInvokeAttachmentResource_basic(t *testing.T
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTatInvocationInvokeAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "instance_id", defaultInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "instance_id", tcacctest.DefaultInstanceId),
 					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "working_directory", "/root"),
 					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "timeout", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "username", "root"),
 					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "output_cos_bucket_url", "https://BucketName-123454321.cos.ap-beijing.myqcloud.com"),
 					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "output_cos_key_prefix", "log"),
-					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "command_id", defaultCommandId),
+					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment", "command_id", tcacctest.DefaultCommandId),
 				),
 			},
 			{
@@ -38,11 +40,11 @@ func TestAccTencentCloudTatInvocationInvokeAttachmentResource_basic(t *testing.T
 
 const testAccTatInvocationInvokeAttachmentVar = `
 variable "instance_id" {
-  default = "` + defaultInstanceId + `"
+  default = "` + tcacctest.DefaultInstanceId + `"
 }
 
 variable "command_id" {
-	default = "` + defaultCommandId + `"
+	default = "` + tcacctest.DefaultCommandId + `"
 }
 `
 const testAccTatInvocationInvokeAttachment = testAccTatInvocationInvokeAttachmentVar + `

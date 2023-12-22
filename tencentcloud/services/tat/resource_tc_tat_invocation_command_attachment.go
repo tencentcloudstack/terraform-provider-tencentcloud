@@ -1,4 +1,4 @@
-package tencentcloud
+package tat
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
+func ResourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTatInvocationCommandAttachmentCreate,
 		Read:   resourceTencentCloudTatInvocationCommandAttachmentRead,
@@ -130,10 +133,10 @@ func resourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudTatInvocationCommandAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invocation_command_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invocation_command_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request      = tat.NewRunCommandRequest()
@@ -198,10 +201,10 @@ func resourceTencentCloudTatInvocationCommandAttachmentCreate(d *schema.Resource
 		request.OutputCOSKeyPrefix = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTatClient().RunCommand(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().RunCommand(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -214,22 +217,22 @@ func resourceTencentCloudTatInvocationCommandAttachmentCreate(d *schema.Resource
 	}
 
 	invocationId = *response.Response.InvocationId
-	d.SetId(invocationId + FILED_SP + instanceId)
+	d.SetId(invocationId + tccommon.FILED_SP + instanceId)
 
 	return resourceTencentCloudTatInvocationCommandAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudTatInvocationCommandAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invocation_command_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invocation_command_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -309,15 +312,15 @@ func resourceTencentCloudTatInvocationCommandAttachmentRead(d *schema.ResourceDa
 }
 
 func resourceTencentCloudTatInvocationCommandAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invocation_command_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invocation_command_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

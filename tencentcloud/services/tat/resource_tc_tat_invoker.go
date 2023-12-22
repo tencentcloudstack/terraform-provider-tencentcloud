@@ -1,17 +1,20 @@
-package tencentcloud
+package tat
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTatInvoker() *schema.Resource {
+func ResourceTencentCloudTatInvoker() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTatInvokerRead,
 		Create: resourceTencentCloudTatInvokerCreate,
@@ -114,10 +117,10 @@ func resourceTencentCloudTatInvoker() *schema.Resource {
 }
 
 func resourceTencentCloudTatInvokerCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = tat.NewCreateInvokerRequest()
@@ -168,10 +171,10 @@ func resourceTencentCloudTatInvokerCreate(d *schema.ResourceData, meta interface
 		request.ScheduleSettings = &scheduleSettings
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTatClient().CreateInvoker(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().CreateInvoker(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -192,13 +195,13 @@ func resourceTencentCloudTatInvokerCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTatInvokerRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	invokerId := d.Id()
 
@@ -272,10 +275,10 @@ func resourceTencentCloudTatInvokerRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudTatInvokerUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tat.NewModifyInvokerRequest()
 
@@ -340,10 +343,10 @@ func resourceTencentCloudTatInvokerUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTatClient().ModifyInvoker(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().ModifyInvoker(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -360,13 +363,13 @@ func resourceTencentCloudTatInvokerUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTatInvokerDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	invokerId := d.Id()
 

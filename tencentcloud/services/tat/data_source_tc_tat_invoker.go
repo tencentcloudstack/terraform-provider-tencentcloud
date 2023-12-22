@@ -1,16 +1,19 @@
-package tencentcloud
+package tat
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudTatInvoker() *schema.Resource {
+func DataSourceTencentCloudTatInvoker() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTatInvokerRead,
 		Schema: map[string]*schema.Schema{
@@ -129,11 +132,11 @@ func dataSourceTencentCloudTatInvoker() *schema.Resource {
 }
 
 func dataSourceTencentCloudTatInvokerRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tat_invoker.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_tat_invoker.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("invoker_id"); ok {
@@ -148,13 +151,13 @@ func dataSourceTencentCloudTatInvokerRead(d *schema.ResourceData, meta interface
 		paramMap["type"] = helper.String(v.(string))
 	}
 
-	tatService := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tatService := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var invokerSet []*tat.Invoker
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := tatService.DescribeTatInvokerByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		invokerSet = results
 		return nil
@@ -224,7 +227,7 @@ func dataSourceTencentCloudTatInvokerRead(d *schema.ResourceData, meta interface
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), invokerSetList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), invokerSetList); e != nil {
 			return e
 		}
 	}

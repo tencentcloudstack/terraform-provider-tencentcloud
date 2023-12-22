@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"encoding/json"
 	"fmt"
@@ -729,11 +730,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_record_line_list":                      dnspod.DataSourceTencentCloudDnspodRecordLineList(),
 			"tencentcloud_dnspod_record_list":                           dnspod.DataSourceTencentCloudDnspodRecordList(),
 			"tencentcloud_dnspod_record_type":                           dnspod.DataSourceTencentCloudDnspodRecordType(),
-			"tencentcloud_tat_command":                                  dataSourceTencentCloudTatCommand(),
-			"tencentcloud_tat_invoker":                                  dataSourceTencentCloudTatInvoker(),
-			"tencentcloud_tat_invoker_records":                          dataSourceTencentCloudTatInvokerRecords(),
-			"tencentcloud_tat_agent":                                    dataSourceTencentCloudTatAgent(),
-			"tencentcloud_tat_invocation_task":                          dataSourceTencentCloudTatInvocationTask(),
+			"tencentcloud_tat_command":                                  tat.DataSourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                                  tat.DataSourceTencentCloudTatInvoker(),
+			"tencentcloud_tat_invoker_records":                          tat.DataSourceTencentCloudTatInvokerRecords(),
+			"tencentcloud_tat_agent":                                    tat.DataSourceTencentCloudTatAgent(),
+			"tencentcloud_tat_invocation_task":                          tat.DataSourceTencentCloudTatInvocationTask(),
 			"tencentcloud_dbbrain_sql_filters":                          dbbrain.DataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":      dbbrain.DataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dbbrain_diag_event":                           dbbrain.DataSourceTencentCloudDbbrainDiagEvent(),
@@ -1596,11 +1597,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_pts_cron_job_restart":                                pts.ResourceTencentCloudPtsCronJobRestart(),
 			"tencentcloud_pts_job_abort":                                       pts.ResourceTencentCloudPtsJobAbort(),
 			"tencentcloud_pts_cron_job_abort":                                  pts.ResourceTencentCloudPtsCronJobAbort(),
-			"tencentcloud_tat_command":                                         resourceTencentCloudTatCommand(),
-			"tencentcloud_tat_invoker":                                         resourceTencentCloudTatInvoker(),
-			"tencentcloud_tat_invoker_config":                                  resourceTencentCloudTatInvokerConfig(),
-			"tencentcloud_tat_invocation_invoke_attachment":                    resourceTencentCloudTatInvocationInvokeAttachment(),
-			"tencentcloud_tat_invocation_command_attachment":                   resourceTencentCloudTatInvocationCommandAttachment(),
+			"tencentcloud_tat_command":                                         tat.ResourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                                         tat.ResourceTencentCloudTatInvoker(),
+			"tencentcloud_tat_invoker_config":                                  tat.ResourceTencentCloudTatInvokerConfig(),
+			"tencentcloud_tat_invocation_invoke_attachment":                    tat.ResourceTencentCloudTatInvocationInvokeAttachment(),
+			"tencentcloud_tat_invocation_command_attachment":                   tat.ResourceTencentCloudTatInvocationCommandAttachment(),
 			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
 			"tencentcloud_organization_org_identity":                           resourceTencentCloudOrganizationOrgIdentity(),

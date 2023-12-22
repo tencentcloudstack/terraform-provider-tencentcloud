@@ -1,17 +1,20 @@
-package tencentcloud
+package tat
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTatCommand() *schema.Resource {
+func ResourceTencentCloudTatCommand() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTatCommandRead,
 		Create: resourceTencentCloudTatCommandCreate,
@@ -135,10 +138,10 @@ func resourceTencentCloudTatCommand() *schema.Resource {
 }
 
 func resourceTencentCloudTatCommandCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_command.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_command.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = tat.NewCreateCommandRequest()
@@ -151,7 +154,7 @@ func resourceTencentCloudTatCommandCreate(d *schema.ResourceData, meta interface
 	}
 
 	if v, ok := d.GetOk("content"); ok {
-		request.Content = helper.String(StringToBase64(v.(string)))
+		request.Content = helper.String(tccommon.StringToBase64(v.(string)))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
@@ -205,10 +208,10 @@ func resourceTencentCloudTatCommandCreate(d *schema.ResourceData, meta interface
 		request.OutputCOSKeyPrefix = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTatClient().CreateCommand(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().CreateCommand(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -229,13 +232,13 @@ func resourceTencentCloudTatCommandCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTatCommandRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_command.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_command.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	commandId := d.Id()
 
@@ -255,7 +258,7 @@ func resourceTencentCloudTatCommandRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if command.Content != nil {
-		content, err := Base64ToString(*command.Content)
+		content, err := tccommon.Base64ToString(*command.Content)
 		if err != nil {
 			return fmt.Errorf("`Content` [%v] base64 to string failed, err: %v.", *command.Content, err)
 		}
@@ -334,10 +337,10 @@ func resourceTencentCloudTatCommandRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudTatCommandUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_command.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_command.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tat.NewModifyCommandRequest()
 
@@ -352,7 +355,7 @@ func resourceTencentCloudTatCommandUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("content") {
 		if v, ok := d.GetOk("content"); ok {
-			request.Content = helper.String(StringToBase64(v.(string)))
+			request.Content = helper.String(tccommon.StringToBase64(v.(string)))
 		}
 	}
 
@@ -412,10 +415,10 @@ func resourceTencentCloudTatCommandUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTatClient().ModifyCommand(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().ModifyCommand(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -432,13 +435,13 @@ func resourceTencentCloudTatCommandUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTatCommandDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_command.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_command.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	commandId := d.Id()
 

@@ -1,15 +1,17 @@
-package tencentcloud
+package tat
 
 import (
 	"context"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 )
 
-func resourceTencentCloudTatInvokerConfig() *schema.Resource {
+func ResourceTencentCloudTatInvokerConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTatInvokerConfigCreate,
 		Read:   resourceTencentCloudTatInvokerConfigRead,
@@ -28,7 +30,7 @@ func resourceTencentCloudTatInvokerConfig() *schema.Resource {
 			"invoker_status": {
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue([]string{"on", "off"}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"on", "off"}),
 				Description:  "Invoker on and off state, Values: `on`, `off`.",
 			},
 		},
@@ -36,8 +38,8 @@ func resourceTencentCloudTatInvokerConfig() *schema.Resource {
 }
 
 func resourceTencentCloudTatInvokerConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
 		invokerId string
@@ -52,14 +54,14 @@ func resourceTencentCloudTatInvokerConfigCreate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudTatInvokerConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	invokerId := d.Id()
 
@@ -88,10 +90,10 @@ func resourceTencentCloudTatInvokerConfigRead(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudTatInvokerConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		disableInvokerRequest = tat.NewDisableInvokerRequest()
@@ -104,10 +106,10 @@ func resourceTencentCloudTatInvokerConfigUpdate(d *schema.ResourceData, meta int
 		status := v.(string)
 		if status == "on" {
 			enableInvokerRequest.InvokerId = &invokerId
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseTatClient().EnableInvoker(enableInvokerRequest)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().EnableInvoker(enableInvokerRequest)
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, enableInvokerRequest.GetAction(), enableInvokerRequest.ToJsonString(), result.ToJsonString())
 				}
@@ -115,10 +117,10 @@ func resourceTencentCloudTatInvokerConfigUpdate(d *schema.ResourceData, meta int
 			})
 		} else {
 			disableInvokerRequest.InvokerId = &invokerId
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseTatClient().DisableInvoker(disableInvokerRequest)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().DisableInvoker(disableInvokerRequest)
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, disableInvokerRequest.GetAction(), disableInvokerRequest.ToJsonString(), result.ToJsonString())
 				}
@@ -136,8 +138,8 @@ func resourceTencentCloudTatInvokerConfigUpdate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudTatInvokerConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tat_invoker_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tat_invoker_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

@@ -1,14 +1,21 @@
-package tencentcloud
+package tat
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewTatService(client *connectivity.TencentCloudClient) TatService {
+	return TatService{client: client}
+}
 
 type TatService struct {
 	client *connectivity.TencentCloudClient
@@ -16,7 +23,7 @@ type TatService struct {
 
 func (me *TatService) DescribeTatCommand(ctx context.Context, commandId string) (command *tat.Command, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tat.NewDescribeCommandsRequest()
 	)
 
@@ -74,7 +81,7 @@ func (me *TatService) DescribeTatCommand(ctx context.Context, commandId string) 
 }
 
 func (me *TatService) DeleteTatCommandById(ctx context.Context, commandId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tat.NewDeleteCommandRequest()
 
@@ -101,7 +108,7 @@ func (me *TatService) DeleteTatCommandById(ctx context.Context, commandId string
 
 func (me *TatService) DescribeTatInvoker(ctx context.Context, invokerId string) (invoker *tat.Invoker, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tat.NewDescribeInvokersRequest()
 	)
 
@@ -159,7 +166,7 @@ func (me *TatService) DescribeTatInvoker(ctx context.Context, invokerId string) 
 }
 
 func (me *TatService) DeleteTatInvokerById(ctx context.Context, invokerId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tat.NewDeleteInvokerRequest()
 
@@ -186,7 +193,7 @@ func (me *TatService) DeleteTatInvokerById(ctx context.Context, invokerId string
 
 func (me *TatService) DescribeTatCommandByFilter(ctx context.Context, param map[string]interface{}) (command []*tat.Command, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tat.NewDescribeCommandsRequest()
 	)
 
@@ -272,7 +279,7 @@ func (me *TatService) DescribeTatCommandByFilter(ctx context.Context, param map[
 
 func (me *TatService) DescribeTatInvokerByFilter(ctx context.Context, param map[string]interface{}) (invoker []*tat.Invoker, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tat.NewDescribeInvokersRequest()
 	)
 
@@ -347,7 +354,7 @@ func (me *TatService) DescribeTatInvokerByFilter(ctx context.Context, param map[
 
 func (me *TatService) DescribeTatAgentByFilter(ctx context.Context, param map[string]interface{}) (agent []*tat.AutomationAgentInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tat.NewDescribeAutomationAgentStatusRequest()
 	)
 
@@ -398,7 +405,7 @@ func (me *TatService) DescribeTatAgentByFilter(ctx context.Context, param map[st
 
 func (me *TatService) DescribeTatInvokerRecordsByFilter(ctx context.Context, param map[string]interface{}) (invokerRecords []*tat.InvokerRecord, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tat.NewDescribeInvokerRecordsRequest()
 	)
 
@@ -445,7 +452,7 @@ func (me *TatService) DescribeTatInvokerRecordsByFilter(ctx context.Context, par
 }
 
 func (me *TatService) DescribeTatInvokerConfigById(ctx context.Context, invokerId string) (invokerAttachment *tat.Invoker, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tat.NewDescribeInvokersRequest()
 	request.InvokerIds = []*string{&invokerId}
@@ -492,7 +499,7 @@ func (me *TatService) DescribeTatInvokerConfigById(ctx context.Context, invokerI
 }
 
 func (me *TatService) DescribeTatInvocationById(ctx context.Context, invocationId string) (invocation *tat.Invocation, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tat.NewDescribeInvocationsRequest()
 	request.InvocationIds = []*string{&invocationId}
@@ -539,7 +546,7 @@ func (me *TatService) DescribeTatInvocationById(ctx context.Context, invocationI
 }
 
 func (me *TatService) DeleteTatInvocationById(ctx context.Context, invocationId, instanceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tat.NewCancelInvocationRequest()
 	request.InvocationId = &invocationId
@@ -565,7 +572,7 @@ func (me *TatService) DeleteTatInvocationById(ctx context.Context, invocationId,
 
 func (me *TatService) DescribeTatInvocationTaskByFilter(ctx context.Context, param map[string]interface{}) (invocationTaskDatasource []*tat.InvocationTask, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tat.NewDescribeInvocationTasksRequest()
 	)
 

@@ -1,16 +1,19 @@
-package tencentcloud
+package tat
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudTatCommand() *schema.Resource {
+func DataSourceTencentCloudTatCommand() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTatCommandRead,
 		Schema: map[string]*schema.Schema{
@@ -157,11 +160,11 @@ func dataSourceTencentCloudTatCommand() *schema.Resource {
 }
 
 func dataSourceTencentCloudTatCommandRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tat_command.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_tat_command.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("command_id"); ok {
@@ -180,13 +183,13 @@ func dataSourceTencentCloudTatCommandRead(d *schema.ResourceData, meta interface
 		paramMap["created_by"] = helper.String(v.(string))
 	}
 
-	tatService := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tatService := TatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var commandSet []*tat.Command
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := tatService.DescribeTatCommandByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		commandSet = results
 		return nil
@@ -211,7 +214,7 @@ func dataSourceTencentCloudTatCommandRead(d *schema.ResourceData, meta interface
 				commandSetMap["description"] = commandSet.Description
 			}
 			if commandSet.Content != nil {
-				content, err := Base64ToString(*commandSet.Content)
+				content, err := tccommon.Base64ToString(*commandSet.Content)
 				if err == nil {
 					commandSetMap["content"] = content
 				} else {
@@ -280,7 +283,7 @@ func dataSourceTencentCloudTatCommandRead(d *schema.ResourceData, meta interface
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), commandSetList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), commandSetList); e != nil {
 			return e
 		}
 	}

@@ -1,7 +1,9 @@
-package tencentcloud
+package tat_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,14 +13,14 @@ func TestAccTencentCloudTatInvocationTaskDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTatInvocationTaskDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tat_invocation_task.invocation_task"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_tat_invocation_task.invocation_task"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tat_invocation_task.invocation_task", "invocation_task_set.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tat_invocation_task.invocation_task", "invocation_task_set.0.command_document.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tat_invocation_task.invocation_task", "invocation_task_set.0.command_document.0.command_type"),

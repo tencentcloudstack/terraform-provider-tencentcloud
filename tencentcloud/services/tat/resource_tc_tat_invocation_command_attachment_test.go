@@ -1,7 +1,9 @@
-package tencentcloud
+package tat_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,15 +13,15 @@ func TestAccTencentCloudTatInvocationCommandAttachmentResource_basic(t *testing.
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTatInvocationCommandAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tat_invocation_command_attachment.invocation_command_attachment", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_command_attachment.invocation_command_attachment", "instance_id", defaultInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_command_attachment.invocation_command_attachment", "instance_id", tcacctest.DefaultInstanceId),
 					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_command_attachment.invocation_command_attachment", "working_directory", "/root"),
 					resource.TestCheckResourceAttr("tencentcloud_tat_invocation_command_attachment.invocation_command_attachment", "timeout", "100"),
 					// resource.TestCheckResourceAttr("tencentcloud_tat_invocation_command_attachment.invocation_command_attachment", "description", "shell test"),
@@ -35,7 +37,7 @@ func TestAccTencentCloudTatInvocationCommandAttachmentResource_basic(t *testing.
 
 const testAccTatInvocationCommandAttachmentVar = `
 variable "instance_id" {
-  default = "` + defaultInstanceId + `"
+  default = "` + tcacctest.DefaultInstanceId + `"
 }
 `
 
