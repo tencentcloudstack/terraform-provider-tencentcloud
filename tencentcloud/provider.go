@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -535,7 +536,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_all_namespaces":                 monitor.DataSourceTencentCloudMonitorAlarmAllNamespaces(),
 			"tencentcloud_monitor_alarm_monitor_type":                   monitor.DataSourceTencentCloudMonitorAlarmMonitorType(),
 			"tencentcloud_monitor_statistic_data":                       dataSourceTencentCloudMonitorStatisticData(),
-			"tencentcloud_monitor_tmp_regions":                          dataSourceTencentCloudMonitorTmpRegions(),
+			"tencentcloud_monitor_tmp_regions":                          tmp.DataSourceTencentCloudMonitorTmpRegions(),
 			"tencentcloud_postgresql_instances":                         postgresql.DataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         postgresql.DataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             postgresql.DataSourceTencentCloudPostgresqlXlogs(),
@@ -1274,21 +1275,21 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_policy":                                monitor.ResourceTencentCloudMonitorAlarmPolicy(),
 			"tencentcloud_monitor_alarm_notice":                                monitor.ResourceTencentCloudMonitorAlarmNotice(),
 			"tencentcloud_monitor_alarm_policy_set_default":                    monitor.ResourceTencentCloudMonitorAlarmPolicySetDefault(),
-			"tencentcloud_monitor_tmp_instance":                                resourceTencentCloudMonitorTmpInstance(),
-			"tencentcloud_monitor_tmp_cvm_agent":                               resourceTencentCloudMonitorTmpCvmAgent(),
-			"tencentcloud_monitor_tmp_scrape_job":                              resourceTencentCloudMonitorTmpScrapeJob(),
-			"tencentcloud_monitor_tmp_exporter_integration":                    resourceTencentCloudMonitorTmpExporterIntegration(),
-			"tencentcloud_monitor_tmp_alert_rule":                              resourceTencentCloudMonitorTmpAlertRule(),
-			"tencentcloud_monitor_tmp_recording_rule":                          resourceTencentCloudMonitorTmpRecordingRule(),
-			"tencentcloud_monitor_tmp_tke_template":                            resourceTencentCloudMonitorTmpTkeTemplate(),
-			"tencentcloud_monitor_tmp_tke_template_attachment":                 resourceTencentCloudMonitorTmpTkeTemplateAttachment(),
-			"tencentcloud_monitor_tmp_tke_alert_policy":                        resourceTencentCloudMonitorTmpTkeAlertPolicy(),
-			"tencentcloud_monitor_tmp_tke_basic_config":                        resourceTencentCloudMonitorTmpTkeBasicConfig(),
-			"tencentcloud_monitor_tmp_tke_cluster_agent":                       resourceTencentCloudMonitorTmpTkeClusterAgent(),
-			"tencentcloud_monitor_tmp_tke_config":                              resourceTencentCloudMonitorTmpTkeConfig(),
-			"tencentcloud_monitor_tmp_tke_record_rule_yaml":                    resourceTencentCloudMonitorTmpTkeRecordRuleYaml(),
-			"tencentcloud_monitor_tmp_tke_global_notification":                 resourceTencentCloudMonitorTmpTkeGlobalNotification(),
-			"tencentcloud_monitor_tmp_manage_grafana_attachment":               resourceTencentCloudMonitorTmpManageGrafanaAttachment(),
+			"tencentcloud_monitor_tmp_instance":                                tmp.ResourceTencentCloudMonitorTmpInstance(),
+			"tencentcloud_monitor_tmp_cvm_agent":                               tmp.ResourceTencentCloudMonitorTmpCvmAgent(),
+			"tencentcloud_monitor_tmp_scrape_job":                              tmp.ResourceTencentCloudMonitorTmpScrapeJob(),
+			"tencentcloud_monitor_tmp_exporter_integration":                    tmp.ResourceTencentCloudMonitorTmpExporterIntegration(),
+			"tencentcloud_monitor_tmp_alert_rule":                              tmp.ResourceTencentCloudMonitorTmpAlertRule(),
+			"tencentcloud_monitor_tmp_recording_rule":                          tmp.ResourceTencentCloudMonitorTmpRecordingRule(),
+			"tencentcloud_monitor_tmp_tke_template":                            tmp.ResourceTencentCloudMonitorTmpTkeTemplate(),
+			"tencentcloud_monitor_tmp_tke_template_attachment":                 tmp.ResourceTencentCloudMonitorTmpTkeTemplateAttachment(),
+			"tencentcloud_monitor_tmp_tke_alert_policy":                        tmp.ResourceTencentCloudMonitorTmpTkeAlertPolicy(),
+			"tencentcloud_monitor_tmp_tke_basic_config":                        tmp.ResourceTencentCloudMonitorTmpTkeBasicConfig(),
+			"tencentcloud_monitor_tmp_tke_cluster_agent":                       tmp.ResourceTencentCloudMonitorTmpTkeClusterAgent(),
+			"tencentcloud_monitor_tmp_tke_config":                              tmp.ResourceTencentCloudMonitorTmpTkeConfig(),
+			"tencentcloud_monitor_tmp_tke_record_rule_yaml":                    tmp.ResourceTencentCloudMonitorTmpTkeRecordRuleYaml(),
+			"tencentcloud_monitor_tmp_tke_global_notification":                 tmp.ResourceTencentCloudMonitorTmpTkeGlobalNotification(),
+			"tencentcloud_monitor_tmp_manage_grafana_attachment":               tmp.ResourceTencentCloudMonitorTmpManageGrafanaAttachment(),
 			"tencentcloud_monitor_grafana_instance":                            tcmg.ResourceTencentCloudMonitorGrafanaInstance(),
 			"tencentcloud_monitor_grafana_integration":                         tcmg.ResourceTencentCloudMonitorGrafanaIntegration(),
 			"tencentcloud_monitor_grafana_notification_channel":                tcmg.ResourceTencentCloudMonitorGrafanaNotificationChannel(),

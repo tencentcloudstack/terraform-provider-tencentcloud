@@ -1201,7 +1201,7 @@ func (me *MonitorService) DescribeTkeTmpConfigById(ctx context.Context, configId
 		}
 	}()
 
-	ids, err := me.parseConfigId(configId)
+	ids, err := me.ParseConfigId(configId)
 	if err != nil {
 		errRet = err
 		return
@@ -1241,7 +1241,7 @@ func (me *MonitorService) DeleteTkeTmpConfigByName(ctx context.Context, configId
 		}
 	}()
 
-	ids, err := me.parseConfigId(configId)
+	ids, err := me.ParseConfigId(configId)
 	if err != nil {
 		errRet = err
 		return
@@ -1275,7 +1275,7 @@ func (me *MonitorService) DeleteTkeTmpConfigByName(ctx context.Context, configId
 	return
 }
 
-func (me *MonitorService) parseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
+func (me *MonitorService) ParseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
 	idSplit := strings.Split(configId, tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return nil, fmt.Errorf("id is broken,%s", configId)
