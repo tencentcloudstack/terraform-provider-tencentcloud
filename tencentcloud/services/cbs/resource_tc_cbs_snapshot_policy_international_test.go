@@ -1,4 +1,4 @@
-package tencentcloud
+package cbs_test
 
 import (
 	"context"
@@ -7,14 +7,17 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	localcbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 )
 
-func TestAccTencentCloudInternationalCbsSnapshotPolicy(t *testing.T) {
+func TestAccTencentCloudInternationalCbsResource_snapshotPolicy(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckInternationalCbsSnapshotPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -40,12 +43,10 @@ func TestAccTencentCloudInternationalCbsSnapshotPolicy(t *testing.T) {
 }
 
 func testAccCheckInternationalCbsSnapshotPolicyDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	cbsService := CbsService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	cbsService := localcbs.NewCbsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_cbs_snapshot_policy" {
 			continue
@@ -64,8 +65,8 @@ func testAccCheckInternationalCbsSnapshotPolicyDestroy(s *terraform.State) error
 
 func testAccCheckInternationalSnapshotPolicyExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -74,9 +75,7 @@ func testAccCheckInternationalSnapshotPolicyExists(n string) resource.TestCheckF
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("cbs snapshot policy id is not set")
 		}
-		cbsService := CbsService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cbsService := localcbs.NewCbsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		policy, err := cbsService.DescribeSnapshotPolicyById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err

@@ -1,16 +1,17 @@
-package tencentcloud
+package ckafka_test
 
 import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudInternationalCkafkaInstanceResource_postpaid(t *testing.T) {
+func TestAccTencentCloudInternationalCkafkaResource_instance(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccTencentCloudKafkaInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -48,7 +49,7 @@ func TestAccTencentCloudInternationalCkafkaInstanceResource_postpaid(t *testing.
 	})
 }
 
-const testAccInternationalKafkaInstancePostpaid = defaultKafkaVariable + `
+const testAccInternationalKafkaInstancePostpaid = tcacctest.DefaultKafkaVariable + `
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
   zone_id            = 100007
@@ -86,7 +87,7 @@ resource "tencentcloud_ckafka_topic" "foo" {
 }
 `
 
-const testAccInternationalKafkaInstanceUpdatePostpaid = defaultKafkaVariable + `
+const testAccInternationalKafkaInstanceUpdatePostpaid = tcacctest.DefaultKafkaVariable + `
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
   zone_id            = 100007
@@ -127,7 +128,7 @@ resource "tencentcloud_ckafka_topic" "foo" {
 }
 `
 
-const testAccInternationalKafkaInstanceUpdatePostpaidDiskSize = defaultKafkaVariable + `
+const testAccInternationalKafkaInstanceUpdatePostpaidDiskSize = tcacctest.DefaultKafkaVariable + `
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
   zone_id            = 100007

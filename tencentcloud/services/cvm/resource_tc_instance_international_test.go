@@ -1,9 +1,10 @@
-package tencentcloud
+package cvm_test
 
 import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
 func TestAccTencentCloudInstanceResource_basic(t *testing.T) {
@@ -11,15 +12,15 @@ func TestAccTencentCloudInstanceResource_basic(t *testing.T) {
 
 	id := "tencentcloud_instance.cvm_basic"
 	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheck(t) },
+		PreCheck:      func() { tcacctest.AccPreCheck(t) },
 		IDRefreshName: id,
-		Providers:     testAccProviders,
+		Providers:     tcacctest.AccProviders,
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccInternationalTencentCloudInstanceBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID(id),
+					tcacctest.AccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttrSet(id, "private_ip"),
@@ -37,7 +38,7 @@ func TestAccTencentCloudInstanceResource_basic(t *testing.T) {
 	})
 }
 
-const testAccInternationalTencentCloudInstanceBasic = defaultInstanceVariable + `
+const testAccInternationalTencentCloudInstanceBasic = tcacctest.DefaultInstanceVariable + `
 resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_international_zone
