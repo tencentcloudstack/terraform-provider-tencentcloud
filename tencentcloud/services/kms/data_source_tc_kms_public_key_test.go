@@ -1,9 +1,10 @@
 package kms_test
 
 import (
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -37,7 +38,7 @@ data "tencentcloud_kms_public_key" "example" {
 resource "tencentcloud_kms_key" "example" {
   alias                         = "%s"
   description                   = "example of kms key"
-  key_usage                     = "ASYMMETRIC_tcacctest.DECRYPT_RSA_2048"
+  key_usage                     = "ASYMMETRIC_DECRYPT_RSA_2048"
   is_enabled                    = true
 }
 `

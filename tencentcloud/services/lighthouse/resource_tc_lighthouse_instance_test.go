@@ -65,7 +65,7 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 			{
 				Config: testAccLighthouseInstance_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_lighthouse_instance.instance", "renew_flag", "NOTIFY_tcacctest.AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr("tencentcloud_lighthouse_instance.instance", "renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
 		},
@@ -85,7 +85,7 @@ resource "tencentcloud_lighthouse_instance" "instance" {
   blueprint_id = "lhbp-f1lkcd41"
 
   period     = 1
-  renew_flag = "NOTIFY_tcacctest.AND_AUTO_RENEW"
+  renew_flag = "NOTIFY_AND_AUTO_RENEW"
 
   instance_name = "terraform"
   zone          = "ap-guangzhou-3"
@@ -161,7 +161,7 @@ resource "tencentcloud_lighthouse_instance" "instance" {
   blueprint_id = "lhbp-f1lkcd41"
 
   period     = 1
-  renew_flag = "NOTIFY_tcacctest.AND_MANUAL_RENEW"
+  renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 
   instance_name = "terraform"
   zone          = "ap-guangzhou-3"

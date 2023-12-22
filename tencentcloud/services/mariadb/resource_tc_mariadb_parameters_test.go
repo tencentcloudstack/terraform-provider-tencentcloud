@@ -254,7 +254,7 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
     }
     params {
         param = "sql_mode"
-        value = "NO_tcacctest.ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES"
+        value = "NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES"
     }
     params {
         param = "sql_require_primary_key"

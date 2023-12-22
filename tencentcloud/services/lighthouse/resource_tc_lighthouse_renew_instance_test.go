@@ -27,7 +27,7 @@ resource "tencentcloud_lighthouse_renew_instance" "renew_instance" {
   instance_id = tencentcloud_lighthouse_instance.instance.id
   instance_charge_prepaid {
 	period = 1
-	renew_flag = "NOTIFY_tcacctest.AND_MANUAL_RENEW"
+	renew_flag = "NOTIFY_AND_MANUAL_RENEW"
   }
   renew_data_disk = true
   auto_voucher = false

@@ -36,7 +36,7 @@ resource "tencentcloud_lighthouse_disk" "disk" {
   disk_type = "CLOUD_SSD"
   disk_charge_prepaid {
 	period = 1
-	renew_flag = "NOTIFY_tcacctest.AND_AUTO_RENEW"
+	renew_flag = "NOTIFY_AND_AUTO_RENEW"
 	time_unit = "m"
 
   }

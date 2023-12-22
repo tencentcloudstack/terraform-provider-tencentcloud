@@ -114,7 +114,7 @@ func TestAccKmsKey_asymmetricKey(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
-					resource.TestCheckResourceAttr(resourceName, "key_usage", "ASYMMETRIC_tcacctest.DECRYPT_RSA_2048"),
+					resource.TestCheckResourceAttr(resourceName, "key_usage", "ASYMMETRIC_DECRYPT_RSA_2048"),
 				),
 			},
 		},
@@ -187,7 +187,7 @@ func testAccKmsKey_asymmetric(rName string) string {
 resource "tencentcloud_kms_key" "test" {
 	alias = %[1]q
 	description = %[1]q
-	key_usage = "ASYMMETRIC_tcacctest.DECRYPT_RSA_2048"
+	key_usage = "ASYMMETRIC_DECRYPT_RSA_2048"
   	is_enabled = false
 }
 `, rName)
