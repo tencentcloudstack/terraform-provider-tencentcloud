@@ -1,6 +1,9 @@
-package tencentcloud
+package tag_test
 
 import (
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"testing"
@@ -14,9 +17,9 @@ func TestAccTencentCloudTagResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTagDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -40,9 +43,9 @@ func testAccCheckTagDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_tag" {
 			continue
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := svctag.NewTagService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		tags, err := service.DescribeTagResourceById(ctx, rs.Primary.Attributes["tag_key"], rs.Primary.Attributes["tag_value"])
 		if err != nil {
@@ -58,15 +61,15 @@ func testAccCheckTagDestroy(s *terraform.State) error {
 
 func testAccCheckTagExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctag.NewTagService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		tags, err := service.DescribeTagResourceById(ctx, rs.Primary.Attributes["tag_key"], rs.Primary.Attributes["tag_value"])
 		if err != nil {
 			return err

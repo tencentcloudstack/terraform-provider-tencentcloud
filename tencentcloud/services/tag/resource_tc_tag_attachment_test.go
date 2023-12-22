@@ -1,6 +1,9 @@
-package tencentcloud
+package tag_test
 
 import (
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"testing"
@@ -14,9 +17,9 @@ func TestAccTencentCloudTagAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTagAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -40,9 +43,9 @@ func testAccCheckTagAttachmentDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_tag_attachment" {
 			continue
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := svctag.NewTagService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		tags, err := service.DescribeTagTagAttachmentById(ctx, rs.Primary.Attributes["tag_key"],
 			rs.Primary.Attributes["tag_value"], rs.Primary.Attributes["resource"])
@@ -59,15 +62,15 @@ func testAccCheckTagAttachmentDestroy(s *terraform.State) error {
 
 func testAccCheckTagAttachmentExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctag.NewTagService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		res, err := service.DescribeTagTagAttachmentById(ctx, rs.Primary.Attributes["tag_key"],
 			rs.Primary.Attributes["tag_value"], rs.Primary.Attributes["resource"])
 		if err != nil {
@@ -81,7 +84,7 @@ func testAccCheckTagAttachmentExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTagResourceTag = defaultCvmModificationVariable + `
+const testAccTagResourceTag = tcacctest.DefaultCvmModificationVariable + `
 data "tencentcloud_user_info" "info" {}
 
 locals {

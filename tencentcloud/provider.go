@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -1011,8 +1012,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_resource_config":                             oceanus.ResourceTencentCloudOceanusResourceConfig(),
 			"tencentcloud_oceanus_work_space":                                  oceanus.ResourceTencentCloudOceanusWorkSpace(),
 			"tencentcloud_oceanus_folder":                                      oceanus.ResourceTencentCloudOceanusFolder(),
-			"tencentcloud_tag":                                                 resourceTencentCloudTag(),
-			"tencentcloud_tag_attachment":                                      resourceTencentCloudTagAttachment(),
+			"tencentcloud_tag":                                                 tag.ResourceTencentCloudTag(),
+			"tencentcloud_tag_attachment":                                      tag.ResourceTencentCloudTagAttachment(),
 			"tencentcloud_eip":                                                 cvm.ResourceTencentCloudEip(),
 			"tencentcloud_eip_association":                                     cvm.ResourceTencentCloudEipAssociation(),
 			"tencentcloud_eip_address_transform":                               cvm.ResourceTencentCloudEipAddressTransform(),
