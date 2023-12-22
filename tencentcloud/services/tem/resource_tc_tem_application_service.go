@@ -1,4 +1,4 @@
-package tencentcloud
+package tem
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTemApplicationService() *schema.Resource {
+func ResourceTencentCloudTemApplicationService() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTemApplicationServiceCreate,
 		Read:   resourceTencentCloudTemApplicationServiceRead,
@@ -45,7 +48,7 @@ func resourceTencentCloudTemApplicationService() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "application service type: EXTERNAL | VPC | CLUSTER.",
-							ValidateFunc: validateAllowedStringValue([]string{"EXTERNAL", "VPC", "CLUSTER"}),
+							ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"EXTERNAL", "VPC", "CLUSTER"}),
 						},
 						"service_name": {
 							Type:        schema.TypeString,
@@ -99,10 +102,10 @@ func resourceTencentCloudTemApplicationService() *schema.Resource {
 }
 
 func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_application_service.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_application_service.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request       = tem.NewCreateApplicationServiceRequest()
@@ -160,10 +163,10 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		request.Service = &servicePortMapping
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().CreateApplicationService(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().CreateApplicationService(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -174,12 +177,12 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		service, errRet := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *service.Result.AllIpDone {
 			return nil
@@ -190,22 +193,22 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + applicationId + FILED_SP + serviceName)
+	d.SetId(environmentId + tccommon.FILED_SP + applicationId + tccommon.FILED_SP + serviceName)
 
 	return resourceTencentCloudTemApplicationServiceRead(d, meta)
 }
 
 func resourceTencentCloudTemApplicationServiceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_application_service.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_application_service.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -294,14 +297,14 @@ func resourceTencentCloudTemApplicationServiceRead(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_application_service.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_application_service.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tem.NewModifyApplicationServiceRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -351,10 +354,10 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().ModifyApplicationService(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().ModifyApplicationService(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -365,12 +368,12 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 		return err
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		service, errRet := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *service.Result.AllIpDone {
 			return nil
@@ -385,14 +388,14 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudTemApplicationServiceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_application_service.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_application_service.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

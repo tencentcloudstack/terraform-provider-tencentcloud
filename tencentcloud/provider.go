@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
@@ -1503,14 +1504,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_data_transform":                                  cls.ResourceTencentCloudClsDataTransform(),
 			"tencentcloud_lighthouse_instance":                                 lighthouse.ResourceTencentCloudLighthouseInstance(),
 			"tencentcloud_lighthouse_firewall_template":                        lighthouse.ResourceTencentCloudLighthouseFirewallTemplate(),
-			"tencentcloud_tem_environment":                                     resourceTencentCloudTemEnvironment(),
-			"tencentcloud_tem_application":                                     resourceTencentCloudTemApplication(),
-			"tencentcloud_tem_workload":                                        resourceTencentCloudTemWorkload(),
-			"tencentcloud_tem_app_config":                                      resourceTencentCloudTemAppConfig(),
-			"tencentcloud_tem_log_config":                                      resourceTencentCloudTemLogConfig(),
-			"tencentcloud_tem_scale_rule":                                      resourceTencentCloudTemScaleRule(),
-			"tencentcloud_tem_gateway":                                         resourceTencentCloudTemGateway(),
-			"tencentcloud_tem_application_service":                             resourceTencentCloudTemApplicationService(),
+			"tencentcloud_tem_environment":                                     tem.ResourceTencentCloudTemEnvironment(),
+			"tencentcloud_tem_application":                                     tem.ResourceTencentCloudTemApplication(),
+			"tencentcloud_tem_workload":                                        tem.ResourceTencentCloudTemWorkload(),
+			"tencentcloud_tem_app_config":                                      tem.ResourceTencentCloudTemAppConfig(),
+			"tencentcloud_tem_log_config":                                      tem.ResourceTencentCloudTemLogConfig(),
+			"tencentcloud_tem_scale_rule":                                      tem.ResourceTencentCloudTemScaleRule(),
+			"tencentcloud_tem_gateway":                                         tem.ResourceTencentCloudTemGateway(),
+			"tencentcloud_tem_application_service":                             tem.ResourceTencentCloudTemApplicationService(),
 			"tencentcloud_teo_zone":                                            resourceTencentCloudTeoZone(),
 			"tencentcloud_teo_zone_setting":                                    resourceTencentCloudTeoZoneSetting(),
 			"tencentcloud_teo_origin_group":                                    resourceTencentCloudTeoOriginGroup(),

@@ -1,9 +1,13 @@
-package tencentcloud
+package tem_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctem "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -16,9 +20,9 @@ func TestAccTencentCloudTemEnvironmentResource_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTemEnvironmentDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -41,9 +45,9 @@ func TestAccTencentCloudTemEnvironmentResource_basic(t *testing.T) {
 }
 
 func testAccCheckTemEnvironmentDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_tem_environment" {
 			continue
@@ -68,15 +72,15 @@ func testAccCheckTemEnvironmentDestroy(s *terraform.State) error {
 
 func testAccCheckTemEnvironmentExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		res, err := service.DescribeTemEnvironment(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
@@ -92,11 +96,11 @@ func testAccCheckTemEnvironmentExists(r string) resource.TestCheckFunc {
 
 const testAccTemEnvironmentVar = `
 variable "vpc_id" {
-	default = "` + defaultTemVpcId + `"
+	default = "` + tcacctest.DefaultTemVpcId + `"
 }
 
 variable "subnet_id" {
-	default = "` + defaultTemSubnetId + `"
+	default = "` + tcacctest.DefaultTemSubnetId + `"
 }
 `
 

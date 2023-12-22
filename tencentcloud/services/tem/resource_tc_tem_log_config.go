@@ -1,4 +1,4 @@
-package tencentcloud
+package tem
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTemLogConfig() *schema.Resource {
+func ResourceTencentCloudTemLogConfig() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTemLogConfigRead,
 		Create: resourceTencentCloudTemLogConfigCreate,
@@ -96,10 +99,10 @@ func resourceTencentCloudTemLogConfig() *schema.Resource {
 }
 
 func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_log_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_log_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request       = tem.NewCreateLogConfigRequest()
@@ -120,8 +123,8 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("workload_id"); ok {
 		workloadId := v.(string)
-		if workloadId != environmentId+FILED_SP+applicationId {
-			return fmt.Errorf("workloadId is error, it should be %s", environmentId+FILED_SP+applicationId)
+		if workloadId != environmentId+tccommon.FILED_SP+applicationId {
+			return fmt.Errorf("workloadId is error, it should be %s", environmentId+tccommon.FILED_SP+applicationId)
 		}
 	}
 
@@ -158,10 +161,10 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 		request.FilePattern = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().CreateLogConfig(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().CreateLogConfig(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -174,20 +177,20 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + applicationId + FILED_SP + name)
+	d.SetId(environmentId + tccommon.FILED_SP + applicationId + tccommon.FILED_SP + name)
 	return resourceTencentCloudTemLogConfigRead(d, meta)
 }
 
 func resourceTencentCloudTemLogConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_logConfig.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_logConfig.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -208,7 +211,7 @@ func resourceTencentCloudTemLogConfigRead(d *schema.ResourceData, meta interface
 
 	_ = d.Set("environment_id", environmentId)
 	_ = d.Set("application_id", logConfig.ApplicationId)
-	_ = d.Set("workload_id", environmentId+FILED_SP+applicationId)
+	_ = d.Set("workload_id", environmentId+tccommon.FILED_SP+applicationId)
 
 	if logConfig.Name != nil {
 		_ = d.Set("name", logConfig.Name)
@@ -246,14 +249,14 @@ func resourceTencentCloudTemLogConfigRead(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_log_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_log_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tem.NewModifyLogConfigRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -298,10 +301,10 @@ func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interfa
 		request.Data = &data
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().ModifyLogConfig(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().ModifyLogConfig(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -317,14 +320,14 @@ func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudTemLogConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_log_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_log_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

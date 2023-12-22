@@ -1,6 +1,9 @@
-package tencentcloud
+package tem
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+
 	"context"
 	"fmt"
 	"log"
@@ -8,10 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTemEnvironment() *schema.Resource {
+func ResourceTencentCloudTemEnvironment() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTemEnvironmentRead,
 		Create: resourceTencentCloudTemEnvironmentCreate,
@@ -57,10 +61,10 @@ func resourceTencentCloudTemEnvironment() *schema.Resource {
 }
 
 func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_environment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_environment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = tem.NewCreateEnvironmentRequest()
@@ -97,10 +101,10 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().CreateEnvironment(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().CreateEnvironment(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -116,13 +120,13 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 
 	environmentId := *response.Response.Result
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTemEnvironmentStatus(ctx, environmentId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *instance.ClusterStatus == "NORMAL" {
 			return nil
@@ -139,8 +143,8 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 	d.SetId(environmentId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:environment/%s", region, environmentId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -151,13 +155,13 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudTemEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_environment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_environment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	environmentId := d.Id()
 
@@ -188,8 +192,8 @@ func resourceTencentCloudTemEnvironmentRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("subnet_ids", environment.SubnetIds)
 	}
 
-	client := meta.(*TencentCloudClient).apiV3Conn
-	tagService := TagService{client: client}
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 	tags, err := tagService.DescribeResourceTags(ctx, "tem", "environment", region, environmentId)
 	if err != nil {
@@ -201,11 +205,11 @@ func resourceTencentCloudTemEnvironmentRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_environment.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_environment.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := tem.NewModifyEnvironmentRequest()
 
@@ -237,10 +241,10 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().ModifyEnvironment(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().ModifyEnvironment(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -253,11 +257,11 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("tem", "environment", tcClient.Region, d.Id())
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("tem", "environment", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -267,13 +271,13 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudTemEnvironmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_environment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_environment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	environmentId := d.Id()
 
 	if err := service.DeleteTemEnvironmentById(ctx, environmentId); err != nil {

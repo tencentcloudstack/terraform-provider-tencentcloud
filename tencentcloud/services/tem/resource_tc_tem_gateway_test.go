@@ -1,10 +1,14 @@
-package tencentcloud
+package tem_test
 
 import (
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctem "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -16,9 +20,9 @@ func TestAccTencentCloudTemGatewayResource_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		// CheckDestroy: testAccCheckTemGatewayDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -28,7 +32,7 @@ func TestAccTencentCloudTemGatewayResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tem_gateway.gateway", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_gateway.gateway", "ingress.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_gateway.gateway", "ingress.0.ingress_name", "demo"),
-					resource.TestCheckResourceAttr("tencentcloud_tem_gateway.gateway", "ingress.0.environment_id", defaultEnvironmentId),
+					resource.TestCheckResourceAttr("tencentcloud_tem_gateway.gateway", "ingress.0.environment_id", tcacctest.DefaultEnvironmentId),
 					resource.TestCheckResourceAttr("tencentcloud_tem_gateway.gateway", "ingress.0.address_ip_version", "IPV4"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_gateway.gateway", "ingress.0.rewrite_type", "NONE"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_gateway.gateway", "ingress.0.mixed", "false"),
@@ -55,15 +59,15 @@ func TestAccTencentCloudTemGatewayResource_basic(t *testing.T) {
 }
 
 // func testAccCheckTemGatewayDestroy(s *terraform.State) error {
-// 	logId := getLogId(contextNil)
-// 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-// 	service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+// 	logId := tccommon.GetLogId(tccommon.ContextNil)
+// 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+// 	service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 // 	for _, rs := range s.RootModule().Resources {
 // 		if rs.Type != "tencentcloud_tem_gateway" {
 // 			continue
 // 		}
 
-// 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+// 		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 // 		if len(idSplit) != 2 {
 // 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 // 		}
@@ -91,22 +95,22 @@ func TestAccTencentCloudTemGatewayResource_basic(t *testing.T) {
 
 func testAccCheckTemGatewayExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		environmentId := idSplit[0]
 		ingressName := idSplit[1]
 
-		service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		res, err := service.DescribeTemGateway(ctx, environmentId, ingressName)
 		if err != nil {
 			return err
@@ -122,7 +126,7 @@ func testAccCheckTemGatewayExists(r string) resource.TestCheckFunc {
 
 const testAccTemGatewayVar = `
 variable "environment_id" {
-  default = "` + defaultEnvironmentId + `"
+  default = "` + tcacctest.DefaultEnvironmentId + `"
 }
 `
 

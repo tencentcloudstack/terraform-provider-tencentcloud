@@ -1,4 +1,4 @@
-package tencentcloud
+package tem
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTemGateway() *schema.Resource {
+func ResourceTencentCloudTemGateway() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTemGatewayRead,
 		Create: resourceTencentCloudTemGatewayCreate,
@@ -171,10 +174,10 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 }
 
 func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_gateway.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_gateway.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request       = tem.NewModifyIngressRequest()
@@ -267,10 +270,10 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 		request.Ingress = &ingressInfo
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().ModifyIngress(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().ModifyIngress(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -283,21 +286,21 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + ingressName)
+	d.SetId(environmentId + tccommon.FILED_SP + ingressName)
 
 	return resourceTencentCloudTemGatewayRead(d, meta)
 }
 
 func resourceTencentCloudTemGatewayRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_gateway.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_gateway.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -408,10 +411,10 @@ func resourceTencentCloudTemGatewayRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_gateway.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_gateway.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tem.NewModifyIngressRequest()
 
@@ -419,7 +422,7 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 		if dMap, ok := helper.InterfacesHeadMap(d, "ingress"); ok {
 			ingressInfo := tem.IngressInfo{}
 
-			idSplit := strings.Split(d.Id(), FILED_SP)
+			idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 			if len(idSplit) != 2 {
 				return fmt.Errorf("id is broken,%s", d.Id())
 			}
@@ -499,10 +502,10 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().ModifyIngress(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTemClient().ModifyIngress(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -518,14 +521,14 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTemGatewayDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_gateway.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tem_gateway.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := TemService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

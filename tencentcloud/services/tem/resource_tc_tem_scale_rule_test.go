@@ -1,10 +1,14 @@
-package tencentcloud
+package tem_test
 
 import (
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctem "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -16,9 +20,9 @@ func TestAccTencentCloudTemScaleRuleResource_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTemScaleRuleDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -26,8 +30,8 @@ func TestAccTencentCloudTemScaleRuleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTemScaleRuleExists("tencentcloud_tem_scale_rule.scaleRule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tem_scale_rule.scaleRule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tem_scale_rule.scaleRule", "environment_id", defaultEnvironmentId),
-					resource.TestCheckResourceAttr("tencentcloud_tem_scale_rule.scaleRule", "application_id", defaultApplicationId),
+					resource.TestCheckResourceAttr("tencentcloud_tem_scale_rule.scaleRule", "environment_id", tcacctest.DefaultEnvironmentId),
+					resource.TestCheckResourceAttr("tencentcloud_tem_scale_rule.scaleRule", "application_id", tcacctest.DefaultApplicationId),
 					resource.TestCheckResourceAttr("tencentcloud_tem_scale_rule.scaleRule", "autoscaler.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_scale_rule.scaleRule", "autoscaler.0.autoscaler_name", "test3123"),
 				),
@@ -42,15 +46,15 @@ func TestAccTencentCloudTemScaleRuleResource_basic(t *testing.T) {
 }
 
 func testAccCheckTemScaleRuleDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_tem_scale_rule" {
 			continue
 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -72,14 +76,14 @@ func testAccCheckTemScaleRuleDestroy(s *terraform.State) error {
 
 func testAccCheckTemScaleRuleExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -87,7 +91,7 @@ func testAccCheckTemScaleRuleExists(r string) resource.TestCheckFunc {
 		applicationId := idSplit[1]
 		scaleRuleId := idSplit[2]
 
-		service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		res, err := service.DescribeTemScaleRule(ctx, environmentId, applicationId, scaleRuleId)
 		if err != nil {
 			return err
@@ -103,15 +107,15 @@ func testAccCheckTemScaleRuleExists(r string) resource.TestCheckFunc {
 
 const testAccTemScaleRuleVar = `
 variable "environment_id" {
-	default = "` + defaultEnvironmentId + `"
+	default = "` + tcacctest.DefaultEnvironmentId + `"
 }
 
 variable "application_id" {
-	default = "` + defaultApplicationId + `"
+	default = "` + tcacctest.DefaultApplicationId + `"
 }
 
 variable "workload_id" {
-	default = "` + defaultEnvironmentId + "#" + defaultApplicationId + `"
+	default = "` + tcacctest.DefaultEnvironmentId + "#" + tcacctest.DefaultApplicationId + `"
 }
 `
 

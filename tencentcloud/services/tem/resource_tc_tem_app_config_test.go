@@ -1,10 +1,14 @@
-package tencentcloud
+package tem_test
 
 import (
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctem "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -16,9 +20,9 @@ func TestAccTencentCloudTemAppConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTemAppConfigDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -26,7 +30,7 @@ func TestAccTencentCloudTemAppConfigResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTemAppConfigExists("tencentcloud_tem_app_config.appConfig"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tem_app_config.appConfig", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tem_app_config.appConfig", "environment_id", defaultEnvironmentId),
+					resource.TestCheckResourceAttr("tencentcloud_tem_app_config.appConfig", "environment_id", tcacctest.DefaultEnvironmentId),
 					resource.TestCheckResourceAttr("tencentcloud_tem_app_config.appConfig", "name", "demo"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_app_config.appConfig", "config_data.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_app_config.appConfig", "config_data.0.key", "key"),
@@ -43,14 +47,14 @@ func TestAccTencentCloudTemAppConfigResource_basic(t *testing.T) {
 }
 
 func testAccCheckTemAppConfigDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_tem_app_config" {
 			continue
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -76,22 +80,22 @@ func testAccCheckTemAppConfigDestroy(s *terraform.State) error {
 
 func testAccCheckTemAppConfigExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		environmentId := idSplit[0]
 		name := idSplit[1]
 
-		service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctem.NewTemService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		res, err := service.DescribeTemAppConfig(ctx, environmentId, name)
 		if err != nil {
 			return err
@@ -107,7 +111,7 @@ func testAccCheckTemAppConfigExists(r string) resource.TestCheckFunc {
 
 const testAccTemAppConfigVar = `
 variable "environment_id" {
-  default = "` + defaultEnvironmentId + `"
+  default = "` + tcacctest.DefaultEnvironmentId + `"
 }
 `
 

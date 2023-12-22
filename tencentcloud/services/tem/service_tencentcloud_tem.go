@@ -1,17 +1,24 @@
-package tencentcloud
+package tem
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewTemService(client *connectivity.TencentCloudClient) TemService {
+	return TemService{client: client}
+}
 
 type TemService struct {
 	client *connectivity.TencentCloudClient
@@ -19,7 +26,7 @@ type TemService struct {
 
 func (me *TemService) DescribeTemEnvironmentStatus(ctx context.Context, environmentId string) (environment *tem.NamespaceStatusInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeEnvironmentStatusRequest()
 	)
 
@@ -49,7 +56,7 @@ func (me *TemService) DescribeTemEnvironmentStatus(ctx context.Context, environm
 
 func (me *TemService) DescribeTemEnvironment(ctx context.Context, environmentId string) (environment *tem.DescribeEnvironmentResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeEnvironmentRequest()
 	)
 
@@ -75,7 +82,7 @@ func (me *TemService) DescribeTemEnvironment(ctx context.Context, environmentId 
 }
 
 func (me *TemService) DeleteTemEnvironmentById(ctx context.Context, environmentId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDestroyEnvironmentRequest()
 	request.EnvironmentId = &environmentId
@@ -101,7 +108,7 @@ func (me *TemService) DeleteTemEnvironmentById(ctx context.Context, environmentI
 
 func (me *TemService) DescribeTemApplication(ctx context.Context, applicationId string) (application *tem.DescribeApplicationsResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeApplicationsRequest()
 	)
 
@@ -128,7 +135,7 @@ func (me *TemService) DescribeTemApplication(ctx context.Context, applicationId 
 }
 
 func (me *TemService) DeleteTemApplicationById(ctx context.Context, applicationId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDeleteApplicationRequest()
 	request.ApplicationId = &applicationId
@@ -155,7 +162,7 @@ func (me *TemService) DeleteTemApplicationById(ctx context.Context, applicationI
 
 func (me *TemService) DescribeTemWorkload(ctx context.Context, environmentId string, applicationId string) (workload *tem.DescribeApplicationInfoResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeApplicationInfoRequest()
 	)
 
@@ -182,7 +189,7 @@ func (me *TemService) DescribeTemWorkload(ctx context.Context, environmentId str
 }
 
 func (me *TemService) DeleteTemWorkloadById(ctx context.Context, environmentId string, applicationId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDeleteApplicationRequest()
 	request.EnvironmentId = &environmentId
@@ -209,7 +216,7 @@ func (me *TemService) DeleteTemWorkloadById(ctx context.Context, environmentId s
 
 func (me *TemService) DescribeTemAppConfig(ctx context.Context, environmentId string, name string) (appConfig *tem.ConfigData, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeConfigDataRequest()
 	)
 
@@ -236,7 +243,7 @@ func (me *TemService) DescribeTemAppConfig(ctx context.Context, environmentId st
 }
 
 func (me *TemService) DeleteTemAppConfigById(ctx context.Context, environmentId string, name string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDestroyConfigDataRequest()
 	request.EnvironmentId = &environmentId
@@ -263,7 +270,7 @@ func (me *TemService) DeleteTemAppConfigById(ctx context.Context, environmentId 
 
 func (me *TemService) DescribeTemLogConfig(ctx context.Context, environmentId string, applicationId string, name string) (logConfig *tem.LogConfig, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeLogConfigRequest()
 	)
 
@@ -291,7 +298,7 @@ func (me *TemService) DescribeTemLogConfig(ctx context.Context, environmentId st
 }
 
 func (me *TemService) DeleteTemLogConfigById(ctx context.Context, environmentId string, applicationId string, name string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDestroyLogConfigRequest()
 	request.EnvironmentId = &environmentId
@@ -319,7 +326,7 @@ func (me *TemService) DeleteTemLogConfigById(ctx context.Context, environmentId 
 
 func (me *TemService) DescribeTemScaleRule(ctx context.Context, environmentId string, applicationId string, scaleRuleId string) (scaleRule *tem.Autoscaler, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeApplicationAutoscalerListRequest()
 	)
 
@@ -352,7 +359,7 @@ func (me *TemService) DescribeTemScaleRule(ctx context.Context, environmentId st
 }
 
 func (me *TemService) DisableTemScaleRuleById(ctx context.Context, environmentId string, applicationId string, scaleRuleId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDisableApplicationAutoscalerRequest()
 	request.EnvironmentId = &environmentId
@@ -379,7 +386,7 @@ func (me *TemService) DisableTemScaleRuleById(ctx context.Context, environmentId
 }
 
 func (me *TemService) DeleteTemScaleRuleById(ctx context.Context, environmentId string, applicationId string, scaleRuleId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDeleteApplicationAutoscalerRequest()
 	request.EnvironmentId = &environmentId
@@ -407,7 +414,7 @@ func (me *TemService) DeleteTemScaleRuleById(ctx context.Context, environmentId 
 
 func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId string, ingressName string) (gateway *tem.IngressInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = tem.NewDescribeIngressRequest()
 	)
 
@@ -421,10 +428,10 @@ func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId stri
 	request.IngressName = &ingressName
 	request.ClusterNamespace = helper.String("default")
 
-	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		response, errRet := me.client.UseTemClient().DescribeIngress(request)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		gateway = response.Response.Result
 		if *gateway.ClbId != "" && *gateway.Vip != "" {
@@ -444,7 +451,7 @@ func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId stri
 }
 
 func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId string, ingressName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDeleteIngressRequest()
 	request.EnvironmentId = &environmentId
@@ -471,7 +478,7 @@ func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId st
 }
 
 func (me *TemService) DescribeTemApplicationServiceById(ctx context.Context, environmentId string, applicationId string) (applicationService *tem.DescribeApplicationServiceListResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDescribeApplicationServiceListRequest()
 	request.EnvironmentId = &environmentId
@@ -497,7 +504,7 @@ func (me *TemService) DescribeTemApplicationServiceById(ctx context.Context, env
 }
 
 func (me *TemService) DeleteTemApplicationServiceById(ctx context.Context, environmentId string, applicationId string, serviceName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tem.NewDeleteApplicationServiceRequest()
 	request.EnvironmentId = &environmentId
