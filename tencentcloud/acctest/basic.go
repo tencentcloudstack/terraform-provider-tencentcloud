@@ -62,13 +62,16 @@ const (
 	DefaultVpcCidr     = "172.16.0.0/16"
 	DefaultVpcCidrLess = "172.16.0.0/18"
 
-	DefaultCvmAZone           = "ap-guangzhou-7"
-	DefaultCvmVpcId           = "vpc-l0dw94uh"
-	DefaultCvmSubnetId        = "subnet-ccj2qg0m"
-	DefaultCvmTestingAZone    = "ap-guangzhou-2"
-	DefaultCvmTestingVpcId    = "vpc-701bm52d"
-	DefaultCvmTestingSubnetId = "subnet-1q62lj3m"
-	DefaultCvmTestingImgId    = "img-eb30mz89"
+	DefaultCvmAZone                 = "ap-guangzhou-7"
+	DefaultCvmInternationalZone     = "ap-guangzhou-3"
+	DefaultCvmVpcId                 = "vpc-l0dw94uh"
+	DefaultCvmSubnetId              = "subnet-ccj2qg0m"
+	DefaultCvmTestingAZone          = "ap-guangzhou-2"
+	DefaultCvmTestingVpcId          = "vpc-701bm52d"
+	DefaultCvmTestingSubnetId       = "subnet-1q62lj3m"
+	DefaultCvmTestingImgId          = "img-eb30mz89"
+	DefaultCvmInternationalVpcId    = "vpc-m7ryq37p"
+	DefaultCvmInternationalSubnetId = "subnet-lwrsb7a0"
 
 	DefaultAZone          = "ap-guangzhou-3"
 	DefaultSubnetId       = "subnet-enm92y0m"
@@ -183,9 +186,11 @@ data "tencentcloud_instance_types" "default" {
 
 // ckafka
 const (
-	DefaultKafkaInstanceId = "ckafka-vv7wpvae"
-	DefaultKafkaVpcId      = "vpc-njbzmzyd"
-	DefaultKafkaSubnetId   = "subnet-2txtpql8"
+	DefaultKafkaInstanceId            = "ckafka-vv7wpvae"
+	DefaultKafkaVpcId                 = "vpc-njbzmzyd"
+	DefaultKafkaSubnetId              = "subnet-2txtpql8"
+	DefaultKafkaInternationalVpcId    = "vpc-ereuklyj"
+	DefaultKafkaInternationalSubnetId = "subnet-e7rvxfx2"
 )
 
 const DefaultKafkaVariable = `
@@ -197,6 +202,12 @@ variable "vpc_id" {
 }
 variable "subnet_id" {
   default = "` + DefaultKafkaSubnetId + `"
+}
+variable "international_vpc_id" {
+  default = "` + DefaultKafkaInternationalVpcId + `"
+}
+variable "international_subnet_id" {
+  default = "` + DefaultKafkaInternationalSubnetId + `"
 }
 `
 
@@ -251,6 +262,10 @@ variable "availability_cvm_zone" {
   default = "` + DefaultCvmAZone + `"
 }
 
+variable "availability_cvm_international_zone" {
+  default = "` + DefaultCvmInternationalZone + `"
+}
+
 variable "availability_cvm_testing_zone" {
   default = "` + DefaultCvmTestingAZone + `"
 }
@@ -273,6 +288,14 @@ variable "cvm_vpc_id" {
 
 variable "cvm_subnet_id" {
   default = "` + DefaultCvmSubnetId + `"
+}
+
+variable "cvm_international_vpc_id" {
+  default = "` + DefaultCvmInternationalVpcId + `"
+}
+
+variable "cvm_international_subnet_id" {
+  default = "` + DefaultCvmInternationalSubnetId + `"
 }
 
 variable "vpc_id" {
