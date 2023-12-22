@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"encoding/json"
 	"fmt"
@@ -632,13 +633,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_white_box_decrypt_key":                    kms.DataSourceTencentCloudKmsWhiteBoxDecryptKey(),
 			"tencentcloud_kms_white_box_device_fingerprints":            kms.DataSourceTencentCloudKmsWhiteBoxDeviceFingerprints(),
 			"tencentcloud_kms_list_algorithms":                          kms.DataSourceTencentCloudKmsListAlgorithms(),
-			"tencentcloud_ssm_products":                                 dataSourceTencentCloudSsmProducts(),
-			"tencentcloud_ssm_secrets":                                  dataSourceTencentCloudSsmSecrets(),
-			"tencentcloud_ssm_secret_versions":                          dataSourceTencentCloudSsmSecretVersions(),
-			"tencentcloud_ssm_rotation_detail":                          dataSourceTencentCloudSsmRotationDetail(),
-			"tencentcloud_ssm_rotation_history":                         dataSourceTencentCloudSsmRotationHistory(),
-			"tencentcloud_ssm_service_status":                           dataSourceTencentCloudSsmServiceStatus(),
-			"tencentcloud_ssm_ssh_key_pair_value":                       dataSourceTencentCloudSsmSshKeyPairValue(),
+			"tencentcloud_ssm_products":                                 ssm.DataSourceTencentCloudSsmProducts(),
+			"tencentcloud_ssm_secrets":                                  ssm.DataSourceTencentCloudSsmSecrets(),
+			"tencentcloud_ssm_secret_versions":                          ssm.DataSourceTencentCloudSsmSecretVersions(),
+			"tencentcloud_ssm_rotation_detail":                          ssm.DataSourceTencentCloudSsmRotationDetail(),
+			"tencentcloud_ssm_rotation_history":                         ssm.DataSourceTencentCloudSsmRotationHistory(),
+			"tencentcloud_ssm_service_status":                           ssm.DataSourceTencentCloudSsmServiceStatus(),
+			"tencentcloud_ssm_ssh_key_pair_value":                       ssm.DataSourceTencentCloudSsmSshKeyPairValue(),
 			"tencentcloud_cdh_instances":                                cdh.DataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                     dayuv2.DataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                     dataSourceTencentCloudTeoZoneAvailablePlans(),
@@ -1457,11 +1458,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_white_box_key":                                   kms.ResourceTencentCloudKmsWhiteBoxKey(),
 			"tencentcloud_kms_cloud_resource_attachment":                       kms.ResourceTencentCloudKmsCloudResourceAttachment(),
 			"tencentcloud_kms_overwrite_white_box_device_fingerprints":         kms.ResourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints(),
-			"tencentcloud_ssm_secret":                                          resourceTencentCloudSsmSecret(),
-			"tencentcloud_ssm_ssh_key_pair_secret":                             resourceTencentCloudSsmSshKeyPairSecret(),
-			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),
-			"tencentcloud_ssm_secret_version":                                  resourceTencentCloudSsmSecretVersion(),
-			"tencentcloud_ssm_rotate_product_secret":                           resourceTencentCloudSsmRotateProductSecret(),
+			"tencentcloud_ssm_secret":                                          ssm.ResourceTencentCloudSsmSecret(),
+			"tencentcloud_ssm_ssh_key_pair_secret":                             ssm.ResourceTencentCloudSsmSshKeyPairSecret(),
+			"tencentcloud_ssm_product_secret":                                  ssm.ResourceTencentCloudSsmProductSecret(),
+			"tencentcloud_ssm_secret_version":                                  ssm.ResourceTencentCloudSsmSecretVersion(),
+			"tencentcloud_ssm_rotate_product_secret":                           ssm.ResourceTencentCloudSsmRotateProductSecret(),
 			"tencentcloud_cdh_instance":                                        cdh.ResourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                              dnspod.ResourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_domain_alias":                                 dnspod.ResourceTencentCloudDnspodDomainAlias(),

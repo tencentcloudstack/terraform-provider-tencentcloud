@@ -1,16 +1,19 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSsmSecrets() *schema.Resource {
+func DataSourceTencentCloudSsmSecrets() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSsmSecretsRead,
 		Schema: map[string]*schema.Schema{
@@ -162,12 +165,12 @@ func dataSourceTencentCloudSsmSecrets() *schema.Resource {
 }
 
 func dataSourceTencentCloudSsmSecretsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssm_secrets.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ssm_secrets.read")()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secrets    []*ssm.SecretMetadata
 	)
 
@@ -196,10 +199,10 @@ func dataSourceTencentCloudSsmSecretsRead(d *schema.ResourceData, meta interface
 		param["product_name"] = v.(string)
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := ssmService.DescribeSecretsByFilter(ctx, param)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		secrets = results
@@ -247,7 +250,7 @@ func dataSourceTencentCloudSsmSecretsRead(d *schema.ResourceData, meta interface
 	}
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		return writeToFile(output.(string), secretList)
+		return tccommon.WriteToFile(output.(string), secretList)
 	}
 
 	return nil

@@ -1,19 +1,22 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSsmSecret() *schema.Resource {
+func ResourceTencentCloudSsmSecret() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSsmSecretCreate,
 		Read:   resourceTencentCloudSsmSecretRead,
@@ -80,12 +83,12 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 }
 
 func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_secret.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_secret.create")()
 
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService    = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request       = ssm.NewCreateSecretRequest()
 		response      = ssm.NewCreateSecretResponse()
 		secretInfo    *SecretInfo
@@ -119,10 +122,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		request.VersionId = helper.String("default")
 		request.SecretString = helper.String("default")
 	}
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().CreateSecret(request)
+	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSsmClient().CreateSecret(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -140,10 +143,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 
 	//delete default version info
 	if secretType == 0 {
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr = ssmService.DeleteSecretVersion(ctx, secretName, "default")
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 			return nil
 		})
@@ -153,10 +156,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 	}
 
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr = ssmService.DisableSecret(ctx, secretName)
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 
 			return nil
@@ -168,10 +171,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 
 			return nil
@@ -181,9 +184,9 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 			return outErr
 		}
 
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
+		resourceName := tccommon.BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -193,21 +196,21 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_secret.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_secret.read")()
 
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService    = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secretName    = d.Id()
 		outErr, inErr error
 		secretInfo    *SecretInfo
 	)
 
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 		if inErr != nil {
-			return retryError(inErr)
+			return tccommon.RetryError(inErr)
 		}
 
 		return nil
@@ -235,7 +238,7 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("is_enabled", false)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "ssm", "secret", tcClient.Region, secretInfo.resourceId)
 	if err != nil {
@@ -247,12 +250,12 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_secret.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_secret.update")()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secretName = d.Id()
 	)
 
@@ -271,10 +274,10 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("description") {
 		description := d.Get("description").(string)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := ssmService.UpdateSecretDescription(ctx, secretName, description)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 
 			return nil
@@ -297,7 +300,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 
 		oldValue, newValue := d.GetChange("tags")
@@ -307,7 +310,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
+		resourceName := tccommon.BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -319,22 +322,22 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_secret.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_secret.delete")()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secretName = d.Id()
 	)
 
 	recoveryWindowInDays := d.Get("recovery_window_in_days").(int)
 	isEnabled := d.Get("is_enabled").(bool)
 	if isEnabled {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := ssmService.DisableSecret(ctx, secretName)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 
 			return nil
@@ -346,10 +349,10 @@ func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := ssmService.DeleteSecret(ctx, secretName, uint64(recoveryWindowInDays))
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		return nil
@@ -360,14 +363,14 @@ func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		secretInfo, e := ssmService.DescribeSecretByName(ctx, secretName)
 		if e != nil {
 			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
 				return nil
 			}
 
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 
 		if secretInfo.status == SSM_STATUS_PENDINGDELETE {
@@ -381,19 +384,19 @@ func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{
 func updateSecretIsEnabled(ctx context.Context, ssmService SsmService, secretName string, isEnabled bool) error {
 	var err error
 	if isEnabled {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := ssmService.EnableSecret(ctx, secretName)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
 
 	} else {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := ssmService.DisableSecret(ctx, secretName)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})

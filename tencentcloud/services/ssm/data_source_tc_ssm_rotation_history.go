@@ -1,14 +1,17 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSsmRotationHistory() *schema.Resource {
+func DataSourceTencentCloudSsmRotationHistory() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSsmRotationHistoryRead,
 		Schema: map[string]*schema.Schema{
@@ -33,13 +36,13 @@ func dataSourceTencentCloudSsmRotationHistory() *schema.Resource {
 }
 
 func dataSourceTencentCloudSsmRotationHistoryRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssm_rotation_history.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ssm_rotation_history.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		versionIDs []*string
 		secretName string
 	)
@@ -50,10 +53,10 @@ func dataSourceTencentCloudSsmRotationHistoryRead(d *schema.ResourceData, meta i
 		secretName = v.(string)
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSsmRotationHistoryByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		versionIDs = result
@@ -71,7 +74,7 @@ func dataSourceTencentCloudSsmRotationHistoryRead(d *schema.ResourceData, meta i
 	d.SetId(secretName)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

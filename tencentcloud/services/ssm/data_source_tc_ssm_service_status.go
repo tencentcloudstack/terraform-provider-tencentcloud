@@ -1,16 +1,18 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 	"strconv"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 )
 
-func dataSourceTencentCloudSsmServiceStatus() *schema.Resource {
+func DataSourceTencentCloudSsmServiceStatus() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSsmServiceStatusRead,
 		Schema: map[string]*schema.Schema{
@@ -39,20 +41,20 @@ func dataSourceTencentCloudSsmServiceStatus() *schema.Resource {
 }
 
 func dataSourceTencentCloudSsmServiceStatusRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssm_service_status.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ssm_service_status.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		service       = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service       = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		serviceStatus *ssm.GetServiceStatusResponseParams
 	)
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSsmServiceStatusByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		serviceStatus = result
@@ -78,7 +80,7 @@ func dataSourceTencentCloudSsmServiceStatusRead(d *schema.ResourceData, meta int
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

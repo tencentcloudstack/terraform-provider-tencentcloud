@@ -1,7 +1,9 @@
-package tencentcloud
+package ssm_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -12,13 +14,13 @@ func TestAccTencentCloudSsmSecretVersionsDataSource(t *testing.T) {
 	dataSourceName := "data.tencentcloud_ssm_secret_versions.example"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: TestAccTencentCloudSsmSecretVersionsDataSourceConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID(dataSourceName),
+					tcacctest.AccCheckTencentCloudDataSourceID(dataSourceName),
 					resource.TestCheckResourceAttr(dataSourceName, "secret_version_list.0.version_id", "v1"),
 					resource.TestCheckResourceAttr(dataSourceName, "secret_version_list.0.secret_binary", "MTIzMTIzMTIzMTIzMTIzQQ=="),
 				),

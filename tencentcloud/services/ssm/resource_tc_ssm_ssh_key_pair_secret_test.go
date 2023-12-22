@@ -1,8 +1,10 @@
-package tencentcloud
+package ssm_test
 
 import (
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,9 +16,9 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(testAccSsmSshKeyPairSecret, rName),

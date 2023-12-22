@@ -1,17 +1,20 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
+func ResourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSsmSshKeyPairSecretCreate,
 		Read:   resourceTencentCloudSsmSshKeyPairSecretRead,
@@ -56,7 +59,7 @@ func resourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 				Optional:     true,
 				Type:         schema.TypeString,
 				Computed:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"Enabled", "Disabled"}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"Enabled", "Disabled"}),
 				Description:  "Enable or Disable Secret. Valid values is `Enabled` or `Disabled`. Default is `Enabled`.",
 			},
 			"clean_ssh_key": {
@@ -81,13 +84,13 @@ func resourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 }
 
 func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request    = ssm.NewCreateSSHKeyPairSecretRequest()
 		response   = ssm.NewCreateSSHKeyPairSecretResponse()
 		secretInfo *SecretInfo
@@ -114,10 +117,10 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 		request.SSHKeyName = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().CreateSSHKeyPairSecret(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSsmClient().CreateSSHKeyPairSecret(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -146,10 +149,10 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		outErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			secretInfo, err = ssmService.DescribeSecretByName(ctx, secretName)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 
 			return nil
@@ -159,9 +162,9 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 			return outErr
 		}
 
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
+		resourceName := tccommon.BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
 		if err = tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -171,13 +174,13 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secretInfo *SecretInfo
 		secretName = d.Id()
 	)
@@ -225,10 +228,10 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 		_ = d.Set("secret_type", sshKeyPairSecret.SecretType)
 	}
 
-	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	outErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		secretInfo, err = service.DescribeSecretByName(ctx, secretName)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 
 		return nil
@@ -238,7 +241,7 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 		return outErr
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "ssm", "secret", tcClient.Region, secretInfo.resourceId)
 	if err != nil {
@@ -250,13 +253,13 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secretName = d.Id()
 	)
 
@@ -280,10 +283,10 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 			request.Description = helper.String(v.(string))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().UpdateDescription(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSsmClient().UpdateDescription(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -298,7 +301,7 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 	}
 
 	if d.HasChange("status") {
-		service := SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service := SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 		if v, ok := d.GetOk("status"); ok {
 			status := v.(string)
@@ -317,7 +320,7 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 
 		oldValue, newValue := d.GetChange("tags")
@@ -327,7 +330,7 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 			return err
 		}
 
-		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
+		resourceName := tccommon.BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
 		if err = tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -338,13 +341,13 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudSsmSshKeyPairSecretDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secretName = d.Id()
 	)
 

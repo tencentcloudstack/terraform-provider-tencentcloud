@@ -1,4 +1,4 @@
-package tencentcloud
+package ssm
 
 const (
 	SSM_PAGE_LIMIT = 200

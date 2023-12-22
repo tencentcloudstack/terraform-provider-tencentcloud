@@ -1,17 +1,20 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSsmSecretVersions() *schema.Resource {
+func DataSourceTencentCloudSsmSecretVersions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSsmSecretVersionsRead,
 		Schema: map[string]*schema.Schema{
@@ -59,21 +62,21 @@ func dataSourceTencentCloudSsmSecretVersions() *schema.Resource {
 }
 
 func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssm_secret_versions.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ssm_secret_versions.read")()
 
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ssmService    = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		secretName    = d.Get("secret_name").(string)
 		outErr, inErr error
 		secretInfo    *SecretInfo
 	)
 
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 		if inErr != nil {
-			return retryError(inErr)
+			return tccommon.RetryError(inErr)
 		}
 
 		return nil
@@ -101,10 +104,10 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 	if v, ok := d.GetOk("version_id"); ok {
 		versionIds = append(versionIds, v.(string))
 	} else {
-		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			versionIds, inErr = ssmService.DescribeSecretVersionIdsByName(ctx, secretName)
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 			return nil
 		})
@@ -115,10 +118,10 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 	}
 
 	for _, versionId := range versionIds {
-		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			secretVersionInfo, inErr := ssmService.DescribeSecretVersion(ctx, secretName, versionId)
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 			secretVersionInfos = append(secretVersionInfos, secretVersionInfo)
 			return nil
@@ -139,7 +142,7 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 		}
 
 		secretVersionList = append(secretVersionList, mapping)
-		ids = append(ids, strings.Join([]string{secretVersionInfo.secretName, secretVersionInfo.versionId}, FILED_SP))
+		ids = append(ids, strings.Join([]string{secretVersionInfo.secretName, secretVersionInfo.versionId}, tccommon.FILED_SP))
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
@@ -149,7 +152,7 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 	}
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		return writeToFile(output.(string), secretVersionList)
+		return tccommon.WriteToFile(output.(string), secretVersionList)
 	}
 
 	return nil

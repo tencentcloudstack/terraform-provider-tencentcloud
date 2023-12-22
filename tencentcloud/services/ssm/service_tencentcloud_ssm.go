@@ -1,16 +1,23 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewSsmService(client *connectivity.TencentCloudClient) SsmService {
+	return SsmService{client: client}
+}
 
 type SsmService struct {
 	client *connectivity.TencentCloudClient
@@ -29,6 +36,10 @@ type SecretInfo struct {
 	resourceId       string
 }
 
+func (info SecretInfo) Status() string {
+	return info.status
+}
+
 type SecretVersionInfo struct {
 	secretName   string
 	versionId    string
@@ -37,7 +48,7 @@ type SecretVersionInfo struct {
 }
 
 func (me *SsmService) DescribeSecretsByFilter(ctx context.Context, param map[string]interface{}) (secrets []*ssm.SecretMetadata, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewListSecretsRequest()
 
 	for k, v := range param {
@@ -90,7 +101,7 @@ func (me *SsmService) DescribeSecretsByFilter(ctx context.Context, param map[str
 }
 
 func (me *SsmService) DescribeSecretByName(ctx context.Context, secretName string) (secret *SecretInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewDescribeSecretRequest()
 	request.SecretName = helper.String(secretName)
 	ratelimit.Check(request.GetAction())
@@ -119,7 +130,7 @@ func (me *SsmService) DescribeSecretByName(ctx context.Context, secretName strin
 }
 
 func (me *SsmService) DescribeSecretVersionIdsByName(ctx context.Context, secretName string) (versionIds []string, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewListSecretVersionIdsRequest()
 	request.SecretName = helper.String(secretName)
 	ratelimit.Check(request.GetAction())
@@ -140,7 +151,7 @@ func (me *SsmService) DescribeSecretVersionIdsByName(ctx context.Context, secret
 }
 
 func (me *SsmService) DescribeSecretVersion(ctx context.Context, secretName, versionId string) (secretVersion *SecretVersionInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewGetSecretValueRequest()
 	request.SecretName = helper.String(secretName)
 	request.VersionId = helper.String(versionId)
@@ -164,7 +175,7 @@ func (me *SsmService) DescribeSecretVersion(ctx context.Context, secretName, ver
 }
 
 func (me *SsmService) CreateSecret(ctx context.Context, param map[string]interface{}) (secretName string, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewCreateSecretRequest()
 
 	for k, v := range param {
@@ -208,7 +219,7 @@ func (me *SsmService) CreateSecret(ctx context.Context, param map[string]interfa
 }
 
 func (me *SsmService) UpdateSecretDescription(ctx context.Context, secretName, description string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewUpdateDescriptionRequest()
 	request.SecretName = helper.String(secretName)
 	request.Description = helper.String(description)
@@ -225,7 +236,7 @@ func (me *SsmService) UpdateSecretDescription(ctx context.Context, secretName, d
 }
 
 func (me *SsmService) UpdateSecret(ctx context.Context, param map[string]interface{}) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewUpdateSecretRequest()
 	for k, v := range param {
 		if k == "secret_name" {
@@ -254,7 +265,7 @@ func (me *SsmService) UpdateSecret(ctx context.Context, param map[string]interfa
 }
 
 func (me *SsmService) EnableSecret(ctx context.Context, secretName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewEnableSecretRequest()
 	request.SecretName = helper.String(secretName)
 	ratelimit.Check(request.GetAction())
@@ -270,7 +281,7 @@ func (me *SsmService) EnableSecret(ctx context.Context, secretName string) (errR
 }
 
 func (me *SsmService) DisableSecret(ctx context.Context, secretName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewDisableSecretRequest()
 	request.SecretName = helper.String(secretName)
 	ratelimit.Check(request.GetAction())
@@ -286,7 +297,7 @@ func (me *SsmService) DisableSecret(ctx context.Context, secretName string) (err
 }
 
 func (me *SsmService) PutSecretValue(ctx context.Context, param map[string]interface{}) (secretName, versionId string, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewPutSecretValueRequest()
 	for k, v := range param {
 		if k == "secret_name" {
@@ -318,7 +329,7 @@ func (me *SsmService) PutSecretValue(ctx context.Context, param map[string]inter
 }
 
 func (me *SsmService) DeleteSecretVersion(ctx context.Context, secretName, versionId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewDeleteSecretVersionRequest()
 	request.SecretName = helper.String(secretName)
 	request.VersionId = helper.String(versionId)
@@ -335,7 +346,7 @@ func (me *SsmService) DeleteSecretVersion(ctx context.Context, secretName, versi
 }
 
 func (me *SsmService) DeleteSecret(ctx context.Context, secretName string, recoveryWindowInDays uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewDeleteSecretRequest()
 	request.SecretName = helper.String(secretName)
 	request.RecoveryWindowInDays = helper.Uint64(recoveryWindowInDays)
@@ -352,7 +363,7 @@ func (me *SsmService) DeleteSecret(ctx context.Context, secretName string, recov
 }
 
 func (me *SsmService) DescribeSecretById(ctx context.Context, secretName string, serviceType uint64) (sshKeyPairSecret *ssm.SecretMetadata, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ssm.NewListSecretsRequest()
 	request.SearchSecretName = &secretName
@@ -400,7 +411,7 @@ func (me *SsmService) DescribeSecretById(ctx context.Context, secretName string,
 }
 
 func (me *SsmService) DeleteSsmSshKeyPairSecretById(ctx context.Context, secretName string, cleanSSHKey *bool) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ssm.NewDeleteSecretRequest()
 	request.SecretName = &secretName
@@ -428,7 +439,7 @@ func (me *SsmService) DeleteSsmSshKeyPairSecretById(ctx context.Context, secretN
 }
 
 func (me *SsmService) DeleteSsmProductSecretById(ctx context.Context, secretName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ssm.NewDeleteSecretRequest()
 	request.SecretName = &secretName
@@ -452,7 +463,7 @@ func (me *SsmService) DeleteSsmProductSecretById(ctx context.Context, secretName
 }
 
 func (me *SsmService) DescribeAsyncRequestInfo(ctx context.Context, flowID int64) (taskStatus int64, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := ssm.NewDescribeAsyncRequestInfoRequest()
 	request.FlowID = helper.Int64(flowID)
@@ -478,7 +489,7 @@ func (me *SsmService) DescribeAsyncRequestInfo(ctx context.Context, flowID int64
 
 func (me *SsmService) SsmProductSecretStateRefreshFunc(flowId int64, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		ctx := contextNil
+		ctx := tccommon.ContextNil
 
 		taskStatus, err := me.DescribeAsyncRequestInfo(ctx, flowId)
 
@@ -492,7 +503,7 @@ func (me *SsmService) SsmProductSecretStateRefreshFunc(flowId int64, failStates 
 
 func (me *SsmService) DescribeSsmProductsByFilter(ctx context.Context) (products []*string, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ssm.NewDescribeSupportedProductsRequest()
 	)
 
@@ -517,7 +528,7 @@ func (me *SsmService) DescribeSsmProductsByFilter(ctx context.Context) (products
 
 func (me *SsmService) DescribeSsmRotationDetailByFilter(ctx context.Context, param map[string]interface{}) (rotationDetail *ssm.DescribeRotationDetailResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ssm.NewDescribeRotationDetailRequest()
 	)
 
@@ -553,7 +564,7 @@ func (me *SsmService) DescribeSsmRotationDetailByFilter(ctx context.Context, par
 
 func (me *SsmService) DescribeSsmRotationHistoryByFilter(ctx context.Context, param map[string]interface{}) (rotationHistory []*string, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ssm.NewDescribeRotationHistoryRequest()
 	)
 
@@ -589,7 +600,7 @@ func (me *SsmService) DescribeSsmRotationHistoryByFilter(ctx context.Context, pa
 
 func (me *SsmService) DescribeSsmServiceStatusByFilter(ctx context.Context) (ServiceStatus *ssm.GetServiceStatusResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ssm.NewGetServiceStatusRequest()
 	)
 
@@ -619,7 +630,7 @@ func (me *SsmService) DescribeSsmServiceStatusByFilter(ctx context.Context) (Ser
 
 func (me *SsmService) DescribeSsmSshKeyPairValueByFilter(ctx context.Context, param map[string]interface{}) (sshKeyPairValue *ssm.GetSSHKeyPairValueResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = ssm.NewGetSSHKeyPairValueRequest()
 	)
 

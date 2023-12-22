@@ -1,10 +1,14 @@
-package tencentcloud
+package ssm_test
 
 import (
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcssm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -18,8 +22,8 @@ func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 	resourceV2Name := "tencentcloud_ssm_secret_version.v2"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckSsmSecretVersionDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -55,18 +59,16 @@ func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 }
 
 func testAccCheckSsmSecretVersionDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	ssmService := SsmService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	ssmService := svcssm.NewSsmService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_ssm_secret_version" {
 			continue
 		}
 
-		items := strings.Split(rs.Primary.ID, FILED_SP)
+		items := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(items) != 2 {
 			return fmt.Errorf("invalid ID %s", rs.Primary.ID)
 		}
@@ -91,8 +93,8 @@ func testAccCheckSsmSecretVersionDestroy(s *terraform.State) error {
 
 func testAccCheckSsmSecretVersionExists(name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {
@@ -101,11 +103,9 @@ func testAccCheckSsmSecretVersionExists(name string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK][SSM secret version][Exists] check:SSM secret version id is not set")
 		}
-		ssmService := SsmService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		ssmService := svcssm.NewSsmService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
-		items := strings.Split(rs.Primary.ID, FILED_SP)
+		items := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(items) != 2 {
 			return fmt.Errorf("invalid ID %s", rs.Primary.ID)
 		}

@@ -1,16 +1,19 @@
-package tencentcloud
+package ssm
 
 import (
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSsmRotateProductSecret() *schema.Resource {
+func ResourceTencentCloudSsmRotateProductSecret() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSsmRotateProductSecretCreate,
 		Read:   resourceTencentCloudSsmRotateProductSecretRead,
@@ -28,11 +31,11 @@ func resourceTencentCloudSsmRotateProductSecret() *schema.Resource {
 }
 
 func resourceTencentCloudSsmRotateProductSecretCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_rotate_product_secret.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_rotate_product_secret.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId        = getLogId(contextNil)
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
 		request      = ssm.NewRotateProductSecretRequest()
 		response     = ssm.NewRotateProductSecretResponse()
 		asyncRequest = ssm.NewDescribeAsyncRequestInfoRequest()
@@ -45,10 +48,10 @@ func resourceTencentCloudSsmRotateProductSecretCreate(d *schema.ResourceData, me
 		secretName = v.(string)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().RotateProductSecret(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSsmClient().RotateProductSecret(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -67,10 +70,10 @@ func resourceTencentCloudSsmRotateProductSecretCreate(d *schema.ResourceData, me
 	// wait
 	flowId = *response.Response.FlowID
 	asyncRequest.FlowID = &flowId
-	err = resource.Retry(writeRetryTimeout*3, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().DescribeAsyncRequestInfo(asyncRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout*3, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSsmClient().DescribeAsyncRequestInfo(asyncRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -91,15 +94,15 @@ func resourceTencentCloudSsmRotateProductSecretCreate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudSsmRotateProductSecretRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_rotate_product_secret.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_rotate_product_secret.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSsmRotateProductSecretDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssm_rotate_product_secret.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ssm_rotate_product_secret.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

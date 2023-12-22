@@ -1,10 +1,14 @@
-package tencentcloud
+package ssm_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
 	"time"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcssm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 
@@ -18,11 +22,11 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_ssm_secret", &resource.Sweeper{
 		Name: "tencentcloud_ssm_secret",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
-			service := SsmService{client}
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+			service := svcssm.NewSsmService(client)
 
 			secrets, err := service.DescribeSecretsByFilter(ctx, nil)
 
@@ -38,17 +42,17 @@ func init() {
 				if createTime != nil {
 					created = time.Unix(int64(*createTime), 0)
 				}
-				if isResourcePersist(name, &created) {
+				if tcacctest.IsResourcePersist(name, &created) {
 					continue
 				}
 				err = service.DisableSecret(ctx, name)
 				if err != nil {
 					continue
 				}
-				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 					err := service.DeleteSecret(ctx, name, 0)
 					if err != nil {
-						return retryError(err, ssm.FAILEDOPERATION)
+						return tccommon.RetryError(err, ssm.FAILEDOPERATION)
 					}
 					return nil
 				})
@@ -67,8 +71,8 @@ func TestAccTencentCloudSsmSecret_basic(t *testing.T) {
 	t.Parallel()
 	resourceName := "tencentcloud_ssm_secret.example"
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckSsmSecretDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -101,12 +105,10 @@ func TestAccTencentCloudSsmSecret_basic(t *testing.T) {
 }
 
 func testAccCheckSsmSecretDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	ssmService := SsmService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	ssmService := svcssm.NewSsmService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_ssm_secret" {
 			continue
@@ -121,7 +123,7 @@ func testAccCheckSsmSecretDestroy(s *terraform.State) error {
 			}
 			return err
 		}
-		if secret != nil && secret.status != SSM_STATUS_PENDINGDELETE {
+		if secret != nil && secret.Status() != svcssm.SSM_STATUS_PENDINGDELETE {
 			return fmt.Errorf("[CHECK][SSM secret][Destroy] check: SSM secret still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -130,8 +132,8 @@ func testAccCheckSsmSecretDestroy(s *terraform.State) error {
 
 func testAccCheckSsmSecretExists(name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {
@@ -140,9 +142,7 @@ func testAccCheckSsmSecretExists(name string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK][SSM secret][Exists] check:SSM secret id is not set")
 		}
-		ssmService := SsmService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		ssmService := svcssm.NewSsmService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		secret, err := ssmService.DescribeSecretByName(ctx, rs.Primary.ID)
 		if err != nil {
 			return err

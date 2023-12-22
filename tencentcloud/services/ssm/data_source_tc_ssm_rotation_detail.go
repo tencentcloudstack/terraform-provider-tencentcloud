@@ -1,15 +1,18 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSsmRotationDetail() *schema.Resource {
+func DataSourceTencentCloudSsmRotationDetail() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSsmRotationDetailRead,
 		Schema: map[string]*schema.Schema{
@@ -48,13 +51,13 @@ func dataSourceTencentCloudSsmRotationDetail() *schema.Resource {
 }
 
 func dataSourceTencentCloudSsmRotationDetailRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssm_rotation_detail.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ssm_rotation_detail.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
-		service        = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service        = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		rotationDetail *ssm.DescribeRotationDetailResponseParams
 		secretName     string
 	)
@@ -65,10 +68,10 @@ func dataSourceTencentCloudSsmRotationDetailRead(d *schema.ResourceData, meta in
 		secretName = v.(string)
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSsmRotationDetailByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		rotationDetail = result
@@ -98,7 +101,7 @@ func dataSourceTencentCloudSsmRotationDetailRead(d *schema.ResourceData, meta in
 	d.SetId(secretName)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

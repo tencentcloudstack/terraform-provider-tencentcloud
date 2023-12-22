@@ -1,14 +1,17 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSsmProducts() *schema.Resource {
+func DataSourceTencentCloudSsmProducts() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSsmProductsRead,
 		Schema: map[string]*schema.Schema{
@@ -28,20 +31,20 @@ func dataSourceTencentCloudSsmProducts() *schema.Resource {
 }
 
 func dataSourceTencentCloudSsmProductsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssm_products.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ssm_products.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		products []*string
 	)
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSsmProductsByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		products = result
@@ -59,7 +62,7 @@ func dataSourceTencentCloudSsmProductsRead(d *schema.ResourceData, meta interfac
 	d.SetId(helper.StrListToStr(products))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), products); e != nil {
+		if e := tccommon.WriteToFile(output.(string), products); e != nil {
 			return e
 		}
 	}

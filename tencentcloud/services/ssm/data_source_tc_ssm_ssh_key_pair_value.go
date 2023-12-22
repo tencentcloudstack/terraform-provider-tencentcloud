@@ -1,15 +1,18 @@
-package tencentcloud
+package ssm
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSsmSshKeyPairValue() *schema.Resource {
+func DataSourceTencentCloudSsmSshKeyPairValue() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSsmSshKeyPairValueRead,
 		Schema: map[string]*schema.Schema{
@@ -60,13 +63,13 @@ func dataSourceTencentCloudSsmSshKeyPairValue() *schema.Resource {
 }
 
 func dataSourceTencentCloudSsmSshKeyPairValueRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssm_ssh_key_pair_value.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ssm_ssh_key_pair_value.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
-		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
-		service         = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service         = SsmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		sshKeyPairValue *ssm.GetSSHKeyPairValueResponseParams
 		sshKeyID        string
 	)
@@ -80,10 +83,10 @@ func dataSourceTencentCloudSsmSshKeyPairValueRead(d *schema.ResourceData, meta i
 		paramMap["SSHKeyId"] = helper.String(v.(string))
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSsmSshKeyPairValueByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		sshKeyPairValue = result
@@ -122,7 +125,7 @@ func dataSourceTencentCloudSsmSshKeyPairValueRead(d *schema.ResourceData, meta i
 	d.SetId(sshKeyID)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}
