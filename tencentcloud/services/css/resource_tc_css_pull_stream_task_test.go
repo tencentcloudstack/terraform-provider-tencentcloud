@@ -67,7 +67,7 @@ func TestAccTencentCloudCssPullStreamTaskResource_basic(t *testing.T) {
 	startTimeNew := baseTime.Add(30 * time.Minute).Format(time.RFC3339)
 	endTimeNew := baseTime.Add(2 * time.Hour).Format(time.RFC3339)
 	liveUrl := "rtmp://5000.liveplay.myqcloud.com/live/stream1"
-	// vodUrl := "https://main.qcloudimg.com/video/tcacctest.TVP_HOME.mp4"
+	// vodUrl := "https://main.qcloudimg.com/video/TVP_HOME.mp4"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
