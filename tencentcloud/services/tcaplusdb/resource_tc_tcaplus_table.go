@@ -1,4 +1,4 @@
-package tencentcloud
+package tcaplusdb
 
 import (
 	"context"
@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudTcaplusTable() *schema.Resource {
+func ResourceTencentCloudTcaplusTable() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcaplusTableCreate,
 		Read:   resourceTencentCloudTcaplusTableRead,
@@ -39,7 +41,7 @@ func resourceTencentCloudTcaplusTable() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(TCAPLUS_TABLE_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(TCAPLUS_TABLE_TYPES),
 				Description:  "Type of the TcaplusDB table. Valid values are `GENERIC` and `LIST`.",
 			},
 			"description": {
@@ -55,7 +57,7 @@ func resourceTencentCloudTcaplusTable() *schema.Resource {
 			"table_idl_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue(TCAPLUS_TABLE_IDL_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(TCAPLUS_TABLE_IDL_TYPES),
 				Description:  "IDL type of the TcaplusDB table. Valid values: `PROTO` and `TDR`.",
 			},
 			"reserved_read_cu": {
@@ -103,12 +105,12 @@ func resourceTencentCloudTcaplusTable() *schema.Resource {
 
 func resourceTencentCloudTcaplusTableCreate(d *schema.ResourceData, meta interface{}) error {
 
-	defer logElapsed("resource.tencentcloud_tcaplus_table.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_table.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var tcaplusIdlId TcaplusIdlId
 
@@ -143,10 +145,10 @@ func resourceTencentCloudTcaplusTableCreate(d *schema.ResourceData, meta interfa
 
 	d.SetId(tableInstanceId)
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		info, has, err := tcaplusService.DescribeTask(ctx, clusterId, taskId)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if !has {
 			return resource.NonRetryableError(fmt.Errorf("create table task has been deleted"))
@@ -176,12 +178,12 @@ func resourceTencentCloudTcaplusTableCreate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_table.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_table.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	clusterId := d.Get("cluster_id").(string)
 
@@ -196,10 +198,10 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 		err := tcaplusService.ModifyTableMemo(ctx, clusterId, groupId, tableId, tableName, d.Get("description").(string))
 		if err != nil {
 
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				err = tcaplusService.ModifyTableMemo(ctx, clusterId, groupId, tableId, tableName, d.Get("description").(string))
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -217,10 +219,10 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 		}
 		taskId, err := tcaplusService.ModifyTables(ctx, tcaplusIdlId, clusterId, groupId, tableId, tableName, d.Get("table_idl_type").(string))
 		if err != nil {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				taskId, err = tcaplusService.ModifyTables(ctx, tcaplusIdlId, clusterId, groupId, tableId, tableName, d.Get("table_idl_type").(string))
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -228,10 +230,10 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			info, has, err := tcaplusService.DescribeTask(ctx, clusterId, taskId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if !has {
 				return resource.NonRetryableError(fmt.Errorf("modify table idl task has been deleted"))
@@ -261,22 +263,22 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_table.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_table.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	clusterId := d.Get("cluster_id").(string)
 
 	tableInfo, has, err := tcaplusService.DescribeTable(ctx, clusterId, d.Id())
 
 	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			tableInfo, has, err = tcaplusService.DescribeTable(ctx, clusterId, d.Id())
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if !has {
 				return nil
@@ -310,12 +312,12 @@ func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_table.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_table.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	clusterId := d.Get("cluster_id").(string)
 	groupId := d.Get("tablegroup_id").(string)
 	tableName := d.Get("table_name").(string)
@@ -324,10 +326,10 @@ func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interfa
 	_, err := tcaplusService.DeleteTable(ctx, clusterId, groupId, instanceTableId, tableName)
 
 	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			_, err = tcaplusService.DeleteTable(ctx, clusterId, groupId, instanceTableId, tableName)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -339,10 +341,10 @@ func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interfa
 	_, has, err := tcaplusService.DescribeTable(ctx, clusterId, instanceTableId)
 
 	if err != nil || has {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			_, has, err = tcaplusService.DescribeTable(ctx, clusterId, instanceTableId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if has {
 				err = fmt.Errorf("delete table fail, table still exist from sdk DescribeTable")
@@ -361,10 +363,10 @@ func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interfa
 
 	taskId, err := tcaplusService.DeleteTable(ctx, clusterId, groupId, instanceTableId, tableName)
 	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			taskId, err = tcaplusService.DeleteTable(ctx, clusterId, groupId, instanceTableId, tableName)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -373,10 +375,10 @@ func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		info, has, err := tcaplusService.DescribeTask(ctx, clusterId, taskId)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if !has {
 			return resource.NonRetryableError(fmt.Errorf("delete table task has been deleted"))

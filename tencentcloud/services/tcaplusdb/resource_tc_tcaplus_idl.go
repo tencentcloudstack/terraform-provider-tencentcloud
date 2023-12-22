@@ -1,10 +1,12 @@
-package tencentcloud
+package tcaplusdb
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,7 +21,7 @@ type TcaplusIdlId struct {
 	FileType    string
 }
 
-func resourceTencentCloudTcaplusIdl() *schema.Resource {
+func ResourceTencentCloudTcaplusIdl() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcaplusIdlCreate,
 		Read:   resourceTencentCloudTcaplusIdlRead,
@@ -47,14 +49,14 @@ func resourceTencentCloudTcaplusIdl() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(TCAPLUS_IDL_TYPES),
 				Description:  "Type of the IDL file. Valid values are PROTO and TDR.",
 			},
 			"file_ext_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(TCAPLUS_FILE_EXT_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(TCAPLUS_FILE_EXT_TYPES),
 				Description:  "File ext type of the IDL file. If `file_type` is `PROTO`, `file_ext_type` must be 'proto'; If `file_type` is `TDR`, `file_ext_type` must be 'xml'.",
 			},
 			"file_content": {
@@ -114,12 +116,12 @@ func resourceTencentCloudTcaplusIdl() *schema.Resource {
 }
 
 func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_idl.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_idl.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var tcaplusIdlId TcaplusIdlId
 	tcaplusIdlId.ClusterId = d.Get("cluster_id").(string)
@@ -146,10 +148,10 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 
 	idlId, parseTableInfos, err := tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, groupId, fileContent)
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			idlId, parseTableInfos, err = tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, groupId, fileContent)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -193,13 +195,13 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_idl.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_idl.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var tcaplusIdlId TcaplusIdlId
 
@@ -209,10 +211,10 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 
 	parseTableInfos, err := tcaplusService.DesOldIdlFiles(ctx, tcaplusIdlId)
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			parseTableInfos, err = tcaplusService.DesOldIdlFiles(ctx, tcaplusIdlId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -250,10 +252,10 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 
 func resourceTencentCloudTcaplusIdlDelete(d *schema.ResourceData, meta interface{}) error {
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var tcaplusIdlId TcaplusIdlId
 
@@ -264,10 +266,10 @@ func resourceTencentCloudTcaplusIdlDelete(d *schema.ResourceData, meta interface
 	err := tcaplusService.DeleteIdlFiles(ctx, tcaplusIdlId)
 
 	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			err = tcaplusService.DeleteIdlFiles(ctx, tcaplusIdlId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})

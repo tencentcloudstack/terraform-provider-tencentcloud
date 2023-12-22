@@ -1,4 +1,4 @@
-package tencentcloud
+package tcaplusdb
 
 import (
 	"context"
@@ -9,20 +9,27 @@ import (
 	"strings"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/pkg/errors"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewTcaplusService(client *connectivity.TencentCloudClient) TcaplusService {
+	return TcaplusService{client: client}
+}
 
 type TcaplusService struct {
 	client *connectivity.TencentCloudClient
 }
 
 func (me *TcaplusService) CreateCluster(ctx context.Context, idlType, clusterName, vpcId, subnetId, password string) (id string, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewCreateClusterRequest()
 	defer func() {
 		if errRet != nil {
@@ -53,7 +60,7 @@ func (me *TcaplusService) CreateCluster(ctx context.Context, idlType, clusterNam
 }
 
 func (me *TcaplusService) DescribeClusters(ctx context.Context, clusterId string, clusterName string) (clusterInfos []*tcaplusdb.ClusterInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeClustersRequest()
 
 	clusterInfos = make([]*tcaplusdb.ClusterInfo, 0, 100)
@@ -106,7 +113,7 @@ func (me *TcaplusService) DescribeClusters(ctx context.Context, clusterId string
 }
 
 func (me *TcaplusService) DescribeCluster(ctx context.Context, id string) (clusterInfo tcaplusdb.ClusterInfo, has bool, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeClustersRequest()
 	defer func() {
 		if errRet != nil {
@@ -146,7 +153,7 @@ func (me *TcaplusService) DescribeCluster(ctx context.Context, id string) (clust
 
 func (me *TcaplusService) DeleteCluster(ctx context.Context, id string) (taskId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDeleteClusterRequest()
 	defer func() {
 		if errRet != nil {
@@ -175,7 +182,7 @@ func (me *TcaplusService) DeleteCluster(ctx context.Context, id string) (taskId 
 }
 
 func (me *TcaplusService) ModifyClusterName(ctx context.Context, id string, clusterName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewModifyClusterNameRequest()
 	defer func() {
 		if errRet != nil {
@@ -199,7 +206,7 @@ func (me *TcaplusService) ModifyClusterName(ctx context.Context, id string, clus
 
 func (me *TcaplusService) ModifyClusterPassword(ctx context.Context, id string, oldPassword, newPassword string, oldPasswordExpireLast int64) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewModifyClusterPasswordRequest()
 	defer func() {
 		if errRet != nil {
@@ -234,7 +241,7 @@ func (me *TcaplusService) ModifyClusterPassword(ctx context.Context, id string, 
 }
 
 func (me *TcaplusService) DescribeTask(ctx context.Context, clusterId string, taskId string) (taskInfo tcaplusdb.TaskInfoNew, has bool, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeTasksRequest()
 	defer func() {
 		if errRet != nil {
@@ -268,7 +275,7 @@ func (me *TcaplusService) DescribeTask(ctx context.Context, clusterId string, ta
 }
 
 func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName string) (groupId string, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewCreateTableGroupRequest()
 	defer func() {
 		if errRet != nil {
@@ -296,7 +303,7 @@ func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName 
 }
 
 func (me *TcaplusService) DescribeGroups(ctx context.Context, clusterId string, groupId, groupName string) (infos []*tcaplusdb.TableGroupInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeTableGroupsRequest()
 
 	infos = make([]*tcaplusdb.TableGroupInfo, 0, 100)
@@ -361,7 +368,7 @@ func (me *TcaplusService) DescribeGroups(ctx context.Context, clusterId string, 
 }
 
 func (me *TcaplusService) DescribeGroup(ctx context.Context, id string, groupId string) (info tcaplusdb.TableGroupInfo, has bool, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeTableGroupsRequest()
 	defer func() {
 		if errRet != nil {
@@ -410,7 +417,7 @@ func (me *TcaplusService) DescribeGroup(ctx context.Context, id string, groupId 
 
 func (me *TcaplusService) DeleteGroup(ctx context.Context, clusterId string, groupId string) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDeleteTableGroupRequest()
 	defer func() {
 		if errRet != nil {
@@ -441,7 +448,7 @@ func (me *TcaplusService) DeleteGroup(ctx context.Context, clusterId string, gro
 }
 
 func (me *TcaplusService) ModifyGroupName(ctx context.Context, id string, groupId, groupName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewModifyTableGroupNameRequest()
 	defer func() {
 		if errRet != nil {
@@ -473,7 +480,7 @@ func (me *TcaplusService) ModifyGroupName(ctx context.Context, id string, groupI
 
 func (me *TcaplusService) DeleteIdlFiles(ctx context.Context, tid TcaplusIdlId) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDeleteIdlFilesRequest()
 	defer func() {
 		if errRet != nil {
@@ -505,7 +512,7 @@ func (me *TcaplusService) DeleteIdlFiles(ctx context.Context, tid TcaplusIdlId) 
 }
 
 func (me *TcaplusService) DesOldIdlFiles(ctx context.Context, tid TcaplusIdlId) (tableInfos []*tcaplusdb.ParsedTableInfoNew, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewVerifyIdlFilesRequest()
 
 	defer func() {
@@ -546,7 +553,7 @@ func (me *TcaplusService) DesOldIdlFiles(ctx context.Context, tid TcaplusIdlId) 
 }
 
 func (me *TcaplusService) VerifyIdlFiles(ctx context.Context, tid TcaplusIdlId, groupId string, fileContent string) (idlId int64, tableInfos []*tcaplusdb.ParsedTableInfoNew, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewVerifyIdlFilesRequest()
 
 	defer func() {
@@ -606,7 +613,7 @@ func (me *TcaplusService) CreateTables(ctx context.Context, tid TcaplusIdlId,
 	reservedWriteQps,
 	reservedVolume int64) (taskId string, tableInstanceId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewCreateTablesRequest()
 
 	defer func() {
@@ -676,7 +683,7 @@ func (me *TcaplusService) CreateTables(ctx context.Context, tid TcaplusIdlId,
 	return
 }
 func (me *TcaplusService) DescribeTables(ctx context.Context, clusterId string, groupId, tableId, tableName string) (infos []*tcaplusdb.TableInfoNew, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeTablesRequest()
 
 	infos = make([]*tcaplusdb.TableInfoNew, 0, 100)
@@ -754,7 +761,7 @@ func (me *TcaplusService) DescribeTables(ctx context.Context, clusterId string, 
 
 func (me *TcaplusService) DescribeTable(ctx context.Context, clusterId, tableInstanceId string) (tableInfo tcaplusdb.TableInfoNew, has bool, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeTablesRequest()
 
 	defer func() {
@@ -805,7 +812,7 @@ func (me *TcaplusService) DescribeTable(ctx context.Context, clusterId, tableIns
 
 func (me *TcaplusService) DeleteTable(ctx context.Context, clusterId, groupId, tableInstanceId, tableName string) (taskId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDeleteTablesRequest()
 
 	defer func() {
@@ -852,7 +859,7 @@ func (me *TcaplusService) DeleteTable(ctx context.Context, clusterId, groupId, t
 
 func (me *TcaplusService) ModifyTableMemo(ctx context.Context, clusterId, groupId, tableInstanceId, tableName, newDesc string) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewModifyTableMemosRequest()
 
 	defer func() {
@@ -906,7 +913,7 @@ func (me *TcaplusService) ModifyTables(ctx context.Context, tid TcaplusIdlId,
 	tableName,
 	tableIdType string) (taskId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewModifyTablesRequest()
 
 	defer func() {
@@ -965,7 +972,7 @@ func (me *TcaplusService) ModifyTables(ctx context.Context, tid TcaplusIdlId,
 
 func (me *TcaplusService) DescribeIdlFileInfos(ctx context.Context, clusterId string) (infos []*tcaplusdb.IdlFileInfo, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewDescribeIdlFileInfosRequest()
 
 	infos = make([]*tcaplusdb.IdlFileInfo, 0, 100)

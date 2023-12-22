@@ -1,4 +1,4 @@
-package tencentcloud
+package tcaplusdb
 
 import (
 	"context"
@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceTencentCloudTcaplusTables() *schema.Resource {
+func DataSourceTencentCloudTcaplusTables() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTcaplusTablesRead,
 		Schema: map[string]*schema.Schema{
@@ -122,13 +124,13 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 }
 
 func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tcaplus_tables.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_tcaplus_tables.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	service := TcaplusService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	clusterId := d.Get("cluster_id").(string)
@@ -220,7 +222,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		return writeToFile(output.(string), list)
+		return tccommon.WriteToFile(output.(string), list)
 	}
 	return nil
 

@@ -1,4 +1,4 @@
-package tencentcloud
+package tcaplusdb
 
 const (
 	TCAPLUS_IDL_TYPE_PROTO = "PROTO"

@@ -1,10 +1,14 @@
-package tencentcloud
+package tcaplusdb_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
 	"time"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctcaplusdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -18,20 +22,20 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_tcaplus_table", &resource.Sweeper{
 		Name: "tencentcloud_tcaplus_table",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
-			service := TcaplusService{client}
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+			service := svctcaplusdb.NewTcaplusService(client)
 
-			clusters, err := service.DescribeClusters(ctx, "", defaultTcaPlusClusterName)
+			clusters, err := service.DescribeClusters(ctx, "", tcacctest.DefaultTcaPlusClusterName)
 
 			if err != nil {
 				return err
 			}
 
 			if len(clusters) == 0 {
-				return fmt.Errorf("no cluster named %s", defaultTcaPlusClusterName)
+				return fmt.Errorf("no cluster named %s", tcacctest.DefaultTcaPlusClusterName)
 			}
 
 			clusterId := *clusters[0].ClusterId
@@ -45,7 +49,7 @@ func init() {
 				insId := *table.TableInstanceId
 				created := time.Time{}
 
-				if isResourcePersist(name, &created) {
+				if tcacctest.IsResourcePersist(name, &created) {
 					continue
 				}
 
@@ -54,10 +58,10 @@ func init() {
 					continue
 				}
 
-				err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+				err = resource.Retry(tccommon.ReadRetryTimeout*3, func() *resource.RetryError {
 					info, has, err := service.DescribeTask(ctx, clusterId, taskId)
 					if err != nil {
-						return retryError(err)
+						return tccommon.RetryError(err)
 					}
 					if !has {
 						return nil
@@ -86,8 +90,8 @@ func init() {
 func TestAccTencentCloudTcaplusTableResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTcaplusTableDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -136,9 +140,9 @@ func testAccCheckTcaplusTableDestroy(s *terraform.State) error {
 		if rs.Type != testTcaplusTableResourceName {
 			continue
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeTable(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 		if err != nil {
@@ -162,9 +166,9 @@ func testAccCheckTcaplusTableExists(n string) resource.TestCheckFunc {
 		if !ok {
 			return fmt.Errorf("resource %s is not found", n)
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeTable(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 		if err != nil {
@@ -180,7 +184,7 @@ func testAccCheckTcaplusTableExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcaplusTableBasic = defaultTcaPlusData + `
+const testAccTcaplusTableBasic = tcacctest.DefaultTcaPlusData + `
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   cluster_id     = local.tcaplus_id
   tablegroup_id  = local.tcaplus_table_group_id

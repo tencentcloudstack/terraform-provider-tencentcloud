@@ -1,7 +1,9 @@
-package tencentcloud
+package tcaplusdb_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,8 +13,8 @@ var testDataTcaplusTablesName = "data.tencentcloud_tcaplus_tables.id_test"
 func TestAccTencentCloudTcaplusTablesData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTcaplusTableDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -40,7 +42,7 @@ func TestAccTencentCloudTcaplusTablesData(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTcaplusTablesBasic = defaultTcaPlusData + `
+const testAccTencentCloudDataTcaplusTablesBasic = tcacctest.DefaultTcaPlusData + `
 data "tencentcloud_tcaplus_tables" "id_test" {
   cluster_id   = local.tcaplus_id
   table_name     =  local.tcaplus_table

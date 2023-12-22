@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"encoding/json"
@@ -501,10 +502,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_scf_layers":                                   scf.DataSourceTencentCloudScfLayers(),
 			"tencentcloud_scf_function_versions":                        scf.DataSourceTencentCloudScfFunctionVersions(),
 			"tencentcloud_scf_logs":                                     scf.DataSourceTencentCloudScfLogs(),
-			"tencentcloud_tcaplus_clusters":                             dataSourceTencentCloudTcaplusClusters(),
-			"tencentcloud_tcaplus_tablegroups":                          dataSourceTencentCloudTcaplusTableGroups(),
-			"tencentcloud_tcaplus_tables":                               dataSourceTencentCloudTcaplusTables(),
-			"tencentcloud_tcaplus_idls":                                 dataSourceTencentCloudTcaplusIdls(),
+			"tencentcloud_tcaplus_clusters":                             tcaplusdb.DataSourceTencentCloudTcaplusClusters(),
+			"tencentcloud_tcaplus_tablegroups":                          tcaplusdb.DataSourceTencentCloudTcaplusTableGroups(),
+			"tencentcloud_tcaplus_tables":                               tcaplusdb.DataSourceTencentCloudTcaplusTables(),
+			"tencentcloud_tcaplus_idls":                                 tcaplusdb.DataSourceTencentCloudTcaplusIdls(),
 			"tencentcloud_monitor_policy_conditions":                    monitor.DataSourceTencentCloudMonitorPolicyConditions(),
 			"tencentcloud_monitor_data":                                 monitor.DataSourceTencentCloudMonitorData(),
 			"tencentcloud_monitor_product_event":                        monitor.DataSourceTencentCloudMonitorProductEvent(),
@@ -1248,10 +1249,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_scf_layer":                                           scf.ResourceTencentCloudScfLayer(),
 			"tencentcloud_scf_function_alias":                                  scf.ResourceTencentCloudScfFunctionAlias(),
 			"tencentcloud_scf_trigger_config":                                  scf.ResourceTencentCloudScfTriggerConfig(),
-			"tencentcloud_tcaplus_cluster":                                     resourceTencentCloudTcaplusCluster(),
-			"tencentcloud_tcaplus_tablegroup":                                  resourceTencentCloudTcaplusTableGroup(),
-			"tencentcloud_tcaplus_idl":                                         resourceTencentCloudTcaplusIdl(),
-			"tencentcloud_tcaplus_table":                                       resourceTencentCloudTcaplusTable(),
+			"tencentcloud_tcaplus_cluster":                                     tcaplusdb.ResourceTencentCloudTcaplusCluster(),
+			"tencentcloud_tcaplus_tablegroup":                                  tcaplusdb.ResourceTencentCloudTcaplusTableGroup(),
+			"tencentcloud_tcaplus_idl":                                         tcaplusdb.ResourceTencentCloudTcaplusIdl(),
+			"tencentcloud_tcaplus_table":                                       tcaplusdb.ResourceTencentCloudTcaplusTable(),
 			"tencentcloud_cdn_domain":                                          cdn.ResourceTencentCloudCdnDomain(),
 			"tencentcloud_cdn_url_push":                                        cdn.ResourceTencentCloudUrlPush(),
 			"tencentcloud_cdn_url_purge":                                       cdn.ResourceTencentCloudUrlPurge(),

@@ -1,10 +1,14 @@
-package tencentcloud
+package tcaplusdb_test
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctcaplusdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -16,8 +20,8 @@ var testTcaplusIdlResourceNameResourceKey = testTcaplusIdlResourceName + ".test_
 func TestAccTencentCloudTcaplusIdlResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTcaplusIdlDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -47,8 +51,8 @@ func TestAccTencentCloudTcaplusIdlResource(t *testing.T) {
 func TestAccTencentCloudTcaplusTdrIdlResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTcaplusIdlDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -71,26 +75,26 @@ func testAccCheckTcaplusIdlDestroy(s *terraform.State) error {
 		if rs.Type != testTcaplusIdlResourceName {
 			continue
 		}
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-		var tcaplusIdlId TcaplusIdlId
+		var tcaplusIdlId svctcaplusdb.TcaplusIdlId
 
 		if err := json.Unmarshal([]byte(rs.Primary.ID), &tcaplusIdlId); err != nil {
 			return fmt.Errorf("idl id is broken,%s", err.Error())
 		}
-		outerr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		outerr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			infos, err := service.DescribeIdlFileInfos(ctx, tcaplusIdlId.ClusterId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if len(infos) == 0 {
 				return nil
 			}
 			for _, info := range infos {
 				if *info.FileId == tcaplusIdlId.FileId {
-					return retryError(fmt.Errorf("delete failed!"))
+					return tccommon.RetryError(fmt.Errorf("delete failed!"))
 				}
 			}
 			return nil
@@ -108,11 +112,11 @@ func testAccCheckTcaplusIdlExists(n string) resource.TestCheckFunc {
 		if !ok {
 			return fmt.Errorf("resource %s is not found", n)
 		}
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-		var tcaplusIdlId TcaplusIdlId
+		var tcaplusIdlId svctcaplusdb.TcaplusIdlId
 
 		if err := json.Unmarshal([]byte(rs.Primary.ID), &tcaplusIdlId); err != nil {
 			return fmt.Errorf("idl id is broken,%s", err.Error())
@@ -131,7 +135,7 @@ func testAccCheckTcaplusIdlExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcaplusIdl = defaultTcaPlusData + `
+const testAccTcaplusIdl = tcacctest.DefaultTcaPlusData + `
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   cluster_id     = local.tcaplus_id
   tablegroup_id  = local.tcaplus_table_group_id
@@ -168,7 +172,7 @@ resource "tencentcloud_tcaplus_idl" "test_idl" {
 }
 `
 
-const testAccTcaplusIdlTdr = defaultTcaPlusData + `
+const testAccTcaplusIdlTdr = tcacctest.DefaultTcaPlusData + `
 resource "tencentcloud_tcaplus_idl" "test_tdr_idl" {
   cluster_id     = data.tencentcloud_tcaplus_clusters.tdr_tcaplus.list.0.cluster_id
   tablegroup_id  = data.tencentcloud_tcaplus_tablegroups.tdr_group.list.0.tablegroup_id

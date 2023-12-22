@@ -1,15 +1,17 @@
-package tencentcloud
+package tcaplusdb
 
 import (
 	"context"
 	"errors"
 	"fmt"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudTcaplusTableGroup() *schema.Resource {
+func ResourceTencentCloudTcaplusTableGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcaplusTableGroupCreate,
 		Read:   resourceTencentCloudTcaplusTableGroupRead,
@@ -25,7 +27,7 @@ func resourceTencentCloudTcaplusTableGroup() *schema.Resource {
 			"tablegroup_name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 30),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 30),
 				Description:  "Name of the TcaplusDB table group. Name length should be between 1 and 30.",
 			},
 			// Computed values.
@@ -49,12 +51,12 @@ func resourceTencentCloudTcaplusTableGroup() *schema.Resource {
 }
 
 func resourceTencentCloudTcaplusTableGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_tablegroup.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		clusterId = d.Get("cluster_id").(string)
@@ -69,23 +71,23 @@ func resourceTencentCloudTcaplusTableGroupCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudTcaplusTableGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_tablegroup.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	clusterId := d.Get("cluster_id").(string)
 	groupId := d.Id()
 
 	info, has, err := tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			info, has, err = tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -107,21 +109,21 @@ func resourceTencentCloudTcaplusTableGroupRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudTcaplusTableGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_tablegroup.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	clusterId := d.Get("cluster_id").(string)
 	groupId := d.Id()
 
 	if d.HasChange("tablegroup_name") {
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			err := tcaplusService.ModifyGroupName(ctx, clusterId, groupId, d.Get("tablegroup_name").(string))
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -133,22 +135,22 @@ func resourceTencentCloudTcaplusTableGroupUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudTcaplusTableGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_tablegroup.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	clusterId := d.Get("cluster_id").(string)
 	groupId := d.Id()
 
 	err := tcaplusService.DeleteGroup(ctx, clusterId, groupId)
 	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			err = tcaplusService.DeleteGroup(ctx, clusterId, groupId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -160,10 +162,10 @@ func resourceTencentCloudTcaplusTableGroupDelete(d *schema.ResourceData, meta in
 
 	_, has, err := tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 	if err != nil || has {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			_, has, err = tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if has {
 				err = fmt.Errorf("delete group fail, group still exist from sdk DescribeGroup")

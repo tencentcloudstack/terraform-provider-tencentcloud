@@ -1,9 +1,13 @@
-package tencentcloud
+package tcaplusdb_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctcaplusdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -15,8 +19,8 @@ var testTcaplusGroupResourceNameResourceKey = testTcaplusGroupResourceName + ".t
 func TestAccTencentCloudTcaplusGroupResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTcaplusGroupDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -47,9 +51,9 @@ func testAccCheckTcaplusGroupDestroy(s *terraform.State) error {
 		if rs.Type != testTcaplusGroupResourceName {
 			continue
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeGroup(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 
@@ -74,9 +78,9 @@ func testAccCheckTcaplusGroupExists(n string) resource.TestCheckFunc {
 		if !ok {
 			return fmt.Errorf("resource %s is not found", n)
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeGroup(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 
@@ -94,13 +98,13 @@ func testAccCheckTcaplusGroupExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcaplusGroup = defaultTcaPlusData + `
+const testAccTcaplusGroup = tcacctest.DefaultTcaPlusData + `
 resource "tencentcloud_tcaplus_tablegroup" "test_group" {
   cluster_id         = local.tcaplus_id
   tablegroup_name    = "tf_test_group_name_guagua"
 }
 `
-const testAccTcaplusGroupUpdate = defaultTcaPlusData + `
+const testAccTcaplusGroupUpdate = tcacctest.DefaultTcaPlusData + `
 resource "tencentcloud_tcaplus_tablegroup" "test_group" {
   cluster_id         = local.tcaplus_id
   tablegroup_name    = "tf_test_group_name_guagua_2"

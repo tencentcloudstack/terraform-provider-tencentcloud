@@ -1,4 +1,4 @@
-package tencentcloud
+package tcaplusdb
 
 import (
 	"context"
@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func resourceTencentCloudTcaplusCluster() *schema.Resource {
+func ResourceTencentCloudTcaplusCluster() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcaplusClusterCreate,
 		Read:   resourceTencentCloudTcaplusClusterRead,
@@ -26,13 +28,13 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(TCAPLUS_IDL_TYPES),
 				Description:  "IDL type of the TcaplusDB cluster. Valid values: `PROTO` and `TDR`.",
 			},
 			"cluster_name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 30),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 30),
 				Description:  "Name of the TcaplusDB cluster. Name length should be between 1 and 30.",
 			},
 			"vpc_id": {
@@ -86,7 +88,7 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      3600,
-				ValidateFunc: validateIntegerMin(300),
+				ValidateFunc: tccommon.ValidateIntegerMin(300),
 				Description:  "Expiration time of old password after password update, unit: second.",
 			},
 
@@ -132,12 +134,12 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 
 func resourceTencentCloudTcaplusClusterCreate(d *schema.ResourceData, meta interface{}) error {
 
-	defer logElapsed("resource.tencentcloud_tcaplus_cluster.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_cluster.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		idlType     = d.Get("idl_type").(string)
@@ -150,10 +152,10 @@ func resourceTencentCloudTcaplusClusterCreate(d *schema.ResourceData, meta inter
 	var clusterId string
 	var inErr, outErr error
 
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		clusterId, inErr = tcaplusService.CreateCluster(ctx, idlType, clusterName, vpcId, subnetId, password)
 		if inErr != nil {
-			return retryError(inErr)
+			return tccommon.RetryError(inErr)
 		}
 		return nil
 	})
@@ -166,20 +168,20 @@ func resourceTencentCloudTcaplusClusterCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudTcaplusClusterRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_cluster.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_cluster.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	clusterInfo, has, err := tcaplusService.DescribeCluster(ctx, d.Id())
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			clusterInfo, has, err = tcaplusService.DescribeCluster(ctx, d.Id())
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -212,20 +214,20 @@ func resourceTencentCloudTcaplusClusterRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_clusterupdate")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_clusterupdate")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	d.Partial(true)
 
 	if d.HasChange("cluster_name") {
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			err := tcaplusService.ModifyClusterName(ctx, d.Id(), d.Get("cluster_name").(string))
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -236,7 +238,7 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("password") {
 		oldPwd, newPwd := d.GetChange("password")
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			err := tcaplusService.ModifyClusterPassword(ctx, d.Id(),
 				oldPwd.(string),
 				newPwd.(string),
@@ -249,7 +251,7 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 				}
 			}
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -264,20 +266,20 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudTcaplusClusterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_cluster.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_cluster.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	_, err := tcaplusService.DeleteCluster(ctx, d.Id())
 
 	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			_, err = tcaplusService.DeleteCluster(ctx, d.Id())
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -289,10 +291,10 @@ func resourceTencentCloudTcaplusClusterDelete(d *schema.ResourceData, meta inter
 
 	_, has, err := tcaplusService.DescribeCluster(ctx, d.Id())
 	if err != nil || has {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			_, has, err = tcaplusService.DescribeCluster(ctx, d.Id())
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 
 			if has {

@@ -1,10 +1,14 @@
-package tencentcloud
+package tcaplusdb_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
 	"time"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctcaplusdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -18,11 +22,11 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_tcaplus_cluster", &resource.Sweeper{
 		Name: "tencentcloud_tcaplus_cluster",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
-			service := TcaplusService{client}
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+			service := svctcaplusdb.NewTcaplusService(client)
 
 			clusters, err := service.DescribeClusters(ctx, "", "")
 			if err != nil {
@@ -37,7 +41,7 @@ func init() {
 				if err != nil {
 					created = time.Time{}
 				}
-				if isResourcePersist(name, &created) {
+				if tcacctest.IsResourcePersist(name, &created) {
 					continue
 				}
 				_, err = service.DeleteCluster(ctx, id)
@@ -54,8 +58,8 @@ func init() {
 func TestAccTencentCloudTcaplusClusterResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTcaplusClusterDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -106,10 +110,10 @@ func testAccCheckTcaplusClusterDestroy(s *terraform.State) error {
 		if rs.Type != testTcaplusClusterResourceName {
 			continue
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeCluster(ctx, rs.Primary.ID)
 		if err != nil {
@@ -133,10 +137,10 @@ func testAccCheckTcaplusClusterExists(n string) resource.TestCheckFunc {
 		if !ok {
 			return fmt.Errorf("resource %s is not found", n)
 		}
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctcaplusdb.NewTcaplusService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeCluster(ctx, rs.Primary.ID)
 		if err != nil {
@@ -154,7 +158,7 @@ func testAccCheckTcaplusClusterExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcaplusCluster string = defaultVpcSubnets + `
+const testAccTcaplusCluster string = tcacctest.DefaultVpcSubnets + `
 resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
   cluster_name             = "tf_te1_guagua"
@@ -164,7 +168,7 @@ resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   old_password_expire_last = 3600
 }
 `
-const testAccTcaplusClusterUpdate string = defaultVpcSubnets + `
+const testAccTcaplusClusterUpdate string = tcacctest.DefaultVpcSubnets + `
 resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
   cluster_name             = "tf_te1_guagua_2"
