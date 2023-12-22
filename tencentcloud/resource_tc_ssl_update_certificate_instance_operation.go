@@ -175,7 +175,7 @@ func resourceTencentCloudSslUpdateCertificateInstanceOperationCreate(d *schema.R
 		request.ExpiringNotificationSwitch = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("repeatable"); v != nil {
+	if v, _ := d.GetOkExists("repeatable"); v != nil {
 		request.Repeatable = helper.Bool(v.(bool))
 	}
 
