@@ -371,6 +371,10 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 					if vv.ForceNew {
 						opt += ", ForceNew"
 					}
+					if vv.Deprecated != "" {
+						opt += ", **Deprecated**"
+						vv.Description = fmt.Sprintf("%s %s", vv.Deprecated, vv.Description)
+					}
 					requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
 				} else if vv.Optional {
 					opt := "Optional"
@@ -378,6 +382,10 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 					opt += fmt.Sprintf(", %s", valueType)
 					if vv.ForceNew {
 						opt += ", ForceNew"
+					}
+					if vv.Deprecated != "" {
+						opt += ", **Deprecated**"
+						vv.Description = fmt.Sprintf("%s %s", vv.Deprecated, vv.Description)
 					}
 					optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
 				}

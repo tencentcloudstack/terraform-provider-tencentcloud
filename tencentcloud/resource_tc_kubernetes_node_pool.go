@@ -193,7 +193,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_config.0.orderly_security_group_ids"},
 			Deprecated:    "The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead.",
-			Description:   "(**Deprecated**) The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead. Security groups to which a CVM instance belongs.",
+			Description:   "Security groups to which a CVM instance belongs.",
 		},
 		"orderly_security_group_ids": {
 			Type:          schema.TypeList,
