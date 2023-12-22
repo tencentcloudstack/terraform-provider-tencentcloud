@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ssl_update_certificate_instance_operation: Support upload ca
+```
