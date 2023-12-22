@@ -1,9 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pts"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/project"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/privatedns"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,34 +9,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mps"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pls"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mdl"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mariadb"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dnspod"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/domain"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dts"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/eb"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dc"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcdb"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
@@ -84,6 +53,32 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dbbrain"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcdb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dnspod"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/domain"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dts"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/eb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mariadb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mdl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mps"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pls"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/privatedns"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/project"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pts"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/rum"
 )
 
 const (
@@ -692,32 +687,32 @@ func Provider() *schema.Provider {
 			"tencentcloud_cat_probe_data":                               cat.DataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                     cat.DataSourceTencentCloudCatNode(),
 			"tencentcloud_cat_metric_data":                              cat.DataSourceTencentCloudCatMetricData(),
-			"tencentcloud_rum_project":                                  dataSourceTencentCloudRumProject(),
-			"tencentcloud_rum_offline_log_config":                       dataSourceTencentCloudRumOfflineLogConfig(),
-			"tencentcloud_rum_whitelist":                                dataSourceTencentCloudRumWhitelist(),
-			"tencentcloud_rum_taw_instance":                             dataSourceTencentCloudRumTawInstance(),
-			"tencentcloud_rum_custom_url":                               dataSourceTencentCloudRumCustomUrl(),
-			"tencentcloud_rum_event_url":                                dataSourceTencentCloudRumEventUrl(),
-			"tencentcloud_rum_fetch_url_info":                           dataSourceTencentCloudRumFetchUrlInfo(),
-			"tencentcloud_rum_fetch_url":                                dataSourceTencentCloudRumFetchUrl(),
-			"tencentcloud_rum_group_log":                                dataSourceTencentCloudRumGroupLog(),
-			"tencentcloud_rum_log_list":                                 dataSourceTencentCloudRumLogList(),
-			"tencentcloud_rum_log_url_statistics":                       dataSourceTencentCloudRumLogUrlStatistics(),
-			"tencentcloud_rum_performance_page":                         dataSourceTencentCloudRumPerformancePage(),
-			"tencentcloud_rum_pv_url_info":                              dataSourceTencentCloudRumPvUrlInfo(),
-			"tencentcloud_rum_pv_url_statistics":                        dataSourceTencentCloudRumPvUrlStatistics(),
-			"tencentcloud_rum_report_count":                             dataSourceTencentCloudRumReportCount(),
-			"tencentcloud_rum_log_stats_log_list":                       dataSourceTencentCloudRumLogStatsLogList(),
-			"tencentcloud_rum_scores":                                   dataSourceTencentCloudRumScores(),
-			"tencentcloud_rum_set_url_statistics":                       dataSourceTencentCloudRumSetUrlStatistics(),
-			"tencentcloud_rum_sign":                                     dataSourceTencentCloudRumSign(),
-			"tencentcloud_rum_static_project":                           dataSourceTencentCloudRumStaticProject(),
-			"tencentcloud_rum_static_resource":                          dataSourceTencentCloudRumStaticResource(),
-			"tencentcloud_rum_static_url":                               dataSourceTencentCloudRumStaticUrl(),
-			"tencentcloud_rum_taw_area":                                 dataSourceTencentCloudRumTawArea(),
-			"tencentcloud_rum_web_vitals_page":                          dataSourceTencentCloudRumWebVitalsPage(),
-			"tencentcloud_rum_log_export":                               dataSourceTencentCloudRumLogExport(),
-			"tencentcloud_rum_log_export_list":                          dataSourceTencentCloudRumLogExportList(),
+			"tencentcloud_rum_project":                                  rum.DataSourceTencentCloudRumProject(),
+			"tencentcloud_rum_offline_log_config":                       rum.DataSourceTencentCloudRumOfflineLogConfig(),
+			"tencentcloud_rum_whitelist":                                rum.DataSourceTencentCloudRumWhitelist(),
+			"tencentcloud_rum_taw_instance":                             rum.DataSourceTencentCloudRumTawInstance(),
+			"tencentcloud_rum_custom_url":                               rum.DataSourceTencentCloudRumCustomUrl(),
+			"tencentcloud_rum_event_url":                                rum.DataSourceTencentCloudRumEventUrl(),
+			"tencentcloud_rum_fetch_url_info":                           rum.DataSourceTencentCloudRumFetchUrlInfo(),
+			"tencentcloud_rum_fetch_url":                                rum.DataSourceTencentCloudRumFetchUrl(),
+			"tencentcloud_rum_group_log":                                rum.DataSourceTencentCloudRumGroupLog(),
+			"tencentcloud_rum_log_list":                                 rum.DataSourceTencentCloudRumLogList(),
+			"tencentcloud_rum_log_url_statistics":                       rum.DataSourceTencentCloudRumLogUrlStatistics(),
+			"tencentcloud_rum_performance_page":                         rum.DataSourceTencentCloudRumPerformancePage(),
+			"tencentcloud_rum_pv_url_info":                              rum.DataSourceTencentCloudRumPvUrlInfo(),
+			"tencentcloud_rum_pv_url_statistics":                        rum.DataSourceTencentCloudRumPvUrlStatistics(),
+			"tencentcloud_rum_report_count":                             rum.DataSourceTencentCloudRumReportCount(),
+			"tencentcloud_rum_log_stats_log_list":                       rum.DataSourceTencentCloudRumLogStatsLogList(),
+			"tencentcloud_rum_scores":                                   rum.DataSourceTencentCloudRumScores(),
+			"tencentcloud_rum_set_url_statistics":                       rum.DataSourceTencentCloudRumSetUrlStatistics(),
+			"tencentcloud_rum_sign":                                     rum.DataSourceTencentCloudRumSign(),
+			"tencentcloud_rum_static_project":                           rum.DataSourceTencentCloudRumStaticProject(),
+			"tencentcloud_rum_static_resource":                          rum.DataSourceTencentCloudRumStaticResource(),
+			"tencentcloud_rum_static_url":                               rum.DataSourceTencentCloudRumStaticUrl(),
+			"tencentcloud_rum_taw_area":                                 rum.DataSourceTencentCloudRumTawArea(),
+			"tencentcloud_rum_web_vitals_page":                          rum.DataSourceTencentCloudRumWebVitalsPage(),
+			"tencentcloud_rum_log_export":                               rum.DataSourceTencentCloudRumLogExport(),
+			"tencentcloud_rum_log_export_list":                          rum.DataSourceTencentCloudRumLogExportList(),
 			"tencentcloud_dnspod_records":                               dnspod.DataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_dnspod_domain_list":                           dnspod.DataSourceTencentCloudDnspodDomainList(),
 			"tencentcloud_dnspod_domain_analytics":                      dnspod.DataSourceTencentCloudDnspodDomainAnalytics(),
@@ -1611,13 +1606,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_db_diag_report_task":                         dbbrain.ResourceTencentCloudDbbrainDbDiagReportTask(),
 			"tencentcloud_dbbrain_modify_diag_db_instance_operation":           dbbrain.ResourceTencentCloudDbbrainModifyDiagDbInstanceOperation(),
 			"tencentcloud_dbbrain_tdsql_audit_log":                             dbbrain.ResourceTencentCloudDbbrainTdsqlAuditLog(),
-			"tencentcloud_rum_project":                                         resourceTencentCloudRumProject(),
-			"tencentcloud_rum_taw_instance":                                    resourceTencentCloudRumTawInstance(),
-			"tencentcloud_rum_whitelist":                                       resourceTencentCloudRumWhitelist(),
-			"tencentcloud_rum_offline_log_config_attachment":                   resourceTencentCloudRumOfflineLogConfigAttachment(),
-			"tencentcloud_rum_instance_status_config":                          resourceTencentCloudRumInstanceStatusConfig(),
-			"tencentcloud_rum_project_status_config":                           resourceTencentCloudRumProjectStatusConfig(),
-			"tencentcloud_rum_release_file":                                    resourceTencentCloudRumReleaseFile(),
+			"tencentcloud_rum_project":                                         rum.ResourceTencentCloudRumProject(),
+			"tencentcloud_rum_taw_instance":                                    rum.ResourceTencentCloudRumTawInstance(),
+			"tencentcloud_rum_whitelist":                                       rum.ResourceTencentCloudRumWhitelist(),
+			"tencentcloud_rum_offline_log_config_attachment":                   rum.ResourceTencentCloudRumOfflineLogConfigAttachment(),
+			"tencentcloud_rum_instance_status_config":                          rum.ResourceTencentCloudRumInstanceStatusConfig(),
+			"tencentcloud_rum_project_status_config":                           rum.ResourceTencentCloudRumProjectStatusConfig(),
+			"tencentcloud_rum_release_file":                                    rum.ResourceTencentCloudRumReleaseFile(),
 			"tencentcloud_tdmq_rocketmq_cluster":                               resourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                             resourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_role":                                  resourceTencentCloudTdmqRocketmqRole(),
