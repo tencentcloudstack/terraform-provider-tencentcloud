@@ -1,10 +1,14 @@
-package tencentcloud
+package teo_test
 
 import (
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcteo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
@@ -15,8 +19,8 @@ import (
 func TestAccTencentCloudTeoApplicationProxyRule_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckApplicationProxyRuleDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -43,14 +47,14 @@ func TestAccTencentCloudTeoApplicationProxyRule_basic(t *testing.T) {
 }
 
 func testAccCheckApplicationProxyRuleDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TeoService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcteo.NewTeoService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_teo_application_proxy_rule" {
 			continue
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -71,15 +75,15 @@ func testAccCheckApplicationProxyRuleDestroy(s *terraform.State) error {
 
 func testAccCheckApplicationProxyRuleExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -87,7 +91,7 @@ func testAccCheckApplicationProxyRuleExists(r string) resource.TestCheckFunc {
 		proxyId := idSplit[1]
 		ruleId := idSplit[2]
 
-		service := TeoService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcteo.NewTeoService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		agents, err := service.DescribeTeoApplicationProxyRule(ctx, zoneId, proxyId, ruleId)
 		if agents == nil {
 			return fmt.Errorf("zone ApplicationProxyRule %s is not found", rs.Primary.ID)

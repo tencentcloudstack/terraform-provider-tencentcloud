@@ -1,15 +1,17 @@
-package tencentcloud
+package teo
 
 import (
 	"context"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 )
 
-func dataSourceTencentCloudTeoRuleEngineSettings() *schema.Resource {
+func DataSourceTencentCloudTeoRuleEngineSettings() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTeoRuleEngineSettingsRead,
 		Schema: map[string]*schema.Schema{
@@ -186,19 +188,19 @@ func dataSourceTencentCloudTeoRuleEngineSettings() *schema.Resource {
 }
 
 func dataSourceTencentCloudTeoRuleEngineSettingsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_teo_rule_engine_settings.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_teo_rule_engine_settings.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	teoService := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	teoService := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var rules []*teo.RulesSettingAction
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := teoService.DescribeTeoRuleEngineSettingsByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		rules = results
 		return nil
@@ -313,7 +315,7 @@ func dataSourceTencentCloudTeoRuleEngineSettingsRead(d *schema.ResourceData, met
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), ruleList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), ruleList); e != nil {
 			return e
 		}
 	}

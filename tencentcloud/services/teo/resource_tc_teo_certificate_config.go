@@ -1,4 +1,4 @@
-package tencentcloud
+package teo
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTeoCertificateConfig() *schema.Resource {
+func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTeoCertificateConfigCreate,
 		Read:   resourceTencentCloudTeoCertificateConfigRead,
@@ -99,8 +102,8 @@ func resourceTencentCloudTeoCertificateConfig() *schema.Resource {
 }
 
 func resourceTencentCloudTeoCertificateConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_certificate_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
 		zoneId string
@@ -114,22 +117,22 @@ func resourceTencentCloudTeoCertificateConfigCreate(d *schema.ResourceData, meta
 		host = v.(string)
 	}
 
-	d.SetId(zoneId + FILED_SP + host)
+	d.SetId(zoneId + tccommon.FILED_SP + host)
 
 	return resourceTencentCloudTeoCertificateConfigUpdate(d, meta)
 }
 
 func resourceTencentCloudTeoCertificateConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_certificate_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -208,15 +211,15 @@ func resourceTencentCloudTeoCertificateConfigRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudTeoCertificateConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_certificate_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := teo.NewModifyHostsCertificateRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -259,10 +262,10 @@ func resourceTencentCloudTeoCertificateConfigUpdate(d *schema.ResourceData, meta
 		request.Mode = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyHostsCertificate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyHostsCertificate(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -273,7 +276,7 @@ func resourceTencentCloudTeoCertificateConfigUpdate(d *schema.ResourceData, meta
 		return err
 	}
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = service.CheckAccelerationDomainStatus(ctx, zoneId, host, "")
 	if err != nil {
 		return err
@@ -283,8 +286,8 @@ func resourceTencentCloudTeoCertificateConfigUpdate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudTeoCertificateConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_certificate_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

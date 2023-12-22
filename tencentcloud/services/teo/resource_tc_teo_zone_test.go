@@ -1,9 +1,13 @@
-package tencentcloud
+package teo_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcteo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -18,11 +22,11 @@ func init() {
 }
 
 func testSweepZone(region string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cli, _ := sharedClientForRegion(region)
-	client := cli.(*TencentCloudClient).apiV3Conn
-	service := TeoService{client}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cli, _ := tcacctest.SharedClientForRegion(region)
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	service := svcteo.NewTeoService(client)
 
 	zone, err := service.DescribeTeoZone(ctx, "")
 	if err != nil {
@@ -45,8 +49,8 @@ func testSweepZone(region string) error {
 func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckZoneDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -97,9 +101,9 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 }
 
 func testAccCheckZoneDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TeoService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcteo.NewTeoService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_teo_zone" {
 			continue
@@ -118,15 +122,15 @@ func testAccCheckZoneDestroy(s *terraform.State) error {
 
 func testAccCheckZoneExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := TeoService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcteo.NewTeoService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		agents, err := service.DescribeTeoZone(ctx, rs.Primary.ID)
 		if agents == nil {
 			return fmt.Errorf("zone %s is not found", rs.Primary.ID)

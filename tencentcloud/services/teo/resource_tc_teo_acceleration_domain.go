@@ -1,4 +1,4 @@
-package tencentcloud
+package teo
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
+func ResourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTeoAccelerationDomainCreate,
 		Read:   resourceTencentCloudTeoAccelerationDomainRead,
@@ -102,11 +105,11 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 }
 
 func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_acceleration_domain.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
 		request    = teo.NewCreateAccelerationDomainRequest()
@@ -153,10 +156,10 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 		request.OriginInfo = &originInfo
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateAccelerationDomain(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateAccelerationDomain(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -167,9 +170,9 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(zoneId + FILED_SP + domainName)
+	d.SetId(zoneId + tccommon.FILED_SP + domainName)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "")
 	if err != nil {
 		return err
@@ -179,16 +182,16 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_acceleration_domain.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -264,13 +267,13 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_acceleration_domain.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -312,10 +315,10 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			request.OriginInfo = &originInfo
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyAccelerationDomain(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyAccelerationDomain(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -326,7 +329,7 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			return err
 		}
 
-		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "")
 		if err != nil {
 			return err
@@ -342,10 +345,10 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			request.Status = helper.String(v.(string))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyAccelerationDomainStatuses(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyAccelerationDomainStatuses(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -356,11 +359,11 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			return err
 		}
 
-		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			instance, errRet := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
 			if errRet != nil {
-				return retryError(errRet, InternalError)
+				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
 			if *instance.DomainStatus == "online" || *instance.DomainStatus == "offline" {
 				return nil
@@ -376,14 +379,14 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_acceleration_domain.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -395,10 +398,10 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 	request.DomainNames = []*string{&domainName}
 	request.Status = helper.String("offline")
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyAccelerationDomainStatuses(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyAccelerationDomainStatuses(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}

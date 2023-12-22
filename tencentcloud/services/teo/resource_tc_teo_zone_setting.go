@@ -1,4 +1,4 @@
-package tencentcloud
+package teo
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTeoZoneSetting() *schema.Resource {
+func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTeoZoneSettingRead,
 		Create: resourceTencentCloudTeoZoneSettingCreate,
@@ -509,8 +512,8 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 }
 
 func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone_setting.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone_setting.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var zoneId string
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -523,13 +526,13 @@ func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone_setting.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone_setting.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	zoneId := d.Id()
 
@@ -794,10 +797,10 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone_setting.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone_setting.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := teo.NewModifyZoneSettingRequest()
 
 	zoneId := d.Id()
@@ -1088,9 +1091,9 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	}
 
 	err := resource.Retry(15*time.Second, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneSetting(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyZoneSetting(request)
 		if e != nil {
-			return retryError(e, "InvalidParameter.ZoneNotFound")
+			return tccommon.RetryError(e, "InvalidParameter.ZoneNotFound")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -1106,8 +1109,8 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudTeoZoneSettingDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone_setting.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone_setting.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

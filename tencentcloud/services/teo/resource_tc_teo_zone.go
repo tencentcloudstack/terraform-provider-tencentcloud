@@ -1,6 +1,9 @@
-package tencentcloud
+package teo
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+
 	"context"
 	"fmt"
 	"log"
@@ -8,10 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTeoZone() *schema.Resource {
+func ResourceTencentCloudTeoZone() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTeoZoneRead,
 		Create: resourceTencentCloudTeoZoneCreate,
@@ -119,11 +123,11 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 }
 
 func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
 		request  = teo.NewCreateZoneRequest()
@@ -151,13 +155,13 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request.PlanId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateZone(request)
 		if e != nil {
-			if isExpectError(e, []string{"ResourceInUse", "ResourceInUse.Others"}) {
+			if tccommon.IsExpectError(e, []string{"ResourceInUse", "ResourceInUse.Others"}) {
 				return resource.NonRetryableError(e)
 			}
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -174,11 +178,11 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	zoneId = *response.Response.ZoneId
 	d.SetId(zoneId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoZone(ctx, zoneId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *instance.Status == "pending" {
 			return nil
@@ -199,7 +203,7 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		resourceName := fmt.Sprintf("qcs::teo::uin/:zone/%s", zoneId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -209,13 +213,13 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	zoneId := d.Id()
 
@@ -288,8 +292,8 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("status", zone.Status)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", "", zoneId)
 	if err != nil {
 		return err
@@ -300,12 +304,12 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	request := teo.NewModifyZoneRequest()
 
@@ -334,10 +338,10 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 			request.Area = helper.String(v.(string))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZone(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyZone(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -350,11 +354,11 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 			return err
 		}
 
-		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			instance, errRet := service.DescribeTeoZone(ctx, zoneId)
 			if errRet != nil {
-				return retryError(errRet, InternalError)
+				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
 			if *instance.Status == "pending" {
 				return nil
@@ -367,11 +371,11 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", "", zoneId)
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("teo", "zone", "", zoneId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -381,13 +385,13 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudTeoZoneDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_zone.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_zone.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	zoneId := d.Id()
 
 	instance, err := service.DescribeTeoZone(ctx, zoneId)

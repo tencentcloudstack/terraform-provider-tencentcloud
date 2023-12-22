@@ -1,23 +1,24 @@
 /*
 Provides a resource to create a teo application_proxy
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_application_proxy" "application_proxy" {
-    accelerate_type      = 0
-    plat_type            = "domain"
-    proxy_name           = "test"
-    proxy_type           = "instance"
-    security_type        = 1
-    session_persist_time = 0
-    status               = "online"
-    zone_id              = "zone-2o0l8g7zisgt"
 
-    ipv6 {
-        switch = "off"
-    }
-}
+	resource "tencentcloud_teo_application_proxy" "application_proxy" {
+	    accelerate_type      = 0
+	    plat_type            = "domain"
+	    proxy_name           = "test"
+	    proxy_type           = "instance"
+	    security_type        = 1
+	    session_persist_time = 0
+	    status               = "online"
+	    zone_id              = "zone-2o0l8g7zisgt"
+
+	    ipv6 {
+	        switch = "off"
+	    }
+	}
 
 ```
 Import
@@ -27,7 +28,7 @@ teo application_proxy can be imported using the zoneId#proxyId, e.g.
 terraform import tencentcloud_teo_application_proxy.application_proxy zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456
 ```
 */
-package tencentcloud
+package teo
 
 import (
 	"context"
@@ -35,13 +36,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
+func ResourceTencentCloudTeoApplicationProxy() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTeoApplicationProxyRead,
 		Create: resourceTencentCloudTeoApplicationProxyCreate,
@@ -162,10 +166,10 @@ func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
 }
 
 func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_application_proxy.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_application_proxy.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = teo.NewCreateApplicationProxyRequest()
@@ -211,8 +215,8 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		request.Ipv6 = &ipv6Access
 	}
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	err := service.CheckZoneComplete(ctx, zoneId)
 	if err != nil {
@@ -220,10 +224,10 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateApplicationProxy(request)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateApplicationProxy(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -239,10 +243,10 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 
 	proxyId = *response.Response.ProxyId
 
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoApplicationProxy(ctx, zoneId, proxyId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *instance.Status == "online" {
 			return nil
@@ -257,20 +261,20 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	d.SetId(zoneId + FILED_SP + proxyId)
+	d.SetId(zoneId + tccommon.FILED_SP + proxyId)
 	return resourceTencentCloudTeoApplicationProxyRead(d, meta)
 }
 
 func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_application_proxy.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_application_proxy.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -357,13 +361,13 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_application_proxy.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_application_proxy.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := teo.NewModifyApplicationProxyRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -416,10 +420,10 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxy(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyApplicationProxy(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -440,10 +444,10 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 			statusRequest.ProxyId = &proxyId
 			statusRequest.Status = helper.String(v.(string))
 
-			statusErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				statusResult, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
+			statusErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				statusResult, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, request.GetAction(), request.ToJsonString(), statusResult.ToJsonString())
@@ -463,21 +467,21 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_application_proxy.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_application_proxy.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	zoneId := idSplit[0]
 	proxyId := idSplit[1]
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		e := resourceTencentCloudTeoApplicationProxyRead(d, meta)
 		if e != nil {
 			log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, e)
@@ -496,7 +500,7 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 		statusRequest.ZoneId = &zoneId
 		statusRequest.ProxyId = &proxyId
 		statusRequest.Status = helper.String("offline")
-		_, e = meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
+		_, e = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
 		if e != nil {
 			return resource.NonRetryableError(fmt.Errorf("setting applicationProxy `status` to offline failed, reason: %v", e))
 		}

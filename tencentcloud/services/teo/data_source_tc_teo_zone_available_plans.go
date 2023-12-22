@@ -1,15 +1,17 @@
-package tencentcloud
+package teo
 
 import (
 	"context"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 )
 
-func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
+func DataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTeoZoneAvailablePlansRead,
 
@@ -74,19 +76,19 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 }
 
 func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_teo_zone_available_plans.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_teo_zone_available_plans.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	teoService := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	teoService := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var planInfos []*teo.PlanInfo
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := teoService.DescribeTeoZoneAvailablePlansByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		planInfos = results
 		return nil
@@ -134,7 +136,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, met
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), planInfoList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), planInfoList); e != nil {
 			return e
 		}
 	}

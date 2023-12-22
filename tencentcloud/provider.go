@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
@@ -653,8 +654,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_ssh_key_pair_value":                       ssm.DataSourceTencentCloudSsmSshKeyPairValue(),
 			"tencentcloud_cdh_instances":                                cdh.DataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                     dayuv2.DataSourceTencentCloudDayuEip(),
-			"tencentcloud_teo_zone_available_plans":                     dataSourceTencentCloudTeoZoneAvailablePlans(),
-			"tencentcloud_teo_rule_engine_settings":                     dataSourceTencentCloudTeoRuleEngineSettings(),
+			"tencentcloud_teo_zone_available_plans":                     teo.DataSourceTencentCloudTeoZoneAvailablePlans(),
+			"tencentcloud_teo_rule_engine_settings":                     teo.DataSourceTencentCloudTeoRuleEngineSettings(),
 			"tencentcloud_sts_caller_identity":                          sts.DataSourceTencentCloudStsCallerIdentity(),
 			"tencentcloud_dcdb_instances":                               dcdb.DataSourceTencentCloudDcdbInstances(),
 			"tencentcloud_dcdb_accounts":                                dcdb.DataSourceTencentCloudDcdbAccounts(),
@@ -1512,15 +1513,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_tem_scale_rule":                                      tem.ResourceTencentCloudTemScaleRule(),
 			"tencentcloud_tem_gateway":                                         tem.ResourceTencentCloudTemGateway(),
 			"tencentcloud_tem_application_service":                             tem.ResourceTencentCloudTemApplicationService(),
-			"tencentcloud_teo_zone":                                            resourceTencentCloudTeoZone(),
-			"tencentcloud_teo_zone_setting":                                    resourceTencentCloudTeoZoneSetting(),
-			"tencentcloud_teo_origin_group":                                    resourceTencentCloudTeoOriginGroup(),
-			"tencentcloud_teo_rule_engine":                                     resourceTencentCloudTeoRuleEngine(),
-			"tencentcloud_teo_ownership_verify":                                resourceTencentCloudTeoOwnershipVerify(),
-			"tencentcloud_teo_certificate_config":                              resourceTencentCloudTeoCertificateConfig(),
-			"tencentcloud_teo_acceleration_domain":                             resourceTencentCloudTeoAccelerationDomain(),
-			"tencentcloud_teo_application_proxy":                               resourceTencentCloudTeoApplicationProxy(),
-			"tencentcloud_teo_application_proxy_rule":                          resourceTencentCloudTeoApplicationProxyRule(),
+			"tencentcloud_teo_zone":                                            teo.ResourceTencentCloudTeoZone(),
+			"tencentcloud_teo_zone_setting":                                    teo.ResourceTencentCloudTeoZoneSetting(),
+			"tencentcloud_teo_origin_group":                                    teo.ResourceTencentCloudTeoOriginGroup(),
+			"tencentcloud_teo_rule_engine":                                     teo.ResourceTencentCloudTeoRuleEngine(),
+			"tencentcloud_teo_ownership_verify":                                teo.ResourceTencentCloudTeoOwnershipVerify(),
+			"tencentcloud_teo_certificate_config":                              teo.ResourceTencentCloudTeoCertificateConfig(),
+			"tencentcloud_teo_acceleration_domain":                             teo.ResourceTencentCloudTeoAccelerationDomain(),
+			"tencentcloud_teo_application_proxy":                               teo.ResourceTencentCloudTeoApplicationProxy(),
+			"tencentcloud_teo_application_proxy_rule":                          teo.ResourceTencentCloudTeoApplicationProxyRule(),
 			"tencentcloud_tcm_mesh":                                            tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                              tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                           tcm.ResourceTencentCloudTcmPrometheusAttachment(),

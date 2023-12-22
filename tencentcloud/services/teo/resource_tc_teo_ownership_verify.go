@@ -1,15 +1,18 @@
-package tencentcloud
+package teo
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTeoOwnershipVerify() *schema.Resource {
+func ResourceTencentCloudTeoOwnershipVerify() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTeoOwnershipVerifyCreate,
 		Read:   resourceTencentCloudTeoOwnershipVerifyRead,
@@ -39,10 +42,10 @@ func resourceTencentCloudTeoOwnershipVerify() *schema.Resource {
 }
 
 func resourceTencentCloudTeoOwnershipVerifyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_ownership_verify.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_ownership_verify.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = teo.NewVerifyOwnershipRequest()
@@ -54,10 +57,10 @@ func resourceTencentCloudTeoOwnershipVerifyCreate(d *schema.ResourceData, meta i
 		request.Domain = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().VerifyOwnership(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().VerifyOwnership(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -80,15 +83,15 @@ func resourceTencentCloudTeoOwnershipVerifyCreate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudTeoOwnershipVerifyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_ownership_verify.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_ownership_verify.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudTeoOwnershipVerifyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_ownership_verify.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_ownership_verify.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
