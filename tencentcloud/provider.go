@@ -1,11 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmg"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcm"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -14,6 +9,13 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmq"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
@@ -779,9 +781,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rocketmq_messages":                       dataSourceTencentCloudTdmqRocketmqMessages(),
 			"tencentcloud_tdmq_pro_instances":                           dataSourceTencentCloudTdmqProInstances(),
 			"tencentcloud_tdmq_pro_instance_detail":                     dataSourceTencentCloudTdmqProInstanceDetail(),
-			"tencentcloud_tcmq_queue":                                   dataSourceTencentCloudTcmqQueue(),
-			"tencentcloud_tcmq_topic":                                   dataSourceTencentCloudTcmqTopic(),
-			"tencentcloud_tcmq_subscribe":                               dataSourceTencentCloudTcmqSubscribe(),
+			"tencentcloud_tcmq_queue":                                   tcmq.DataSourceTencentCloudTcmqQueue(),
+			"tencentcloud_tcmq_topic":                                   tcmq.DataSourceTencentCloudTcmqTopic(),
+			"tencentcloud_tcmq_subscribe":                               tcmq.DataSourceTencentCloudTcmqSubscribe(),
 			"tencentcloud_as_instances":                                 as.DataSourceTencentCloudAsInstances(),
 			"tencentcloud_as_advices":                                   as.DataSourceTencentCloudAsAdvices(),
 			"tencentcloud_as_limits":                                    as.DataSourceTencentCloudAsLimits(),
@@ -1661,9 +1663,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_end_point_service_white_list":                    pls.ResourceTencentCloudVpcEndPointServiceWhiteList(),
 			"tencentcloud_vpc_enable_end_point_connect":                        pls.ResourceTencentCloudVpcEnableEndPointConnect(),
 			"tencentcloud_ci_bucket_attachment":                                ci.ResourceTencentCloudCiBucketAttachment(),
-			"tencentcloud_tcmq_queue":                                          resourceTencentCloudTcmqQueue(),
-			"tencentcloud_tcmq_topic":                                          resourceTencentCloudTcmqTopic(),
-			"tencentcloud_tcmq_subscribe":                                      resourceTencentCloudTcmqSubscribe(),
+			"tencentcloud_tcmq_queue":                                          tcmq.ResourceTencentCloudTcmqQueue(),
+			"tencentcloud_tcmq_topic":                                          tcmq.ResourceTencentCloudTcmqTopic(),
+			"tencentcloud_tcmq_subscribe":                                      tcmq.ResourceTencentCloudTcmqSubscribe(),
 			"tencentcloud_ci_bucket_pic_style":                                 ci.ResourceTencentCloudCiBucketPicStyle(),
 			"tencentcloud_ci_hot_link":                                         ci.ResourceTencentCloudCiHotLink(),
 			"tencentcloud_ci_media_snapshot_template":                          ci.ResourceTencentCloudCiMediaSnapshotTemplate(),

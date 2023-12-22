@@ -1,9 +1,13 @@
-package tencentcloud
+package tcmq_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctcmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmq"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -14,10 +18,10 @@ func TestAccTencentCloudTcmqQueueResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
 		CheckDestroy: testAccCheckTcmqQueueDestroy,
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTcmqQueue,
@@ -38,10 +42,10 @@ func TestAccTencentCloudTcmqQueueResource_basic(t *testing.T) {
 }
 
 func testAccCheckTcmqQueueDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := svctcmq.NewTcmqService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_tcmq_queue" {
 			continue
@@ -65,8 +69,8 @@ func testAccCheckTcmqQueueDestroy(s *terraform.State) error {
 
 func testAccCheckTcmqQueueExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -76,7 +80,7 @@ func testAccCheckTcmqQueueExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("TcmqQueue id is not set")
 		}
 
-		service := TcmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svctcmq.NewTcmqService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		queue, err := service.DescribeTcmqQueueById(ctx, rs.Primary.ID)
 		if queue == nil {
 			return fmt.Errorf("TcmqQueue %s is not found", rs.Primary.ID)

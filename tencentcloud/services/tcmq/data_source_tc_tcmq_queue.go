@@ -1,15 +1,18 @@
-package tencentcloud
+package tcmq
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudTcmqQueue() *schema.Resource {
+func DataSourceTencentCloudTcmqQueue() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTcmqQueueRead,
 		Schema: map[string]*schema.Schema{
@@ -312,12 +315,12 @@ func dataSourceTencentCloudTcmqQueue() *schema.Resource {
 }
 
 func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tcmq_queue.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_tcmq_queue.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("offset"); v != nil {
@@ -362,15 +365,15 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 
 	}
 
-	service := TcmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmqService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var queueList []*tcmq.CmqQueue
 	queueNames := make([]string, 0)
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTcmqQueueByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		queueList = result
 		return nil
@@ -505,7 +508,7 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), result); e != nil {
+		if e := tccommon.WriteToFile(output.(string), result); e != nil {
 			return e
 		}
 	}

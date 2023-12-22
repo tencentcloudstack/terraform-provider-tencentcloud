@@ -1,4 +1,4 @@
-package tencentcloud
+package tcmq
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTcmqSubscribe() *schema.Resource {
+func ResourceTencentCloudTcmqSubscribe() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcmqSubscribeCreate,
 		Read:   resourceTencentCloudTcmqSubscribeRead,
@@ -88,10 +91,10 @@ func resourceTencentCloudTcmqSubscribe() *schema.Resource {
 }
 
 func resourceTencentCloudTcmqSubscribeCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_subscribe.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_subscribe.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request          = tcmq.NewCreateCmqSubscribeRequest()
@@ -140,10 +143,10 @@ func resourceTencentCloudTcmqSubscribeCreate(d *schema.ResourceData, meta interf
 		request.NotifyContentFormat = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateCmqSubscribe(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().CreateCmqSubscribe(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -154,22 +157,22 @@ func resourceTencentCloudTcmqSubscribeCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	d.SetId(topicName + FILED_SP + subscriptionName)
+	d.SetId(topicName + tccommon.FILED_SP + subscriptionName)
 
 	return resourceTencentCloudTcmqSubscribeRead(d, meta)
 }
 
 func resourceTencentCloudTcmqSubscribeRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_subscribe.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_subscribe.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmqService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -220,14 +223,14 @@ func resourceTencentCloudTcmqSubscribeRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudTcmqSubscribeUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_subscribe.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_subscribe.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tcmq.NewModifyCmqSubscriptionAttributeRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -270,10 +273,10 @@ func resourceTencentCloudTcmqSubscribeUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyCmqSubscriptionAttribute(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyCmqSubscriptionAttribute(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -288,14 +291,14 @@ func resourceTencentCloudTcmqSubscribeUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudTcmqSubscribeDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_subscribe.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_subscribe.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := TcmqService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

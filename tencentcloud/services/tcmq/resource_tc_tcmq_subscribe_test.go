@@ -1,10 +1,14 @@
-package tencentcloud
+package tcmq_test
 
 import (
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctcmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmq"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -14,10 +18,10 @@ func TestAccTencentCloudTcmqSubscribeResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
 		CheckDestroy: testAccCheckTcmqSubscribeDestroy,
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTcmqSubscribe,
@@ -38,15 +42,15 @@ func TestAccTencentCloudTcmqSubscribeResource_basic(t *testing.T) {
 }
 
 func testAccCheckTcmqSubscribeDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := svctcmq.NewTcmqService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_tcmq_subscribe" {
 			continue
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -65,8 +69,8 @@ func testAccCheckTcmqSubscribeDestroy(s *terraform.State) error {
 
 func testAccCheckTcmqSubscribeExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -76,8 +80,8 @@ func testAccCheckTcmqSubscribeExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("TcmqSubscribe id is not set")
 		}
 
-		service := TcmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		service := svctcmq.NewTcmqService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}

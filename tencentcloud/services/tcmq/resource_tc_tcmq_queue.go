@@ -1,18 +1,21 @@
-package tencentcloud
+package tcmq
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTcmqQueue() *schema.Resource {
+func ResourceTencentCloudTcmqQueue() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcmqQueueCreate,
 		Read:   resourceTencentCloudTcmqQueueRead,
@@ -128,10 +131,10 @@ func resourceTencentCloudTcmqQueue() *schema.Resource {
 }
 
 func resourceTencentCloudTcmqQueueCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_queue.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_queue.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = tcmq.NewCreateCmqQueueRequest()
@@ -202,10 +205,10 @@ func resourceTencentCloudTcmqQueueCreate(d *schema.ResourceData, meta interface{
 		request.RetentionSizeInMB = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateCmqQueue(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().CreateCmqQueue(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -222,14 +225,14 @@ func resourceTencentCloudTcmqQueueCreate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_queue.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_queue.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmqService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	queueName := d.Id()
 
@@ -320,10 +323,10 @@ func resourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudTcmqQueueUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_queue.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_queue.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tcmq.NewModifyCmqQueueAttributeRequest()
 
@@ -426,10 +429,10 @@ func resourceTencentCloudTcmqQueueUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyCmqQueueAttribute(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyCmqQueueAttribute(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -444,13 +447,13 @@ func resourceTencentCloudTcmqQueueUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudTcmqQueueDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcmq_queue.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcmq_queue.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TcmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcmqService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	queueName := d.Id()
 
 	if err := service.DeleteTcmqQueueById(ctx, queueName); err != nil {

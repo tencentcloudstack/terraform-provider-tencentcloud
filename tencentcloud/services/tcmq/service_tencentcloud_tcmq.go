@@ -1,10 +1,13 @@
-package tencentcloud
+package tcmq
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	tcmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -12,12 +15,16 @@ import (
 
 // basic information
 
+func NewTcmqService(client *connectivity.TencentCloudClient) TcmqService {
+	return TcmqService{client: client}
+}
+
 type TcmqService struct {
 	client *connectivity.TencentCloudClient
 }
 
 func (me *TcmqService) DescribeTcmqTopicById(ctx context.Context, topicName string) (topic *tcmq.CmqTopic, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDescribeCmqTopicDetailRequest()
 	request.TopicName = &topicName
@@ -46,7 +53,7 @@ func (me *TcmqService) DescribeTcmqTopicById(ctx context.Context, topicName stri
 }
 
 func (me *TcmqService) DeleteTcmqTopicById(ctx context.Context, topicName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDeleteCmqTopicRequest()
 	request.TopicName = &topicName
@@ -70,7 +77,7 @@ func (me *TcmqService) DeleteTcmqTopicById(ctx context.Context, topicName string
 }
 
 func (me *TcmqService) DescribeTcmqQueueById(ctx context.Context, queueName string) (queue *tcmq.CmqQueue, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDescribeCmqQueueDetailRequest()
 	request.QueueName = &queueName
@@ -95,7 +102,7 @@ func (me *TcmqService) DescribeTcmqQueueById(ctx context.Context, queueName stri
 }
 
 func (me *TcmqService) DescribeTcmqQueueByFilter(ctx context.Context, paramMap map[string]interface{}) (queueList []*tcmq.CmqQueue, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDescribeCmqQueuesRequest()
 
@@ -156,7 +163,7 @@ func (me *TcmqService) DescribeTcmqQueueByFilter(ctx context.Context, paramMap m
 }
 
 func (me *TcmqService) DeleteTcmqQueueById(ctx context.Context, queueName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDeleteCmqQueueRequest()
 	request.QueueName = &queueName
@@ -180,7 +187,7 @@ func (me *TcmqService) DeleteTcmqQueueById(ctx context.Context, queueName string
 }
 
 func (me *TcmqService) DescribeTcmqTopicByFilter(ctx context.Context, paramMap map[string]interface{}) (topicList []*tcmq.CmqTopic, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDescribeCmqTopicsRequest()
 
@@ -241,7 +248,7 @@ func (me *TcmqService) DescribeTcmqTopicByFilter(ctx context.Context, paramMap m
 }
 
 func (me *TcmqService) DescribeTcmqSubscribeById(ctx context.Context, topicName string, subscriptionName string) (subscribe *tcmq.CmqSubscription, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDescribeCmqSubscriptionDetailRequest()
 	request.TopicName = &topicName
@@ -271,7 +278,7 @@ func (me *TcmqService) DescribeTcmqSubscribeById(ctx context.Context, topicName 
 }
 
 func (me *TcmqService) DescribeTcmqSubscribeByFilter(ctx context.Context, paramMap map[string]interface{}) (subscriptionList []*tcmq.CmqSubscription, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDescribeCmqSubscriptionDetailRequest()
 
@@ -308,7 +315,7 @@ func (me *TcmqService) DescribeTcmqSubscribeByFilter(ctx context.Context, paramM
 }
 
 func (me *TcmqService) DeleteTcmqSubscribeById(ctx context.Context, topicName string, subscriptionName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := tcmq.NewDeleteCmqSubscribeRequest()
 	request.TopicName = &topicName
