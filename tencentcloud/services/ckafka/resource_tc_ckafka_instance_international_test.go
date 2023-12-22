@@ -2,6 +2,7 @@ package ckafka_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -41,6 +42,9 @@ func TestAccTencentCloudInternationalCkafkaResource_instance(t *testing.T) {
 				),
 			},
 			{
+				PreConfig: func() {
+					time.Sleep(60 * time.Second)
+				},
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance_postpaid",
 				ImportState:             true,
 				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
