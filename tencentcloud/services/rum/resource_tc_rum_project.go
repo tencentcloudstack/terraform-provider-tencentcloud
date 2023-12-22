@@ -68,8 +68,8 @@ func ResourceTencentCloudRumProject() *schema.Resource {
 			},
 
 			"desc": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:     schema.TypeString,
+				Optional: true,
 				Description: "	Description of the created project (optional and up to 1,000 characters).",
 			},
 

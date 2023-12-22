@@ -1,20 +1,22 @@
 /*
 Provides a resource to create a rum release_file
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_rum_release_file" "release_file" {
-  project_id      = 123
-  version         = "1.0"
-  file_key        = "120000-last-1632921299138-index.js.map"
-  file_name       = "index.js.map"
-  file_hash 	  = "b148c43fd81d845ba7cc6907928ce430"
-  release_file_id = 1
-}
+
+	resource "tencentcloud_rum_release_file" "release_file" {
+	  project_id      = 123
+	  version         = "1.0"
+	  file_key        = "120000-last-1632921299138-index.js.map"
+	  file_name       = "index.js.map"
+	  file_hash 	  = "b148c43fd81d845ba7cc6907928ce430"
+	  release_file_id = 1
+	}
+
 ```
 
-Import
+# Import
 
 rum release_file can be imported using the id, e.g.
 
@@ -25,12 +27,13 @@ terraform import tencentcloud_rum_release_file.release_file projectId#releaseFil
 package rum
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"log"
 	"strconv"
 	"strings"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
