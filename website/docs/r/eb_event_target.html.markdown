@@ -116,12 +116,12 @@ The following arguments are supported:
 * `target_description` - (Required, List) target description.
 * `type` - (Required, String) target type.
 
-The `ckafka_target_params` object supports the following:
+The `ckafka_target_params` object of `target_description` supports the following:
 
 * `retry_policy` - (Required, List) retry strategy.
 * `topic_name` - (Required, String) The ckafka topic to deliver to.
 
-The `es_target_params` object supports the following:
+The `es_target_params` object of `target_description` supports the following:
 
 * `index_prefix` - (Required, String) index prefix.
 * `index_suffix_mode` - (Required, String) DTS index configuration.
@@ -130,12 +130,12 @@ The `es_target_params` object supports the following:
 * `rotation_interval` - (Required, String) es log rotation granularity.
 * `index_template_type` - (Optional, String) es template type.
 
-The `retry_policy` object supports the following:
+The `retry_policy` object of `ckafka_target_params` supports the following:
 
 * `max_retry_attempts` - (Required, Int) Maximum number of retries.
 * `retry_interval` - (Required, Int) Retry Interval Unit: Seconds.
 
-The `scf_params` object supports the following:
+The `scf_params` object of `target_description` supports the following:
 
 * `batch_event_count` - (Optional, Int) Maximum number of events for batch delivery.
 * `batch_timeout` - (Optional, Int) Maximum waiting time for bulk delivery.

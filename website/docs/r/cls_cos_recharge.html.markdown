@@ -76,12 +76,12 @@ The `extract_rule_info` object supports the following:
 * `un_match_log_key` - (Optional, String) parsing failure log key.
 * `un_match_up_load_switch` - (Optional, Bool) whether to upload the parsing failure log.
 
-The `filter_key_regex` object supports the following:
+The `filter_key_regex` object of `extract_rule_info` supports the following:
 
 * `key` - (Required, String) need filter log key.
 * `regex` - (Required, String) need filter log regex.
 
-The `meta_tags` object supports the following:
+The `meta_tags` object of `extract_rule_info` supports the following:
 
 * `key` - (Optional, String) metadata key.
 * `value` - (Optional, String) metadata value.

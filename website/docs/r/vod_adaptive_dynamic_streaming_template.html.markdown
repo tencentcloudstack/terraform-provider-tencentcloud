@@ -69,7 +69,7 @@ The following arguments are supported:
 * `drm_type` - (Optional, String, ForceNew) DRM scheme type. Valid values: `SimpleAES`. If this field is an empty string, DRM will not be performed on the video.
 * `sub_app_id` - (Optional, Int) Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.
 
-The `audio` object supports the following:
+The `audio` object of `stream_info` supports the following:
 
 * `bitrate` - (Required, Int) Audio stream bitrate in Kbps. Value range: `0` and `[26, 256]`. If the value is `0`, the bitrate of the audio stream will be the same as that of the original audio.
 * `codec` - (Required, String) Audio stream encoder. Valid value are: `libfdk_aac` and `libmp3lame`. while `libfdk_aac` is recommended.
@@ -82,7 +82,7 @@ The `stream_info` object supports the following:
 * `video` - (Required, List) Video parameter information.
 * `remove_audio` - (Optional, Bool) Whether to remove audio stream. Valid values: `false`: no, `true`: yes. `false` by default.
 
-The `video` object supports the following:
+The `video` object of `stream_info` supports the following:
 
 * `bitrate` - (Required, Int) Bitrate of video stream in Kbps. Value range: `0` and `[128, 35000]`. If the value is `0`, the bitrate of the video will be the same as that of the source video.
 * `codec` - (Required, String) Video stream encoder. Valid values: `libx264`,`libx265`,`av1`. `libx264`: H.264, `libx265`: H.265, `av1`: AOMedia Video 1. Currently, a resolution within 640x480 must be specified for `H.265`. and the `av1` container only supports mp4.

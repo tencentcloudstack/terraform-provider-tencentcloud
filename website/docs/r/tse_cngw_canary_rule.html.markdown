@@ -80,7 +80,7 @@ The following arguments are supported:
 * `service_id` - (Required, String) service ID.
 * `tags` - (Optional, Map) Tag description list.
 
-The `balanced_service_list` object supports the following:
+The `balanced_service_list` object of `canary_rule` supports the following:
 
 * `percent` - (Optional, Float64) percent, 10 is 10%, valid values:0 to 100.
 * `service_id` - (Optional, String) service ID, required when used as an input parameter.
@@ -95,7 +95,7 @@ The `canary_rule` object supports the following:
 * `service_id` - (Optional, String) service ID.
 * `service_name` - (Optional, String) service name.
 
-The `condition_list` object supports the following:
+The `condition_list` object of `canary_rule` supports the following:
 
 * `type` - (Required, String) type.Reference value:`path`,`method`,`query`,`header`,`cookie`,`body`,`system`.
 * `delimiter` - (Optional, String) delimiter. valid when operator is in or not in, reference value:`,`, `;`,`\n`.

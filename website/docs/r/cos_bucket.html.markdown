@@ -264,7 +264,7 @@ The `cors_rules` object supports the following:
 * `expose_headers` - (Optional, List) Specifies expose header in the response.
 * `max_age_seconds` - (Optional, Int) Specifies time in seconds that browser can cache the response for a preflight request.
 
-The `expiration` object supports the following:
+The `expiration` object of `lifecycle_rules` supports the following:
 
 * `date` - (Optional, String) Specifies the date after which you want the corresponding action to take effect.
 * `days` - (Optional, Int) Specifies the number of days after object creation when the specific rule action takes effect.
@@ -279,11 +279,11 @@ The `lifecycle_rules` object supports the following:
 * `non_current_transition` - (Optional, Set) Specifies a period in the non current object's transitions.
 * `transition` - (Optional, Set) Specifies a period in the object's transitions (documented below).
 
-The `non_current_expiration` object supports the following:
+The `non_current_expiration` object of `lifecycle_rules` supports the following:
 
 * `non_current_days` - (Optional, Int) Number of days after non current object creation when the specific rule action takes effect. The maximum value is 3650.
 
-The `non_current_transition` object supports the following:
+The `non_current_transition` object of `lifecycle_rules` supports the following:
 
 * `storage_class` - (Required, String) Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
 * `non_current_days` - (Optional, Int) Number of days after non current object creation when the specific rule action takes effect.
@@ -314,7 +314,7 @@ The `replica_rules` object supports the following:
 * `id` - (Optional, String) Name of a specific rule.
 * `prefix` - (Optional, String) Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.
 
-The `transition` object supports the following:
+The `transition` object of `lifecycle_rules` supports the following:
 
 * `storage_class` - (Required, String) Specifies the storage class to which you want the object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
 * `date` - (Optional, String) Specifies the date after which you want the corresponding action to take effect.

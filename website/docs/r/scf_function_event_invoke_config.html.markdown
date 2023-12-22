@@ -39,7 +39,7 @@ The `async_trigger_config` object supports the following:
 * `msg_ttl` - (Required, Int) Message retention period.
 * `retry_config` - (Required, List) Async retry configuration of function upon user error.
 
-The `retry_config` object supports the following:
+The `retry_config` object of `async_trigger_config` supports the following:
 
 * `retry_num` - (Required, Int) Number of retry attempts.
 

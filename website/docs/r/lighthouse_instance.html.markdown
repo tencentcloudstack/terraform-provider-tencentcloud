@@ -114,7 +114,7 @@ The `containers` object supports the following:
 * `publish_ports` - (Optional, List) List of mappings of container ports and host ports.
 * `volumes` - (Optional, List) List of container mount volumes.
 
-The `envs` object supports the following:
+The `envs` object of `containers` supports the following:
 
 * `key` - (Required, String) Environment variable key.
 * `value` - (Required, String) Environment variable value.
@@ -124,14 +124,14 @@ The `login_configuration` object supports the following:
 * `auto_generate_password` - (Required, String) whether auto generate password. if false, need set password.
 * `password` - (Optional, String) Login password.
 
-The `publish_ports` object supports the following:
+The `publish_ports` object of `containers` supports the following:
 
 * `container_port` - (Required, Int) Container port.
 * `host_port` - (Required, Int) Host port.
 * `ip` - (Optional, String) External IP. It defaults to 0.0.0.0.
 * `protocol` - (Optional, String) The protocol defaults to tcp. Valid values: tcp, udp and sctp.
 
-The `volumes` object supports the following:
+The `volumes` object of `containers` supports the following:
 
 * `container_path` - (Required, String) Container path.
 * `host_path` - (Required, String) Host path.

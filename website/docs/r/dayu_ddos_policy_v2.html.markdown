@@ -157,7 +157,7 @@ The `ddos_speed_limit_config` object supports the following:
 * `packet_rate` - (Required, Int) Packet rate pps.
 * `protocol_list` - (Required, String) IP protocol numbers, take the value[ ALL (all protocols),TCP (tcp protocol),UDP (udp protocol),SMP (smp protocol),1; 2-100 (custom protocol number range, up to 8)].
 
-The `listeners` object supports the following:
+The `listeners` object of `water_print_config` supports the following:
 
 * `forward_protocol` - (Required, String) Forwarding protocol, value [TCP, UDP].
 * `frontend_port_end` - (Required, Int) Upper limit of forwarding listening port. Values: [1-65535].

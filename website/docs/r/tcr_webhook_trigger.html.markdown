@@ -80,12 +80,12 @@ The following arguments are supported:
 * `trigger` - (Required, List) trigger parameters.
 * `tags` - (Optional, Map) Tag description list.
 
-The `headers` object supports the following:
+The `headers` object of `targets` supports the following:
 
 * `key` - (Required, String) Header Key.
 * `values` - (Required, Set) Header Values.
 
-The `targets` object supports the following:
+The `targets` object of `trigger` supports the following:
 
 * `address` - (Required, String) target address.
 * `headers` - (Optional, List) custom Headers.

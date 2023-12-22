@@ -67,7 +67,7 @@ The `cls` object supports the following:
 * `log_set` - (Optional, String) Log set of CLS.
 * `topic` - (Optional, String) Log topic of CLS.
 
-The `items` object supports the following:
+The `items` object of `selected_range` supports the following:
 
 * `gateways` - (Optional, Set) Ingress gateway list.
 * `namespace` - (Optional, String) Namespace.

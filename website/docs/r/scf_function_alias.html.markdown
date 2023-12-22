@@ -60,14 +60,14 @@ The following arguments are supported:
 * `namespace` - (Optional, String) Function namespace.
 * `routing_config` - (Optional, List) Request routing configuration of alias.
 
-The `additional_version_matches` object supports the following:
+The `additional_version_matches` object of `routing_config` supports the following:
 
 * `expression` - (Required, String) Rule requirements for range match:It should be described in an open or closed range, i.e., (a,b) or [a,b], where both a and b are integersRule requirements for exact match:Exact string match.
 * `key` - (Required, String) Matching rule key. When the API is called, pass in the key to route the request to the specified version based on the matching ruleHeader method:Enter invoke.headers.User for key and pass in RoutingKey:{User:value} when invoking a function through invoke for invocation based on rule matching.
 * `method` - (Required, String) Match method. Valid values:range: Range matchexact: exact string match.
 * `version` - (Required, String) Function version name.
 
-The `additional_version_weights` object supports the following:
+The `additional_version_weights` object of `routing_config` supports the following:
 
 * `version` - (Required, String) Function version name.
 * `weight` - (Required, Float64) Version weight.

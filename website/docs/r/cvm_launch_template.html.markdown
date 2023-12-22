@@ -68,7 +68,7 @@ The `action_timer` object supports the following:
 * `externals` - (Optional, List) Extended data.
 * `timer_action` - (Optional, String) Timer name.
 
-The `automation_service` object supports the following:
+The `automation_service` object of `enhanced_service` supports the following:
 
 * `enabled` - (Optional, Bool) Whether to enable TencentCloud Automation Tools(TAT), TRUE or FALSE.
 
@@ -90,7 +90,7 @@ The `enhanced_service` object supports the following:
 * `monitor_service` - (Optional, List) Enable cloud monitor service.
 * `security_service` - (Optional, List) Enable cloud security service.
 
-The `externals` object supports the following:
+The `externals` object of `action_timer` supports the following:
 
 * `release_address` - (Optional, Bool) Release address.
 * `storage_block_attr` - (Optional, List) HDD local storage attributes.
@@ -119,7 +119,7 @@ The `login_settings` object supports the following:
 * `key_ids` - (Optional, Set) List of key ID.
 * `password` - (Optional, String) The login password of instance.
 
-The `monitor_service` object supports the following:
+The `monitor_service` object of `enhanced_service` supports the following:
 
 * `enabled` - (Optional, Bool) Whether to enable cloud monitor service, TRUE or FALSE.
 
@@ -130,16 +130,16 @@ The `placement` object supports the following:
 * `host_ips` - (Optional, Set) Specify the host machine ip.
 * `project_id` - (Optional, Int) The project ID of the instance.
 
-The `security_service` object supports the following:
+The `security_service` object of `enhanced_service` supports the following:
 
 * `enabled` - (Optional, Bool) Whether to enable cloud security service, TRUE or FALSE.
 
-The `spot_options` object supports the following:
+The `spot_options` object of `instance_market_options` supports the following:
 
 * `max_price` - (Required, String) Bidding.
 * `spot_instance_type` - (Optional, String) Bidding request type, currently only supported type: one-time.
 
-The `storage_block_attr` object supports the following:
+The `storage_block_attr` object of `externals` supports the following:
 
 * `max_size` - (Required, Int) The maximum capacity of HDD local storage.
 * `min_size` - (Required, Int) The minimum capacity of HDD local storage.
@@ -157,7 +157,7 @@ The `tag_specification` object supports the following:
 * `resource_type` - (Required, String) The type of resource.
 * `tags` - (Required, List) Tag list.
 
-The `tags` object supports the following:
+The `tags` object of `tag_specification` supports the following:
 
 * `key` - (Required, String) The key of tag.
 * `value` - (Required, String) The value of tag.

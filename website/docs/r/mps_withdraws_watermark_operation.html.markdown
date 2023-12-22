@@ -49,14 +49,14 @@ The following arguments are supported:
 * `session_context` - (Optional, String, ForceNew) The source context which is used to pass through the user request information. The task flow status change callback will return the value of this field.
 * `task_notify_config` - (Optional, List, ForceNew) Event notification information of a task. If this parameter is left empty, no event notifications will be obtained.
 
-The `aws_sqs` object supports the following:
+The `aws_sqs` object of `task_notify_config` supports the following:
 
 * `sqs_queue_name` - (Required, String) The name of the SQS queue.
 * `sqs_region` - (Required, String) The region of the SQS queue.
 * `s3_secret_id` - (Optional, String) The key ID required to read from/write to the SQS queue.
 * `s3_secret_key` - (Optional, String) The key required to read from/write to the SQS queue.
 
-The `cos_input_info` object supports the following:
+The `cos_input_info` object of `input_info` supports the following:
 
 * `bucket` - (Required, String) The COS bucket of the object to process, such as `TopRankVideo-125xxx88`.
 * `object` - (Required, String) The path of the object to process, such as `/movie/201907/WildAnimal.mov`.
@@ -69,7 +69,7 @@ The `input_info` object supports the following:
 * `s3_input_info` - (Optional, List) The information of the AWS S3 object processed. This parameter is required if `Type` is `AWS-S3`.Note: This field may return null, indicating that no valid value can be obtained.
 * `url_input_info` - (Optional, List) The URL of the object to process. This parameter is valid and required when `Type` is `URL`.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `s3_input_info` object supports the following:
+The `s3_input_info` object of `input_info` supports the following:
 
 * `s3_bucket` - (Required, String) The AWS S3 bucket.
 * `s3_object` - (Required, String) The path of the AWS S3 object.
@@ -88,7 +88,7 @@ The `task_notify_config` object supports the following:
 * `queue_name` - (Optional, String) The CMQ or TDMQ-CMQ queue to receive notifications. This parameter is valid when `CmqModel` is `Queue`.
 * `topic_name` - (Optional, String) The CMQ or TDMQ-CMQ topic to receive notifications. This parameter is valid when `CmqModel` is `Topic`.
 
-The `url_input_info` object supports the following:
+The `url_input_info` object of `input_info` supports the following:
 
 * `url` - (Required, String) URL of a video.
 

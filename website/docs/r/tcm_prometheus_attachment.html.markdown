@@ -43,7 +43,7 @@ The following arguments are supported:
 * `mesh_id` - (Required, String, ForceNew) Mesh ID.
 * `prometheus` - (Required, List, ForceNew) Prometheus configuration.
 
-The `custom_prom` object supports the following:
+The `custom_prom` object of `prometheus` supports the following:
 
 * `auth_type` - (Required, String) Authentication type of the prometheus.
 * `url` - (Required, String) Url of the prometheus.

@@ -49,7 +49,7 @@ The `function_targets` object supports the following:
 * `function` - (Required, List) Information about cloud functions.Note: This field may return null, indicating that no valid value can be obtained.
 * `weight` - (Optional, Int) Weight. The default is `10`.
 
-The `function` object supports the following:
+The `function` object of `function_targets` supports the following:
 
 * `function_name` - (Required, String) The name of function.
 * `function_namespace` - (Required, String) The namespace of function.

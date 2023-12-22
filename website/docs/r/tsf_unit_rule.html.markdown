@@ -56,7 +56,7 @@ The `unit_rule_item_list` object supports the following:
 * `unit_rule_id` - (Optional, String) Unitization rule ID.
 * `unit_rule_tag_list` - (Optional, List) list of rule labels.
 
-The `unit_rule_tag_list` object supports the following:
+The `unit_rule_tag_list` object of `unit_rule_item_list` supports the following:
 
 * `tag_field` - (Required, String) label name.
 * `tag_operator` - (Required, String) Operator: IN/NOT_IN/EQUAL/NOT_EQUAL/REGEX.

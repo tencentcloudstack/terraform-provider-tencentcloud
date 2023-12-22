@@ -93,7 +93,7 @@ The `call_back` object supports the following:
 * `body` - (Required, String) callback body.
 * `headers` - (Optional, Set) callback headers.
 
-The `config_info` object supports the following:
+The `config_info` object of `analysis` supports the following:
 
 * `key` - (Required, String) key.
 * `value` - (Required, String) value.

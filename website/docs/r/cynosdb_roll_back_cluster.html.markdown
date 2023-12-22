@@ -59,7 +59,7 @@ The `rollback_tables` object supports the following:
 * `database` - (Required, String) New database name.
 * `tables` - (Required, List) Tables.
 
-The `tables` object supports the following:
+The `tables` object of `rollback_tables` supports the following:
 
 * `new_table` - (Required, String) New table name.
 * `old_table` - (Required, String) Old table name.

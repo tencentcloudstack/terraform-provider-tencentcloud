@@ -89,12 +89,17 @@ The following arguments are supported:
 * `task_mode` - (Required, Int) Task display mode, 0: canvas mode, 1: form mode.
 * `task_type` - (Required, Int) Task type, 201: real-time task, 202: offline task.
 
-The `config` object supports the following:
+The `config` object of `node_info` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
 
-The `ext_config` object supports the following:
+The `ext_config` object of `node_info` supports the following:
+
+* `name` - (Optional, String) Configuration name.
+* `value` - (Optional, String) Configuration value.
+
+The `ext_config` object of `node_mapping` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
@@ -113,7 +118,7 @@ The `node_info` object supports the following:
 * `schema` - (Optional, List) Schema information.
 * `update_time` - (Optional, String) Update time.
 
-The `node_mapping` object supports the following:
+The `node_mapping` object of `node_info` supports the following:
 
 * `ext_config` - (Optional, List) Node extension configuration information.
 * `schema_mappings` - (Optional, List) Schema mapping information.
@@ -121,17 +126,22 @@ The `node_mapping` object supports the following:
 * `source_id` - (Optional, String) Source node ID.
 * `source_schema` - (Optional, List) Source node schema information.
 
-The `properties` object supports the following:
+The `properties` object of `schema` supports the following:
 
 * `name` - (Optional, String) Attributes name.
 * `value` - (Optional, String) Attributes value.
 
-The `schema_mappings` object supports the following:
+The `properties` object of `source_schema` supports the following:
+
+* `name` - (Optional, String) Attributes name.
+* `value` - (Optional, String) Attributes value.
+
+The `schema_mappings` object of `node_mapping` supports the following:
 
 * `sink_schema_id` - (Required, String) Schema ID from sink node.
 * `source_schema_id` - (Required, String) Schema ID from source node.
 
-The `schema` object supports the following:
+The `schema` object of `node_info` supports the following:
 
 * `id` - (Required, String) Schema ID.
 * `name` - (Required, String) Schema name.
@@ -141,7 +151,7 @@ The `schema` object supports the following:
 * `properties` - (Optional, List) Schema extended attributes.
 * `value` - (Optional, String) Schema value.
 
-The `source_schema` object supports the following:
+The `source_schema` object of `node_mapping` supports the following:
 
 * `id` - (Required, String) Schema ID.
 * `name` - (Required, String) Schema name.

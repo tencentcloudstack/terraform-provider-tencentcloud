@@ -220,22 +220,22 @@ The `cache_key` object supports the following:
 * `key_rules` - (Optional, List) Path-specific cache key configuration.
 * `query_string` - (Optional, List) Request parameter contained in CacheKey.
 
-The `cache_rules` object supports the following:
+The `cache_rules` object of `status_code_cache` supports the following:
 
 * `cache_time` - (Required, Int) Status code cache expiration time (in seconds).
 * `status_code` - (Required, String) Code of status cache. available values: `403`, `404`.
 
-The `capping_rules` object supports the following:
+The `capping_rules` object of `downstream_capping` supports the following:
 
 * `kbps_threshold` - (Required, Int) Capping rule kbps threshold.
 * `rule_paths` - (Required, List) List of capping rule path.
 * `rule_type` - (Required, String) Capping rule type.
 
-The `client_certificate_config` object supports the following:
+The `client_certificate_config` object of `https_config` supports the following:
 
 * `certificate_content` - (Required, String) Client Certificate PEM format, requires Base64 encoding.
 
-The `compression_rules` object supports the following:
+The `compression_rules` object of `compression` supports the following:
 
 * `algorithms` - (Required, List) List of algorithms, available: `gzip` and `brotli`.
 * `compress` - (Required, Bool) Must be set as true, enables compression.
@@ -260,21 +260,21 @@ The `error_page` object supports the following:
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `page_rules` - (Optional, List) List of error page rule.
 
-The `filter_rules` object supports the following:
+The `filter_rules` object of `ip_filter` supports the following:
 
 * `filter_type` - (Required, String) Ip filter `blacklist`/`whitelist` type of filter rules.
 * `filters` - (Required, List) Ip filter rule list, supports IPs in X.X.X.X format, or /8, /16, /24 format IP ranges. Up to 50 allowlists or blocklists can be entered.
 * `rule_paths` - (Required, List) Content list for each `rule_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
 * `rule_type` - (Required, String) Ip filter rule type of filter rules, available: `all`, `file`, `directory`, `path`.
 
-The `force_redirect` object supports the following:
+The `force_redirect` object of `https_config` supports the following:
 
 * `carry_headers` - (Optional, String) Whether to return the newly added header during force redirection. Values: `on`, `off`.
 * `redirect_status_code` - (Optional, Int) Forced redirect status code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
 * `redirect_type` - (Optional, String) Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
 * `switch` - (Optional, String) Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.
 
-The `header_rules` object supports the following:
+The `header_rules` object of `request_header` supports the following:
 
 * `header_mode` - (Required, String) Http header setting method. The following types are supported: `add`: add a head, if a head already exists, there will be a duplicate head, `del`: delete the head.
 * `header_name` - (Required, String) Http header name.
@@ -282,7 +282,7 @@ The `header_rules` object supports the following:
 * `rule_paths` - (Required, List) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html.
 * `rule_type` - (Required, String) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect.
 
-The `header_rules` object supports the following:
+The `header_rules` object of `response_header` supports the following:
 
 * `header_mode` - (Required, String) Response header mode.
 * `header_name` - (Required, String) response header name of rule.
@@ -322,7 +322,7 @@ The `ip_freq_limit` object supports the following:
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `qps` - (Optional, Int) Sets the limited number of requests per second, 514 will be returned for requests that exceed the limit.
 
-The `key_rules` object supports the following:
+The `key_rules` object of `cache_key` supports the following:
 
 * `query_string` - (Required, List) Request parameter contained in CacheKey.
 * `rule_paths` - (Required, List) List of rule paths for each `key_rules`: `/` for `index`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
@@ -331,7 +331,7 @@ The `key_rules` object supports the following:
 * `ignore_case` - (Optional, String) Whether caches are case insensitive.
 * `rule_tag` - (Optional, String) Specify rule tag, default value is `user`.
 
-The `max_age_rules` object supports the following:
+The `max_age_rules` object of `max_age` supports the following:
 
 * `max_age_contents` - (Required, List) List of rule paths for each `max_age_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
 * `max_age_time` - (Required, Int) Max Age time in seconds, this can set to `0` that stands for no cache.
@@ -372,7 +372,7 @@ The `oss_private_access` object supports the following:
 * `region` - (Optional, String) Region.
 * `secret_key` - (Optional, String) Key.
 
-The `page_rules` object supports the following:
+The `page_rules` object of `error_page` supports the following:
 
 * `redirect_code` - (Required, Int) Redirect code of error page rules.
 * `redirect_url` - (Required, String) Redirect url of error page rules.
@@ -389,20 +389,20 @@ The `qn_private_access` object supports the following:
 * `access_key` - (Optional, String) Access ID.
 * `secret_key` - (Optional, String) Key.
 
-The `query_string` object supports the following:
+The `query_string` object of `cache_key` supports the following:
 
 * `action` - (Optional, String) Include/exclude query parameters. Values: `includeAll` (Default), `excludeAll`, `includeCustom`, `excludeCustom`.
 * `reorder` - (Optional, String) Whether to sort again, values `on`, `off` (Default).
 * `switch` - (Optional, String) Whether to use QueryString as part of CacheKey, values `on`, `off` (Default).
 * `value` - (Optional, String) Array of included/excluded query strings (separated by `;`).
 
-The `query_string` object supports the following:
+The `query_string` object of `key_rules` supports the following:
 
 * `action` - (Optional, String) Specify key rule QS action, values: `includeCustom`, `excludeCustom`.
 * `switch` - (Optional, String) Whether to use QueryString as part of CacheKey, values `on`, `off` (Default).
 * `value` - (Optional, String) Array of included/excluded query strings (separated by `;`).
 
-The `referer_rules` object supports the following:
+The `referer_rules` object of `referer` supports the following:
 
 * `allow_empty` - (Required, Bool) Whether to allow emptpy.
 * `referer_type` - (Required, String) Referer type.
@@ -440,14 +440,14 @@ The `rule_cache` object supports the following:
 * `rule_type` - (Optional, String) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.
 * `switch` - (Optional, String) Cache configuration switch. Valid values are `on` and `off`.
 
-The `server_certificate_config` object supports the following:
+The `server_certificate_config` object of `https_config` supports the following:
 
 * `certificate_content` - (Optional, String) Server certificate information. This is required when uploading an external certificate, which should contain the complete certificate chain.
 * `certificate_id` - (Optional, String) Server certificate ID.
 * `message` - (Optional, String) Certificate remarks.
 * `private_key` - (Optional, String) Server key information. This is required when uploading an external certificate.
 
-The `statistic_item` object supports the following:
+The `statistic_item` object of `band_width_alert` supports the following:
 
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `alert_percentage` - (Optional, Int) Alert percentage.
@@ -464,7 +464,7 @@ The `status_code_cache` object supports the following:
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `cache_rules` - (Optional, List) List of cache rule.
 
-The `type_a` object supports the following:
+The `type_a` object of `authentication` supports the following:
 
 * `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
 * `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
@@ -473,7 +473,7 @@ The `type_a` object supports the following:
 * `sign_param` - (Required, String) Signature parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
 * `backup_secret_key` - (Optional, String) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
 
-The `type_b` object supports the following:
+The `type_b` object of `authentication` supports the following:
 
 * `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
 * `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
@@ -481,7 +481,7 @@ The `type_b` object supports the following:
 * `secret_key` - (Required, String) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
 * `backup_secret_key` - (Optional, String) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
 
-The `type_c` object supports the following:
+The `type_c` object of `authentication` supports the following:
 
 * `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
 * `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
@@ -490,7 +490,7 @@ The `type_c` object supports the following:
 * `backup_secret_key` - (Optional, String) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
 * `time_format` - (Optional, String) Timestamp formation, available values: `dec`, `hex`.
 
-The `type_d` object supports the following:
+The `type_d` object of `authentication` supports the following:
 
 * `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
 * `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.

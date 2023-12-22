@@ -70,21 +70,21 @@ The following arguments are supported:
 * `concat_template` - (Required, List) stitching template.
 * `name` - (Required, String) The template name only supports `Chinese`, `English`, `numbers`, `_`, `-` and `*`.
 
-The `audio_mix` object supports the following:
+The `audio_mix` object of `concat_template` supports the following:
 
 * `audio_source` - (Required, String) The media address of the audio track that needs to be mixed.
 * `effect_config` - (Optional, List) Mix Fade Configuration.
 * `mix_mode` - (Optional, String) Mixing mode Repeat: background sound loop, Once: The background sound is played once.
 * `replace` - (Optional, String) Whether to replace the original audio of the Input media file with the mixed audio track media.
 
-The `audio` object supports the following:
+The `audio` object of `concat_template` supports the following:
 
 * `codec` - (Required, String) Codec format, value aac, mp3.
 * `bitrate` - (Optional, String) Original audio bit rate, unit: Kbps, Value range: [8, 1000].
 * `channels` - (Optional, String) number of channels- When Codec is set to aac, support 1, 2, 4, 5, 6, 8- When Codec is set to mp3, support 1, 2.
 * `samplerate` - (Optional, String) Sampling Rate- Unit: Hz- Optional 11025, 22050, 32000, 44100, 48000, 96000- Different packages, mp3 supports different sampling rates, as shown in the table below.
 
-The `concat_fragment` object supports the following:
+The `concat_fragment` object of `concat_template` supports the following:
 
 * `mode` - (Required, String) node type, `start`, `end`.
 * `url` - (Required, String) Splicing object address.
@@ -97,11 +97,11 @@ The `concat_template` object supports the following:
 * `audio` - (Optional, List) audio parameters, the target file does not require Audio information, need to set Audio.Remove to true.
 * `video` - (Optional, List) video information, do not upload Video, which is equivalent to deleting video information.
 
-The `container` object supports the following:
+The `container` object of `concat_template` supports the following:
 
 * `format` - (Required, String) Container format: mp4, flv, hls, ts, mp3, aac.
 
-The `effect_config` object supports the following:
+The `effect_config` object of `audio_mix` supports the following:
 
 * `bgm_fade_time` - (Optional, String) bgm transition fade-in duration, support floating point numbers.
 * `enable_bgm_fade` - (Optional, String) Enable bgm conversion fade in.
@@ -110,7 +110,7 @@ The `effect_config` object supports the following:
 * `end_fadeout_time` - (Optional, String) fade out time, greater than 0, support floating point numbers.
 * `start_fadein_time` - (Optional, String) Fade in duration, greater than 0, support floating point numbers.
 
-The `video` object supports the following:
+The `video` object of `concat_template` supports the following:
 
 * `codec` - (Required, String) Codec format `H.264`.
 * `bitrate` - (Optional, String) Original audio bit rate, unit: Kbps, Value range: [8, 1000].

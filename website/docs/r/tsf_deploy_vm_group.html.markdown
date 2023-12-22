@@ -75,7 +75,7 @@ The `health_check_settings` object supports the following:
 * `liveness_probe` - (Optional, List) Survival health check. Note: This field may return null, indicating that no valid value was found.
 * `readiness_probe` - (Optional, List) Readiness health check. Note: This field may return null, indicating that no valid values can be obtained.
 
-The `liveness_probe` object supports the following:
+The `liveness_probe` object of `health_check_settings` supports the following:
 
 * `action_type` - (Required, String) Health check method. HTTP: check through HTTP interface; CMD: check through executing command; TCP: check through establishing TCP connection. Note: This field may return null, indicating that no valid value was found.
 * `command` - (Optional, Set) The command to be executed for command health checks. Note: This field may return null, indicating that no valid values can be obtained.
@@ -89,7 +89,7 @@ The `liveness_probe` object supports the following:
 * `timeout_seconds` - (Optional, Int) The maximum timeout period for each health check response. Note: This field may return null, indicating that no valid values can be obtained.
 * `type` - (Optional, String) The type of readiness probe. TSF_DEFAULT represents the default readiness probe of TSF, while K8S_NATIVE represents the native readiness probe of Kubernetes. If this field is not specified, the native readiness probe of Kubernetes is used by default. Note: This field may return null, indicating that no valid values can be obtained.
 
-The `readiness_probe` object supports the following:
+The `readiness_probe` object of `health_check_settings` supports the following:
 
 * `action_type` - (Required, String) The health check method. HTTP indicates checking through an HTTP interface, CMD indicates checking through executing a command, and TCP indicates checking through establishing a TCP connection. Note: This field may return null, indicating that no valid values can be obtained.
 * `command` - (Optional, Set) The command to be executed for command check. Note: This field may return null, indicating that no valid values can be obtained.

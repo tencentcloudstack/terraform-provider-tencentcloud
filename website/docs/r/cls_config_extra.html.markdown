@@ -135,7 +135,7 @@ The `extract_rule` object supports the following:
 * `un_match_log_key` - (Optional, String) Unmatched log key.
 * `un_match_up_load_switch` - (Optional, Bool) Whether to upload the logs that failed to be parsed. Valid values: true: yes; false: no.
 
-The `filter_key_regex` object supports the following:
+The `filter_key_regex` object of `extract_rule` supports the following:
 
 * `key` - (Optional, String) Log key to be filtered.
 * `regex` - (Optional, String) Filter rule regex corresponding to key.
@@ -146,14 +146,14 @@ The `host_file` object supports the following:
 * `log_path` - (Required, String) Log file dir.
 * `custom_labels` - (Optional, Set) Metadata info.
 
-The `workload` object supports the following:
+The `workload` object of `container_file` supports the following:
 
 * `kind` - (Required, String) workload type.
 * `name` - (Required, String) workload name.
 * `container` - (Optional, String) container name.
 * `namespace` - (Optional, String) namespace.
 
-The `workloads` object supports the following:
+The `workloads` object of `container_stdout` supports the following:
 
 * `kind` - (Required, String) workload type.
 * `name` - (Required, String) workload name.

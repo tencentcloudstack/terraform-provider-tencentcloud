@@ -47,12 +47,12 @@ The `ddos_speed_limit_config` object supports the following:
 * `dst_port_scopes` - (Optional, List) This field has been deprecated. Please fill in the new field DstPortList.
 * `protocol_list` - (Optional, String) IP protocol numbers, values [ALL (all protocols) TCP (tcp protocol) UDP (udp protocol) SMP (smp protocol) 1; 2-100 (custom protocol number range, up to 8)] Note: When customizing the protocol number range, only the protocol number can be filled in, multiple ranges; Separation; When filling in ALL, no other agreements or agreements can be filled inNumber.
 
-The `dst_port_scopes` object supports the following:
+The `dst_port_scopes` object of `ddos_speed_limit_config` supports the following:
 
 * `begin_port` - (Required, Int) Starting port, ranging from 1 to 65535.
 * `end_port` - (Required, Int) end  port, ranging from 1 to 65535.
 
-The `speed_values` object supports the following:
+The `speed_values` object of `ddos_speed_limit_config` supports the following:
 
 * `type` - (Required, Int) Speed limit value type, value [1 (packet rate pps) 2 (bandwidth bps)].
 * `value` - (Required, Int) value.

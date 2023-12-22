@@ -74,22 +74,42 @@ The following arguments are supported:
 * `task_name` - (Required, String) Task name.
 * `description` - (Optional, String) Description information.
 
-The `config` object supports the following:
+The `config` object of `nodes` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
 
-The `execute_context` object supports the following:
+The `config` object of `task_info` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
 
-The `ext_config` object supports the following:
+The `execute_context` object of `task_info` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
 
-The `mappings` object supports the following:
+The `ext_config` object of `mappings` supports the following:
+
+* `name` - (Optional, String) Configuration name.
+* `value` - (Optional, String) Configuration value.
+
+The `ext_config` object of `node_mapping` supports the following:
+
+* `name` - (Optional, String) Configuration name.
+* `value` - (Optional, String) Configuration value.
+
+The `ext_config` object of `nodes` supports the following:
+
+* `name` - (Optional, String) Configuration name.
+* `value` - (Optional, String) Configuration value.
+
+The `ext_config` object of `task_info` supports the following:
+
+* `name` - (Optional, String) Configuration name.
+* `value` - (Optional, String) Configuration value.
+
+The `mappings` object of `task_info` supports the following:
 
 * `ext_config` - (Optional, List) Node extension configuration information.
 * `schema_mappings` - (Optional, List) Schema mapping information.
@@ -97,7 +117,7 @@ The `mappings` object supports the following:
 * `source_id` - (Optional, String) Source node ID.
 * `source_schema` - (Optional, List) Source node schema information.
 
-The `node_mapping` object supports the following:
+The `node_mapping` object of `nodes` supports the following:
 
 * `ext_config` - (Optional, List) Node extension configuration information.
 * `schema_mappings` - (Optional, List) Schema mapping information.
@@ -105,7 +125,7 @@ The `node_mapping` object supports the following:
 * `source_id` - (Optional, String) Source node ID.
 * `source_schema` - (Optional, List) Source node schema information.
 
-The `nodes` object supports the following:
+The `nodes` object of `task_info` supports the following:
 
 * `app_id` - (Optional, String) User App Id.
 * `config` - (Optional, List) Node configuration information.
@@ -126,17 +146,27 @@ The `nodes` object supports the following:
 * `task_id` - (Optional, String) The task id to which the node belongs.
 * `update_time` - (Optional, String) Update time.
 
-The `properties` object supports the following:
+The `properties` object of `schema` supports the following:
 
 * `name` - (Optional, String) Attributes name.
 * `value` - (Optional, String) Attributes value.
 
-The `schema_mappings` object supports the following:
+The `properties` object of `source_schema` supports the following:
+
+* `name` - (Optional, String) Attributes name.
+* `value` - (Optional, String) Attributes value.
+
+The `schema_mappings` object of `mappings` supports the following:
 
 * `sink_schema_id` - (Required, String) Schema ID from sink node.
 * `source_schema_id` - (Required, String) Schema ID from source node.
 
-The `schema` object supports the following:
+The `schema_mappings` object of `node_mapping` supports the following:
+
+* `sink_schema_id` - (Required, String) Schema ID from sink node.
+* `source_schema_id` - (Required, String) Schema ID from source node.
+
+The `schema` object of `nodes` supports the following:
 
 * `id` - (Required, String) Schema ID.
 * `name` - (Required, String) Schema name.
@@ -146,7 +176,17 @@ The `schema` object supports the following:
 * `properties` - (Optional, List) Schema extended attributes.
 * `value` - (Optional, String) Schema value.
 
-The `source_schema` object supports the following:
+The `source_schema` object of `mappings` supports the following:
+
+* `id` - (Required, String) Schema ID.
+* `name` - (Required, String) Schema name.
+* `type` - (Required, String) Schema type.
+* `alias` - (Optional, String) Schema alias.
+* `comment` - (Optional, String) Schema comment.
+* `properties` - (Optional, List) Schema extended attributes.
+* `value` - (Optional, String) Schema value.
+
+The `source_schema` object of `node_mapping` supports the following:
 
 * `id` - (Required, String) Schema ID.
 * `name` - (Required, String) Schema name.

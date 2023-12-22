@@ -205,7 +205,7 @@ The following arguments are supported:
 * `alert_rule` - (Required, List) Alarm notification channels.
 * `instance_id` - (Required, String) Instance Id.
 
-The `alert_manager` object supports the following:
+The `alert_manager` object of `notification` supports the following:
 
 * `url` - (Required, String) Alertmanager url.
 * `cluster_id` - (Optional, String) The ID of the cluster where the alertmanager is deployed. Note: This field may return null, indicating that a valid value could not be retrieved.
@@ -221,17 +221,17 @@ The `alert_rule` object supports the following:
 * `template_id` - (Optional, String) If the alarm is sent from a template, the TemplateId is the template id.
 * `updated_at` - (Optional, String) Last modified time.
 
-The `annotations` object supports the following:
+The `annotations` object of `rules` supports the following:
 
 * `name` - (Required, String) Name of map.
 * `value` - (Required, String) Value of map.
 
-The `labels` object supports the following:
+The `labels` object of `rules` supports the following:
 
 * `name` - (Required, String) Name of map.
 * `value` - (Required, String) Value of map.
 
-The `notification` object supports the following:
+The `notification` object of `alert_rule` supports the following:
 
 * `enabled` - (Required, Bool) Whether it is enabled.
 * `type` - (Required, String) The channel type, which defaults to amp, supports the following `amp`, `webhook`, `alertmanager`.
@@ -248,7 +248,7 @@ The `notification` object supports the following:
 * `time_range_start` - (Optional, String) The time from which it takes effect.
 * `web_hook` - (Optional, String) If Type is webhook, the field is required. Note: This field may return null, indicating that a valid value could not be retrieved.
 
-The `rules` object supports the following:
+The `rules` object of `alert_rule` supports the following:
 
 * `for` - (Required, String) Time of duration.
 * `labels` - (Required, List) Extra labels.

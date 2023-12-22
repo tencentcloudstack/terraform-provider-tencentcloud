@@ -100,25 +100,25 @@ The following arguments are supported:
 
 * `template` - (Required, List) Template settings.
 
-The `pod_monitors` object supports the following:
+The `pod_monitors` object of `template` supports the following:
 
 * `config` - (Required, String) Config.
 * `name` - (Required, String) Name.
 * `template_id` - (Optional, String) Used for the argument, if the configuration comes to the template, the template id.
 
-The `raw_jobs` object supports the following:
+The `raw_jobs` object of `template` supports the following:
 
 * `config` - (Required, String) Config.
 * `name` - (Required, String) Name.
 * `template_id` - (Optional, String) Used for the argument, if the configuration comes to the template, the template id.
 
-The `record_rules` object supports the following:
+The `record_rules` object of `template` supports the following:
 
 * `config` - (Required, String) Config.
 * `name` - (Required, String) Name.
 * `template_id` - (Optional, String) Used for the argument, if the configuration comes to the template, the template id.
 
-The `service_monitors` object supports the following:
+The `service_monitors` object of `template` supports the following:
 
 * `config` - (Required, String) Config.
 * `name` - (Required, String) Name.

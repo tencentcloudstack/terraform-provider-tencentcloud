@@ -105,14 +105,14 @@ The following arguments are supported:
 * `limit_detail` - (Required, List) rate limit configuration.
 * `name` - (Required, String) service name or service ID.
 
-The `external_redis` object supports the following:
+The `external_redis` object of `limit_detail` supports the following:
 
 * `redis_host` - (Required, String) redis ip, maybe null.
 * `redis_password` - (Required, String) redis password, maybe null.
 * `redis_port` - (Required, Int) redis port, maybe null.
 * `redis_timeout` - (Required, Int) redis timeout, unit: `ms`, maybe null.
 
-The `headers` object supports the following:
+The `headers` object of `rate_limit_response` supports the following:
 
 * `key` - (Optional, String) key of header.
 * `value` - (Optional, String) value of header.
@@ -133,12 +133,12 @@ The `limit_detail` object supports the following:
 * `rate_limit_response_url` - (Optional, String) request forwarding address, maybe null.
 * `rate_limit_response` - (Optional, List) response configuration, the response strategy is text, maybe null.
 
-The `qps_thresholds` object supports the following:
+The `qps_thresholds` object of `limit_detail` supports the following:
 
 * `max` - (Required, Int) the max threshold.
 * `unit` - (Required, String) qps threshold unit.Reference value:`second`, `minute`, `hour`, `day`, `month`, `year`.
 
-The `rate_limit_response` object supports the following:
+The `rate_limit_response` object of `limit_detail` supports the following:
 
 * `body` - (Optional, String) custom response body, maybe bull.
 * `headers` - (Optional, List) headrs.

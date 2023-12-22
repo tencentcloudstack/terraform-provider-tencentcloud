@@ -61,7 +61,7 @@ The `destination` object supports the following:
 * `encryption` - (Optional, List) Server-side encryption for the inventory result.
 * `prefix` - (Optional, String) Prefix of the inventory result.
 
-The `encryption` object supports the following:
+The `encryption` object of `destination` supports the following:
 
 * `sse_cos` - (Optional, String) Encryption with COS-managed key. This field can be left empty.
 
@@ -74,7 +74,7 @@ The `optional_fields` object supports the following:
 
 * `fields` - (Optional, Set) Optional analysis items to include in the inventory result. The optional fields include Size, LastModifiedDate, StorageClass, ETag, IsMultipartUploaded, ReplicationStatus, Tag, Crc64, and x-cos-meta-*.
 
-The `period` object supports the following:
+The `period` object of `filter` supports the following:
 
 * `end_time` - (Optional, String) Creation end time of the objects to analyze. The parameter is a timestamp in seconds, for example, 1568688762.
 * `start_time` - (Optional, String) Creation start time of the objects to analyze. The parameter is a timestamp in seconds, for example, 1568688761.

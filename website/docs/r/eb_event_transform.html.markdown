@@ -105,28 +105,28 @@ The following arguments are supported:
 * `rule_id` - (Required, String) ruleId.
 * `transformations` - (Required, List) A list of transformation rules, currently only one.
 
-The `etl_filter` object supports the following:
+The `etl_filter` object of `transformations` supports the following:
 
 * `filter` - (Required, String) Grammatical Rules are consistent.
 
-The `extraction` object supports the following:
+The `extraction` object of `transformations` supports the following:
 
 * `extraction_input_path` - (Required, String) JsonPath, if not specified, the default value $.
 * `format` - (Required, String) Value: `TEXT`, `JSON`.
 * `text_params` - (Optional, List) Only Text needs to be passed.
 
-The `output_structs` object supports the following:
+The `output_structs` object of `transform` supports the following:
 
 * `key` - (Required, String) Corresponding to the key in the output json.
 * `value_type` - (Required, String) The data type of value, optional values: `STRING`, `NUMBER`, `BOOLEAN`, `NULL`, `SYS_VARIABLE`, `JSONPATH`.
 * `value` - (Required, String) You can fill in the json-path and also support constants or built-in keyword date types.
 
-The `text_params` object supports the following:
+The `text_params` object of `extraction` supports the following:
 
 * `regex` - (Optional, String) Fill in the regular expression: length 128.
 * `separator` - (Optional, String) `Comma`, `|`, `tab`, `space`, `newline`, `%`, `#`, the limit length is 1.
 
-The `transform` object supports the following:
+The `transform` object of `transformations` supports the following:
 
 * `output_structs` - (Required, List) Describe how the data is transformed.
 

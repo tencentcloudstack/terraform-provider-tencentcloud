@@ -151,7 +151,7 @@ The following arguments are supported:
 * `upstream_name` - (Optional, String) Backend channel name.
 * `upstream_type` - (Optional, String) Backend access type, value range: IP_PORT, K8S.
 
-The `extra_labels` object supports the following:
+The `extra_labels` object of `k8s_service` supports the following:
 
 * `key` - (Required, String) Key of Label.
 * `value` - (Required, String) Value of Label.

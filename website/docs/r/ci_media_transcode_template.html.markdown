@@ -112,7 +112,7 @@ The `audio` object supports the following:
 * `samplerate` - (Optional, String) Sampling Rate- Unit: Hz- Optional 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 88200, 96000- Different packages, mp3 supports different sampling rates, as shown in the table below- When Codec is set to amr, only 8000 is supported- When Codec is set to opus, it supports 8000, 16000, 24000, 48000.
 * `switch_track` - (Optional, String) Convert track, the value is true, false. This parameter is invalid when Video.Codec is H.265.
 
-The `clip_config` object supports the following:
+The `clip_config` object of `container` supports the following:
 
 * `duration` - (Optional, String) Fragmentation duration, default 5s.
 
@@ -121,7 +121,7 @@ The `container` object supports the following:
 * `format` - (Required, String) Package format.
 * `clip_config` - (Optional, List) Fragment configuration, valid when format is hls and dash.
 
-The `effect_config` object supports the following:
+The `effect_config` object of `audio_mix` supports the following:
 
 * `bgm_fade_time` - (Optional, String) bgm transition fade-in duration, support floating point numbers.
 * `enable_bgm_fade` - (Optional, String) Enable bgm conversion fade in.
@@ -130,7 +130,7 @@ The `effect_config` object supports the following:
 * `end_fadeout_time` - (Optional, String) fade out time, greater than 0, support floating point numbers.
 * `start_fadein_time` - (Optional, String) Fade in duration, greater than 0, support floating point numbers.
 
-The `hls_encrypt` object supports the following:
+The `hls_encrypt` object of `trans_config` supports the following:
 
 * `is_hls_encrypt` - (Optional, String) Whether to enable HLS encryption, support encryption when Container.Format is hls.
 * `uri_key` - (Optional, String) HLS encrypted key, this parameter is only meaningful when IsHlsEncrypt is true.

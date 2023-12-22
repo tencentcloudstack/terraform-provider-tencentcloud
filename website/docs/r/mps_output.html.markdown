@@ -42,20 +42,20 @@ The following arguments are supported:
 * `flow_id` - (Required, String) Flow ID.
 * `output` - (Required, List) Output configuration of the transport stream.
 
-The `destinations` object supports the following:
+The `destinations` object of `rtmp_settings` supports the following:
 
-* `ip` - (Required, String) Output IP.
-* `port` - (Required, Int) output port.
+* `stream_key` - (Required, String) relayed StreamKey, in the format: stream?key=value.
+* `url` - (Required, String) relayed URL, the format is: rtmp://domain/live.
 
-The `destinations` object supports the following:
+The `destinations` object of `rtp_settings` supports the following:
 
 * `ip` - (Required, String) The target IP of the relay.
 * `port` - (Required, Int) Destination port for relays.
 
-The `destinations` object supports the following:
+The `destinations` object of `srt_settings` supports the following:
 
-* `stream_key` - (Required, String) relayed StreamKey, in the format: stream?key=value.
-* `url` - (Required, String) relayed URL, the format is: rtmp://domain/live.
+* `ip` - (Required, String) Output IP.
+* `port` - (Required, Int) output port.
 
 The `output` object supports the following:
 
@@ -69,18 +69,18 @@ The `output` object supports the following:
 * `rtp_settings` - (Optional, List) Output RTP configuration.
 * `srt_settings` - (Optional, List) configuration of the output SRT.
 
-The `rtmp_settings` object supports the following:
+The `rtmp_settings` object of `output` supports the following:
 
 * `destinations` - (Required, List) The target address of the relay can be filled in 1~2.
 * `chunk_size` - (Optional, Int) RTMP Chunk size, range is [4096, 40960].
 
-The `rtp_settings` object supports the following:
+The `rtp_settings` object of `output` supports the following:
 
 * `destinations` - (Required, List) The target address of the relay can be filled in 1~2.
 * `fec` - (Required, String) You can only fill in none.
 * `idle_timeout` - (Required, Int) Idle timeout, unit ms.
 
-The `srt_settings` object supports the following:
+The `srt_settings` object of `output` supports the following:
 
 * `destinations` - (Required, List) The target address of the relay is required when Mode is CALLER, and only one group can be filled in.
 * `latency` - (Optional, Int) The total delay of relaying SRT, the default is 0, the unit is ms, and the range is [0, 3000].

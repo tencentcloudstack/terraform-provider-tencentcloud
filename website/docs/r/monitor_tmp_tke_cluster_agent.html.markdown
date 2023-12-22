@@ -189,23 +189,23 @@ The `agents` object supports the following:
 * `not_install_basic_scrape` - (Optional, Bool) Whether to install the default collection configuration.
 * `not_scrape` - (Optional, Bool) Whether to collect indicators, true means drop all indicators, false means collect default indicators.
 
-The `external_labels` object supports the following:
+The `external_labels` object of `agents` supports the following:
 
 * `name` - (Required, String) Indicator name.
 * `value` - (Optional, String) Index value.
 
-The `in_cluster_pod_config` object supports the following:
+The `in_cluster_pod_config` object of `agents` supports the following:
 
 * `host_net` - (Required, Bool) Whether to use HostNetWork.
 * `node_selector` - (Optional, List) Specify the pod to run the node.
 * `tolerations` - (Optional, List) Tolerate Stain.
 
-The `node_selector` object supports the following:
+The `node_selector` object of `in_cluster_pod_config` supports the following:
 
 * `name` - (Optional, String) The pod configuration name of the component deployed in the cluster.
 * `value` - (Optional, String) Pod configuration values for components deployed in the cluster.
 
-The `tolerations` object supports the following:
+The `tolerations` object of `in_cluster_pod_config` supports the following:
 
 * `effect` - (Optional, String) blemish effect to match.
 * `key` - (Optional, String) The taint key to which the tolerance applies.

@@ -107,25 +107,25 @@ The following arguments are supported:
 * `media_process_task` - (Optional, List) Parameter of video processing task.
 * `sub_app_id` - (Optional, Int) Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.
 
-The `adaptive_dynamic_streaming_task_list` object supports the following:
+The `adaptive_dynamic_streaming_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Adaptive bitrate streaming template ID.
 * `watermark_list` - (Optional, List) List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.
 
-The `animated_graphic_task_list` object supports the following:
+The `animated_graphic_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Animated image generating template ID.
 * `end_time_offset` - (Required, Float64) End time of animated image in video in seconds.
 * `start_time_offset` - (Required, Float64) Start time of animated image in video in seconds.
 
-The `cover_by_snapshot_task_list` object supports the following:
+The `cover_by_snapshot_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Time point screen capturing template ID.
 * `position_type` - (Required, String) Screen capturing mode. Valid values: `Time`, `Percent`. `Time`: screen captures by time point, `Percent`: screen captures by percentage.
 * `position_value` - (Required, Float64) Screenshot position: For time point screen capturing, this means to take a screenshot at a specified time point (in seconds) and use it as the cover. For percentage screen capturing, this value means to take a screenshot at a specified percentage of the video duration and use it as the cover.
 * `watermark_list` - (Optional, List) List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.
 
-The `image_sprite_task_list` object supports the following:
+The `image_sprite_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Image sprite generating template ID.
 
@@ -139,7 +139,7 @@ The `media_process_task` object supports the following:
 * `snapshot_by_time_offset_task_list` - (Optional, List) List of time point screen capturing tasks. Note: this field may return null, indicating that no valid values can be obtained.
 * `transcode_task_list` - (Optional, List) List of transcoding tasks. Note: this field may return null, indicating that no valid values can be obtained.
 
-The `mosaic_list` object supports the following:
+The `mosaic_list` object of `transcode_task_list` supports the following:
 
 * `coordinate_origin` - (Optional, String) Origin position, which currently can only be: `TopLeft`: the origin of coordinates is in the top-left corner of the video, and the origin of the blur is in the top-left corner of the image or text. Default value: TopLeft.
 * `end_time_offset` - (Optional, Float64) End time offset of blur in seconds. If this parameter is left empty or `0` is entered, the blur will exist till the last video frame; If this value is greater than `0` (e.g., n), the blur will exist till second n; If this value is smaller than `0` (e.g., -n), the blur will exist till second n before the last video frame.
@@ -149,24 +149,56 @@ The `mosaic_list` object supports the following:
 * `x_pos` - (Optional, String) The horizontal position of the origin of the blur relative to the origin of coordinates of the video. `%` and `px` formats are supported: If the string ends in `%`, the XPos of the blur will be the specified percentage of the video width; for example, 10% means that XPos is 10% of the video width; If the string ends in `px`, the XPos of the blur will be the specified px; for example, 100px means that XPos is 100 px. Default value: `0px`.
 * `y_pos` - (Optional, String) Vertical position of the origin of blur relative to the origin of coordinates of video. `%` and `px` formats are supported: If the string ends in `%`, the YPos of the blur will be the specified percentage of the video height; for example, 10% means that YPos is 10% of the video height; If the string ends in `px`, the YPos of the blur will be the specified px; for example, 100px means that YPos is 100 px. Default value: `0px`.
 
-The `sample_snapshot_task_list` object supports the following:
+The `sample_snapshot_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Sampled screen capturing template ID.
 * `watermark_list` - (Optional, List) List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.
 
-The `snapshot_by_time_offset_task_list` object supports the following:
+The `snapshot_by_time_offset_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Time point screen capturing template ID.
 * `ext_time_offset_list` - (Optional, List) The list of screenshot time points. `s` and `%` formats are supported: When a time point string ends with `s`, its unit is second. For example, `3.5s` means the 3.5th second of the video; When a time point string ends with `%`, it is marked with corresponding percentage of the video duration. For example, `10%` means that the time point is at the 10% of the video entire duration.
 * `watermark_list` - (Optional, List) List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.
 
-The `transcode_task_list` object supports the following:
+The `transcode_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Video transcoding template ID.
 * `mosaic_list` - (Optional, List) List of blurs. Up to 10 ones can be supported.
 * `watermark_list` - (Optional, List) List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.
 
-The `watermark_list` object supports the following:
+The `watermark_list` object of `adaptive_dynamic_streaming_task_list` supports the following:
+
+* `definition` - (Required, String) Watermarking template ID.
+* `end_time_offset` - (Optional, Float64) End time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will exist till the last video frame; If this value is greater than `0` (e.g., n), the watermark will exist till second n; If this value is smaller than `0` (e.g., -n), the watermark will exist till second n before the last video frame.
+* `start_time_offset` - (Optional, Float64) Start time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame; If this value is greater than `0` (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than `0` (e.g., -n), the watermark will appear at second n before the last video frame.
+* `svg_content` - (Optional, String) SVG content of up to `2000000` characters. This needs to be entered only when the watermark type is `SVG`. Note: this field may return null, indicating that no valid values can be obtained.
+* `text_content` - (Optional, String) Text content of up to `100` characters. This needs to be entered only when the watermark type is text. Note: this field may return null, indicating that no valid values can be obtained.
+
+The `watermark_list` object of `cover_by_snapshot_task_list` supports the following:
+
+* `definition` - (Required, String) Watermarking template ID.
+* `end_time_offset` - (Optional, Float64) End time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will exist till the last video frame; If this value is greater than `0` (e.g., n), the watermark will exist till second n; If this value is smaller than `0` (e.g., -n), the watermark will exist till second n before the last video frame.
+* `start_time_offset` - (Optional, Float64) Start time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame; If this value is greater than `0` (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than `0` (e.g., -n), the watermark will appear at second n before the last video frame.
+* `svg_content` - (Optional, String) SVG content of up to `2000000` characters. This needs to be entered only when the watermark type is `SVG`. Note: this field may return null, indicating that no valid values can be obtained.
+* `text_content` - (Optional, String) Text content of up to `100` characters. This needs to be entered only when the watermark type is text. Note: this field may return null, indicating that no valid values can be obtained.
+
+The `watermark_list` object of `sample_snapshot_task_list` supports the following:
+
+* `definition` - (Required, String) Watermarking template ID.
+* `end_time_offset` - (Optional, Float64) End time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will exist till the last video frame; If this value is greater than `0` (e.g., n), the watermark will exist till second n; If this value is smaller than `0` (e.g., -n), the watermark will exist till second n before the last video frame.
+* `start_time_offset` - (Optional, Float64) Start time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame; If this value is greater than `0` (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than `0` (e.g., -n), the watermark will appear at second n before the last video frame.
+* `svg_content` - (Optional, String) SVG content of up to `2000000` characters. This needs to be entered only when the watermark type is `SVG`. Note: this field may return null, indicating that no valid values can be obtained.
+* `text_content` - (Optional, String) Text content of up to `100` characters. This needs to be entered only when the watermark type is text. Note: this field may return null, indicating that no valid values can be obtained.
+
+The `watermark_list` object of `snapshot_by_time_offset_task_list` supports the following:
+
+* `definition` - (Required, String) Watermarking template ID.
+* `end_time_offset` - (Optional, Float64) End time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will exist till the last video frame; If this value is greater than `0` (e.g., n), the watermark will exist till second n; If this value is smaller than `0` (e.g., -n), the watermark will exist till second n before the last video frame.
+* `start_time_offset` - (Optional, Float64) Start time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame. If this parameter is left blank or `0` is entered, the watermark will appear upon the first video frame; If this value is greater than `0` (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than `0` (e.g., -n), the watermark will appear at second n before the last video frame.
+* `svg_content` - (Optional, String) SVG content of up to `2000000` characters. This needs to be entered only when the watermark type is `SVG`. Note: this field may return null, indicating that no valid values can be obtained.
+* `text_content` - (Optional, String) Text content of up to `100` characters. This needs to be entered only when the watermark type is text. Note: this field may return null, indicating that no valid values can be obtained.
+
+The `watermark_list` object of `transcode_task_list` supports the following:
 
 * `definition` - (Required, String) Watermarking template ID.
 * `end_time_offset` - (Optional, Float64) End time offset of a watermark in seconds. If this parameter is left blank or `0` is entered, the watermark will exist till the last video frame; If this value is greater than `0` (e.g., n), the watermark will exist till second n; If this value is smaller than `0` (e.g., -n), the watermark will exist till second n before the last video frame.

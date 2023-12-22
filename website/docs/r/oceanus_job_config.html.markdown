@@ -107,12 +107,12 @@ The `clazz_levels` object supports the following:
 * `clazz` - (Required, String) Java class full pathNote: This field may return null, indicating that no valid value can be obtained.
 * `level` - (Required, String) Log level TRACE, DEBUG, INFO, WARN, ERRORNote: This field may return null, indicating that no valid value can be obtained.
 
-The `configuration` object supports the following:
+The `configuration` object of `node_config` supports the following:
 
 * `key` - (Required, String) System configuration key.
 * `value` - (Required, String) System configuration value.
 
-The `edges` object supports the following:
+The `edges` object of `job_graph` supports the following:
 
 * `source` - (Required, Int) Starting node ID of the edgeNote: This field may return null, indicating that no valid value can be obtained.
 * `target` - (Required, Int) Target node ID of the edgeNote: This field may return null, indicating that no valid value can be obtained.
@@ -123,12 +123,12 @@ The `expert_mode_configuration` object supports the following:
 * `node_config` - (Optional, List) Node configurationNote: This field may return null, indicating that no valid value can be obtained.
 * `slot_sharing_groups` - (Optional, List) Slot sharing groupsNote: This field may return null, indicating that no valid value can be obtained.
 
-The `job_graph` object supports the following:
+The `job_graph` object of `expert_mode_configuration` supports the following:
 
 * `edges` - (Optional, List) Edge set of the running graphNote: This field may return null, indicating that no valid value can be obtained.
 * `nodes` - (Optional, List) Point set of the running graphNote: This field may return null, indicating that no valid value can be obtained.
 
-The `node_config` object supports the following:
+The `node_config` object of `expert_mode_configuration` supports the following:
 
 * `id` - (Required, Int) Node IDNote: This field may return null, indicating that no valid value can be obtained.
 * `configuration` - (Optional, List) Configuration propertiesNote: This field may return null, indicating that no valid value can be obtained.
@@ -136,7 +136,7 @@ The `node_config` object supports the following:
 * `slot_sharing_group` - (Optional, String) Slot sharing groupNote: This field may return null, indicating that no valid value can be obtained.
 * `state_ttl` - (Optional, String) State TTL configuration of the node, separated by semicolonsNote: This field may return null, indicating that no valid value can be obtained.
 
-The `nodes` object supports the following:
+The `nodes` object of `job_graph` supports the following:
 
 * `description` - (Required, String) Node descriptionNote: This field may return null, indicating that no valid value can be obtained.
 * `id` - (Required, Int) Node IDNote: This field may return null, indicating that no valid value can be obtained.
@@ -154,13 +154,13 @@ The `resource_refs` object supports the following:
 * `type` - (Required, Int) Reference resource type, for example, setting the main resource to 1 represents the jar package where the main class is located.
 * `version` - (Required, Int) Resource version ID, -1 indicates the latest version.
 
-The `slot_sharing_groups` object supports the following:
+The `slot_sharing_groups` object of `expert_mode_configuration` supports the following:
 
 * `name` - (Required, String) Name of the SlotSharingGroupNote: This field may return null, indicating that no valid value can be obtained.
 * `spec` - (Required, List) Specification of the SlotSharingGroupNote: This field may return null, indicating that no valid value can be obtained.
 * `description` - (Optional, String) Description of the SlotSharingGroupNote: This field may return null, indicating that no valid value can be obtained.
 
-The `spec` object supports the following:
+The `spec` object of `slot_sharing_groups` supports the following:
 
 * `cpu` - (Required, Float64) Applicable CPUNote: This field may return null, indicating that no valid value can be obtained.
 * `heap_memory` - (Required, String) Default is b, supporting units are b, kb, mb, gbNote: This field may return null, indicating that no valid value can be obtained.

@@ -75,7 +75,7 @@ The `autoscaler` object supports the following:
 * `description` - (Optional, String) description.
 * `horizontal_autoscaler` - (Optional, List) scaler based on metrics.
 
-The `cron_horizontal_autoscaler` object supports the following:
+The `cron_horizontal_autoscaler` object of `autoscaler` supports the following:
 
 * `enabled` - (Required, Bool) enable scaler.
 * `name` - (Required, String) name.
@@ -83,7 +83,7 @@ The `cron_horizontal_autoscaler` object supports the following:
 * `priority` - (Required, Int) priority.
 * `schedules` - (Required, List) schedule payload.
 
-The `horizontal_autoscaler` object supports the following:
+The `horizontal_autoscaler` object of `autoscaler` supports the following:
 
 * `enabled` - (Required, Bool) enable scaler.
 * `max_replicas` - (Required, Int) maximal replica number.
@@ -91,7 +91,7 @@ The `horizontal_autoscaler` object supports the following:
 * `min_replicas` - (Required, Int) minimal replica number.
 * `threshold` - (Required, Int) metric threshold.
 
-The `schedules` object supports the following:
+The `schedules` object of `cron_horizontal_autoscaler` supports the following:
 
 * `start_at` - (Required, String) start time.
 * `target_replicas` - (Required, Int) target replica number.

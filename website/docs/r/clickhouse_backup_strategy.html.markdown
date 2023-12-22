@@ -49,7 +49,7 @@ The following arguments are supported:
 * `instance_id` - (Required, String, ForceNew) Instance id.
 * `meta_backup_strategy` - (Optional, List) Metadata backup strategy.
 
-The `back_up_tables` object supports the following:
+The `back_up_tables` object of `data_backup_strategy` supports the following:
 
 * `database` - (Required, String) Database.
 * `table` - (Required, String) Table.

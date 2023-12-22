@@ -135,7 +135,7 @@ The following arguments are supported:
 * `destination_region_id` - (Optional, Int, ForceNew) the region ID of the target instance, such as Guangzhou is 1.
 * `peer_replication_option` - (Optional, List, ForceNew) enable synchronization of configuration items across master account instances.
 
-The `filters` object supports the following:
+The `filters` object of `rule` supports the following:
 
 * `type` - (Required, String) type (name, tag, and resource).
 * `value` - (Optional, String) empty by default.

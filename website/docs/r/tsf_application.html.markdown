@@ -50,11 +50,11 @@ The following arguments are supported:
 * `program_id` - (Optional, String) ID of the dataset to be bound.
 * `service_config_list` - (Optional, List) List of service configuration information.
 
-The `health_check` object supports the following:
+The `health_check` object of `service_config_list` supports the following:
 
 * `path` - (Optional, String) Health check path.
 
-The `ports` object supports the following:
+The `ports` object of `service_config_list` supports the following:
 
 * `protocol` - (Required, String) Port protocol.
 * `target_port` - (Required, Int) Service port.
