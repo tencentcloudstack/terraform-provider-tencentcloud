@@ -1,3 +1,11 @@
+## 1.81.61 (December 22, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_bi_datasource_cloud: support param cluster_id ([#2422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2422))
+* resource/tencentcloud_bi_embed_token_apply: support param ticket_num ([#2422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2422))
+* resource/tencentcloud_ssl_update_certificate_instance_operation: Support upload ca ([#2421](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2421))
+
 ## 1.81.60 (December 20, 2023)
 
 FEATURES:
