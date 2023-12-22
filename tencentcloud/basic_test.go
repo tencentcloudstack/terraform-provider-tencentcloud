@@ -62,13 +62,16 @@ const (
 	defaultVpcCidr     = "172.16.0.0/16"
 	defaultVpcCidrLess = "172.16.0.0/18"
 
-	defaultCvmAZone           = "ap-guangzhou-7"
-	defaultCvmVpcId           = "vpc-l0dw94uh"
-	defaultCvmSubnetId        = "subnet-ccj2qg0m"
-	defaultCvmTestingAZone    = "ap-guangzhou-2"
-	defaultCvmTestingVpcId    = "vpc-701bm52d"
-	defaultCvmTestingSubnetId = "subnet-1q62lj3m"
-	defaultCvmTestingImgId    = "img-eb30mz89"
+	defaultCvmAZone                 = "ap-guangzhou-7"
+	defaultCvmInternationalZone     = "ap-guangzhou-3"
+	defaultCvmVpcId                 = "vpc-l0dw94uh"
+	defaultCvmSubnetId              = "subnet-ccj2qg0m"
+	defaultCvmTestingAZone          = "ap-guangzhou-2"
+	defaultCvmTestingVpcId          = "vpc-701bm52d"
+	defaultCvmTestingSubnetId       = "subnet-1q62lj3m"
+	defaultCvmTestingImgId          = "img-eb30mz89"
+	defaultCvmInternationalVpcId    = "vpc-m7ryq37p"
+	defaultCvmInternationalSubnetId = "subnet-lwrsb7a0"
 
 	defaultAZone          = "ap-guangzhou-3"
 	defaultSubnetId       = "subnet-enm92y0m"
@@ -183,9 +186,11 @@ data "tencentcloud_instance_types" "default" {
 
 // ckafka
 const (
-	defaultKafkaInstanceId = "ckafka-vv7wpvae"
-	defaultKafkaVpcId      = "vpc-njbzmzyd"
-	defaultKafkaSubnetId   = "subnet-2txtpql8"
+	defaultKafkaInstanceId            = "ckafka-vv7wpvae"
+	defaultKafkaVpcId                 = "vpc-njbzmzyd"
+	defaultKafkaSubnetId              = "subnet-2txtpql8"
+	defaultKafkaInternationalVpcId    = "vpc-ereuklyj"
+	defaultKafkaInternationalSubnetId = "subnet-e7rvxfx2"
 )
 
 const defaultKafkaVariable = `
@@ -197,6 +202,12 @@ variable "vpc_id" {
 }
 variable "subnet_id" {
   default = "` + defaultKafkaSubnetId + `"
+}
+variable "international_vpc_id" {
+  default = "` + defaultKafkaInternationalVpcId + `"
+}
+variable "international_subnet_id" {
+  default = "` + defaultKafkaInternationalSubnetId + `"
 }
 `
 
@@ -216,12 +227,14 @@ const (
 
 // Cloud monitoring grafana visualization
 const (
-	defaultGrafanaVpcId      = "vpc-391sv4w3"
-	defaultGrafanaSubnetId   = "subnet-ljyn7h30"
-	defaultGrafanaInstanceId = "grafana-dp2hnnfa"
-	defaultGrafanaReceiver   = "Consumer-nfyxuzmbmq"
-	defaultGrafanaPlugin     = "grafana-clock-panel"
-	defaultGrafanaVersion    = "1.2.0"
+	defaultGrafanaVpcId                 = "vpc-391sv4w3"
+	defaultGrafanaSubnetId              = "subnet-ljyn7h30"
+	defaultInternationalGrafanaVpcId    = "vpc-dg21ckzx"
+	defaultInternationalGrafanaSubnetId = "subnet-i5lq9vy4"
+	defaultGrafanaInstanceId            = "grafana-dp2hnnfa"
+	defaultGrafanaReceiver              = "Consumer-nfyxuzmbmq"
+	defaultGrafanaPlugin                = "grafana-clock-panel"
+	defaultGrafanaVersion               = "1.2.0"
 )
 
 /*
@@ -251,6 +264,10 @@ variable "availability_cvm_zone" {
   default = "` + defaultCvmAZone + `"
 }
 
+variable "availability_cvm_international_zone" {
+  default = "` + defaultCvmInternationalZone + `"
+}
+
 variable "availability_cvm_testing_zone" {
   default = "` + defaultCvmTestingAZone + `"
 }
@@ -274,6 +291,15 @@ variable "cvm_vpc_id" {
 variable "cvm_subnet_id" {
   default = "` + defaultCvmSubnetId + `"
 }
+
+variable "cvm_international_vpc_id" {
+  default = "` + defaultCvmInternationalVpcId + `"
+}
+
+variable "cvm_international_subnet_id" {
+  default = "` + defaultCvmInternationalSubnetId + `"
+}
+
 
 variable "vpc_id" {
   default = "` + defaultVpcId + `"
