@@ -688,6 +688,7 @@ TDMQ for Pulsar(tpulsar)
     tencentcloud_tdmq_topic
     tencentcloud_tdmq_role
     tencentcloud_tdmq_namespace_role_attachment
+    tencentcloud_tdmq_subscription_attachment
 
 TencentDB for MongoDB(mongodb)
   Data Source
@@ -1717,6 +1718,7 @@ TDMQ for RocketMQ(trocket)
     tencentcloud_tdmq_rocketmq_role
     tencentcloud_tdmq_rocketmq_group
     tencentcloud_tdmq_rocketmq_messages
+    tencentcloud_tdmq_vip_instance
 
   Resource
     tencentcloud_tdmq_rocketmq_cluster
@@ -1732,7 +1734,14 @@ TDMQ for RocketMQ(trocket)
     tencentcloud_trocket_rocketmq_consumer_group
     tencentcloud_trocket_rocketmq_role
 
+tdmq
+  Resource
+    tencentcloud_tdmq_subscription_attachment
+
 TDMQ for RabbitMQ(trabbit)
+  Data Source
+    tencentcloud_tdmq_rabbitmq_node_list
+    tencentcloud_tdmq_rabbitmq_vip_instance
   Resource
     tencentcloud_tdmq_rabbitmq_user
     tencentcloud_tdmq_rabbitmq_virtual_host
