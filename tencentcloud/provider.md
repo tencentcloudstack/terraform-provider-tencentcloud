@@ -1839,6 +1839,8 @@ Tencent Service Framework(TSF)
     tencentcloud_tsf_operate_container_group
     tencentcloud_tsf_operate_group
     tencentcloud_tsf_unit_namespace
+    tencentcloud_tsf_application
+    tencentcloud_tsf_repository
 
 Media Processing Service(MPS)
   Data Source
