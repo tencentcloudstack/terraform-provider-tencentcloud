@@ -7,7 +7,7 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudMysqlResource_instance(t *testing.T) {
+func TestAccTencentCloudInternationalMysqlResource_instance(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
