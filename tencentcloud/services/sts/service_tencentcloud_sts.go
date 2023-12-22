@@ -1,6 +1,7 @@
-package tencentcloud
+package sts
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"log"
 
@@ -15,7 +16,7 @@ type StsService struct {
 
 func (me *StsService) DescribeStsCallerIdentityByFilter(ctx context.Context) (callerIdentity *sts.GetCallerIdentityResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = sts.NewGetCallerIdentityRequest()
 	)
 

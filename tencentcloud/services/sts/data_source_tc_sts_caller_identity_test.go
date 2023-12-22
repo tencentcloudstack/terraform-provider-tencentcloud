@@ -1,6 +1,7 @@
-package tencentcloud
+package sts_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -11,13 +12,13 @@ func TestAccTencentCloudStsCallerIdentityDataSource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceStsCallerIdentity,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_sts_caller_identity.caller_identity"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_sts_caller_identity.caller_identity"),
 				),
 			},
 		},

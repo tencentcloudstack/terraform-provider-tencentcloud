@@ -1,6 +1,7 @@
-package tencentcloud
+package sts
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"log"
 
@@ -9,7 +10,7 @@ import (
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 )
 
-func dataSourceTencentCloudStsCallerIdentity() *schema.Resource {
+func DataSourceTencentCloudStsCallerIdentity() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudStsCallerIdentityRead,
 		Schema: map[string]*schema.Schema{
@@ -53,19 +54,19 @@ func dataSourceTencentCloudStsCallerIdentity() *schema.Resource {
 }
 
 func dataSourceTencentCloudStsCallerIdentityRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_sts_caller_identity.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_sts_caller_identity.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	stsService := StsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	stsService := StsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var callerIdentity *sts.GetCallerIdentityResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := stsService.DescribeStsCallerIdentityByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		callerIdentity = results
 		return nil
@@ -99,7 +100,7 @@ func dataSourceTencentCloudStsCallerIdentityRead(d *schema.ResourceData, meta in
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), map[string]interface{}{
+		if e := tccommon.WriteToFile(output.(string), map[string]interface{}{
 			"arn":          callerIdentity.Arn,
 			"account_id":   callerIdentity.AccountId,
 			"user_id":      callerIdentity.UserId,

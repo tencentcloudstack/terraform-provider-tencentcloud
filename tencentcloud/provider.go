@@ -1,8 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,15 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/scf"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ses"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/sms"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/sqlserver"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
+	sdksts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 
 	providercommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -86,6 +79,13 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/project"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pts"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/rum"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/scf"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ses"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/sms"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/sqlserver"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/sts"
 )
 
 const (
@@ -644,7 +644,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_eip":                                     dayuv2.DataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                     dataSourceTencentCloudTeoZoneAvailablePlans(),
 			"tencentcloud_teo_rule_engine_settings":                     dataSourceTencentCloudTeoRuleEngineSettings(),
-			"tencentcloud_sts_caller_identity":                          dataSourceTencentCloudStsCallerIdentity(),
+			"tencentcloud_sts_caller_identity":                          sts.DataSourceTencentCloudStsCallerIdentity(),
 			"tencentcloud_dcdb_instances":                               dcdb.DataSourceTencentCloudDcdbInstances(),
 			"tencentcloud_dcdb_accounts":                                dcdb.DataSourceTencentCloudDcdbAccounts(),
 			"tencentcloud_dcdb_databases":                               dcdb.DataSourceTencentCloudDcdbDatabases(),
@@ -2066,7 +2066,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {
 	// applying STS credentials
-	request := sts.NewAssumeRoleRequest()
+	request := sdksts.NewAssumeRoleRequest()
 	request.RoleArn = helper.String(assumeRoleArn)
 	request.RoleSessionName = helper.String(assumeRoleSessionName)
 	request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
