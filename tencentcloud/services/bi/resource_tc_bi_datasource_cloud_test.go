@@ -33,17 +33,17 @@ resource "tencentcloud_bi_datasource_cloud" "datasource_cloud" {
   db_name    = "bi_dev"
   db_type    = "MYSQL"
   db_user    = "root"
-  project_id = "11015056"
-  db_pwd     = "xxxxxx"
+  project_id = "11015030"
+  db_pwd     = "zxcvb12345"
   service_type {
-    instance_id = "cdb-12viotu5"
+    instance_id = "cdb-1ub45mjx"
     region     = "ap-guangzhou"
     type       = "Cloud"
   }
-  source_name = "tf-test1"
-  vip         = "10.0.0.4"
+  source_name = "bi_test"
+  vip         = "172.16.64.9"
   vport       = "3306"
   region_id   = "gz"
-  vpc_id      = 5292713
+  vpc_id      = 5232945
 }
 `

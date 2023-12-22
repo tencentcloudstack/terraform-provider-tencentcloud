@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_bi_embed_token_apply: support param ticket_num
+```
+
+```release-note:enhancement
+resource/tencentcloud_bi_datasource_cloud: support param cluster_id
+```
