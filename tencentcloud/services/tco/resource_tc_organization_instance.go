@@ -1,16 +1,19 @@
-package tencentcloud
+package tco
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudOrganizationOrganization() *schema.Resource {
+func ResourceTencentCloudOrganizationOrganization() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudOrganizationOrganizationCreate,
 		Read:   resourceTencentCloudOrganizationOrganizationRead,
@@ -133,20 +136,20 @@ func resourceTencentCloudOrganizationOrganization() *schema.Resource {
 }
 
 func resourceTencentCloudOrganizationOrganizationCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = organization.NewCreateOrganizationRequest()
 		response = organization.NewCreateOrganizationResponse()
 		orgId    uint64
 	)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().CreateOrganization(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().CreateOrganization(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -165,14 +168,14 @@ func resourceTencentCloudOrganizationOrganizationCreate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudOrganizationOrganizationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	organization, err := service.DescribeOrganizationOrganizationById(ctx)
 	if err != nil {
@@ -269,13 +272,13 @@ func resourceTencentCloudOrganizationOrganizationRead(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudOrganizationOrganizationDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	if err := service.DeleteOrganizationOrganizationById(ctx); err != nil {
 		return err

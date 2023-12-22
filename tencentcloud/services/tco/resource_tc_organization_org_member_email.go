@@ -1,4 +1,4 @@
-package tencentcloud
+package tco
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudOrganizationOrgMemberEmail() *schema.Resource {
+func ResourceTencentCloudOrganizationOrgMemberEmail() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudOrganizationOrgMemberEmailCreate,
 		Read:   resourceTencentCloudOrganizationOrgMemberEmailRead,
@@ -86,10 +89,10 @@ func resourceTencentCloudOrganizationOrgMemberEmail() *schema.Resource {
 }
 
 func resourceTencentCloudOrganizationOrgMemberEmailCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_email.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member_email.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = organization.NewAddOrganizationMemberEmailRequest()
@@ -114,10 +117,10 @@ func resourceTencentCloudOrganizationOrgMemberEmailCreate(d *schema.ResourceData
 		request.Phone = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().AddOrganizationMemberEmail(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().AddOrganizationMemberEmail(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -130,22 +133,22 @@ func resourceTencentCloudOrganizationOrgMemberEmailCreate(d *schema.ResourceData
 	}
 
 	bindId = *response.Response.BindId
-	d.SetId(helper.Int64ToStr(memberUin) + FILED_SP + helper.UInt64ToStr(bindId))
+	d.SetId(helper.Int64ToStr(memberUin) + tccommon.FILED_SP + helper.UInt64ToStr(bindId))
 
 	return resourceTencentCloudOrganizationOrgMemberEmailRead(d, meta)
 }
 
 func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_email.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member_email.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -205,14 +208,14 @@ func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudOrganizationOrgMemberEmailUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_email.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member_email.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := organization.NewUpdateOrganizationMemberEmailBindRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -253,10 +256,10 @@ func resourceTencentCloudOrganizationOrgMemberEmailUpdate(d *schema.ResourceData
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().UpdateOrganizationMemberEmailBind(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().UpdateOrganizationMemberEmailBind(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -271,8 +274,8 @@ func resourceTencentCloudOrganizationOrgMemberEmailUpdate(d *schema.ResourceData
 }
 
 func resourceTencentCloudOrganizationOrgMemberEmailDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_email.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member_email.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

@@ -1,15 +1,18 @@
-package tencentcloud
+package tco
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudOrganizationOrgAuthNode() *schema.Resource {
+func DataSourceTencentCloudOrganizationOrgAuthNode() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudOrganizationOrgAuthNodeRead,
 		Schema: map[string]*schema.Schema{
@@ -68,26 +71,26 @@ func dataSourceTencentCloudOrganizationOrgAuthNode() *schema.Resource {
 }
 
 func dataSourceTencentCloudOrganizationOrgAuthNodeRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_organization_org_auth_node.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_organization_org_auth_node.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("auth_name"); ok {
 		paramMap["AuthName"] = helper.String(v.(string))
 	}
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var items []*organization.AuthNode
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeOrganizationOrgAuthNodeByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		items = result
 		return nil
@@ -135,7 +138,7 @@ func dataSourceTencentCloudOrganizationOrgAuthNodeRead(d *schema.ResourceData, m
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output3, ok := d.GetOk("result_output_file")
 	if ok && output3.(string) != "" {
-		if e := writeToFile(output3.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output3.(string), tmpList); e != nil {
 			return e
 		}
 	}

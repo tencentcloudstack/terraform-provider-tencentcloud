@@ -1,4 +1,4 @@
-package tencentcloud
+package tco
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudOrganizationPolicySubAccountAttachment() *schema.Resource {
+func ResourceTencentCloudOrganizationPolicySubAccountAttachment() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudOrganizationPolicySubAccountAttachmentRead,
 		Create: resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate,
@@ -89,10 +92,10 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachment() *schema.Resour
 }
 
 func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_policy_sub_account_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_policy_sub_account_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request          = organization.NewBindOrganizationMemberAuthAccountRequest()
@@ -116,10 +119,10 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.
 		request.MemberUin = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().BindOrganizationMemberAuthAccount(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().BindOrganizationMemberAuthAccount(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -132,20 +135,20 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.
 		return err
 	}
 
-	d.SetId(strconv.Itoa(policyId) + FILED_SP + strconv.Itoa(memberUin) + FILED_SP + strconv.Itoa(orgSubAccountUin))
+	d.SetId(strconv.Itoa(policyId) + tccommon.FILED_SP + strconv.Itoa(memberUin) + tccommon.FILED_SP + strconv.Itoa(orgSubAccountUin))
 	return resourceTencentCloudOrganizationPolicySubAccountAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudOrganizationPolicySubAccountAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_policy_sub_account_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_policy_sub_account_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -205,15 +208,15 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentRead(d *schema.Re
 }
 
 func resourceTencentCloudOrganizationPolicySubAccountAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_policy_sub_account_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_policy_sub_account_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

@@ -1,16 +1,19 @@
-package tencentcloud
+package tco
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment() *schema.Resource {
+func ResourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate,
 		Read:   resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentRead,
@@ -40,10 +43,10 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment() *schema.R
 }
 
 func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_auth_identity.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member_auth_identity.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = organization.NewCreateOrganizationMemberAuthIdentityRequest()
@@ -62,10 +65,10 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *sc
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().CreateOrganizationMemberAuthIdentity(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().CreateOrganizationMemberAuthIdentity(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -81,14 +84,14 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *sc
 }
 
 func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_auth_identity.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member_auth_identity.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	memberUin := d.Id()
 	uin := helper.StrToInt64(memberUin)
@@ -109,12 +112,12 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentRead(d *sche
 }
 
 func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_auth_identity.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member_auth_identity.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	uin := d.Id()
 	var identityIds []string
 	if v, ok := d.GetOk("identity_ids"); ok {

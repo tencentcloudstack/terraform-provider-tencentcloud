@@ -1,7 +1,9 @@
-package tencentcloud
+package tco_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,13 +12,13 @@ func TestAccTencentCloudOrganizationOrgFinancialByProductDataSource_basic(t *tes
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOrganizationOrgFinancialByProductDataSource,
-				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product"),
+				Check: resource.ComposeTestCheckFunc(tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product"),
 					resource.TestCheckResourceAttr("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product", "month", "2023-05"),
 					resource.TestCheckResourceAttr("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product", "end_month", "2023-09"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product", "product_codes.#"),

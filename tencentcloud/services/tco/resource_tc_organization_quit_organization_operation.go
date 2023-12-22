@@ -1,15 +1,18 @@
-package tencentcloud
+package tco
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudOrganizationQuitOrganizationOperation() *schema.Resource {
+func ResourceTencentCloudOrganizationQuitOrganizationOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudOrganizationQuitOrganizationOperationCreate,
 		Read:   resourceTencentCloudOrganizationQuitOrganizationOperationRead,
@@ -29,10 +32,10 @@ func resourceTencentCloudOrganizationQuitOrganizationOperation() *schema.Resourc
 }
 
 func resourceTencentCloudOrganizationQuitOrganizationOperationCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_quit_organization_operation.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_quit_organization_operation.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request = organization.NewQuitOrganizationRequest()
@@ -42,10 +45,10 @@ func resourceTencentCloudOrganizationQuitOrganizationOperationCreate(d *schema.R
 		request.OrgId = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().QuitOrganization(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().QuitOrganization(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -62,15 +65,15 @@ func resourceTencentCloudOrganizationQuitOrganizationOperationCreate(d *schema.R
 }
 
 func resourceTencentCloudOrganizationQuitOrganizationOperationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_quit_organization_operation.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_quit_organization_operation.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudOrganizationQuitOrganizationOperationDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_quit_organization_operation.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_quit_organization_operation.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

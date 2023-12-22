@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -926,11 +927,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_black_email_address":                      ses.DataSourceTencentCloudSesBlackEmailAddress(),
 			"tencentcloud_ses_statistics_report":                        ses.DataSourceTencentCloudSesStatisticsReport(),
 			"tencentcloud_ses_send_email_status":                        ses.DataSourceTencentCloudSesSendEmailStatus(),
-			"tencentcloud_organization_org_financial_by_member":         dataSourceTencentCloudOrganizationOrgFinancialByMember(),
-			"tencentcloud_organization_org_financial_by_month":          dataSourceTencentCloudOrganizationOrgFinancialByMonth(),
-			"tencentcloud_organization_org_financial_by_product":        dataSourceTencentCloudOrganizationOrgFinancialByProduct(),
-			"tencentcloud_organization_org_auth_node":                   dataSourceTencentCloudOrganizationOrgAuthNode(),
-			"tencentcloud_organization_members":                         dataSourceTencentCloudOrganizationMembers(),
+			"tencentcloud_organization_org_financial_by_member":         tco.DataSourceTencentCloudOrganizationOrgFinancialByMember(),
+			"tencentcloud_organization_org_financial_by_month":          tco.DataSourceTencentCloudOrganizationOrgFinancialByMonth(),
+			"tencentcloud_organization_org_financial_by_product":        tco.DataSourceTencentCloudOrganizationOrgFinancialByProduct(),
+			"tencentcloud_organization_org_auth_node":                   tco.DataSourceTencentCloudOrganizationOrgAuthNode(),
+			"tencentcloud_organization_members":                         tco.DataSourceTencentCloudOrganizationMembers(),
 			"tencentcloud_pts_scenario_with_jobs":                       pts.DataSourceTencentCloudPtsScenarioWithJobs(),
 			"tencentcloud_cam_list_attached_user_policy":                dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                    cam.DataSourceTencentCloudCamSecretLastUsedTime(),
@@ -1238,7 +1239,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_set_policy_version_config":                       cam.ResourceTencentCloudCamSetPolicyVersionConfig(),
 			"tencentcloud_cam_user_permission_boundary_attachment":             cam.ResourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_cam_role_permission_boundary_attachment":             cam.ResourceTencentCloudCamRolePermissionBoundaryAttachment(),
-			"tencentcloud_organization_quit_organization_operation":            resourceTencentCloudOrganizationQuitOrganizationOperation(),
+			"tencentcloud_organization_quit_organization_operation":            tco.ResourceTencentCloudOrganizationQuitOrganizationOperation(),
 			"tencentcloud_ciam_user_group":                                     ciam.ResourceTencentCloudCiamUserGroup(),
 			"tencentcloud_ciam_user_store":                                     ciam.ResourceTencentCloudCiamUserStore(),
 			"tencentcloud_scf_function":                                        scf.ResourceTencentCloudScfFunction(),
@@ -1607,14 +1608,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_tat_invoker_config":                                  tat.ResourceTencentCloudTatInvokerConfig(),
 			"tencentcloud_tat_invocation_invoke_attachment":                    tat.ResourceTencentCloudTatInvocationInvokeAttachment(),
 			"tencentcloud_tat_invocation_command_attachment":                   tat.ResourceTencentCloudTatInvocationCommandAttachment(),
-			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
-			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
-			"tencentcloud_organization_org_identity":                           resourceTencentCloudOrganizationOrgIdentity(),
-			"tencentcloud_organization_org_member_email":                       resourceTencentCloudOrganizationOrgMemberEmail(),
-			"tencentcloud_organization_instance":                               resourceTencentCloudOrganizationOrganization(),
-			"tencentcloud_organization_policy_sub_account_attachment":          resourceTencentCloudOrganizationPolicySubAccountAttachment(),
-			"tencentcloud_organization_org_member_auth_identity_attachment":    resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment(),
-			"tencentcloud_organization_org_member_policy_attachment":           resourceTencentCloudOrganizationOrgMemberPolicyAttachment(),
+			"tencentcloud_organization_org_node":                               tco.ResourceTencentCloudOrganizationOrgNode(),
+			"tencentcloud_organization_org_member":                             tco.ResourceTencentCloudOrganizationOrgMember(),
+			"tencentcloud_organization_org_identity":                           tco.ResourceTencentCloudOrganizationOrgIdentity(),
+			"tencentcloud_organization_org_member_email":                       tco.ResourceTencentCloudOrganizationOrgMemberEmail(),
+			"tencentcloud_organization_instance":                               tco.ResourceTencentCloudOrganizationOrganization(),
+			"tencentcloud_organization_policy_sub_account_attachment":          tco.ResourceTencentCloudOrganizationPolicySubAccountAttachment(),
+			"tencentcloud_organization_org_member_auth_identity_attachment":    tco.ResourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment(),
+			"tencentcloud_organization_org_member_policy_attachment":           tco.ResourceTencentCloudOrganizationOrgMemberPolicyAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                                  dbbrain.ResourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":              dbbrain.ResourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                         dbbrain.ResourceTencentCloudDbbrainDbDiagReportTask(),

@@ -1,12 +1,15 @@
-package tencentcloud
+package tco
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -17,7 +20,7 @@ type OrganizationService struct {
 
 func (me *OrganizationService) DescribeOrganizationOrgNode(ctx context.Context, nodeId string) (orgNode *organization.OrgNode, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationNodesRequest()
 	)
 
@@ -70,7 +73,7 @@ func (me *OrganizationService) DescribeOrganizationOrgNode(ctx context.Context, 
 }
 
 func (me *OrganizationService) DeleteOrganizationOrgNodeById(ctx context.Context, nodeId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDeleteOrganizationNodesRequest()
 
@@ -97,7 +100,7 @@ func (me *OrganizationService) DeleteOrganizationOrgNodeById(ctx context.Context
 
 func (me *OrganizationService) DescribeOrganizationOrgMember(ctx context.Context, uin string) (orgMember *organization.OrgMember, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationMembersRequest()
 	)
 
@@ -153,7 +156,7 @@ func (me *OrganizationService) DescribeOrganizationOrgMember(ctx context.Context
 }
 
 func (me *OrganizationService) DeleteOrganizationOrgMemberById(ctx context.Context, uin string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDeleteOrganizationMembersRequest()
 
@@ -180,7 +183,7 @@ func (me *OrganizationService) DeleteOrganizationOrgMemberById(ctx context.Conte
 
 func (me *OrganizationService) DescribeOrganizationPolicySubAccountAttachment(ctx context.Context, policyId, memberUin string) (policySubAccountAttachment *organization.OrgMemberAuthAccount, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationMemberAuthAccountsRequest()
 	)
 
@@ -212,7 +215,7 @@ func (me *OrganizationService) DescribeOrganizationPolicySubAccountAttachment(ct
 }
 
 func (me *OrganizationService) DeleteOrganizationPolicySubAccountAttachmentById(ctx context.Context, policyId, memberUin, orgSubAccountUin string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewCancelOrganizationMemberAuthAccountRequest()
 
@@ -240,7 +243,7 @@ func (me *OrganizationService) DeleteOrganizationPolicySubAccountAttachmentById(
 }
 
 func (me *OrganizationService) DescribeOrganizationOrgMemberAuthIdentityById(ctx context.Context, memberUin int64) (identityIds []int64, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := organization.NewDescribeOrganizationMemberAuthIdentitiesRequest()
 	request.MemberUin = &memberUin
 
@@ -288,7 +291,7 @@ func (me *OrganizationService) DescribeOrganizationOrgMemberAuthIdentityById(ctx
 }
 
 func (me *OrganizationService) DeleteOrganizationOrgMemberAuthIdentityById(ctx context.Context, memberUin string, identityId []string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDeleteOrganizationMemberAuthIdentityRequest()
 
@@ -319,7 +322,7 @@ func (me *OrganizationService) DeleteOrganizationOrgMemberAuthIdentityById(ctx c
 
 func (me *OrganizationService) DescribeOrganizationOrgAuthNodeByFilter(ctx context.Context, param map[string]interface{}) (orgAuthNode []*organization.AuthNode, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationAuthNodeRequest()
 	)
 
@@ -366,7 +369,7 @@ func (me *OrganizationService) DescribeOrganizationOrgAuthNodeByFilter(ctx conte
 }
 
 func (me *OrganizationService) DescribeOrganizationOrganizationById(ctx context.Context) (result *organization.DescribeOrganizationResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDescribeOrganizationRequest()
 
@@ -390,7 +393,7 @@ func (me *OrganizationService) DescribeOrganizationOrganizationById(ctx context.
 }
 
 func (me *OrganizationService) DeleteOrganizationOrganizationById(ctx context.Context) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDeleteOrganizationRequest()
 
@@ -413,7 +416,7 @@ func (me *OrganizationService) DeleteOrganizationOrganizationById(ctx context.Co
 }
 
 func (me *OrganizationService) DescribeOrganizationOrgMemberEmailById(ctx context.Context, memberUin int64, bindId uint64) (orgMemberEmail *organization.DescribeOrganizationMemberEmailBindResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDescribeOrganizationMemberEmailBindRequest()
 	request.MemberUin = &memberUin
@@ -445,7 +448,7 @@ func (me *OrganizationService) DescribeOrganizationOrgMemberEmailById(ctx contex
 
 func (me *OrganizationService) DescribeOrganizationOrgFinancialByMemberByFilter(ctx context.Context, param map[string]interface{}) (orgFinancialByMember *organization.DescribeOrganizationFinancialByMemberResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationFinancialByMemberRequest()
 	)
 
@@ -513,7 +516,7 @@ func (me *OrganizationService) DescribeOrganizationOrgFinancialByMemberByFilter(
 
 func (me *OrganizationService) DescribeOrganizationOrgFinancialByMonthByFilter(ctx context.Context, param map[string]interface{}) (orgFinancialByMonth []*organization.OrgFinancialByMonth, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationFinancialByMonthRequest()
 	)
 
@@ -552,7 +555,7 @@ func (me *OrganizationService) DescribeOrganizationOrgFinancialByMonthByFilter(c
 }
 func (me *OrganizationService) DescribeOrganizationOrgFinancialByProductByFilter(ctx context.Context, param map[string]interface{}) (orgFinancialByProduct *organization.DescribeOrganizationFinancialByProductResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationFinancialByProductRequest()
 	)
 
@@ -619,7 +622,7 @@ func (me *OrganizationService) DescribeOrganizationOrgFinancialByProductByFilter
 }
 
 func (me *OrganizationService) DescribeOrganizationOrgIdentityById(ctx context.Context, identityId string) (orgIdentity *organization.OrgIdentity, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewListOrganizationIdentityRequest()
 	request.IdentityId = helper.StrToUint64Point(identityId)
@@ -663,7 +666,7 @@ func (me *OrganizationService) DescribeOrganizationOrgIdentityById(ctx context.C
 }
 
 func (me *OrganizationService) DeleteOrganizationOrgIdentityById(ctx context.Context, identityId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDeleteOrganizationIdentityRequest()
 	request.IdentityId = helper.StrToUint64Point(identityId)
@@ -687,7 +690,7 @@ func (me *OrganizationService) DeleteOrganizationOrgIdentityById(ctx context.Con
 }
 
 func (me *OrganizationService) DeleteOrganizationOrgMemberPolicyAttachmentById(ctx context.Context, policyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDeleteOrganizationMembersPolicyRequest()
 	request.PolicyId = helper.StrToUint64Point(policyId)
@@ -712,7 +715,7 @@ func (me *OrganizationService) DeleteOrganizationOrgMemberPolicyAttachmentById(c
 
 func (me *OrganizationService) DescribeOrganizationMembersByFilter(ctx context.Context, param map[string]interface{}) (members []*organization.OrgMember, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = organization.NewDescribeOrganizationMembersRequest()
 	)
 

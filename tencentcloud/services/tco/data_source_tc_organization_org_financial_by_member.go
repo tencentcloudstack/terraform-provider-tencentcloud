@@ -1,15 +1,18 @@
-package tencentcloud
+package tco
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudOrganizationOrgFinancialByMember() *schema.Resource {
+func DataSourceTencentCloudOrganizationOrgFinancialByMember() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudOrganizationOrgFinancialByMemberRead,
 		Schema: map[string]*schema.Schema{
@@ -89,12 +92,12 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMember() *schema.Resource {
 }
 
 func dataSourceTencentCloudOrganizationOrgFinancialByMemberRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_organization_org_financial_by_member.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_organization_org_financial_by_member.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("month"); ok {
@@ -115,13 +118,13 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMemberRead(d *schema.Resour
 		paramMap["ProductCodes"] = helper.InterfacesStringsPoint(productCodesSet)
 	}
 
-	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	var response *organization.DescribeOrganizationFinancialByMemberResponseParams
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeOrganizationOrgFinancialByMemberByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -166,7 +169,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMemberRead(d *schema.Resour
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
