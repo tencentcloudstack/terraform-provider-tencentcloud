@@ -11,9 +11,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	svctke "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
+
 	"gopkg.in/yaml.v2"
 )
 
@@ -1268,7 +1271,7 @@ func (me *MonitorService) DeleteTkeTmpConfigByName(ctx context.Context, configId
 	return
 }
 
-func (me *MonitorService) parseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
+func (me *MonitorService) parseConfigId(configId string) (ret *svctke.PrometheusConfigIds, err error) {
 	idSplit := strings.Split(configId, FILED_SP)
 	if len(idSplit) != 3 {
 		return nil, fmt.Errorf("id is broken,%s", configId)
@@ -1281,7 +1284,7 @@ func (me *MonitorService) parseConfigId(configId string) (ret *PrometheusConfigI
 		return nil, fmt.Errorf("id is broken,%s", configId)
 	}
 
-	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
+	ret = &svctke.PrometheusConfigIds{InstanceId: instanceId, ClusterType: clusterType, ClusterId: clusterId}
 	return
 }
 

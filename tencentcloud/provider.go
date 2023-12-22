@@ -1,11 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -14,6 +9,13 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
@@ -320,16 +322,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_dc_gateway_ccn_routes":                        dcg.DataSourceTencentCloudDcGatewayCCNRoutes(),
 			"tencentcloud_security_group":                               dataSourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_groups":                              dataSourceTencentCloudSecurityGroups(),
-			"tencentcloud_kubernetes_clusters":                          dataSourceTencentCloudKubernetesClusters(),
-			"tencentcloud_kubernetes_charts":                            dataSourceTencentCloudKubernetesCharts(),
-			"tencentcloud_kubernetes_cluster_levels":                    datasourceTencentCloudKubernetesClusterLevels(),
-			"tencentcloud_kubernetes_cluster_common_names":              datasourceTencentCloudKubernetesClusterCommonNames(),
-			"tencentcloud_kubernetes_cluster_authentication_options":    dataSourceTencentCloudKubernetesClusterAuthenticationOptions(),
-			"tencentcloud_kubernetes_available_cluster_versions":        dataSourceTencentCloudKubernetesAvailableClusterVersions(),
-			"tencentcloud_eks_clusters":                                 dataSourceTencentCloudEKSClusters(),
-			"tencentcloud_eks_cluster_credential":                       datasourceTencentCloudEksClusterCredential(),
-			"tencentcloud_container_clusters":                           dataSourceTencentCloudContainerClusters(),
-			"tencentcloud_container_cluster_instances":                  dataSourceTencentCloudContainerClusterInstances(),
+			"tencentcloud_kubernetes_clusters":                          tke.DataSourceTencentCloudKubernetesClusters(),
+			"tencentcloud_kubernetes_charts":                            tke.DataSourceTencentCloudKubernetesCharts(),
+			"tencentcloud_kubernetes_cluster_levels":                    tke.DataSourceTencentCloudKubernetesClusterLevels(),
+			"tencentcloud_kubernetes_cluster_common_names":              tke.DataSourceTencentCloudKubernetesClusterCommonNames(),
+			"tencentcloud_kubernetes_cluster_authentication_options":    tke.DataSourceTencentCloudKubernetesClusterAuthenticationOptions(),
+			"tencentcloud_kubernetes_available_cluster_versions":        tke.DataSourceTencentCloudKubernetesAvailableClusterVersions(),
+			"tencentcloud_eks_clusters":                                 tke.DataSourceTencentCloudEKSClusters(),
+			"tencentcloud_eks_cluster_credential":                       tke.DataSourceTencentCloudEksClusterCredential(),
+			"tencentcloud_container_clusters":                           tke.DataSourceTencentCloudContainerClusters(),
+			"tencentcloud_container_cluster_instances":                  tke.DataSourceTencentCloudContainerClusterInstances(),
 			"tencentcloud_mysql_backup_list":                            cdb.DataSourceTencentCloudMysqlBackupList(),
 			"tencentcloud_mysql_zone_config":                            cdb.DataSourceTencentCloudMysqlZoneConfig(),
 			"tencentcloud_mysql_parameter_list":                         cdb.DataSourceTencentCloudMysqlParameterList(),
@@ -960,8 +962,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_bgp_biz_trend":                       antiddos.DataSourceTencentCloudAntiddosBgpBizTrend(),
 			"tencentcloud_antiddos_list_listener":                       antiddos.DataSourceTencentCloudAntiddosListListener(),
 			"tencentcloud_antiddos_overview_attack_trend":               antiddos.DataSourceTencentCloudAntiddosOverviewAttackTrend(),
-			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
-			"tencentcloud_kubernetes_cluster_node_pools":                dataSourceTencentCloudKubernetesClusterNodePools(),
+			"tencentcloud_kubernetes_cluster_instances":                 tke.DataSourceTencentCloudKubernetesClusterInstances(),
+			"tencentcloud_kubernetes_cluster_node_pools":                tke.DataSourceTencentCloudKubernetesClusterNodePools(),
 			"tencentcloud_clickhouse_spec":                              cdwch.DataSourceTencentCloudClickhouseSpec(),
 			"tencentcloud_clickhouse_instance_shards":                   cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
 		},
@@ -1084,21 +1086,21 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_instance_sla_config":                             clb.ResourceTencentCloudClbInstanceSlaConfig(),
 			"tencentcloud_clb_replace_cert_for_lbs":                            clb.ResourceTencentCloudClbReplaceCertForLbs(),
 			"tencentcloud_clb_security_group_attachment":                       clb.ResourceTencentCloudClbSecurityGroupAttachment(),
-			"tencentcloud_container_cluster":                                   resourceTencentCloudContainerCluster(),
-			"tencentcloud_container_cluster_instance":                          resourceTencentCloudContainerClusterInstance(),
-			"tencentcloud_kubernetes_cluster":                                  resourceTencentCloudTkeCluster(),
-			"tencentcloud_kubernetes_cluster_endpoint":                         resourceTencentCloudTkeClusterEndpoint(),
-			"tencentcloud_eks_cluster":                                         resourceTencentCloudEksCluster(),
-			"tencentcloud_eks_container_instance":                              resourceTencentCloudEksContainerInstance(),
-			"tencentcloud_kubernetes_addon_attachment":                         resourceTencentCloudTkeAddonAttachment(),
-			"tencentcloud_kubernetes_auth_attachment":                          resourceTencentCloudTKEAuthAttachment(),
-			"tencentcloud_kubernetes_as_scaling_group":                         resourceTencentCloudKubernetesAsScalingGroup(),
-			"tencentcloud_kubernetes_scale_worker":                             resourceTencentCloudTkeScaleWorker(),
-			"tencentcloud_kubernetes_cluster_attachment":                       resourceTencentCloudTkeClusterAttachment(),
-			"tencentcloud_kubernetes_node_pool":                                resourceTencentCloudKubernetesNodePool(),
-			"tencentcloud_kubernetes_serverless_node_pool":                     resourceTkeServerLessNodePool(),
-			"tencentcloud_kubernetes_backup_storage_location":                  resourceTencentCloudTkeBackupStorageLocation(),
-			"tencentcloud_kubernetes_encryption_protection":                    resourceTencentCloudKubernetesEncryptionProtection(),
+			"tencentcloud_container_cluster":                                   tke.ResourceTencentCloudContainerCluster(),
+			"tencentcloud_container_cluster_instance":                          tke.ResourceTencentCloudContainerClusterInstance(),
+			"tencentcloud_kubernetes_cluster":                                  tke.ResourceTencentCloudTkeCluster(),
+			"tencentcloud_kubernetes_cluster_endpoint":                         tke.ResourceTencentCloudTkeClusterEndpoint(),
+			"tencentcloud_eks_cluster":                                         tke.ResourceTencentCloudEksCluster(),
+			"tencentcloud_eks_container_instance":                              tke.ResourceTencentCloudEksContainerInstance(),
+			"tencentcloud_kubernetes_addon_attachment":                         tke.ResourceTencentCloudTkeAddonAttachment(),
+			"tencentcloud_kubernetes_auth_attachment":                          tke.ResourceTencentCloudTKEAuthAttachment(),
+			"tencentcloud_kubernetes_as_scaling_group":                         tke.ResourceTencentCloudKubernetesAsScalingGroup(),
+			"tencentcloud_kubernetes_scale_worker":                             tke.ResourceTencentCloudTkeScaleWorker(),
+			"tencentcloud_kubernetes_cluster_attachment":                       tke.ResourceTencentCloudTkeClusterAttachment(),
+			"tencentcloud_kubernetes_node_pool":                                tke.ResourceTencentCloudKubernetesNodePool(),
+			"tencentcloud_kubernetes_serverless_node_pool":                     tke.ResourceTencentCloudTkeServerLessNodePool(),
+			"tencentcloud_kubernetes_backup_storage_location":                  tke.ResourceTencentCloudTkeBackupStorageLocation(),
+			"tencentcloud_kubernetes_encryption_protection":                    tke.ResourceTencentCloudKubernetesEncryptionProtection(),
 			"tencentcloud_mysql_backup_policy":                                 cdb.ResourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                       cdb.ResourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                             cdb.ResourceTencentCloudMysqlAccountPrivilege(),

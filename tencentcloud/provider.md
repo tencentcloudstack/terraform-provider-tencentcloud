@@ -347,10 +347,15 @@ Container Cluster(tke)
   Data Source
     tencentcloud_container_cluster_instances
     tencentcloud_container_clusters
+    tencentcloud_eks_clusters
+    tencentcloud_eks_cluster_credential
 
   Resource
     tencentcloud_container_cluster
     tencentcloud_container_cluster_instance
+    tencentcloud_eks_cluster
+    tencentcloud_eks_container_instance
+    tencentcloud_kubernetes_as_scaling_group
 
 Cloud Load Balancer(CLB)
   Data Source
