@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/sms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ses"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/scf"
 	"encoding/json"
@@ -1518,8 +1519,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_batch_send_email":                                ses.ResourceTencentCloudSesBatchSendEmail(),
 			"tencentcloud_ses_verify_domain":                                   ses.ResourceTencentCloudSesVerifyDomain(),
 			"tencentcloud_ses_black_list_delete":                               ses.ResourceTencentCloudSesBlackListDelete(),
-			"tencentcloud_sms_sign":                                            resourceTencentCloudSmsSign(),
-			"tencentcloud_sms_template":                                        resourceTencentCloudSmsTemplate(),
+			"tencentcloud_sms_sign":                                            sms.ResourceTencentCloudSmsSign(),
+			"tencentcloud_sms_template":                                        sms.ResourceTencentCloudSmsTemplate(),
 			"tencentcloud_dcdb_account":                                        dcdb.ResourceTencentCloudDcdbAccount(),
 			"tencentcloud_dcdb_hourdb_instance":                                dcdb.ResourceTencentCloudDcdbHourdbInstance(),
 			"tencentcloud_dcdb_security_group_attachment":                      dcdb.ResourceTencentCloudDcdbSecurityGroupAttachment(),

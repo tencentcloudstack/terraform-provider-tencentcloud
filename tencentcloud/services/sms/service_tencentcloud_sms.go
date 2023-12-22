@@ -1,10 +1,13 @@
-package tencentcloud
+package sms
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -16,7 +19,7 @@ type SmsService struct {
 
 func (me *SmsService) DescribeSmsSign(ctx context.Context, signId string, international string) (sign *sms.DescribeSignListStatus, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = sms.NewDescribeSmsSignListRequest()
 	)
 
@@ -46,7 +49,7 @@ func (me *SmsService) DescribeSmsSign(ctx context.Context, signId string, intern
 }
 
 func (me *SmsService) DeleteSmsSignById(ctx context.Context, signId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := sms.NewDeleteSmsSignRequest()
 	request.SignId = helper.Uint64(helper.StrToUInt64(signId))
@@ -72,7 +75,7 @@ func (me *SmsService) DeleteSmsSignById(ctx context.Context, signId string) (err
 
 func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId string, international string) (template *sms.DescribeTemplateListStatus, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = sms.NewDescribeSmsTemplateListRequest()
 	)
 
@@ -102,7 +105,7 @@ func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId string
 }
 
 func (me *SmsService) DeleteSmsTemplateById(ctx context.Context, templateId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := sms.NewDeleteSmsTemplateRequest()
 

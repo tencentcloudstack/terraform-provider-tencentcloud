@@ -1,4 +1,4 @@
-package tencentcloud
+package sms
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSmsSign() *schema.Resource {
+func ResourceTencentCloudSmsSign() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudSmsSignRead,
 		Create: resourceTencentCloudSmsSignCreate,
@@ -72,10 +75,10 @@ func resourceTencentCloudSmsSign() *schema.Resource {
 }
 
 func resourceTencentCloudSmsSignCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_sms_sign.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_sms_sign.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request       = sms.NewAddSmsSignRequest()
@@ -117,10 +120,10 @@ func resourceTencentCloudSmsSignCreate(d *schema.ResourceData, meta interface{})
 		request.Remark = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSmsClient().AddSmsSign(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSmsClient().AddSmsSign(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -135,20 +138,20 @@ func resourceTencentCloudSmsSignCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	signId = *response.Response.AddSignStatus.SignId
-	d.SetId(helper.UInt64ToStr(signId) + FILED_SP + strconv.Itoa(international))
+	d.SetId(helper.UInt64ToStr(signId) + tccommon.FILED_SP + strconv.Itoa(international))
 	return resourceTencentCloudSmsSignRead(d, meta)
 }
 
 func resourceTencentCloudSmsSignRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_sms_sign.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_sms_sign.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -178,14 +181,14 @@ func resourceTencentCloudSmsSignRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceTencentCloudSmsSignUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_sms_sign.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_sms_sign.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := sms.NewModifySmsSignRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -225,10 +228,10 @@ func resourceTencentCloudSmsSignUpdate(d *schema.ResourceData, meta interface{})
 		request.Remark = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSmsClient().ModifySmsSign(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSmsClient().ModifySmsSign(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -245,15 +248,15 @@ func resourceTencentCloudSmsSignUpdate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudSmsSignDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_sms_sign.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_sms_sign.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := SmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
