@@ -81,7 +81,7 @@ The following arguments are supported:
 * `disable_higher_video_resolution` - (Optional, Int) Whether to prohibit the conversion of video resolution to high resolution, value range:0: no.1: yes.Default value: 0.
 * `name` - (Optional, String) Template name, length limit: 64 characters.
 
-The `audio` object supports the following:
+The `audio` object of `stream_infos` supports the following:
 
 * `bitrate` - (Required, Int) Bit rate of the audio stream, value range: 0 and [26, 256], unit: kbps.When the value is 0, it means that the audio bit rate is consistent with the original audio.
 * `codec` - (Required, String) Encoding format of audio stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.
@@ -95,7 +95,7 @@ The `stream_infos` object supports the following:
 * `remove_audio` - (Optional, Int) Whether to remove audio stream, value:0: reserved.1: remove.
 * `remove_video` - (Optional, Int) Whether to remove video stream, value:0: reserved.1: remove.
 
-The `video` object supports the following:
+The `video` object of `stream_infos` supports the following:
 
 * `bitrate` - (Required, Int) Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video.
 * `codec` - (Required, String) Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4.

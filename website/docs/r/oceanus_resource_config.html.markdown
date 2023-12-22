@@ -57,7 +57,7 @@ The following arguments are supported:
 * `remark` - (Optional, String) Resource description.
 * `work_space_id` - (Optional, String) Workspace SerialId.
 
-The `param` object supports the following:
+The `param` object of `resource_loc` supports the following:
 
 * `bucket` - (Required, String) Resource bucket.
 * `path` - (Required, String) Resource path.

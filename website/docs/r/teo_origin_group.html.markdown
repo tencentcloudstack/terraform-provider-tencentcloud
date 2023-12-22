@@ -69,7 +69,7 @@ The `origin_records` object supports the following:
 * `private` - (Optional, Bool) Whether origin site is using private authentication. Only valid when `OriginType` is `third_party`.
 * `weight` - (Optional, Int) Indicating origin sites weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.
 
-The `private_parameter` object supports the following:
+The `private_parameter` object of `origin_records` supports the following:
 
 * `name` - (Required, String) Parameter Name. Valid values: `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key.
 * `value` - (Required, String) Parameter value.

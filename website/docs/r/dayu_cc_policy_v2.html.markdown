@@ -108,7 +108,14 @@ The `cc_precision_req_limits` object supports the following:
 * `policys` - (Required, List) The CC Frequency Limit Policy Item field.
 * `protocol` - (Required, String) Protocol, preferably HTTP, HTTPS.
 
-The `policys` object supports the following:
+The `policys` object of `cc_precision_policys` supports the following:
+
+* `field_name` - (Required, String) Configuration item types, currently only support value.
+* `field_type` - (Required, String) Configuration fields with the desirable values cgi, ua, cookie, referer, accept, srcip.
+* `value_operator` - (Required, String) Configure the item-value comparison mode, which can be taken as the value of evaluate, not_equal, include.
+* `value` - (Required, String) Configure the value.
+
+The `policys` object of `cc_precision_req_limits` supports the following:
 
 * `action` - (Required, String) The frequency limit policy mode, the optional value of arg indicates the verification code, and drop indicates the discard.
 * `execute_duration` - (Required, Int) The duration of the frequency limit policy can be taken from 1 to 86400 per second.
@@ -118,13 +125,6 @@ The `policys` object supports the following:
 * `cookie` - (Optional, String) Cookies, one of the three policy entries can only be filled in.
 * `uri` - (Optional, String) Uri, one of the three policy entries can only be filled in.
 * `user_agent` - (Optional, String) User-Agent, only one of the three policy entries can be filled in.
-
-The `policys` object supports the following:
-
-* `field_name` - (Required, String) Configuration item types, currently only support value.
-* `field_type` - (Required, String) Configuration fields with the desirable values cgi, ua, cookie, referer, accept, srcip.
-* `value_operator` - (Required, String) Configure the item-value comparison mode, which can be taken as the value of evaluate, not_equal, include.
-* `value` - (Required, String) Configure the value.
 
 The `thresholds` object supports the following:
 

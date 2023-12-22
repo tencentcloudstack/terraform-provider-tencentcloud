@@ -55,7 +55,7 @@ The `snapshot` object supports the following:
 * `time_interval` - (Optional, String) Screenshot time interval, (0 3600], in seconds, Support float format, the execution accuracy is accurate to milliseconds.
 * `width` - (Optional, String) wide, value range: [128, 4096], Unit: px, If only Width is set, Height is calculated according to the original ratio of the video.
 
-The `sprite_snapshot_config` object supports the following:
+The `sprite_snapshot_config` object of `snapshot` supports the following:
 
 * `color` - (Required, String) See `https://www.ffmpeg.org/ffmpeg-utils.html#color-syntax` for details on supported colors.
 * `columns` - (Required, String) Number of screenshot columns, value range: [1, 10000].

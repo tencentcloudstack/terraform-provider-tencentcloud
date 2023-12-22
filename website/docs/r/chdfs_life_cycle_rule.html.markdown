@@ -44,7 +44,7 @@ The `life_cycle_rule` object supports the following:
 * `status` - (Optional, Int) rule status, 1:open, 2:close.
 * `transitions` - (Optional, List) life cycle rule transition list.
 
-The `transitions` object supports the following:
+The `transitions` object of `life_cycle_rule` supports the following:
 
 * `days` - (Required, Int) trigger days(n day).
 * `type` - (Required, Int) transition type, 1: archive, 2: delete, 3: low rate.

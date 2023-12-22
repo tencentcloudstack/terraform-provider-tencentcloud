@@ -37,7 +37,7 @@ The following arguments are supported:
 * `environment_id` - (Required, String) environment ID.
 * `service` - (Optional, List) service detail list.
 
-The `port_mapping_item_list` object supports the following:
+The `port_mapping_item_list` object of `service` supports the following:
 
 * `port` - (Optional, Int) container port.
 * `protocol` - (Optional, String) UDP or TCP.

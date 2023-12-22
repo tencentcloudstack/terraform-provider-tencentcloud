@@ -57,12 +57,12 @@ The following arguments are supported:
 
 * `ingress` - (Optional, List) gateway properties.
 
-The `backend` object supports the following:
+The `backend` object of `paths` supports the following:
 
 * `service_name` - (Required, String) backend name.
 * `service_port` - (Required, Int) backend port.
 
-The `http` object supports the following:
+The `http` object of `rules` supports the following:
 
 * `paths` - (Required, List) path payload.
 
@@ -77,18 +77,18 @@ The `ingress` object supports the following:
 * `rewrite_type` - (Optional, String) redirect mode, support AUTO and NONE.
 * `tls` - (Optional, List) ingress TLS configurations.
 
-The `paths` object supports the following:
+The `paths` object of `http` supports the following:
 
 * `backend` - (Required, List) backend payload.
 * `path` - (Required, String) path.
 
-The `rules` object supports the following:
+The `rules` object of `ingress` supports the following:
 
 * `http` - (Required, List) rule payload.
 * `host` - (Optional, String) host name.
 * `protocol` - (Optional, String) protocol.
 
-The `tls` object supports the following:
+The `tls` object of `ingress` supports the following:
 
 * `certificate_id` - (Required, String) certificate ID.
 * `hosts` - (Required, Set) host names.

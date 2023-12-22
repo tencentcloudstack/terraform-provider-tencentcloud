@@ -100,7 +100,7 @@ The `databases` object supports the following:
 * `database_name` - (Required, String) The original database name before rollback.
 * `new_database_name` - (Required, String) The new database name after rollback.
 
-The `table` object supports the following:
+The `table` object of `tables` supports the following:
 
 * `new_table_name` - (Required, String) New database table name after rollback.
 * `table_name` - (Required, String) The original database table name before rollback.

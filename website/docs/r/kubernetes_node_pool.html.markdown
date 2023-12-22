@@ -205,22 +205,13 @@ The `auto_scaling_config` object supports the following:
 * `orderly_security_group_ids` - (Optional, List) Ordered security groups to which a CVM instance belongs.
 * `password` - (Optional, String, ForceNew) Password to access.
 * `public_ip_assigned` - (Optional, Bool) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, Set) (**Deprecated**) The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead. Security groups to which a CVM instance belongs.
+* `security_group_ids` - (Optional, Set, **Deprecated**) The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead. Security groups to which a CVM instance belongs.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
 
-The `data_disk` object supports the following:
-
-* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
-* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
-* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
-* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
-* `mount_target` - (Optional, String, ForceNew) Mount target.
-
-The `data_disk` object supports the following:
+The `data_disk` object of `auto_scaling_config` supports the following:
 
 * `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated. Default is `false`.
 * `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
@@ -229,7 +220,16 @@ The `data_disk` object supports the following:
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
 * `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD` and `data_size` > 460GB.
 
-The `gpu_args` object supports the following:
+The `data_disk` object of `node_config` supports the following:
+
+* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
+* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
+* `mount_target` - (Optional, String, ForceNew) Mount target.
+
+The `gpu_args` object of `node_config` supports the following:
 
 * `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
 * `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.

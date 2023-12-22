@@ -86,7 +86,7 @@ The `ai_recognition_task` object supports the following:
 
 * `definition` - (Required, Int) Intelligent video recognition template ID.
 
-The `cos_output_storage` object supports the following:
+The `cos_output_storage` object of `output_storage` supports the following:
 
 * `bucket` - (Optional, String) The bucket to which the output file of media processing is saved, such as `TopRankVideo-125xxx88`. If this parameter is left empty, the value of the upper layer will be inherited.
 * `region` - (Optional, String) The region of the output bucket, such as `ap-chongqing`. If this parameter is left empty, the value of the upper layer will be inherited.
@@ -97,7 +97,7 @@ The `output_storage` object supports the following:
 * `cos_output_storage` - (Optional, List) The location to save the output object in COS. This parameter is valid and required when `Type` is COS.Note: This field may return null, indicating that no valid value can be obtained.
 * `s3_output_storage` - (Optional, List) The AWS S3 bucket to save the output file. This parameter is required if `Type` is `AWS-S3`.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `s3_output_storage` object supports the following:
+The `s3_output_storage` object of `output_storage` supports the following:
 
 * `s3_bucket` - (Required, String) The AWS S3 bucket.
 * `s3_region` - (Required, String) The region of the AWS S3 bucket.

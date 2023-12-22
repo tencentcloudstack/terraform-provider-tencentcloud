@@ -52,7 +52,7 @@ The following arguments are supported:
 * `name` - (Required, String) The template name only supports `Chinese`, `English`, `numbers`, `_`, `-` and `*`.
 * `watermark` - (Required, List) container format.
 
-The `image` object supports the following:
+The `image` object of `watermark` supports the following:
 
 * `background` - (Required, String) Whether the background image.
 * `mode` - (Required, String) Size mode, Original: original size, Proportion: proportional, Fixed: fixed size.
@@ -61,7 +61,7 @@ The `image` object supports the following:
 * `height` - (Optional, String) High, 1: When the Mode is Original, it does not support setting the width of the watermark image, 2: When the Mode is Proportion, the unit is %, the value range of the background image: [100 300]; the value range of the foreground image: [1 100], relative to Video width, up to 4096px, 3: When Mode is Fixed, the unit is px, value range: [8, 4096], 4: If only Width is set, Height is calculated according to the proportion of the watermark image.
 * `width` - (Optional, String) Width, 1: When the Mode is Original, it does not support setting the width of the watermark image, 2: When the Mode is Proportion, the unit is %, the value range of the background image: [100 300]; the value range of the foreground image: [1 100], relative to Video width, up to 4096px, 3: When Mode is Fixed, the unit is px, value range: [8, 4096], 4: If only Width is set, Height is calculated according to the proportion of the watermark image.
 
-The `text` object supports the following:
+The `text` object of `watermark` supports the following:
 
 * `font_color` - (Required, String) Font color, format: 0xRRGGBB.
 * `font_size` - (Required, String) Font size, value range: [5 100], unit px.

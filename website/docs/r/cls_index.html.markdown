@@ -76,18 +76,23 @@ The following arguments are supported:
 * `rule` - (Optional, List) Index rule.
 * `status` - (Optional, Bool) Whether to take effect. Default value: true.
 
-The `full_text` object supports the following:
+The `full_text` object of `rule` supports the following:
 
 * `case_sensitive` - (Required, Bool) Case sensitivity.
 * `contain_z_h` - (Required, Bool) Whether Chinese characters are contained.
 * `tokenizer` - (Required, String) Full-Text index delimiter. Each character in the string represents a delimiter.
 
-The `key_value` object supports the following:
+The `key_value` object of `rule` supports the following:
 
 * `case_sensitive` - (Required, Bool) Case sensitivity.
 * `key_values` - (Optional, List) Key-Value pair information of the index to be created. Up to 100 key-value pairs can be configured.
 
-The `key_values` object supports the following:
+The `key_values` object of `key_value` supports the following:
+
+* `key` - (Required, String) When a key value or metafield index needs to be configured for a field, the metafield Key does not need to be prefixed with __TAG__. and is consistent with the one when logs are uploaded. __TAG__. will be prefixed automatically for display in the console..
+* `value` - (Optional, List) Field index description information.
+
+The `key_values` object of `tag` supports the following:
 
 * `key` - (Required, String) When a key value or metafield index needs to be configured for a field, the metafield Key does not need to be prefixed with __TAG__. and is consistent with the one when logs are uploaded. __TAG__. will be prefixed automatically for display in the console..
 * `value` - (Optional, List) Field index description information.
@@ -98,12 +103,12 @@ The `rule` object supports the following:
 * `key_value` - (Optional, List) Key-Value index configuration.
 * `tag` - (Optional, List) Metafield index configuration.
 
-The `tag` object supports the following:
+The `tag` object of `rule` supports the following:
 
 * `case_sensitive` - (Required, Bool) Case sensitivity.
 * `key_values` - (Optional, List) Key-Value pair information of the index to be created. Up to 100 key-value pairs can be configured.
 
-The `value` object supports the following:
+The `value` object of `key_values` supports the following:
 
 * `type` - (Required, String) Field type. Valid values: long, text, double.
 * `contain_z_h` - (Optional, Bool) Whether Chinese characters are contained.

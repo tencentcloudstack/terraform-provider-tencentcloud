@@ -205,7 +205,7 @@ The following arguments are supported:
 * `instance_id` - (Required, String) Instance Id.
 * `notification` - (Required, List) Alarm notification channels.
 
-The `alert_manager` object supports the following:
+The `alert_manager` object of `notification` supports the following:
 
 * `url` - (Required, String) Alert manager url.
 * `cluster_id` - (Optional, String) Cluster id.

@@ -146,7 +146,7 @@ The `forward_balancer_ids` object supports the following:
 * `target_attribute` - (Required, List) Attribute list of target rules.
 * `rule_id` - (Optional, String) ID of forwarding rules.
 
-The `target_attribute` object supports the following:
+The `target_attribute` object of `forward_balancer_ids` supports the following:
 
 * `port` - (Required, Int) Port number.
 * `weight` - (Required, Int) Weight.

@@ -51,7 +51,7 @@ The `database_privilege_list` object supports the following:
 * `database_privileges` - (Optional, Set) Database privileges. Valid valuse: SELECT, INSERT_ALL, ALTER, TRUNCATE, DROP_TABLE, CREATE_TABLE, DROP_DATABASE.
 * `table_privilege_list` - (Optional, List) Table privilege list.
 
-The `table_privilege_list` object supports the following:
+The `table_privilege_list` object of `database_privilege_list` supports the following:
 
 * `table_name` - (Required, String) Table name.
 * `table_privileges` - (Required, Set) Table privileges. Valid values: SELECT, INSERT_ALL, ALTER, TRUNCATE, DROP_TABLE.

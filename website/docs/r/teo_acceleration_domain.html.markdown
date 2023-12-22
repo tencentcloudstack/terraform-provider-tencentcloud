@@ -42,7 +42,7 @@ The `origin_info` object supports the following:
 * `private_access` - (Optional, String) Whether to authenticate access to the private object storage origin (valid when `OriginType=COS/AWS_S3`). Values: `on`: Enable private authentication; `off`: Disable private authentication. If this field is not specified, the default value `off` is used.
 * `private_parameters` - (Optional, List) The private authentication parameters. This field is valid when `PrivateAccess=on`.
 
-The `private_parameters` object supports the following:
+The `private_parameters` object of `origin_info` supports the following:
 
 * `name` - (Required, String) The parameter name. Valid values: `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key.
 * `value` - (Required, String) The parameter value.

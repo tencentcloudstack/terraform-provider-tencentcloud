@@ -36,12 +36,12 @@ The following arguments are supported:
 * `bucket` - (Required, String, ForceNew) Bucket name.
 * `domain_certificate` - (Required, List, ForceNew) The certificate of specified doamin.
 
-The `certificate` object supports the following:
+The `certificate` object of `domain_certificate` supports the following:
 
 * `cert_type` - (Required, String) Certificate type.
 * `custom_cert` - (Required, List) Custom certificate.
 
-The `custom_cert` object supports the following:
+The `custom_cert` object of `certificate` supports the following:
 
 * `cert` - (Required, String) Public key of certificate.
 * `private_key` - (Required, String) Private key of certificate.

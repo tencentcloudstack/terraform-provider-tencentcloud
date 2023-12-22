@@ -55,7 +55,7 @@ The following arguments are supported:
 * `tehd_config` - (Optional, List) Ultra-fast HD transcoding parameters.
 * `video_template` - (Optional, List) Video stream configuration parameters, when RemoveVideo is 0, this field is required.
 
-The `artifact_repair` object supports the following:
+The `artifact_repair` object of `video_enhance` supports the following:
 
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 * `type` - (Optional, String) Type, optional value: weak/strong.Default value: weak.Note: This field may return null, indicating that no valid value can be obtained.
@@ -67,12 +67,12 @@ The `audio_template` object supports the following:
 * `sample_rate` - (Required, Int) Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz.
 * `audio_channel` - (Optional, Int) Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo.Default: 2.
 
-The `color_enhance` object supports the following:
+The `color_enhance` object of `video_enhance` supports the following:
 
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 * `type` - (Optional, String) Type, optional value: weak/normal/strong.Default value: weak.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `denoise` object supports the following:
+The `denoise` object of `video_enhance` supports the following:
 
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 * `type` - (Optional, String) Type, optional value: weak/strong.Default value: weak.Note: This field may return null, indicating that no valid value can be obtained.
@@ -81,42 +81,42 @@ The `enhance_config` object supports the following:
 
 * `video_enhance` - (Optional, List) Video Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `face_enhance` object supports the following:
+The `face_enhance` object of `video_enhance` supports the following:
 
 * `intensity` - (Optional, Float64) Intensity, value range: 0.0~1.0.Default value: 0.0.Note: This field may return null, indicating that no valid value can be obtained.
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 
-The `frame_rate` object supports the following:
+The `frame_rate` object of `video_enhance` supports the following:
 
 * `fps` - (Optional, Int) Frame rate, value range: [0, 100], unit: Hz.Default value: 0.Note: For transcoding, this parameter will override the Fps inside the VideoTemplate.Note: This field may return null, indicating that no valid value can be obtained.
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 
-The `hdr` object supports the following:
+The `hdr` object of `video_enhance` supports the following:
 
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 * `type` - (Optional, String) Type, optional value: HDR10/HLG.Default value: HDR10.Note: The encoding method of video needs to be libx265.Note: Video encoding bit depth is 10.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `image_quality_enhance` object supports the following:
+The `image_quality_enhance` object of `video_enhance` supports the following:
 
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 * `type` - (Optional, String) Type, optional value: weak/normal/strong.Default value: weak.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `low_light_enhance` object supports the following:
+The `low_light_enhance` object of `video_enhance` supports the following:
 
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 * `type` - (Optional, String) Type, optional value: normal.Default value: normal.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `scratch_repair` object supports the following:
+The `scratch_repair` object of `video_enhance` supports the following:
 
 * `intensity` - (Optional, Float64) Intensity, value range: 0.0~1.0.Default value: 0.0.Note: This field may return null, indicating that no valid value can be obtained.
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 
-The `sharp_enhance` object supports the following:
+The `sharp_enhance` object of `video_enhance` supports the following:
 
 * `intensity` - (Optional, Float64) Intensity, value range: 0.0~1.0.Default value: 0.0.Note: This field may return null, indicating that no valid value can be obtained.
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
 
-The `super_resolution` object supports the following:
+The `super_resolution` object of `video_enhance` supports the following:
 
 * `size` - (Optional, Int) Super resolution multiple, optional value:2: currently only supports 2x super resolution.Default value: 2.Note: This field may return null, indicating that no valid value can be obtained.
 * `switch` - (Optional, String) Capability configuration switch, optional value: ON/OFF.Default value: ON.
@@ -127,7 +127,7 @@ The `tehd_config` object supports the following:
 * `type` - (Required, String) Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled.
 * `max_video_bitrate` - (Optional, Int) The upper limit of the video bit rate, which is valid when the Type specifies the ultra-fast HD type.Do not fill in or fill in 0 means that there is no upper limit on the video bit rate.
 
-The `video_enhance` object supports the following:
+The `video_enhance` object of `enhance_config` supports the following:
 
 * `artifact_repair` - (Optional, List) De-artifact (glitch) configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `color_enhance` - (Optional, List) Color Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.

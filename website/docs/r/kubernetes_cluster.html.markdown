@@ -869,7 +869,19 @@ The `cluster_extra_args` object supports the following:
 * `kube_controller_manager` - (Optional, List, ForceNew) The customized parameters for kube-controller-manager.
 * `kube_scheduler` - (Optional, List, ForceNew) The customized parameters for kube-scheduler.
 
-The `data_disk` object supports the following:
+The `data_disk` object of `master_config` supports the following:
+
+* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.
+* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
+* `encrypt` - (Optional, Bool) Indicates whether to encrypt data disk, default `false`.
+* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
+* `kms_key_id` - (Optional, String) ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.
+* `mount_target` - (Optional, String, ForceNew) Mount target.
+* `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
+
+The `data_disk` object of `worker_config` supports the following:
 
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.
@@ -899,7 +911,7 @@ The `extension_addon` object supports the following:
 * `name` - (Required, String) Add-on name.
 * `param` - (Required, String) Parameter of the add-on resource object in JSON string format, please check the example at the top of page for reference.
 
-The `instances_para` object supports the following:
+The `instances_para` object of `exist_instance` supports the following:
 
 * `instance_ids` - (Required, List, ForceNew) Cluster IDs.
 

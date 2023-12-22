@@ -76,7 +76,7 @@ The `audio` object supports the following:
 * `codec` - (Required, String) Codec format, value aac, mp3, flac, amr, Vorbis, opus, pcm_s16le.
 * `remove` - (Optional, String) Whether to delete the source audio stream, the value is true, false.
 
-The `clip_config` object supports the following:
+The `clip_config` object of `container` supports the following:
 
 * `duration` - (Optional, String) Fragmentation duration, default 5s.
 

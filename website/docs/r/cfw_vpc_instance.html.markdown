@@ -78,7 +78,7 @@ The following arguments are supported:
 * `ccn_id` - (Optional, String) Cloud networking id, suitable for cloud networking mode.
 * `fw_vpc_cidr` - (Optional, String) auto Automatically select the firewall network segment; 10.10.10.0/24 The firewall network segment entered by the user.
 
-The `fw_deploy` object supports the following:
+The `fw_deploy` object of `vpc_fw_instances` supports the following:
 
 * `deploy_region` - (Required, String) Firewall Deployment Region.
 * `width` - (Required, Int) Bandwidth, unit: Mbps.

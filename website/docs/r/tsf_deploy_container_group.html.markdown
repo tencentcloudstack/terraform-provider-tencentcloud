@@ -128,7 +128,7 @@ The `envs` object supports the following:
 * `value_from` - (Optional, List) Kubernetes ValueFrom configuration. Note: This field may return null, indicating that no valid values can be obtained.
 * `value` - (Optional, String) value of env.
 
-The `field_ref` object supports the following:
+The `field_ref` object of `value_from` supports the following:
 
 * `field_path` - (Optional, String) The FieldPath configuration of Kubernetes. Note: This field may return null, indicating that no valid values can be obtained.
 
@@ -137,7 +137,7 @@ The `health_check_settings` object supports the following:
 * `liveness_probe` - (Optional, List) Liveness probe. Note: This field may return null, indicating that no valid values can be obtained.
 * `readiness_probe` - (Optional, List) Readiness health check. Note: This field may return null, indicating that no valid values can be obtained.
 
-The `liveness_probe` object supports the following:
+The `liveness_probe` object of `health_check_settings` supports the following:
 
 * `action_type` - (Required, String) The health check method. HTTP: checks through an HTTP interface; CMD: checks by executing a command; TCP: checks by establishing a TCP connection. Note: This field may return null, indicating that no valid values can be obtained.
 * `command` - (Optional, Set) The command to be executed for command health checks. Note: This field may return null, indicating that no valid values can be obtained.
@@ -151,14 +151,14 @@ The `liveness_probe` object supports the following:
 * `timeout_seconds` - (Optional, Int) The maximum timeout period for each health check response. Note: This field may return null, indicating that no valid values can be obtained.
 * `type` - (Optional, String) The type of readiness probe. TSF_DEFAULT represents the default readiness probe of TSF, while K8S_NATIVE represents the native readiness probe of Kubernetes. If this field is not specified, the native readiness probe of Kubernetes is used by default. Note: This field may return null, indicating that no valid values can be obtained.
 
-The `protocol_ports` object supports the following:
+The `protocol_ports` object of `service_setting` supports the following:
 
 * `port` - (Required, Int) port.
 * `protocol` - (Required, String) TCP or UDP.
 * `target_port` - (Required, Int) container port.
 * `node_port` - (Optional, Int) node port.
 
-The `readiness_probe` object supports the following:
+The `readiness_probe` object of `health_check_settings` supports the following:
 
 * `action_type` - (Required, String) The health check method. HTTP indicates checking through an HTTP interface, CMD indicates checking through executing a command, and TCP indicates checking through establishing a TCP connection. Note: This field may return null, indicating that no valid values can be obtained.
 * `command` - (Optional, Set) The command to be executed for command check. Note: This field may return null, indicating that no valid values can be obtained.
@@ -172,7 +172,7 @@ The `readiness_probe` object supports the following:
 * `timeout_seconds` - (Optional, Int) The maximum timeout period for each health check response. Note: This field may return null, indicating that no valid values can be obtained.
 * `type` - (Optional, String) The type of readiness probe. TSF_DEFAULT represents the default readiness probe of TSF, while K8S_NATIVE represents the native readiness probe of Kubernetes. If this field is not specified, the native readiness probe of Kubernetes is used by default. Note: This field may return null, indicating that no valid values can be obtained.
 
-The `resource_field_ref` object supports the following:
+The `resource_field_ref` object of `value_from` supports the following:
 
 * `resource` - (Optional, String) The Resource configuration of Kubernetes. Note: This field may return null, indicating that no valid values can be obtained.
 
@@ -191,7 +191,7 @@ The `service_setting` object supports the following:
 * `open_session_affinity` - (Optional, Bool) Enable session affinity. true means enabled, false means disabled. The default value is false. Note: This field may return null, indicating that no valid values can be obtained.
 * `session_affinity_timeout_seconds` - (Optional, Int) Session affinity session time. The default value is 10800. Note: This field may return null, indicating that no valid values can be obtained.
 
-The `value_from` object supports the following:
+The `value_from` object of `envs` supports the following:
 
 * `field_ref` - (Optional, List) The FieldRef configuration of Kubernetes env. Note: This field may return null, indicating that no valid values can be obtained.
 * `resource_field_ref` - (Optional, List) The ResourceFieldRef configuration of Kubernetes env. Note: This field may return null, indicating that no valid values can be obtained.

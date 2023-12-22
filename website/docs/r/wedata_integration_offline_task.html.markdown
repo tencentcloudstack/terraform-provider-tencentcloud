@@ -75,22 +75,27 @@ The following arguments are supported:
 * `task_mode` - (Required, String) Task display mode, 0: canvas mode, 1: form mode.
 * `task_name` - (Required, String) Task name.
 
-The `config` object supports the following:
+The `config` object of `task_info` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
 
-The `execute_context` object supports the following:
+The `execute_context` object of `task_info` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
 
-The `ext_config` object supports the following:
+The `ext_config` object of `mappings` supports the following:
 
 * `name` - (Optional, String) Configuration name.
 * `value` - (Optional, String) Configuration value.
 
-The `mappings` object supports the following:
+The `ext_config` object of `task_info` supports the following:
+
+* `name` - (Optional, String) Configuration name.
+* `value` - (Optional, String) Configuration value.
+
+The `mappings` object of `task_info` supports the following:
 
 * `ext_config` - (Optional, List) Node extension configuration information.
 * `schema_mappings` - (Optional, List) Schema mapping information.
@@ -98,7 +103,7 @@ The `mappings` object supports the following:
 * `source_id` - (Optional, String) Source node ID.
 * `source_schema` - (Optional, List) Source node schema information.
 
-The `offline_task_add_entity` object supports the following:
+The `offline_task_add_entity` object of `task_info` supports the following:
 
 * `crontab_expression` - (Optional, String) Crontab expression.
 * `cycle_type` - (Optional, Int) Scheduling type, 0: crontab type, 1: minutes, 2: hours, 3: days, 4: weeks, 5: months, 6: one-time, 7: user-driven, 10: elastic period (week), 11: elastic period (month), 12: year, 13: instant trigger.
@@ -109,17 +114,17 @@ The `offline_task_add_entity` object supports the following:
 * `self_depend` - (Optional, Int) Self-dependent rules, 1: Ordered serial one at a time, queued execution, 2: Unordered serial one at a time, not queued execution, 3: Parallel, multiple at once.
 * `try_limit` - (Optional, Int) Number of retries.
 
-The `properties` object supports the following:
+The `properties` object of `source_schema` supports the following:
 
 * `name` - (Optional, String) Attributes name.
 * `value` - (Optional, String) Attributes value.
 
-The `schema_mappings` object supports the following:
+The `schema_mappings` object of `mappings` supports the following:
 
 * `sink_schema_id` - (Required, String) Schema ID from sink node.
 * `source_schema_id` - (Required, String) Schema ID from source node.
 
-The `source_schema` object supports the following:
+The `source_schema` object of `mappings` supports the following:
 
 * `id` - (Required, String) Schema ID.
 * `name` - (Required, String) Schema name.

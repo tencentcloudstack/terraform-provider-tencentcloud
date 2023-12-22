@@ -137,7 +137,7 @@ The `engine_region_infos` object supports the following:
 * `replica` - (Required, Int) The number of nodes allocated in this region.
 * `vpc_infos` - (Required, List) Cluster network information.
 
-The `vpc_infos` object supports the following:
+The `vpc_infos` object of `engine_region_infos` supports the following:
 
 * `subnet_id` - (Required, String) Subnet ID.
 * `vpc_id` - (Required, String) Vpc Id.

@@ -67,7 +67,7 @@ The `action_timer` object supports the following:
 * `externals` - (Optional, List, ForceNew) Additional data.
 * `timer_action` - (Optional, String, ForceNew) Timer name. Currently TerminateInstances is the only supported value.
 
-The `automation_service` object supports the following:
+The `automation_service` object of `enhanced_service` supports the following:
 
 * `enabled` - (Optional, Bool, ForceNew) Whether to enable the TAT service.
 
@@ -89,7 +89,7 @@ The `enhanced_service` object supports the following:
 * `monitor_service` - (Optional, List, ForceNew) Enables cloud monitor service. If this parameter is not specified, the cloud monitor service will be enabled by default.
 * `security_service` - (Optional, List, ForceNew) Enables cloud security service. If this parameter is not specified, the cloud security service will be enabled by default.
 
-The `externals` object supports the following:
+The `externals` object of `action_timer` supports the following:
 
 * `release_address` - (Optional, Bool, ForceNew) Release address.
 * `storage_block_attr` - (Optional, List, ForceNew) Information on local HDD storage.
@@ -118,7 +118,7 @@ The `login_settings` object supports the following:
 * `key_ids` - (Optional, Set, ForceNew) List of key IDs. After an instance is associated with a key, you can access the instance with the private key in the key pair.
 * `password` - (Optional, String, ForceNew) Login password of the instance.
 
-The `monitor_service` object supports the following:
+The `monitor_service` object of `enhanced_service` supports the following:
 
 * `enabled` - (Optional, Bool, ForceNew) Whether to enable Cloud Monitor.
 
@@ -129,16 +129,16 @@ The `placement` object supports the following:
 * `host_ips` - (Optional, Set, ForceNew) IPs of the hosts to create CVMs.
 * `project_id` - (Optional, Int, ForceNew) ID of the project to which the instance belongs. This parameter can be obtained from the projectId returned by DescribeProject. If this is left empty, the default project is used.
 
-The `security_service` object supports the following:
+The `security_service` object of `enhanced_service` supports the following:
 
 * `enabled` - (Optional, Bool) Whether to enable Cloud Security.
 
-The `spot_options` object supports the following:
+The `spot_options` object of `instance_market_options` supports the following:
 
 * `max_price` - (Required, String, ForceNew) Bidding price.
 * `spot_instance_type` - (Optional, String, ForceNew) Bidding request type. Currently only one-time is supported.
 
-The `storage_block_attr` object supports the following:
+The `storage_block_attr` object of `externals` supports the following:
 
 * `max_size` - (Required, Int, ForceNew) Maximum capacity of local HDD storage.
 * `min_size` - (Required, Int, ForceNew) Minimum capacity of local HDD storage.
@@ -156,7 +156,7 @@ The `tag_specification` object supports the following:
 * `resource_type` - (Required, String, ForceNew) The type of resource that the tag is bound to.
 * `tags` - (Required, List) List of tags.
 
-The `tags` object supports the following:
+The `tags` object of `tag_specification` supports the following:
 
 * `key` - (Required, String, ForceNew) Tag key.
 * `value` - (Required, String, ForceNew) Tag value.

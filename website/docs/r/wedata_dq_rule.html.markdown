@@ -71,7 +71,7 @@ The `compare_rule` object supports the following:
 * `cycle_step` - (Optional, Int) Periodic Indicates the default period of a template, in secondsNote: This field may return null, indicating that a valid value cannot be obtained.
 * `items` - (Optional, List) Comparison condition listNote: This field may return null, indicating that a valid value cannot be obtained.
 
-The `field_config` object supports the following:
+The `field_config` object of `table_config` supports the following:
 
 * `field_data_type` - (Optional, String) Field typeNote: This field may return null, indicating that a valid value cannot be obtained.
 * `field_key` - (Optional, String) Field keyNote: This field may return null, indicating that a valid value cannot be obtained.
@@ -82,14 +82,14 @@ The `field_config` object supports the following:
 * `table_config` - (Optional, List) Library table variableNote: This field may return null, indicating that a valid value cannot be obtained.
 * `where_config` - (Optional, List) Where variableNote: This field may return null, indicating that a valid value cannot be obtained.
 
-The `items` object supports the following:
+The `items` object of `compare_rule` supports the following:
 
 * `compare_type` - (Optional, Int) Comparison type 1. Fixed value 2. Fluctuating value 3. Comparison of value range 4. Enumeration range comparison 5. Do not compareNote: This field may return null, indicating that a valid value cannot be obtained.
 * `operator` - (Optional, String) Comparison operation type &amp;lt; &amp;lt;= == =&amp;gt; &amp;gt;Note: This field may return null, indicating that a valid value cannot be obtained.
 * `value_compute_type` - (Optional, Int) Quality statistics Type 1. Absolute value 2. Increase 3. Decrease 4. C contains 5. N C does not containNote: This field may return null, indicating that a valid value cannot be obtained.
 * `value_list` - (Optional, List) Compare the threshold listNote: This field may return null, indicating that a valid value cannot be obtained.
 
-The `table_config` object supports the following:
+The `table_config` object of `field_config` supports the following:
 
 * `database_id` - (Optional, String) Database idNote: This field may return null, indicating that a valid value cannot be obtained.
 * `database_name` - (Optional, String) Database nameNote: This field may return null, indicating that a valid value cannot be obtained.
@@ -98,12 +98,12 @@ The `table_config` object supports the following:
 * `table_key` - (Optional, String) Table keyNote: This field may return null, indicating that a valid value cannot be obtained.
 * `table_name` - (Optional, String) Table nameNote: This field may return null, indicating that a valid value cannot be obtained.
 
-The `value_list` object supports the following:
+The `value_list` object of `items` supports the following:
 
 * `value_type` - (Optional, Int) Threshold type 1. Low threshold 2. High threshold 3. Common threshold 4. Enumerated valueNote: This field may return null, indicating that a valid value cannot be obtained.
 * `value` - (Optional, String) Threshold valueNote: This field may return null, indicating that a valid value cannot be obtained.
 
-The `where_config` object supports the following:
+The `where_config` object of `field_config` supports the following:
 
 * `field_data_type` - (Optional, String) Field typeNote: This field may return null, indicating that a valid value cannot be obtained.
 * `field_key` - (Optional, String) Field keyNote: This field may return null, indicating that a valid value cannot be obtained.

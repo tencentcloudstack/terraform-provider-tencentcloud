@@ -90,7 +90,7 @@ The following arguments are supported:
 * `upstream_type` - (Required, String) service type. Reference value:`Kubernetes`, `Registry`, `IPList`, `HostIP`, `Scf`.
 * `tags` - (Optional, Map, **Deprecated**) Deprecate ineffective tags Tag description list.
 
-The `targets` object supports the following:
+The `targets` object of `upstream_info` supports the following:
 
 * `host` - (Required, String) host.
 * `port` - (Required, Int) port.

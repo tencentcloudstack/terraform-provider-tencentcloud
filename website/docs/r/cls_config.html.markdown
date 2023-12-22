@@ -82,12 +82,12 @@ The `extract_rule` object supports the following:
 * `un_match_log_key` - (Optional, String) Unmatched log key.
 * `un_match_up_load_switch` - (Optional, Bool) Whether to upload the logs that failed to be parsed. Valid values: true: yes; false: no.
 
-The `filter_key_regex` object supports the following:
+The `filter_key_regex` object of `extract_rule` supports the following:
 
 * `key` - (Optional, String) Log key to be filtered.
 * `regex` - (Optional, String) Filter rule regex corresponding to key.
 
-The `meta_tags` object supports the following:
+The `meta_tags` object of `extract_rule` supports the following:
 
 * `key` - (Optional, String) tag key.
 * `value` - (Optional, String) tag value.

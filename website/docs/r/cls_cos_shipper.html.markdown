@@ -67,7 +67,7 @@ The `content` object supports the following:
 * `csv` - (Optional, List) CSV format content description.Note: this field may return null, indicating that no valid values can be obtained.
 * `json` - (Optional, List) JSON format content description.Note: this field may return null, indicating that no valid values can be obtained.
 
-The `csv` object supports the following:
+The `csv` object of `content` supports the following:
 
 * `delimiter` - (Required, String) Field delimiter.
 * `escape_char` - (Required, String) Field delimiter.
@@ -81,7 +81,7 @@ The `filter_rules` object supports the following:
 * `regex` - (Required, String) Filter rule.
 * `value` - (Required, String) Filter rule value.
 
-The `json` object supports the following:
+The `json` object of `content` supports the following:
 
 * `enable_tag` - (Required, Bool) Enablement flag.
 * `meta_fields` - (Required, Set) Metadata information list

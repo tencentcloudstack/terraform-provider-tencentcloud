@@ -216,13 +216,13 @@ The following arguments are supported:
 * `run_mode` - (Optional, String) Operation mode, such as: Immediate (indicates immediate operation, the default value is this value), Timed (indicates scheduled operation).
 * `src_info` - (Optional, List) Source information, single-node database use.
 
-The `conflict_handle_option` object supports the following:
+The `conflict_handle_option` object of `options` supports the following:
 
 * `condition_column` - (Optional, String) Columns covered by the condition. Note: This field may return null, indicating that no valid value can be obtained.
 * `condition_operator` - (Optional, String) Conditional Override Operation. Note: This field may return null, indicating that no valid value can be obtained.
 * `condition_order_in_src_and_dst` - (Optional, String) Conditional Override Priority Processing. Note: This field may return null, indicating that no valid value can be obtained.
 
-The `databases` object supports the following:
+The `databases` object of `objects` supports the following:
 
 * `db_mode` - (Optional, String) DB selection mode: All (for all objects under the current object), Partial (for some objects), when the Mode is Partial, this item is required. Note that synchronization of advanced objects does not depend on this value. Note: This field may return null, indicating that no valid value can be obtained.
 * `db_name` - (Optional, String) The name of the library that needs to be migrated or synchronized. This item is required when the ObjectMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
@@ -242,7 +242,7 @@ The `databases` object supports the following:
 * `view_mode` - (Optional, String) View selection mode: All is all view objects under the current object, Partial is part of the view objects. Note: This field may return null, indicating that no valid value can be obtained.
 * `views` - (Optional, List) View object collection, when ViewMode is Partial, this item needs to be filled in. Note: This field may return null, indicating that no valid value can be obtained.
 
-The `ddl_options` object supports the following:
+The `ddl_options` object of `options` supports the following:
 
 * `ddl_object` - (Optional, String) Ddl type, such as Database, Table, View, Index, etc. Note: This field may return null, indicating that no valid value can be obtained.
 * `ddl_value` - (Optional, Set) The specific value of ddl, the possible values for Database [Create,Drop,Alter].The possible values for Table [Create,Drop,Alter,Truncate,Rename].The possible values for View[Create,Drop].For the possible values of Index [Create, Drop]. Note: This field may return null, indicating that no valid value can be obtained.
@@ -283,7 +283,7 @@ The `objects` object supports the following:
 * `mode` - (Optional, String) Migration object type Partial (partial object). Note: This field may return null, indicating that no valid value can be obtained.
 * `online_ddl` - (Optional, List) OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.
 
-The `online_ddl` object supports the following:
+The `online_ddl` object of `objects` supports the following:
 
 * `status` - (Optional, String) status.
 
@@ -326,13 +326,13 @@ The `src_info` object supports the following:
 * `user` - (Optional, String) Username, required for instances that require username and password authentication for access. Note: This field may return null, indicating that no valid value can be obtained.
 * `vpc_id` - (Optional, String) Private network ID, which is required for access methods of private network, leased line, and VPN. Note: This field may return null, indicating that no valid value can be obtained.
 
-The `tables` object supports the following:
+The `tables` object of `databases` supports the following:
 
 * `filter_condition` - (Optional, String) Filter condition. Note: This field may return null, indicating that no valid value can be obtained.
 * `new_table_name` - (Optional, String) New table name. Note: This field may return null, indicating that no valid value can be obtained.
 * `table_name` - (Optional, String) Table name. Note: This field may return null, indicating that no valid value can be obtained.
 
-The `views` object supports the following:
+The `views` object of `databases` supports the following:
 
 * `new_view_name` - (Optional, String) New view name. Note: This field may return null, indicating that no valid value can be obtained.
 * `view_name` - (Optional, String) View name. Note: This field may return null, indicating that no valid value can be obtained.

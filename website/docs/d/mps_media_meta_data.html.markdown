@@ -40,7 +40,7 @@ The following arguments are supported:
 * `input_info` - (Required, List) Input information of file for metadata getting.
 * `result_output_file` - (Optional, String) Used to save results.
 
-The `cos_input_info` object supports the following:
+The `cos_input_info` object of `input_info` supports the following:
 
 * `bucket` - (Required, String) The COS bucket of the object to process, such as `TopRankVideo-125xxx88`.
 * `object` - (Required, String) The path of the object to process, such as `/movie/201907/WildAnimal.mov`.
@@ -53,7 +53,7 @@ The `input_info` object supports the following:
 * `s3_input_info` - (Optional, List) The information of the AWS S3 object processed. This parameter is required if `Type` is `AWS-S3`.Note: This field may return null, indicating that no valid value can be obtained.
 * `url_input_info` - (Optional, List) The URL of the object to process. This parameter is valid and required when `Type` is `URL`.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `s3_input_info` object supports the following:
+The `s3_input_info` object of `input_info` supports the following:
 
 * `s3_bucket` - (Required, String) The AWS S3 bucket.
 * `s3_object` - (Required, String) The path of the AWS S3 object.
@@ -61,7 +61,7 @@ The `s3_input_info` object supports the following:
 * `s3_secret_id` - (Optional, String) The key ID required to access the AWS S3 object.
 * `s3_secret_key` - (Optional, String) The key required to access the AWS S3 object.
 
-The `url_input_info` object supports the following:
+The `url_input_info` object of `input_info` supports the following:
 
 * `url` - (Required, String) URL of a video.
 

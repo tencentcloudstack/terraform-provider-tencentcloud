@@ -75,7 +75,7 @@ The `charge_properties` object supports the following:
 * `time_unit` - (Required, String) Time Unit,Generally h and mNote: This field may return null, indicating that a valid value cannot be obtained.
 * `charge_type` - (Optional, String) Charge type, vaild values: PREPAID, POSTPAID_BY_HOUR.
 
-The `disk_spec` object supports the following:
+The `disk_spec` object of `resources` supports the following:
 
 * `disk_count` - (Required, Int) disk count.
 * `disk_size` - (Required, Int) disk size.

@@ -214,7 +214,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		}
 		if v.Required {
 			opt := "Required"
-			sub := getSubStruct(0, k, v)
+			sub := getSubStruct(0, "", k, v)
 			subStruct = append(subStruct, sub...)
 			// get type
 			res := parseSubtract(v, sub)
@@ -234,7 +234,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
 		} else if v.Optional {
 			opt := "Optional"
-			sub := getSubStruct(0, k, v)
+			sub := getSubStruct(0, "", k, v)
 			subStruct = append(subStruct, sub...)
 			// get type
 			res := parseSubtract(v, sub)
@@ -346,7 +346,7 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 }
 
 // getSubStruct get sub structure from go file
-func getSubStruct(step int, k string, v *schema.Schema) []string {
+func getSubStruct(step int, parentK, k string, v *schema.Schema) []string {
 	var subStructs []string
 
 	if v.Description == "" {
@@ -358,7 +358,11 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 	var subStruct []string
 	if v.Type == schema.TypeMap || v.Type == schema.TypeList || v.Type == schema.TypeSet {
 		if _, ok := v.Elem.(*schema.Resource); ok {
-			subStruct = append(subStruct, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
+			if step == 0 {
+				subStruct = append(subStruct, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
+			} else {
+				subStruct = append(subStruct, fmt.Sprintf("\nThe `%s` object of `%s` supports the following:\n", k, parentK))
+			}
 			var (
 				requiredArgs []string
 				optionalArgs []string
@@ -371,6 +375,10 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 					if vv.ForceNew {
 						opt += ", ForceNew"
 					}
+					if vv.Deprecated != "" {
+						opt += ", **Deprecated**"
+						vv.Description = fmt.Sprintf("%s %s", vv.Deprecated, vv.Description)
+					}
 					requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
 				} else if vv.Optional {
 					opt := "Optional"
@@ -378,6 +386,10 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 					opt += fmt.Sprintf(", %s", valueType)
 					if vv.ForceNew {
 						opt += ", ForceNew"
+					}
+					if vv.Deprecated != "" {
+						opt += ", **Deprecated**"
+						vv.Description = fmt.Sprintf("%s %s", vv.Deprecated, vv.Description)
 					}
 					optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
 				}
@@ -389,7 +401,7 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 			subStructs = append(subStructs, strings.Join(subStruct, "\n"))
 
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
-				subStructs = append(subStructs, getSubStruct(step+1, kk, vv)...)
+				subStructs = append(subStructs, getSubStruct(step+1, k, kk, vv)...)
 			}
 		}
 	}

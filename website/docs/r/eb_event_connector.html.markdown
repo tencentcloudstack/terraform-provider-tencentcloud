@@ -132,12 +132,12 @@ The following arguments are supported:
 * `enable` - (Optional, Bool) switch.
 * `type` - (Optional, String) type.
 
-The `api_gw_params` object supports the following:
+The `api_gw_params` object of `connection_description` supports the following:
 
 * `method` - (Required, String) POST.
 * `protocol` - (Required, String) HTTPS.
 
-The `ckafka_params` object supports the following:
+The `ckafka_params` object of `connection_description` supports the following:
 
 * `offset` - (Required, String) kafka offset.
 * `topic_name` - (Required, String) ckafka  topic.

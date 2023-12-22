@@ -155,7 +155,7 @@ The `cache_prefresh` object supports the following:
 * `switch` - (Required, String) Specifies whether to enable cache prefresh.- `on`: Enable.- `off`: Disable.
 * `percent` - (Optional, Int) Percentage of cache time before try to prefresh. Valid value range: 1-99.
 
-The `cache` object supports the following:
+The `cache` object of `cache` supports the following:
 
 * `cache_time` - (Optional, Int) Cache expiration time settings, Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.
 * `ignore_cache_control` - (Optional, String) Specifies whether to enable force cache. Valid values: `on`: Enable; `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
@@ -177,7 +177,7 @@ The `compression` object supports the following:
 * `switch` - (Required, String) Whether to enable Smart compression.- `on`: Enable.- `off`: Disable.
 * `algorithms` - (Optional, Set) Compression algorithms to select. Valid values: `brotli`, `gzip`.
 
-The `follow_origin` object supports the following:
+The `follow_origin` object of `cache` supports the following:
 
 * `switch` - (Optional, String) Specifies whether to follow the origin server configuration.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
 
@@ -186,7 +186,7 @@ The `force_redirect` object supports the following:
 * `switch` - (Required, String) Whether to enable force redirect.- `on`: Enable.- `off`: Disable.
 * `redirect_status_code` - (Optional, Int) Redirection status code.- 301- 302 Note: This field may return null, indicating that no valid value can be obtained.
 
-The `hsts` object supports the following:
+The `hsts` object of `https` supports the following:
 
 * `switch` - (Required, String) - `on`: Enable.- `off`: Disable.
 * `include_sub_domains` - (Optional, String) Specifies whether to include subdomain names. Valid values: `on` and `off`. Note: This field may return null, indicating that no valid value can be obtained.
@@ -209,7 +209,7 @@ The `max_age` object supports the following:
 * `follow_origin` - (Optional, String) Specifies whether to follow the max cache age of the origin server.- `on`: Enable.- `off`: Disable.If is on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.
 * `max_age_time` - (Optional, Int) Specifies the max age of the cache (in seconds). The maximum value is 365 days. Note: the value 0 means not to cache. Note: This field may return null, indicating that no valid value can be obtained.
 
-The `no_cache` object supports the following:
+The `no_cache` object of `cache` supports the following:
 
 * `switch` - (Optional, String) Whether to cache the configuration. Valid values: `on`: Do not cache; `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.
 
@@ -229,7 +229,7 @@ The `post_max_size` object supports the following:
 * `switch` - (Required, String) Specifies whether to enable custom setting of the maximum file size.- `on`: Enable. You can set a custom max size.- `off`: Disable. In this case, the max size defaults to 32 MB.
 * `max_size` - (Optional, Int) Maximum size. Value range: 1-500 MB. Note: This field may return null, indicating that no valid value can be obtained.
 
-The `query_string` object supports the following:
+The `query_string` object of `cache_key` supports the following:
 
 * `switch` - (Required, String) Whether to use QueryString as part of CacheKey.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
 * `action` - (Optional, String) - `includeCustom`: Include the specified query strings.- `excludeCustom`: Exclude the specified query strings. Note: This field may return null, indicating that no valid value can be obtained.

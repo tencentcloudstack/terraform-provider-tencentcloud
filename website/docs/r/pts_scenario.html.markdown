@@ -119,12 +119,12 @@ The following arguments are supported:
 * `sla_policy` - (Optional, List) SLA strategy.
 * `test_scripts` - (Optional, List) Test script file information.
 
-The `alert_channel` object supports the following:
+The `alert_channel` object of `sla_policy` supports the following:
 
 * `amp_consumer_id` - (Optional, String) AMP consumer ID.
 * `notice_id` - (Optional, String) Notification template ID.
 
-The `concurrency` object supports the following:
+The `concurrency` object of `load_spec` supports the following:
 
 * `graceful_stop_seconds` - (Optional, Int) Wait time for graceful termination of the task.
 * `iteration_count` - (Optional, Int) Number of runs.
@@ -145,7 +145,7 @@ The `datasets` object supports the following:
 * `type` - (Optional, String) File type.
 * `updated_at` - (Optional, String) Update time.
 
-The `dns_config` object supports the following:
+The `dns_config` object of `domain_name_config` supports the following:
 
 * `nameservers` - (Optional, Set) DNS IP List.
 
@@ -154,23 +154,23 @@ The `domain_name_config` object supports the following:
 * `dns_config` - (Optional, List) DNS configuration.
 * `host_aliases` - (Optional, List) Domain name binding configuration.
 
-The `geo_regions_load_distribution` object supports the following:
+The `geo_regions_load_distribution` object of `load` supports the following:
 
 * `region_id` - (Required, Int) Regional ID.
 * `percentage` - (Optional, Int) Percentage.
 * `region` - (Optional, String) Region.
 
-The `host_aliases` object supports the following:
+The `host_aliases` object of `domain_name_config` supports the following:
 
 * `host_names` - (Optional, Set) List of domain names to be bound.
 * `ip` - (Optional, String) The IP address to be bound.
 
-The `label_filter` object supports the following:
+The `label_filter` object of `sla_rules` supports the following:
 
 * `label_name` - (Optional, String) Label name.
 * `label_value` - (Optional, String) Label value.
 
-The `load_spec` object supports the following:
+The `load_spec` object of `load` supports the following:
 
 * `concurrency` - (Optional, List) Configuration of concurrent pressure mode.
 * `requests_per_second` - (Optional, List) Configuration of RPS pressure mode.
@@ -206,7 +206,7 @@ The `request_files` object supports the following:
 * `type` - (Optional, String) File type.
 * `updated_at` - (Optional, String) Update time.
 
-The `requests_per_second` object supports the following:
+The `requests_per_second` object of `load_spec` supports the following:
 
 * `duration_seconds` - (Optional, Int) Pressure time.
 * `graceful_stop_seconds` - (Optional, Int) Elegant shutdown waiting time.
@@ -215,7 +215,7 @@ The `requests_per_second` object supports the following:
 * `start_requests_per_second` - (Optional, Int) Initial RPS.
 * `target_requests_per_second` - (Optional, Int) Target RPS, invalid input parameter.
 
-The `script_origin` object supports the following:
+The `script_origin` object of `load_spec` supports the following:
 
 * `duration_seconds` - (Required, Int) Pressure testing time.
 * `machine_number` - (Required, Int) Number of machines.
@@ -226,7 +226,7 @@ The `sla_policy` object supports the following:
 * `alert_channel` - (Optional, List) Alarm notification channel.
 * `sla_rules` - (Optional, List) SLA rules.
 
-The `sla_rules` object supports the following:
+The `sla_rules` object of `sla_policy` supports the following:
 
 * `abort_flag` - (Optional, Bool) Whether to stop the stress test task.
 * `aggregation` - (Optional, String) Aggregation method of pressure test index.
@@ -236,7 +236,7 @@ The `sla_rules` object supports the following:
 * `metric` - (Optional, String) Pressure test index.
 * `value` - (Optional, Float64) Threshold value.
 
-The `stages` object supports the following:
+The `stages` object of `concurrency` supports the following:
 
 * `duration_seconds` - (Optional, Int) Pressure time.
 * `target_virtual_users` - (Optional, Int) Number of virtual users.
@@ -251,7 +251,7 @@ The `test_scripts` object supports the following:
 * `type` - (Optional, String) File type.
 * `updated_at` - (Optional, String) Update time.
 
-The `vpc_load_distribution` object supports the following:
+The `vpc_load_distribution` object of `load` supports the following:
 
 * `region_id` - (Required, Int) Regional ID.
 * `region` - (Optional, String) Region.

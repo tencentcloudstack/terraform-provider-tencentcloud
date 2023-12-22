@@ -117,84 +117,84 @@ The following arguments are supported:
 * `terrorism_configure` - (Optional, List) Control parameters for unsafe information.
 * `user_define_configure` - (Optional, List) User-Defined Content Moderation Control Parameters.
 
-The `asr_review_info` object supports the following:
+The `asr_review_info` object of `political_configure` supports the following:
 
 * `switch` - (Required, String) Political asr task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
 * `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
 
-The `asr_review_info` object supports the following:
+The `asr_review_info` object of `porn_configure` supports the following:
+
+* `switch` - (Required, String) Voice pornography task switch, optional value:ON/OFF.
+* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
+* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
+
+The `asr_review_info` object of `prohibited_configure` supports the following:
+
+* `switch` - (Required, String) Voice Prohibition task switch, optional value:ON/OFF.
+* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
+* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
+
+The `asr_review_info` object of `user_define_configure` supports the following:
 
 * `switch` - (Required, String) User-defined asr review task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
 * `label_set` - (Optional, Set) User-defined asr tags, the review result contains the selected tag and returns the result, if the filter tag is empty, all review results are returned. If you want to use the tag filtering function, when adding a asr library, you need to add the corresponding character tag.The maximum number of tags is 10, and the length of each tag is up to 16 characters.
 * `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
 
-The `asr_review_info` object supports the following:
-
-* `switch` - (Required, String) Voice Prohibition task switch, optional value:ON/OFF.
-* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
-* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
-
-The `asr_review_info` object supports the following:
-
-* `switch` - (Required, String) Voice pornography task switch, optional value:ON/OFF.
-* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
-* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
-
-The `face_review_info` object supports the following:
+The `face_review_info` object of `user_define_configure` supports the following:
 
 * `switch` - (Required, String) User-defined face review task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
 * `label_set` - (Optional, Set) User-defined face review tags, the review result contains the selected tag and returns the result, if the filter tag is empty, all review results are returned. If you want to use the tag filtering function, when adding a face library, you need to add the corresponding character tag.The maximum number of tags is 10, and the length of each tag is up to 16 characters.
 * `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
 
-The `img_review_info` object supports the following:
+The `img_review_info` object of `political_configure` supports the following:
 
 * `switch` - (Required, String) Political image task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 97 points. Value range: 0~100.
 * `label_set` - (Optional, Set) Political image filter tag, if the review result contains the selected tag, the result will be returned, if the filter tag is empty, all the review results will be returned, the optional value is:violation_photo, politician, entertainment, sport, entrepreneur, scholar, celebrity, military.
 * `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 95 points. Value range: 0~100.
 
-The `img_review_info` object supports the following:
+The `img_review_info` object of `porn_configure` supports the following:
 
 * `switch` - (Required, String) Porn screen task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 90 points. Value range: 0~100.
 * `label_set` - (Optional, Set) Porn image filter label, if the review result contains the selected label, the result will be returned. If the filter label is empty, all the review results will be returned. The optional value is:porn, vulgar, intimacy, sexy.
 * `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 0. Value range: 0~100.
 
-The `img_review_info` object supports the following:
+The `img_review_info` object of `terrorism_configure` supports the following:
 
 * `switch` - (Required, String) Terrorism image task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 90 points. Value range: 0~100.
 * `label_set` - (Optional, Set) Terrorism image filter tag, if the review result contains the selected tag, the result will be returned, if the filter tag is empty, all the review results will be returned, the optional value is:guns, crowd, bloody, police, banners, militant, explosion, terrorists, scenario.
 * `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 80 points. Value range: 0~100.
 
-The `ocr_review_info` object supports the following:
-
-* `switch` - (Required, String) Ocr Prohibition task switch, optional value:ON/OFF.
-* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
-* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
-
-The `ocr_review_info` object supports the following:
-
-* `switch` - (Required, String) Ocr pornography task switch, optional value:ON/OFF.
-* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
-* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
-
-The `ocr_review_info` object supports the following:
-
-* `switch` - (Required, String) Ocr terrorism image task switch, optional value:ON/OFF.
-* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
-* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
-
-The `ocr_review_info` object supports the following:
+The `ocr_review_info` object of `political_configure` supports the following:
 
 * `switch` - (Required, String) Political ocr task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
 * `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
 
-The `ocr_review_info` object supports the following:
+The `ocr_review_info` object of `porn_configure` supports the following:
+
+* `switch` - (Required, String) Ocr pornography task switch, optional value:ON/OFF.
+* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
+* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
+
+The `ocr_review_info` object of `prohibited_configure` supports the following:
+
+* `switch` - (Required, String) Ocr Prohibition task switch, optional value:ON/OFF.
+* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
+* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
+
+The `ocr_review_info` object of `terrorism_configure` supports the following:
+
+* `switch` - (Required, String) Ocr terrorism image task switch, optional value:ON/OFF.
+* `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.
+* `review_confidence` - (Optional, Int) The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.
+
+The `ocr_review_info` object of `user_define_configure` supports the following:
 
 * `switch` - (Required, String) User-defined ocr text review task switch, optional value:ON/OFF.
 * `block_confidence` - (Optional, Int) The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.

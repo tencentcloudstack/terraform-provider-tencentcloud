@@ -47,7 +47,7 @@ The following arguments are supported:
 * `objects` - (Optional, List) objects.
 * `task_name` - (Optional, String) task name.
 
-The `object_items` object supports the following:
+The `object_items` object of `objects` supports the following:
 
 * `db_mode` - (Optional, String) database mode.
 * `db_name` - (Optional, String) database name.
@@ -62,11 +62,11 @@ The `objects` object supports the following:
 * `object_mode` - (Required, String) object mode.
 * `object_items` - (Optional, List) object items.
 
-The `tables` object supports the following:
+The `tables` object of `object_items` supports the following:
 
 * `table_name` - (Optional, String) table name.
 
-The `views` object supports the following:
+The `views` object of `object_items` supports the following:
 
 * `view_name` - (Optional, String) view name.
 

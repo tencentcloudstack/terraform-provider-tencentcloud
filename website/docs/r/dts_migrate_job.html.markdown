@@ -135,17 +135,17 @@ The following arguments are supported:
 * `auto_retry_time_range_minutes` - (Optional, Int) AutoRetryTimeRangeMinutes.
 * `expect_run_time` - (Optional, String) ExpectRunTime.
 
-The `consistency` object supports the following:
+The `consistency` object of `migrate_option` supports the following:
 
 * `mode` - (Optional, String) ConsistencyOption.
 
-The `database_table` object supports the following:
+The `database_table` object of `migrate_option` supports the following:
 
 * `object_mode` - (Required, String) Object mode. eg:all,partial.
 * `advanced_objects` - (Optional, Set) AdvancedObjects.
 * `databases` - (Optional, List) The database list.
 
-The `databases` object supports the following:
+The `databases` object of `database_table` supports the following:
 
 * `db_mode` - (Optional, String) DB selection mode:all (for all objects under the current object), partial (partial objects), when the ObjectMode is partial, this item is required.
 * `db_name` - (Optional, String) database name.
@@ -178,12 +178,22 @@ The `dst_info` object supports the following:
 * `extra_attr` - (Optional, List) ExtraAttr.
 * `supplier` - (Optional, String) Supplier.
 
-The `extra_attr` object supports the following:
+The `extra_attr` object of `dst_info` supports the following:
 
 * `key` - (Optional, String) Key.
 * `value` - (Optional, String) Value.
 
-The `info` object supports the following:
+The `extra_attr` object of `migrate_option` supports the following:
+
+* `key` - (Optional, String) Key.
+* `value` - (Optional, String) Value.
+
+The `extra_attr` object of `src_info` supports the following:
+
+* `key` - (Optional, String) Key.
+* `value` - (Optional, String) Value.
+
+The `info` object of `dst_info` supports the following:
 
 * `account_mode` - (Optional, String) Account Mode.
 * `account_role` - (Optional, String) Account Role.
@@ -206,7 +216,7 @@ The `info` object supports the following:
 * `user` - (Optional, String) User.
 * `vpc_id` - (Optional, String) VpcId.
 
-The `info` object supports the following:
+The `info` object of `src_info` supports the following:
 
 * `account_mode` - (Optional, String) AccountMode.
 * `account_role` - (Optional, String) AccountRole.
@@ -239,7 +249,7 @@ The `migrate_option` object supports the following:
 * `is_override_root` - (Optional, Bool) IsOverrideRoot.
 * `migrate_type` - (Optional, String) MigrateType.
 
-The `roles` object supports the following:
+The `roles` object of `databases` supports the following:
 
 * `new_role_name` - (Optional, String) NewRoleName.
 * `role_name` - (Optional, String) RoleName.
@@ -254,14 +264,14 @@ The `src_info` object supports the following:
 * `extra_attr` - (Optional, List) ExtraAttr.
 * `supplier` - (Optional, String) Supplier.
 
-The `tables` object supports the following:
+The `tables` object of `databases` supports the following:
 
 * `new_table_name` - (Optional, String) new table name.
 * `table_edit_mode` - (Optional, String) table edit mode.
 * `table_name` - (Optional, String) table name.
 * `tmp_tables` - (Optional, Set) temporary tables.
 
-The `views` object supports the following:
+The `views` object of `databases` supports the following:
 
 * `new_view_name` - (Optional, String) NewViewName.
 * `view_name` - (Optional, String) ViewName.

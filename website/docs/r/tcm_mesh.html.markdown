@@ -91,13 +91,13 @@ The following arguments are supported:
 * `mesh_id` - (Optional, String) Mesh ID.
 * `tag_list` - (Optional, List) A list of associated tags.
 
-The `apm` object supports the following:
+The `apm` object of `tracing` supports the following:
 
 * `enable` - (Optional, Bool) Whether enable APM.
 * `instance_id` - (Optional, String) Instance id of the APM.
 * `region` - (Optional, String) Region.
 
-The `apm` object supports the following:
+The `apm` object of `tracing` supports the following:
 
 * `enable` - (Required, Bool) Whether enable APM.
 * `instance_id` - (Optional, String) Instance id of the APM.
@@ -111,7 +111,7 @@ The `config` object supports the following:
 * `sidecar_resources` - (Optional, List) Default sidecar requests and limits.
 * `tracing` - (Optional, List) Tracing config.
 
-The `custom_prom` object supports the following:
+The `custom_prom` object of `prometheus` supports the following:
 
 * `auth_type` - (Required, String) Authentication type of the prometheus.
 * `url` - (Required, String) Url of the prometheus.
@@ -120,13 +120,13 @@ The `custom_prom` object supports the following:
 * `username` - (Optional, String) Username of the prometheus, used in basic authentication type.
 * `vpc_id` - (Optional, String) Vpc id.
 
-The `inject` object supports the following:
+The `inject` object of `config` supports the following:
 
 * `exclude_ip_ranges` - (Optional, Set) IP ranges that should not be proxied.
 * `hold_application_until_proxy_starts` - (Optional, Bool) Let istio-proxy(sidecar) start first, before app container.
 * `hold_proxy_until_application_ends` - (Optional, Bool) Let istio-proxy(sidecar) stop last, after app container.
 
-The `istio` object supports the following:
+The `istio` object of `config` supports the following:
 
 * `outbound_traffic_policy` - (Required, String) Outbound traffic policy, REGISTRY_ONLY or ALLOW_ANY, see https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig-OutboundTrafficPolicy-Mode.
 * `disable_http_retry` - (Optional, Bool) Disable http retry.
@@ -135,12 +135,12 @@ The `istio` object supports the following:
 * `smart_dns` - (Optional, List) SmartDNS configuration.
 * `tracing` - (Optional, List) Tracing config(Deprecated, please use MeshConfig.Tracing for configuration).
 
-The `limits` object supports the following:
+The `limits` object of `sidecar_resources` supports the following:
 
 * `name` - (Optional, String) Resource type name, `cpu/memory`.
 * `quantity` - (Optional, String) Resource quantity, example: cpu-`100m`, memory-`1Gi`.
 
-The `prometheus` object supports the following:
+The `prometheus` object of `config` supports the following:
 
 * `custom_prom` - (Optional, List) Custom prometheus.
 * `instance_id` - (Optional, String) Instance id.
@@ -148,17 +148,17 @@ The `prometheus` object supports the following:
 * `subnet_id` - (Optional, String) Subnet id.
 * `vpc_id` - (Optional, String) Vpc id.
 
-The `requests` object supports the following:
+The `requests` object of `sidecar_resources` supports the following:
 
 * `name` - (Optional, String) Resource type name, `cpu/memory`.
 * `quantity` - (Optional, String) Resource quantity, example: cpu-`100m`, memory-`1Gi`.
 
-The `sidecar_resources` object supports the following:
+The `sidecar_resources` object of `config` supports the following:
 
 * `limits` - (Optional, Set) Sidecar limits.
 * `requests` - (Optional, Set) Sidecar requests.
 
-The `smart_dns` object supports the following:
+The `smart_dns` object of `istio` supports the following:
 
 * `istio_meta_dns_auto_allocate` - (Optional, Bool) Enable auto allocate address.
 * `istio_meta_dns_capture` - (Optional, Bool) Enable dns proxy.
@@ -169,14 +169,21 @@ The `tag_list` object supports the following:
 * `value` - (Required, String) Tag value.
 * `passthrough` - (Optional, Bool) Passthrough to other related product.
 
-The `tracing` object supports the following:
+The `tracing` object of `config` supports the following:
 
 * `apm` - (Optional, List) APM config.
 * `enable` - (Optional, Bool) Whether enable tracing.
 * `sampling` - (Optional, Float64) Tracing sampling, 0.0-1.0.
 * `zipkin` - (Optional, List) Third party zipkin config.
 
-The `zipkin` object supports the following:
+The `tracing` object of `istio` supports the following:
+
+* `apm` - (Optional, List) APM config.
+* `enable` - (Optional, Bool) Whether enable tracing.
+* `sampling` - (Optional, Float64) Tracing sampling, 0.0-1.0.
+* `zipkin` - (Optional, List) Third party zipkin config.
+
+The `zipkin` object of `tracing` supports the following:
 
 * `address` - (Required, String) Zipkin address.
 

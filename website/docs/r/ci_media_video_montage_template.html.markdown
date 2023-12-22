@@ -87,7 +87,7 @@ The `container` object supports the following:
 
 * `format` - (Required, String) Container format: mp4, flv, hls, ts, mkv.
 
-The `effect_config` object supports the following:
+The `effect_config` object of `audio_mix` supports the following:
 
 * `bgm_fade_time` - (Optional, String) bgm transition fade-in duration, support floating point numbers.
 * `enable_bgm_fade` - (Optional, String) Enable bgm conversion fade in.
