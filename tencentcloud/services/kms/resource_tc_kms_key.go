@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
@@ -186,7 +187,7 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		keyMetaData, err := kmsService.DescribeKeyById(ctx, keyId)
 		if err != nil {
 			return err
@@ -241,7 +242,7 @@ func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) er
 	transformKeyState(d)
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "kms", "key", tcClient.Region, *key.ResourceId)
 	if err != nil {
 		return err
@@ -331,10 +332,10 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 
 	if d.HasChange("tags") {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 
 		oldValue, newValue := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 		keyMetaData, err := kmsService.DescribeKeyById(ctx, keyId)
 		if err != nil {
 			return err

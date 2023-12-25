@@ -10,6 +10,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -173,7 +174,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		resourceName := tccommon.BuildTagResourceName("cam", "role", "", roleId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -233,7 +234,7 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	//tags
-	tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	tags, err := tagService.DescribeResourceTags(ctx, "cam", "role", "", roleId)
 	if err != nil {
 		return err
@@ -319,10 +320,8 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 	//tag
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		resourceName := tccommon.BuildTagResourceName("cam", "role", "", roleId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {

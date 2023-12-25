@@ -5,6 +5,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -180,7 +181,7 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 	ids := make([]string, 0, len(instanceList))
 	list := make([]map[string]interface{}, 0, len(instanceList))
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 
 	for _, v := range instanceList {
 		listItem := make(map[string]interface{})

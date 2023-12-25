@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 
@@ -185,7 +186,7 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		}
 
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -239,7 +240,7 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 	}
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "ssm", "secret", tcClient.Region, secretInfo.resourceId)
 	if err != nil {
 		return err
@@ -301,10 +302,10 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("tags") {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 
 		oldValue, newValue := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 		secretInfo, err := ssmService.DescribeSecretByName(ctx, secretName)
 		if err != nil {
 			return err

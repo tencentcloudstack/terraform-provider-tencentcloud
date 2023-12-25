@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -136,7 +137,7 @@ func resourceTencentCloudCwpLicenseOrderCreate(d *schema.ResourceData, meta inte
 	d.SetId(strings.Join([]string{resourceId, regionId}, tccommon.FILED_SP))
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		//region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::cwp::uin/:order/%s", resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
@@ -226,7 +227,7 @@ func resourceTencentCloudCwpLicenseOrderRead(d *schema.ResourceData, meta interf
 		_ = d.Set("project_id", licenseOrder.ProjectId)
 	}
 
-	tagService := &TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	tags, err := tagService.DescribeResourceTags(ctx, "cwp", "order", "", resourceId)
 	if err != nil {
 		return err
@@ -292,9 +293,9 @@ func resourceTencentCloudCwpLicenseOrderUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("tags") {
-		tagService := &TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		resourceName := tccommon.BuildTagResourceName("cwp", "order", "", resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err

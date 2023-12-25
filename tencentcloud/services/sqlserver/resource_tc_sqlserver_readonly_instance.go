@@ -3,6 +3,7 @@ package sqlserver
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"context"
 	"fmt"
@@ -93,7 +94,7 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	sqlserverService := SqlserverService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	var (
@@ -263,7 +264,7 @@ func resourceTencentCloudSqlserverReadonlyInstanceRead(d *schema.ResourceData, m
 	_ = d.Set("readonly_groups_min_in_group", readOnlyInstance.MinReadOnlyInGroup)
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "sqlserver", "instance", tcClient.Region, d.Id())
 	if err != nil {
 		return err

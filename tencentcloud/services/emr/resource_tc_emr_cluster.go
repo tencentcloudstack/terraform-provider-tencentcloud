@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -392,7 +393,7 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	tags, err := tagService.DescribeResourceTags(ctx, "emr", "emr-instance", region, d.Id())
 	if err != nil {

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -2431,7 +2432,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	// tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := TagService{client: client}
+		tagService := svctag.NewTagService(client)
 		region := client.Region
 		resourceName := tccommon.BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
@@ -2452,7 +2453,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	region := client.Region
 	cdnService := CdnService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 
 	domain := d.Id()
 
@@ -3919,9 +3920,9 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		tagService := TagService{client: client}
+		tagService := svctag.NewTagService(client)
 		region := client.Region
 		resourceName := tccommon.BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
@@ -3951,7 +3952,7 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: client}
+		tagService := svctag.NewTagService(client)
 		region := client.Region
 		resourceName := tccommon.BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 		deleteTags := make([]string, 0, len(tags))

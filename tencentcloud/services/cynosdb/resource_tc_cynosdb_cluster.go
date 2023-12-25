@@ -7,6 +7,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -40,7 +41,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 
 		client         = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		cynosdbService = CynosdbService{client: client}
-		tagService     = TagService{client: client}
+		tagService     = svctag.NewTagService(client)
 		region         = client.Region
 		//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -346,7 +347,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	}
 
 	//tag
-	tagService := &TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	tags, err := tagService.DescribeResourceTags(ctx, "cynosdb", "cluster", client.Region, id)
 	if err != nil {
 		return err
@@ -498,7 +499,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		instanceId     = d.Get("instance_id").(string)
 		client         = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		cynosdbService = CynosdbService{client: client}
-		tagService     = TagService{client: client}
+		tagService     = svctag.NewTagService(client)
 		region         = client.Region
 	)
 	immutableArgs := []string{
@@ -645,7 +646,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 	// update tags
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
 		resourceName := tccommon.BuildTagResourceName("cynosdb", "cluster", region, clusterId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {

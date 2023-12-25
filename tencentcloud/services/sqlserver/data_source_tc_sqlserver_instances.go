@@ -3,6 +3,7 @@ package sqlserver
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"context"
 	"log"
@@ -156,7 +157,7 @@ func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	service := SqlserverService{client: tcClient}
 
 	id := d.Get("id").(string)

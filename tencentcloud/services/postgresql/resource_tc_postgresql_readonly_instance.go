@@ -536,7 +536,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 	//	replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 	//
 	//	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	//	tagService := &TagService{client: tcClient}
+	//	tagService := svctag.NewTagService(tcClient)
 	//	resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 	//	err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 	//	if err != nil {

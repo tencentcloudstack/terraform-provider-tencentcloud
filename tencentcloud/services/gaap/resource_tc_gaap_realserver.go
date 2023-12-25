@@ -7,6 +7,7 @@ import (
 	"net"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -104,7 +105,7 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagClient := m.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tagClient}
+		tagService := svctag.NewTagService(tagClient)
 		resourceName := tccommon.BuildTagResourceName("gaap", "realServer", tagClient.Region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -169,7 +170,7 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 	_ = d.Set("project_id", realserver.ProjectId)
 
 	tagClient := m.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := TagService{client: tagClient}
+	tagService := svctag.NewTagService(tagClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "gaap", "realServer", tagClient.Region, id)
 	if err != nil {
 		return err
@@ -201,9 +202,9 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		tagService := TagService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(m.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		region := m.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("gaap", "realServer", region, id)

@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -588,7 +589,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "clb", "clb", tcClient.Region, d.Id())
 	if err != nil {
 		return err
@@ -803,10 +804,10 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("clb", "clb", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {

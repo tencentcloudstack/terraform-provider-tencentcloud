@@ -3,6 +3,7 @@ package sqlserver
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"context"
 	"fmt"
@@ -212,7 +213,7 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	sqlserverService := SqlserverService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 	var (
 		name           = d.Get("name").(string)
@@ -343,7 +344,7 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	sqlserverService := SqlserverService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 	instanceId := d.Id()
 
@@ -415,7 +416,7 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
 		resourceName := tccommon.BuildTagResourceName("sqlserver", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
@@ -512,7 +513,7 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	sqlserverService := SqlserverService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 	//update project id
 	if d.HasChange("project_id") {
@@ -555,7 +556,7 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 	}
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
 		resourceName := tccommon.BuildTagResourceName("sqlserver", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
@@ -677,7 +678,7 @@ func resourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("maintenance_time_span", timeSpan)
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "sqlserver", "instance", tcClient.Region, d.Id())
 	if err != nil {
 		return err

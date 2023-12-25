@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -172,7 +173,7 @@ func resourceTencentCloudImageCreate(d *schema.ResourceData, meta interface{}) e
 	// Wait for the tags attached to the vm since tags attachment it's async while vm creation.
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("cvm", "image", tcClient.Region, imageId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
@@ -237,7 +238,7 @@ func resourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := TagService{client}
+	tagService := svctag.NewTagService(client)
 
 	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "image", client.Region, d.Id())
 	if err != nil {
@@ -269,10 +270,8 @@ func resourceTencentCloudImageUpdate(d *schema.ResourceData, meta interface{}) e
 
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("cvm", "image", region, instanceId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)

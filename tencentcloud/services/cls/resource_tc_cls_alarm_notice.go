@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -237,7 +238,7 @@ func resourceTencentCloudClsAlarmNoticeCreate(d *schema.ResourceData, meta inter
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::cls:%s:uin/:alarmNotice/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
@@ -352,7 +353,7 @@ func resourceTencentCloudClsAlarmNoticeRead(d *schema.ResourceData, meta interfa
 	}
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "cls", "alarmNotice", tcClient.Region, d.Id())
 	if err != nil {
 		return err
@@ -476,9 +477,9 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("tags") {
 		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		resourceName := tccommon.BuildTagResourceName("cls", "alarmNotice", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err

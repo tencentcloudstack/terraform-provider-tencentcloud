@@ -13,6 +13,7 @@ import (
 	"unicode"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 
@@ -744,7 +745,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		functionInfo.tags = tags
 
-		tagService := TagService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(m.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := m.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		functionId := fmt.Sprintf("%s/function/%s", *functionInfo.namespace, functionInfo.name)
 		resourceName := tccommon.BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
@@ -1043,7 +1044,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 	client := m.(tccommon.ProviderMeta).GetAPIV3Conn()
 	scfService := ScfService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	id := d.Id()
@@ -1416,7 +1417,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		functionId := fmt.Sprintf("%s/function/%s", fnNamespace, fnName)
 
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		resourceName := tccommon.BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {

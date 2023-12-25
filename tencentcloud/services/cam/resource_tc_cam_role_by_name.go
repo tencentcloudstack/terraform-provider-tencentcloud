@@ -10,6 +10,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -165,7 +166,7 @@ func resourceTencentCloudCamRoleByNameCreate(d *schema.ResourceData, meta interf
 		if len(instances) != 0 {
 			instance = instances[0]
 		}
-		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		resourceName := tccommon.BuildTagResourceName("cam", "role", "", *instance.RoleId)
 		log.Printf("resourceName: %v", resourceName)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
@@ -230,7 +231,7 @@ func resourceTencentCloudCamRoleByNameRead(d *schema.ResourceData, meta interfac
 	}
 
 	//tags
-	tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	tags, err := tagService.DescribeResourceTags(ctx, "cam", "role", "", *instance.RoleId)
 	if err != nil {
 		return err
@@ -316,10 +317,8 @@ func resourceTencentCloudCamRoleByNameUpdate(d *schema.ResourceData, meta interf
 	//tag
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		var instance *cam.RoleInfo
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			params := make(map[string]interface{})

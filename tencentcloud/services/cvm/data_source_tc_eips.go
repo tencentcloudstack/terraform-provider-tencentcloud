@@ -5,6 +5,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -109,7 +110,7 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	filter := make(map[string][]string)

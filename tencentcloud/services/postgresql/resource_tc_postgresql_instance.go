@@ -10,6 +10,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
@@ -558,7 +559,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	//internal version: replace null begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -1072,11 +1073,11 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
 		//internal version: replace null begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
@@ -1297,7 +1298,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	// ignore spec_code
 	// qcs::postgres:ap-guangzhou:uin/123435236:DBInstanceId/postgres-xxx
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "postgres", "DBInstanceId", tcClient.Region, d.Id())
 	if err != nil {
 		return err

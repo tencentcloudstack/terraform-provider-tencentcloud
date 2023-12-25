@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -209,7 +210,7 @@ func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, me
 	client1 := *client
 	mongodbService := MongodbService{client: client}
 	mongodbService1 := MongodbService{client: &client1}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	// collect info from master instance
@@ -393,7 +394,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	mongodbService := MongodbService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	d.Partial(true)
@@ -449,7 +450,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
 		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {

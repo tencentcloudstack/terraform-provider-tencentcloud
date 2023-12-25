@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -253,7 +254,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
 		log.Printf("[DEBUG]Mysql instance create, resourceName:%s\n", resourceName)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
@@ -346,7 +347,7 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("security_groups", securityGroups)
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "cdb", "instanceId", tcClient.Region, d.Id())
 	if err != nil {
 		return err

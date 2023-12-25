@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -290,8 +291,8 @@ func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, node
 
 func (me *EMRService) ModifyResourcesTags(ctx context.Context, region string, instanceId string, oldTags, newTags map[string]interface{}) error {
 	resourceName := tccommon.BuildTagResourceName("emr", "emr-instance", region, instanceId)
-	rTags, dTags := diffTags(oldTags, newTags)
-	tagService := &TagService{client: me.client}
+	rTags, dTags := svctag.DiffTags(oldTags, newTags)
+	tagService := svctag.NewTagService(me.client)
 	if err := tagService.ModifyTags(ctx, resourceName, rTags, dTags); err != nil {
 		return err
 	}

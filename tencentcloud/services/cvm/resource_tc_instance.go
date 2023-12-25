@@ -11,6 +11,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -703,7 +704,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	// Wait for the tags attached to the vm since tags attachment it's async while vm creation.
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("cvm", "instance", tcClient.Region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
@@ -851,7 +852,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
 	}
 
-	tagService := TagService{client}
+	tagService := svctag.NewTagService(client)
 
 	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "instance", client.Region, d.Id())
 	if err != nil {
@@ -1368,10 +1369,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("cvm", "instance", region, instanceId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)

@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -114,7 +115,7 @@ func resourceTencentCloudCkafkaDatahubTopicCreate(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::ckafka:%s:uin/:dipTopic/%s", region, topicName)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
@@ -165,7 +166,7 @@ func resourceTencentCloudCkafkaDatahubTopicRead(d *schema.ResourceData, meta int
 	}
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "ckafka", "dipTopic", tcClient.Region, d.Id())
 	if err != nil {
 		return err
@@ -234,9 +235,9 @@ func resourceTencentCloudCkafkaDatahubTopicUpdate(d *schema.ResourceData, meta i
 
 	if d.HasChange("tags") {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		resourceName := tccommon.BuildTagResourceName("ckafka", "dipTopic", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err

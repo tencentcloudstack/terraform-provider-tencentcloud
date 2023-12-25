@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -129,7 +130,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	var internetChargeType string
@@ -241,7 +242,7 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	eipId := d.Id()
@@ -306,7 +307,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	eipId := d.Id()
@@ -378,7 +379,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		resourceName := tccommon.BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {

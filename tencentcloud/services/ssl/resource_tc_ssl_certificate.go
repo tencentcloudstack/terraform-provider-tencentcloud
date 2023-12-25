@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -197,7 +198,7 @@ func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interfac
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagClient := m.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tagClient}
+		tagService := svctag.NewTagService(tagClient)
 		resourceName := tccommon.BuildTagResourceName("ssl", "certificate", tagClient.Region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -283,7 +284,7 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 	_ = d.Set("subject_names", subjectAltNames)
 
 	tagClient := m.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := TagService{client: tagClient}
+	tagService := svctag.NewTagService(tagClient)
 
 	tags, err := tagService.DescribeResourceTags(ctx, "ssl", "certificate", tagClient.Region, d.Id())
 	if err != nil {
@@ -353,9 +354,9 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
 		tagClient := m.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := TagService{client: tagClient}
+		tagService := svctag.NewTagService(tagClient)
 		resourceName := tccommon.BuildTagResourceName("ssl", "certificate", tagClient.Region, id)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
