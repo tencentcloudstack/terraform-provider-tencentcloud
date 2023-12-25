@@ -1,59 +1,38 @@
-/*
-Provides a resource to create a dlc detach_user_policy_operation
-
-Example Usage
-
-```hcl
-resource "tencentcloud_dlc_detach_user_policy_operation" "detach_user_policy_operation" {
- user_id = 100032676511
- policy_set {
-   database = "test_iac_keep"
-   catalog = "DataLakeCatalog"
-   table = ""
-   operation = "ASSAYER"
-   policy_type = "DATABASE"
-   re_auth = false
-   source = "USER"
-   mode = "COMMON"
-   operator = "100032669045"
-   id = 102533
- }
-}
-```
-
-*/
-package tencentcloud
+package dlc
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDlcDetachUserPolicyOperation() *schema.Resource {
+func ResourceTencentCloudDlcDetachWorkGroupPolicyOperation() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudDlcDetachUserPolicyOperationCreate,
-		Read:   resourceTencentCloudDlcDetachUserPolicyOperationRead,
-		Delete: resourceTencentCloudDlcDetachUserPolicyOperationDelete,
+		Create: resourceTencentCloudDlcDetachWorkGroupPolicyOperationCreate,
+		Read:   resourceTencentCloudDlcDetachWorkGroupPolicyOperationRead,
+		Delete: resourceTencentCloudDlcDetachWorkGroupPolicyOperationDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"user_id": {
+			"work_group_id": {
 				Required:    true,
 				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "User id, the same as the sub-user uin.",
+				Type:        schema.TypeInt,
+				Description: "Work group id.",
 			},
 
 			"policy_set": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeList,
-				Description: "Authentication policy collection.",
+				Description: "The set of policies to be bound.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database": {
@@ -148,19 +127,19 @@ func resourceTencentCloudDlcDetachUserPolicyOperation() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudDlcDetachUserPolicyOperationCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dlc_detach_user_policy_operation.create")()
-	defer inconsistentCheck(d, meta)()
+func resourceTencentCloudDlcDetachWorkGroupPolicyOperationCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dlc_detach_work_group_policy_operation.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
-		request = dlc.NewDetachUserPolicyRequest()
-		userId  string
+		request     = dlc.NewDetachWorkGroupPolicyRequest()
+		workGroupId string
 	)
-	if v, ok := d.GetOk("user_id"); ok {
-		userId = v.(string)
-		request.UserId = helper.String(v.(string))
+	if v, _ := d.GetOkExists("work_group_id"); v != nil {
+		workGroupId = helper.IntToStr(v.(int))
+		request.WorkGroupId = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("policy_set"); ok {
@@ -222,35 +201,35 @@ func resourceTencentCloudDlcDetachUserPolicyOperationCreate(d *schema.ResourceDa
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().DetachUserPolicy(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DetachWorkGroupPolicy(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s operate dlc detachUserPolicyOperation failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate dlc detachWorkGroupPolicyOperation failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(userId)
+	d.SetId(workGroupId)
 
-	return resourceTencentCloudDlcDetachUserPolicyOperationRead(d, meta)
+	return resourceTencentCloudDlcDetachWorkGroupPolicyOperationRead(d, meta)
 }
 
-func resourceTencentCloudDlcDetachUserPolicyOperationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dlc_detach_user_policy_operation.read")()
-	defer inconsistentCheck(d, meta)()
+func resourceTencentCloudDlcDetachWorkGroupPolicyOperationRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dlc_detach_work_group_policy_operation.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudDlcDetachUserPolicyOperationDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dlc_detach_user_policy_operation.delete")()
-	defer inconsistentCheck(d, meta)()
+func resourceTencentCloudDlcDetachWorkGroupPolicyOperationDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dlc_detach_work_group_policy_operation.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
