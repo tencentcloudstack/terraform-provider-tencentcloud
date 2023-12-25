@@ -27,7 +27,7 @@ func ResourceTencentCloudMariadbHourDbInstance() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"zones": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Required:    true,
 				Description: "available zone of instance.",
@@ -113,9 +113,9 @@ func resourceTencentCloudMariadbHourDbInstanceCreate(d *schema.ResourceData, met
 	)
 
 	if v, ok := d.GetOk("zones"); ok {
-		zonesSet := v.(*schema.Set).List()
-		for i := range zonesSet {
-			zones := zonesSet[i].(string)
+		zonesList := v.([]interface{})
+		for i := range zonesList {
+			zones := zonesList[i].(string)
 			request.Zones = append(request.Zones, &zones)
 		}
 	}
