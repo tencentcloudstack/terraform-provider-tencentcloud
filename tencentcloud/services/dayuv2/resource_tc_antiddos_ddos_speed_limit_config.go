@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -180,7 +181,7 @@ func resourceTencentCloudAntiddosDdosSpeedLimitConfigCreate(d *schema.ResourceDa
 		return err
 	}
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	configList, err := service.DescribeAntiddosDdosSpeedLimitConfigById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -242,7 +243,7 @@ func resourceTencentCloudAntiddosDdosSpeedLimitConfigRead(d *schema.ResourceData
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	instanceId := idSplit[0]
 	configId := idSplit[1]
@@ -417,7 +418,7 @@ func resourceTencentCloudAntiddosDdosSpeedLimitConfigDelete(d *schema.ResourceDa
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccls "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -52,7 +53,7 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svccls.NewClsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	id := d.Id()
 
@@ -114,7 +115,7 @@ func resourceTencentCloudClbLogSetDelete(d *schema.ResourceData, meta interface{
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svccls.NewClsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	id := d.Id()
 
 	if err := service.DeleteClsLogsetById(ctx, id); err != nil {

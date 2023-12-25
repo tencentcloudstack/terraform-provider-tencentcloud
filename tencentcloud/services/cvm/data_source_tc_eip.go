@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -76,9 +77,7 @@ func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) err
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	vpcService := VpcService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	vpcService := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	filter := make(map[string][]string)
 	filters, ok := d.GetOk("filter")

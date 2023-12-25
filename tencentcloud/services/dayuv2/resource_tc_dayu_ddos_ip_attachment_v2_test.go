@@ -1,14 +1,14 @@
 package dayuv2_test
 
 import (
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svcdayuv2 "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
-
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -37,7 +37,7 @@ func testAccCheckDayuDdosIpAttachmentDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := svcdayuv2.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+	service := svcantiddos.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_dayu_ddos_ip_attachment_v2" {
 			continue
@@ -80,7 +80,7 @@ func testAccCheckDayuDdosIpAttachmentExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("DDoS ip attachment id is not set")
 		}
-		service := svcdayuv2.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		service := svcantiddos.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		for _, rs := range s.RootModule().Resources {
 			if rs.Type != "tencentcloud_dayu_ddos_ip_attachment_v2" {
 				continue

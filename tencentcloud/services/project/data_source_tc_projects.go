@@ -4,6 +4,7 @@ import (
 	"context"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -79,7 +80,7 @@ func dataSourceTencentCloudProjectsRead(d *schema.ResourceData, meta interface{}
 		paramMap["AllList"] = helper.IntUint64(v.(int))
 	}
 
-	service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	var projects []*tag.Project
 

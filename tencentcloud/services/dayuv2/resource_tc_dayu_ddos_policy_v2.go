@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
@@ -424,7 +425,7 @@ func resourceTencentCloudDayuDdosPolicyV2Create(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_dayu_ddos_policy_v2.create")()
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	resourceId := d.Get("resource_id").(string)
 	business := d.Get("business").(string)
@@ -711,7 +712,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_dayu_ddos_policy_v2.read")()
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 2 {
 		return fmt.Errorf("broken ID of DDoS policy")
@@ -903,7 +904,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_dayu_ddos_policy_v2.read")()
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 2 {
 		return fmt.Errorf("broken ID of DDoS policy")
@@ -1337,7 +1338,7 @@ func resourceTencentCloudDayuDdosPolicyV2Delete(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_dayu_ddos_policy_v2.read")()
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 2 {
 		return fmt.Errorf("broken ID of DDoS policy")

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctke "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -19,6 +20,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewMonitorService(client *connectivity.TencentCloudClient) MonitorService {
+	return MonitorService{client: client}
+}
 
 type MonitorService struct {
 	client *connectivity.TencentCloudClient
@@ -1197,7 +1202,7 @@ func (me *MonitorService) DescribeTkeTmpConfigById(ctx context.Context, configId
 		}
 	}()
 
-	ids, err := me.parseConfigId(configId)
+	ids, err := me.ParseConfigId(configId)
 	if err != nil {
 		errRet = err
 		return
@@ -1237,7 +1242,7 @@ func (me *MonitorService) DeleteTkeTmpConfigByName(ctx context.Context, configId
 		}
 	}()
 
-	ids, err := me.parseConfigId(configId)
+	ids, err := me.ParseConfigId(configId)
 	if err != nil {
 		errRet = err
 		return
@@ -1271,7 +1276,7 @@ func (me *MonitorService) DeleteTkeTmpConfigByName(ctx context.Context, configId
 	return
 }
 
-func (me *MonitorService) parseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
+func (me *MonitorService) ParseConfigId(configId string) (ret *svctke.PrometheusConfigIds, err error) {
 	idSplit := strings.Split(configId, tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return nil, fmt.Errorf("id is broken,%s", configId)
@@ -1284,7 +1289,7 @@ func (me *MonitorService) parseConfigId(configId string) (ret *PrometheusConfigI
 		return nil, fmt.Errorf("id is broken,%s", configId)
 	}
 
-	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
+	ret = &svctke.PrometheusConfigIds{InstanceId: instanceId, ClusterType: clusterType, ClusterId: clusterId}
 	return
 }
 

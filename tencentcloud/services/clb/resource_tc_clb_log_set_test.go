@@ -1,17 +1,18 @@
 package clb_test
 
 import (
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	localclb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
-
 	"context"
 	"fmt"
 	"testing"
 	"time"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	svccls "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 )
 
 func TestAccTencentCloudClbLogset_basic(t *testing.T) {
@@ -43,7 +44,7 @@ func testAccCheckClbLogsetDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	clsService := localclb.NewClsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+	clsService := svccls.NewClsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_clb_logset" {
 			continue
@@ -70,7 +71,7 @@ func testAccCheckClbLogsetExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK][CLB logset][Exists] check: CLB logset id is not set")
 		}
-		service := localclb.NewClsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		service := svccls.NewClsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		resourceId := rs.Primary.ID
 		instance, err := service.DescribeClsLogset(ctx, resourceId)
 		if err != nil {

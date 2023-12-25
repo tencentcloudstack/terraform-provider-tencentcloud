@@ -12,6 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+
+	svccam "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
 )
 
 func ResourceTencentCloudCosBucketPolicy() *schema.Resource {
@@ -67,9 +69,7 @@ func resourceTencentCloudCosBucketPolicyCreate(d *schema.ResourceData, meta inte
 	cosService := CosService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
-	camService := CamService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	camService := svccam.NewCamService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	policyErr := camService.PolicyDocumentForceCheck(policy)
 	if policyErr != nil {
 		return policyErr
@@ -131,9 +131,7 @@ func resourceTencentCloudCosBucketPolicyUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("policy") {
 		policy := d.Get("policy").(string)
-		camService := CamService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		camService := svccam.NewCamService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		policyErr := camService.PolicyDocumentForceCheck(policy)
 		if policyErr != nil {
 			return policyErr

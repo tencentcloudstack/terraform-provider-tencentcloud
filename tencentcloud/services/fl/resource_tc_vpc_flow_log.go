@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -187,7 +189,7 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := TagService{client}
+		tagService := svctag.NewTagService(client)
 		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		resourceName := tccommon.BuildTagResourceName("vpc", "fl", client.Region, flowLogId)
 		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
@@ -207,7 +209,7 @@ func resourceTencentCloudVpcFlowLogRead(d *schema.ResourceData, meta interface{}
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
 
@@ -276,7 +278,7 @@ func resourceTencentCloudVpcFlowLogRead(d *schema.ResourceData, meta interface{}
 	}
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "fl", client.Region, flowLogId)
 	if err != nil {
 		return err
@@ -354,9 +356,9 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("tags") {
 		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := TagService{client}
+		tagService := svctag.NewTagService(client)
 		oldValue, newValue := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
 		resourceName := tccommon.BuildTagResourceName("vpc", "fl", client.Region, flowLogId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
@@ -375,7 +377,7 @@ func resourceTencentCloudVpcFlowLogDelete(d *schema.ResourceData, meta interface
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
 
 	if err != nil {

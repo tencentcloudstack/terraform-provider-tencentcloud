@@ -8,11 +8,10 @@ import (
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcdayu "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
-	svcdayuv2 "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
 )
 
 var testDayuL7RuleV2ResourceName = "tencentcloud_dayu_l7_rule_v2"
@@ -57,7 +56,7 @@ func testAccCheckDayuL7RuleV2Destroy(s *terraform.State) error {
 		extendParams := make(map[string]interface{})
 		extendParams["domain"] = domain
 		extendParams["protocol"] = protocol
-		dayuService := svcdayuv2.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		dayuService := svcdayu.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 		if err != nil {
 			return err
@@ -105,7 +104,7 @@ func testAccCheckDayuL7RuleV2Exists(n string) resource.TestCheckFunc {
 		extendParams := make(map[string]interface{})
 		extendParams["domain"] = domain
 		extendParams["protocol"] = protocol
-		dayuService := svcdayuv2.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		dayuService := svcdayu.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 
 		if err != nil {

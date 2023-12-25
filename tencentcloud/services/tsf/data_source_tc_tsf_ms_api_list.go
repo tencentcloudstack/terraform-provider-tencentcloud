@@ -1,0 +1,163 @@
+package tsf
+
+import (
+	"context"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+)
+
+func DataSourceTencentCloudTsfMsApiList() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceTencentCloudTsfMsApiListRead,
+		Schema: map[string]*schema.Schema{
+			"microservice_id": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "Microservice Id.",
+			},
+
+			"search_word": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "search word, support  service name.",
+			},
+
+			"result": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "result list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"total_count": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Quantity.",
+						},
+						"content": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "api list.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"path": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "api path.",
+									},
+									"method": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "api method.",
+									},
+									"description": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Method description. Note: This field may return null, indicating that no valid value was found.",
+									},
+									"status": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "API status. 0: offline, 1: online.Note: This field may return null, indicating that no valid value was found.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
+		},
+	}
+}
+
+func dataSourceTencentCloudTsfMsApiListRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_tsf_ms_api_list.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("microservice_id"); ok {
+		paramMap["MicroserviceId"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("search_word"); ok {
+		paramMap["SearchWord"] = helper.String(v.(string))
+	}
+
+	service := TsfService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	var result *tsf.TsfApiListResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		response, e := service.DescribeTsfMsApiListByFilter(ctx, paramMap)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		result = response
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	ids := make([]string, 0, len(result.Content))
+	tsfApiListResponseMap := map[string]interface{}{}
+	if result != nil {
+
+		if result.TotalCount != nil {
+			tsfApiListResponseMap["total_count"] = result.TotalCount
+		}
+
+		if result.Content != nil {
+			contentList := []interface{}{}
+			for _, content := range result.Content {
+				contentMap := map[string]interface{}{}
+
+				if content.Path != nil {
+					contentMap["path"] = content.Path
+				}
+
+				if content.Method != nil {
+					contentMap["method"] = content.Method
+				}
+
+				if content.Description != nil {
+					contentMap["description"] = content.Description
+				}
+
+				if content.Status != nil {
+					contentMap["status"] = content.Status
+				}
+
+				contentList = append(contentList, contentMap)
+				ids = append(ids, *content.Path)
+			}
+
+			tsfApiListResponseMap["content"] = contentList
+		}
+
+		_ = d.Set("result", []interface{}{tsfApiListResponseMap})
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := tccommon.WriteToFile(output.(string), tsfApiListResponseMap); e != nil {
+			return e
+		}
+	}
+	return nil
+}

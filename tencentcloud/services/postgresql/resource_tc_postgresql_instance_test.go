@@ -10,6 +10,7 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -28,7 +29,7 @@ func init() {
 			cli, _ := tcacctest.SharedClientForRegion(r)
 			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 			postgresqlService := svcpostgresql.NewPostgresqlService(client)
-			vpcService := svcpostgresql.NewVpcService(client)
+			vpcService := svcvpc.NewVpcService(client)
 
 			instances, err := postgresqlService.DescribePostgresqlInstances(ctx, nil)
 			if err != nil {

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
@@ -297,7 +298,7 @@ func resourceTencentCloudDayuCCPolicyV2Create(d *schema.ResourceData, meta inter
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	resourceId := d.Get("resource_id").(string)
 	business := d.Get("business").(string)
 	protectThresholdConfig, err := antiddosService.DescribeListProtectThresholdConfig(ctx, resourceId)
@@ -444,7 +445,7 @@ func resourceTencentCloudDayuCCPolicyV2Read(d *schema.ResourceData, meta interfa
 	}
 	instanceId := items[0]
 	business := items[1]
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	thresholdList, err := antiddosService.DescribeCCThresholdList(ctx, business, instanceId)
 	if err != nil {
@@ -577,7 +578,7 @@ func resourceTencentCloudDayuCCPolicyV2Update(d *schema.ResourceData, meta inter
 	}
 	instanceId := items[0]
 	business := items[1]
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	protectThresholdConfig, err := antiddosService.DescribeListProtectThresholdConfig(ctx, instanceId)
 	if err != nil {
 		return err
@@ -930,7 +931,7 @@ func resourceTencentCloudDayuCCPolicyV2Delete(d *schema.ResourceData, meta inter
 	}
 	instanceId := items[0]
 	business := items[1]
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	thresholdList, err := antiddosService.DescribeCCThresholdList(ctx, business, instanceId)
 	if err != nil {
 		return err

@@ -943,7 +943,7 @@ SQLServer
     tencentcloud_sqlserver_dbs
     tencentcloud_sqlserver_accounts
     tencentcloud_sqlserver_account_db_attachments
-      tencentcloud_sqlserver_readonly_groups
+    tencentcloud_sqlserver_readonly_groups
     tencentcloud_sqlserver_publish_subscribes
     tencentcloud_sqlserver_basic_instances
     tencentcloud_sqlserver_backup_commands

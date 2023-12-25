@@ -8,6 +8,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -228,7 +229,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("cam", "uin", region, helper.UInt64ToStr(*response.Response.Uin))
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
@@ -289,7 +290,7 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	//tags
-	tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	tags, err := tagService.DescribeResourceTags(ctx, "cam", "uin", region, helper.UInt64ToStr(*instance.Response.Uin))
 	if err != nil {
@@ -400,10 +401,8 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 		}
 
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("cam", "uin", region, helper.UInt64ToStr(*instance.Response.Uin))
 		err = tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)

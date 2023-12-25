@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccls "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -60,9 +61,7 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	clsService := ClsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	clsService := svccls.NewClsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	if v, ok := d.GetOk("log_set_id"); ok {
 		info, err := clsService.DescribeClsLogset(ctx, v.(string))
@@ -100,9 +99,7 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
-	clsService := ClsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	clsService := svccls.NewClsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	res, err := clsService.DescribeClsTopicById(ctx, id)
 	if err != nil {
 		return err
@@ -126,9 +123,7 @@ func resourceTencentCloudClbInstanceTopicDelete(d *schema.ResourceData, meta int
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
-	clsService := ClsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	clsService := svccls.NewClsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	err := clsService.DeleteClsTopic(ctx, id)
 	if err != nil {
 		return err

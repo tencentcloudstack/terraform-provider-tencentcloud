@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -121,7 +122,7 @@ func resourceTencentCloudAntiddosDdosGeoIpBlockConfigCreate(d *schema.ResourceDa
 		return err
 	}
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	configList, err := service.DescribeAntiddosDdosGeoIpBlockConfigById(ctx, instanceId)
 	if err != nil {
@@ -169,7 +170,7 @@ func resourceTencentCloudAntiddosDdosGeoIpBlockConfigRead(d *schema.ResourceData
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -287,7 +288,7 @@ func resourceTencentCloudAntiddosDdosGeoIpBlockConfigDelete(d *schema.ResourceDa
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)

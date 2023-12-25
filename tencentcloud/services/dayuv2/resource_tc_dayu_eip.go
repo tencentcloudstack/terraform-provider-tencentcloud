@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -102,7 +103,7 @@ func resourceTencentCloudDayuEipCreate(d *schema.ResourceData, meta interface{})
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	bindResourceType := d.Get("bind_resource_type").(string)
 	resourceId := d.Get("resource_id").(string)
 	eip := d.Get("eip").(string)
@@ -145,7 +146,7 @@ func resourceTencentCloudDayuEipRead(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("broken ID of dayu eip.")
 	}
 	resourceId := items[0]
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	bgpIPInstances, err := antiddosService.DescribeListBGPIPInstances(ctx, resourceId, DDOS_EIP_BIND_STATUS, 0, 10)
 	if err != nil {
 		return err
@@ -177,7 +178,7 @@ func resourceTencentCloudDayuEipDelete(d *schema.ResourceData, meta interface{})
 	}
 	resourceId := items[0]
 	eip := items[1]
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	err := antiddosService.DisassociateDDoSEipAddress(ctx, resourceId, eip)
 	if err != nil {
 		return err

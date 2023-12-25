@@ -7,9 +7,14 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewDomainService(client *connectivity.TencentCloudClient) DomainService {
+	return DomainService{client: client}
+}
 
 type DomainService struct {
 	client *connectivity.TencentCloudClient

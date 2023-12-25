@@ -3,7 +3,7 @@ package clb_test
 import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	localclb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
+	svccls "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 
 	"context"
 	"fmt"
@@ -43,7 +43,7 @@ func testAccCheckClbInstanceTopicExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK][CLB topic][Exists] check: CLB topic id is not set")
 		}
-		clsService := localclb.NewClsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		clsService := svccls.NewClsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		instance, err := clsService.DescribeClsTopicById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err

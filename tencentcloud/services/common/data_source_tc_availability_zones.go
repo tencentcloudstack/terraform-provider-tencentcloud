@@ -5,6 +5,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -75,9 +76,7 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	cvmService := CvmService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	cvmService := svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	var name string
 	var includeUnavailable = false
@@ -107,7 +106,7 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 		if name != "" && name != *zone.Zone {
 			continue
 		}
-		if !includeUnavailable && *zone.ZoneState == ZONE_STATE_UNAVAILABLE {
+		if !includeUnavailable && *zone.ZoneState == svccvm.ZONE_STATE_UNAVAILABLE {
 			continue
 		}
 		mapping := map[string]interface{}{

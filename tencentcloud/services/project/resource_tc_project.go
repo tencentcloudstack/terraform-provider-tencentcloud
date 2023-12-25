@@ -5,6 +5,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -98,7 +99,7 @@ func resourceTencentCloudProjectCreate(d *schema.ResourceData, meta interface{})
 		if v.(int) == 1 {
 			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-			service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			service := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 			projectId := helper.StrToUInt64(d.Id())
 
 			if err := service.DisableProjectById(ctx, projectId); err != nil {
@@ -118,7 +119,7 @@ func resourceTencentCloudProjectRead(d *schema.ResourceData, meta interface{}) e
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	projectId := helper.StrToUInt64(d.Id())
 
@@ -216,7 +217,7 @@ func resourceTencentCloudProjectDelete(d *schema.ResourceData, meta interface{})
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	projectId := helper.StrToUInt64(d.Id())
 
 	if err := service.DisableProjectById(ctx, projectId); err != nil {

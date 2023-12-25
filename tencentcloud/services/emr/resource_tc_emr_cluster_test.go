@@ -16,6 +16,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 
+	svccdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
 	svcemr "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 )
 
@@ -89,7 +90,7 @@ func init() {
 
 				if metaDB != nil && *metaDB != "" {
 					// remove metadb
-					mysqlService := svcemr.NewMysqlService(client.GetAPIV3Conn())
+					mysqlService := svccdb.NewMysqlService(client.GetAPIV3Conn())
 
 					err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 						err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)

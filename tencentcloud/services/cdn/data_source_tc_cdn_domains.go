@@ -5,6 +5,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
@@ -329,7 +330,7 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		region     = client.Region
 		cdnService = CdnService{client: client}
-		tagService = TagService{client: client}
+		tagService = svctag.NewTagService(client)
 	)
 
 	var domainFilterMap = make(map[string]interface{}, 5)

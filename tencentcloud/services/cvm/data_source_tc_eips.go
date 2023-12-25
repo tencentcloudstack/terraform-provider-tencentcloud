@@ -5,6 +5,8 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -108,8 +110,8 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	vpcService := svcvpc.NewVpcService(client)
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	filter := make(map[string][]string)
@@ -143,7 +145,7 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 
 EIP_LOOP:
 	for _, eip := range eips {
-		respTags, err := tagService.DescribeResourceTags(ctx, VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, *eip.AddressId)
+		respTags, err := tagService.DescribeResourceTags(ctx, svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, *eip.AddressId)
 		if err != nil {
 			log.Printf("[CRITAL]%s describe eip tags failed: %+v", logId, err)
 			return err

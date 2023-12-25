@@ -9,6 +9,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -544,7 +545,7 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	}
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	if tags := helper.GetTags(d, "tag_set"); len(tags) > 0 {
@@ -632,7 +633,7 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("tags", tagSets)
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	tags, err := tagService.DescribeResourceTags(ctx, "ckafka", "ckafkaId", region, instanceId)
@@ -870,11 +871,11 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("tag_set") {
 
 		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := TagService{client: client}
+		tagService := svctag.NewTagService(client)
 		region := client.Region
 
 		oldTags, newTags := d.GetChange("tag_set")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
 		resourceName := tccommon.BuildTagResourceName("ckafka", "ckafkaId", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {

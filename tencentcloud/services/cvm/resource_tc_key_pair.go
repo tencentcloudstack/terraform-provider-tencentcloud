@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -154,7 +155,7 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := &TagService{client: tcClient}
+		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("cvm", "keypair", tcClient.Region, keyId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -204,7 +205,7 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := TagService{client}
+	tagService := svctag.NewTagService(client)
 
 	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "keypair", client.Region, d.Id())
 	if err != nil {
@@ -236,10 +237,8 @@ func resourceTencentCloudKeyPairUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("cvm", "keypair", region, keyId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)

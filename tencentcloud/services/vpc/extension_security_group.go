@@ -1,0 +1,3 @@
+package vpc
+
+const DESCRIBE_SECURITY_GROUP_LIMIT = 50

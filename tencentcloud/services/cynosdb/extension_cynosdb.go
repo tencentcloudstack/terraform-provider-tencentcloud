@@ -5,11 +5,12 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
 )
 
 const (
-	CYNOSDB_CHARGE_TYPE_POSTPAID = COMMON_PAYTYPE_POSTPAID
-	CYNOSDB_CHARGE_TYPE_PREPAID  = COMMON_PAYTYPE_PREPAID
+	CYNOSDB_CHARGE_TYPE_POSTPAID = svcpostgresql.COMMON_PAYTYPE_POSTPAID
+	CYNOSDB_CHARGE_TYPE_PREPAID  = svcpostgresql.COMMON_PAYTYPE_PREPAID
 	CYNOSDB_SERVERLESS           = "SERVERLESS"
 
 	CYNOSDB_STATUS_RUNNING  = "running"
@@ -45,8 +46,8 @@ const (
 var (
 	CYNOSDB_PREPAID_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
 	CYNOSDB_CHARGE_TYPE    = map[int64]string{
-		0: COMMON_PAYTYPE_POSTPAID,
-		1: COMMON_PAYTYPE_PREPAID,
+		0: svcpostgresql.COMMON_PAYTYPE_POSTPAID,
+		1: svcpostgresql.COMMON_PAYTYPE_PREPAID,
 	}
 )
 

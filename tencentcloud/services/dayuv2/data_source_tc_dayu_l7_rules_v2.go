@@ -5,6 +5,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcdayu "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -18,7 +19,7 @@ func DataSourceTencentCloudDayuL7RulesV2() *schema.Resource {
 			"business": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(DAYU_RESOURCE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(svcdayu.DAYU_RESOURCE_TYPE),
 				Description:  "Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.",
 			},
 			"domain": {
@@ -192,9 +193,7 @@ func dataSourceTencentCloudDayuL7RulesReadV2(d *schema.ResourceData, meta interf
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DayuService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	service := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	business := d.Get("business").(string)
 	domain := d.Get("domain").(string)

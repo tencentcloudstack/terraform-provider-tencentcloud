@@ -8,11 +8,10 @@ import (
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
-	svcdayuv2 "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
 )
 
 func TestAccTencentCloudDayuDdosPolicyV2Resource(t *testing.T) {
@@ -52,7 +51,7 @@ func testAccCheckDayuDdosPolicyV2Destroy(s *terraform.State) error {
 		}
 		resourceId := items[0]
 
-		antiddosService := svcdayuv2.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		antiddosService := svcantiddos.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		blackWhiteIpRelationList, err := antiddosService.DescribeListBlackWhiteIpList(ctx, resourceId)
 		if err != nil {
 			return err

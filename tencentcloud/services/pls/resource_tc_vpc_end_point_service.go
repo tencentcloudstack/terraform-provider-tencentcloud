@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -142,7 +143,7 @@ func resourceTencentCloudVpcEndPointServiceRead(d *schema.ResourceData, meta int
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	endPointServiceId := d.Id()
 
@@ -264,7 +265,7 @@ func resourceTencentCloudVpcEndPointServiceDelete(d *schema.ResourceData, meta i
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	endPointServiceId := d.Id()
 
 	if err := service.DeleteVpcEndPointServiceById(ctx, endPointServiceId); err != nil {

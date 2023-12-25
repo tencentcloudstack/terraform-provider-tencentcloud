@@ -8,6 +8,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccrs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
@@ -355,7 +356,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 
 	// security groups
 	// Only redis service support modify Generic DB instance security groups
-	redisService := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	redisService := svccrs.NewRedisService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	sg, err := redisService.DescribeDBSecurityGroups(ctx, "postgres", d.Id())
 	if err != nil {
 		return err
@@ -517,7 +518,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 	if d.HasChange("security_groups_ids") {
 
 		// Only redis service support modify Generic DB instance security groups
-		service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		service := svccrs.NewRedisService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		ids := d.Get("security_groups_ids").(*schema.Set).List()
 		var sgIds []*string
 		for _, id := range ids {
@@ -536,7 +537,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 	//	replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 	//
 	//	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	//	tagService := &TagService{client: tcClient}
+	//	tagService := svctag.NewTagService(tcClient)
 	//	resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 	//	err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 	//	if err != nil {

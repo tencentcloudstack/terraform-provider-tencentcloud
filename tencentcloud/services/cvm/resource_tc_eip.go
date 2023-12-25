@@ -6,6 +6,8 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -35,7 +37,7 @@ func ResourceTencentCloudEip() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     EIP_TYPE_EIP,
+				Default:     svcvpc.EIP_TYPE_EIP,
 				ForceNew:    true,
 				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP` and `AntiDDoSEIP`. Default is `EIP`.",
 			},
@@ -66,7 +68,7 @@ func ResourceTencentCloudEip() *schema.Resource {
 			"prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: tccommon.ValidateAllowedIntValue(EIP_AVAILABLE_PERIOD),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(svcvpc.EIP_AVAILABLE_PERIOD),
 				Description:  "Period of instance. Default value: `1`. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. NOTES: must set when `internet_charge_type` is `BANDWIDTH_PREPAID_BY_MONTH`.",
 			},
 
@@ -128,8 +130,8 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	vpcService := svcvpc.NewVpcService(client)
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	var internetChargeType string
@@ -207,7 +209,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	d.SetId(eipId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := tccommon.BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
+		resourceName := tccommon.BuildTagResourceName(svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, eipId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			log.Printf("[CRITAL]%s set eip tags failed: %+v", logId, err)
 			return err
@@ -220,7 +222,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
-		if eip != nil && *eip.AddressStatus == EIP_STATUS_CREATING {
+		if eip != nil && *eip.AddressStatus == svcvpc.EIP_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("eip is still creating"))
 		}
 		return nil
@@ -240,8 +242,8 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	vpcService := svcvpc.NewVpcService(client)
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	eipId := d.Id()
@@ -262,7 +264,7 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		return nil
 	}
 
-	tags, err := tagService.DescribeResourceTags(ctx, VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
+	tags, err := tagService.DescribeResourceTags(ctx, svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, eipId)
 	if err != nil {
 		log.Printf("[CRITAL]%s describe eip tags failed: %+v", logId, err)
 		return err
@@ -305,8 +307,8 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	vpcService := VpcService{client: client}
-	tagService := TagService{client: client}
+	vpcService := svcvpc.NewVpcService(client)
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	eipId := d.Id()
@@ -378,8 +380,8 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := tccommon.BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName(svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, eipId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			log.Printf("[CRITAL]%s update eip tags failed: %+v", logId, err)
@@ -398,9 +400,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	vpcService := VpcService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	vpcService := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	eipId := d.Id()
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := vpcService.UnattachEip(ctx, eipId)

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -264,7 +265,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	redisService := RedisService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	//internal version: replace clientCreate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace clientCreate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	region := client.Region
@@ -620,7 +621,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	}
 	//internal version: replace resourceTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := &TagService{client: tcClient}
+	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, d.Id())
 	//internal version: replace resourceTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
@@ -644,7 +645,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	redisService := RedisService{client: client}
-	tagService := TagService{client: client}
+	tagService := svctag.NewTagService(client)
 	region := client.Region
 
 	d.Partial(true)
@@ -925,7 +926,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		//internal version: replace setTagUpdate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		resourceName := tccommon.BuildTagResourceName("redis", "instance", region, id)
 		//internal version: replace setTagUpdate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.

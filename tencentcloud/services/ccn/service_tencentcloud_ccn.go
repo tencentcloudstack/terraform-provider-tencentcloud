@@ -9,6 +9,7 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -56,6 +57,26 @@ type CcnAttachedInstanceInfo struct {
 type CcnBandwidthLimit struct {
 	region string
 	limit  int64
+}
+
+func NewVpcService(client *connectivity.TencentCloudClient) VpcService {
+	return VpcService{client: client}
+}
+
+type VpcService struct {
+	client *connectivity.TencentCloudClient
+}
+
+// ///////common
+func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*vpc.Filter) {
+	if ins == nil {
+		ins = make([]*vpc.Filter, 0, 2)
+	}
+
+	var filter = vpc.Filter{Name: &key, Values: []*string{&value}}
+	ins = append(ins, &filter)
+	outs = ins
+	return
 }
 
 func (me *VpcService) DescribeCcn(ctx context.Context, ccnId string) (info CcnBasicInfo, has int, errRet error) {
@@ -697,4 +718,287 @@ func (me *VpcService) ModifyCcnRegionBandwidthLimitsType(ctx context.Context, cc
 		return err
 	}
 	return nil
+}
+
+func (me *VpcService) DescribeVpcCcnRegionBandwidthLimitsByFilter(ctx context.Context, param map[string]interface{}) (CcnRegionBandwidthLimits []*vpc.CcnBandwidth, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeCrossBorderCcnRegionBandwidthLimitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "filters" {
+			request.Filters = v.([]*vpc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCrossBorderCcnRegionBandwidthLimits(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CcnBandwidthSet) < 1 {
+			break
+		}
+		CcnRegionBandwidthLimits = append(CcnRegionBandwidthLimits, response.Response.CcnBandwidthSet...)
+		if len(response.Response.CcnBandwidthSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeCcnCrossBorderFlowMonitorByFilter(ctx context.Context, param map[string]interface{}) (crossBorderFlowMonitor []*vpc.CrossBorderFlowMonitorData, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeCrossBorderFlowMonitorRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "source_region" {
+			request.SourceRegion = v.(*string)
+		}
+		if k == "destination_region" {
+			request.DestinationRegion = v.(*string)
+		}
+		if k == "ccn_id" {
+			request.CcnId = v.(*string)
+		}
+		if k == "ccn_uin" {
+			request.CcnUin = v.(*string)
+		}
+		if k == "period" {
+			if *v.(*int64) != 0 {
+				request.Period = v.(*int64)
+			}
+		}
+		if k == "start_time" {
+			request.StartTime = v.(*string)
+		}
+		if k == "end_time" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeCrossBorderFlowMonitor(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.CrossBorderFlowMonitorData) < 1 {
+		return
+	}
+
+	crossBorderFlowMonitor = response.Response.CrossBorderFlowMonitorData
+
+	return
+}
+
+func (me *VpcService) DescribeCcnCrossBorderComplianceByFilter(ctx context.Context, param map[string]interface{}) (crossBorderCompliance []*vpc.CrossBorderCompliance, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeCrossBorderComplianceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "service_provider" {
+			request.ServiceProvider = v.(*string)
+		}
+		if k == "compliance_id" {
+			if *v.(*uint64) != 0 {
+				request.ComplianceId = v.(*uint64)
+			}
+		}
+		if k == "company" {
+			request.Company = v.(*string)
+		}
+		if k == "uniform_social_credit_code" {
+			request.UniformSocialCreditCode = v.(*string)
+		}
+		if k == "legal_person" {
+			request.LegalPerson = v.(*string)
+		}
+		if k == "issuing_authority" {
+			request.IssuingAuthority = v.(*string)
+		}
+		if k == "business_address" {
+			request.BusinessAddress = v.(*string)
+		}
+		if k == "post_code" {
+			if *v.(*uint64) != 0 {
+				request.PostCode = v.(*uint64)
+			}
+		}
+		if k == "manager" {
+			request.Manager = v.(*string)
+		}
+		if k == "manager_id" {
+			request.ManagerId = v.(*string)
+		}
+		if k == "manager_address" {
+			request.ManagerAddress = v.(*string)
+		}
+		if k == "manager_telephone" {
+			request.ManagerTelephone = v.(*string)
+		}
+		if k == "email" {
+			request.Email = v.(*string)
+		}
+		if k == "service_start_date" {
+			request.ServiceStartDate = v.(*string)
+		}
+		if k == "service_end_date" {
+			request.ServiceEndDate = v.(*string)
+		}
+		if k == "state" {
+			request.State = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCrossBorderCompliance(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CrossBorderComplianceSet) < 1 {
+			break
+		}
+		crossBorderCompliance = append(crossBorderCompliance, response.Response.CrossBorderComplianceSet...)
+		if len(response.Response.CrossBorderComplianceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcCcnRoutesById(ctx context.Context, ccnId string, routeId string) (ccnRoutes *vpc.CcnRoute, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeCcnRoutesRequest()
+	request.CcnId = &ccnId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeCcnRoutes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, route := range response.Response.RouteSet {
+		if *route.RouteId == routeId {
+			ccnRoutes = route
+			return
+		}
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeTenantCcnByFilter(ctx context.Context, param map[string]interface{}) (tenantCcn []*vpc.CcnInstanceInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeTenantCcnsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = make([]*vpc.Filter, 0, len(param))
+	for k, v := range param {
+		filter := &vpc.Filter{
+			Name:   helper.String(k),
+			Values: v.([]*string),
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeTenantCcns(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CcnSet) < 1 {
+			break
+		}
+		tenantCcn = append(tenantCcn, response.Response.CcnSet...)
+		if len(response.Response.CcnSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
 }
