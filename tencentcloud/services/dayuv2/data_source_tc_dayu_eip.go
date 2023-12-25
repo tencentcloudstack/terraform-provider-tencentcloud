@@ -4,6 +4,7 @@ import (
 	"context"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -135,7 +136,7 @@ func dataSourceTencentCloudDayuEipRead(d *schema.ResourceData, meta interface{})
 	offset := d.Get("offset").(int)
 	limit := d.Get("limit").(int)
 
-	antiddosService := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	antiddosService := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	result, err := antiddosService.DescribeListBGPIPInstances(ctx, resourceId, bindStatus, offset, limit)
 	if err != nil {
 		return err

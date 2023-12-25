@@ -13,8 +13,7 @@ import (
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
-	svcdayuv2 "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
+	svcdayu "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 )
 
 var testDayuL4RuleResourceName = "tencentcloud_dayu_l4_rule"
@@ -61,7 +60,7 @@ func testAccCheckDayuL4RuleV2Destroy(s *terraform.State) error {
 		resourceId := items[1]
 		vpn := items[2]
 		virtualPortStr := items[3]
-		service := svcdayuv2.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		service := svcdayu.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		extendParams := make(map[string]interface{})
 		extendParams["ip"] = vpn
 		virtualPort, err := strconv.Atoi(virtualPortStr)
@@ -98,7 +97,7 @@ func testAccCheckDayuL4RuleV2Exists(n string) resource.TestCheckFunc {
 		vpn := items[2]
 		virtualPortStr := items[3]
 		virtualPort, err := strconv.Atoi(virtualPortStr)
-		service := svcdayuv2.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		service := svcdayu.NewDayuService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		extendParams := make(map[string]interface{})
 		extendParams["ip"] = vpn

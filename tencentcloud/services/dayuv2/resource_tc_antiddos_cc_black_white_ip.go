@@ -13,6 +13,8 @@ import (
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 )
 
 func ResourceTencentCloudAntiddosCcBlackWhiteIp() *schema.Resource {
@@ -153,7 +155,7 @@ func resourceTencentCloudAntiddosCcBlackWhiteIpCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	ccBlackWhiteIps, err := service.DescribeAntiddosCcBlackWhiteIpById(ctx, "bgpip", instanceId, ip, domain, protocol)
 	if err != nil {
 		return err
@@ -199,7 +201,7 @@ func resourceTencentCloudAntiddosCcBlackWhiteIpRead(d *schema.ResourceData, meta
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 5 {
@@ -269,7 +271,7 @@ func resourceTencentCloudAntiddosCcBlackWhiteIpDelete(d *schema.ResourceData, me
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 5 {
 		return fmt.Errorf("id is broken,%s", idSplit)

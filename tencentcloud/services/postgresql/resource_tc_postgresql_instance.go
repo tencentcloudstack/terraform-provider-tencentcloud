@@ -10,6 +10,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccrs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -936,7 +937,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	if d.HasChange("security_groups") {
 
 		// Only redis service support modify Generic DB instance security groups
-		service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		service := svccrs.NewRedisService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		ids := d.Get("security_groups").(*schema.Set).List()
 		var sgIds []*string
 		for _, id := range ids {
@@ -1217,7 +1218,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 
 	// security groups
 	// Only redis service support modify Generic DB instance security groups
-	redisService := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	redisService := svccrs.NewRedisService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	sg, err := redisService.DescribeDBSecurityGroups(ctx, "postgres", d.Id())
 	if err != nil {
 		return err

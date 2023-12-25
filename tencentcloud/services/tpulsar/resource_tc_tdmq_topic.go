@@ -3,6 +3,7 @@ package tpulsar
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctdmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmq"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"context"
 	"fmt"
@@ -227,7 +228,7 @@ func resourceTencentCloudTdmqTopicDelete(d *schema.ResourceData, meta interface{
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteTdmqTopic(ctx, environId, topicName, clusterId); err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == VPCNotFound {
+				if sdkErr.Code == svcvpc.VPCNotFound {
 					return nil
 				}
 			}

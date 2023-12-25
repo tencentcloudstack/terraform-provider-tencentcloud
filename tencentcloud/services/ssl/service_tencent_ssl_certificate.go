@@ -300,7 +300,7 @@ func (me *SSLService) DescribeCertificates(ctx context.Context, request *ssl.Des
 	return
 }
 
-func (me *SSLService) checkCertificateType(ctx context.Context, certId string, checkType string) (bool, error) {
+func (me *SSLService) CheckCertificateType(ctx context.Context, certId string, checkType string) (bool, error) {
 
 	//get certificate by id
 

@@ -12,6 +12,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
+func NewDomainService(client *connectivity.TencentCloudClient) DomainService {
+	return DomainService{client: client}
+}
+
 type DomainService struct {
 	client *connectivity.TencentCloudClient
 }

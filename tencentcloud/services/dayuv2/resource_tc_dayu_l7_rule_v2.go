@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcdayu "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -35,7 +36,7 @@ func ResourceTencentCloudDayuL7RuleV2() *schema.Resource {
 			"resource_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(DAYU_RESOURCE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(svcdayu.DAYU_RESOURCE_TYPE),
 				ForceNew:     true,
 				Description:  "Type of the resource that the layer 7 rule works for, valid value is `bgpip`.",
 			},
@@ -137,7 +138,7 @@ func resourceTencentCloudDayuL7RuleCreateV2(d *schema.ResourceData, meta interfa
 	ruleItem := rule[0].(map[string]interface{})
 	domain := ruleItem["domain"].(string)
 	protocol := ruleItem["protocol"].(string)
-	dayuService := DayuService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	dayuService := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	err := dayuService.CreateL7RuleV2(ctx, resourceType, resourceId, resourceIp, rule)
 	if err != nil {
 		return err
@@ -151,7 +152,7 @@ func resourceTencentCloudDayuL7RuleUpdateV2(d *schema.ResourceData, meta interfa
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	dayuService := DayuService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	dayuService := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 3 {
@@ -249,7 +250,7 @@ func resourceTencentCloudDayuL7RuleReadV2(d *schema.ResourceData, meta interface
 	extendParams := make(map[string]interface{})
 	extendParams["domain"] = domain
 	extendParams["protocol"] = protocol
-	dayuService := DayuService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	dayuService := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	for {
 		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 		if err != nil {
@@ -283,7 +284,7 @@ func resourceTencentCloudDayuL7RuleDeleteV2(d *schema.ResourceData, meta interfa
 	domain := items[1]
 	protocol := items[2]
 
-	dayuService := DayuService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	dayuService := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	extendParams := make(map[string]interface{})
 	extendParams["domain"] = domain
 	extendParams["protocol"] = protocol

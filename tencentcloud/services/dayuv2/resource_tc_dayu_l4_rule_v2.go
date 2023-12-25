@@ -12,6 +12,7 @@ import (
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcdayu "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 )
 
 func ResourceTencentCloudDayuL4RuleV2() *schema.Resource {
@@ -24,7 +25,7 @@ func ResourceTencentCloudDayuL4RuleV2() *schema.Resource {
 			"business": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(DAYU_RESOURCE_TYPE_RULE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(svcdayu.DAYU_RESOURCE_TYPE_RULE),
 				ForceNew:     true,
 				Description:  "Business of the resource that the layer 4 rule works for. Valid values: `bgpip` and `net`.",
 			},
@@ -141,9 +142,7 @@ func resourceTencentCloudDayuL4RuleCreateV2(d *schema.ResourceData, meta interfa
 	vpn := d.Get("vpn").(string)
 	virtualPort := d.Get("virtual_port").(int)
 	rules := d.Get("rules").([]interface{})
-	service := DayuService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	service := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	err := service.CreateNewL4Rules(ctx, business, resourceId, vpn, rules)
 	if err != nil {
 		return err
@@ -158,9 +157,7 @@ func resourceTencentCloudDayuL4RuleReadV2(d *schema.ResourceData, meta interface
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DayuService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	service := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 4 {
 		return fmt.Errorf("broken ID of dayu L4 rule")
@@ -210,9 +207,7 @@ func resourceTencentCloudDayuL4RuleDeleteV2(d *schema.ResourceData, meta interfa
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DayuService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	service := svcdayu.NewDayuService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 4 {

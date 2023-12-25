@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -118,7 +119,7 @@ func resourceTencentCloudAntiddosDdosBlackWhiteIpRead(d *schema.ResourceData, me
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	instanceId := idSplit[0]
 	ip := idSplit[1]
@@ -138,7 +139,7 @@ func resourceTencentCloudAntiddosDdosBlackWhiteIpRead(d *schema.ResourceData, me
 			}
 		}
 		if targetIpSegment != nil {
-			_ = d.Set("type", IP_TYPE_BLACK)
+			_ = d.Set("type", svcantiddos.IP_TYPE_BLACK)
 			_ = d.Set("ip", targetIpSegment.Ip)
 			_ = d.Set("mask", targetIpSegment.Mask)
 		}
@@ -154,7 +155,7 @@ func resourceTencentCloudAntiddosDdosBlackWhiteIpRead(d *schema.ResourceData, me
 			}
 		}
 		if targetIpSegment != nil {
-			_ = d.Set("type", IP_TYPE_WHITE)
+			_ = d.Set("type", svcantiddos.IP_TYPE_WHITE)
 			_ = d.Set("ip", targetIpSegment.Ip)
 			_ = d.Set("mask", targetIpSegment.Mask)
 		}
@@ -234,7 +235,7 @@ func resourceTencentCloudAntiddosDdosBlackWhiteIpDelete(d *schema.ResourceData, 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)

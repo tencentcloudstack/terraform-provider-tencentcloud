@@ -4,6 +4,7 @@ import (
 	"context"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -107,7 +108,7 @@ func dataSourceTencentCloudAntiddosOverviewDdosTrendRead(d *schema.ResourceData,
 		paramMap["IpList"] = helper.InterfacesStringsPoint(ipListSet)
 	}
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	var describeOverviewDDoSTrendResponseParams *antiddos.DescribeOverviewDDoSTrendResponseParams
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {

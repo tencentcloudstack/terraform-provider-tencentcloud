@@ -7,12 +7,11 @@ import (
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-
-	svcfl "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
 )
 
 func init() {
@@ -25,7 +24,7 @@ func init() {
 			cli, _ := tcacctest.SharedClientForRegion(r)
 			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			service := svcfl.NewVpcService(client)
+			service := svcvpc.NewVpcService(client)
 
 			request := vpc.NewDescribeFlowLogsRequest()
 			result, err := service.DescribeFlowLogs(ctx, request)

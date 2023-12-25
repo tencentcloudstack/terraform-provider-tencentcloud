@@ -4,7 +4,7 @@ import (
 	tcprovider "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"context"
 	"fmt"
@@ -35,7 +35,7 @@ func testSweepEipInstance(region string) error {
 	}
 	client := sharedClient.(tccommon.ProviderMeta)
 
-	vpcService := svccvm.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
 
 	instances, err := vpcService.DescribeEipByFilter(ctx, nil)
 	if err != nil {
@@ -253,7 +253,7 @@ func testAccCheckEipExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("eip id is not set")
 		}
 
-		vpcService := svccvm.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		vpcService := svcvpc.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		eip, err := vpcService.DescribeEipById(ctx, rs.Primary.ID)
 		if err != nil {
 			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -277,7 +277,7 @@ func testAccCheckEipExists(n string) resource.TestCheckFunc {
 func testAccCheckEipDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	vpcService := svccvm.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_eip" {
 			continue

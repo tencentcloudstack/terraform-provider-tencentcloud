@@ -9,6 +9,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctke "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -1275,7 +1276,7 @@ func (me *MonitorService) DeleteTkeTmpConfigByName(ctx context.Context, configId
 	return
 }
 
-func (me *MonitorService) ParseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
+func (me *MonitorService) ParseConfigId(configId string) (ret *svctke.PrometheusConfigIds, err error) {
 	idSplit := strings.Split(configId, tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return nil, fmt.Errorf("id is broken,%s", configId)
@@ -1288,7 +1289,7 @@ func (me *MonitorService) ParseConfigId(configId string) (ret *PrometheusConfigI
 		return nil, fmt.Errorf("id is broken,%s", configId)
 	}
 
-	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
+	ret = &svctke.PrometheusConfigIds{InstanceId: instanceId, ClusterType: clusterType, ClusterId: clusterId}
 	return
 }
 

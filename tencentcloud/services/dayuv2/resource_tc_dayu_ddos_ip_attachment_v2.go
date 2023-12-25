@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
+	svcdayu "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -70,13 +72,13 @@ func resourceTencentCloudDayuDDosIpAttachmentCreateV2(d *schema.ResourceData, me
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	var bgpInstanceId string
 	boundIps := make([]string, 0)
 	request := antiddos.NewCreateBoundIPRequest()
 
-	request.Business = helper.String(BUSINESS_BGP_MULTIP)
+	request.Business = helper.String(svcdayu.BUSINESS_BGP_MULTIP)
 	if v, ok := d.GetOk("bgp_instance_id"); ok {
 		bgpInstanceId = v.(string)
 		request.Id = helper.String(bgpInstanceId)
@@ -99,7 +101,7 @@ func resourceTencentCloudDayuDDosIpAttachmentCreateV2(d *schema.ResourceData, me
 			if v, ok := dMap["device_type"]; ok {
 				boundIpInfo.DeviceType = helper.String(v.(string))
 			}
-			boundIpInfo.IspCode = helper.IntUint64(ISP_CODE_BGP)
+			boundIpInfo.IspCode = helper.IntUint64(svcdayu.ISP_CODE_BGP)
 			request.BoundDevList = append(request.BoundDevList, &boundIpInfo)
 		}
 	}
@@ -111,7 +113,7 @@ func resourceTencentCloudDayuDDosIpAttachmentCreateV2(d *schema.ResourceData, me
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if *result.Response.Success.Code != RESPONSE_SUCCESS_CODE {
+		if *result.Response.Success.Code != svcdayu.RESPONSE_SUCCESS_CODE {
 			return resource.RetryableError(errors.New("request failed"))
 		}
 		return nil
@@ -125,7 +127,7 @@ func resourceTencentCloudDayuDDosIpAttachmentCreateV2(d *schema.ResourceData, me
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		if *boundip.BoundStatus == DAYU_BOUNDSTATUS_IDLE {
+		if *boundip.BoundStatus == svcdayu.DAYU_BOUNDSTATUS_IDLE {
 			return nil
 		}
 		return resource.RetryableError(errors.New("still building."))
@@ -148,7 +150,7 @@ func resourceTencentCloudDayuDDosIpAttachmentReadV2(d *schema.ResourceData, meta
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -198,7 +200,7 @@ func resourceTencentCloudDayuDDosIpAttachmentDeleteV2(d *schema.ResourceData, me
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := svcantiddos.NewAntiddosService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -208,7 +210,7 @@ func resourceTencentCloudDayuDDosIpAttachmentDeleteV2(d *schema.ResourceData, me
 	boundIps := idSplit[1]
 
 	request := antiddos.NewCreateBoundIPRequest()
-	request.Business = helper.String(BUSINESS_BGP_MULTIP)
+	request.Business = helper.String(svcdayu.BUSINESS_BGP_MULTIP)
 	request.Id = helper.String(bgpInstanceId)
 	ubBoundDevList := make([]*antiddos.BoundIpInfo, 0)
 	for _, boundIp := range strings.Split(boundIps, tccommon.COMMA_SP) {
@@ -229,7 +231,7 @@ func resourceTencentCloudDayuDDosIpAttachmentDeleteV2(d *schema.ResourceData, me
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if *result.Response.Success.Code != RESPONSE_SUCCESS_CODE {
+		if *result.Response.Success.Code != svcdayu.RESPONSE_SUCCESS_CODE {
 			return resource.RetryableError(errors.New("request failed"))
 		}
 		return nil
@@ -244,7 +246,7 @@ func resourceTencentCloudDayuDDosIpAttachmentDeleteV2(d *schema.ResourceData, me
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		if *boundip.BoundStatus == DAYU_BOUNDSTATUS_IDLE {
+		if *boundip.BoundStatus == svcdayu.DAYU_BOUNDSTATUS_IDLE {
 			return nil
 		}
 		return resource.RetryableError(errors.New("still building."))

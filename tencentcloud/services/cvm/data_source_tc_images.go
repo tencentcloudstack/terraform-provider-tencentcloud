@@ -14,6 +14,8 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
+	svccbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 )
 
 func DataSourceTencentCloudImages() *schema.Resource {
@@ -178,9 +180,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	cbsService := CbsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	var (
 		imageId        string
@@ -311,7 +311,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	return nil
 }
 
-func imagesReadSnapshotByIds(ctx context.Context, cbsService CbsService, image *cvm.Image) (snapshotResults []map[string]interface{}, errRet error) {
+func imagesReadSnapshotByIds(ctx context.Context, cbsService svccbs.CbsService, image *cvm.Image) (snapshotResults []map[string]interface{}, errRet error) {
 	if len(image.SnapshotSet) == 0 {
 		return
 	}

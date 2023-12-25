@@ -3,7 +3,7 @@ package tke
 import (
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
-	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 )
 
 const (
@@ -60,7 +60,7 @@ const (
 	TKE_ROLE_WORKER      = "WORKER"
 )
 
-var TKE_INSTANCE_CHARGE_TYPE = []string{svcas.CVM_CHARGE_TYPE_PREPAID, svcas.CVM_CHARGE_TYPE_POSTPAID}
+var TKE_INSTANCE_CHARGE_TYPE = []string{svccvm.CVM_CHARGE_TYPE_PREPAID, svccvm.CVM_CHARGE_TYPE_POSTPAID}
 
 const (
 	TKE_CLUSTER_OS_TYPE_DOCKER_CUSTOMIZE = "DOCKER_CUSTOMIZE"

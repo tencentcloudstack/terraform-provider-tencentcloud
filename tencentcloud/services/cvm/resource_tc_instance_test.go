@@ -4,6 +4,7 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"context"
 	"fmt"
@@ -690,7 +691,7 @@ func testAccCheckSecurityGroupExists(n string, id *string) resource.TestCheckFun
 			return fmt.Errorf("no security group ID is set")
 		}
 
-		service := svccvm.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		service := svcvpc.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		sg, err := service.DescribeSecurityGroup(context.TODO(), rs.Primary.ID)
 		if err != nil {

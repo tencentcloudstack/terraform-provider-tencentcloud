@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -351,7 +352,7 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 
 	if metaDB != nil && *metaDB != "" {
 		// remove metadb
-		mysqlService := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		mysqlService := svccdb.NewMysqlService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)

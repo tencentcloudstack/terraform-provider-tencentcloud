@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -322,7 +323,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
 		}
 		if pok {
-			if chargeType != INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
+			if chargeType != svcas.INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
 				return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
 			}
 			request.BandwidthPackageId = helper.String(pv.(string))

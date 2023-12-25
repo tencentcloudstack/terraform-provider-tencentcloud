@@ -1,5 +1,9 @@
 package ckafka
 
+import (
+	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
+)
+
 const (
 	CKAFKA_DESCRIBE_LIMIT    = 50
 	CKAFKA_ACL_PRINCIPAL_STR = "User:"
@@ -85,6 +89,6 @@ const CkafkaInstanceNotFound = "InvalidParameterValue.InstanceNotExist"
 const CkafkaFailedOperation = "FailedOperation"
 
 const (
-	CKAFKA_CHARGE_TYPE_POSTPAID = COMMON_PAYTYPE_POSTPAID
-	CKAFKA_CHARGE_TYPE_PREPAID  = COMMON_PAYTYPE_PREPAID
+	CKAFKA_CHARGE_TYPE_POSTPAID = svcpostgresql.COMMON_PAYTYPE_POSTPAID
+	CKAFKA_CHARGE_TYPE_PREPAID  = svcpostgresql.COMMON_PAYTYPE_PREPAID
 )

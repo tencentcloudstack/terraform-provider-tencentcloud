@@ -5,6 +5,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -41,7 +42,7 @@ func resourceTencentCloudEipPublicAddressAdjustCreate(d *schema.ResourceData, me
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		service    = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		service    = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		request    = vpc.NewAdjustPublicAddressRequest()
 		instanceId string
 		addressId  string

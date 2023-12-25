@@ -5,6 +5,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
 )
 
 const (
@@ -43,8 +44,8 @@ const (
 )
 
 const (
-	MONGODB_CHARGE_TYPE_POSTPAID = COMMON_PAYTYPE_POSTPAID
-	MONGODB_CHARGE_TYPE_PREPAID  = COMMON_PAYTYPE_PREPAID
+	MONGODB_CHARGE_TYPE_POSTPAID = svcpostgresql.COMMON_PAYTYPE_POSTPAID
+	MONGODB_CHARGE_TYPE_PREPAID  = svcpostgresql.COMMON_PAYTYPE_PREPAID
 )
 
 var MONGODB_CHARGE_TYPE = map[uint64]string{

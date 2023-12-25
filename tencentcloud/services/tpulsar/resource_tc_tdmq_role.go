@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -160,7 +161,7 @@ func resourceTencentCloudTdmqRoleDelete(d *schema.ResourceData, meta interface{}
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteTdmqRole(ctx, roleName, clusterId); err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == VPCNotFound {
+				if sdkErr.Code == svcvpc.VPCNotFound {
 					return nil
 				}
 			}

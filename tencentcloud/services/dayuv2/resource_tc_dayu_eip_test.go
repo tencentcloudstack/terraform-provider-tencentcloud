@@ -3,6 +3,7 @@ package dayuv2_test
 import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	svcdayuv2 "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
 
 	"context"
@@ -55,7 +56,7 @@ func testAccCheckDayuEipDestroy(s *terraform.State) error {
 		resourceId := items[0]
 		eip := items[1]
 
-		service := svcdayuv2.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		service := svcantiddos.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		result, err := service.DescribeListBGPIPInstances(ctx, resourceId, svcdayuv2.DDOS_EIP_BIND_STATUS, 0, 10)
 		if err != nil {
@@ -88,7 +89,7 @@ func testAccCheckDayuEipExists(n string) resource.TestCheckFunc {
 		}
 		resourceId := items[0]
 
-		service := svcdayuv2.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		service := svcantiddos.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		result, err := service.DescribeListBGPIPInstances(ctx, resourceId, svcdayuv2.DDOS_EIP_BIND_STATUS, 0, 10)
 

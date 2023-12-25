@@ -17,6 +17,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
+func NewAntiddosService(client *connectivity.TencentCloudClient) AntiddosService {
+	return AntiddosService{client: client}
+}
+
 type AntiddosService struct {
 	client *connectivity.TencentCloudClient
 }

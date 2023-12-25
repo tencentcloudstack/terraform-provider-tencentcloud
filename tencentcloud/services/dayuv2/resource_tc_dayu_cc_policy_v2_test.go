@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svcdayuv2 "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcantiddos "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 )
 
 func TestAccTencentCloudDayuCCPolicyV2Resource(t *testing.T) {
@@ -50,7 +50,7 @@ func testAccCheckDayuCCPolicyV2Destroy(s *terraform.State) error {
 		}
 		instanceId := items[0]
 		business := items[1]
-		antiddosService := svcdayuv2.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		antiddosService := svcantiddos.NewAntiddosService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		thresholdList, err := antiddosService.DescribeCCThresholdList(ctx, business, instanceId)
 		if err != nil {
 			return err

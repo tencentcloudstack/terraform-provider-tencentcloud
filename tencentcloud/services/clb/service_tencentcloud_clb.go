@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcssl "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 
@@ -980,10 +981,10 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 	certPara = &certificateInput
 
 	//check type valid
-	sslService := SSLService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	sslService := svcssl.NewSSLService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	if certificateInput.CertCaId != nil {
-		check, err := sslService.checkCertificateType(ctx, *certificateInput.CertCaId, SSL_CERT_TYPE_CA)
+		check, err := sslService.CheckCertificateType(ctx, *certificateInput.CertCaId, svcssl.SSL_CERT_TYPE_CA)
 		if err != nil {
 			certificateSetFlag = false
 			errRet = fmt.Errorf("certificated %s check error %s", *certificateInput.CertCaId, err)
@@ -992,12 +993,12 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 		}
 		if !check {
 			certificateSetFlag = false
-			errRet = fmt.Errorf("certificated %s check error cert type is not `%s`", *certificateInput.CertCaId, SSL_CERT_TYPE_CA)
+			errRet = fmt.Errorf("certificated %s check error cert type is not `%s`", *certificateInput.CertCaId, svcssl.SSL_CERT_TYPE_CA)
 			return
 		}
 	}
 	if certificateInput.CertId != nil {
-		check, err := sslService.checkCertificateType(ctx, *certificateInput.CertId, SSL_CERT_TYPE_SERVER)
+		check, err := sslService.CheckCertificateType(ctx, *certificateInput.CertId, svcssl.SSL_CERT_TYPE_SERVER)
 		if err != nil {
 			certificateSetFlag = false
 			errRet = fmt.Errorf("certificated %s check error %s", *certificateInput.CertId, err)
@@ -1006,7 +1007,7 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 		}
 		if !check {
 			certificateSetFlag = false
-			errRet = fmt.Errorf("certificated %s check error cert type is not `%s`", *certificateInput.CertId, SSL_CERT_TYPE_SERVER)
+			errRet = fmt.Errorf("certificated %s check error cert type is not `%s`", *certificateInput.CertId, svcssl.SSL_CERT_TYPE_SERVER)
 			errRet = errors.WithStack(errRet)
 			return
 		}

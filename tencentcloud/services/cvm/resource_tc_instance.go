@@ -11,6 +11,7 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -776,7 +777,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	cvmService := CvmService{
 		client: client,
 	}
-	cbsService := CbsService{client: client}
+	cbsService := svccbs.NewCbsService(client)
 	var instance *cvm.Instance
 	var errRet error
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -1256,9 +1257,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return fmt.Errorf("error: data disk count has changed (%d -> %d) but doesn't support add or remove for now", len(ov), len(nv))
 		}
 
-		cbsService := CbsService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		for i := range nv {
 			sizeKey := fmt.Sprintf("data_disks.%d.data_disk_size", i)
@@ -1521,13 +1520,13 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			diskId := value["data_disk_id"].(string)
 			deleteWithInstance := value["delete_with_instance"].(bool)
 			if deleteWithInstance {
-				cbsService := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+				cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 				err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
 					}
-					if *diskInfo.DiskState != CBS_STORAGE_STATUS_UNATTACHED {
+					if *diskInfo.DiskState != svccbs.CBS_STORAGE_STATUS_UNATTACHED {
 						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
 					}
 					return nil
@@ -1552,7 +1551,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
 					}
-					if *diskInfo.DiskState == CBS_STORAGE_STATUS_TORECYCLE {
+					if *diskInfo.DiskState == svccbs.CBS_STORAGE_STATUS_TORECYCLE {
 						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
 					}
 					return nil
