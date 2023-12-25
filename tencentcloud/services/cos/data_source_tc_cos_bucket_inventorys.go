@@ -9,6 +9,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -77,8 +78,8 @@ func DataSourceTencentCloudCosBucketInventorys() *schema.Resource {
 							},
 						},
 						"optional_fields": {
-							Type:     schema.TypeList,
-							Optional: true,
+							Type:        schema.TypeList,
+							Optional:    true,
 							Description: "Analysis items to include in the inventory result	.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{

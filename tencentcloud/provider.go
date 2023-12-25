@@ -42,7 +42,7 @@ import (
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdksts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 
-	providercommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -140,7 +140,7 @@ type TencentCloudClient struct {
 	apiV3Conn *connectivity.TencentCloudClient
 }
 
-var _ providercommon.ProviderMeta = &TencentCloudClient{}
+var _ tccommon.ProviderMeta = &TencentCloudClient{}
 
 // GetAPIV3Conn 返回访问云 API 的客户端连接对象
 func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
@@ -180,7 +180,7 @@ func Provider() *schema.Provider {
 				Type:         schema.TypeString,
 				Optional:     true,
 				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_PROTOCOL, "HTTPS"),
-				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"HTTP", "HTTPS"}),
 				Description:  "The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.",
 			},
 			"domain": {
@@ -219,7 +219,7 @@ func Provider() *schema.Provider {
 								}
 								return 7200, nil
 							},
-							ValidateFunc: validateIntegerInRange(0, 43200),
+							ValidateFunc: tccommon.ValidateIntegerInRange(0, 43200),
 							Description:  "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 						"policy": {

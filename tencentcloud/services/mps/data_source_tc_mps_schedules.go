@@ -118,8 +118,8 @@ func DataSourceTencentCloudMpsSchedules() *schema.Resource {
 													Description: "The region of the AWS S3 bucket.",
 												},
 												"dir": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
 													Description: "The bucket directory bound. It must be an absolute path that starts and ends with `/`, such as `/movie/201907/`. If you do not specify this, the root directory will be bound.	.",
 												},
 												"formats": {
@@ -127,7 +127,7 @@ func DataSourceTencentCloudMpsSchedules() *schema.Resource {
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Computed: true,
+													Computed:    true,
 													Description: "The file formats that will trigger the scheme, such as [mp4, flv, mov]. If you do not specify this, the upload of files in any format will trigger the scheme.	.",
 												},
 												"s3_secret_id": {

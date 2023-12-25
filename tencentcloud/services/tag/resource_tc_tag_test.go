@@ -1,18 +1,19 @@
 package tag_test
 
 import (
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-//go test -i; go test -test.run TestAccTencentCloudTagResource_basic -v
+// go test -i; go test -test.run TestAccTencentCloudTagResource_basic -v
 func TestAccTencentCloudTagResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
