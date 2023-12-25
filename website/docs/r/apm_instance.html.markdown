@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a apm instance
 
+~> **NOTE:** To use the field `pay_mode`, you need to contact official customer service to join the whitelist.
+
 ## Example Usage
 
 ```hcl
@@ -31,6 +33,7 @@ The following arguments are supported:
 
 * `name` - (Required, String) Name Of Instance.
 * `description` - (Optional, String) Description Of Instance.
+* `pay_mode` - (Optional, Int) Modify the billing mode: `1` means prepaid, `0` means pay-as-you-go, the default value is `0`.
 * `span_daily_counters` - (Optional, Int) Quota Of Instance Reporting.
 * `tags` - (Optional, Map) Tag description list.
 * `trace_duration` - (Optional, Int) Duration Of Trace Data.
