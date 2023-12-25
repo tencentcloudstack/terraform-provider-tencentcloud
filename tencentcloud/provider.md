@@ -347,15 +347,10 @@ Container Cluster(tke)
   Data Source
     tencentcloud_container_cluster_instances
     tencentcloud_container_clusters
-    tencentcloud_eks_clusters
-    tencentcloud_eks_cluster_credential
 
   Resource
     tencentcloud_container_cluster
     tencentcloud_container_cluster_instance
-    tencentcloud_eks_cluster
-    tencentcloud_eks_container_instance
-    tencentcloud_kubernetes_as_scaling_group
 
 Cloud Load Balancer(CLB)
   Data Source
@@ -468,10 +463,6 @@ Cloud Virtual Machine(CVM)
     tencentcloud_cvm_sync_image
     tencentcloud_cvm_export_images
     tencentcloud_cvm_image_share_permission
-    tencentcloud_cvm_import_image
-    tencentcloud_cvm_renew_host
-    tencentcloud_cvm_program_fpga_image
-    tencentcloud_cvm_modify_instance_disk_type
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -692,7 +683,6 @@ TDMQ for Pulsar(tpulsar)
     tencentcloud_tdmq_topic
     tencentcloud_tdmq_role
     tencentcloud_tdmq_namespace_role_attachment
-    tencentcloud_tdmq_subscription_attachment
 
 TencentDB for MongoDB(mongodb)
   Data Source
@@ -1722,7 +1712,6 @@ TDMQ for RocketMQ(trocket)
     tencentcloud_tdmq_rocketmq_role
     tencentcloud_tdmq_rocketmq_group
     tencentcloud_tdmq_rocketmq_messages
-    tencentcloud_tdmq_vip_instance
 
   Resource
     tencentcloud_tdmq_rocketmq_cluster
@@ -1738,14 +1727,7 @@ TDMQ for RocketMQ(trocket)
     tencentcloud_trocket_rocketmq_consumer_group
     tencentcloud_trocket_rocketmq_role
 
-tdmq
-  Resource
-    tencentcloud_tdmq_subscription_attachment
-
 TDMQ for RabbitMQ(trabbit)
-  Data Source
-    tencentcloud_tdmq_rabbitmq_node_list
-    tencentcloud_tdmq_rabbitmq_vip_instance
   Resource
     tencentcloud_tdmq_rabbitmq_user
     tencentcloud_tdmq_rabbitmq_virtual_host
@@ -1843,8 +1825,6 @@ Tencent Service Framework(TSF)
     tencentcloud_tsf_operate_container_group
     tencentcloud_tsf_operate_group
     tencentcloud_tsf_unit_namespace
-    tencentcloud_tsf_application
-    tencentcloud_tsf_repository
 
 Media Processing Service(MPS)
   Data Source
