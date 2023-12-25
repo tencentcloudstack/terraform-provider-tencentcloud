@@ -1,30 +1,18 @@
-/*
-Provides a resource to create a cvm renew_host
-
-Example Usage
-
-```hcl
-resource "tencentcloud_cvm_renew_host" "renew_host" {
-  host_id = "xxxxxx"
-  host_charge_prepaid {
-	period = 1
-	renew_flag = "NOTIFY_AND_MANUAL_RENEW"
-  }
-}
-```
-*/
-package tencentcloud
+package cvm
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCvmRenewHost() *schema.Resource {
+func ResourceTencentCloudCvmRenewHost() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCvmRenewHostCreate,
 		Read:   resourceTencentCloudCvmRenewHostRead,
@@ -63,10 +51,10 @@ func resourceTencentCloudCvmRenewHost() *schema.Resource {
 }
 
 func resourceTencentCloudCvmRenewHostCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_renew_host.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_renew_host.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request = cvm.NewRenewHostsRequest()
@@ -85,10 +73,10 @@ func resourceTencentCloudCvmRenewHostCreate(d *schema.ResourceData, meta interfa
 		request.HostChargePrepaid = &chargePrepaid
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().RenewHosts(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().RenewHosts(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -105,15 +93,15 @@ func resourceTencentCloudCvmRenewHostCreate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCvmRenewHostRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_renew_host.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_renew_host.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudCvmRenewHostDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_renew_host.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_renew_host.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

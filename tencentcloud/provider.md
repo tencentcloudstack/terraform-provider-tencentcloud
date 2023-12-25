@@ -468,6 +468,10 @@ Cloud Virtual Machine(CVM)
     tencentcloud_cvm_sync_image
     tencentcloud_cvm_export_images
     tencentcloud_cvm_image_share_permission
+    tencentcloud_cvm_import_image
+    tencentcloud_cvm_renew_host
+    tencentcloud_cvm_program_fpga_image
+    tencentcloud_cvm_modify_instance_disk_type
 
 TDSQL-C MySQL(CynosDB)
   Data Source

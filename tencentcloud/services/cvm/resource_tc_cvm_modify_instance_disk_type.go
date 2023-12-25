@@ -1,45 +1,18 @@
-/*
-Provides a resource to create a cvm modify_instance_disk_type
-
-Example Usage
-
-```hcl
-resource "tencentcloud_cvm_modify_instance_disk_type" "modify_instance_disk_type" {
-  instance_id = "ins-r8hr2upy"
-  data_disks {
-		disk_size = 50
-		disk_type = "CLOUD_BASIC"
-		disk_id = "disk-hrsd0u81"
-		delete_with_instance = true
-		snapshot_id = "snap-r9unnd89"
-		encrypt = false
-		kms_key_id = "kms-abcd1234"
-		throughput_performance = 2
-		cdc_id = "cdc-b9pbd3px"
-
-  }
-  system_disk {
-		disk_type = "CLOUD_PREMIUM"
-		disk_id = "disk-1drr53sd"
-		disk_size = 50
-		cdc_id = "cdc-b9pbd3px"
-
-  }
-}
-```
-*/
-package tencentcloud
+package cvm
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCvmModifyInstanceDiskType() *schema.Resource {
+func ResourceTencentCloudCvmModifyInstanceDiskType() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCvmModifyInstanceDiskTypeCreate,
 		Read:   resourceTencentCloudCvmModifyInstanceDiskTypeRead,
@@ -171,10 +144,10 @@ func resourceTencentCloudCvmModifyInstanceDiskType() *schema.Resource {
 }
 
 func resourceTencentCloudCvmModifyInstanceDiskTypeCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_modify_instance_disk_type.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_modify_instance_disk_type.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = cvm.NewModifyInstanceDiskTypeRequest()
@@ -237,10 +210,10 @@ func resourceTencentCloudCvmModifyInstanceDiskTypeCreate(d *schema.ResourceData,
 		request.SystemDisk = &systemDisk
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().ModifyInstanceDiskType(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstanceDiskType(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -257,15 +230,15 @@ func resourceTencentCloudCvmModifyInstanceDiskTypeCreate(d *schema.ResourceData,
 }
 
 func resourceTencentCloudCvmModifyInstanceDiskTypeRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_modify_instance_disk_type.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_modify_instance_disk_type.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudCvmModifyInstanceDiskTypeDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_modify_instance_disk_type.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_modify_instance_disk_type.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

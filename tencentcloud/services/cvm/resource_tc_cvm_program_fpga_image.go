@@ -1,36 +1,18 @@
-/*
-Provides a resource to create a cvm program_fpga_image
-
-Example Usage
-
-```hcl
-resource "tencentcloud_cvm_program_fpga_image" "program_fpga_image" {
-  instance_id = "ins-xxxxxx"
-  fpga_url = ""
-  dbd_fs = ""
-}
-```
-
-Import
-
-cvm program_fpga_image can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_cvm_program_fpga_image.program_fpga_image program_fpga_image_id
-```
-*/
-package tencentcloud
+package cvm
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCvmProgramFpgaImage() *schema.Resource {
+func ResourceTencentCloudCvmProgramFpgaImage() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCvmProgramFpgaImageCreate,
 		Read:   resourceTencentCloudCvmProgramFpgaImageRead,
@@ -74,10 +56,10 @@ func resourceTencentCloudCvmProgramFpgaImage() *schema.Resource {
 }
 
 func resourceTencentCloudCvmProgramFpgaImageCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_program_fpga_image.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_program_fpga_image.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request = cvm.NewProgramFpgaImageRequest()
@@ -101,10 +83,10 @@ func resourceTencentCloudCvmProgramFpgaImageCreate(d *schema.ResourceData, meta 
 		request.DryRun = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().ProgramFpgaImage(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ProgramFpgaImage(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -121,15 +103,15 @@ func resourceTencentCloudCvmProgramFpgaImageCreate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudCvmProgramFpgaImageRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_program_fpga_image.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_program_fpga_image.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudCvmProgramFpgaImageDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_program_fpga_image.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_program_fpga_image.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

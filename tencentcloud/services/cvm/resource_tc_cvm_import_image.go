@@ -1,54 +1,18 @@
-/*
-Provides a resource to create a cvm import_image
-
-Example Usage
-
-```hcl
-resource "tencentcloud_cvm_import_image" "import_image" {
-  architecture = "x86_64"
-  os_type = "CentOS"
-  os_version = "7"
-  image_url = ""
-  image_name = "sample"
-  image_description = "sampleimage"
-  dry_run = false
-  force = false
-  tag_specification {
-		resource_type = "image"
-		tags {
-			key = "tagKey"
-			value = "tagValue"
-		}
-
-  }
-  license_type = "TencentCloud"
-  boot_mode = "Legacy BIOS"
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-```
-
-Import
-
-cvm import_image can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_cvm_import_image.import_image import_image_id
-```
-*/
-package tencentcloud
+package cvm
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCvmImportImage() *schema.Resource {
+func ResourceTencentCloudCvmImportImage() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCvmImportImageCreate,
 		Read:   resourceTencentCloudCvmImportImageRead,
@@ -166,10 +130,10 @@ func resourceTencentCloudCvmImportImage() *schema.Resource {
 }
 
 func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_import_image.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_import_image.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = cvm.NewImportImageRequest()
@@ -240,10 +204,10 @@ func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta inter
 		request.BootMode = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().ImportImage(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ImportImage(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -260,15 +224,15 @@ func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCvmImportImageRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_import_image.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_import_image.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudCvmImportImageDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_import_image.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_import_image.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
