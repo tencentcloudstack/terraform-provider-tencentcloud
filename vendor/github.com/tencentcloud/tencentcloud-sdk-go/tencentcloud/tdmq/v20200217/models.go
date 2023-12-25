@@ -168,10 +168,6 @@ type BindCluster struct {
 	ClusterName *string `json:"ClusterName,omitnil" name:"ClusterName"`
 }
 
-type BundleSetOpt struct {
-
-}
-
 // Predefined struct for user
 type ClearCmqQueueRequestParams struct {
 	// 队列名字，在单个地域同一账号下唯一。队列名称是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线(-)。
@@ -5209,7 +5205,7 @@ type DescribeNamespaceBundlesOptRequestParams struct {
 	// 过滤的 bundle
 	Bundle *string `json:"Bundle,omitnil" name:"Bundle"`
 
-	// bundle 所属的 broker ip 地址，支持模糊查询
+	// bundle 所属的 broker IP 地址，支持模糊查询
 	OwnerBroker *string `json:"OwnerBroker,omitnil" name:"OwnerBroker"`
 }
 
@@ -5237,7 +5233,7 @@ type DescribeNamespaceBundlesOptRequest struct {
 	// 过滤的 bundle
 	Bundle *string `json:"Bundle,omitnil" name:"Bundle"`
 
-	// bundle 所属的 broker ip 地址，支持模糊查询
+	// bundle 所属的 broker IP 地址，支持模糊查询
 	OwnerBroker *string `json:"OwnerBroker,omitnil" name:"OwnerBroker"`
 }
 
@@ -5271,9 +5267,6 @@ func (r *DescribeNamespaceBundlesOptRequest) FromJsonString(s string) error {
 type DescribeNamespaceBundlesOptResponseParams struct {
 	// 记录条数
 	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
-
-	// bundle列表
-	BundleSet []*BundleSetOpt `json:"BundleSet,omitnil" name:"BundleSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
@@ -6747,6 +6740,108 @@ func (r *DescribeRocketMQConsumeStatsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeRocketMQConsumerConnectionDetailRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+
+	// 命名空间名称
+	NamespaceId *string `json:"NamespaceId,omitnil" name:"NamespaceId"`
+
+	// 消费组名称
+	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+
+	// 消费端实例ID
+	ClientId *string `json:"ClientId,omitnil" name:"ClientId"`
+
+	// 偏移量
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 限制数目
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 按主题类型过滤查询结果，可选择Normal, GlobalOrder, PartitionedOrder, Retry, Transaction, DeadLetter
+	FilterType []*string `json:"FilterType,omitnil" name:"FilterType"`
+}
+
+type DescribeRocketMQConsumerConnectionDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+
+	// 命名空间名称
+	NamespaceId *string `json:"NamespaceId,omitnil" name:"NamespaceId"`
+
+	// 消费组名称
+	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+
+	// 消费端实例ID
+	ClientId *string `json:"ClientId,omitnil" name:"ClientId"`
+
+	// 偏移量
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 限制数目
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 按主题类型过滤查询结果，可选择Normal, GlobalOrder, PartitionedOrder, Retry, Transaction, DeadLetter
+	FilterType []*string `json:"FilterType,omitnil" name:"FilterType"`
+}
+
+func (r *DescribeRocketMQConsumerConnectionDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRocketMQConsumerConnectionDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "NamespaceId")
+	delete(f, "GroupId")
+	delete(f, "ClientId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "FilterType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRocketMQConsumerConnectionDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeRocketMQConsumerConnectionDetailResponseParams struct {
+	// 总条数
+	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 消费端主题信息列表
+	Details []*RocketMQConsumerTopic `json:"Details,omitnil" name:"Details"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeRocketMQConsumerConnectionDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeRocketMQConsumerConnectionDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeRocketMQConsumerConnectionDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRocketMQConsumerConnectionDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeRocketMQConsumerConnectionsRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
@@ -8109,6 +8204,9 @@ type DescribeRocketMQTopicsRequestParams struct {
 
 	// 按主题名称搜索，支持模糊查询
 	FilterName *string `json:"FilterName,omitnil" name:"FilterName"`
+
+	// 按订阅消费组名称过滤
+	FilterGroup *string `json:"FilterGroup,omitnil" name:"FilterGroup"`
 }
 
 type DescribeRocketMQTopicsRequest struct {
@@ -8131,6 +8229,9 @@ type DescribeRocketMQTopicsRequest struct {
 
 	// 按主题名称搜索，支持模糊查询
 	FilterName *string `json:"FilterName,omitnil" name:"FilterName"`
+
+	// 按订阅消费组名称过滤
+	FilterGroup *string `json:"FilterGroup,omitnil" name:"FilterGroup"`
 }
 
 func (r *DescribeRocketMQTopicsRequest) ToJsonString() string {
@@ -8151,6 +8252,7 @@ func (r *DescribeRocketMQTopicsRequest) FromJsonString(s string) error {
 	delete(f, "NamespaceId")
 	delete(f, "FilterType")
 	delete(f, "FilterName")
+	delete(f, "FilterGroup")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRocketMQTopicsRequest has unknown keys!", "")
 	}
@@ -11118,6 +11220,11 @@ type RabbitMQClusterAccessInfo struct {
 	// Prometheus信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PrometheusEndpointInfo *PrometheusEndpointInfo `json:"PrometheusEndpointInfo,omitnil" name:"PrometheusEndpointInfo"`
+
+	// http://amqp-k3eb47gm.dashboard.rabbitmq.cq.public.tencenttdmq.com:15672/
+	// 公网域名接入点
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WebConsoleDomainEndpoint *string `json:"WebConsoleDomainEndpoint,omitnil" name:"WebConsoleDomainEndpoint"`
 }
 
 type RabbitMQClusterInfo struct {
@@ -11974,6 +12081,27 @@ type RocketMQConsumerConnection struct {
 
 	// 消费端版本
 	Version *string `json:"Version,omitnil" name:"Version"`
+}
+
+type RocketMQConsumerTopic struct {
+	// 主题名称
+	Topic *string `json:"Topic,omitnil" name:"Topic"`
+
+	// 主题类型，Default表示普通，GlobalOrder表示全局顺序，PartitionedOrder表示局部顺序，Transaction表示事务，Retry表示重试，DeadLetter表示死信
+	Type *string `json:"Type,omitnil" name:"Type"`
+
+	// 分区数
+	PartitionNum *uint64 `json:"PartitionNum,omitnil" name:"PartitionNum"`
+
+	// 消息堆积数
+	Accumulative *int64 `json:"Accumulative,omitnil" name:"Accumulative"`
+
+	// 最后消费时间，以毫秒为单位
+	LastConsumptionTime *uint64 `json:"LastConsumptionTime,omitnil" name:"LastConsumptionTime"`
+
+	// 订阅规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubRule *string `json:"SubRule,omitnil" name:"SubRule"`
 }
 
 type RocketMQGroup struct {
