@@ -1,33 +1,18 @@
-/*
-Use this data source to query detailed information of monitor statistic_data
-
-Example Usage
-
-```hcl
-data "tencentcloud_monitor_statistic_data" "statistic_data" {
-  module       = "monitor"
-  namespace    = "QCE/TKE2"
-  metric_names = ["cpu_usage"]
-  conditions {
-    key      = "tke_cluster_instance_id"
-    operator = "="
-    value    = ["cls-mw2w40s7"]
-  }
-}
-```
-*/
-package tencentcloud
+package monitor
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudMonitorStatisticData() *schema.Resource {
+func DataSourceTencentCloudMonitorStatisticData() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMonitorStatisticDataRead,
 		Schema: map[string]*schema.Schema{
@@ -179,12 +164,12 @@ func dataSourceTencentCloudMonitorStatisticData() *schema.Resource {
 }
 
 func dataSourceTencentCloudMonitorStatisticDataRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_monitor_statistic_data.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_monitor_statistic_data.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("module"); ok {
@@ -228,13 +213,13 @@ func dataSourceTencentCloudMonitorStatisticDataRead(d *schema.ResourceData, meta
 		paramMap["GroupBys"] = helper.InterfacesStringsPoint(groupBysSet)
 	}
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var statistic *monitor.DescribeStatisticDataResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMonitorStatisticDataByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		statistic = result
 		return nil
@@ -324,7 +309,7 @@ func dataSourceTencentCloudMonitorStatisticDataRead(d *schema.ResourceData, meta
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

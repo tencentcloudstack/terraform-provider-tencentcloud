@@ -1,9 +1,11 @@
-package tencentcloud
+package monitor_test
 
 import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
 // go test -test.run TestAccTencentCloudMonitorAlarmMonitorTypeDataSource_basic -v
@@ -11,14 +13,14 @@ func TestAccTencentCloudTestingMonitorAlarmMonitorTypeDataSource_basic(t *testin
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTestingMonitorAlarmMonitorTypeDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_monitor_alarm_monitor_type.alarm_monitor_type"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_monitor_alarm_monitor_type.alarm_monitor_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_monitor_alarm_monitor_type.alarm_monitor_type", "monitor_type_infos.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_monitor_alarm_monitor_type.alarm_monitor_type", "monitor_type_infos.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_monitor_alarm_monitor_type.alarm_monitor_type", "monitor_type_infos.0.name"),

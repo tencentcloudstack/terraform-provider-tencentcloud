@@ -1,70 +1,21 @@
-/*
-Provides a policy group resource for monitor.
-
-~> **NOTE:** It has been deprecated and replaced by tencentcloud_monitor_alarm_policy.
-
-Example Usage
-
-```hcl
-resource "tencentcloud_monitor_policy_group" "group" {
-  group_name       = "nice_group"
-  policy_view_name = "cvm_device"
-  remark           = "this is a test policy group"
-  is_union_rule    = 1
-  conditions {
-    metric_id           = 33
-    alarm_notify_type   = 1
-    alarm_notify_period = 600
-    calc_type           = 1
-    calc_value          = 3
-    calc_period         = 300
-    continue_period     = 2
-  }
-  conditions {
-    metric_id           = 30
-    alarm_notify_type   = 1
-    alarm_notify_period = 600
-    calc_type           = 2
-    calc_value          = 30
-    calc_period         = 300
-    continue_period     = 2
-  }
-  event_conditions {
-    event_id            = 39
-    alarm_notify_type   = 0
-    alarm_notify_period = 300
-  }
-  event_conditions {
-    event_id            = 40
-    alarm_notify_type   = 0
-    alarm_notify_period = 300
-  }
-}
-```
-Import
-
-Policy group instance can be imported, e.g.
-
-```
-$ terraform import tencentcloud_monitor_policy_group.group group-id
-```
-
-*/
-package tencentcloud
+package monitor
 
 import (
 	"context"
 	"fmt"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
+func ResourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.59.18. Please use 'tencentcloud_monitor_alarm_policy' instead.",
 		Create:             resourceTencentMonitorPolicyGroupCreate,
@@ -80,7 +31,7 @@ func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Policy group name, length should between 1 and 20.",
-				ValidateFunc: validateStringLengthInRange(1, 20),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 20),
 			},
 			"policy_view_name": {
 				Type:        schema.TypeString,
@@ -92,7 +43,7 @@ func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateStringLengthInRange(0, 100),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(0, 100),
 				Description:  "Policy group's remark information.",
 			},
 			"project_id": {
@@ -106,7 +57,7 @@ func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      0,
-				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 				Description:  "The and or relation of indicator alarm rule. Valid values: `0`, `1`. `0` represents or rule (if any rule is met, the alarm will be raised), `1` represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
 			},
 			"conditions": {
@@ -123,7 +74,7 @@ func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 						"alarm_notify_type": {
 							Type:         schema.TypeInt,
 							Required:     true,
-							ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+							ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 							Description:  "Alarm sending convergence type. `0` continuous alarm, `1` index alarm.",
 						},
 						"alarm_notify_period": {
@@ -135,7 +86,7 @@ func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Computed:     true,
-							ValidateFunc: validateIntegerInRange(1, 12),
+							ValidateFunc: tccommon.ValidateIntegerInRange(1, 12),
 							Description:  "Compare type. Valid value ranges: [1~12]. `1` means more than, `2` means greater than or equal, `3` means less than, `4` means less than or equal to, `5` means equal, `6` means not equal, `7` means days rose, `8` means days fell, `9` means weeks rose, `10` means weeks fell, `11` means period rise, `12` means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
 						},
 						"calc_value": {
@@ -173,7 +124,7 @@ func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 						"alarm_notify_type": {
 							Type:         schema.TypeInt,
 							Required:     true,
-							ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+							ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 							Description:  "Alarm sending convergence type. `0` continuous alarm, `1` index alarm.",
 						},
 						"alarm_notify_period": {
@@ -325,10 +276,10 @@ func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 	}
 }
 func resourceTencentMonitorPolicyGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_policy_group.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_policy_group.create")()
 
 	var (
-		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+		monitorService = MonitorService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request        = monitor.NewCreatePolicyGroupRequest()
 	)
 
@@ -378,11 +329,11 @@ func resourceTencentMonitorPolicyGroupCreate(d *schema.ResourceData, meta interf
 	}
 
 	var groupId *int64
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := monitorService.client.UseMonitorClient().CreatePolicyGroup(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		groupId = response.Response.GroupId
 
@@ -395,14 +346,14 @@ func resourceTencentMonitorPolicyGroupCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_policy_group.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_policy_group.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
-		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+		monitorService = MonitorService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request        = monitor.NewDescribePolicyGroupInfoRequest()
 		response       *monitor.DescribePolicyGroupInfoResponse
 	)
@@ -424,10 +375,10 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 	request.GroupId = &groupId
 	request.Module = helper.String("monitor")
 
-	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		if response, err = monitorService.client.UseMonitorClient().DescribePolicyGroupInfo(request); err != nil {
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		return nil
 	}); err != nil {
@@ -571,12 +522,12 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentMonitorPolicyGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_policy_group.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_policy_group.update")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
-		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+		monitorService = MonitorService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request        = monitor.NewModifyPolicyGroupRequest()
 	)
 	groupId, err := strconv.ParseInt(d.Id(), 10, 64)
@@ -634,11 +585,11 @@ func resourceTencentMonitorPolicyGroupUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, err := monitorService.client.UseMonitorClient().ModifyPolicyGroup(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		return nil
 	}); err != nil {
@@ -649,10 +600,10 @@ func resourceTencentMonitorPolicyGroupUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentMonitorPolicyGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_policy_group.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_policy_group.delete")()
 
 	var (
-		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+		monitorService = MonitorService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request        = monitor.NewDeletePolicyGroupRequest()
 	)
 
@@ -663,10 +614,10 @@ func resourceTencentMonitorPolicyGroupDelete(d *schema.ResourceData, meta interf
 	request.GroupId = []*int64{&groupId}
 	request.Module = helper.String("monitor")
 
-	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		if _, err = monitorService.client.UseMonitorClient().DeletePolicyGroup(request); err != nil {
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		return nil
 	}); err != nil {
