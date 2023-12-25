@@ -97,6 +97,13 @@ func ResourceTencentCloudCatTaskSet() *schema.Resource {
 				Description: "The input is valid when the parameter is modified, `suspend`/`resume`, used to suspend/resume the dial test task.",
 			},
 
+			"node_ip_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "`0`-Unlimit ip type, `1`-IPv4, `2`-IPv6.",
+			},
+
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -164,6 +171,10 @@ func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOk("cron"); ok {
 		request.Cron = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("node_ip_type"); ok {
+		request.TaskCategory = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -284,6 +295,10 @@ func resourceTencentCloudCatTaskSetRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("cron", taskSet.Cron)
 	}
 
+	if taskSet.NodeIpType != nil {
+		_ = d.Set("node_ip_type", taskSet.NodeIpType)
+	}
+
 	if taskSet.Status != nil {
 		_ = d.Set("status", taskSet.Status)
 	}
@@ -331,6 +346,12 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("cron") {
 		if v, ok := d.GetOk("cron"); ok {
 			request.Cron = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("node_ip_type") {
+		if v, ok := d.GetOkExists("node_ip_type"); ok {
+			request.NodeIpType = helper.IntInt64(v.(int))
 		}
 	}
 
