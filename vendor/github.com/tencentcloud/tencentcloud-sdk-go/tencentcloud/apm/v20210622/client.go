@@ -59,8 +59,9 @@ func NewCreateApmInstanceRequest() (request *CreateApmInstanceRequest) {
 func NewCreateApmInstanceResponse() (response *CreateApmInstanceResponse) {
     response = &CreateApmInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateApmInstance
@@ -111,8 +112,9 @@ func NewDescribeApmAgentRequest() (request *DescribeApmAgentRequest) {
 func NewDescribeApmAgentResponse() (response *DescribeApmAgentResponse) {
     response = &DescribeApmAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeApmAgent
@@ -177,8 +179,9 @@ func NewDescribeApmInstancesRequest() (request *DescribeApmInstancesRequest) {
 func NewDescribeApmInstancesResponse() (response *DescribeApmInstancesResponse) {
     response = &DescribeApmInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeApmInstances
@@ -229,8 +232,9 @@ func NewDescribeGeneralMetricDataRequest() (request *DescribeGeneralMetricDataRe
 func NewDescribeGeneralMetricDataResponse() (response *DescribeGeneralMetricDataResponse) {
     response = &DescribeGeneralMetricDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGeneralMetricData
@@ -240,6 +244,7 @@ func NewDescribeGeneralMetricDataResponse() (response *DescribeGeneralMetricData
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
 //  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INVALIDINSTANCEID = "FailedOperation.InvalidInstanceID"
@@ -265,6 +270,7 @@ func (c *Client) DescribeGeneralMetricData(request *DescribeGeneralMetricDataReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
 //  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INVALIDINSTANCEID = "FailedOperation.InvalidInstanceID"
@@ -295,6 +301,67 @@ func (c *Client) DescribeGeneralMetricDataWithContext(ctx context.Context, reque
     return
 }
 
+func NewDescribeGeneralSpanListRequest() (request *DescribeGeneralSpanListRequest) {
+    request = &DescribeGeneralSpanListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "DescribeGeneralSpanList")
+    
+    
+    return
+}
+
+func NewDescribeGeneralSpanListResponse() (response *DescribeGeneralSpanListResponse) {
+    response = &DescribeGeneralSpanListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGeneralSpanList
+// 通用查询调用链列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
+//  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
+//  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeGeneralSpanList(request *DescribeGeneralSpanListRequest) (response *DescribeGeneralSpanListResponse, err error) {
+    return c.DescribeGeneralSpanListWithContext(context.Background(), request)
+}
+
+// DescribeGeneralSpanList
+// 通用查询调用链列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
+//  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
+//  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeGeneralSpanListWithContext(ctx context.Context, request *DescribeGeneralSpanListRequest) (response *DescribeGeneralSpanListResponse, err error) {
+    if request == nil {
+        request = NewDescribeGeneralSpanListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGeneralSpanList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGeneralSpanListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeMetricRecordsRequest() (request *DescribeMetricRecordsRequest) {
     request = &DescribeMetricRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -309,8 +376,9 @@ func NewDescribeMetricRecordsRequest() (request *DescribeMetricRecordsRequest) {
 func NewDescribeMetricRecordsResponse() (response *DescribeMetricRecordsResponse) {
     response = &DescribeMetricRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMetricRecords
@@ -322,6 +390,7 @@ func NewDescribeMetricRecordsResponse() (response *DescribeMetricRecordsResponse
 //  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INVALIDINSTANCEID = "FailedOperation.InvalidInstanceID"
+//  FAILEDOPERATION_INVALIDREQUEST = "FailedOperation.InvalidRequest"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeMetricRecords(request *DescribeMetricRecordsRequest) (response *DescribeMetricRecordsResponse, err error) {
@@ -337,6 +406,7 @@ func (c *Client) DescribeMetricRecords(request *DescribeMetricRecordsRequest) (r
 //  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INVALIDINSTANCEID = "FailedOperation.InvalidInstanceID"
+//  FAILEDOPERATION_INVALIDREQUEST = "FailedOperation.InvalidRequest"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeMetricRecordsWithContext(ctx context.Context, request *DescribeMetricRecordsRequest) (response *DescribeMetricRecordsResponse, err error) {
@@ -369,8 +439,9 @@ func NewDescribeServiceOverviewRequest() (request *DescribeServiceOverviewReques
 func NewDescribeServiceOverviewResponse() (response *DescribeServiceOverviewResponse) {
     response = &DescribeServiceOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeServiceOverview
@@ -383,6 +454,7 @@ func NewDescribeServiceOverviewResponse() (response *DescribeServiceOverviewResp
 //  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
 //  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  FAILEDOPERATION_INVALIDREQUEST = "FailedOperation.InvalidRequest"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeServiceOverview(request *DescribeServiceOverviewRequest) (response *DescribeServiceOverviewResponse, err error) {
@@ -399,6 +471,7 @@ func (c *Client) DescribeServiceOverview(request *DescribeServiceOverviewRequest
 //  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
 //  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  FAILEDOPERATION_INVALIDREQUEST = "FailedOperation.InvalidRequest"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeServiceOverviewWithContext(ctx context.Context, request *DescribeServiceOverviewRequest) (response *DescribeServiceOverviewResponse, err error) {
@@ -431,8 +504,9 @@ func NewModifyApmInstanceRequest() (request *ModifyApmInstanceRequest) {
 func NewModifyApmInstanceResponse() (response *ModifyApmInstanceResponse) {
     response = &ModifyApmInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApmInstance
@@ -499,8 +573,9 @@ func NewTerminateApmInstanceRequest() (request *TerminateApmInstanceRequest) {
 func NewTerminateApmInstanceResponse() (response *TerminateApmInstanceResponse) {
     response = &TerminateApmInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateApmInstance

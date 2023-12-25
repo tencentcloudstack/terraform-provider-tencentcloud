@@ -49,6 +49,12 @@ func ResourceTencentCloudApmInstance() *schema.Resource {
 				Description: "Quota Of Instance Reporting.",
 			},
 
+			"pay_mode": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Modify the billing mode: `1` means prepaid, `0` means pay-as-you-go, the default value is `0`.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -83,6 +89,10 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("span_daily_counters"); ok {
 		request.SpanDailyCounters = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("pay_mode"); ok {
+		request.PayMode = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -155,6 +165,10 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("span_daily_counters", instance.SpanDailyCounters)
 	}
 
+	if instance.PayMode != nil {
+		_ = d.Set("pay_mode", instance.PayMode)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "apm", "apm-instance", tcClient.Region, d.Id())
@@ -180,7 +194,7 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	request.InstanceId = &instanceId
 
-	mutableArgs := []string{"name", "description", "trace_duration", "span_daily_counters"}
+	mutableArgs := []string{"name", "description", "trace_duration", "span_daily_counters", "pay_mode"}
 
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -205,6 +219,10 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 
 		if v, ok := d.GetOkExists("span_daily_counters"); ok {
 			request.SpanDailyCounters = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("pay_mode"); ok {
+			request.PayMode = helper.IntInt64(v.(int))
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

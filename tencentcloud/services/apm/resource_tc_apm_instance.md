@@ -1,5 +1,7 @@
 Provides a resource to create a apm instance
 
+~> **NOTE:** To use the field `pay_mode`, you need to contact official customer service to join the whitelist.
+
 Example Usage
 
 ```hcl
