@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -184,7 +185,6 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 			"wait_switch": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     2,
 				Description: "Switching mode: `1`-maintenance time window switching, `2`-immediate switching, default value `2`.",
 			},
 
@@ -506,37 +506,45 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		info *redis.InstanceSet
 		e    error
 	)
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		has, _, info, e = service.CheckRedisOnlineOk(ctx, d.Id(), tccommon.ReadRetryTimeout*20)
-		if info != nil {
-			if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
+
+	if v, ok := d.GetOkExists("wait_switch"); ok && v.(int) == 1 {
+		info, e = service.DescribeRedisInstanceById(ctx, d.Id())
+		if e != nil {
+			return e
+		}
+	} else {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			has, _, info, e = service.CheckRedisOnlineOk(ctx, d.Id(), tccommon.ReadRetryTimeout*20)
+			if info != nil {
+				if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
+					d.SetId("")
+					onlineHas = false
+					return nil
+				}
+			}
+			if e != nil {
+				return resource.NonRetryableError(e)
+			}
+			if !has {
 				d.SetId("")
 				onlineHas = false
 				return nil
 			}
+			return nil
+		})
+		if err != nil {
+			//internal version: replace redisFail begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			return fmt.Errorf("Fail to get info from redis, reaseon %s", err.Error())
+			//internal version: replace redisFail end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		}
-		if e != nil {
-			return resource.NonRetryableError(e)
-		}
-		if !has {
-			d.SetId("")
-			onlineHas = false
+		if !onlineHas {
 			return nil
 		}
-		return nil
-	})
-	if err != nil {
-		//internal version: replace redisFail begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		return fmt.Errorf("Fail to get info from redis, reaseon %s", err.Error())
-		//internal version: replace redisFail end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	}
-	if !onlineHas {
-		return nil
 	}
 
 	statusName := REDIS_STATUS[*info.Status]
 	if statusName == "" {
-		err = fmt.Errorf("redis read unkwnow status %d", *info.Status)
+		err := fmt.Errorf("redis read unkwnow status %d", *info.Status)
 		log.Printf("[CRITAL]%s redis read status name error, reason:%s\n", logId, err.Error())
 		return err
 	}
@@ -835,11 +843,13 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		typeId := d.Get("type_id").(int)
 		request.InstanceId = &id
 		request.TargetInstanceType = helper.String(strconv.Itoa(typeId))
+		waitSwitch := 2
 		if v, ok := d.GetOk("wait_switch"); ok {
-			request.SwitchOption = helper.Int64(v.(int64))
-		} else {
-			request.SwitchOption = helper.IntInt64(2)
+			waitSwitch = v.(int)
 		}
+
+		request.SwitchOption = helper.IntInt64(waitSwitch)
+		startTime := time.Now().Format("2006-01-02 15:04:05")
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().UpgradeInstanceVersion(request)
 			if e != nil {
@@ -855,11 +865,45 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 
 		service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		_, _, _, err = service.CheckRedisOnlineOk(ctx, id, 20*tccommon.ReadRetryTimeout)
-		if err != nil {
-			log.Printf("[CRITAL]%s redis upgradeVersionOperation fail, reason:%s\n", logId, err.Error())
-			return err
+		if waitSwitch == 2 {
+			_, _, _, err = service.CheckRedisOnlineOk(ctx, id, 20*tccommon.ReadRetryTimeout)
+			if err != nil {
+				log.Printf("[CRITAL]%s redis upgradeVersionOperation fail, reason:%s\n", logId, err.Error())
+				return err
+			}
+		} else {
+			time.Sleep(10 * time.Second)
+			paramMap := make(map[string]interface{})
+			paramMap["InstanceId"] = &id
+			paramMap["BeginTime"] = &startTime
+			paramMap["TaskTypes"] = helper.StringsStringsPoint([]string{"043"})
+			err := resource.Retry(5*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := service.DescribeRedisInstanceTaskListByFilter(ctx, paramMap)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+				if result == nil || len(result) < 1 {
+					return resource.RetryableError(fmt.Errorf("redis upgradeVersion fail, result is nil"))
+				}
+				for _, v := range result {
+					if *v.Result == 0 || *v.Result == 1 {
+						return resource.RetryableError(fmt.Errorf("redis upgradeVersion state is %v, retry...", *v.Result))
+					}
+					if *v.Result == 4 {
+						return resource.NonRetryableError(fmt.Errorf("redis upgradeVersion fail, task status is %v", *v.Result))
+					}
+					if *v.Result == 2 {
+						return nil
+					}
+				}
+				return resource.RetryableError(fmt.Errorf("redis upgradeVersion fail, retry..."))
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s redis upgradeVersion failed, reason:%+v", logId, err)
+				return err
+			}
 		}
+
 	}
 
 	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("port") || d.HasChange("recycle") || d.HasChange("ip") {
