@@ -1,9 +1,11 @@
-package tencentcloud
+package postgresql_test
 
 import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
 const testAccPostgresqlInstanceOperation_disisolate = "tencentcloud_postgresql_disisolate_db_instance_operation.disisolate_db_instance_operation"
@@ -15,16 +17,16 @@ func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_all(t *testi
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccStepSetRegion(t, "ap-guangzhou")
-			testAccPreCheck(t)
+			tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlCommonDbInstanceOperation_restart,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-guangzhou")
-					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_restart, "id"),
@@ -34,8 +36,8 @@ func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_all(t *testi
 			{
 				Config: testAccPostgresqlCommonDbInstanceOperation_isolate,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-guangzhou")
-					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_isolate, "id"),
@@ -45,8 +47,8 @@ func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_all(t *testi
 			{
 				Config: testAccPostgresqlCommonDbInstanceOperation_disisolate,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-guangzhou")
-					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_disisolate, "id"),
@@ -63,16 +65,16 @@ func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_renew(t *tes
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccStepSetRegion(t, "ap-guangzhou")
-			testAccPreCheck(t)
+			tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlCommonDbInstanceOperation_renew,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-guangzhou")
-					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+					tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_renew, "id"),
@@ -85,7 +87,7 @@ func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_renew(t *tes
 	})
 }
 
-const testAccPostgresqlCommonDbInstanceOperation_isolate = OperationPresetPGSQL + `
+const testAccPostgresqlCommonDbInstanceOperation_isolate = tcacctest.OperationPresetPGSQL + `
 
 resource "tencentcloud_postgresql_isolate_db_instance_operation" "isolate_db_instance_operation" {
   db_instance_id_set = [local.pgsql_id]
@@ -93,7 +95,7 @@ resource "tencentcloud_postgresql_isolate_db_instance_operation" "isolate_db_ins
 
 `
 
-const testAccPostgresqlCommonDbInstanceOperation_disisolate = OperationPresetPGSQL + `
+const testAccPostgresqlCommonDbInstanceOperation_disisolate = tcacctest.OperationPresetPGSQL + `
 
 resource "tencentcloud_postgresql_disisolate_db_instance_operation" "disisolate_db_instance_operation" {
   db_instance_id_set = [local.pgsql_id]
@@ -103,7 +105,7 @@ resource "tencentcloud_postgresql_disisolate_db_instance_operation" "disisolate_
 
 `
 
-const testAccPostgresqlCommonDbInstanceOperation_restart = OperationPresetPGSQL + `
+const testAccPostgresqlCommonDbInstanceOperation_restart = tcacctest.OperationPresetPGSQL + `
 
 resource "tencentcloud_postgresql_restart_db_instance_operation" "restart_db_instance_operation" {
   db_instance_id = local.pgsql_id
@@ -121,7 +123,7 @@ resource "tencentcloud_postgresql_renew_db_instance_operation" "renew_db_instanc
 
 `
 
-const testAccPostgresqlInstanceCommonBase_PREPAID = defaultAzVariable + `
+const testAccPostgresqlInstanceCommonBase_PREPAID = tcacctest.DefaultAzVariable + `
 
 data "tencentcloud_security_groups" "sg" {
 	name = "default"
