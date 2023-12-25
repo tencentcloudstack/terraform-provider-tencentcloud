@@ -1,57 +1,21 @@
-/*
-Provides a resource to create a redis param
-
-Example Usage
-
-```hcl
-resource "tencentcloud_redis_param" "param" {
-    instance_id     = "crs-c1nl9rpv"
-    instance_params = {
-        "cluster-node-timeout"          = "15000"
-        "disable-command-list"          = "\"\""
-        "hash-max-ziplist-entries"      = "512"
-        "hash-max-ziplist-value"        = "64"
-        "hz"                            = "10"
-        "lazyfree-lazy-eviction"        = "yes"
-        "lazyfree-lazy-expire"          = "yes"
-        "lazyfree-lazy-server-del"      = "yes"
-        "maxmemory-policy"              = "noeviction"
-        "notify-keyspace-events"        = "\"\""
-        "proxy-slowlog-log-slower-than" = "500"
-        "replica-lazy-flush"            = "yes"
-        "sentineauth"                   = "no"
-        "set-max-intset-entries"        = "512"
-        "slowlog-log-slower-than"       = "10"
-        "timeout"                       = "31536000"
-        "zset-max-ziplist-entries"      = "128"
-        "zset-max-ziplist-value"        = "64"
-    }
-}
-```
-
-Import
-
-redis param can be imported using the instanceId, e.g.
-
-```
-terraform import tencentcloud_redis_param.param crs-c1nl9rpv
-```
-*/
-package tencentcloud
+package crs
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudRedisParam() *schema.Resource {
+func ResourceTencentCloudRedisParam() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudRedisParamCreate,
 		Read:   resourceTencentCloudRedisParamRead,
@@ -77,8 +41,8 @@ func resourceTencentCloudRedisParam() *schema.Resource {
 }
 
 func resourceTencentCloudRedisParamCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_param.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_redis_param.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
 		instanceId string
@@ -93,13 +57,13 @@ func resourceTencentCloudRedisParamCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudRedisParamRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_param.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_redis_param.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
 
@@ -130,11 +94,11 @@ func resourceTencentCloudRedisParamRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_param.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_redis_param.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := redis.NewModifyInstanceParamsRequest()
 	response := redis.NewModifyInstanceParamsResponse()
@@ -143,7 +107,7 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 	request.InstanceId = &instanceId
 
 	if v, ok := d.GetOk("instance_params"); ok {
-		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		param, err := service.DescribeRedisParamById(ctx, instanceId)
 		if err != nil && len(param) == 0 {
 			return fmt.Errorf("[ERROR] resource `RedisParam` [%s] not found, please check if it has been deleted.\n", d.Id())
@@ -166,10 +130,10 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 		return resourceTencentCloudRedisParamRead(d, meta)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().ModifyInstanceParams(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().ModifyInstanceParams(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -181,10 +145,10 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	taskId := *response.Response.TaskId
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
 		if err != nil {
 			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
@@ -209,8 +173,8 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudRedisParamDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_param.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_redis_param.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

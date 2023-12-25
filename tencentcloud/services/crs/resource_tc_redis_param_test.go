@@ -1,6 +1,9 @@
-package tencentcloud
+package crs_test
 
 import (
+	svccrs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"testing"
@@ -13,15 +16,15 @@ import (
 func TestAccTencentCloudRedisParamResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRedisParam,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisParamExists("tencentcloud_redis_param.param"),
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_param.param", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_id", defaultCrsInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_id", tcacctest.DefaultCrsInstanceId),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.cluster-node-timeout", "15000"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.disable-command-list", "\"\""),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.hash-max-ziplist-entries", "512"),
@@ -53,7 +56,7 @@ func TestAccTencentCloudRedisParamResource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisParamExists("tencentcloud_redis_param.param"),
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_param.param", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_id", defaultCrsInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_id", tcacctest.DefaultCrsInstanceId),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.cluster-node-timeout", "15000"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.disable-command-list", "\"\""),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.hash-max-ziplist-entries", "512"),
@@ -82,15 +85,15 @@ func TestAccTencentCloudRedisParamResource_basic(t *testing.T) {
 func testAccTencentCloudRedisParamExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := RedisService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svccrs.NewRedisService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		params, err := service.DescribeRedisParamById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
@@ -105,7 +108,7 @@ func testAccTencentCloudRedisParamExists(r string) resource.TestCheckFunc {
 
 const testAccRedisParamVar = `
 variable "instance_id" {
-	default = "` + defaultCrsInstanceId + `"
+	default = "` + tcacctest.DefaultCrsInstanceId + `"
 }
 `
 

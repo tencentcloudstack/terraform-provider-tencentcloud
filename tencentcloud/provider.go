@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/wedata"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,6 +9,8 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/wedata"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tpulsar"
@@ -1167,7 +1168,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_account":                                       crs.ResourceTencentCloudRedisAccount(),
 			"tencentcloud_redis_param_template":                                crs.ResourceTencentCloudRedisParamTemplate(),
 			"tencentcloud_redis_connection_config":                             crs.ResourceTencentCloudRedisConnectionConfig(),
-			"tencentcloud_redis_param":                                         resourceTencentCloudRedisParam(),
+			"tencentcloud_redis_param":                                         crs.ResourceTencentCloudRedisParam(),
 			"tencentcloud_redis_read_only":                                     crs.ResourceTencentCloudRedisReadOnly(),
 			"tencentcloud_redis_ssl":                                           crs.ResourceTencentCloudRedisSsl(),
 			"tencentcloud_redis_backup_download_restriction":                   crs.ResourceTencentCloudRedisBackupDownloadRestriction(),
