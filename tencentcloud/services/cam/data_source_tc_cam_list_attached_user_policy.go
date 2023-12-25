@@ -1,27 +1,18 @@
-/*
-Use this data source to query detailed information of cam list_attached_user_policy
-
-Example Usage
-
-```hcl
-data "tencentcloud_cam_list_attached_user_policy" "list_attached_user_policy" {
-  target_uin = 100032767426
-  attach_type = 0
-    }
-```
-*/
-package tencentcloud
+package cam
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCamListAttachedUserPolicy() *schema.Resource {
+func DataSourceTencentCloudCamListAttachedUserPolicy() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCamListAttachedUserPolicyRead,
 		Schema: map[string]*schema.Schema{
@@ -131,12 +122,12 @@ func dataSourceTencentCloudCamListAttachedUserPolicy() *schema.Resource {
 }
 
 func dataSourceTencentCloudCamListAttachedUserPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cam_list_attached_user_policy.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cam_list_attached_user_policy.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOkExists("target_uin"); v != nil {
@@ -155,14 +146,14 @@ func dataSourceTencentCloudCamListAttachedUserPolicyRead(d *schema.ResourceData,
 		paramMap["Keyword"] = helper.String(v.(string))
 	}
 
-	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var policyList []*cam.AttachedUserPolicy
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCamListAttachedUserPolicyByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		policyList = result
 		return nil
@@ -239,7 +230,7 @@ func dataSourceTencentCloudCamListAttachedUserPolicyRead(d *schema.ResourceData,
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

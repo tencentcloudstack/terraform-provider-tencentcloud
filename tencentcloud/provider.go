@@ -951,7 +951,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_auth_node":                   tco.DataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_organization_members":                         tco.DataSourceTencentCloudOrganizationMembers(),
 			"tencentcloud_pts_scenario_with_jobs":                       pts.DataSourceTencentCloudPtsScenarioWithJobs(),
-			"tencentcloud_cam_list_attached_user_policy":                dataSourceTencentCloudCamListAttachedUserPolicy(),
+			"tencentcloud_cam_list_attached_user_policy":                cam.DataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                    cam.DataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":           cam.DataSourceTencentCloudCamPolicyGrantingServiceAccess(),
 			"tencentcloud_cam_group_user_account":                       cam.DataSourceTencentCloudCamGroupUserAccount(),
