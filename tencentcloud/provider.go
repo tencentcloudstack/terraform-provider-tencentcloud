@@ -1160,7 +1160,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfs_auto_snapshot_policy":                            cfs.ResourceTencentCloudCfsAutoSnapshotPolicy(),
 			"tencentcloud_cfs_auto_snapshot_policy_attachment":                 cfs.ResourceTencentCloudCfsAutoSnapshotPolicyAttachment(),
 			"tencentcloud_cfs_snapshot":                                        cfs.ResourceTencentCloudCfsSnapshot(),
-			"tencentcloud_cfs_user_quota":                                      resourceTencentCloudCfsUserQuota(),
+			"tencentcloud_cfs_user_quota":                                      cfs.ResourceTencentCloudCfsUserQuota(),
 			"tencentcloud_cfs_sign_up_cfs_service":                             cfs.ResourceTencentCloudCfsSignUpCfsService(),
 			"tencentcloud_redis_instance":                                      crs.ResourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                                 crs.ResourceTencentCloudRedisBackupConfig(),

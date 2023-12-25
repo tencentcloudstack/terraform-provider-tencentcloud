@@ -1,27 +1,4 @@
-/*
-Provides a resource to create a cfs user_quota
-
-Example Usage
-
-```hcl
-resource "tencentcloud_cfs_user_quota" "user_quota" {
-  file_system_id = "cfs-4636029bc"
-  user_type = "Uid"
-  user_id = "2159973417"
-  capacity_hard_limit = 10
-  file_hard_limit = 10000
-}
-```
-
-Import
-
-cfs user_quota can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_cfs_user_quota.user_quota fileSystemId#userType#userId
-```
-*/
-package tencentcloud
+package cfs
 
 import (
 	"context"
@@ -29,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfsUserQuota() *schema.Resource {
+func ResourceTencentCloudCfsUserQuota() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsUserQuotaCreate,
 		Read:   resourceTencentCloudCfsUserQuotaRead,
@@ -79,10 +59,10 @@ func resourceTencentCloudCfsUserQuota() *schema.Resource {
 }
 
 func resourceTencentCloudCfsUserQuotaCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_user_quota.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_user_quota.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request      = cfs.NewSetUserQuotaRequest()
@@ -113,10 +93,10 @@ func resourceTencentCloudCfsUserQuotaCreate(d *schema.ResourceData, meta interfa
 		request.FileHardLimit = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().SetUserQuota(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().SetUserQuota(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -127,22 +107,22 @@ func resourceTencentCloudCfsUserQuotaCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	d.SetId(fileSystemId + FILED_SP + userType + FILED_SP + userId)
+	d.SetId(fileSystemId + tccommon.FILED_SP + userType + tccommon.FILED_SP + userId)
 
 	return resourceTencentCloudCfsUserQuotaRead(d, meta)
 }
 
 func resourceTencentCloudCfsUserQuotaRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_user_quota.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_user_quota.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -185,8 +165,8 @@ func resourceTencentCloudCfsUserQuotaRead(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCfsUserQuotaUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_user_quota.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_user_quota.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	immutableArgs := []string{"file_system_id", "user_type", "user_id", "capacity_hard_limit", "file_hard_limit"}
 
@@ -199,14 +179,14 @@ func resourceTencentCloudCfsUserQuotaUpdate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfsUserQuotaDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_user_quota.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_user_quota.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
