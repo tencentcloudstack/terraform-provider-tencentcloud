@@ -41,6 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 * `instances` - Instance information list.
   * `auto_renew_flag` - Automatic renewal mark, 0 indicates the default state (the user has not set it, that is, the initial state is manual renewal), 1 indicates automatic renewal, 2 indicates that the automatic renewal is not specified (user setting).
   * `config_display` - Instance configuration specification name.
+  * `create_time` - Create time.
   * `expire_time` - Instance expiration time, in milliseconds.
   * `instance_id` - Instance ID.
   * `instance_name` - Instance name.
@@ -54,6 +55,9 @@ In addition to all arguments above, the following attributes are exported:
   * `spec_name` - Instance Configuration ID.
   * `status` - Instance status, 0-creating, 1-normal, 2-isolating, 3-destroyed, 4-abnormal, 5-delivery failure, 6-allocation change, 7-allocation failure.
   * `subnet_id` - Subnet idNote: This field may return null, indicating that no valid value can be obtained.
+  * `tags` - Tag list.
+    * `tag_key` - Tag key.
+    * `tag_value` - Tag value.
   * `vpc_id` - Id of the VPCNote: This field may return null, indicating that no valid value can be obtained.
 
 
