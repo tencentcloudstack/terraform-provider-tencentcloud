@@ -1,9 +1,11 @@
-package tencentcloud
+package tke_test
 
 import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
 var testInternationalTkeClusterName = "tencentcloud_kubernetes_cluster"
@@ -12,8 +14,8 @@ var testInternationalTkeClusterResourceKey = testInternationalTkeClusterName + "
 func TestAccTencentCloudInternationalKubernetesResource_cluster(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -45,7 +47,7 @@ func TestAccTencentCloudInternationalKubernetesResource_cluster(t *testing.T) {
 	})
 }
 
-const InternationalTkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages + defaultSecurityGroupData
+const InternationalTkeDeps = tcacctest.TkeExclusiveNetwork + tcacctest.TkeInstanceType + tcacctest.TkeCIDRs + tcacctest.DefaultImages + tcacctest.DefaultSecurityGroupData
 
 const testAccInternationalTkeCluster = InternationalTkeDeps + `
 variable "availability_zone" {
