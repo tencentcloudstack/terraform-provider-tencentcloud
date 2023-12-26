@@ -113,7 +113,7 @@ tencentcloud/services/es/resource_tc_elasticsearch_instance.go:
   reqTag: |
     var tags map[string]string
     	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
-    		if billingService.isYunTiAccount() {
+    		if billingService.IsYunTiAccount() {
     			request.TagList = make([]*es.TagInfo, 0, len(tags))
     			for k, v := range tags {
     				tagInfo := &es.TagInfo{
@@ -173,9 +173,9 @@ tencentcloud/services/mongodb/resource_tc_mongodb_instance.go:
     e, ok := err.(*sdkErrors.TencentCloudSDKError)
     log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \\n", logId, e.Error())
 
-    if ok && IsContains("InvalidParameterValue.InvalidTradeOperation", e.Code) {
+    if ok && tccommon.IsContains("InvalidParameterValue.InvalidTradeOperation", e.Code) {
     	// yunti prepaid user
-    	return retryError(fmt.Errorf("[DEBUG] wait pass the bpass for yunti prepaid user, retry... error msg:[%s]", e.Message))
+    	return tccommon.RetryError(fmt.Errorf("[DEBUG] wait pass the bpass for yunti prepaid user, retry... error msg:[%s]", e.Message))
     }
 
     // if id != nil {
@@ -290,7 +290,7 @@ tencentcloud/services/postgresql/resource_tc_postgresql_instance.go:
     }
   clientUpdate: |
     tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-    tagService := &TagService{client: tcClient}
+    tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
     postgresqlService := PostgresqlService{client: tcClient}
   waitTag: |
     // Wait the tags enabled
@@ -435,14 +435,14 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
     func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string, msg error) (resourceId *string, err error) {
       logId := tccommon.GetLogId(ctx)
       
-      if !me.isYunTiAccount() {
+      if !me.IsYunTiAccount() {
       return
     }
       
       e, ok := msg.(*sdkErrors.TencentCloudSDKError)
       log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \\n", logId, e.Error())
       
-      if ok && tccommon.IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
+      if ok && tccommon.tccommon.IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
       errStr := msg.Error()
       
       re := regexp.MustCompile(dealRegx)
@@ -507,7 +507,7 @@ tencentcloud/services/crs/resource_tc_redis_instance.go:
     }
   getId: |
     // normal user
-    if !billingService.isYunTiAccount() || chargeType == REDIS_CHARGE_TYPE_POSTPAID {
+    if !billingService.IsYunTiAccount() || chargeType == REDIS_CHARGE_TYPE_POSTPAID {
     resourceId = *instanceIds[0]
     }
   setTag: |
@@ -534,7 +534,7 @@ tencentcloud/services/crs/resource_tc_redis_instance.go:
   clientRead: |
     tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     service := RedisService{client: tcClient}
-    tagService := &TagService{client: tcClient}
+    tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
     instanceId := d.Id()
   redisFail: |
@@ -562,7 +562,7 @@ tencentcloud/services/crs/resource_tc_redis_instance.go:
 
 tencentcloud/services/tpulsar/resource_tc_tdmq_instance.go:
   import: |
-    import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
+    import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
   client: |
     client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
