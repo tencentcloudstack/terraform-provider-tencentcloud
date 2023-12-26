@@ -423,7 +423,7 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
       return
     }
       
-    func (me *BillingService) isYunTiAccount() bool {
+    func (me *BillingService) IsYunTiAccount() bool {
       val, ok := os.LookupEnv(tencentcloud.PROVIDER_ENABLE_YUNTI)
       if ok && strings.ToLower(val) == "true" {
       return true
