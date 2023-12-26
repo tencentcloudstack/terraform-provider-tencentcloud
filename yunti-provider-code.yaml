@@ -103,7 +103,7 @@ tencentcloud/services/es/resource_tc_elasticsearch_instance.go:
     import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   var: |
     var (
-    	client               = meta.(*TencentCloudClient).apiV3Conn
+    	client               = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     	billingService       = billing.BillingService{Client: client}
     	tagService           = TagService{client: client}
     	region               = client.Region
@@ -202,7 +202,7 @@ tencentcloud/services/cdb/resource_tc_mysql_instance.go:
   import: |
     import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   var: |
-    client := meta.(*TencentCloudClient).apiV3Conn
+    client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     billingService := billing.BillingService{Client: client}
     var instanceId string
   bpass: |
@@ -221,7 +221,7 @@ tencentcloud/services/cdb/resource_tc_mysql_instance.go:
   instanceId: "instanceId = *response.Response.InstanceIds[0]"
   setId: "d.SetId(instanceId)"
   mysqlServer: |
-    client := meta.(*TencentCloudClient).apiV3Conn
+    client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     mysqlService := MysqlService{client: client}
     tagService := &TagService{client: client}
   setTag: |
@@ -251,7 +251,7 @@ tencentcloud/services/postgresql/resource_tc_postgresql_instance.go:
   import: |
     import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   clientCreate: |
-    client := meta.(*TencentCloudClient).apiV3Conn
+    client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     postgresqlService := PostgresqlService{client: client}
     tagService := TagService{client: client}
     billingService := billing.BillingService{Client: client}
@@ -289,7 +289,7 @@ tencentcloud/services/postgresql/resource_tc_postgresql_instance.go:
     }
     }
   clientUpdate: |
-    tcClient := meta.(*TencentCloudClient).apiV3Conn
+    tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     tagService := &TagService{client: tcClient}
     postgresqlService := PostgresqlService{client: tcClient}
   waitTag: |
@@ -532,7 +532,7 @@ tencentcloud/services/crs/resource_tc_redis_instance.go:
     		time.Sleep(3 * time.Second)
     	}
   clientRead: |
-    tcClient := meta.(*TencentCloudClient).apiV3Conn
+    tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     service := RedisService{client: tcClient}
     tagService := &TagService{client: tcClient}
 
@@ -564,7 +564,7 @@ tencentcloud/services/tpulsar/resource_tc_tdmq_instance.go:
   import: |
     import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   client: |
-    client := meta.(*TencentCloudClient).apiV3Conn
+    client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     tagService := TagService{client: client}
     region := client.Region
   buildName: "resourceName := BuildTagResourceName(\"tdmq\", \"cluster\", region, clusterId)"
@@ -575,8 +575,8 @@ tencentcloud/services/tpulsar/resource_tc_tdmq_instance.go:
     			return err
     		}
   var: |
-    tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-    region := meta.(*TencentCloudClient).apiV3Conn.Region
+    tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+    region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
   setTag: |
     oldTags, newTags := d.GetChange("tags")
     replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
