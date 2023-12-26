@@ -33,6 +33,8 @@ jobs:
           go-version-file: .go-version
           #go-version: '1.21'
           cache: false 
+        env:
+          GO111MODULE: off
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
