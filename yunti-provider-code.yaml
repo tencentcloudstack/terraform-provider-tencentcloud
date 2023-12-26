@@ -359,7 +359,7 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
     sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
     )
-      
+    const PROVIDER_ENABLE_YUNTI = "TENCENTCLOUD_ENABLE_YUNTI"  
     type BillingService struct {
       Client *connectivity.TencentCloudClient
     }
@@ -423,7 +423,7 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
     }
       
     func (me *BillingService) IsYunTiAccount() bool {
-      val, ok := os.LookupEnv(tencentcloud.PROVIDER_ENABLE_YUNTI)
+      val, ok := os.LookupEnv(PROVIDER_ENABLE_YUNTI)
       if ok && strings.ToLower(val) == "true" {
       return true
     }
@@ -441,7 +441,7 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
       e, ok := msg.(*sdkErrors.TencentCloudSDKError)
       log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \\n", logId, e.Error())
       
-      if ok && tccommon.tccommon.IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
+      if ok && tccommon.IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
       errStr := msg.Error()
       
       re := regexp.MustCompile(dealRegx)
