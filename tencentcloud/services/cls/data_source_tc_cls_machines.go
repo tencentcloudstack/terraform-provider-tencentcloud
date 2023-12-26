@@ -3,12 +3,11 @@ package cls
 import (
 	"context"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -97,7 +96,6 @@ func dataSourceTencentCloudClsMachinesRead(d *schema.ResourceData, meta interfac
 	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var machines []*cls.MachineInfo
-
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeClsMachinesByFilter(ctx, paramMap)
 		if e != nil {
