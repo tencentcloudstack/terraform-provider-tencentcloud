@@ -15,8 +15,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-//internal version: replace tagFmt begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace tagFmt end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func NewTagService(client *connectivity.TencentCloudClient) TagService {
 	return TagService{client: client}
