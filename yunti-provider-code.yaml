@@ -167,7 +167,6 @@ tencentcloud/services/es/resource_tc_elasticsearch_instance.go:
 tencentcloud/services/mongodb/resource_tc_mongodb_instance.go:
   import: |
     import	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-    import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   bpass: |
     // query deal by bpass
     e, ok := err.(*sdkErrors.TencentCloudSDKError)
@@ -482,7 +481,6 @@ go.mod: |
 tencentcloud/services/crs/resource_tc_redis_instance.go:
   import: |
     import	"time"
-    import	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   tagComputed: "				Computed:    true,"
   clientCreate: "	billingService := billing.BillingService{Client: client}"
