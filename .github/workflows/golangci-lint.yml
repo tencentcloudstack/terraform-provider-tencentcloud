@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   golangci-lint:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -40,6 +40,6 @@ jobs:
         with:
           version: v1.46.2
           #version: v1.54
-          working-directory: ./tencentcloud/
+          working-directory: ./tencentcloud/...
           args: --new-from-rev=origin/master -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
