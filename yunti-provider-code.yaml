@@ -53,7 +53,7 @@ tencentcloud/provider.go:
 tencentcloud/services/cynosdb/resource_tc_cynosdb_cluster.go:
   import: "import \"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing\""
   client: |
-    billingService = billing.BillingService{client: client}
+    billingService = billing.BillingService{Client: client}
   varId: "	var id string"
   varCharge: "	var chargeTypeStr string"
   strCharge: "		chargeTypeStr = v.(string)"
@@ -102,7 +102,7 @@ tencentcloud/services/es/resource_tc_elasticsearch_instance.go:
   var: |
     var (
     	client               = meta.(*TencentCloudClient).apiV3Conn
-    	billingService       = BillingService{client: client}
+    	billingService       = billing.BillingService{Client: client}
     	tagService           = TagService{client: client}
     	region               = client.Region
     	chargeType           string
@@ -163,7 +163,9 @@ tencentcloud/services/es/resource_tc_elasticsearch_instance.go:
     err := tagService.waitTagsEnable(ctx, "es", "instance", d.Id(), region, replaceTags)
 
 tencentcloud/services/mongodb/resource_tc_mongodb_instance.go:
-  import: "import	sdkErrors \"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors\""
+  import: |
+    import	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+    import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   bpass: |
     // query deal by bpass
     e, ok := err.(*sdkErrors.TencentCloudSDKError)
@@ -197,7 +199,7 @@ tencentcloud/services/mongodb/resource_tc_mongodb_instance.go:
 tencentcloud/services/cdb/resource_tc_mysql_instance.go:
   var: |
     client := meta.(*TencentCloudClient).apiV3Conn
-    billingService := BillingService{client: client}
+    billingService := billing.BillingService{Client: client}
     var instanceId string
   bpass: |
     // query deal by bpass
@@ -246,7 +248,7 @@ tencentcloud/services/postgresql/resource_tc_postgresql_instance.go:
     client := meta.(*TencentCloudClient).apiV3Conn
     postgresqlService := PostgresqlService{client: client}
     tagService := TagService{client: client}
-    billingService := BillingService{client: client}
+    billingService := billing.BillingService{Client: client}
     region := client.Region
   var: "chargeType     = d.Get(\"charge_type\").(string)"
   bpass: |
@@ -332,72 +334,74 @@ tencentcloud/services/tag/service_tencentcloud_tag.go:
 tencentcloud/services/billing/service_tencentcloud_billing.go:
   all: |
     package billing
-
+  
     import (
     "context"
     "fmt"
+    "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
+    tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
     "log"
     "os"
     "regexp"
     "strings"
     "time"
-
+    
     "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
     "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
     "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-
-    billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
+    
+    billingSdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
     sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
     )
-
-      type BillingService struct {
-      client *connectivity.TencentCloudClient
+      
+    type BillingService struct {
+      Client *connectivity.TencentCloudClient
     }
-
-      func (me *BillingService) DescribeDeals(ctx context.Context, dealId string) (deal *billing.Deal, errRet error) {
+      
+    func (me *BillingService) DescribeDeals(ctx context.Context, dealId string) (deal *billingSdk.Deal, errRet error) {
       var (
-      logId    = getLogId(ctx)
-      request  = billing.NewDescribeDealsByCondRequest()
-      response = billing.NewDescribeDealsByCondResponse()
-      dealList []*billing.Deal
+      logId    = tccommon.GetLogId(ctx)
+      request  = billingSdk.NewDescribeDealsByCondRequest()
+      response = billingSdk.NewDescribeDealsByCondResponse()
+      dealList []*billingSdk.Deal
       )
-
+      
       defer func() {
       if errRet != nil {
       log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\\n",
       logId, "query object", request.ToJsonString(), errRet.Error())
     }
     }()
-
-      request.OrderId = helper.String(dealId)
-      request.Limit = helper.IntInt64(20)
-      baseTime := time.Now().Local()
-      startTime := baseTime.AddDate(0, 0, -7).Format("2006-01-02 15:04:05")
-      endTime := baseTime.Format("2006-01-02 15:04:05")
-      request.StartTime = helper.String(startTime)
-      request.EndTime = helper.String(endTime)
-
-      ratelimit.Check(request.GetAction())
-      err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+      
+    request.OrderId = helper.String(dealId)
+    request.Limit = helper.IntInt64(20)
+    baseTime := time.Now().Local()
+    startTime := baseTime.AddDate(0, 0, -7).Format("2006-01-02 15:04:05")
+    endTime := baseTime.Format("2006-01-02 15:04:05")
+    request.StartTime = helper.String(startTime)
+    request.EndTime = helper.String(endTime)
+      
+    ratelimit.Check(request.GetAction())
+    err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
       for _, dealState := range DEAL_STATUS_CODE {
       request.Status = helper.Int64(dealState)
-      response, ee := me.client.UseBillingClient().DescribeDealsByCond(request)
+      response, ee := me.Client.UseBillingClient().DescribeDealsByCond(request)
       if ee != nil {
-      return retryError(errRet, InternalError)
+      return tccommon.RetryError(errRet, tccommon.InternalError)
       }
       dealList = response.Response.Deals
       if len(dealList) > 0 {
       break
       }
     }
-      if len(dealList) != 1 {
+    if len(dealList) != 1 {
       log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\\n",
       logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
       return nil
     }
       deal = dealList[0]
-      if in(*deal.Status, DEAL_TERMINATE_STATUS_CODE) {
+    if in(*deal.Status, DEAL_TERMINATE_STATUS_CODE) {
       log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\\n",
       logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
       return nil
@@ -405,36 +409,36 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
       time.Sleep(3 * time.Second)
     return resource.RetryableError(fmt.Errorf("deal status is not ready..., current is: %v", deal.Status))
     })
-
-      if err != nil {
+      
+    if err != nil {
       errRet = err
       return
     }
       return
     }
-
-      func (me *BillingService) isYunTiAccount() bool {
-      val, ok := os.LookupEnv(PROVIDER_ENABLE_YUNTI)
+      
+    func (me *BillingService) isYunTiAccount() bool {
+      val, ok := os.LookupEnv(tencentcloud.PROVIDER_ENABLE_YUNTI)
       if ok && strings.ToLower(val) == "true" {
       return true
     }
       return false
     }
-
+      
       //query deal by bpass
-      func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string, msg error) (resourceId *string, err error) {
-      logId := getLogId(ctx)
-
+    func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string, msg error) (resourceId *string, err error) {
+      logId := tccommon.GetLogId(ctx)
+      
       if !me.isYunTiAccount() {
       return
     }
-
+      
       e, ok := msg.(*sdkErrors.TencentCloudSDKError)
       log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \\n", logId, e.Error())
-
-      if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
+      
+      if ok && tccommon.IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
       errStr := msg.Error()
-
+      
       re := regexp.MustCompile(dealRegx)
       result := re.FindStringSubmatch(errStr)
       for i, str := range result {
@@ -442,7 +446,7 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
     }
       dealId := re.FindStringSubmatch(errStr)[1]
       deal, billErr := me.DescribeDeals(ctx, dealId)
-      if billErr != nil {
+    if billErr != nil {
       log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\\n", logId, billErr.Error())
       return nil, billErr
     }
@@ -452,8 +456,8 @@ tencentcloud/services/billing/service_tencentcloud_billing.go:
     }
       return
     }
-
-      func in(target int64, intArr []int64) bool {
+      
+    func in(target int64, intArr []int64) bool {
       for _, element := range intArr {
       if target == element {
       return true
@@ -472,7 +476,7 @@ go.mod: |
 tencentcloud/services/crs/resource_tc_redis_instance.go:
   import: "import	\"time\""
   tagComputed: "				Computed:    true,"
-  clientCreate: "	billingService := BillingService{client: client}"
+  clientCreate: "	billingService := billing.BillingService{Client: client}"
   redisServer: "		masterZoneId, err := redisService.getZoneId(availabilityZone)"
   varId: "var resourceId string"
   bpass: |
@@ -538,7 +542,7 @@ tencentcloud/services/crs/resource_tc_redis_instance.go:
     	return err
     }
   queryAndSetId: |
-    _, _, _, err = redisService.CheckRedisOnlineOk(ctx, resourceId, 20*readRetryTimeout)
+    _, _, _, err = redisService.CheckRedisOnlineOk(ctx, resourceId, 20*tccommon.ReadRetryTimeout)
   
     if err != nil {
     log.Printf("[CRITAL]%s create redis task fail, reason:%s\\n", logId, err.Error())
