@@ -575,11 +575,11 @@ tencentcloud/services/tpulsar/resource_tc_tdmq_instance.go:
     			return err
     		}
   var: |
-    tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+    tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
     region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
   setTag: |
     oldTags, newTags := d.GetChange("tags")
-    replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+    replaceTags, deleteTags := tag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
     resourceName := tccommon.BuildTagResourceName("tdmq", "cluster", region, d.Id())
     if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
       return err
