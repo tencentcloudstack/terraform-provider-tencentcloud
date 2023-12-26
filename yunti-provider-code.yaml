@@ -105,7 +105,7 @@ tencentcloud/services/es/resource_tc_elasticsearch_instance.go:
     var (
     	client               = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     	billingService       = billing.BillingService{Client: client}
-    	tagService           = TagService{client: client}
+    	tagService           = svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
     	region               = client.Region
     	chargeType           string
     )
@@ -143,26 +143,26 @@ tencentcloud/services/es/resource_tc_elasticsearch_instance.go:
     // set tag before query the instance
     	if len(tags) > 0 {
     		// resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
-    		resourceName := BuildTagResourceName("es", "instance", region, d.Id())
+    		resourceName := tccommon.BuildTagResourceName("es", "instance", region, d.Id())
     		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
     			return err
     		}
 
     		// Wait the tags enabled
-    		err = tagService.waitTagsEnable(ctx, "es", "instance", d.Id(), region, tags)
+    		err = tagService.WaitTagsEnable(ctx, "es", "instance", d.Id(), region, tags)
     		if err != nil {
     			return err
     		}
     	}
   waitTag: |
     // resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
-    resourceName := BuildTagResourceName("es", "instance", region, d.Id())
+    resourceName := tccommon.BuildTagResourceName("es", "instance", region, d.Id())
     if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
     	return err
     }
 
     // Wait the tags enabled
-    err := tagService.waitTagsEnable(ctx, "es", "instance", d.Id(), region, replaceTags)
+    err := tagService.WaitTagsEnable(ctx, "es", "instance", d.Id(), region, replaceTags)
 
 tencentcloud/services/mongodb/resource_tc_mongodb_instance.go:
   import: |
@@ -186,13 +186,13 @@ tencentcloud/services/mongodb/resource_tc_mongodb_instance.go:
   setTag: |
     // set tag before query the instance
     	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-    		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+    		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
     		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
     			return err
     		}
 
     		// Wait the tags enabled
-    		err := tagService.waitTagsEnable(ctx, "mongodb", "instance", instanceId, region, tags)
+    		err := tagService.WaitTagsEnable(ctx, "mongodb", "instance", instanceId, region, tags)
     		if err != nil {
     			return err
     		}
@@ -223,17 +223,17 @@ tencentcloud/services/cdb/resource_tc_mysql_instance.go:
   mysqlServer: |
     client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     mysqlService := MysqlService{client: client}
-    tagService := &TagService{client: client}
+    tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
   setTag: |
     // set tag before query the instance
     	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-    		resourceName := BuildTagResourceName("cdb", "instanceId", client.Region, d.Id())
+    		resourceName := tccommon.BuildTagResourceName("cdb", "instanceId", client.Region, d.Id())
     		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
     			return err
     		}
 
     		// Wait the tags enabled
-    		err := tagService.waitTagsEnable(ctx, "cdb", "instanceId", d.Id(), client.Region, tags)
+    		err := tagService.WaitTagsEnable(ctx, "cdb", "instanceId", d.Id(), client.Region, tags)
     		if err != nil {
     			return err
     		}
@@ -242,7 +242,7 @@ tencentcloud/services/cdb/resource_tc_mysql_instance.go:
         }
   waitTag:
     // Wait the tags enabled
-    err = tagService.waitTagsEnable(ctx, "cdb", "instanceId", d.Id(), region, replaceTags)
+    err = tagService.WaitTagsEnable(ctx, "cdb", "instanceId", d.Id(), region, replaceTags)
     if err != nil {
     return err
     }
@@ -253,7 +253,7 @@ tencentcloud/services/postgresql/resource_tc_postgresql_instance.go:
   clientCreate: |
     client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
     postgresqlService := PostgresqlService{client: client}
-    tagService := TagService{client: client}
+    tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
     billingService := billing.BillingService{Client: client}
     region := client.Region
   var: "chargeType     = d.Get(\"charge_type\").(string)"
@@ -277,13 +277,13 @@ tencentcloud/services/postgresql/resource_tc_postgresql_instance.go:
   setTag: |
     // set tag before query the instance
     if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-    resourceName := BuildTagResourceName("postgres", "DBInstanceId", region, d.Id())
+    resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", region, d.Id())
     if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
     return err
     }
 
     // Wait the tags enabled
-    err := tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), region, tags)
+    err := tagService.WaitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), region, tags)
     if err != nil {
     return err
     }
@@ -294,7 +294,7 @@ tencentcloud/services/postgresql/resource_tc_postgresql_instance.go:
     postgresqlService := PostgresqlService{client: tcClient}
   waitTag: |
     // Wait the tags enabled
-    		err = tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), tcClient.Region, replaceTags)
+    		err = tagService.WaitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), tcClient.Region, replaceTags)
     		if err != nil {
     			return err
     		}
@@ -517,14 +517,14 @@ tencentcloud/services/crs/resource_tc_redis_instance.go:
     		for k, v := range tags {
     			log.Printf("[DEBUG]%s tags[k:%s, v:%s]", logId, k, v)
     		}
-    		resourceName := BuildTagResourceName("redis", "instance", region, resourceId)
+    		resourceName := tccommon.BuildTagResourceName("redis", "instance", region, resourceId)
     		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
     			log.Printf("[CRITAL]%s modify tags failed, reason:%s\\n", logId, err.Error())
     			return err
     		}
 
     		// Wait the tags enabled
-    		err = tagService.waitTagsEnable(ctx, "redis", "instance", resourceId, region, tags)
+    		err = tagService.WaitTagsEnable(ctx, "redis", "instance", resourceId, region, tags)
     		if err != nil {
     			return err
     		}
@@ -543,10 +543,10 @@ tencentcloud/services/crs/resource_tc_redis_instance.go:
   resourceTag: |
     var tags map[string]string
     tags, err = tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, instanceId)
-  setTagUpdate: "resourceName := BuildTagResourceName(\"redis\", \"instance\", region, d.Id())"
+  setTagUpdate: "resourceName := tccommon.BuildTagResourceName(\"redis\", \"instance\", region, d.Id())"
   waitTag: |
     // Wait the tags enabled
-    err := tagService.waitTagsEnable(ctx, "redis", "instance", d.Id(), region, replaceTags)
+    err := tagService.WaitTagsEnable(ctx, "redis", "instance", d.Id(), region, replaceTags)
     if err != nil {
     	return err
     }
@@ -565,12 +565,12 @@ tencentcloud/services/tpulsar/resource_tc_tdmq_instance.go:
     import "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
   client: |
     client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-    tagService := TagService{client: client}
+    tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
     region := client.Region
-  buildName: "resourceName := BuildTagResourceName(\"tdmq\", \"cluster\", region, clusterId)"
+  buildName: "resourceName := tccommon.BuildTagResourceName(\"tdmq\", \"cluster\", region, clusterId)"
   waitTag: |
     // Wait the tags enabled
-    		err = tagService.waitTagsEnable(ctx, "tdmq", "cluster", clusterId, region, tags)
+    		err = tagService.WaitTagsEnable(ctx, "tdmq", "cluster", clusterId, region, tags)
     		if err != nil {
     			return err
     		}
@@ -580,14 +580,14 @@ tencentcloud/services/tpulsar/resource_tc_tdmq_instance.go:
   setTag: |
     oldTags, newTags := d.GetChange("tags")
     replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-    resourceName := BuildTagResourceName("tdmq", "cluster", region, d.Id())
+    resourceName := tccommon.BuildTagResourceName("tdmq", "cluster", region, d.Id())
     if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
       return err
     }
     
     
     // Wait the tags enabled
-    err := tagService.waitTagsEnable(ctx, "tdmq", "cluster", d.Id(), region, replaceTags)
+    err := tagService.WaitTagsEnable(ctx, "tdmq", "cluster", d.Id(), region, replaceTags)
     if err != nil {
       return err
     }
