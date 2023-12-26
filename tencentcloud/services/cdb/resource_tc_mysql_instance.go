@@ -17,6 +17,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 var importMysqlFlag = false
 
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
