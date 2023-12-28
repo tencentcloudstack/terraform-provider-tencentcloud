@@ -1103,7 +1103,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.825
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
