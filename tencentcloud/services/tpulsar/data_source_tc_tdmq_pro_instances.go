@@ -125,6 +125,30 @@ func DataSourceTencentCloudTdmqProInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Peak bandwidth. Unit: mbps.",
 						},
+						"tags": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Tag list.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"tag_key": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Tag key.",
+									},
+									"tag_value": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Tag value.",
+									},
+								},
+							},
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Create time.",
+						},
 					},
 				},
 			},
@@ -252,6 +276,29 @@ func dataSourceTencentCloudTdmqProInstancesRead(d *schema.ResourceData, meta int
 
 			if pulsarProInstance.MaxBandWidth != nil {
 				pulsarProInstanceMap["max_band_width"] = pulsarProInstance.MaxBandWidth
+			}
+
+			if pulsarProInstance.Tags != nil {
+				tagsList := []interface{}{}
+				for _, tags := range pulsarProInstance.Tags {
+					tagsMap := map[string]interface{}{}
+
+					if tags.TagKey != nil {
+						tagsMap["tag_key"] = tags.TagKey
+					}
+
+					if tags.TagValue != nil {
+						tagsMap["tag_value"] = tags.TagValue
+					}
+
+					tagsList = append(tagsList, tagsMap)
+				}
+
+				pulsarProInstanceMap["tags"] = tagsList
+			}
+
+			if pulsarProInstance.CreateTime != nil {
+				pulsarProInstanceMap["create_time"] = pulsarProInstance.CreateTime
 			}
 
 			ids = append(ids, *pulsarProInstance.InstanceId)

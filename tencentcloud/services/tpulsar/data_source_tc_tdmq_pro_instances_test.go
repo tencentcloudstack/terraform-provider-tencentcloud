@@ -26,7 +26,7 @@ func TestAccTencentCloudNeedFixTdmqProInstancesDataSource_basic(t *testing.T) {
 			{
 				Config: testAccTdmqProInstancesDataSourcelFilter,
 				Check: resource.ComposeTestCheckFunc(
-					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_pro_instances.pro_instances"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_pro_instances.pro_instances_filter"),
 				),
 			},
 		},
