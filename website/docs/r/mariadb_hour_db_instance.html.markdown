@@ -40,7 +40,7 @@ The following arguments are supported:
 * `memory` - (Required, Int) instance memory.
 * `node_count` - (Required, Int) number of node for instance.
 * `storage` - (Required, Int) instance disk storage.
-* `zones` - (Required, Set: [`String`]) available zone of instance.
+* `zones` - (Required, List: [`String`]) available zone of instance.
 * `db_version_id` - (Optional, String) db engine version, default to 10.1.9.
 * `instance_name` - (Optional, String) name of this instance.
 * `project_id` - (Optional, Int) project id.
