@@ -25,16 +25,16 @@ type CreateProbeTasksRequestParams struct {
 	// 批量任务名-地址
 	BatchTasks []*ProbeTaskBasicConfiguration `json:"BatchTasks,omitnil" name:"BatchTasks"`
 
-	// 任务类型
+	// 任务类型，如1、2、3、4、5、6、7；1-页面性能、2-文件上传、3-文件下载、4-端口性能、5-网络质量、6-音视频体验、7-域名whois
 	TaskType *int64 `json:"TaskType,omitnil" name:"TaskType"`
 
-	// 拨测节点
+	// 拨测节点，如10001，具体拨测地域运营商对应的拨测点编号可联系云拨测确认。
 	Nodes []*string `json:"Nodes,omitnil" name:"Nodes"`
 
 	// 拨测间隔
 	Interval *int64 `json:"Interval,omitnil" name:"Interval"`
 
-	// 拨测参数
+	// 拨测参数，如{}，详细可参考云拨测官方文档。
 	Parameters *string `json:"Parameters,omitnil" name:"Parameters"`
 
 	// 任务分类
@@ -48,14 +48,17 @@ type CreateProbeTasksRequestParams struct {
 	// 资源标签值
 	Tag []*Tag `json:"Tag,omitnil" name:"Tag"`
 
-	// 测试类型，包含定时测试与即时测试
+	// 测试类型，包含定时测试与即时测试。0-定时拨测，其它表示即时拨测。
 	ProbeType *uint64 `json:"ProbeType,omitnil" name:"ProbeType"`
 
-	// 插件类型
+	// 插件类型，如CDN，详情参考云拨测官方文档。
 	PluginSource *string `json:"PluginSource,omitnil" name:"PluginSource"`
 
 	// 客户端ID
 	ClientNum *string `json:"ClientNum,omitnil" name:"ClientNum"`
+
+	// 拨测点IP类型：0-不限制IP类型，1-IPv4，2-IPv6
+	NodeIpType *int64 `json:"NodeIpType,omitnil" name:"NodeIpType"`
 }
 
 type CreateProbeTasksRequest struct {
@@ -64,16 +67,16 @@ type CreateProbeTasksRequest struct {
 	// 批量任务名-地址
 	BatchTasks []*ProbeTaskBasicConfiguration `json:"BatchTasks,omitnil" name:"BatchTasks"`
 
-	// 任务类型
+	// 任务类型，如1、2、3、4、5、6、7；1-页面性能、2-文件上传、3-文件下载、4-端口性能、5-网络质量、6-音视频体验、7-域名whois
 	TaskType *int64 `json:"TaskType,omitnil" name:"TaskType"`
 
-	// 拨测节点
+	// 拨测节点，如10001，具体拨测地域运营商对应的拨测点编号可联系云拨测确认。
 	Nodes []*string `json:"Nodes,omitnil" name:"Nodes"`
 
 	// 拨测间隔
 	Interval *int64 `json:"Interval,omitnil" name:"Interval"`
 
-	// 拨测参数
+	// 拨测参数，如{}，详细可参考云拨测官方文档。
 	Parameters *string `json:"Parameters,omitnil" name:"Parameters"`
 
 	// 任务分类
@@ -87,14 +90,17 @@ type CreateProbeTasksRequest struct {
 	// 资源标签值
 	Tag []*Tag `json:"Tag,omitnil" name:"Tag"`
 
-	// 测试类型，包含定时测试与即时测试
+	// 测试类型，包含定时测试与即时测试。0-定时拨测，其它表示即时拨测。
 	ProbeType *uint64 `json:"ProbeType,omitnil" name:"ProbeType"`
 
-	// 插件类型
+	// 插件类型，如CDN，详情参考云拨测官方文档。
 	PluginSource *string `json:"PluginSource,omitnil" name:"PluginSource"`
 
 	// 客户端ID
 	ClientNum *string `json:"ClientNum,omitnil" name:"ClientNum"`
+
+	// 拨测点IP类型：0-不限制IP类型，1-IPv4，2-IPv6
+	NodeIpType *int64 `json:"NodeIpType,omitnil" name:"NodeIpType"`
 }
 
 func (r *CreateProbeTasksRequest) ToJsonString() string {
@@ -120,6 +126,7 @@ func (r *CreateProbeTasksRequest) FromJsonString(s string) error {
 	delete(f, "ProbeType")
 	delete(f, "PluginSource")
 	delete(f, "ClientNum")
+	delete(f, "NodeIpType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateProbeTasksRequest has unknown keys!", "")
 	}
@@ -283,6 +290,9 @@ type DescribeDetailedSingleProbeDataRequestParams struct {
 	// 首尔
 	// 多伦多
 	City []*string `json:"City,omitnil" name:"City"`
+
+	// es scroll查询id
+	ScrollID *string `json:"ScrollID,omitnil" name:"ScrollID"`
 }
 
 type DescribeDetailedSingleProbeDataRequest struct {
@@ -353,6 +363,9 @@ type DescribeDetailedSingleProbeDataRequest struct {
 	// 首尔
 	// 多伦多
 	City []*string `json:"City,omitnil" name:"City"`
+
+	// es scroll查询id
+	ScrollID *string `json:"ScrollID,omitnil" name:"ScrollID"`
 }
 
 func (r *DescribeDetailedSingleProbeDataRequest) ToJsonString() string {
@@ -380,6 +393,7 @@ func (r *DescribeDetailedSingleProbeDataRequest) FromJsonString(s string) error 
 	delete(f, "Districts")
 	delete(f, "ErrorTypes")
 	delete(f, "City")
+	delete(f, "ScrollID")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDetailedSingleProbeDataRequest has unknown keys!", "")
 	}
@@ -393,6 +407,9 @@ type DescribeDetailedSingleProbeDataResponseParams struct {
 
 	// 符合条件的数据总数
 	TotalNumber *int64 `json:"TotalNumber,omitnil" name:"TotalNumber"`
+
+	// es scroll查询的id
+	ScrollID *string `json:"ScrollID,omitnil" name:"ScrollID"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
@@ -411,6 +428,74 @@ func (r *DescribeDetailedSingleProbeDataResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDetailedSingleProbeDataResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeInstantTasksRequestParams struct {
+	// 数量
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 起始位置
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+}
+
+type DescribeInstantTasksRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数量
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 起始位置
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+}
+
+func (r *DescribeInstantTasksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstantTasksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstantTasksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeInstantTasksResponseParams struct {
+	// 任务
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tasks []*SingleInstantTask `json:"Tasks,omitnil" name:"Tasks"`
+
+	// 总数
+	Total *uint64 `json:"Total,omitnil" name:"Total"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeInstantTasksResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeInstantTasksResponseParams `json:"Response"`
+}
+
+func (r *DescribeInstantTasksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstantTasksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -545,10 +630,10 @@ type DescribeProbeMetricDataRequestParams struct {
 	// AnalyzeTaskType_MediaStream：音视频体验
 	AnalyzeTaskType *string `json:"AnalyzeTaskType,omitnil" name:"AnalyzeTaskType"`
 
-	// 指标类型，指标查询默认传gauge
+	// 指标类型（counter、gauge以及histogram），指标查询默认传gauge
 	MetricType *string `json:"MetricType,omitnil" name:"MetricType"`
 
-	// 指标详细字段，可以传递传具体的指标也可以对指标进行聚合查询例如："avg(ping_time)"代表整体时延(ms)
+	// 指标详细字段，可以传递传具体的指标也可以对指标进行聚合查询例如："avg(ping_time)"代表整体时延(ms)；不同的任务类型支持不同的field查询，以及聚合规则，详情可见https://cloud.tencent.com/document/product/248/87584。
 	Field *string `json:"Field,omitnil" name:"Field"`
 
 	// 过滤条件可以传单个过滤条件也可以拼接多个参数
@@ -573,10 +658,10 @@ type DescribeProbeMetricDataRequest struct {
 	// AnalyzeTaskType_MediaStream：音视频体验
 	AnalyzeTaskType *string `json:"AnalyzeTaskType,omitnil" name:"AnalyzeTaskType"`
 
-	// 指标类型，指标查询默认传gauge
+	// 指标类型（counter、gauge以及histogram），指标查询默认传gauge
 	MetricType *string `json:"MetricType,omitnil" name:"MetricType"`
 
-	// 指标详细字段，可以传递传具体的指标也可以对指标进行聚合查询例如："avg(ping_time)"代表整体时延(ms)
+	// 指标详细字段，可以传递传具体的指标也可以对指标进行聚合查询例如："avg(ping_time)"代表整体时延(ms)；不同的任务类型支持不同的field查询，以及聚合规则，详情可见https://cloud.tencent.com/document/product/248/87584。
 	Field *string `json:"Field,omitnil" name:"Field"`
 
 	// 过滤条件可以传单个过滤条件也可以拼接多个参数
@@ -1082,6 +1167,10 @@ type ProbeTask struct {
 	// 拨测节点列表
 	Nodes []*string `json:"Nodes,omitnil" name:"Nodes"`
 
+	// 拨测任务所选的拨测点IP类型，0-不限，1-IPv4，2-IPv6
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodeIpType *int64 `json:"NodeIpType,omitnil" name:"NodeIpType"`
+
 	// 拨测间隔
 	Interval *int64 `json:"Interval,omitnil" name:"Interval"`
 
@@ -1208,6 +1297,32 @@ func (r *ResumeProbeTaskResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *ResumeProbeTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type SingleInstantTask struct {
+	// 任务ID
+	TaskId *string `json:"TaskId,omitnil" name:"TaskId"`
+
+	// 任务地址
+	TargetAddress *string `json:"TargetAddress,omitnil" name:"TargetAddress"`
+
+	// 任务类型
+	TaskType *uint64 `json:"TaskType,omitnil" name:"TaskType"`
+
+	// 测试时间
+	ProbeTime *uint64 `json:"ProbeTime,omitnil" name:"ProbeTime"`
+
+	// 任务状态
+	Status *string `json:"Status,omitnil" name:"Status"`
+
+	// 成功率
+	SuccessRate *float64 `json:"SuccessRate,omitnil" name:"SuccessRate"`
+
+	// 节点数量
+	NodeCount *uint64 `json:"NodeCount,omitnil" name:"NodeCount"`
+
+	// 节点类型
+	TaskCategory *uint64 `json:"TaskCategory,omitnil" name:"TaskCategory"`
 }
 
 // Predefined struct for user
@@ -1359,16 +1474,16 @@ func (r *UpdateProbeTaskAttributesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpdateProbeTaskConfigurationListRequestParams struct {
-	// 任务 ID
+	// 任务 ID，如task-n1wchki8
 	TaskIds []*string `json:"TaskIds,omitnil" name:"TaskIds"`
 
-	// 拨测节点
+	// 拨测节点，如10001，详细地区运营商拨测编号请联系云拨测。
 	Nodes []*string `json:"Nodes,omitnil" name:"Nodes"`
 
-	// 拨测间隔
+	// 拨测间隔，如30，单位为分钟。
 	Interval *int64 `json:"Interval,omitnil" name:"Interval"`
 
-	// 拨测参数
+	// 拨测参数，详细参数配置可参考云拨测官网文档。
 	Parameters *string `json:"Parameters,omitnil" name:"Parameters"`
 
 	// 定时任务cron表达式
@@ -1377,21 +1492,24 @@ type UpdateProbeTaskConfigurationListRequestParams struct {
 	// 预付费套餐id
 	// 需要与taskId对应
 	ResourceIDs []*string `json:"ResourceIDs,omitnil" name:"ResourceIDs"`
+
+	// 拨测节点的IP类型，0-不限，1-IPv4，2-IPv6
+	NodeIpType *int64 `json:"NodeIpType,omitnil" name:"NodeIpType"`
 }
 
 type UpdateProbeTaskConfigurationListRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务 ID
+	// 任务 ID，如task-n1wchki8
 	TaskIds []*string `json:"TaskIds,omitnil" name:"TaskIds"`
 
-	// 拨测节点
+	// 拨测节点，如10001，详细地区运营商拨测编号请联系云拨测。
 	Nodes []*string `json:"Nodes,omitnil" name:"Nodes"`
 
-	// 拨测间隔
+	// 拨测间隔，如30，单位为分钟。
 	Interval *int64 `json:"Interval,omitnil" name:"Interval"`
 
-	// 拨测参数
+	// 拨测参数，详细参数配置可参考云拨测官网文档。
 	Parameters *string `json:"Parameters,omitnil" name:"Parameters"`
 
 	// 定时任务cron表达式
@@ -1400,6 +1518,9 @@ type UpdateProbeTaskConfigurationListRequest struct {
 	// 预付费套餐id
 	// 需要与taskId对应
 	ResourceIDs []*string `json:"ResourceIDs,omitnil" name:"ResourceIDs"`
+
+	// 拨测节点的IP类型，0-不限，1-IPv4，2-IPv6
+	NodeIpType *int64 `json:"NodeIpType,omitnil" name:"NodeIpType"`
 }
 
 func (r *UpdateProbeTaskConfigurationListRequest) ToJsonString() string {
@@ -1420,6 +1541,7 @@ func (r *UpdateProbeTaskConfigurationListRequest) FromJsonString(s string) error
 	delete(f, "Parameters")
 	delete(f, "Cron")
 	delete(f, "ResourceIDs")
+	delete(f, "NodeIpType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateProbeTaskConfigurationListRequest has unknown keys!", "")
 	}

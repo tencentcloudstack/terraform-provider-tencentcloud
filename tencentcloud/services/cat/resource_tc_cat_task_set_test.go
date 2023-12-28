@@ -29,6 +29,7 @@ func TestAccTencentCloudCatTaskSet_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cat_task_set.task_set", "parameters"),
 					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "task_category", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "cron", "* 0-6 * * *"),
+					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "node_ip_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "tags.createdBy", "terraform"),
 				),
 			},
@@ -49,6 +50,7 @@ func TestAccTencentCloudCatTaskSet_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cat_task_set.task_set", "parameters"),
 					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "task_category", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "cron", "* 0-6 * * *"),
+					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "node_ip_type", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "tags.createdBy", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_cat_task_set.task_set", "status", "4"),
 				),
@@ -102,6 +104,7 @@ resource "tencentcloud_cat_task_set" "task_set" {
   )
   task_category = 1
   cron          = "* 0-6 * * *"
+  node_ip_type  = 1
   tags          = {
     "createdBy" = "terraform"
   }
@@ -147,6 +150,7 @@ resource "tencentcloud_cat_task_set" "task_set" {
   )
   task_category = 1
   cron          = "* 0-6 * * *"
+  node_ip_type  = 0
   tags          = {
     "createdBy" = "terraform"
   }
