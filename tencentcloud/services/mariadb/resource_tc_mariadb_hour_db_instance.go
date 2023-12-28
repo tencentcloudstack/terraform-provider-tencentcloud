@@ -205,7 +205,7 @@ func resourceTencentCloudMariadbHourDbInstanceCreate(d *schema.ResourceData, met
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-		resourceName := fmt.Sprintf("qcs::mariadb:%s:uin/:mariadb-hour-instance/%s", region, instanceId)
+		resourceName := fmt.Sprintf("qcs::mariadb:%s:uin/:instance/%s", region, instanceId)
 		if err = tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -282,7 +282,7 @@ func resourceTencentCloudMariadbHourDbInstanceRead(d *schema.ResourceData, meta 
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
-	tags, err := tagService.DescribeResourceTags(ctx, "mariadb", "mariadb-hour-instance", tcClient.Region, instanceId)
+	tags, err := tagService.DescribeResourceTags(ctx, "mariadb", "instance", tcClient.Region, instanceId)
 	if err != nil {
 		return err
 	}
@@ -360,7 +360,7 @@ func resourceTencentCloudMariadbHourDbInstanceUpdate(d *schema.ResourceData, met
 		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := tccommon.BuildTagResourceName("mariadb", "mariadb-hour-instance", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("mariadb", "instance", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
