@@ -3,6 +3,7 @@ package ssm_test
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
@@ -14,6 +15,7 @@ import (
 func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 	t.Parallel()
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
+	rSshName := fmt.Sprintf("%d", time.Now().Unix())
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			tcacctest.AccPreCheck(t)
@@ -21,14 +23,14 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccSsmSshKeyPairSecret, rName),
+				Config: fmt.Sprintf(testAccSsmSshKeyPairSecret, rName, rSshName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "desc."),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Disabled"),
 				),
 			},
 			{
-				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretUpdate, rName),
+				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretUpdate, rName, rSshName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "update desc."),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Enabled"),
@@ -36,6 +38,26 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 			},
 			{
 				ResourceName:            "tencentcloud_ssm_ssh_key_pair_secret.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"clean_ssh_key"},
+			},
+			{
+				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretNoId, rSshName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "description", "desc."),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "status", "Disabled"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretNoIdUpdate, rSshName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "description", "update desc."),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "status", "Enabled"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_ssm_ssh_key_pair_secret.example1",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"clean_ssh_key"},
@@ -61,7 +83,7 @@ resource "tencentcloud_ssm_ssh_key_pair_secret" "example" {
   project_id    = 0
   description   = "desc."
   kms_key_id    = tencentcloud_kms_key.example.id
-  ssh_key_name  = "tf_example_ssh"
+  ssh_key_name  = "tf_ssh_name_%s"
   status        = "Disabled"
   clean_ssh_key = true
 
@@ -88,12 +110,42 @@ resource "tencentcloud_ssm_ssh_key_pair_secret" "example" {
   project_id    = 0
   description   = "update desc."
   kms_key_id    = tencentcloud_kms_key.example.id
-  ssh_key_name  = "tf_example_ssh"
+  ssh_key_name  = "tf_ssh_name_%s"
   status        = "Enabled"
   clean_ssh_key = true
 
   tags = {
     createdBy = "terraformUpdate"
+  }
+}
+`
+
+const testAccSsmSshKeyPairSecretNoId = `
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example1" {
+  secret_name   = "tf-example-ssh-test-no-id"
+  project_id    = 0
+  description   = "desc."
+  ssh_key_name  = "tf_noid_name_%s"
+  status        = "Disabled"
+  clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraform"
+  }
+}
+`
+
+const testAccSsmSshKeyPairSecretNoIdUpdate = `
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example1" {
+  secret_name   = "tf-example-ssh-test-no-id"
+  project_id    = 0
+  description   = "update desc."
+  ssh_key_name  = "tf_noid_name_%s"
+  status        = "Enabled"
+  clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraform"
   }
 }
 `

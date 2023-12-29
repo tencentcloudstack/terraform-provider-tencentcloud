@@ -38,6 +38,7 @@ func ResourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 			},
 			"kms_key_id": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Specifies a KMS CMK to encrypt the secret.If this parameter is left empty, the CMK created by Secrets Manager by default will be used for encryption.You can also specify a custom KMS CMK created in the same region for encryption.",
 			},
