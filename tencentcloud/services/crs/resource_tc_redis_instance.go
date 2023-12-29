@@ -844,7 +844,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		request.InstanceId = &id
 		request.TargetInstanceType = helper.String(strconv.Itoa(typeId))
 		waitSwitch := 2
-		if v, ok := d.GetOk("wait_switch"); ok {
+		if v, ok := d.GetOkExists("wait_switch"); ok {
 			waitSwitch = v.(int)
 		}
 

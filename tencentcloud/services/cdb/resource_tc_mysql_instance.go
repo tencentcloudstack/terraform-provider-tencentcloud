@@ -18,6 +18,8 @@ import (
 
 var importMysqlFlag = false
 
+const InWindow = 1
+
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_name": {
@@ -1160,7 +1162,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if v, ok := d.GetOk("max_deay_time"); ok {
 			maxDelayTime = int64(v.(int))
 		}
-		if v, ok := d.GetOk("wait_switch"); ok {
+		if v, ok := d.GetOkExists("wait_switch"); ok {
 			waitSwitch = int64(v.(int))
 		}
 
@@ -1169,7 +1171,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			return err
 		}
 
-		if waitSwitch != 1 {
+		if waitSwitch != InWindow {
 			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
