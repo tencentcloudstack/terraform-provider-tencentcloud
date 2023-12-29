@@ -2,6 +2,7 @@ package oceanus
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -133,6 +134,11 @@ func dataSourceTencentCloudOceanusJobEventsRead(d *schema.ResourceData, meta int
 		result, e := service.DescribeOceanusJobEventsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
+		}
+
+		if result == nil {
+			e = fmt.Errorf("oceanus Job events not exists")
+			return resource.NonRetryableError(e)
 		}
 
 		JobEvents = result
