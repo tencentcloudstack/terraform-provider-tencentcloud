@@ -894,6 +894,10 @@ func (me *OceanusService) DescribeOceanusJobEventsByFilter(ctx context.Context, 
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response == nil {
+		return
+	}
+
 	JobEvents = response.Response
 	return
 }
