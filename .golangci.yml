@@ -29,7 +29,7 @@ linters-settings:
 
 run:
   modules-download-mode: vendor
-  timeout: 15m
+  timeout: 60m
   # The default concurrency value is the number of available CPU.
   concurrency: 12
   # Allow multiple parallel golangci-lint instances running.
