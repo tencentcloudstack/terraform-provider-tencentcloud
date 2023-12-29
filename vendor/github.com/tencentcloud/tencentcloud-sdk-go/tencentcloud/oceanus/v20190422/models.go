@@ -1969,6 +1969,107 @@ func (r *DescribeJobConfigsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeJobEventsRequestParams struct {
+	// 作业的 ID
+	JobId *string `json:"JobId,omitnil" name:"JobId"`
+
+	// 筛选条件：起始 Unix 时间戳（秒）
+	StartTimestamp *uint64 `json:"StartTimestamp,omitnil" name:"StartTimestamp"`
+
+	// 筛选条件：结束 Unix 时间戳（秒）
+	EndTimestamp *uint64 `json:"EndTimestamp,omitnil" name:"EndTimestamp"`
+
+	// 事件类型。如果不传则返回所有类型的数据
+	Types []*string `json:"Types,omitnil" name:"Types"`
+
+	// 运行实例 ID 数组
+	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil" name:"RunningOrderIds"`
+
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+}
+
+type DescribeJobEventsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 作业的 ID
+	JobId *string `json:"JobId,omitnil" name:"JobId"`
+
+	// 筛选条件：起始 Unix 时间戳（秒）
+	StartTimestamp *uint64 `json:"StartTimestamp,omitnil" name:"StartTimestamp"`
+
+	// 筛选条件：结束 Unix 时间戳（秒）
+	EndTimestamp *uint64 `json:"EndTimestamp,omitnil" name:"EndTimestamp"`
+
+	// 事件类型。如果不传则返回所有类型的数据
+	Types []*string `json:"Types,omitnil" name:"Types"`
+
+	// 运行实例 ID 数组
+	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil" name:"RunningOrderIds"`
+
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+}
+
+func (r *DescribeJobEventsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeJobEventsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "StartTimestamp")
+	delete(f, "EndTimestamp")
+	delete(f, "Types")
+	delete(f, "RunningOrderIds")
+	delete(f, "WorkSpaceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeJobEventsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeJobEventsResponseParams struct {
+	// 该作业指定范围内的事件列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Events []*JobEvent `json:"Events,omitnil" name:"Events"`
+
+	// 该作业指定范围内运行实例 ID 数组，仅当入参没有传入 RunningOrderIds 参数时才会返回。倒序输出
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil" name:"RunningOrderIds"`
+
+	// 事件的总数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeJobEventsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeJobEventsResponseParams `json:"Response"`
+}
+
+func (r *DescribeJobEventsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeJobEventsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeJobSavepointRequestParams struct {
 	// 作业 SerialId
 	JobId *string `json:"JobId,omitnil" name:"JobId"`
@@ -3115,6 +3216,101 @@ type GatewayRefItem struct {
 	Type *uint64 `json:"Type,omitnil" name:"Type"`
 }
 
+// Predefined struct for user
+type GetMetaTableRequestParams struct {
+	// Catalog名
+	Catalog *string `json:"Catalog,omitnil" name:"Catalog"`
+
+	// Database名
+	Database *string `json:"Database,omitnil" name:"Database"`
+
+	// Table名
+	Table *string `json:"Table,omitnil" name:"Table"`
+
+	// 空间唯一标识
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+}
+
+type GetMetaTableRequest struct {
+	*tchttp.BaseRequest
+	
+	// Catalog名
+	Catalog *string `json:"Catalog,omitnil" name:"Catalog"`
+
+	// Database名
+	Database *string `json:"Database,omitnil" name:"Database"`
+
+	// Table名
+	Table *string `json:"Table,omitnil" name:"Table"`
+
+	// 空间唯一标识
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+}
+
+func (r *GetMetaTableRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetMetaTableRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Catalog")
+	delete(f, "Database")
+	delete(f, "Table")
+	delete(f, "WorkSpaceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetMetaTableRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type GetMetaTableResponseParams struct {
+	// 元数据表唯一标识
+	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+
+	// Catalog名
+	Catalog *string `json:"Catalog,omitnil" name:"Catalog"`
+
+	// Database名
+	Database *string `json:"Database,omitnil" name:"Database"`
+
+	// Table名
+	Table *string `json:"Table,omitnil" name:"Table"`
+
+	// 建表语句,使用 Base64 编码。
+	// 例如
+	// Q1JFQVRFIFRBQkxFIGRhdGFnZW5fc291cmNlX3RhYmxlICggCiAgICBpZCBJTlQsIAogICAgbmFtZSBTVFJJTkcgCikgV0lUSCAoCidjb25uZWN0b3InPSdkYXRhZ2VuJywKJ3Jvd3MtcGVyLXNlY29uZCcgPSAnMScKKTs=
+	DDL *string `json:"DDL,omitnil" name:"DDL"`
+
+	// 场景时间
+	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type GetMetaTableResponse struct {
+	*tchttp.BaseResponse
+	Response *GetMetaTableResponseParams `json:"Response"`
+}
+
+func (r *GetMetaTableResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetMetaTableResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type JobConfig struct {
 	// 作业Id
 	JobId *string `json:"JobId,omitnil" name:"JobId"`
@@ -3232,6 +3428,29 @@ type JobConfig struct {
 	// es空间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EsServerlessSpace *string `json:"EsServerlessSpace,omitnil" name:"EsServerlessSpace"`
+}
+
+type JobEvent struct {
+	// 内部定义的事件类型
+	Type *string `json:"Type,omitnil" name:"Type"`
+
+	// 事件类型的说明文字
+	Description *string `json:"Description,omitnil" name:"Description"`
+
+	// 事件发生的 Unix 时间戳（秒）
+	Timestamp *uint64 `json:"Timestamp,omitnil" name:"Timestamp"`
+
+	// 事件发生时的运行 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RunningOrderId *uint64 `json:"RunningOrderId,omitnil" name:"RunningOrderId"`
+
+	// 事件的一些可选说明
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Message *string `json:"Message,omitnil" name:"Message"`
+
+	// 异常事件的排查手册链接
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SolutionLink *string `json:"SolutionLink,omitnil" name:"SolutionLink"`
 }
 
 type JobGraph struct {
