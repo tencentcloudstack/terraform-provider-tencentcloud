@@ -144,3 +144,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+lighthouse instance can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_lighthouse_instance.lighthouse lhins-xxxxxx
+```
+
