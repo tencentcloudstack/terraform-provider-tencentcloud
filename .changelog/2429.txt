@@ -1,0 +1,11 @@
+```release-note:enhancement
+tencentcloud_mysql_instance: Support upgrade switching during window period
+```
+
+```release-note:enhancement
+tencentcloud_redis_instance: Support upgrade switching during window period
+```
+
+```release-note:enhancement
+tencentcloud_mysql_readonly_instance: Fix read-only instance `slave_deploy_mode` problem
+```

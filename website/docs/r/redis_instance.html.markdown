@@ -263,6 +263,7 @@ The following arguments are supported:
 * `type_id` - (Optional, Int) Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.
 * `type` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.33.1. Please use 'type_id' instead. Instance type. Available values: `cluster_ckv`,`cluster_redis5.0`,`cluster_redis`,`master_slave_ckv`,`master_slave_redis4.0`,`master_slave_redis5.0`,`master_slave_redis`,`standalone_redis`, specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.
 * `vpc_id` - (Optional, String) ID of the vpc with which the instance is to be associated. When the `operation_network` is `changeVpc` or `changeBaseToVpc`, this parameter needs to be configured.
+* `wait_switch` - (Optional, Int) Switching mode: `1`-maintenance time window switching, `2`-immediate switching, default value `2`.
 
 ## Attributes Reference
 
