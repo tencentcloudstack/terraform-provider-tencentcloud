@@ -49,6 +49,7 @@ func ResourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 			},
 			"ssh_key_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Name of the SSH key pair, which only contains digits, letters and underscores and must start with a digit or letter. The maximum length is 25 characters.",
 			},
