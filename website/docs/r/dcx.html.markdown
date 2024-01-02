@@ -84,3 +84,11 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the dedicated tunnels. Valid value: `PENDING`, `ALLOCATING`, `ALLOCATED`, `ALTERING`, `DELETING`, `DELETED`, `COMFIRMING` and `REJECTED`.
 
 
+## Import
+
+DCX instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_dcx.foo dcx-cbbr1gjk
+```
+
