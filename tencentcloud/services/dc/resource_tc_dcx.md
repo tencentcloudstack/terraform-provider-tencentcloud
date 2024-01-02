@@ -42,4 +42,13 @@ resource "tencentcloud_dcx" "static_main" {
   tencent_address       = "100.93.46.1/30"
   customer_address      = "100.93.46.2/30"
 }
+
+
+```
+Import
+
+DCX instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_dcx.foo dcx-cbbr1gjk
 ```

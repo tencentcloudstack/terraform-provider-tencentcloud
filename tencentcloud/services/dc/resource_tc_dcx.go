@@ -45,9 +45,10 @@ func ResourceTencentCloudDcxInstance() *schema.Resource {
 				Description: "Connection owner, who is the current customer by default. The developer account ID should be entered for shared connections.",
 			},
 			"network_region": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Network region.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
