@@ -849,3 +849,55 @@ func (me *OceanusService) DeleteOceanusFolderById(ctx context.Context, workSpace
 
 	return
 }
+
+func (me *OceanusService) DescribeOceanusJobEventsByFilter(ctx context.Context, param map[string]interface{}) (JobEvents *oceanus.DescribeJobEventsResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = oceanus.NewDescribeJobEventsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "JobId" {
+			request.JobId = v.(*string)
+		}
+
+		if k == "StartTimestamp" {
+			request.StartTimestamp = v.(*uint64)
+		}
+
+		if k == "EndTimestamp" {
+			request.EndTimestamp = v.(*uint64)
+		}
+
+		if k == "Types" {
+			request.Types = v.([]*string)
+		}
+
+		if k == "WorkSpaceId" {
+			request.WorkSpaceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DescribeJobEvents(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	JobEvents = response.Response
+	return
+}

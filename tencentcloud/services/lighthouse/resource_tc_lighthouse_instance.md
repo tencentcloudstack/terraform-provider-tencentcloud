@@ -74,3 +74,11 @@ resource "tencentcloud_lighthouse_instance" "lighthouse" {
   firewall_template_id = tencentcloud_lighthouse_firewall_template.firewall_template.id
 }
 ```
+
+Import
+
+lighthouse instance can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_lighthouse_instance.lighthouse lhins-xxxxxx
+```

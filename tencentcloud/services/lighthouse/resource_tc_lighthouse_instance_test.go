@@ -68,6 +68,12 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_lighthouse_instance.instance", "renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
+			{
+				ResourceName:            "tencentcloud_lighthouse_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"is_update_bundle_id_auto_voucher", "period", "dry_run", "client_token", "login_configuration", "permit_default_key_pair_login", "isolate_data_disk", "containers", "firewall_template_id"},
+			},
 		},
 	})
 }

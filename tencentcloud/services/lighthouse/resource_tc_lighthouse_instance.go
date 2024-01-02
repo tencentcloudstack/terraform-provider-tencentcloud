@@ -22,6 +22,9 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 		Read:   resourceTencentCloudLighthouseInstanceRead,
 		Delete: resourceTencentCloudLighthouseInstanceDelete,
 		Update: resourceTencentCloudLighthouseInstanceUpdate,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"bundle_id": {
 				Type:        schema.TypeString,

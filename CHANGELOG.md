@@ -1,3 +1,19 @@
+## 1.81.62 (December 29, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_oceanus_job_events` ([#2442](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2442))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_tdmq_pro_instances: support params `create_time` and `tags` ([#2431](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2431))
+* resource/tencentcloud_apm_instance: support param `pay_mode` ([#2432](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2432))
+* resource/tencentcloud_cat_task_set: support param `node_ip_type` ([#2433](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2433))
+* resource/tencentcloud_lighthouse_instance: support import ([#2443](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2443))
+* resource/tencentcloud_mariadb_hour_db_instance: Fix tag problem ([#2434](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2434))
+* resource/tencentcloud_mariadb_hour_db_instance: Fix zone sorting problem ([#2435](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2435))
+* resource/tencentcloud_ssm_ssh_key_pair_secret: Fix kms_key_id problem ([#2440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2440))
+
 ## 1.81.61 (December 22, 2023)
 
 ENHANCEMENTS:

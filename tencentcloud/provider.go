@@ -311,6 +311,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_tree_resources":                       oceanus.DataSourceTencentCloudOceanusTreeResources(),
 			"tencentcloud_oceanus_job_submission_log":                   oceanus.DataSourceTencentCloudOceanusJobSubmissionLog(),
 			"tencentcloud_oceanus_check_savepoint":                      oceanus.DataSourceTencentCloudOceanusCheckSavepoint(),
+			"tencentcloud_oceanus_job_events":                           oceanus.DataSourceTencentCloudOceanusJobEvents(),
 			"tencentcloud_vpn_customer_gateways":                        vpn.DataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                                 vpn.DataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                           vpn.DataSourceTencentCloudVpnGatewayRoutes(),
