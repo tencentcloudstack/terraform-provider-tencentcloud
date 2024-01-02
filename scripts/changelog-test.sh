@@ -15,21 +15,25 @@ for source_name in $source_names; do
     name=${source_name#*/}
     type=${source_name%/*}
     if [ $type == "datasource" ]; then
-        type=dataSource
+        type=DataSource
     fi 
-    # echo $source_name $type $name
+    if [ $type == "resource" ]; then
+        type=Resource
+    fi
     function_name=$(cat tencentcloud/provider.go | grep "\"${name}\"" | grep "${type}")
     function_name=${function_name#*:}
     function_name=$(echo $(echo ${function_name%,*}))
-
-    test_file=$(grep -r "func $function_name \*schema\.Resource" tencentcloud)
-    test_file=${test_file#*/}
+    package=${function_name%.*}
+    function_name=${function_name#*.}
+    test_file=$(grep -r "func $function_name \*schema\.Resource" tencentcloud/services/$package)
     test_file=${test_file%:*}
     test_files="$test_files $test_file"
 done
 echo "test files:" $test_files
 
 for test_file in $test_files; do
+    file_path=${test_file%/*}
+    test_file=${test_file##*/}
     test_case_type=${test_file%_tc_*}
     test_case_name=${test_file#*_tc_}
     test_case_name=${test_case_name%.*}
@@ -37,7 +41,7 @@ for test_file in $test_files; do
     test_case_type=`echo $test_case_type | sed -r 's/(^|_)(\w)/\U\2/g'`
     test_case_name=`echo $test_case_name | sed -r 's/(^|_)(\w)/\U\2/g'`
    
-    go_test_cmd="go test -v -run TestAccTencentCloud${test_case_name}${test_case_type} -timeout=0 ./tencentcloud/"
+    go_test_cmd="go test -v -run TestAccTencentCloud${test_case_name}${test_case_type} -timeout=0 ./$file_path"
     echo $go_test_cmd
     $go_test_cmd
     if [ $? -ne 0 ]; then
