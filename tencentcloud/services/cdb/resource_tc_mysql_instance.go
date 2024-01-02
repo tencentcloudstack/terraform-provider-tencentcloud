@@ -22,6 +22,8 @@ import (
 
 var importMysqlFlag = false
 
+const InWindow = 1
+
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_name": {
@@ -165,6 +167,11 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     false,
 			Description: "Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.",
+		},
+		"wait_switch": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.",
 		},
 		// Computed values
 		"intranet_ip": {
@@ -1149,6 +1156,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		engineVersion := ""
 		var upgradeSubversion int64
 		var maxDelayTime int64
+		var waitSwitch int64 = 0
 		if v, ok := d.GetOk("engine_version"); ok {
 			engineVersion = v.(string)
 		}
@@ -1158,37 +1166,65 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if v, ok := d.GetOk("max_deay_time"); ok {
 			maxDelayTime = int64(v.(int))
 		}
+		if v, ok := d.GetOkExists("wait_switch"); ok {
+			waitSwitch = int64(v.(int))
+		}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstanceEngineVersion(ctx, d.Id(), engineVersion, upgradeSubversion, maxDelayTime)
+		asyncRequestId, err := mysqlService.UpgradeDBInstanceEngineVersion(ctx, d.Id(), engineVersion, upgradeSubversion, maxDelayTime, waitSwitch)
 		if err != nil {
 			return err
 		}
 
-		err = resource.Retry(6*time.Hour, func() *resource.RetryError {
-			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+		if waitSwitch != InWindow {
+			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
+				}
+
+				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+					return nil
+				}
+				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("update mysql engineVersion status is %s", taskStatus))
+				}
+				err = fmt.Errorf("update mysql engineVersion task status is %s,we won't wait for it finish ,it show message:%s",
+					",", message)
+				return resource.NonRetryableError(err)
+			})
 
 			if err != nil {
-				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
+				log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
+				return err
+			}
+		} else {
+			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
 				}
+
+				if *mysqlInfo.TaskStatus == 15 {
+					return nil
+				}
+				return resource.RetryableError(fmt.Errorf("update mysql engineVersion task status is %v", mysqlInfo.TaskStatus))
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
+				return err
 			}
 
-			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-				return nil
-			}
-			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("update mysql engineVersion status is %s", taskStatus))
-			}
-			err = fmt.Errorf("update mysql engineVersion task status is %s,we won't wait for it finish ,it show message:%s",
-				",", message)
-			return resource.NonRetryableError(err)
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
-			return err
 		}
 	}
 

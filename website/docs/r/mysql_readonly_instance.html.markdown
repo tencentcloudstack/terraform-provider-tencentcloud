@@ -102,9 +102,11 @@ The following arguments are supported:
 * `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
 * `prepaid_period` - (Optional, Int) Period of instance. NOTES: Only supported prepaid instance.
 * `security_groups` - (Optional, Set: [`String`]) Security groups to use.
+* `slave_deploy_mode` - (Optional, Int) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
 * `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional, Map) Instance tags.
 * `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.
+* `wait_switch` - (Optional, Int) Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.
 * `zone` - (Optional, String) Zone information, this parameter defaults to, the system automatically selects an Availability Zone.
 
 ## Attributes Reference
