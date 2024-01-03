@@ -44,6 +44,8 @@ In addition to all arguments above, the following attributes are exported:
     * `max_age_seconds` - Specifies time in seconds that browser can cache the response for a preflight request.
   * `cos_bucket_url` - The URL of this cos bucket.
   * `lifecycle_rules` - The lifecycle configuration of a bucket.
+    * `abort_incomplete_multipart_upload` - Set the maximum time a multipart upload is allowed to remain running.
+      * `days_after_initiation` - Specifies the number of days after the multipart upload starts that the upload must be completed. The maximum value is 3650.
     * `expiration` - Specifies a period in the object's expire.
       * `date` - Specifies the date after which you want the corresponding action to take effect.
       * `days` - Specifies the number of days after object creation when the specific rule action takes effect.

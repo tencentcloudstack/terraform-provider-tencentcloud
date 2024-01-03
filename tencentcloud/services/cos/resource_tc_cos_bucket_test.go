@@ -273,6 +273,8 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 						}),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_expiration.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.abort_incomplete_multipart_upload.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.abort_incomplete_multipart_upload.0.days_after_initiation", "1"),
 				),
 			},
 			{
@@ -785,6 +787,10 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
     non_current_transition {
       non_current_days = 180
       storage_class = "ARCHIVE"
+    }
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
     }
   }
 }

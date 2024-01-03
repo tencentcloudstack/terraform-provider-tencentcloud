@@ -256,6 +256,10 @@ The following arguments are supported:
 * `versioning_enable` - (Optional, Bool) Enable bucket versioning. NOTE: The `multi_az` feature is true for the current bucket, cannot disable version control.
 * `website` - (Optional, List) A website object(documented below).
 
+The `abort_incomplete_multipart_upload` object of `lifecycle_rules` supports the following:
+
+* `days_after_initiation` - (Required, Int) Specifies the number of days after the multipart upload starts that the upload must be completed. The maximum value is 3650.
+
 The `cors_rules` object supports the following:
 
 * `allowed_headers` - (Required, List) Specifies which headers are allowed.
@@ -273,6 +277,7 @@ The `expiration` object of `lifecycle_rules` supports the following:
 The `lifecycle_rules` object supports the following:
 
 * `filter_prefix` - (Required, String) Object key prefix identifying one or more objects to which the rule applies.
+* `abort_incomplete_multipart_upload` - (Optional, Set) Set the maximum time a multipart upload is allowed to remain running.
 * `expiration` - (Optional, Set) Specifies a period in the object's expire (documented below).
 * `id` - (Optional, String) A unique identifier for the rule. It can be up to 255 characters.
 * `non_current_expiration` - (Optional, Set) Specifies when non current object versions shall expire.

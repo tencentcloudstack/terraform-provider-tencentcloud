@@ -172,6 +172,20 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 											},
 										},
 									},
+									"abort_incomplete_multipart_upload": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Set the maximum time a multipart upload is allowed to remain running.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"days_after_initiation": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Specifies the number of days after the multipart upload starts that the upload must be completed. The maximum value is 3650.",
+												},
+											},
+										},
+									},
 								},
 							},
 						},
