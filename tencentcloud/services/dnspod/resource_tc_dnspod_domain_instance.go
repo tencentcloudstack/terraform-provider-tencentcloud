@@ -60,6 +60,11 @@ func ResourceTencentCloudDnspodDomainInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Create time of the domain.",
 			},
+			"slave_dns": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Is secondary DNS enabled.",
+			},
 		},
 	}
 }
@@ -151,6 +156,7 @@ func resourceTencentCloudDnspodDomainInstanceRead(d *schema.ResourceData, meta i
 		_ = d.Set("domain", info.Domain)
 		_ = d.Set("create_time", info.CreatedOn)
 		_ = d.Set("is_mark", info.IsMark)
+		_ = d.Set("slave_dns", info.SlaveDNS)
 
 		return nil
 	})
