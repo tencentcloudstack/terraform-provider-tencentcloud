@@ -280,7 +280,7 @@ func setString(fieldName string, value string, request *clb.TargetGroupAssociati
 	case "location_id":
 		request.LocationId = helper.String(value)
 	default:
-		fmt.Printf("Invalid field name: %s\n", fieldName)
+		log.Printf("Invalid field name: %s\n", fieldName)
 	}
 }
 func isBindFromClb(id string) bool {
