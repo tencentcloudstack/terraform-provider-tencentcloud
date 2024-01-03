@@ -1,3 +1,21 @@
+## 1.81.63 (January 3, 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_oceanus_job_events` ([#2452](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2452))
+* **New Data Source:** `tencentcloud_oceanus_meta_table` ([#2452](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2452))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_cos_buckets: add `abort_incomplete_multipart_upload` field ([#2449](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2449))
+* resource/tencentcloud_cos_bucket: add `abort_incomplete_multipart_upload` field ([#2449](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2449))
+* resource/tencentcloud_dcx: Support import ([#2448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2448))
+* resource/tencentcloud_dnspod_domain_instance: Add computed `slave_dns` param ([#2450](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2450))
+* resource/tencentcloud_ssm_ssh_key_pair_secret: Fix ssh_key_name problem ([#2444](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2444))
+* tencentcloud_mysql_instance: Support upgrade switching during window period ([#2429](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2429))
+* tencentcloud_mysql_readonly_instance: Fix read-only instance `slave_deploy_mode` problem ([#2429](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2429))
+* tencentcloud_redis_instance: Support upgrade switching during window period ([#2429](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2429))
+
 ## 1.81.62 (December 29, 2023)
 
 FEATURES:
