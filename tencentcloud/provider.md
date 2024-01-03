@@ -1127,6 +1127,8 @@ Oceanus
     tencentcloud_oceanus_tree_resources
     tencentcloud_oceanus_job_submission_log
     tencentcloud_oceanus_check_savepoint
+    tencentcloud_oceanus_job_events
+    tencentcloud_oceanus_meta_table
 
   Resource
     tencentcloud_oceanus_folder

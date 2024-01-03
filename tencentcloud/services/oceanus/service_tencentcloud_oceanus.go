@@ -901,3 +901,51 @@ func (me *OceanusService) DescribeOceanusJobEventsByFilter(ctx context.Context, 
 	JobEvents = response.Response
 	return
 }
+
+func (me *OceanusService) DescribeOceanusMetaTableByFilter(ctx context.Context, param map[string]interface{}) (MetaTable *oceanus.GetMetaTableResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = oceanus.NewGetMetaTableRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "WorkSpaceId" {
+			request.WorkSpaceId = v.(*string)
+		}
+
+		if k == "Catalog" {
+			request.Catalog = v.(*string)
+		}
+
+		if k == "Database" {
+			request.Database = v.(*string)
+		}
+
+		if k == "Table" {
+			request.Table = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().GetMetaTable(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	MetaTable = response.Response
+	return
+}
