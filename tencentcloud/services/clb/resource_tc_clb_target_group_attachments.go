@@ -137,8 +137,6 @@ func resourceTencentCloudClbTargetGroupAttachmentsCreate(d *schema.ResourceData,
 		resourceId = v.(string)
 		request.Associations = parseParamToRequest(d, "target_group_id", resourceId)
 	}
-	fmt.Println(1222222)
-	fmt.Println(resourceId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateTargetGroups(request)
@@ -180,12 +178,6 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 	if err != nil {
 		return err
 	}
-	fmt.Println(111111111)
-	fmt.Println(111111111)
-
-	fmt.Println(targetGroupList)
-	fmt.Println(associationsSet)
-	fmt.Println(targetGroupAttachments)
 
 	if len(targetGroupAttachments) < 1 {
 		d.SetId("")
@@ -340,5 +332,4 @@ func processIds(id string, dMap map[string]interface{}, key string, clbFlag bool
 		}
 
 	}
-	fmt.Println(clbFlag, key, ids)
 }
