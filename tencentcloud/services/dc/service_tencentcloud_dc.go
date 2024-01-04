@@ -627,7 +627,7 @@ func (me *DcService) waitCreateDirectConnectTunnelAvailable(ctx context.Context,
 			return tccommon.RetryError(e)
 		}
 		if has == 0 {
-			return nil
+			return resource.NonRetryableError(fmt.Errorf("tunnel not found"))
 		}
 		if item.State == nil {
 			return resource.NonRetryableError(fmt.Errorf("tunnel state is nil"))
