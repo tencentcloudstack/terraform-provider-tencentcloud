@@ -411,7 +411,7 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOkExists("bot_status"); ok {
 		tmpBotStatus := v.(int)
 
-		if tmpBotStatus != BOT_STATUS_0 {
+		if tmpBotStatus == BOT_STATUS_1 {
 			botStatus = uint64(tmpBotStatus)
 			modifyBotStatusRequest := waf.NewModifyBotStatusRequest()
 			modifyBotStatusRequest.Domain = &domain
@@ -419,6 +419,8 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 			tmpStatus := strconv.FormatUint(botStatus, 10)
 			modifyBotStatusRequest.Status = &tmpStatus
 			modifyBotStatusRequest.Category = common.StringPtr("bot")
+			modifyBotStatusRequest.IsVersionFour = common.BoolPtr(true)
+			modifyBotStatusRequest.BotVersion = common.StringPtr("4.1.0")
 
 			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafClient().ModifyBotStatus(modifyBotStatusRequest)
@@ -442,7 +444,7 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOkExists("api_safe_status"); ok {
 		tmpApiSafeStatus := v.(int)
 
-		if tmpApiSafeStatus != API_SAFE_STATUS_0 {
+		if tmpApiSafeStatus == API_SAFE_STATUS_1 {
 			apiSafeStatus = uint64(tmpApiSafeStatus)
 			modifyApiAnalyzeStatusRequest := waf.NewModifyApiAnalyzeStatusRequest()
 			modifyApiAnalyzeStatusRequest.Domain = &domain
@@ -941,6 +943,8 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 			tmpStatus := strconv.FormatUint(botStatus, 10)
 			modifyBotStatusRequest.Status = &tmpStatus
 			modifyBotStatusRequest.Category = common.StringPtr("bot")
+			modifyBotStatusRequest.IsVersionFour = common.BoolPtr(true)
+			modifyBotStatusRequest.BotVersion = common.StringPtr("4.1.0")
 
 			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafClient().ModifyBotStatus(modifyBotStatusRequest)
@@ -988,32 +992,34 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	// set cls
-	if v, ok := d.GetOkExists("cls_status"); ok {
-		clsStatus = uint64(v.(int))
-		modifyDomainsCLSStatusRequest := waf.NewModifyDomainsCLSStatusRequest()
-		modifyDomainsCLSStatusRequest.Domains = []*waf.DomainURI{
-			{
-				Domain:     common.StringPtr(domain),
-				Edition:    common.StringPtr("clb-waf"),
-				InstanceID: common.StringPtr(instanceID),
-			},
-		}
-		modifyDomainsCLSStatusRequest.Status = &clsStatus
-
-		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafClient().ModifyDomainsCLSStatus(modifyDomainsCLSStatusRequest)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainsCLSStatusRequest.GetAction(), modifyDomainsCLSStatusRequest.ToJsonString(), result.ToJsonString())
+	if d.HasChange("cls_status") {
+		if v, ok := d.GetOkExists("cls_status"); ok {
+			clsStatus = uint64(v.(int))
+			modifyDomainsCLSStatusRequest := waf.NewModifyDomainsCLSStatusRequest()
+			modifyDomainsCLSStatusRequest.Domains = []*waf.DomainURI{
+				{
+					Domain:     common.StringPtr(domain),
+					Edition:    common.StringPtr("clb-waf"),
+					InstanceID: common.StringPtr(instanceID),
+				},
 			}
+			modifyDomainsCLSStatusRequest.Status = &clsStatus
 
-			return nil
-		})
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafClient().ModifyDomainsCLSStatus(modifyDomainsCLSStatusRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainsCLSStatusRequest.GetAction(), modifyDomainsCLSStatusRequest.ToJsonString(), result.ToJsonString())
+				}
 
-		if err != nil {
-			log.Printf("[CRITAL]%s modify waf clbDomain cls_status failed, reason:%+v", logId, err)
-			return err
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify waf clbDomain cls_status failed, reason:%+v", logId, err)
+				return err
+			}
 		}
 	}
 
