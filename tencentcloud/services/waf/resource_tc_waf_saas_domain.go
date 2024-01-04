@@ -744,7 +744,7 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOkExists("status"); ok {
 		tmpProtectionStatus := v.(int)
 
-		if tmpProtectionStatus != PROTECTION_STATUS_1 {
+		if tmpProtectionStatus == PROTECTION_STATUS_0 {
 			protectionStatus = uint64(tmpProtectionStatus)
 			modifyProtectionStatusRequest := waf.NewModifyProtectionStatusRequest()
 			modifyProtectionStatusRequest.Domain = &domain

@@ -473,7 +473,7 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOkExists("cls_status"); ok {
 		tmpClsStatus := v.(int)
 
-		if tmpClsStatus != CLS_STATUS_0 {
+		if tmpClsStatus == CLS_STATUS_1 {
 			clsStatus = uint64(tmpClsStatus)
 			modifyDomainsCLSStatusRequest := waf.NewModifyDomainsCLSStatusRequest()
 			modifyDomainsCLSStatusRequest.Domains = []*waf.DomainURI{
@@ -507,7 +507,7 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOkExists("status"); ok {
 		tmpWafStatus := v.(int)
 
-		if tmpWafStatus != CLB_DOMAIN_STATUS_1 {
+		if tmpWafStatus == CLB_DOMAIN_STATUS_0 {
 			wafStatus = uint64(tmpWafStatus)
 			modifyHostStatusRequest := waf.NewModifyHostStatusRequest()
 			modifyHostStatusRequest.HostsStatus = []*waf.HostStatus{
