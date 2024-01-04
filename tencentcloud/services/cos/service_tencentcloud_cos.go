@@ -571,6 +571,14 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 				}
 				rule["non_current_expiration"] = schema.NewSet(nonCurrentExpirationHash, []interface{}{e})
 			}
+			// abortIncompleteMultipartUpload
+			if value.AbortIncompleteMultipartUpload != nil {
+				e := make(map[string]interface{})
+				if value.AbortIncompleteMultipartUpload.DaysAfterInitiation != nil {
+					e["days_after_initiation"] = int(*value.AbortIncompleteMultipartUpload.DaysAfterInitiation)
+				}
+				rule["abort_incomplete_multipart_upload"] = schema.NewSet(abortIncompleteMultipartUploadHash, []interface{}{e})
+			}
 
 			lifecycleRules = append(lifecycleRules, rule)
 		}
@@ -666,6 +674,14 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 					e["non_current_days"] = int(*value.NoncurrentVersionExpiration.NoncurrentDays)
 				}
 				rule["non_current_expiration"] = []interface{}{e}
+			}
+			// abortIncompleteMultipartUpload
+			if value.AbortIncompleteMultipartUpload != nil {
+				e := make(map[string]interface{})
+				if value.AbortIncompleteMultipartUpload.DaysAfterInitiation != nil {
+					e["days_after_initiation"] = int(*value.AbortIncompleteMultipartUpload.DaysAfterInitiation)
+				}
+				rule["abort_incomplete_multipart_upload"] = []interface{}{e}
 			}
 
 			lifecycleRules = append(lifecycleRules, rule)

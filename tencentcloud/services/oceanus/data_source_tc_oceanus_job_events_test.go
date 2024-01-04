@@ -1,4 +1,4 @@
-package oceanus
+package oceanus_test
 
 import (
 	"testing"

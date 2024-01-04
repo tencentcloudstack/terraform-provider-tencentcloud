@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket: add `abort_incomplete_multipart_upload` field
+```
+
+```release-note:enhancement
+datasource/tencentcloud_cos_buckets: add `abort_incomplete_multipart_upload` field
+```
