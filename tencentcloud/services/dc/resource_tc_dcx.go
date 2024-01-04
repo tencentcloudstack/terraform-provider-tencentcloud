@@ -227,6 +227,11 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
+
+	err = service.waitCreateDirectConnectTunnelAvailable(ctx, dcxId)
+	if err != nil {
+		return err
+	}
 	d.SetId(dcxId)
 
 	return resourceTencentCloudDcxInstanceRead(d, meta)
