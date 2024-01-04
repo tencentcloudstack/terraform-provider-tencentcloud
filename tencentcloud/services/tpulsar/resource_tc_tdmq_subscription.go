@@ -79,14 +79,14 @@ func resourceTencentCloudTdmqSubscriptionCreate(d *schema.ResourceData, meta int
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId              = tccommon.GetLogId(tccommon.ContextNil)
-		request            = tdmq.NewCreateSubscriptionRequest()
-		clusterId          string
-		environmentId      string
-		topicName          string
-		subscriptionName   string
-		createPolicyStatus bool
-		deletePolicyStatus string
+		logId                 = tccommon.GetLogId(tccommon.ContextNil)
+		request               = tdmq.NewCreateSubscriptionRequest()
+		clusterId             string
+		environmentId         string
+		topicName             string
+		subscriptionName      string
+		autoCreatePolicyTopic bool
+		autoDeletePolicyTopic string
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -115,16 +115,16 @@ func resourceTencentCloudTdmqSubscriptionCreate(d *schema.ResourceData, meta int
 
 	if v, ok := d.GetOkExists("auto_create_policy_topic"); ok {
 		request.AutoCreatePolicyTopic = helper.Bool(v.(bool))
-		createPolicyStatus = v.(bool)
+		autoCreatePolicyTopic = v.(bool)
 
 		if v, ok = d.GetOkExists("auto_delete_policy_topic"); ok {
-			if createPolicyStatus == false && v.(bool) == true {
+			if autoCreatePolicyTopic == false && v.(bool) == true {
 				return errors.New("If `auto_create_policy_topic` is false, Can't set `auto_delete_policy_topic` param.")
 			} else {
 				if v.(bool) {
-					deletePolicyStatus = "true"
+					autoDeletePolicyTopic = "true"
 				} else {
-					deletePolicyStatus = "false"
+					autoDeletePolicyTopic = "false"
 				}
 			}
 		}
@@ -153,7 +153,7 @@ func resourceTencentCloudTdmqSubscriptionCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	d.SetId(strings.Join([]string{clusterId, environmentId, topicName, subscriptionName, deletePolicyStatus}, tccommon.FILED_SP))
+	d.SetId(strings.Join([]string{clusterId, environmentId, topicName, subscriptionName, autoDeletePolicyTopic}, tccommon.FILED_SP))
 
 	return resourceTencentCloudTdmqSubscriptionRead(d, meta)
 }
@@ -178,7 +178,7 @@ func resourceTencentCloudTdmqSubscriptionRead(d *schema.ResourceData, meta inter
 	environmentId := idSplit[1]
 	topicName := idSplit[2]
 	subscriptionName := idSplit[3]
-	deletePolicyStatus := idSplit[4]
+	autoDeletePolicyTopic := idSplit[4]
 
 	subscription, err := service.DescribeTdmqSubscriptionById(ctx, clusterId, environmentId, topicName, subscriptionName)
 	if err != nil {
@@ -197,7 +197,7 @@ func resourceTencentCloudTdmqSubscriptionRead(d *schema.ResourceData, meta inter
 	_ = d.Set("cluster_id", clusterId)
 	_ = d.Set("remark", subscription.Remark)
 
-	if deletePolicyStatus == "true" {
+	if autoDeletePolicyTopic == "true" {
 		_ = d.Set("auto_delete_policy_topic", true)
 	} else {
 		_ = d.Set("auto_delete_policy_topic", false)
@@ -232,13 +232,13 @@ func resourceTencentCloudTdmqSubscriptionDelete(d *schema.ResourceData, meta int
 	environmentId := idSplit[1]
 	topicName := idSplit[2]
 	subscriptionName := idSplit[3]
-	deletePolicyStatus := idSplit[4]
+	autoDeletePolicyTopic := idSplit[4]
 
 	if err := service.DeleteTdmqSubscriptionById(ctx, clusterId, environmentId, topicName, subscriptionName); err != nil {
 		return err
 	}
 
-	if deletePolicyStatus == "true" {
+	if autoDeletePolicyTopic == "true" {
 		// Delete Topics
 		if err := service.DeleteTdmqTopicsAttachmentById(ctx, environmentId, topicName, subscriptionName, clusterId); err != nil {
 			return err
