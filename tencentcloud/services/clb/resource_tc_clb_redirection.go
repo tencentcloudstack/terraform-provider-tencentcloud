@@ -136,6 +136,13 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 			if e != nil {
 				return tccommon.RetryError(e)
 			}
+
+			if instance == nil {
+				return resource.NonRetryableError(fmt.Errorf("[CLB redirection][Create] the queried instance is empty [DescribeListenerById]"))
+			}
+			if instance.Protocol == nil || instance.Port == nil {
+				return resource.NonRetryableError(fmt.Errorf("[CLB redirection][Create] protocol or port is nil, get protocol and port fail [DescribeListenerById]"))
+			}
 			protocol = *(instance.Protocol)
 			port = int(*(instance.Port))
 			return nil
