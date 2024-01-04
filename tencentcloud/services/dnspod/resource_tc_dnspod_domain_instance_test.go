@@ -63,6 +63,7 @@ func TestAccTencentCloudDnspodDoamin(t *testing.T) {
 					testAccCheckDnspodDomainExists("tencentcloud_dnspod_domain_instance.domain"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_instance.domain", "domain", "terraformer.com"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_instance.domain", "is_mark", "no"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_instance.domain", "slave_dns", "no"),
 				),
 			},
 		},

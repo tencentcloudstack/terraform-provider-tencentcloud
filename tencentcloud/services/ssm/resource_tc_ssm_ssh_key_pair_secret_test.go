@@ -62,6 +62,26 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"clean_ssh_key"},
 			},
+			{
+				Config: testAccSsmSshKeyPairSecretNoName,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "description", "desc."),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "status", "Disabled"),
+				),
+			},
+			{
+				Config: testAccSsmSshKeyPairSecretNoNameUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "description", "update desc."),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "status", "Enabled"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_ssm_ssh_key_pair_secret.example2",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"clean_ssh_key"},
+			},
 		},
 	})
 }
@@ -141,6 +161,34 @@ resource "tencentcloud_ssm_ssh_key_pair_secret" "example1" {
   project_id    = 0
   description   = "update desc."
   ssh_key_name  = "tf_noid_name_%s"
+  status        = "Enabled"
+  clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraform"
+  }
+}
+`
+
+const testAccSsmSshKeyPairSecretNoName = `
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example2" {
+  secret_name   = "tf-example-ssh-test-no-id"
+  project_id    = 0
+  description   = "desc."
+  status        = "Disabled"
+  clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraform"
+  }
+}
+`
+
+const testAccSsmSshKeyPairSecretNoNameUpdate = `
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example2" {
+  secret_name   = "tf-example-ssh-test-no-id"
+  project_id    = 0
+  description   = "update desc."
   status        = "Enabled"
   clean_ssh_key = true
 

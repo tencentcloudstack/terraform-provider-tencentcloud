@@ -524,6 +524,7 @@ func NewCreateDomainAliasResponse() (response *CreateDomainAliasResponse) {
 //  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
 //  LIMITEXCEEDED_DOMAINALIASCOUNTEXCEEDED = "LimitExceeded.DomainAliasCountExceeded"
 //  LIMITEXCEEDED_DOMAINALIASNUMBERLIMIT = "LimitExceeded.DomainAliasNumberLimit"
@@ -553,6 +554,7 @@ func (c *Client) CreateDomainAlias(request *CreateDomainAliasRequest) (response 
 //  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
 //  LIMITEXCEEDED_DOMAINALIASCOUNTEXCEEDED = "LimitExceeded.DomainAliasCountExceeded"
 //  LIMITEXCEEDED_DOMAINALIASNUMBERLIMIT = "LimitExceeded.DomainAliasNumberLimit"
@@ -865,6 +867,8 @@ func NewCreateRecordResponse() (response *CreateRecordResponse) {
 // CreateRecord
 // 添加记录
 //
+// 备注：新添加的解析记录存在短暂的索引延迟，如果查询不到新增记录，请在 30 秒后重试
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DOMAINISLOCKED = "FailedOperation.DomainIsLocked"
@@ -923,6 +927,8 @@ func (c *Client) CreateRecord(request *CreateRecordRequest) (response *CreateRec
 
 // CreateRecord
 // 添加记录
+//
+// 备注：新添加的解析记录存在短暂的索引延迟，如果查询不到新增记录，请在 30 秒后重试
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1806,7 +1812,7 @@ func NewDeleteShareDomainResponse() (response *DeleteShareDomainResponse) {
 }
 
 // DeleteShareDomain
-// 删除域名共享
+// 按账号删除域名共享
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DOMAINISLOCKED = "FailedOperation.DomainIsLocked"
@@ -1824,7 +1830,7 @@ func (c *Client) DeleteShareDomain(request *DeleteShareDomainRequest) (response 
 }
 
 // DeleteShareDomain
-// 删除域名共享
+// 按账号删除域名共享
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DOMAINISLOCKED = "FailedOperation.DomainIsLocked"
@@ -2295,6 +2301,8 @@ func NewDescribeDomainFilterListResponse() (response *DescribeDomainFilterListRe
 // DescribeDomainFilterList
 // 获取域名筛选列表
 //
+// 备注：新添加的解析记录存在短暂的索引延迟，如果查询不到新增记录，请在 30 秒后重试
+//
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
@@ -2317,6 +2325,8 @@ func (c *Client) DescribeDomainFilterList(request *DescribeDomainFilterListReque
 
 // DescribeDomainFilterList
 // 获取域名筛选列表
+//
+// 备注：新添加的解析记录存在短暂的索引延迟，如果查询不到新增记录，请在 30 秒后重试
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3381,6 +3391,8 @@ func NewDescribeRecordListResponse() (response *DescribeRecordListResponse) {
 // DescribeRecordList
 // 获取某个域名下的解析记录列表
 //
+// 备注：新添加的解析记录存在短暂的索引延迟，如果查询不到新增记录，请在 30 秒后重试
+//
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
@@ -3410,6 +3422,8 @@ func (c *Client) DescribeRecordList(request *DescribeRecordListRequest) (respons
 
 // DescribeRecordList
 // 获取某个域名下的解析记录列表
+//
+// 备注：新添加的解析记录存在短暂的索引延迟，如果查询不到新增记录，请在 30 秒后重试
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4181,6 +4195,7 @@ func NewModifyDomainCustomLineResponse() (response *ModifyDomainCustomLineRespon
 //  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
 //  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
 //  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
 //  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
@@ -4224,6 +4239,7 @@ func (c *Client) ModifyDomainCustomLine(request *ModifyDomainCustomLineRequest) 
 //  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
 //  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
 //  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
 //  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
@@ -4291,6 +4307,7 @@ func NewModifyDomainLockResponse() (response *ModifyDomainLockResponse) {
 //  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
 //  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
 //  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
 //  INVALIDPARAMETER_UNREALNAMEUSER = "InvalidParameter.UnrealNameUser"
 //  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
@@ -4323,6 +4340,7 @@ func (c *Client) ModifyDomainLock(request *ModifyDomainLockRequest) (response *M
 //  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
 //  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
 //  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
 //  INVALIDPARAMETER_UNREALNAMEUSER = "InvalidParameter.UnrealNameUser"
 //  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
@@ -4386,6 +4404,7 @@ func NewModifyDomainOwnerResponse() (response *ModifyDomainOwnerResponse) {
 //  INVALIDPARAMETER_EMAILINVALID = "InvalidParameter.EmailInvalid"
 //  INVALIDPARAMETER_EMAILORQQINVALID = "InvalidParameter.EmailOrQqInvalid"
 //  INVALIDPARAMETER_EMAILSAME = "InvalidParameter.EmailSame"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_OTHERACCOUNTUNREALNAME = "InvalidParameter.OtherAccountUnrealName"
 //  INVALIDPARAMETER_QCLOUDUININVALID = "InvalidParameter.QcloudUinInvalid"
 //  INVALIDPARAMETER_USERAREAINVALID = "InvalidParameter.UserAreaInvalid"
@@ -4413,6 +4432,7 @@ func (c *Client) ModifyDomainOwner(request *ModifyDomainOwnerRequest) (response 
 //  INVALIDPARAMETER_EMAILINVALID = "InvalidParameter.EmailInvalid"
 //  INVALIDPARAMETER_EMAILORQQINVALID = "InvalidParameter.EmailOrQqInvalid"
 //  INVALIDPARAMETER_EMAILSAME = "InvalidParameter.EmailSame"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_OTHERACCOUNTUNREALNAME = "InvalidParameter.OtherAccountUnrealName"
 //  INVALIDPARAMETER_QCLOUDUININVALID = "InvalidParameter.QcloudUinInvalid"
 //  INVALIDPARAMETER_USERAREAINVALID = "InvalidParameter.UserAreaInvalid"
@@ -4557,6 +4577,7 @@ func NewModifyDomainStatusResponse() (response *ModifyDomainStatusResponse) {
 //  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_TOOLSDOMAININVALID = "InvalidParameter.ToolsDomainInvalid"
 //  INVALIDPARAMETER_UNREALNAMEUSER = "InvalidParameter.UnrealNameUser"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
@@ -4576,6 +4597,7 @@ func (c *Client) ModifyDomainStatus(request *ModifyDomainStatusRequest) (respons
 //  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETER_TOOLSDOMAININVALID = "InvalidParameter.ToolsDomainInvalid"
 //  INVALIDPARAMETER_UNREALNAMEUSER = "InvalidParameter.UnrealNameUser"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"

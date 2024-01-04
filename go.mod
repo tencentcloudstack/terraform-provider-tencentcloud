@@ -55,7 +55,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.797
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.781
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.831
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
@@ -109,7 +109,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.798
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.829
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/wI2L/jsondiff v0.3.0
 	k8s.io/apimachinery v0.22.4
 )

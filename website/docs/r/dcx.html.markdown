@@ -67,6 +67,7 @@ The following arguments are supported:
 * `bgp_auth_key` - (Optional, String, ForceNew) BGP key of the user.
 * `customer_address` - (Optional, String, ForceNew) Interconnect IP of the DC within client.
 * `dc_owner_account` - (Optional, String, ForceNew) Connection owner, who is the current customer by default. The developer account ID should be entered for shared connections.
+* `network_region` - (Optional, String, ForceNew) Network region.
 * `network_type` - (Optional, String, ForceNew) Type of the network. Valid value: `VPC`, `BMVPC` and `CCN`. The default value is `VPC`.
 * `route_filter_prefixes` - (Optional, Set: [`String`], ForceNew) Static route, the network address of the user IDC. It can be modified after setting but cannot be deleted. AN unable field within BGP.
 * `route_type` - (Optional, String, ForceNew) Type of the route, and available values include BGP and STATIC. The default value is `BGP`.
@@ -82,4 +83,12 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of resource.
 * `state` - State of the dedicated tunnels. Valid value: `PENDING`, `ALLOCATING`, `ALLOCATED`, `ALTERING`, `DELETING`, `DELETED`, `COMFIRMING` and `REJECTED`.
 
+
+## Import
+
+DCX instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_dcx.foo dcx-cbbr1gjk
+```
 

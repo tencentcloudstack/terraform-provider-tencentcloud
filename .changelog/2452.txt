@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_oceanus_job_events
+```
+
+```release-note:new-data-source
+tencentcloud_oceanus_meta_table
+```

@@ -433,6 +433,23 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 								},
 							},
 						},
+						"abort_incomplete_multipart_upload": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Set:         abortIncompleteMultipartUploadHash,
+							MaxItems:    1,
+							Description: "Set the maximum time a multipart upload is allowed to remain running.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"days_after_initiation": {
+										Type:         schema.TypeInt,
+										Required:     true,
+										ValidateFunc: tccommon.ValidateIntegerMin(1),
+										Description:  "Specifies the number of days after the multipart upload starts that the upload must be completed. The maximum value is 3650.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -920,13 +937,9 @@ func waitAclEnable(ctx context.Context, meta interface{}, bucket string) error {
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		aclResult, e := cosService.GetBucketACL(ctx, bucket)
 		if e != nil {
-			sdkError, ok := e.(*errors.TencentCloudSDKError)
-			if ok {
-				log.Printf("[CRITAL]%s api[%s] fail when try to update acl, reason[%s,%s,%s]\n", logId, "GetBucketACL", sdkError.Error(), sdkError.GetCode(), sdkError.GetMessage())
-
-				if strings.Contains(sdkError.GetMessage(), "NoSuchBucket") {
-					return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still on creating, need try again.\n", logId, "GetBucketACL"))
-				}
+			if strings.Contains(e.Error(), "NoSuchBucket") {
+				log.Printf("[CRITAL][retry]%s api[%s] because of bucket[%s] still on creating, need try again.\n", logId, "GetBucketACL", bucket)
+				return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still on creating, need try again.\n", logId, "GetBucketACL"))
 			}
 			log.Printf("[CRITAL]%s api[%s] fail when try to update acl, reason[%s]\n", logId, "GetBucketACL", e.Error())
 			return resource.NonRetryableError(e)
@@ -1290,6 +1303,19 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 				}
 
 				rule.NoncurrentVersionExpiration = e
+			}
+
+			// AbortIncompleteMultipartUpload
+			abortIncompleteMultipartUploads := d.Get(fmt.Sprintf("lifecycle_rules.%d.abort_incomplete_multipart_upload", i)).(*schema.Set).List()
+			if len(abortIncompleteMultipartUploads) > 0 {
+				abortIncompleteMultipartUpload := abortIncompleteMultipartUploads[0].(map[string]interface{})
+				e := &s3.AbortIncompleteMultipartUpload{}
+
+				if val, ok := abortIncompleteMultipartUpload["days_after_initiation"].(int); ok && val > 0 {
+					e.DaysAfterInitiation = aws.Int64(int64(val))
+				}
+
+				rule.AbortIncompleteMultipartUpload = e
 			}
 			rules = append(rules, rule)
 		}
@@ -1659,6 +1685,15 @@ func nonCurrentExpirationHash(v interface{}) int {
 	var buf bytes.Buffer
 	m := v.(map[string]interface{})
 	if v, ok := m["non_current_days"]; ok {
+		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
+	}
+	return helper.HashString(buf.String())
+}
+
+func abortIncompleteMultipartUploadHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["days_after_initiation"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
 	return helper.HashString(buf.String())
