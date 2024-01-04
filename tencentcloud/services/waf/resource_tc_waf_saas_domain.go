@@ -232,7 +232,7 @@ func ResourceTencentCloudWafSaasDomain() *schema.Resource {
 				Type:         schema.TypeInt,
 				Default:      XFF_RESET_0,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(XFF_RESET_STATUS),
-				Description:  "0:disable xff reset; 1:ensable xff reset.",
+				Description:  "0:disable xff reset; 1:enable xff reset.",
 			},
 			"bot_status": {
 				Type:         schema.TypeInt,
@@ -963,7 +963,13 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 	}
 
 	if domainInfo.BotStatus != nil {
-		_ = d.Set("bot_status", domainInfo.BotStatus)
+		if *domainInfo.BotStatus == BOT_STATUS_0 || *domainInfo.BotStatus == BOT_STATUS_1 {
+			_ = d.Set("bot_status", BOT_STATUS_0)
+		} else if *domainInfo.BotStatus == BOT_STATUS_2 || *domainInfo.BotStatus == BOT_STATUS_3 {
+			_ = d.Set("bot_status", BOT_STATUS_1)
+		} else {
+			_ = d.Set("bot_status", domainInfo.BotStatus)
+		}
 	}
 
 	if domainInfo.ApiStatus != nil {

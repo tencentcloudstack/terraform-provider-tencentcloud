@@ -658,7 +658,13 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 	}
 
 	if domainInfo.BotStatus != nil {
-		_ = d.Set("bot_status", domainInfo.BotStatus)
+		if *domainInfo.BotStatus == BOT_STATUS_0 || *domainInfo.BotStatus == BOT_STATUS_1 {
+			_ = d.Set("bot_status", BOT_STATUS_0)
+		} else if *domainInfo.BotStatus == BOT_STATUS_2 || *domainInfo.BotStatus == BOT_STATUS_3 {
+			_ = d.Set("bot_status", BOT_STATUS_1)
+		} else {
+			_ = d.Set("bot_status", domainInfo.BotStatus)
+		}
 	}
 
 	if domainInfo.ApiStatus != nil {

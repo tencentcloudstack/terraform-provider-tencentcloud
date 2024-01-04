@@ -86,7 +86,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
   proxy_send_timeout = 500
   sni_type           = 3
   sni_host           = "3.3.3.3"
-  xff_reset          = 1
+  xff_reset          = 0
   bot_status         = 1
   api_safe_status    = 1
 }
@@ -101,7 +101,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
   ssl_id          = "3a6B5y8v"
   load_balance    = "2"
   https_rewrite   = 0
-  is_http2        = 0
+  is_http2        = 0 
   upstream_scheme = "https"
   src_list        = [
     "1.1.1.1",
