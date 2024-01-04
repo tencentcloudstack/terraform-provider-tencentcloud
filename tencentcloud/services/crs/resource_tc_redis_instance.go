@@ -118,7 +118,7 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 			"mem_size": {
 				Type:         schema.TypeInt,
 				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1024, 2048, 4096, 8192, 12288, 16384, 20480, 24576, 32768, 40960, 49152, 65536}),
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{256, 1024, 2048, 4096, 8192, 12288, 16384, 20480, 24576, 32768, 40960, 49152, 65536}),
 				Description:  "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding.",
 			},
 			"vpc_id": {
