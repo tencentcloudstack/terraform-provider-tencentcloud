@@ -41,15 +41,18 @@ resource "tencentcloud_security_group" "emr_sg" {
 }
 
 resource "tencentcloud_emr_cluster" "emr_cluster" {
-	product_id=4
-	display_strategy="clusterList"
+	product_id=38
 	vpc_settings={
 	  vpc_id=tencentcloud_vpc.emr_vpc.id
       subnet_id=tencentcloud_subnet.emr_subnet.id
 	}
-	softwares=[
-	  "zookeeper-3.6.1",
-    ]
+	softwares = [
+	  "hdfs-2.8.5",
+	  "knox-1.6.1",
+	  "openldap-2.4.44",
+	  "yarn-2.8.5",
+	  "zookeeper-3.6.3",
+	]
 	support_ha=0
 	instance_name="emr-cluster-test"
 	resource_spec {
@@ -80,7 +83,7 @@ resource "tencentcloud_emr_cluster" "emr_cluster" {
 	time_span=3600
 	time_unit="s"
 	pay_mode=0
-	placement={
+	placement_info={
 	  zone=var.availability_zone
 	  project_id=0
 	}
