@@ -52,7 +52,7 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "ID of next-hop gateway. Note: when `next_type` is EIP, GatewayId should be `0`.",
+				Description: "ID of next-hop gateway. Note: when `next_type` is EIP, `next_hub` should be `0`.",
 			},
 			// Name enabled will lead to exist route table diff fail (null -> false cannot diff).
 			"disabled": {

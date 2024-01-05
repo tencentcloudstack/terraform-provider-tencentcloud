@@ -19,13 +19,13 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 }
 ```
 
-CCN IPEC VPN gateway
+CCN IPSEC VPN gateway
 ```hcl
 resource "tencentcloud_vpn_gateway" "my_cgw" {
   name      = "test"
   bandwidth = 5
   zone      = "ap-guangzhou-3"
-  type      = "CCN"
+  type      = "IPSEC"
 
   tags      = {
     test = "test"
