@@ -920,6 +920,39 @@ func (me *TdmqService) DescribeTdmqSubscriptionAttachmentById(ctx context.Contex
 	return
 }
 
+func (me *TdmqService) DescribeTdmqSubscriptionById(ctx context.Context, clusterId, environmentId, topicName, subscriptionName string) (subscriptionAttachment *tdmq.Subscription, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tdmq.NewDescribeSubscriptionsRequest()
+	request.ClusterId = &clusterId
+	request.EnvironmentId = &environmentId
+	request.TopicName = &topicName
+	request.SubscriptionName = &subscriptionName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeSubscriptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	subscriptionAttachment = response.Response.SubscriptionSets[0]
+	return
+}
+
 func (me *TdmqService) GetTdmqTopicsAttachmentById(ctx context.Context, environmentId, Topic, subscriptionName, clusterId string) (has bool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -1007,6 +1040,39 @@ func (me *TdmqService) DeleteTdmqSubscriptionAttachmentById(ctx context.Context,
 		{
 			EnvironmentId:    &environmentId,
 			TopicName:        &Topic,
+			SubscriptionName: &subscriptionName,
+		},
+	}
+	request.ClusterId = &clusterId
+	request.EnvironmentId = &environmentId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteSubscriptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DeleteTdmqSubscriptionById(ctx context.Context, clusterId, environmentId, topicName, subscriptionName string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tdmq.NewDeleteSubscriptionsRequest()
+	request.SubscriptionTopicSets = []*tdmq.SubscriptionTopic{
+		{
+			EnvironmentId:    &environmentId,
+			TopicName:        &topicName,
 			SubscriptionName: &subscriptionName,
 		},
 	}

@@ -684,6 +684,7 @@ TDMQ for Pulsar(tpulsar)
     tencentcloud_tdmq_topic
     tencentcloud_tdmq_role
     tencentcloud_tdmq_namespace_role_attachment
+    tencentcloud_tdmq_subscription
 
 TencentDB for MongoDB(mongodb)
   Data Source
