@@ -52,14 +52,17 @@ resource "tencentcloud_security_group" "emr_sg" {
 }
 
 resource "tencentcloud_emr_cluster" "emr_cluster" {
-  product_id       = 4
-  display_strategy = "clusterList"
+  product_id = 38
   vpc_settings = {
     vpc_id    = tencentcloud_vpc.emr_vpc.id
     subnet_id = tencentcloud_subnet.emr_subnet.id
   }
   softwares = [
-    "zookeeper-3.6.1",
+    "hdfs-2.8.5",
+    "knox-1.6.1",
+    "openldap-2.4.44",
+    "yarn-2.8.5",
+    "zookeeper-3.6.3",
   ]
   support_ha    = 0
   instance_name = "emr-cluster-test"
@@ -91,7 +94,7 @@ resource "tencentcloud_emr_cluster" "emr_cluster" {
   time_span = 3600
   time_unit = "s"
   pay_mode  = 0
-  placement = {
+  placement_info = {
     zone       = var.availability_zone
     project_id = 0
   }
@@ -103,11 +106,8 @@ resource "tencentcloud_emr_cluster" "emr_cluster" {
 
 The following arguments are supported:
 
-* `display_strategy` - (Required, String, ForceNew) Display strategy of EMR instance.
 * `instance_name` - (Required, String, ForceNew) Name of the instance, which can contain 6 to 36 English letters, Chinese characters, digits, dashes(-), or underscores(_).
-* `login_settings` - (Required, Map, ForceNew) Instance login settings.
 * `pay_mode` - (Required, Int) The pay mode of instance. 0 represent POSTPAID_BY_HOUR, 1 represent PREPAID.
-* `placement` - (Required, Map, ForceNew) The location of the instance.
 * `product_id` - (Required, Int, ForceNew) Product ID. Different products ID represents different EMR product versions. Value range:
 - 16: represents EMR-V2.3.0
 - 20: indicates EMR-V2.5.0
@@ -121,20 +121,29 @@ The following arguments are supported:
 - 38: represents EMR-V2.7.0
 - 39: stands for STARROCKS-V1.1.0
 - 41: represents DRUID-V1.1.0.
-* `softwares` - (Required, List: [`String`], ForceNew) The softwares of a EMR instance.
+* `softwares` - (Required, Set: [`String`], ForceNew) The softwares of a EMR instance.
 * `support_ha` - (Required, Int, ForceNew) The flag whether the instance support high availability.(0=>not support, 1=>support).
-* `time_span` - (Required, Int) The length of time the instance was purchased. Use with TimeUnit.When TimeUnit is s, the parameter can only be filled in at 3600, representing a metered instance.
-When TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.
-* `time_unit` - (Required, String) The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).
 * `vpc_settings` - (Required, Map, ForceNew) The private net config of EMR instance.
+* `display_strategy` - (Optional, String, **Deprecated**) It will be deprecated in later versions. Display strategy of EMR instance.
 * `extend_fs_field` - (Optional, String) Access the external file system.
+* `login_settings` - (Optional, Map) Instance login settings.
 * `need_master_wan` - (Optional, String, ForceNew) Whether to enable the cluster Master node public network. Value range:
 				- NEED_MASTER_WAN: Indicates that the cluster Master node public network is enabled.
 				- NOT_NEED_MASTER_WAN: Indicates that it is not turned on.
 				By default, the cluster Master node internet is enabled.
+* `placement_info` - (Optional, List) The location of the instance.
+* `placement` - (Optional, Map, **Deprecated**) It will be deprecated in later versions. Use `placement_info` instead. The location of the instance.
 * `resource_spec` - (Optional, List) Resource specification of EMR instance.
 * `sg_id` - (Optional, String, ForceNew) The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.
 * `tags` - (Optional, Map) Tag description list.
+* `time_span` - (Optional, Int) The length of time the instance was purchased. Use with TimeUnit.When TimeUnit is s, the parameter can only be filled in at 3600, representing a metered instance.
+When TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.
+* `time_unit` - (Optional, String) The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).
+
+The `placement_info` object supports the following:
+
+* `zone` - (Required, String) Zone.
+* `project_id` - (Optional, Int) Project id.
 
 The `resource_spec` object supports the following:
 

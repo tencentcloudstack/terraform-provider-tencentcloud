@@ -80,7 +80,7 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 	}
 
 	if v, ok := d.GetOk("softwares"); ok {
-		softwares := v.([]interface{})
+		softwares := v.(*schema.Set).List()
 		request.Software = make([]*string, 0)
 		for _, software := range softwares {
 			request.Software = append(request.Software, common.StringPtr(software.(string)))
@@ -143,6 +143,22 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 			request.Placement.ProjectId = common.Int64Ptr(projectIdInt64)
 		} else {
 			request.Placement.ProjectId = common.Int64Ptr(0)
+		}
+		if zone, ok := placement["zone"]; ok {
+			request.Placement.Zone = common.StringPtr(zone.(string))
+		}
+	}
+
+	if v, ok := d.GetOk("placement_info"); ok {
+		request.Placement = &emr.Placement{}
+		placementList := v.([]interface{})
+		placement := placementList[0].(map[string]interface{})
+
+		if v, ok := placement["project_id"]; ok {
+			projectId := v.(int)
+			request.Placement.ProjectId = helper.IntInt64(projectId)
+		} else {
+			request.Placement.ProjectId = helper.IntInt64(0)
 		}
 		if zone, ok := placement["zone"]; ok {
 			request.Placement.Zone = common.StringPtr(zone.(string))

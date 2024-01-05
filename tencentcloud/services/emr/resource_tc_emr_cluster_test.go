@@ -122,11 +122,10 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 				Config: testEmrBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEmrExists(testEmrClusterResourceKey),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "product_id", "4"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "display_strategy", "clusterList"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "product_id", "38"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.vpc_id", tcacctest.DefaultEMRVpcId),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.subnet_id", tcacctest.DefaultEMRSubnetId),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "softwares.0", "zookeeper-3.6.1"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "softwares.#", "5"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "support_ha", "0"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "instance_name", "emr-test-demo"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.#", "1"),
@@ -134,12 +133,17 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "time_span", "3600"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "time_unit", "s"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "pay_mode", "0"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement.zone", "ap-guangzhou-3"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement.project_id", "0"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement_info.0.zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement_info.0.project_id", "0"),
 					resource.TestCheckResourceAttrSet(testEmrClusterResourceKey, "instance_id"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "sg_id", tcacctest.DefaultEMRSgId),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "tags.emr-key", "emr-value"),
 				),
+			},
+			{
+				ResourceName:            testEmrClusterResourceKey,
+				ImportState:             true,
+				ImportStateVerifyIgnore: []string{"display_strategy", "placement", "time_span", "time_unit", "login_settings"},
 			},
 		},
 	})
@@ -203,15 +207,18 @@ data "tencentcloud_instance_types" "cvm4c8m" {
 }
 
 resource "tencentcloud_emr_cluster" "emrrrr" {
-	product_id=4
-	display_strategy="clusterList"
+	product_id=38
 	vpc_settings={
 	  vpc_id=var.vpc_id
 	  subnet_id=var.subnet_id
 	}
-	softwares=[
-	  "zookeeper-3.6.1",
-  ]
+	softwares = [
+	  "hdfs-2.8.5",
+	  "knox-1.6.1",
+	  "openldap-2.4.44",
+	  "yarn-2.8.5",
+	  "zookeeper-3.6.3",
+	]
 	support_ha=0
 	instance_name="emr-test-demo"
 	resource_spec {
@@ -242,7 +249,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 	time_span=3600
 	time_unit="s"
 	pay_mode=0
-	placement={
+	placement_info {
 	  zone="ap-guangzhou-3"
 	  project_id=0
 	}
