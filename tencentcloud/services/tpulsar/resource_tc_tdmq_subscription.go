@@ -118,7 +118,7 @@ func resourceTencentCloudTdmqSubscriptionCreate(d *schema.ResourceData, meta int
 		autoCreatePolicyTopic = v.(bool)
 
 		if v, ok = d.GetOkExists("auto_delete_policy_topic"); ok {
-			if !autoCreatePolicyTopic && v.(bool) == true {
+			if !autoCreatePolicyTopic && v.(bool) {
 				return errors.New("If `auto_create_policy_topic` is false, Can't set `auto_delete_policy_topic` param.")
 			} else {
 				if v.(bool) {
