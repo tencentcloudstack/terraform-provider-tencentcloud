@@ -118,7 +118,7 @@ func resourceTencentCloudTdmqSubscriptionCreate(d *schema.ResourceData, meta int
 		autoCreatePolicyTopic = v.(bool)
 
 		if v, ok = d.GetOkExists("auto_delete_policy_topic"); ok {
-			if autoCreatePolicyTopic == false && v.(bool) == true {
+			if !autoCreatePolicyTopic && v.(bool) == true {
 				return errors.New("If `auto_create_policy_topic` is false, Can't set `auto_delete_policy_topic` param.")
 			} else {
 				if v.(bool) {
@@ -140,7 +140,7 @@ func resourceTencentCloudTdmqSubscriptionCreate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || *result.Response.Result == false {
+		if result == nil || !*result.Response.Result {
 			e = fmt.Errorf("create tdmq subscription failed")
 			return resource.NonRetryableError(e)
 		}
