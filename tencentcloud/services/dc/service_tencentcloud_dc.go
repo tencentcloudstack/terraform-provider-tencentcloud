@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
@@ -616,5 +618,27 @@ func (me *DcService) DescribeDcAccessPointsByFilter(ctx context.Context, param m
 		offset += limit
 	}
 
+	return
+}
+func (me *DcService) waitCreateDirectConnectTunnelAvailable(ctx context.Context, dcxId string) (err error) {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		item, has, e := me.DescribeDirectConnectTunnel(ctx, dcxId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if has == 0 {
+			return resource.NonRetryableError(fmt.Errorf("tunnel not found"))
+		}
+		if item.State == nil {
+			return resource.NonRetryableError(fmt.Errorf("tunnel state is nil"))
+		}
+		if *item.State != "AVAILABLE" {
+			return resource.RetryableError(fmt.Errorf("tunnel status is not ready, status is %s ", *item.State))
+		}
+		return nil
+	})
+	if err != nil {
+		return
+	}
 	return
 }
