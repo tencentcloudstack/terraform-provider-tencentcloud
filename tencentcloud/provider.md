@@ -383,6 +383,7 @@ Cloud Load Balancer(CLB)
     tencentcloud_clb_target_group
     tencentcloud_clb_target_group_instance_attachment
     tencentcloud_clb_target_group_attachment
+    tencentcloud_clb_target_group_attachments
     tencentcloud_clb_log_set
     tencentcloud_clb_log_topic
     tencentcloud_clb_customized_config

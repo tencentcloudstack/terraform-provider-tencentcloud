@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -25,34 +26,44 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
 			"load_balancer_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "CLB instance ID",
+				Optional:    true,
+				Description: "CLB instance ID, (load_balancer_id and target_group_id require at least one).",
+			},
+			"target_group_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Target group ID, (load_balancer_id and target_group_id require at least one).",
 			},
 			"associations": {
 				Required:    true,
 				Type:        schema.TypeSet,
 				MaxItems:    20,
-				Description: "Association array, the combination cannot exceed 20",
+				Description: "Association array, the combination cannot exceed 20.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-
-						"listener_id": {
+						"load_balancer_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Listener ID",
+							Description: "CLB instance ID, when the binding target is target group, load_balancer_id in associations is required.",
 						},
 						"target_group_id": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Target group ID",
+							Optional:    true,
+							Description: "Target group ID, when the binding target is clb, the target_group_id in associations is required.",
+						},
+						"listener_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Listener ID.",
 						},
 						"location_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Forwarding rule ID",
+							Description: "Forwarding rule ID.",
 						},
 					},
 				},
@@ -61,35 +72,70 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 	}
 }
 
+const ResourcePrefixFromClb = "lb"
+
+func checkParam(d *schema.ResourceData) error {
+	_, clbIdExists := d.GetOk("load_balancer_id")
+	_, groupIdExists := d.GetOk("target_group_id")
+
+	if !clbIdExists && !groupIdExists {
+		return fmt.Errorf("one of load_balancer_id and target_group_id must be specified as the binding target")
+	}
+
+	if clbIdExists && groupIdExists {
+		return fmt.Errorf("load_balancer_id and target_group_id cannot be used as binding targets at the same time")
+	}
+
+	if v, ok := d.GetOk("associations"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			associationsClbExists := false
+			associationsGroupExists := false
+
+			if v, ok := dMap["load_balancer_id"]; ok && v.(string) != "" {
+				associationsClbExists = true
+			}
+			if v, ok := dMap["target_group_id"]; ok && v.(string) != "" {
+				associationsGroupExists = true
+			}
+
+			if !associationsClbExists && !associationsGroupExists {
+				return fmt.Errorf("then in associations, load_balancer_id and target_group_id must be filled in one")
+			}
+
+			if clbIdExists && associationsClbExists {
+				return fmt.Errorf("if the binding target is clb, then in associations, it is expected that " +
+					"target_group_id exists and load_balancer_id does not exist")
+			}
+
+			if groupIdExists && associationsGroupExists {
+				return fmt.Errorf("if the binding target is targetGroup, then in associations, it is expected that " +
+					"load_balancer_id exists and target_group_id does not exist")
+			}
+		}
+	}
+	return nil
+}
 func resourceTencentCloudClbTargetGroupAttachmentsCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_clb_target_group_attachments.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	var (
-		request        = clb.NewAssociateTargetGroupsRequest()
-		loadBalancerId string
-	)
-	if v, ok := d.GetOk("load_balancer_id"); ok {
-		loadBalancerId = v.(string)
+	if err := checkParam(d); err != nil {
+		return err
 	}
-	if v, ok := d.GetOk("associations"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			dMap := item.(map[string]interface{})
-			targetGroupAssociation := clb.TargetGroupAssociation{}
-			targetGroupAssociation.LoadBalancerId = helper.String(loadBalancerId)
-			if v, ok := dMap["listener_id"]; ok {
-				targetGroupAssociation.ListenerId = helper.String(v.(string))
-			}
-			if v, ok := dMap["target_group_id"]; ok {
-				targetGroupAssociation.TargetGroupId = helper.String(v.(string))
-			}
-			if v, ok := dMap["location_id"]; ok {
-				targetGroupAssociation.LocationId = helper.String(v.(string))
-			}
-			request.Associations = append(request.Associations, &targetGroupAssociation)
-		}
+	var (
+		request    = clb.NewAssociateTargetGroupsRequest()
+		resourceId string
+	)
+	if v, ok := d.GetOk("load_balancer_id"); ok && v.(string) != "" {
+		resourceId = v.(string)
+		request.Associations = parseParamToRequest(d, "load_balancer_id", resourceId)
+	}
+
+	if v, ok := d.GetOk("target_group_id"); ok && v.(string) != "" {
+		resourceId = v.(string)
+		request.Associations = parseParamToRequest(d, "target_group_id", resourceId)
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -112,7 +158,7 @@ func resourceTencentCloudClbTargetGroupAttachmentsCreate(d *schema.ResourceData,
 		return err
 	}
 
-	d.SetId(loadBalancerId)
+	d.SetId(resourceId)
 
 	return resourceTencentCloudClbTargetGroupAttachmentsRead(d, meta)
 }
@@ -127,38 +173,7 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 
 	service := ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	loadBalancerId := d.Id()
-	associationsSet := make(map[string]struct{}, 0)
-	targetGroupList := make([]string, 0)
-	if v, ok := d.GetOk("associations"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			dMap := item.(map[string]interface{})
-			ids := make([]string, 0)
-
-			ids = append(ids, loadBalancerId)
-			if v, ok := dMap["listener_id"]; ok {
-				ids = append(ids, v.(string))
-			} else {
-				ids = append(ids, "null")
-			}
-
-			if v, ok := dMap["target_group_id"]; ok {
-				ids = append(ids, v.(string))
-				targetGroupList = append(targetGroupList, v.(string))
-			} else {
-				ids = append(ids, "null")
-			}
-
-			if v, ok := dMap["location_id"]; ok {
-				ids = append(ids, v.(string))
-			} else {
-				ids = append(ids, "null")
-			}
-
-			associationsSet[strings.Join(ids, tccommon.FILED_SP)] = struct{}{}
-		}
-	}
-
+	targetGroupList, associationsSet := margeReadRequest(d)
 	targetGroupAttachments, err := service.DescribeClbTargetGroupAttachmentsById(ctx, targetGroupList, associationsSet)
 	if err != nil {
 		return err
@@ -177,12 +192,16 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 			return fmt.Errorf("id is broken,%s", info)
 		}
 		associationsMap := map[string]interface{}{}
-		_ = d.Set("load_balancer_id", info[0])
+		if isBindFromClb(d.Id()) {
+			_ = d.Set("load_balancer_id", info[0])
+			associationsMap["target_group_id"] = info[1]
 
-		associationsMap["listener_id"] = info[1]
+		} else {
+			_ = d.Set("target_group_id", info[1])
+			associationsMap["load_balancer_id"] = info[0]
+		}
 
-		associationsMap["target_group_id"] = info[2]
-
+		associationsMap["listener_id"] = info[2]
 		associationsMap["location_id"] = info[3]
 
 		associationsList = append(associationsList, associationsMap)
@@ -206,24 +225,11 @@ func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData,
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := clb.NewDisassociateTargetGroupsRequest()
-
-	loadBalancerId := d.Id()
-	if v, ok := d.GetOk("associations"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			dMap := item.(map[string]interface{})
-			targetGroupAssociation := clb.TargetGroupAssociation{}
-			targetGroupAssociation.LoadBalancerId = helper.String(loadBalancerId)
-			if v, ok := dMap["listener_id"]; ok {
-				targetGroupAssociation.ListenerId = helper.String(v.(string))
-			}
-			if v, ok := dMap["target_group_id"]; ok {
-				targetGroupAssociation.TargetGroupId = helper.String(v.(string))
-			}
-			if v, ok := dMap["location_id"]; ok {
-				targetGroupAssociation.LocationId = helper.String(v.(string))
-			}
-			request.Associations = append(request.Associations, &targetGroupAssociation)
-		}
+	id := d.Id()
+	if isBindFromClb(id) {
+		request.Associations = parseParamToRequest(d, "load_balancer_id", id)
+	} else {
+		request.Associations = parseParamToRequest(d, "target_group_id", id)
 	}
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -247,4 +253,83 @@ func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData,
 	}
 
 	return nil
+}
+func parseParamToRequest(d *schema.ResourceData, param string, id string) (associations []*clb.TargetGroupAssociation) {
+
+	if v, ok := d.GetOk("associations"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			targetGroupAssociation := clb.TargetGroupAssociation{}
+			dMap[param] = id
+			for name := range dMap {
+				setString(name, dMap[name].(string), &targetGroupAssociation)
+			}
+			associations = append(associations, &targetGroupAssociation)
+		}
+	}
+	return associations
+}
+func setString(fieldName string, value string, request *clb.TargetGroupAssociation) {
+	switch fieldName {
+	case "load_balancer_id":
+		request.LoadBalancerId = helper.String(value)
+	case "target_group_id":
+		request.TargetGroupId = helper.String(value)
+	case "listener_id":
+		request.ListenerId = helper.String(value)
+	case "location_id":
+		request.LocationId = helper.String(value)
+	default:
+		log.Printf("Invalid field name: %s\n", fieldName)
+	}
+}
+func isBindFromClb(id string) bool {
+	re := regexp.MustCompile(`^(.*?)-`)
+	match := re.FindStringSubmatch(id)
+
+	if len(match) > 1 {
+		return match[1] == ResourcePrefixFromClb
+	}
+	return false
+}
+func margeReadRequest(d *schema.ResourceData) ([]string, map[string]struct{}) {
+	resourceId := d.Id()
+
+	associationsSet := make(map[string]struct{})
+	targetGroupList := make([]string, 0)
+	if v, ok := d.GetOk("associations"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			ids := make([]string, 0)
+
+			processIds(resourceId, dMap, "load_balancer_id", isBindFromClb(resourceId), &ids)
+			processIds(resourceId, dMap, "target_group_id", isBindFromClb(resourceId), &ids)
+			processIds(resourceId, dMap, "listener_id", isBindFromClb(resourceId), &ids)
+			processIds(resourceId, dMap, "location_id", isBindFromClb(resourceId), &ids)
+
+			if groupId, ok := dMap["target_group_id"]; ok && groupId.(string) != "" {
+				targetGroupList = append(targetGroupList, groupId.(string))
+			}
+
+			associationsSet[strings.Join(ids, tccommon.FILED_SP)] = struct{}{}
+		}
+	}
+	if len(targetGroupList) < 1 && !isBindFromClb(resourceId) {
+		targetGroupList = append(targetGroupList, resourceId)
+	}
+	return targetGroupList, associationsSet
+}
+func processIds(id string, dMap map[string]interface{}, key string, clbFlag bool, ids *[]string) {
+	if clbFlag && key == "load_balancer_id" {
+		*ids = append(*ids, id)
+	} else if !clbFlag && key == "target_group_id" {
+		*ids = append(*ids, id)
+	} else {
+		if v, ok := dMap[key]; ok {
+			*ids = append(*ids, v.(string))
+		} else {
+			*ids = append(*ids, "null")
+		}
+
+	}
 }

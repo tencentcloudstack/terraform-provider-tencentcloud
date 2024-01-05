@@ -2304,13 +2304,13 @@ func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context,
 				info = append(info, "null")
 			}
 
+			info = append(info, groupId)
+
 			if associations.ListenerId != nil {
 				info = append(info, *associations.ListenerId)
 			} else {
 				info = append(info, "null")
 			}
-
-			info = append(info, groupId)
 
 			if associations.LocationId != nil {
 				info = append(info, *associations.LocationId)
