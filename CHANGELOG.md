@@ -1,3 +1,21 @@
+## 1.81.64 (January 5, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tdmq_subscription` ([#2451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2451))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dcx: Add waiting tunnel ready logic ([#2460](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2460))
+* resource/tencentcloud_emr_cluster: support import ([#2461](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2461))
+* resource/tencentcloud_waf_clb_domain: Adapt to more scenarios of `bot_status` ([#2458](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2458))
+* resource/tencentcloud_waf_saas_domain: Adapt to more scenarios of `bot_status` ([#2458](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2458))
+* tencentcloud_clb_target_group_attachments: Support two-way binding of clb and targetGroup ([#2454](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2454))
+
+BUG FIXES:
+
+* tencentcloud_clb_redirection: Fix null pointer exception ([#2457](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2457))
+
 ## 1.81.63 (January 3, 2024)
 
 FEATURES:
