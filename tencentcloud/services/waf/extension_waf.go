@@ -103,6 +103,8 @@ var CLS_STATUS = []int{
 const (
 	BOT_STATUS_0 = 0
 	BOT_STATUS_1 = 1
+	BOT_STATUS_2 = 2
+	BOT_STATUS_3 = 3
 )
 
 var BOT_STATUS = []int{

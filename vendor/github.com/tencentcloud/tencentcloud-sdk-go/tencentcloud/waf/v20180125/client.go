@@ -443,6 +443,7 @@ func NewAddSpartaProtectionResponse() (response *AddSpartaProtectionResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_REDISOPERATIONFAILED = "FailedOperation.RedisOperationFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ASYNCHRONOUSCALLFAILED = "InternalError.AsynchronousCallFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -475,6 +476,7 @@ func (c *Client) AddSpartaProtection(request *AddSpartaProtectionRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_REDISOPERATIONFAILED = "FailedOperation.RedisOperationFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ASYNCHRONOUSCALLFAILED = "InternalError.AsynchronousCallFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3999,6 +4001,7 @@ func NewDescribeModuleStatusResponse() (response *DescribeModuleStatusResponse) 
 // 查询各个waf基础安全模块的开关状态，看每个模块是否开启
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MONGOOPERATIONFAILED = "FailedOperation.MongoOperationFailed"
 //  INTERNALERROR = "InternalError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeModuleStatus(request *DescribeModuleStatusRequest) (response *DescribeModuleStatusResponse, err error) {
@@ -4009,6 +4012,7 @@ func (c *Client) DescribeModuleStatus(request *DescribeModuleStatusRequest) (res
 // 查询各个waf基础安全模块的开关状态，看每个模块是否开启
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MONGOOPERATIONFAILED = "FailedOperation.MongoOperationFailed"
 //  INTERNALERROR = "InternalError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeModuleStatusWithContext(ctx context.Context, request *DescribeModuleStatusRequest) (response *DescribeModuleStatusResponse, err error) {
@@ -4050,6 +4054,7 @@ func NewDescribeObjectsResponse() (response *DescribeObjectsResponse) {
 // 查看防护对象列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MONGOOPERATIONFAILED = "FailedOperation.MongoOperationFailed"
 //  INTERNALERROR = "InternalError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeObjects(request *DescribeObjectsRequest) (response *DescribeObjectsResponse, err error) {
@@ -4060,6 +4065,7 @@ func (c *Client) DescribeObjects(request *DescribeObjectsRequest) (response *Des
 // 查看防护对象列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MONGOOPERATIONFAILED = "FailedOperation.MongoOperationFailed"
 //  INTERNALERROR = "InternalError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeObjectsWithContext(ctx context.Context, request *DescribeObjectsRequest) (response *DescribeObjectsResponse, err error) {
@@ -6295,6 +6301,7 @@ func NewModifyBotStatusResponse() (response *ModifyBotStatusResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_ERRCODENOPURCHASED = "AuthFailure.ErrCodeNoPurchased"
 //  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
 func (c *Client) ModifyBotStatus(request *ModifyBotStatusRequest) (response *ModifyBotStatusResponse, err error) {
     return c.ModifyBotStatusWithContext(context.Background(), request)
 }
@@ -6305,6 +6312,7 @@ func (c *Client) ModifyBotStatus(request *ModifyBotStatusRequest) (response *Mod
 // 可能返回的错误码:
 //  AUTHFAILURE_ERRCODENOPURCHASED = "AuthFailure.ErrCodeNoPurchased"
 //  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
 func (c *Client) ModifyBotStatusWithContext(ctx context.Context, request *ModifyBotStatusRequest) (response *ModifyBotStatusResponse, err error) {
     if request == nil {
         request = NewModifyBotStatusRequest()
@@ -8582,6 +8590,7 @@ func NewUpsertCCRuleResponse() (response *UpsertCCRuleResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  LIMITEXCEEDED_SPECIFICATIONERR = "LimitExceeded.SpecificationErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) UpsertCCRule(request *UpsertCCRuleRequest) (response *UpsertCCRuleResponse, err error) {
     return c.UpsertCCRuleWithContext(context.Background(), request)
@@ -8592,6 +8601,7 @@ func (c *Client) UpsertCCRule(request *UpsertCCRuleRequest) (response *UpsertCCR
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  LIMITEXCEEDED_SPECIFICATIONERR = "LimitExceeded.SpecificationErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) UpsertCCRuleWithContext(ctx context.Context, request *UpsertCCRuleRequest) (response *UpsertCCRuleResponse, err error) {
     if request == nil {
@@ -8691,6 +8701,7 @@ func NewUpsertSessionResponse() (response *UpsertSessionResponse) {
 // Waf  会话定义 Upsert接口
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) UpsertSession(request *UpsertSessionRequest) (response *UpsertSessionResponse, err error) {
     return c.UpsertSessionWithContext(context.Background(), request)
@@ -8700,6 +8711,7 @@ func (c *Client) UpsertSession(request *UpsertSessionRequest) (response *UpsertS
 // Waf  会话定义 Upsert接口
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) UpsertSessionWithContext(ctx context.Context, request *UpsertSessionRequest) (response *UpsertSessionResponse, err error) {
     if request == nil {

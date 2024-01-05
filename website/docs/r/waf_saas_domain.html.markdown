@@ -212,7 +212,7 @@ The following arguments are supported:
 * `upstream_scheme` - (Optional, String) Upstream scheme for https, http or https.
 * `upstream_type` - (Optional, Int) Upstream type, 0 represents IP, 1 represents domain name.
 * `weights` - (Optional, List: [`Int`]) Weight of each upstream.
-* `xff_reset` - (Optional, Int) 0:disable xff reset; 1:ensable xff reset.
+* `xff_reset` - (Optional, Int) 0:disable xff reset; 1:enable xff reset.
 
 The `ports` object supports the following:
 
