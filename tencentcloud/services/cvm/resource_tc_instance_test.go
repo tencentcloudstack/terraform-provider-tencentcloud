@@ -9,7 +9,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 	"testing"
 	"time"
 
@@ -43,14 +42,14 @@ func testSweepCvmInstance(region string) error {
 
 	for _, v := range instances {
 		instanceId := *v.InstanceId
-		instanceName := *v.InstanceName
+		//instanceName := *v.InstanceName
 		now := time.Now()
 		createTime := tccommon.StringToTime(*v.CreatedTime)
 		interval := now.Sub(createTime).Minutes()
 
-		if strings.HasPrefix(instanceName, tcacctest.KeepResource) || strings.HasPrefix(instanceName, tcacctest.DefaultResource) {
-			continue
-		}
+		//if strings.HasPrefix(instanceName, tcacctest.KeepResource) || strings.HasPrefix(instanceName, tcacctest.DefaultResource) {
+		//	continue
+		//}
 
 		if tccommon.NeedProtect == 1 && int64(interval) < 30 {
 			continue
