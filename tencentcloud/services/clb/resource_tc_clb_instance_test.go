@@ -8,7 +8,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 	"testing"
 	"time"
 
@@ -51,15 +50,15 @@ func testSweepClbInstance(region string) error {
 	if len(res) > 0 {
 		for _, v := range res {
 			id := *v.LoadBalancerId
-			instanceName := *v.LoadBalancerName
+			//instanceName := *v.LoadBalancerName
 			createTime := tccommon.StringToTime(*v.CreateTime)
 
 			now := time.Now()
 			interval := now.Sub(createTime).Minutes()
 			// keep not delete
-			if strings.HasPrefix(instanceName, tcacctest.KeepResource) || strings.HasPrefix(instanceName, tcacctest.DefaultResource) {
-				continue
-			}
+			//if strings.HasPrefix(instanceName, tcacctest.KeepResource) || strings.HasPrefix(instanceName, tcacctest.DefaultResource) {
+			//	continue
+			//}
 			// less than 30 minute, not delete
 			if tccommon.NeedProtect == 1 && int64(interval) < 30 {
 				continue

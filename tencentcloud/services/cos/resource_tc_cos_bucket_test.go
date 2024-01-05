@@ -39,13 +39,13 @@ func testSweepCosBuckets(region string) error {
 		return fmt.Errorf("list buckets error: %s", err.Error())
 	}
 
-	prefix := regexp.MustCompile("^(tf|test)-")
+	//prefix := regexp.MustCompile("^(tf|test)-")
 
 	for _, v := range buckets {
 		bucket := *v.Name
-		if !prefix.MatchString(bucket) {
-			continue
-		}
+		//if !prefix.MatchString(bucket) {
+		//	continue
+		//}
 
 		// delete all object in the bucket before deleting bucket
 		if objects, err := cosService.ListObjects(ctx, bucket); err != nil {
