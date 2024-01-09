@@ -392,7 +392,8 @@ func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listener
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRule(request)
 	if err != nil {
-		return errors.WithStack(err)
+		log.Println(errors.WithStack(err).Error())
+		return err
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -1013,6 +1014,22 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 		}
 	}
 	return
+}
+func processRetryErrMsg(err error) *resource.RetryError {
+	if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		for _, msg := range []string{
+			"is not in normal status",
+			"is not in normal desState",
+			"desState is abnormal",
+			"des status abnormal",
+			"Your task is working",
+		} {
+			if strings.Contains(e.GetMessage(), msg) {
+				return resource.RetryableError(e)
+			}
+		}
+	}
+	return nil
 }
 
 func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
