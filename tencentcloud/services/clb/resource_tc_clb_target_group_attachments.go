@@ -3,6 +3,7 @@ package clb
 import (
 	"context"
 	"fmt"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"regexp"
 	"strings"
@@ -139,9 +140,23 @@ func resourceTencentCloudClbTargetGroupAttachmentsCreate(d *schema.ResourceData,
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateTargetGroups(request)
-		if e != nil {
-			return tccommon.RetryError(e, tccommon.InternalError)
+		result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateTargetGroups(request)
+		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				for _, msg := range []string{
+					"is not in normal status",
+					"is not in normal desState",
+					"desState is abnormal",
+					"des status abnormal",
+					"Your task is working",
+				} {
+					if strings.Contains(e.GetMessage(), msg) {
+						return resource.RetryableError(e)
+					}
+				}
+
+			}
+			return tccommon.RetryError(err, tccommon.InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), result.ToJsonString(), result.ToJsonString())
@@ -235,6 +250,20 @@ func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData,
 		ratelimit.Check(request.GetAction())
 		result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().DisassociateTargetGroups(request)
 		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				for _, msg := range []string{
+					"is not in normal status",
+					"is not in normal desState",
+					"desState is abnormal",
+					"des status abnormal",
+					"Your task is working",
+				} {
+					if strings.Contains(e.GetMessage(), msg) {
+						return resource.RetryableError(e)
+					}
+				}
+
+			}
 			return tccommon.RetryError(err, tccommon.InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
