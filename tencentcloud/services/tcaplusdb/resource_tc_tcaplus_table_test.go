@@ -3,6 +3,7 @@ package tcaplusdb_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 	"time"
 
@@ -35,7 +36,8 @@ func init() {
 			}
 
 			if len(clusters) == 0 {
-				return fmt.Errorf("no cluster named %s", tcacctest.DefaultTcaPlusClusterName)
+				log.Printf("no cluster named %s", tcacctest.DefaultTcaPlusClusterName)
+				return nil
 			}
 
 			clusterId := *clusters[0].ClusterId

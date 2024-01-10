@@ -2543,13 +2543,16 @@ func (me *VpcService) DescribeNatGatewayByFilter(ctx context.Context, filters ma
 		logId   = tccommon.GetLogId(ctx)
 		request = vpc.NewDescribeNatGatewaysRequest()
 	)
-	request.Filters = make([]*vpc.Filter, 0, len(filters))
+	reqFilters := make([]*vpc.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := vpc.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
-		request.Filters = append(request.Filters, &filter)
+		reqFilters = append(reqFilters, &filter)
+	}
+	if len(reqFilters) > 0 {
+		request.Filters = reqFilters
 	}
 
 	var offset uint64 = 0
@@ -3401,13 +3404,16 @@ func (me *VpcService) DescribeHaVipByFilter(ctx context.Context, filters map[str
 		logId   = tccommon.GetLogId(ctx)
 		request = vpc.NewDescribeHaVipsRequest()
 	)
-	request.Filters = make([]*vpc.Filter, 0, len(filters))
+	reqFilters := make([]*vpc.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := vpc.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
-		request.Filters = append(request.Filters, &filter)
+		reqFilters = append(reqFilters, &filter)
+	}
+	if len(reqFilters) > 0 {
+		request.Filters = reqFilters
 	}
 
 	var offset uint64 = 0
@@ -4174,13 +4180,16 @@ func (me *VpcService) DescribeVpnGwByFilter(ctx context.Context, filters map[str
 		logId   = tccommon.GetLogId(ctx)
 		request = vpc.NewDescribeVpnGatewaysRequest()
 	)
-	request.Filters = make([]*vpc.FilterObject, 0, len(filters))
+	reqFilters := make([]*vpc.FilterObject, 0, len(filters))
 	for k, v := range filters {
 		filter := vpc.FilterObject{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
-		request.Filters = append(request.Filters, &filter)
+		reqFilters = append(reqFilters, &filter)
+	}
+	if len(reqFilters) > 0 {
+		request.Filters = reqFilters
 	}
 
 	var offset uint64 = 0
@@ -4239,13 +4248,16 @@ func (me *VpcService) DescribeCustomerGatewayByFilter(ctx context.Context, filte
 		logId   = tccommon.GetLogId(ctx)
 		request = vpc.NewDescribeCustomerGatewaysRequest()
 	)
-	request.Filters = make([]*vpc.Filter, 0, len(filters))
+	reqFilters := make([]*vpc.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := vpc.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
-		request.Filters = append(request.Filters, &filter)
+		reqFilters = append(reqFilters, &filter)
+	}
+	if len(reqFilters) > 0 {
+		request.Filters = reqFilters
 	}
 
 	var offset uint64 = 0

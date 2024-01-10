@@ -32,6 +32,11 @@ func init() {
 			response, err := client.UseCamClient().DescribeOIDCConfig(request)
 
 			if err != nil {
+				tencentErr := err.(*errors.TencentCloudSDKError)
+				if tencentErr.Code == "ResourceNotFound.IdentityNotExist" {
+					log.Printf("sso role name %s not exists", defaultSSORoleName)
+					return nil
+				}
 				return err
 			}
 

@@ -3,6 +3,7 @@ package tmp_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pkg/errors"
+	tencent_errors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 )
 
@@ -32,11 +34,17 @@ func init() {
 			promConfigs, err := service.DescribeTkeTmpConfigById(ctx, configId)
 
 			if err != nil {
+				tencentErr := err.(*tencent_errors.TencentCloudSDKError)
+				if tencentErr.Code == "InvalidParameter.PromInstanceNotFound" {
+					log.Println("prometheus instance not exists")
+					return nil
+				}
 				return err
 			}
 
 			if promConfigs == nil {
-				return fmt.Errorf("Prometheus config %s not exist", configId)
+				log.Printf("prometheus config %s not exist", configId)
+				return nil
 			}
 
 			ServiceMonitors := transObj2StrNames(promConfigs.ServiceMonitors)

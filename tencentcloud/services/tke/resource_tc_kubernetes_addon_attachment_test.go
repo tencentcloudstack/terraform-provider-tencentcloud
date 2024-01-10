@@ -3,6 +3,7 @@ package tke_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
 
@@ -33,7 +34,8 @@ func init() {
 			}
 
 			if len(cls) == 0 {
-				return fmt.Errorf("no persistent cluster")
+				log.Println("no persistent cluster")
+				return nil
 			}
 
 			for _, c := range cls {

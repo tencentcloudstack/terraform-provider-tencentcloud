@@ -3,6 +3,7 @@ package sqlserver_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
 
@@ -35,7 +36,8 @@ func init() {
 			}
 
 			if len(db) == 0 {
-				return fmt.Errorf("%s not exists", tcacctest.DefaultSQLServerName)
+				log.Printf("sqlserver %s not exists", tcacctest.DefaultSQLServerName)
+				return nil
 			}
 
 			instanceId := *db[0].InstanceId
