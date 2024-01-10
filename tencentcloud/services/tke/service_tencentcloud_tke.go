@@ -829,6 +829,7 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 }
 
 func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId string, mustHaveWorkers bool) error {
+	logId := tccommon.GetLogId(ctx)
 	return resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		_, workers, err := me.DescribeClusterInstances(ctx, clusterId)
 		if err != nil {
@@ -843,6 +844,8 @@ func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId 
 
 		if len(workers) == 0 && len(virtualNodes) == 0 {
 			if mustHaveWorkers {
+				log.Printf("[WARN]%s waiting for workers in the cluster[%s] to be created.\n",
+					logId, clusterId)
 				return resource.RetryableError(fmt.Errorf("waiting for workers created"))
 			}
 			return nil
