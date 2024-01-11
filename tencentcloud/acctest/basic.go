@@ -227,8 +227,8 @@ const (
 
 // Cloud monitoring grafana visualization
 const (
-	DefaultGrafanaVpcId                 = "vpc-391sv4w3"
-	DefaultGrafanaSubnetId              = "subnet-ljyn7h30"
+	DefaultGrafanaVpcId                 = "vpc-axrsmmrv"
+	DefaultGrafanaSubnetId              = "subnet-o6qcrhzo"
 	DefaultInternationalGrafanaVpcId    = "vpc-dg21ckzx"
 	DefaultInternationalGrafanaSubnetId = "subnet-i5lq9vy4"
 	DefaultGrafanaInstanceId            = "grafana-dp2hnnfa"

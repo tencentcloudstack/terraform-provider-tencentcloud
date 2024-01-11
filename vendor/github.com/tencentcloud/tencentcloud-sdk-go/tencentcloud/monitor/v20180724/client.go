@@ -535,7 +535,7 @@ func NewCreateExporterIntegrationResponse() (response *CreateExporterIntegration
 }
 
 // CreateExporterIntegration
-// 创建 exporter 集成
+// 创建集成中心 exporter 集成，因集成较多，建议控制台创建集成。(前提：已授权创建托管 EKS 集群，验证方式：1. 控制台界面确认，未提示授权则表示已授权创建；2. 通过 DescribePrometheusInstanceInitStatus 接口查询集群状态，如果托管集群不存在，可通过 RunPrometheusInstance 接口创建)
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -555,7 +555,7 @@ func (c *Client) CreateExporterIntegration(request *CreateExporterIntegrationReq
 }
 
 // CreateExporterIntegration
-// 创建 exporter 集成
+// 创建集成中心 exporter 集成，因集成较多，建议控制台创建集成。(前提：已授权创建托管 EKS 集群，验证方式：1. 控制台界面确认，未提示授权则表示已授权创建；2. 通过 DescribePrometheusInstanceInitStatus 接口查询集群状态，如果托管集群不存在，可通过 RunPrometheusInstance 接口创建)
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -903,7 +903,7 @@ func NewCreatePrometheusAlertPolicyResponse() (response *CreatePrometheusAlertPo
 }
 
 // CreatePrometheusAlertPolicy
-// 创建告警策略
+// 创建 Prometheus 告警策略(将逐步废弃，建议使用 CreatePrometheusAlertGroup 创建告警策略)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -924,7 +924,7 @@ func (c *Client) CreatePrometheusAlertPolicy(request *CreatePrometheusAlertPolic
 }
 
 // CreatePrometheusAlertPolicy
-// 创建告警策略
+// 创建 Prometheus 告警策略(将逐步废弃，建议使用 CreatePrometheusAlertGroup 创建告警策略)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -1114,7 +1114,7 @@ func NewCreatePrometheusGlobalNotificationResponse() (response *CreatePrometheus
 }
 
 // CreatePrometheusGlobalNotification
-// 创建全局告警通知渠道
+// 创建全局告警通知渠道。集群内创建的告警规则如果未配置告警通知渠道，默认走全局告警通知渠道（建议在控制台创建告警，集群内创建告警不易维护）
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -1125,7 +1125,7 @@ func (c *Client) CreatePrometheusGlobalNotification(request *CreatePrometheusGlo
 }
 
 // CreatePrometheusGlobalNotification
-// 创建全局告警通知渠道
+// 创建全局告警通知渠道。集群内创建的告警规则如果未配置告警通知渠道，默认走全局告警通知渠道（建议在控制台创建告警，集群内创建告警不易维护）
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -1309,7 +1309,7 @@ func NewCreatePrometheusScrapeJobResponse() (response *CreatePrometheusScrapeJob
 }
 
 // CreatePrometheusScrapeJob
-// 创建 Prometheus 抓取任务
+// 创建 Prometheus Agent 抓取任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1329,7 +1329,7 @@ func (c *Client) CreatePrometheusScrapeJob(request *CreatePrometheusScrapeJobReq
 }
 
 // CreatePrometheusScrapeJob
-// 创建 Prometheus 抓取任务
+// 创建 Prometheus Agent 抓取任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1825,7 +1825,7 @@ func NewDeleteExporterIntegrationResponse() (response *DeleteExporterIntegration
 }
 
 // DeleteExporterIntegration
-// 删除 exporter 集成
+// 删除集成中心 exporter 集成
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -1848,7 +1848,7 @@ func (c *Client) DeleteExporterIntegration(request *DeleteExporterIntegrationReq
 }
 
 // DeleteExporterIntegration
-// 删除 exporter 集成
+// 删除集成中心 exporter 集成
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -2430,7 +2430,7 @@ func NewDeletePrometheusScrapeJobsResponse() (response *DeletePrometheusScrapeJo
 }
 
 // DeletePrometheusScrapeJobs
-// 删除 Prometheus 抓取任务
+// 删除 Prometheus Agent 抓取任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2450,7 +2450,7 @@ func (c *Client) DeletePrometheusScrapeJobs(request *DeletePrometheusScrapeJobsR
 }
 
 // DeletePrometheusScrapeJobs
-// 删除 Prometheus 抓取任务
+// 删除 Prometheus Agent 抓取任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6709,7 +6709,7 @@ func NewDestroyPrometheusInstanceResponse() (response *DestroyPrometheusInstance
 }
 
 // DestroyPrometheusInstance
-// 彻底删除 Prometheus 实例相关数据，给定的实例必须先被 Terminate
+// 彻底删除 Prometheus 实例相关数据，给定的实例必须先被 Terminate(该接口是异步接口，实例是否释放需要通过 DescribePrometheusInstances 接口返回的状态来判断)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6726,7 +6726,7 @@ func (c *Client) DestroyPrometheusInstance(request *DestroyPrometheusInstanceReq
 }
 
 // DestroyPrometheusInstance
-// 彻底删除 Prometheus 实例相关数据，给定的实例必须先被 Terminate
+// 彻底删除 Prometheus 实例相关数据，给定的实例必须先被 Terminate(该接口是异步接口，实例是否释放需要通过 DescribePrometheusInstances 接口返回的状态来判断)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"

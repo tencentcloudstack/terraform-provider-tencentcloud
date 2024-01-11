@@ -48,14 +48,15 @@ resource "tencentcloud_monitor_grafana_instance" "foo" {
 
 The following arguments are supported:
 
+* `enable_internet` - (Required, Bool) Control whether grafana could be accessed by internet.
 * `instance_name` - (Required, String) Instance name.
-* `enable_internet` - (Optional, Bool) Control whether grafana could be accessed by internet.
+* `subnet_ids` - (Required, Set: [`String`]) Subnet Id array.
+* `vpc_id` - (Required, String) Vpc Id.
+* `auto_voucher` - (Optional, Bool) Whether to automatically use vouchers.
 * `grafana_init_password` - (Optional, String) Grafana server admin password.
 * `is_destroy` - (Optional, Bool) Whether to clean up completely, the default is false.
 * `is_distroy` - (Optional, Bool, **Deprecated**) It has been deprecated from version 1.81.16. Whether to clean up completely, the default is false.
-* `subnet_ids` - (Optional, Set: [`String`]) Subnet Id array.
 * `tags` - (Optional, Map) Tag description list.
-* `vpc_id` - (Optional, String) Vpc Id.
 
 ## Attributes Reference
 
