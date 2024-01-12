@@ -52,8 +52,8 @@ const (
 
 // clb
 const (
-	DefaultSshCertificate  = "vYSQkJ3K"
-	DefaultSshCertificateB = "vYVlNIhW"
+	DefaultSshCertificate  = "Bg9KzlUq"
+	DefaultSshCertificateB = "Bg9JKn5V"
 )
 
 const (
