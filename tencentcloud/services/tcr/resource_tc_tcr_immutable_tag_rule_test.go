@@ -3,8 +3,11 @@ package tcr_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
+
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -34,6 +37,11 @@ func testSweepTcrImmutableTagRule(r string) error {
 	// so... only need to care about the rules under the keep namespace
 	rules, err := tcrService.DescribeTcrImmutableTagRuleById(ctx, tcacctest.DefaultTCRInstanceId, helper.String(tcacctest.DefaultTCRNamespace), nil)
 	if err != nil {
+		tencentErr := err.(*errors.TencentCloudSDKError)
+		if tencentErr.Code == "ResourceNotFound" {
+			log.Printf("tcr instanceId %s not exists", tcacctest.DefaultTCRInstanceId)
+			return nil
+		}
 		return err
 	}
 

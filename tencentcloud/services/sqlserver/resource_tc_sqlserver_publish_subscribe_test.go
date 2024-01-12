@@ -38,10 +38,18 @@ func testAccTencentCloudSQLServerPubSubSweeper(r string) error {
 	if err != nil {
 		return err
 	}
-	subInstances, err := service.DescribeSqlserverInstances(ctx, "", tcacctest.DefaultSubSQLServerName, -1, "", "", 1)
+	if len(instance) == 0 {
+		log.Printf("sqlserver publish instance %s not exists", tcacctest.DefaultPubSQLServerName)
+		return nil
+	}
 
+	subInstances, err := service.DescribeSqlserverInstances(ctx, "", tcacctest.DefaultSubSQLServerName, -1, "", "", 1)
 	if err != nil {
 		return err
+	}
+	if len(subInstances) == 0 {
+		log.Printf("sqlserver subscribe instance %s not exists", tcacctest.DefaultSubSQLServerName)
+		return nil
 	}
 
 	pubInstanceId := *instance[0].InstanceId

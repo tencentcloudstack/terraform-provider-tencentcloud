@@ -47,20 +47,23 @@ func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, config
 func (me *AsService) DescribeLaunchConfigurationByFilter(ctx context.Context, configurationId, configurationName string) (configs []*as.LaunchConfiguration, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := as.NewDescribeLaunchConfigurationsRequest()
-	request.Filters = make([]*as.Filter, 0)
+	filters := make([]*as.Filter, 0)
 	if configurationId != "" {
 		filter := &as.Filter{
 			Name:   helper.String("launch-configuration-id"),
 			Values: []*string{&configurationId},
 		}
-		request.Filters = append(request.Filters, filter)
+		filters = append(filters, filter)
 	}
 	if configurationName != "" {
 		filter := &as.Filter{
 			Name:   helper.String("launch-configuration-name"),
 			Values: []*string{&configurationName},
 		}
-		request.Filters = append(request.Filters, filter)
+		filters = append(filters, filter)
+	}
+	if len(filters) > 0 {
+		request.Filters = filters
 	}
 
 	offset := 0
@@ -130,33 +133,36 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(
 ) (scalingGroups []*as.AutoScalingGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := as.NewDescribeAutoScalingGroupsRequest()
-	request.Filters = make([]*as.Filter, 0)
+	filters := make([]*as.Filter, 0)
 	if scalingGroupId != "" {
 		filter := &as.Filter{
 			Name:   helper.String("auto-scaling-group-id"),
 			Values: []*string{&scalingGroupId},
 		}
-		request.Filters = append(request.Filters, filter)
+		filters = append(filters, filter)
 	}
 	if configurationId != "" {
 		filter := &as.Filter{
 			Name:   helper.String("launch-configuration-id"),
 			Values: []*string{&configurationId},
 		}
-		request.Filters = append(request.Filters, filter)
+		filters = append(filters, filter)
 	}
 	if scalingGroupName != "" {
 		filter := &as.Filter{
 			Name:   helper.String("auto-scaling-group-name"),
 			Values: []*string{&scalingGroupName},
 		}
-		request.Filters = append(request.Filters, filter)
+		filters = append(filters, filter)
 	}
 	for k, v := range tags {
-		request.Filters = append(request.Filters, &as.Filter{
+		filters = append(filters, &as.Filter{
 			Name:   helper.String("tag:" + k),
 			Values: []*string{helper.String(v)},
 		})
+	}
+	if len(filters) > 0 {
+		request.Filters = filters
 	}
 
 	offset := 0

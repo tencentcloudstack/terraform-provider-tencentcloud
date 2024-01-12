@@ -38,7 +38,8 @@ func init() {
 			}
 
 			if len(clusters) == 0 {
-				return fmt.Errorf("no cluster names %s", tcacctest.DefaultTkeClusterName)
+				log.Println("no cluster names " + tcacctest.DefaultTkeClusterName)
+				return nil
 			}
 
 			clusterId := clusters[0].ClusterId

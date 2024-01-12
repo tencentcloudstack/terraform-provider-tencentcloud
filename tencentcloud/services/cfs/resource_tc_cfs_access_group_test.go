@@ -37,6 +37,10 @@ func init() {
 				id := *groups[i].PGroupId
 				name := *groups[i].Name
 
+				if tcacctest.IsResourcePersist(name, nil) || !strings.HasPrefix(name, "test") {
+					continue
+				}
+
 				rules, err := service.DescribeAccessRule(ctx, id, "")
 
 				if err == nil { // ignore deleting the access rules when an error happened
@@ -55,9 +59,6 @@ func init() {
 					}
 				}
 
-				if tcacctest.IsResourcePersist(name, nil) || !strings.HasPrefix(name, "test") {
-					continue
-				}
 				if err := service.DeleteAccessGroup(ctx, id); err != nil {
 					continue
 				}

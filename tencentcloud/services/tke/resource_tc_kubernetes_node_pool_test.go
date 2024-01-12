@@ -45,6 +45,15 @@ func testNodePoolSweep(region string) error {
 	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 	service := svctke.NewTkeService(client)
 
+	cls, err := service.DescribeClusters(ctx, tcacctest.DefaultTkeClusterId, "")
+	if err != nil {
+		return err
+	}
+	if len(cls) == 0 {
+		log.Println("no found clusterId " + tcacctest.DefaultTkeClusterId)
+		return nil
+	}
+
 	request := tke.NewDescribeClusterNodePoolsRequest()
 	request.ClusterId = helper.String(tcacctest.DefaultTkeClusterId)
 	response, err := client.UseTkeClient().DescribeClusterNodePools(request)

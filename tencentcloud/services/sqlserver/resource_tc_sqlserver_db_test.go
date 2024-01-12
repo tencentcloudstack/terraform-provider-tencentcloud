@@ -31,6 +31,10 @@ func init() {
 			if err != nil {
 				return err
 			}
+			if len(instances) == 0 {
+				log.Println("sqlserver instance is empty")
+				return nil
+			}
 
 			var (
 				insId    string
