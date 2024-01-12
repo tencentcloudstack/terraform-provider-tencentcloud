@@ -13,7 +13,7 @@ import (
 )
 
 // go test -test.run TestAccTencentCloudMonitorGrafanaInstance_basic -v
-func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
+func TestAccTencentCloudMonitorGrafanaInstance(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
