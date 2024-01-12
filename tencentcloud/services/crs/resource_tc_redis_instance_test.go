@@ -143,7 +143,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudRedisInstanceResource_basic(t *testing.T) {
+func TestAccTencentCloudRedisInstanceResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
