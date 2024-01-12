@@ -361,6 +361,7 @@ data "tencentcloud_instance_types" "default" {
     values = ["S1", "S2", "S3", "S4", "S5", "SR1", "SA1", "SA2"]
   }
   cpu_core_count = 2
+  memory_size = 2
   exclude_sold_out = true
 }
 `

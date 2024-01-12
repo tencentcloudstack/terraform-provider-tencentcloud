@@ -82,6 +82,7 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(id, "vpc_id"),
 					resource.TestCheckResourceAttrSet(id, "subnet_id"),
 					resource.TestCheckResourceAttrSet(id, "project_id"),
+					resource.TestCheckResourceAttr(id, "tags.hostname", "tci"),
 				),
 			},
 			{
@@ -776,6 +777,10 @@ resource "tencentcloud_instance" "cvm_basic" {
   subnet_id         = var.cvm_subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
+
+  tags = {
+    hostname = "tci"
+  }
 }
 `
 
@@ -908,6 +913,10 @@ resource "tencentcloud_instance" "cvm_basic" {
   subnet_id         = var.cvm_subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
+
+  tags = {
+    hostname = "tci"
+  }
 }
 `
 
