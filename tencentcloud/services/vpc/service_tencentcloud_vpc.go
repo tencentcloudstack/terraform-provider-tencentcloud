@@ -2300,7 +2300,7 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 
 	liteRule.port = port
 	if port != "ALL" && !portRE.MatchString(port) && !protocolTemplateRE.MatchString(protocol) {
-		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
+		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53` or `80-90`", liteRule.port)
 		return
 	}
 
@@ -3706,8 +3706,8 @@ func parseACLRule(str string) (liteRule VpcACLRule, err error) {
 		}
 	}
 
-	if liteRule.port != "ALL" && !regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`).MatchString(liteRule.port) {
-		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
+	if liteRule.port != "ALL" && !regexp.MustCompile(`^(\d{1,5}|(\d{1,5}-\d{1,5}))$`).MatchString(liteRule.port) {
+		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53` or `80-90`", liteRule.port)
 		return
 	}
 
