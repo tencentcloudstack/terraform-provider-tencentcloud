@@ -44,16 +44,18 @@ func ResourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 
 			"vpc_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Description: "Vpc Id.",
 			},
 
 			"subnet_ids": {
-				Type:     schema.TypeSet,
-				Required: true,
+				Type: schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				Optional:    true,
+				Computed:    true,
 				Description: "Subnet Id array.",
 			},
 
@@ -66,7 +68,8 @@ func ResourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 
 			"enable_internet": {
 				Type:        schema.TypeBool,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Description: "Control whether grafana could be accessed by internet.",
 			},
 
