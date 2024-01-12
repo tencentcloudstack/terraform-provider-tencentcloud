@@ -64,8 +64,8 @@ const (
 
 	DefaultCvmAZone                 = "ap-guangzhou-7"
 	DefaultCvmInternationalZone     = "ap-guangzhou-3"
-	DefaultCvmVpcId                 = "vpc-l0dw94uh"
-	DefaultCvmSubnetId              = "subnet-ccj2qg0m"
+	DefaultCvmVpcId                 = "vpc-gmq0mxoj"
+	DefaultCvmSubnetId              = "subnet-cpknsqgo"
 	DefaultCvmTestingAZone          = "ap-guangzhou-2"
 	DefaultCvmTestingVpcId          = "vpc-701bm52d"
 	DefaultCvmTestingSubnetId       = "subnet-1q62lj3m"

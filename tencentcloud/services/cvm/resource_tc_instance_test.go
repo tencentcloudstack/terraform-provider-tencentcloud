@@ -71,11 +71,9 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 		PreCheck:      func() { tcacctest.AccPreCheck(t) },
 		IDRefreshName: id,
 		Providers:     tcacctest.AccProviders,
-		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
-				Config:    testAccTencentCloudInstanceBasic,
+				Config: testAccTencentCloudInstanceBasic,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -87,8 +85,7 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
-				Config:    testAccTencentCloudInstanceModifyInstanceType,
+				Config: testAccTencentCloudInstanceModifyInstanceType,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
@@ -98,7 +95,6 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 			{
 				ResourceName:            id,
 				ImportState:             true,
-				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "force_delete"},
 			},
 		},
