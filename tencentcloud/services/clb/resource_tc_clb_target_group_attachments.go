@@ -139,9 +139,12 @@ func resourceTencentCloudClbTargetGroupAttachmentsCreate(d *schema.ResourceData,
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateTargetGroups(request)
-		if e != nil {
-			return tccommon.RetryError(e, tccommon.InternalError)
+		result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateTargetGroups(request)
+		if err != nil {
+			if e := processRetryErrMsg(err); e != nil {
+				return e
+			}
+			return tccommon.RetryError(err, tccommon.InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), result.ToJsonString(), result.ToJsonString())
@@ -235,6 +238,9 @@ func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData,
 		ratelimit.Check(request.GetAction())
 		result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().DisassociateTargetGroups(request)
 		if err != nil {
+			if e := processRetryErrMsg(err); e != nil {
+				return e
+			}
 			return tccommon.RetryError(err, tccommon.InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",

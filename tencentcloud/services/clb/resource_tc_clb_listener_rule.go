@@ -283,6 +283,9 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		requestId := ""
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().CreateRule(request)
 		if e != nil {
+			if err := processRetryErrMsg(e); err != nil {
+				return err
+			}
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -610,6 +613,9 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyDomainAttributes(domainRequest)
 			if e != nil {
+				if err := processRetryErrMsg(e); err != nil {
+					return err
+				}
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -656,6 +662,9 @@ func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta inte
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteRuleById(ctx, clbId, listenerId, locationId)
 		if e != nil {
+			if err := processRetryErrMsg(e); err != nil {
+				return err
+			}
 			return tccommon.RetryError(e)
 		}
 		return nil
