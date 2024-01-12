@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/target_group_attachments: support parallel
+```
+
+```release-note:enhancement
+resource/tencentcloud_clb_listener_rule: support parallel
+```
