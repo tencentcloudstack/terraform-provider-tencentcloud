@@ -155,27 +155,27 @@ const testAccClbTargetGroupAttachmentsTarget = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
   clb_name     = "tf_test_clb_attach_1"
-  vpc_id = "vpc-5kwngvex"
+  vpc_id = "vpc-efc9vddt"
 }
 resource "tencentcloud_clb_instance" "clb_basic2" {
   network_type = "OPEN"
   clb_name     = "tf_test_clb_attach_2"
-  vpc_id = "vpc-5kwngvex"
+  vpc_id = "vpc-efc9vddt"
 }
 resource "tencentcloud_clb_instance" "clb_basic3" {
   network_type = "OPEN"
   clb_name     = "tf_test_clb_attach_3"
-  vpc_id = "vpc-5kwngvex"
+  vpc_id = "vpc-efc9vddt"
 }
 resource "tencentcloud_clb_instance" "clb_basic4" {
   network_type = "OPEN"
   clb_name     = "tf_test_clb_attach_4"
-  vpc_id = "vpc-5kwngvex"
+  vpc_id = "vpc-efc9vddt"
 }
 resource "tencentcloud_clb_instance" "clb_basic5" {
   network_type = "OPEN"
   clb_name     = "tf_test_clb_attach_5"
-  vpc_id = "vpc-5kwngvex"
+  vpc_id = "vpc-efc9vddt"
 }
 
 
