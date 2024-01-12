@@ -1,6 +1,10 @@
 package cbs_test
 
 import (
+	"log"
+	"strings"
+	"time"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	localcbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
@@ -12,6 +16,54 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_cbs_snapshot", &resource.Sweeper{
+		Name: "tencentcloud_cbs_snapshot",
+		F:    testSweepCbsSnapshot,
+	})
+}
+
+func testSweepCbsSnapshot(region string) error {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	sharedClient, err := tcacctest.SharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(tccommon.ProviderMeta)
+
+	cbsService := localcbs.NewCbsService(client.GetAPIV3Conn())
+
+	instances, err := cbsService.DescribeSnapshotsByFilter(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+		instanceId := v.SnapshotId
+		instanceName := v.SnapshotName
+
+		now := time.Now()
+
+		createTime := tccommon.StringToTime(*v.CreateTime)
+		interval := now.Sub(createTime).Minutes()
+		if strings.HasPrefix(*instanceName, tcacctest.KeepResource) || strings.HasPrefix(*instanceName, tcacctest.DefaultResource) {
+			continue
+		}
+		// less than 30 minute, not delete
+		if tccommon.NeedProtect == 1 && int64(interval) < 30 {
+			continue
+		}
+
+		if err = cbsService.DeleteSnapshot(ctx, *instanceId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", *instanceId, err.Error())
+		}
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudCbsSnapshot(t *testing.T) {
 	t.Parallel()
