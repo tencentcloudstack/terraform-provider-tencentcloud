@@ -1,3 +1,12 @@
+## 1.81.65 (January 12, 2024)
+
+ENHANCEMENTS:
+
+* resource/resource_tc_redis_instance: Increase `mem_size` optional value ([#2459](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2459))
+* resource/target_group_attachments: support parallel ([#2467](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2467))
+* resource/tencentcloud_clb_listener_rule: support parallel ([#2467](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2467))
+* resource/tencentcloud_kubernetes_cluster: add `cluster_internet` and `cluster_intranet` configuration check ([#2469](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2469))
+
 ## 1.81.64 (January 5, 2024)
 
 FEATURES:
