@@ -50,7 +50,7 @@ func testNodePoolSweep(region string) error {
 		return err
 	}
 	if len(cls) == 0 {
-		log.Println("no persistent cluster " + tcacctest.DefaultTkeClusterId)
+		log.Println("no found default tke clusterId " + tcacctest.DefaultTkeClusterId)
 		return nil
 	}
 
