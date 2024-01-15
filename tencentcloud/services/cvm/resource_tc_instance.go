@@ -669,9 +669,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(instanceId)
 
-	//get system disk ID and data disk ID
-	var systemDiskId string
-	var dataDiskIds []string
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
@@ -682,17 +679,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
-			//get system disk ID
-			if instance.SystemDisk != nil && instance.SystemDisk.DiskId != nil {
-				systemDiskId = *instance.SystemDisk.DiskId
-			}
-			if instance.DataDisks != nil {
-				for _, dataDisk := range instance.DataDisks {
-					if dataDisk != nil && dataDisk.DiskId != nil {
-						dataDiskIds = append(dataDiskIds, *dataDisk.DiskId)
-					}
-				}
-			}
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -706,31 +692,20 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
-		resourceName := tccommon.BuildTagResourceName("cvm", "instance", tcClient.Region, instanceId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
-			return err
-		}
-
-		//except instance ,system disk and data disk will be tagged
-		//keep logical consistence with the console
-		//tag system disk
-		if systemDiskId != "" {
-			resourceName = tccommon.BuildTagResourceName("cvm", "volume", tcClient.Region, systemDiskId)
-			if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-				// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
-				return err
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			actualTags, e := tagService.DescribeResourceTags(ctx, "cvm", "instance", tcClient.Region, instanceId)
+			if e != nil {
+				return resource.RetryableError(e)
 			}
-		}
-		//tag disk ids
-		for _, diskId := range dataDiskIds {
-			if diskId != "" {
-				resourceName = tccommon.BuildTagResourceName("cvm", "volume", tcClient.Region, diskId)
-				if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-					// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
-					return err
+			for tagKey, tagValue := range tags {
+				if v, ok := actualTags[tagKey]; !ok || v != tagValue {
+					return resource.RetryableError(fmt.Errorf("tag(%s, %s) modification is not completed", tagKey, tagValue))
 				}
 			}
+			return nil
+		})
+		if err != nil {
+			return err
 		}
 	}
 

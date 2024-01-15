@@ -64,8 +64,8 @@ const (
 
 	DefaultCvmAZone                 = "ap-guangzhou-7"
 	DefaultCvmInternationalZone     = "ap-guangzhou-3"
-	DefaultCvmVpcId                 = "vpc-l0dw94uh"
-	DefaultCvmSubnetId              = "subnet-ccj2qg0m"
+	DefaultCvmVpcId                 = "vpc-gmq0mxoj"
+	DefaultCvmSubnetId              = "subnet-cpknsqgo"
 	DefaultCvmTestingAZone          = "ap-guangzhou-2"
 	DefaultCvmTestingVpcId          = "vpc-701bm52d"
 	DefaultCvmTestingSubnetId       = "subnet-1q62lj3m"
@@ -358,9 +358,10 @@ data "tencentcloud_instance_types" "default" {
   }
   filter {
     name   = "instance-family"
-    values = ["S1", "S2", "S3", "S4", "S5", "SR1", "SA1", "SA2"]
+    values = ["S1", "S2", "S3", "S4", "S5"]
   }
   cpu_core_count = 2
+  memory_size = 2
   exclude_sold_out = true
 }
 `
