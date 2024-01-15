@@ -358,7 +358,7 @@ data "tencentcloud_instance_types" "default" {
   }
   filter {
     name   = "instance-family"
-    values = ["S1", "S2", "S3", "S4", "S5", "SR1", "SA1", "SA2"]
+    values = ["S1", "S2", "S3", "S4", "S5"]
   }
   cpu_core_count = 2
   memory_size = 2
