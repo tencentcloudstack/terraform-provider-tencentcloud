@@ -1,3 +1,11 @@
+## 1.81.66 (January 15, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: `instance_charge_type` support `UNDERWRITE` ([#2478](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2478))
+* resource/tencentcloud_instance: fix tag conflict ([#2464](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2464))
+* resource/tencentcloud_mysql_instance: Modify configuration to support window period switching ([#2472](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2472))
+
 ## 1.81.65 (January 12, 2024)
 
 ENHANCEMENTS:
