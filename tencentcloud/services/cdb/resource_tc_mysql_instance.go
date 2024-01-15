@@ -1016,6 +1016,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			cpu := int64(d.Get("cpu").(int))
 			volumeSize := int64(d.Get("volume_size").(int))
 			deviceType := ""
+			var waitSwitch int64 = 0
 
 			fastUpgrade := int64(0)
 			if v, ok := d.GetOk("fast_upgrade"); ok {
@@ -1025,7 +1026,11 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				deviceType = v.(string)
 			}
 
-			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, -1, -1, "", "")
+			if v, ok := d.GetOkExists("wait_switch"); ok {
+				waitSwitch = int64(v.(int))
+			}
+
+			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, -1, -1, "", "", waitSwitch)
 
 			if err != nil {
 				return err
@@ -1069,6 +1074,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			deviceType := ""
 			firstSlaveZone := ""
 			secondSlaveZone := ""
+			var waitSwitch int64 = 0
 
 			fastUpgrade := int64(0)
 			if v, ok := d.GetOk("fast_upgrade"); ok {
@@ -1086,7 +1092,11 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				secondSlaveZone = v.(string)
 			}
 
-			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone)
+			if v, ok := d.GetOkExists("wait_switch"); ok {
+				waitSwitch = int64(v.(int))
+			}
+
+			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone, waitSwitch)
 
 			if err != nil {
 				return err

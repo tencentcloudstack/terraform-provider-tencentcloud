@@ -1217,11 +1217,9 @@ func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, v
 
 func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 	memSize, cpu, volumeSize, fastUpgrade int64, deviceType string, slaveDeployMode, slaveSyncMode int64,
-	firstSlaveZone, secondSlaveZone string) (asyncRequestId string, errRet error) {
+	firstSlaveZone, secondSlaveZone string, waitSwitch int64) (asyncRequestId string, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
-
-	var waitSwitch int64 = 0 // 0- switch immediately, 1- time window switch
 
 	request := cdb.NewUpgradeDBInstanceRequest()
 	request.InstanceId = &mysqlId

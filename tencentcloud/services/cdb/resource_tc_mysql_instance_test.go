@@ -123,7 +123,7 @@ func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
 				ResourceName:            "tencentcloud_mysql_instance.prepaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "force_delete", "param_template_id", "fast_upgrade"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "force_delete", "param_template_id", "fast_upgrade", "parameters"},
 			},
 		},
 	})
@@ -148,7 +148,7 @@ func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 				ResourceName:            "tencentcloud_mysql_instance.mysql_exclusive",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "force_delete", "param_template_id", "fast_upgrade"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "force_delete", "param_template_id", "fast_upgrade", "parameters"},
 			},
 			{
 				Config: testAccMySQLDeviceTypeUpdate,
@@ -228,7 +228,7 @@ func TestAccTencentCloudMysqlInstanceResource_MasterInstance_basic_and_update(t 
 				ResourceName:            "tencentcloud_mysql_instance.mysql_master",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "parameters"},
 			},
 			// add tag
 			{
@@ -430,7 +430,7 @@ resource "tencentcloud_mysql_instance" "prepaid" {
 
 const testAccMySQLDeviceType = `
 variable "temporary_param_tmpl_id" {
-	default = 19656
+	default = 21117
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
@@ -452,7 +452,7 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
 
 const testAccMySQLDeviceTypeUpdate = `
 variable "temporary_param_tmpl_id" {
-	default = 19656
+	default = 21117
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
@@ -624,7 +624,7 @@ resource "tencentcloud_mysql_instance" "mysql8" {
 	mem_size          = 1000
 	volume_size       = 25
 	intranet_port     = 3306
-	security_groups   = ["sg-ngx2bo7j"]
+	security_groups   = ["sg-3k7vtgf7"]
   
 	tags = {
 	  createdBy = "terraform"
