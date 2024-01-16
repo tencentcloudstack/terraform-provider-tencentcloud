@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -12,7 +13,7 @@ import (
 	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 )
 
-// go test -test.run TestAccTencentCloudMonitorGrafanaInstance_basic -v
+// go test -test.run TestAccTencentCloudMonitorGrafanaInstanceResource -v
 func TestAccTencentCloudMonitorGrafanaInstanceResource(t *testing.T) {
 	t.Parallel()
 
@@ -105,6 +106,8 @@ func testAccCheckGrafanaInstanceExists(r string) resource.TestCheckFunc {
 		if instance == nil {
 			return fmt.Errorf("GrafanaInstance %s is not found", rs.Primary.ID)
 		}
+
+		time.Sleep(time.Second * 100)
 
 		return nil
 	}
