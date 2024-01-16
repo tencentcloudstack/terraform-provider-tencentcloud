@@ -43,7 +43,7 @@ const (
 )
 
 var logFirstTime = ""
-var logAtomicId int64 = 0
+var logAtomicId int64 = 0 // ff
 
 // ReadRetryTimeout is read retry timeout
 // const readRetryTimeout = 3 * time.Minute
