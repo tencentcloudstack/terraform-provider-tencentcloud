@@ -1,10 +1,6 @@
 package tcmg
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
-
 	"context"
 	"fmt"
 	"log"
@@ -12,8 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
-
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 )
 
 func ResourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
@@ -106,6 +104,12 @@ func ResourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 				Description: "Grafana public address.",
 			},
 
+			"auto_voucher": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to automatically use vouchers.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -149,6 +153,10 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 	if v, _ := d.GetOk("enable_internet"); v != nil {
 		// Internal account won't open
 		request.EnableInternet = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("auto_voucher"); ok {
+		request.AutoVoucher = helper.Bool(v.(bool))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -319,6 +327,10 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 
 	if d.HasChange("grafana_init_password") {
 		return fmt.Errorf("`grafana_init_password` do not support change now.")
+	}
+
+	if d.HasChange("auto_voucher") {
+		return fmt.Errorf("`auto_voucher` do not support change now.")
 	}
 
 	if d.HasChange("enable_internet") {

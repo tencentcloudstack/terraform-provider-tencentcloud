@@ -49,6 +49,7 @@ resource "tencentcloud_monitor_grafana_instance" "foo" {
 The following arguments are supported:
 
 * `instance_name` - (Required, String) Instance name.
+* `auto_voucher` - (Optional, Bool) Whether to automatically use vouchers.
 * `enable_internet` - (Optional, Bool) Control whether grafana could be accessed by internet.
 * `grafana_init_password` - (Optional, String) Grafana server admin password.
 * `is_destroy` - (Optional, Bool) Whether to clean up completely, the default is false.

@@ -4,18 +4,17 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
 	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMonitorGrafanaInstance_basic -v
-func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
+// go test -test.run TestAccTencentCloudMonitorGrafanaInstanceResource -v
+func TestAccTencentCloudMonitorGrafanaInstanceResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -32,6 +31,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_monitor_grafana_instance.grafanaInstance", "internal_url"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "auto_voucher", "true"),
 				),
 			},
 			{
@@ -48,7 +48,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 				ResourceName:            "tencentcloud_monitor_grafana_instance.grafanaInstance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"grafana_init_password", "is_destroy"},
+				ImportStateVerifyIgnore: []string{"grafana_init_password", "is_destroy", "auto_voucher"},
 			},
 		},
 	})
@@ -107,6 +107,8 @@ func testAccCheckGrafanaInstanceExists(r string) resource.TestCheckFunc {
 			return fmt.Errorf("GrafanaInstance %s is not found", rs.Primary.ID)
 		}
 
+		time.Sleep(time.Second * 100)
+
 		return nil
 	}
 }
@@ -129,6 +131,7 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   grafana_init_password = "1234567890"
   enable_internet = false
   is_destroy = true
+  auto_voucher = true
 
   tags = {
     "createdBy" = "test"
@@ -144,6 +147,7 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   grafana_init_password = "1234567890"
   enable_internet = true
   is_destroy = true
+  auto_voucher = true
 
   tags = {
     "createdBy" = "test"

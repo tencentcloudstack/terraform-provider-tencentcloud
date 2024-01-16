@@ -938,6 +938,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.829/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.831/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.833 h1:EE3PbnS+BiCjPcfbf2Tel03YglInffxV+mIbmzoFEag=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.833/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.839 h1:VGVFNQDaUpDsPkJrh8I9qOxHZ1yj5sJmg9ngsUvTAHM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.839/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624/go.mod h1:+TXSVyeKwt1IhZRqKPbTREteBcP+K07Q846/ilNzLWA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762 h1:2egy69SP/wPsmnfozcQVZ6tUY6F6N/TpEe/7xtXrc/8=
@@ -982,6 +984,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651 h1:Ohb
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651/go.mod h1:HLqsSgUnwgkE+XecQajekinjz1B7S+1U1J66puH4jpQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.815 h1:wsTtihNYIpnCz+R01imMGrEfahf+J/wF4bivxnUwr8w=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.815/go.mod h1:0nU7o/VOMYZ1/xjIsFVivQ3RZkdDeGTdezSlyjyG7GI=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.839 h1:eRIkvwwyw7Guh3Ayr3J5tKSWfNX9WQBQ5zzNpBYoBHQ=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.839/go.mod h1:4OoBA087NHVdyeRJFy/SML7kIJmt54DtNkNlJWZp8oE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.777 h1:SoH/KkqkEUw8iDmQDZCw5Saf319Ceyt3v8Vqodo8DiY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.777/go.mod h1:sBmwqD3GkczHFiArdYpHPp9QriIbzNtO99DueYVyGwE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831 h1:oyazF5wgAgoinGo/SDGfUReE3JFxqcpI6/pstWhK7yE=
