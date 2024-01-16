@@ -92,6 +92,11 @@ func ResourceTencentCloudCfwEdgePolicy() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(POLICY_SCOPE),
 				Description:  "Effective range. serial: serial; side: bypass; all: global, Default is all.",
 			},
+			"param_template_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Parameter template id.",
+			},
 		},
 	}
 }
@@ -268,6 +273,10 @@ func resourceTencentCloudCfwEdgePolicyRead(d *schema.ResourceData, meta interfac
 
 	if edgePolicy.Scope != nil {
 		_ = d.Set("scope", edgePolicy.Scope)
+	}
+
+	if edgePolicy.ParamTemplateId != nil {
+		_ = d.Set("param_template_id", edgePolicy.ParamTemplateId)
 	}
 
 	return nil

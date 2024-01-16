@@ -48,8 +48,11 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `beta_list` - Beta mission details. Note: This field may return null, indicating that no valid value can be obtained.
 * `fw_group_name` - Firewall name.
 * `internal_uuid` - Uuid used internally, this field is generally not used.
+* `param_template_id` - Parameter template id. Note: This field may return null, indicating that no valid value can be obtained.
+* `param_template_name` - Parameter template Name. Note: This field may return null, indicating that no valid value can be obtained.
 * `uuid` - The unique id corresponding to the rule.
 
 

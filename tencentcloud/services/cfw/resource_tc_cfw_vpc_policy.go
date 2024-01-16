@@ -94,6 +94,40 @@ func ResourceTencentCloudCfwVpcPolicy() *schema.Resource {
 				Computed:    true,
 				Description: "Firewall name.",
 			},
+			"beta_list": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Beta mission details. Note: This field may return null, indicating that no valid value can be obtained.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"task_id": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Task id. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"task_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Mission name. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"last_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Last execution time. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+					},
+				},
+			},
+			"param_template_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Parameter template id. Note: This field may return null, indicating that no valid value can be obtained.",
+			},
+			"param_template_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Parameter template Name. Note: This field may return null, indicating that no valid value can be obtained.",
+			},
 		},
 	}
 }
@@ -255,6 +289,37 @@ func resourceTencentCloudCfwVpcPolicyRead(d *schema.ResourceData, meta interface
 
 	if vpcPolicy.FwGroupName != nil {
 		_ = d.Set("fw_group_name", vpcPolicy.FwGroupName)
+	}
+
+	if vpcPolicy.BetaList != nil {
+		betaListList := []interface{}{}
+		for _, betaList := range vpcPolicy.BetaList {
+			betaListMap := map[string]interface{}{}
+
+			if betaList.TaskId != nil {
+				betaListMap["task_id"] = betaList.TaskId
+			}
+
+			if betaList.TaskName != nil {
+				betaListMap["task_name"] = betaList.TaskName
+			}
+
+			if betaList.LastTime != nil {
+				betaListMap["last_time"] = betaList.LastTime
+			}
+
+			betaListList = append(betaListList, betaListMap)
+		}
+
+		_ = d.Set("beta_list", betaListList)
+	}
+
+	if vpcPolicy.ParamTemplateId != nil {
+		_ = d.Set("param_template_id", vpcPolicy.ParamTemplateId)
+	}
+
+	if vpcPolicy.ParamTemplateName != nil {
+		_ = d.Set("param_template_name", vpcPolicy.ParamTemplateName)
 	}
 
 	return nil
