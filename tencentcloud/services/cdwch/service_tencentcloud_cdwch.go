@@ -691,3 +691,60 @@ func (me *CdwchService) DescribeClickhouseInstanceShardsByFilter(ctx context.Con
 	instanceShards = response.Response
 	return
 }
+
+func (me *CdwchService) DescribeClickhouseInstanceNodesByFilter(ctx context.Context, param map[string]interface{}) (instanceNodes []*cdwch.InstanceNode, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cdwch.NewDescribeInstanceNodesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "NodeRole" {
+			request.NodeRole = v.(*string)
+		}
+		if k == "DisplayPolicy" {
+			request.DisplayPolicy = v.(*string)
+		}
+		if k == "ForceAll" {
+			request.ForceAll = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCdwchClient().DescribeInstanceNodes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.InstanceNodesList) < 1 {
+			break
+		}
+		instanceNodes = append(instanceNodes, response.Response.InstanceNodesList...)
+		if len(response.Response.InstanceNodesList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
