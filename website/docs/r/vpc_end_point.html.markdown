@@ -20,6 +20,12 @@ resource "tencentcloud_vpc_end_point" "end_point" {
   end_point_name       = "terraform-test"
   end_point_service_id = "vpcsvc-69y13tdb"
   end_point_vip        = "10.0.2.1"
+
+  security_groups_ids = [
+    "sg-ghvp9djf",
+    "sg-if748odn",
+    "sg-3k7vtgf7",
+  ]
 }
 ```
 
@@ -32,6 +38,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, String) ID of subnet instance.
 * `vpc_id` - (Required, String) ID of vpc instance.
 * `end_point_vip` - (Optional, String) VIP of endpoint ip.
+* `security_groups_ids` - (Optional, List: [`String`]) Ordered security groups associated with the endpoint.
 
 ## Attributes Reference
 
