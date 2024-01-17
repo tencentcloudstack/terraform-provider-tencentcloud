@@ -981,6 +981,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_cluster_node_pools":                tke.DataSourceTencentCloudKubernetesClusterNodePools(),
 			"tencentcloud_clickhouse_spec":                              cdwch.DataSourceTencentCloudClickhouseSpec(),
 			"tencentcloud_clickhouse_instance_shards":                   cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
+			"tencentcloud_clickhouse_instance_nodes":                    cdwch.DataSourceTencentCloudClickhouseInstanceNodes(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
