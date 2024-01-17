@@ -1,3 +1,9 @@
+## 1.81.68 (January 17, 2024)
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_scale_worker: fix DescribeClusters return parameter `Property` parsing code ([#2480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2480))
+
 ## 1.81.67 (January 17, 2024)
 
 FEATURES:
