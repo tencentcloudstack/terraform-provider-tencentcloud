@@ -127,6 +127,37 @@ output "domain" {
 }
 ```
 
+### Specified  Vip Instance
+
+```hcl
+resource "tencentcloud_security_group" "foo" {
+  name = "clb-instance-open-sg"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "clb-instance-open-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_clb_instance" "clb_open" {
+  network_type    = "OPEN"
+  clb_name        = "clb-instance-open"
+  project_id      = 0
+  vpc_id          = tencentcloud_vpc.foo.id
+  security_groups = [tencentcloud_security_group.foo.id]
+
+  vip = "111.230.4.204"
+
+  tags = {
+    test = "tf"
+  }
+}
+
+output "domain" {
+  value = tencentcloud_clb_instance.vip
+}
+```
+
 ### Default enable
 
 ```hcl
@@ -253,6 +284,7 @@ The following arguments are supported:
 * `target_region_info_region` - (Optional, String) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional, String) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `vip_isp` - (Optional, String, ForceNew) Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).
+* `vip` - (Optional, String, ForceNew) Applies for CLB instances for a specified VIP, only applicable to open CLB.
 * `vpc_id` - (Optional, String, ForceNew) VPC ID of the CLB.
 * `zone_id` - (Optional, String) Available zone id, only applicable to open CLB.
 

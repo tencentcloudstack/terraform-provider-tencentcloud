@@ -168,6 +168,13 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).",
 			},
+			"vip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Applies for CLB instances for a specified VIP, only applicable to open CLB.",
+			},
 			"load_balancer_pass_to_target": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -265,12 +272,20 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.SubnetId = helper.String(v.(string))
 	}
 
-	//vip
+	//vip_isp
 	if v, ok := d.GetOk("vip_isp"); ok {
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support vip ISP setting")
 		}
 		request.VipIsp = helper.String(v.(string))
+	}
+
+	//vip
+	if v, ok := d.GetOk("vip"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support vip setting")
+		}
+		request.Vip = helper.String(v.(string))
 	}
 
 	//SlaType
@@ -570,6 +585,11 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	if instance.VipIsp != nil {
 		_ = d.Set("vip_isp", instance.VipIsp)
 	}
+
+	if instance.LoadBalancerVips != nil && len(instance.LoadBalancerVips) > 0 {
+		_ = d.Set("vip", instance.LoadBalancerVips[0])
+	}
+
 	if instance.AddressIPVersion != nil {
 		_ = d.Set("address_ip_version", instance.AddressIPVersion)
 	}
