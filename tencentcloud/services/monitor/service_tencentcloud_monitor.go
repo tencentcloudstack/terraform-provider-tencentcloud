@@ -2486,3 +2486,58 @@ func (me *MonitorService) DescribeMonitorStatisticDataByFilter(ctx context.Conte
 
 	return
 }
+
+func (me *MonitorService) DescribeMonitorTmpAlertGroupById(ctx context.Context, instanceId, groupId string) (tmpAlertGroup *monitor.PrometheusAlertGroupSet, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitor.NewDescribePrometheusAlertGroupsRequest()
+	request.InstanceId = &instanceId
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribePrometheusAlertGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.AlertGroupSet) < 1 {
+		return
+	}
+
+	tmpAlertGroup = response.Response.AlertGroupSet[0]
+	return
+}
+
+func (me *MonitorService) DeleteMonitorTmpAlertGroupById(ctx context.Context, instanceId, groupId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitor.NewDeletePrometheusAlertGroupsRequest()
+	request.InstanceId = &instanceId
+	request.GroupIds = []*string{&groupId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DeletePrometheusAlertGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

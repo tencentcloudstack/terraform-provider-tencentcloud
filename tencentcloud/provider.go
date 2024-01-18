@@ -1296,6 +1296,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_tmp_exporter_integration":                    tmp.ResourceTencentCloudMonitorTmpExporterIntegration(),
 			"tencentcloud_monitor_tmp_alert_rule":                              tmp.ResourceTencentCloudMonitorTmpAlertRule(),
 			"tencentcloud_monitor_tmp_recording_rule":                          tmp.ResourceTencentCloudMonitorTmpRecordingRule(),
+			"tencentcloud_monitor_tmp_alert_group":                             tmp.ResourceTencentCloudMonitorTmpAlertGroup(),
 			"tencentcloud_monitor_tmp_tke_template":                            tmp.ResourceTencentCloudMonitorTmpTkeTemplate(),
 			"tencentcloud_monitor_tmp_tke_template_attachment":                 tmp.ResourceTencentCloudMonitorTmpTkeTemplateAttachment(),
 			"tencentcloud_monitor_tmp_tke_alert_policy":                        tmp.ResourceTencentCloudMonitorTmpTkeAlertPolicy(),
