@@ -41,6 +41,18 @@ func testSweepSubnet(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	data := make([][]string, len(instances))
+	for i, instance := range instances {
+		data[i] = []string{
+			"vpc",
+			"subnet",
+			instance.SubnetId(),
+			instance.Name(),
+		}
+	}
+	tccommon.WriteCsvFileData(data)
+
 	for _, v := range instances {
 
 		instanceId := v.SubnetId()
