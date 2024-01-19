@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_cfw_edge_policy: Add return parameters
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfw_nat_policy: Add return parameters
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfw_vpc_policy: Add return parameters
+```

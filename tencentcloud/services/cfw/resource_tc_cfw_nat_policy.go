@@ -83,6 +83,11 @@ func ResourceTencentCloudCfwNatPolicy() *schema.Resource {
 				Optional:    true,
 				Description: "Description.",
 			},
+			"param_template_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Parameter template id. Note: This field may return null, indicating that no valid value can be obtained.",
+			},
 		},
 	}
 }
@@ -229,6 +234,10 @@ func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface
 
 	if natPolicy.Scope != nil {
 		_ = d.Set("scope", natPolicy.Scope)
+	}
+
+	if natPolicy.ParamTemplateId != nil {
+		_ = d.Set("param_template_id", natPolicy.ParamTemplateId)
 	}
 
 	return nil

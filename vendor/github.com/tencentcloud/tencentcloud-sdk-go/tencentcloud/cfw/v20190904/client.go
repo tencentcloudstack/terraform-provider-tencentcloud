@@ -59,8 +59,9 @@ func NewAddAcRuleRequest() (request *AddAcRuleRequest) {
 func NewAddAcRuleResponse() (response *AddAcRuleResponse) {
     response = &AddAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddAcRule
@@ -141,8 +142,9 @@ func NewAddAclRuleRequest() (request *AddAclRuleRequest) {
 func NewAddAclRuleResponse() (response *AddAclRuleResponse) {
     response = &AddAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddAclRule
@@ -223,8 +225,9 @@ func NewAddEnterpriseSecurityGroupRulesRequest() (request *AddEnterpriseSecurity
 func NewAddEnterpriseSecurityGroupRulesResponse() (response *AddEnterpriseSecurityGroupRulesResponse) {
     response = &AddEnterpriseSecurityGroupRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddEnterpriseSecurityGroupRules
@@ -283,8 +286,9 @@ func NewAddNatAcRuleRequest() (request *AddNatAcRuleRequest) {
 func NewAddNatAcRuleResponse() (response *AddNatAcRuleResponse) {
     response = &AddNatAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddNatAcRule
@@ -365,8 +369,9 @@ func NewAddVpcAcRuleRequest() (request *AddVpcAcRuleRequest) {
 func NewAddVpcAcRuleResponse() (response *AddVpcAcRuleResponse) {
     response = &AddVpcAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddVpcAcRule
@@ -447,8 +452,9 @@ func NewCreateAcRulesRequest() (request *CreateAcRulesRequest) {
 func NewCreateAcRulesResponse() (response *CreateAcRulesResponse) {
     response = &CreateAcRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAcRules
@@ -499,8 +505,9 @@ func NewCreateAddressTemplateRequest() (request *CreateAddressTemplateRequest) {
 func NewCreateAddressTemplateResponse() (response *CreateAddressTemplateResponse) {
     response = &CreateAddressTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAddressTemplate
@@ -539,6 +546,171 @@ func (c *Client) CreateAddressTemplateWithContext(ctx context.Context, request *
     return
 }
 
+func NewCreateAlertCenterIsolateRequest() (request *CreateAlertCenterIsolateRequest) {
+    request = &CreateAlertCenterIsolateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "CreateAlertCenterIsolate")
+    
+    
+    return
+}
+
+func NewCreateAlertCenterIsolateResponse() (response *CreateAlertCenterIsolateResponse) {
+    response = &CreateAlertCenterIsolateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAlertCenterIsolate
+// 用户告警中心-封隔离处置按钮
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAlertCenterIsolate(request *CreateAlertCenterIsolateRequest) (response *CreateAlertCenterIsolateResponse, err error) {
+    return c.CreateAlertCenterIsolateWithContext(context.Background(), request)
+}
+
+// CreateAlertCenterIsolate
+// 用户告警中心-封隔离处置按钮
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAlertCenterIsolateWithContext(ctx context.Context, request *CreateAlertCenterIsolateRequest) (response *CreateAlertCenterIsolateResponse, err error) {
+    if request == nil {
+        request = NewCreateAlertCenterIsolateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAlertCenterIsolate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAlertCenterIsolateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAlertCenterOmitRequest() (request *CreateAlertCenterOmitRequest) {
+    request = &CreateAlertCenterOmitRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "CreateAlertCenterOmit")
+    
+    
+    return
+}
+
+func NewCreateAlertCenterOmitResponse() (response *CreateAlertCenterOmitResponse) {
+    response = &CreateAlertCenterOmitResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAlertCenterOmit
+// 用户告警中心-忽略处置按钮
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAlertCenterOmit(request *CreateAlertCenterOmitRequest) (response *CreateAlertCenterOmitResponse, err error) {
+    return c.CreateAlertCenterOmitWithContext(context.Background(), request)
+}
+
+// CreateAlertCenterOmit
+// 用户告警中心-忽略处置按钮
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAlertCenterOmitWithContext(ctx context.Context, request *CreateAlertCenterOmitRequest) (response *CreateAlertCenterOmitResponse, err error) {
+    if request == nil {
+        request = NewCreateAlertCenterOmitRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAlertCenterOmit require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAlertCenterOmitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAlertCenterRuleRequest() (request *CreateAlertCenterRuleRequest) {
+    request = &CreateAlertCenterRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "CreateAlertCenterRule")
+    
+    
+    return
+}
+
+func NewCreateAlertCenterRuleResponse() (response *CreateAlertCenterRuleResponse) {
+    response = &CreateAlertCenterRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAlertCenterRule
+// 用户告警中心-封禁、放通处置按钮
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAlertCenterRule(request *CreateAlertCenterRuleRequest) (response *CreateAlertCenterRuleResponse, err error) {
+    return c.CreateAlertCenterRuleWithContext(context.Background(), request)
+}
+
+// CreateAlertCenterRule
+// 用户告警中心-封禁、放通处置按钮
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAlertCenterRuleWithContext(ctx context.Context, request *CreateAlertCenterRuleRequest) (response *CreateAlertCenterRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateAlertCenterRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAlertCenterRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAlertCenterRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateBlockIgnoreRuleListRequest() (request *CreateBlockIgnoreRuleListRequest) {
     request = &CreateBlockIgnoreRuleListRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -553,8 +725,9 @@ func NewCreateBlockIgnoreRuleListRequest() (request *CreateBlockIgnoreRuleListRe
 func NewCreateBlockIgnoreRuleListResponse() (response *CreateBlockIgnoreRuleListResponse) {
     response = &CreateBlockIgnoreRuleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBlockIgnoreRuleList
@@ -607,8 +780,9 @@ func NewCreateChooseVpcsRequest() (request *CreateChooseVpcsRequest) {
 func NewCreateChooseVpcsResponse() (response *CreateChooseVpcsResponse) {
     response = &CreateChooseVpcsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateChooseVpcs
@@ -659,8 +833,9 @@ func NewCreateDatabaseWhiteListRulesRequest() (request *CreateDatabaseWhiteListR
 func NewCreateDatabaseWhiteListRulesResponse() (response *CreateDatabaseWhiteListRulesResponse) {
     response = &CreateDatabaseWhiteListRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDatabaseWhiteListRules
@@ -699,6 +874,61 @@ func (c *Client) CreateDatabaseWhiteListRulesWithContext(ctx context.Context, re
     return
 }
 
+func NewCreateIdsWhiteRuleRequest() (request *CreateIdsWhiteRuleRequest) {
+    request = &CreateIdsWhiteRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "CreateIdsWhiteRule")
+    
+    
+    return
+}
+
+func NewCreateIdsWhiteRuleResponse() (response *CreateIdsWhiteRuleResponse) {
+    response = &CreateIdsWhiteRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateIdsWhiteRule
+// 创建入侵防御规则白名单接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateIdsWhiteRule(request *CreateIdsWhiteRuleRequest) (response *CreateIdsWhiteRuleResponse, err error) {
+    return c.CreateIdsWhiteRuleWithContext(context.Background(), request)
+}
+
+// CreateIdsWhiteRule
+// 创建入侵防御规则白名单接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateIdsWhiteRuleWithContext(ctx context.Context, request *CreateIdsWhiteRuleRequest) (response *CreateIdsWhiteRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateIdsWhiteRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateIdsWhiteRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateIdsWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateNatFwInstanceRequest() (request *CreateNatFwInstanceRequest) {
     request = &CreateNatFwInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -713,8 +943,9 @@ func NewCreateNatFwInstanceRequest() (request *CreateNatFwInstanceRequest) {
 func NewCreateNatFwInstanceResponse() (response *CreateNatFwInstanceResponse) {
     response = &CreateNatFwInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNatFwInstance
@@ -795,8 +1026,9 @@ func NewCreateNatFwInstanceWithDomainRequest() (request *CreateNatFwInstanceWith
 func NewCreateNatFwInstanceWithDomainResponse() (response *CreateNatFwInstanceWithDomainResponse) {
     response = &CreateNatFwInstanceWithDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNatFwInstanceWithDomain
@@ -877,8 +1109,9 @@ func NewCreateSecurityGroupRulesRequest() (request *CreateSecurityGroupRulesRequ
 func NewCreateSecurityGroupRulesResponse() (response *CreateSecurityGroupRulesResponse) {
     response = &CreateSecurityGroupRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSecurityGroupRules
@@ -937,8 +1170,9 @@ func NewCreateVpcFwGroupRequest() (request *CreateVpcFwGroupRequest) {
 func NewCreateVpcFwGroupResponse() (response *CreateVpcFwGroupResponse) {
     response = &CreateVpcFwGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateVpcFwGroup
@@ -1019,8 +1253,9 @@ func NewDeleteAcRuleRequest() (request *DeleteAcRuleRequest) {
 func NewDeleteAcRuleResponse() (response *DeleteAcRuleResponse) {
     response = &DeleteAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAcRule
@@ -1071,8 +1306,9 @@ func NewDeleteAddressTemplateRequest() (request *DeleteAddressTemplateRequest) {
 func NewDeleteAddressTemplateResponse() (response *DeleteAddressTemplateResponse) {
     response = &DeleteAddressTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAddressTemplate
@@ -1125,8 +1361,9 @@ func NewDeleteAllAccessControlRuleRequest() (request *DeleteAllAccessControlRule
 func NewDeleteAllAccessControlRuleResponse() (response *DeleteAllAccessControlRuleResponse) {
     response = &DeleteAllAccessControlRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAllAccessControlRule
@@ -1179,8 +1416,9 @@ func NewDeleteBlockIgnoreRuleListRequest() (request *DeleteBlockIgnoreRuleListRe
 func NewDeleteBlockIgnoreRuleListResponse() (response *DeleteBlockIgnoreRuleListResponse) {
     response = &DeleteBlockIgnoreRuleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBlockIgnoreRuleList
@@ -1219,6 +1457,61 @@ func (c *Client) DeleteBlockIgnoreRuleListWithContext(ctx context.Context, reque
     return
 }
 
+func NewDeleteIdsWhiteRuleRequest() (request *DeleteIdsWhiteRuleRequest) {
+    request = &DeleteIdsWhiteRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DeleteIdsWhiteRule")
+    
+    
+    return
+}
+
+func NewDeleteIdsWhiteRuleResponse() (response *DeleteIdsWhiteRuleResponse) {
+    response = &DeleteIdsWhiteRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteIdsWhiteRule
+// 删除入侵防御规则白名单接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteIdsWhiteRule(request *DeleteIdsWhiteRuleRequest) (response *DeleteIdsWhiteRuleResponse, err error) {
+    return c.DeleteIdsWhiteRuleWithContext(context.Background(), request)
+}
+
+// DeleteIdsWhiteRule
+// 删除入侵防御规则白名单接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteIdsWhiteRuleWithContext(ctx context.Context, request *DeleteIdsWhiteRuleRequest) (response *DeleteIdsWhiteRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteIdsWhiteRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteIdsWhiteRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteIdsWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteNatFwInstanceRequest() (request *DeleteNatFwInstanceRequest) {
     request = &DeleteNatFwInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1233,8 +1526,9 @@ func NewDeleteNatFwInstanceRequest() (request *DeleteNatFwInstanceRequest) {
 func NewDeleteNatFwInstanceResponse() (response *DeleteNatFwInstanceResponse) {
     response = &DeleteNatFwInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNatFwInstance
@@ -1315,8 +1609,9 @@ func NewDeleteResourceGroupRequest() (request *DeleteResourceGroupRequest) {
 func NewDeleteResourceGroupResponse() (response *DeleteResourceGroupResponse) {
     response = &DeleteResourceGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteResourceGroup
@@ -1397,8 +1692,9 @@ func NewDeleteSecurityGroupRuleRequest() (request *DeleteSecurityGroupRuleReques
 func NewDeleteSecurityGroupRuleResponse() (response *DeleteSecurityGroupRuleResponse) {
     response = &DeleteSecurityGroupRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSecurityGroupRule
@@ -1449,8 +1745,9 @@ func NewDeleteVpcFwGroupRequest() (request *DeleteVpcFwGroupRequest) {
 func NewDeleteVpcFwGroupResponse() (response *DeleteVpcFwGroupResponse) {
     response = &DeleteVpcFwGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteVpcFwGroup
@@ -1531,8 +1828,9 @@ func NewDeleteVpcInstanceRequest() (request *DeleteVpcInstanceRequest) {
 func NewDeleteVpcInstanceResponse() (response *DeleteVpcInstanceResponse) {
     response = &DeleteVpcInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteVpcInstance
@@ -1583,8 +1881,9 @@ func NewDescribeAcListsRequest() (request *DescribeAcListsRequest) {
 func NewDescribeAcListsResponse() (response *DescribeAcListsResponse) {
     response = &DescribeAcListsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAcLists
@@ -1637,8 +1936,9 @@ func NewDescribeAclRuleRequest() (request *DescribeAclRuleRequest) {
 func NewDescribeAclRuleResponse() (response *DescribeAclRuleResponse) {
     response = &DescribeAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAclRule
@@ -1691,8 +1991,9 @@ func NewDescribeAddressTemplateListRequest() (request *DescribeAddressTemplateLi
 func NewDescribeAddressTemplateListResponse() (response *DescribeAddressTemplateListResponse) {
     response = &DescribeAddressTemplateListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAddressTemplateList
@@ -1741,8 +2042,9 @@ func NewDescribeAssetSyncRequest() (request *DescribeAssetSyncRequest) {
 func NewDescribeAssetSyncResponse() (response *DescribeAssetSyncResponse) {
     response = &DescribeAssetSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetSync
@@ -1823,8 +2125,9 @@ func NewDescribeAssociatedInstanceListRequest() (request *DescribeAssociatedInst
 func NewDescribeAssociatedInstanceListResponse() (response *DescribeAssociatedInstanceListResponse) {
     response = &DescribeAssociatedInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssociatedInstanceList
@@ -1877,8 +2180,9 @@ func NewDescribeBlockByIpTimesListRequest() (request *DescribeBlockByIpTimesList
 func NewDescribeBlockByIpTimesListResponse() (response *DescribeBlockByIpTimesListResponse) {
     response = &DescribeBlockByIpTimesListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlockByIpTimesList
@@ -1959,8 +2263,9 @@ func NewDescribeBlockIgnoreListRequest() (request *DescribeBlockIgnoreListReques
 func NewDescribeBlockIgnoreListResponse() (response *DescribeBlockIgnoreListResponse) {
     response = &DescribeBlockIgnoreListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlockIgnoreList
@@ -2011,8 +2316,9 @@ func NewDescribeBlockStaticListRequest() (request *DescribeBlockStaticListReques
 func NewDescribeBlockStaticListResponse() (response *DescribeBlockStaticListResponse) {
     response = &DescribeBlockStaticListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlockStaticList
@@ -2093,8 +2399,9 @@ func NewDescribeCfwEipsRequest() (request *DescribeCfwEipsRequest) {
 func NewDescribeCfwEipsResponse() (response *DescribeCfwEipsResponse) {
     response = &DescribeCfwEipsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCfwEips
@@ -2175,8 +2482,9 @@ func NewDescribeDefenseSwitchRequest() (request *DescribeDefenseSwitchRequest) {
 func NewDescribeDefenseSwitchResponse() (response *DescribeDefenseSwitchResponse) {
     response = &DescribeDefenseSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDefenseSwitch
@@ -2231,8 +2539,9 @@ func NewDescribeEnterpriseSGRuleProgressRequest() (request *DescribeEnterpriseSG
 func NewDescribeEnterpriseSGRuleProgressResponse() (response *DescribeEnterpriseSGRuleProgressResponse) {
     response = &DescribeEnterpriseSGRuleProgressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEnterpriseSGRuleProgress
@@ -2313,8 +2622,9 @@ func NewDescribeEnterpriseSecurityGroupRuleRequest() (request *DescribeEnterpris
 func NewDescribeEnterpriseSecurityGroupRuleResponse() (response *DescribeEnterpriseSecurityGroupRuleResponse) {
     response = &DescribeEnterpriseSecurityGroupRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEnterpriseSecurityGroupRule
@@ -2395,8 +2705,9 @@ func NewDescribeFwEdgeIpsRequest() (request *DescribeFwEdgeIpsRequest) {
 func NewDescribeFwEdgeIpsResponse() (response *DescribeFwEdgeIpsResponse) {
     response = &DescribeFwEdgeIpsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFwEdgeIps
@@ -2477,8 +2788,9 @@ func NewDescribeFwGroupInstanceInfoRequest() (request *DescribeFwGroupInstanceIn
 func NewDescribeFwGroupInstanceInfoResponse() (response *DescribeFwGroupInstanceInfoResponse) {
     response = &DescribeFwGroupInstanceInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFwGroupInstanceInfo
@@ -2559,8 +2871,9 @@ func NewDescribeFwSyncStatusRequest() (request *DescribeFwSyncStatusRequest) {
 func NewDescribeFwSyncStatusResponse() (response *DescribeFwSyncStatusResponse) {
     response = &DescribeFwSyncStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFwSyncStatus
@@ -2641,8 +2954,9 @@ func NewDescribeGuideScanInfoRequest() (request *DescribeGuideScanInfoRequest) {
 func NewDescribeGuideScanInfoResponse() (response *DescribeGuideScanInfoResponse) {
     response = &DescribeGuideScanInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGuideScanInfo
@@ -2723,8 +3037,9 @@ func NewDescribeIPStatusListRequest() (request *DescribeIPStatusListRequest) {
 func NewDescribeIPStatusListResponse() (response *DescribeIPStatusListResponse) {
     response = &DescribeIPStatusListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIPStatusList
@@ -2759,6 +3074,61 @@ func (c *Client) DescribeIPStatusListWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeIdsWhiteRuleRequest() (request *DescribeIdsWhiteRuleRequest) {
+    request = &DescribeIdsWhiteRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeIdsWhiteRule")
+    
+    
+    return
+}
+
+func NewDescribeIdsWhiteRuleResponse() (response *DescribeIdsWhiteRuleResponse) {
+    response = &DescribeIdsWhiteRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIdsWhiteRule
+// 查询入侵防御规则白名单接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeIdsWhiteRule(request *DescribeIdsWhiteRuleRequest) (response *DescribeIdsWhiteRuleResponse, err error) {
+    return c.DescribeIdsWhiteRuleWithContext(context.Background(), request)
+}
+
+// DescribeIdsWhiteRule
+// 查询入侵防御规则白名单接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeIdsWhiteRuleWithContext(ctx context.Context, request *DescribeIdsWhiteRuleRequest) (response *DescribeIdsWhiteRuleResponse, err error) {
+    if request == nil {
+        request = NewDescribeIdsWhiteRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIdsWhiteRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIdsWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeLogsRequest() (request *DescribeLogsRequest) {
     request = &DescribeLogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2773,8 +3143,9 @@ func NewDescribeLogsRequest() (request *DescribeLogsRequest) {
 func NewDescribeLogsResponse() (response *DescribeLogsResponse) {
     response = &DescribeLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogs
@@ -2783,6 +3154,8 @@ func NewDescribeLogsResponse() (response *DescribeLogsResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeLogs(request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
     return c.DescribeLogsWithContext(context.Background(), request)
 }
@@ -2793,6 +3166,8 @@ func (c *Client) DescribeLogs(request *DescribeLogsRequest) (response *DescribeL
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeLogsWithContext(ctx context.Context, request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
     if request == nil {
         request = NewDescribeLogsRequest()
@@ -2823,8 +3198,9 @@ func NewDescribeNatAcRuleRequest() (request *DescribeNatAcRuleRequest) {
 func NewDescribeNatAcRuleResponse() (response *DescribeNatAcRuleResponse) {
     response = &DescribeNatAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNatAcRule
@@ -2877,8 +3253,9 @@ func NewDescribeNatFwInfoCountRequest() (request *DescribeNatFwInfoCountRequest)
 func NewDescribeNatFwInfoCountResponse() (response *DescribeNatFwInfoCountResponse) {
     response = &DescribeNatFwInfoCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNatFwInfoCount
@@ -2959,8 +3336,9 @@ func NewDescribeNatFwInstanceRequest() (request *DescribeNatFwInstanceRequest) {
 func NewDescribeNatFwInstanceResponse() (response *DescribeNatFwInstanceResponse) {
     response = &DescribeNatFwInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNatFwInstance
@@ -3041,8 +3419,9 @@ func NewDescribeNatFwInstanceWithRegionRequest() (request *DescribeNatFwInstance
 func NewDescribeNatFwInstanceWithRegionResponse() (response *DescribeNatFwInstanceWithRegionResponse) {
     response = &DescribeNatFwInstanceWithRegionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNatFwInstanceWithRegion
@@ -3123,8 +3502,9 @@ func NewDescribeNatFwInstancesInfoRequest() (request *DescribeNatFwInstancesInfo
 func NewDescribeNatFwInstancesInfoResponse() (response *DescribeNatFwInstancesInfoResponse) {
     response = &DescribeNatFwInstancesInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNatFwInstancesInfo
@@ -3205,8 +3585,9 @@ func NewDescribeNatFwVpcDnsLstRequest() (request *DescribeNatFwVpcDnsLstRequest)
 func NewDescribeNatFwVpcDnsLstResponse() (response *DescribeNatFwVpcDnsLstResponse) {
     response = &DescribeNatFwVpcDnsLstResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNatFwVpcDnsLst
@@ -3287,8 +3668,9 @@ func NewDescribeNatSwitchListRequest() (request *DescribeNatSwitchListRequest) {
 func NewDescribeNatSwitchListResponse() (response *DescribeNatSwitchListResponse) {
     response = &DescribeNatSwitchListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNatSwitchList
@@ -3337,8 +3719,9 @@ func NewDescribeResourceGroupRequest() (request *DescribeResourceGroupRequest) {
 func NewDescribeResourceGroupResponse() (response *DescribeResourceGroupResponse) {
     response = &DescribeResourceGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceGroup
@@ -3419,8 +3802,9 @@ func NewDescribeResourceGroupNewRequest() (request *DescribeResourceGroupNewRequ
 func NewDescribeResourceGroupNewResponse() (response *DescribeResourceGroupNewResponse) {
     response = &DescribeResourceGroupNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceGroupNew
@@ -3501,8 +3885,9 @@ func NewDescribeRuleOverviewRequest() (request *DescribeRuleOverviewRequest) {
 func NewDescribeRuleOverviewResponse() (response *DescribeRuleOverviewResponse) {
     response = &DescribeRuleOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleOverview
@@ -3555,8 +3940,9 @@ func NewDescribeSecurityGroupListRequest() (request *DescribeSecurityGroupListRe
 func NewDescribeSecurityGroupListResponse() (response *DescribeSecurityGroupListResponse) {
     response = &DescribeSecurityGroupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityGroupList
@@ -3609,8 +3995,9 @@ func NewDescribeSourceAssetRequest() (request *DescribeSourceAssetRequest) {
 func NewDescribeSourceAssetResponse() (response *DescribeSourceAssetResponse) {
     response = &DescribeSourceAssetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSourceAsset
@@ -3659,12 +4046,13 @@ func NewDescribeSwitchListsRequest() (request *DescribeSwitchListsRequest) {
 func NewDescribeSwitchListsResponse() (response *DescribeSwitchListsResponse) {
     response = &DescribeSwitchListsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSwitchLists
-// 防火墙开关列表
+// 防火墙开关列表，已废弃，请使用DescribeFwEdgeIps
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3674,7 +4062,7 @@ func (c *Client) DescribeSwitchLists(request *DescribeSwitchListsRequest) (respo
 }
 
 // DescribeSwitchLists
-// 防火墙开关列表
+// 防火墙开关列表，已废弃，请使用DescribeFwEdgeIps
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3709,8 +4097,9 @@ func NewDescribeTLogInfoRequest() (request *DescribeTLogInfoRequest) {
 func NewDescribeTLogInfoResponse() (response *DescribeTLogInfoResponse) {
     response = &DescribeTLogInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTLogInfo
@@ -3791,8 +4180,9 @@ func NewDescribeTLogIpListRequest() (request *DescribeTLogIpListRequest) {
 func NewDescribeTLogIpListResponse() (response *DescribeTLogIpListResponse) {
     response = &DescribeTLogIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTLogIpList
@@ -3873,8 +4263,9 @@ func NewDescribeTableStatusRequest() (request *DescribeTableStatusRequest) {
 func NewDescribeTableStatusResponse() (response *DescribeTableStatusResponse) {
     response = &DescribeTableStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTableStatus
@@ -3927,8 +4318,9 @@ func NewDescribeUnHandleEventTabListRequest() (request *DescribeUnHandleEventTab
 func NewDescribeUnHandleEventTabListResponse() (response *DescribeUnHandleEventTabListResponse) {
     response = &DescribeUnHandleEventTabListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUnHandleEventTabList
@@ -4009,8 +4401,9 @@ func NewDescribeVpcAcRuleRequest() (request *DescribeVpcAcRuleRequest) {
 func NewDescribeVpcAcRuleResponse() (response *DescribeVpcAcRuleResponse) {
     response = &DescribeVpcAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVpcAcRule
@@ -4063,8 +4456,9 @@ func NewDescribeVpcFwGroupSwitchRequest() (request *DescribeVpcFwGroupSwitchRequ
 func NewDescribeVpcFwGroupSwitchResponse() (response *DescribeVpcFwGroupSwitchResponse) {
     response = &DescribeVpcFwGroupSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVpcFwGroupSwitch
@@ -4145,8 +4539,9 @@ func NewExpandCfwVerticalRequest() (request *ExpandCfwVerticalRequest) {
 func NewExpandCfwVerticalResponse() (response *ExpandCfwVerticalResponse) {
     response = &ExpandCfwVerticalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExpandCfwVertical
@@ -4227,8 +4622,9 @@ func NewModifyAcRuleRequest() (request *ModifyAcRuleRequest) {
 func NewModifyAcRuleResponse() (response *ModifyAcRuleResponse) {
     response = &ModifyAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAcRule
@@ -4281,8 +4677,9 @@ func NewModifyAclRuleRequest() (request *ModifyAclRuleRequest) {
 func NewModifyAclRuleResponse() (response *ModifyAclRuleResponse) {
     response = &ModifyAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAclRule
@@ -4337,8 +4734,9 @@ func NewModifyAddressTemplateRequest() (request *ModifyAddressTemplateRequest) {
 func NewModifyAddressTemplateResponse() (response *ModifyAddressTemplateResponse) {
     response = &ModifyAddressTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAddressTemplate
@@ -4391,8 +4789,9 @@ func NewModifyAllPublicIPSwitchStatusRequest() (request *ModifyAllPublicIPSwitch
 func NewModifyAllPublicIPSwitchStatusResponse() (response *ModifyAllPublicIPSwitchStatusResponse) {
     response = &ModifyAllPublicIPSwitchStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAllPublicIPSwitchStatus
@@ -4443,8 +4842,9 @@ func NewModifyAllRuleStatusRequest() (request *ModifyAllRuleStatusRequest) {
 func NewModifyAllRuleStatusResponse() (response *ModifyAllRuleStatusResponse) {
     response = &ModifyAllRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAllRuleStatus
@@ -4497,8 +4897,9 @@ func NewModifyAllVPCSwitchStatusRequest() (request *ModifyAllVPCSwitchStatusRequ
 func NewModifyAllVPCSwitchStatusResponse() (response *ModifyAllVPCSwitchStatusResponse) {
     response = &ModifyAllVPCSwitchStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAllVPCSwitchStatus
@@ -4549,8 +4950,9 @@ func NewModifyAssetScanRequest() (request *ModifyAssetScanRequest) {
 func NewModifyAssetScanResponse() (response *ModifyAssetScanResponse) {
     response = &ModifyAssetScanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAssetScan
@@ -4601,8 +5003,9 @@ func NewModifyAssetSyncRequest() (request *ModifyAssetSyncRequest) {
 func NewModifyAssetSyncResponse() (response *ModifyAssetSyncResponse) {
     response = &ModifyAssetSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAssetSync
@@ -4683,8 +5086,9 @@ func NewModifyBlockIgnoreListRequest() (request *ModifyBlockIgnoreListRequest) {
 func NewModifyBlockIgnoreListResponse() (response *ModifyBlockIgnoreListResponse) {
     response = &ModifyBlockIgnoreListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBlockIgnoreList
@@ -4749,8 +5153,9 @@ func NewModifyBlockIgnoreRuleRequest() (request *ModifyBlockIgnoreRuleRequest) {
 func NewModifyBlockIgnoreRuleResponse() (response *ModifyBlockIgnoreRuleResponse) {
     response = &ModifyBlockIgnoreRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBlockIgnoreRule
@@ -4803,8 +5208,9 @@ func NewModifyBlockTopRequest() (request *ModifyBlockTopRequest) {
 func NewModifyBlockTopResponse() (response *ModifyBlockTopResponse) {
     response = &ModifyBlockTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBlockTop
@@ -4885,8 +5291,9 @@ func NewModifyEWRuleStatusRequest() (request *ModifyEWRuleStatusRequest) {
 func NewModifyEWRuleStatusResponse() (response *ModifyEWRuleStatusResponse) {
     response = &ModifyEWRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyEWRuleStatus
@@ -4943,8 +5350,9 @@ func NewModifyEdgeIpSwitchRequest() (request *ModifyEdgeIpSwitchRequest) {
 func NewModifyEdgeIpSwitchResponse() (response *ModifyEdgeIpSwitchResponse) {
     response = &ModifyEdgeIpSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyEdgeIpSwitch
@@ -4952,6 +5360,7 @@ func NewModifyEdgeIpSwitchResponse() (response *ModifyEdgeIpSwitchResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyEdgeIpSwitch(request *ModifyEdgeIpSwitchRequest) (response *ModifyEdgeIpSwitchResponse, err error) {
     return c.ModifyEdgeIpSwitchWithContext(context.Background(), request)
 }
@@ -4961,6 +5370,7 @@ func (c *Client) ModifyEdgeIpSwitch(request *ModifyEdgeIpSwitchRequest) (respons
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyEdgeIpSwitchWithContext(ctx context.Context, request *ModifyEdgeIpSwitchRequest) (response *ModifyEdgeIpSwitchResponse, err error) {
     if request == nil {
         request = NewModifyEdgeIpSwitchRequest()
@@ -4991,8 +5401,9 @@ func NewModifyEnterpriseSecurityDispatchStatusRequest() (request *ModifyEnterpri
 func NewModifyEnterpriseSecurityDispatchStatusResponse() (response *ModifyEnterpriseSecurityDispatchStatusResponse) {
     response = &ModifyEnterpriseSecurityDispatchStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyEnterpriseSecurityDispatchStatus
@@ -5045,8 +5456,9 @@ func NewModifyEnterpriseSecurityGroupRuleRequest() (request *ModifyEnterpriseSec
 func NewModifyEnterpriseSecurityGroupRuleResponse() (response *ModifyEnterpriseSecurityGroupRuleResponse) {
     response = &ModifyEnterpriseSecurityGroupRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyEnterpriseSecurityGroupRule
@@ -5103,8 +5515,9 @@ func NewModifyFwGroupSwitchRequest() (request *ModifyFwGroupSwitchRequest) {
 func NewModifyFwGroupSwitchResponse() (response *ModifyFwGroupSwitchResponse) {
     response = &ModifyFwGroupSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFwGroupSwitch
@@ -5185,8 +5598,9 @@ func NewModifyNatAcRuleRequest() (request *ModifyNatAcRuleRequest) {
 func NewModifyNatAcRuleResponse() (response *ModifyNatAcRuleResponse) {
     response = &ModifyNatAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNatAcRule
@@ -5241,8 +5655,9 @@ func NewModifyNatFwReSelectRequest() (request *ModifyNatFwReSelectRequest) {
 func NewModifyNatFwReSelectResponse() (response *ModifyNatFwReSelectResponse) {
     response = &ModifyNatFwReSelectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNatFwReSelect
@@ -5323,8 +5738,9 @@ func NewModifyNatFwSwitchRequest() (request *ModifyNatFwSwitchRequest) {
 func NewModifyNatFwSwitchResponse() (response *ModifyNatFwSwitchResponse) {
     response = &ModifyNatFwSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNatFwSwitch
@@ -5405,8 +5821,9 @@ func NewModifyNatFwVpcDnsSwitchRequest() (request *ModifyNatFwVpcDnsSwitchReques
 func NewModifyNatFwVpcDnsSwitchResponse() (response *ModifyNatFwVpcDnsSwitchResponse) {
     response = &ModifyNatFwVpcDnsSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNatFwVpcDnsSwitch
@@ -5477,8 +5894,9 @@ func NewModifyNatInstanceRequest() (request *ModifyNatInstanceRequest) {
 func NewModifyNatInstanceResponse() (response *ModifyNatInstanceResponse) {
     response = &ModifyNatInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNatInstance
@@ -5559,8 +5977,9 @@ func NewModifyNatSequenceRulesRequest() (request *ModifyNatSequenceRulesRequest)
 func NewModifyNatSequenceRulesResponse() (response *ModifyNatSequenceRulesResponse) {
     response = &ModifyNatSequenceRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNatSequenceRules
@@ -5627,66 +6046,6 @@ func (c *Client) ModifyNatSequenceRulesWithContext(ctx context.Context, request 
     return
 }
 
-func NewModifyPublicIPSwitchStatusRequest() (request *ModifyPublicIPSwitchStatusRequest) {
-    request = &ModifyPublicIPSwitchStatusRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cfw", APIVersion, "ModifyPublicIPSwitchStatus")
-    
-    
-    return
-}
-
-func NewModifyPublicIPSwitchStatusResponse() (response *ModifyPublicIPSwitchStatusResponse) {
-    response = &ModifyPublicIPSwitchStatusResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyPublicIPSwitchStatus
-// 已上新接口，支持串行
-//
-// 
-//
-// 单个修改互联网边界防火墙开关
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
-//  INVALIDPARAMETER = "InvalidParameter"
-func (c *Client) ModifyPublicIPSwitchStatus(request *ModifyPublicIPSwitchStatusRequest) (response *ModifyPublicIPSwitchStatusResponse, err error) {
-    return c.ModifyPublicIPSwitchStatusWithContext(context.Background(), request)
-}
-
-// ModifyPublicIPSwitchStatus
-// 已上新接口，支持串行
-//
-// 
-//
-// 单个修改互联网边界防火墙开关
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
-//  INVALIDPARAMETER = "InvalidParameter"
-func (c *Client) ModifyPublicIPSwitchStatusWithContext(ctx context.Context, request *ModifyPublicIPSwitchStatusRequest) (response *ModifyPublicIPSwitchStatusResponse, err error) {
-    if request == nil {
-        request = NewModifyPublicIPSwitchStatusRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyPublicIPSwitchStatus require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyPublicIPSwitchStatusResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewModifyResourceGroupRequest() (request *ModifyResourceGroupRequest) {
     request = &ModifyResourceGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5701,8 +6060,9 @@ func NewModifyResourceGroupRequest() (request *ModifyResourceGroupRequest) {
 func NewModifyResourceGroupResponse() (response *ModifyResourceGroupResponse) {
     response = &ModifyResourceGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourceGroup
@@ -5787,8 +6147,9 @@ func NewModifyRunSyncAssetRequest() (request *ModifyRunSyncAssetRequest) {
 func NewModifyRunSyncAssetResponse() (response *ModifyRunSyncAssetResponse) {
     response = &ModifyRunSyncAssetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRunSyncAsset
@@ -5841,8 +6202,9 @@ func NewModifySecurityGroupItemRuleStatusRequest() (request *ModifySecurityGroup
 func NewModifySecurityGroupItemRuleStatusResponse() (response *ModifySecurityGroupItemRuleStatusResponse) {
     response = &ModifySecurityGroupItemRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySecurityGroupItemRuleStatus
@@ -5895,8 +6257,9 @@ func NewModifySecurityGroupRuleRequest() (request *ModifySecurityGroupRuleReques
 func NewModifySecurityGroupRuleResponse() (response *ModifySecurityGroupRuleResponse) {
     response = &ModifySecurityGroupRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySecurityGroupRule
@@ -5951,8 +6314,9 @@ func NewModifySecurityGroupSequenceRulesRequest() (request *ModifySecurityGroupS
 func NewModifySecurityGroupSequenceRulesResponse() (response *ModifySecurityGroupSequenceRulesResponse) {
     response = &ModifySecurityGroupSequenceRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySecurityGroupSequenceRules
@@ -6003,8 +6367,9 @@ func NewModifySequenceAclRulesRequest() (request *ModifySequenceAclRulesRequest)
 func NewModifySequenceAclRulesResponse() (response *ModifySequenceAclRulesResponse) {
     response = &ModifySequenceAclRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySequenceAclRules
@@ -6085,8 +6450,9 @@ func NewModifySequenceRulesRequest() (request *ModifySequenceRulesRequest) {
 func NewModifySequenceRulesResponse() (response *ModifySequenceRulesResponse) {
     response = &ModifySequenceRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySequenceRules
@@ -6139,8 +6505,9 @@ func NewModifyStorageSettingRequest() (request *ModifyStorageSettingRequest) {
 func NewModifyStorageSettingResponse() (response *ModifyStorageSettingResponse) {
     response = &ModifyStorageSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyStorageSetting
@@ -6221,8 +6588,9 @@ func NewModifyTableStatusRequest() (request *ModifyTableStatusRequest) {
 func NewModifyTableStatusResponse() (response *ModifyTableStatusResponse) {
     response = &ModifyTableStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTableStatus
@@ -6275,8 +6643,9 @@ func NewModifyVpcAcRuleRequest() (request *ModifyVpcAcRuleRequest) {
 func NewModifyVpcAcRuleResponse() (response *ModifyVpcAcRuleResponse) {
     response = &ModifyVpcAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyVpcAcRule
@@ -6331,8 +6700,9 @@ func NewModifyVpcFwGroupRequest() (request *ModifyVpcFwGroupRequest) {
 func NewModifyVpcFwGroupResponse() (response *ModifyVpcFwGroupResponse) {
     response = &ModifyVpcFwGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyVpcFwGroup
@@ -6413,8 +6783,9 @@ func NewModifyVpcFwSequenceRulesRequest() (request *ModifyVpcFwSequenceRulesRequ
 func NewModifyVpcFwSequenceRulesResponse() (response *ModifyVpcFwSequenceRulesResponse) {
     response = &ModifyVpcFwSequenceRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyVpcFwSequenceRules
@@ -6495,8 +6866,9 @@ func NewRemoveAcRuleRequest() (request *RemoveAcRuleRequest) {
 func NewRemoveAcRuleResponse() (response *RemoveAcRuleResponse) {
     response = &RemoveAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveAcRule
@@ -6577,8 +6949,9 @@ func NewRemoveAclRuleRequest() (request *RemoveAclRuleRequest) {
 func NewRemoveAclRuleResponse() (response *RemoveAclRuleResponse) {
     response = &RemoveAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveAclRule
@@ -6659,8 +7032,9 @@ func NewRemoveEnterpriseSecurityGroupRuleRequest() (request *RemoveEnterpriseSec
 func NewRemoveEnterpriseSecurityGroupRuleResponse() (response *RemoveEnterpriseSecurityGroupRuleResponse) {
     response = &RemoveEnterpriseSecurityGroupRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveEnterpriseSecurityGroupRule
@@ -6741,8 +7115,9 @@ func NewRemoveNatAcRuleRequest() (request *RemoveNatAcRuleRequest) {
 func NewRemoveNatAcRuleResponse() (response *RemoveNatAcRuleResponse) {
     response = &RemoveNatAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveNatAcRule
@@ -6823,8 +7198,9 @@ func NewRemoveVpcAcRuleRequest() (request *RemoveVpcAcRuleRequest) {
 func NewRemoveVpcAcRuleResponse() (response *RemoveVpcAcRuleResponse) {
     response = &RemoveVpcAcRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveVpcAcRule
@@ -6905,8 +7281,9 @@ func NewSetNatFwDnatRuleRequest() (request *SetNatFwDnatRuleRequest) {
 func NewSetNatFwDnatRuleResponse() (response *SetNatFwDnatRuleResponse) {
     response = &SetNatFwDnatRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetNatFwDnatRule
@@ -6987,8 +7364,9 @@ func NewSetNatFwEipRequest() (request *SetNatFwEipRequest) {
 func NewSetNatFwEipResponse() (response *SetNatFwEipResponse) {
     response = &SetNatFwEipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetNatFwEip
@@ -7069,8 +7447,9 @@ func NewStopSecurityGroupRuleDispatchRequest() (request *StopSecurityGroupRuleDi
 func NewStopSecurityGroupRuleDispatchResponse() (response *StopSecurityGroupRuleDispatchResponse) {
     response = &StopSecurityGroupRuleDispatchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopSecurityGroupRuleDispatch
@@ -7151,8 +7530,9 @@ func NewSyncFwOperateRequest() (request *SyncFwOperateRequest) {
 func NewSyncFwOperateResponse() (response *SyncFwOperateResponse) {
     response = &SyncFwOperateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncFwOperate
