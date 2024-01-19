@@ -111,13 +111,14 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 	}
 	tags := helper.GetTags(d, "tags")
 
-	request.Filters = make([]*vpc.Filter, 0, len(params))
+	tmpList := make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
-		request.Filters = append(request.Filters, filter)
+		tmpList = append(tmpList, filter)
+		request.Filters = tmpList
 	}
 	offset := uint64(0)
 	request.Offset = &offset

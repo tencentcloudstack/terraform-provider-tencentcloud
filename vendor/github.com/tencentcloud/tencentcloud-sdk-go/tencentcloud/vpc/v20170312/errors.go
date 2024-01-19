@@ -359,6 +359,9 @@ const (
 	// 该资源不支持此操作。
 	INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
 
+	// 指定的优先级之间冲突或与已存在的优先级冲突。
+	INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+
 	// SSL-VPN-SERVER 云端网段和SSL-VPN-SERVER 客户端网段重叠。
 	INVALIDPARAMETERVALUE_SSLCCNVPNSERVERCIDRCONFLICT = "InvalidParameterValue.SslCcnVpnServerCidrConflict"
 
@@ -533,11 +536,17 @@ const (
 	// 每月地址找回配额超过限制。
 	LIMITEXCEEDED_MONTHLYADDRESSRECOVERYQUOTA = "LimitExceeded.MonthlyAddressRecoveryQuota"
 
+	// NAT网关的DNAT转换规则数量已达到上限。
+	LIMITEXCEEDED_NATGATEWAYDNATLIMITEXCEEDED = "LimitExceeded.NatGatewayDnatLimitExceeded"
+
 	// NAT网关数量已达到上限。
 	LIMITEXCEEDED_NATGATEWAYLIMITEXCEEDED = "LimitExceeded.NatGatewayLimitExceeded"
 
 	// 私有网络创建的NAT网关超过上限。
 	LIMITEXCEEDED_NATGATEWAYPERVPCLIMITEXCEEDED = "LimitExceeded.NatGatewayPerVpcLimitExceeded"
+
+	// VPC内创建的弹性网卡数量超过上限
+	LIMITEXCEEDED_NETWORKINTERFACELIMITEXCEEDED = "LimitExceeded.NetworkInterfaceLimitExceeded"
 
 	// 过滤参数名称超过限制。
 	LIMITEXCEEDED_NUMBEROFFILTERS = "LimitExceeded.NumberOfFilters"
@@ -598,6 +607,9 @@ const (
 
 	// 网段资源不足。
 	RESOURCEINSUFFICIENT_CIDRBLOCK = "ResourceInsufficient.CidrBlock"
+
+	// 指定实例类型已售罄。
+	RESOURCEINSUFFICIENT_INSTANCE = "ResourceInsufficient.Instance"
 
 	// 子网IP资源不足, 无法分配IP。
 	RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
@@ -788,6 +800,9 @@ const (
 	// 不支持创建流日志：当前弹性网卡未绑定实例。
 	UNSUPPORTEDOPERATION_FLOWLOGSNOTSUPPORTNULLINSTANCEENI = "UnsupportedOperation.FlowLogsNotSupportNullInstanceEni"
 
+	// TGW还没有投放IPv6网段
+	UNSUPPORTEDOPERATION_IPV6CIDRNOTDEPLOYED = "UnsupportedOperation.IPV6CidrNotDeployed"
+
 	// 指定的客户令牌已经被使用。
 	UNSUPPORTEDOPERATION_IDEMPOTENTPARAMETERMISMATCH = "UnsupportedOperation.IdempotentParameterMismatch"
 
@@ -814,6 +829,9 @@ const (
 
 	// 账户余额不足。
 	UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
+
+	// 至少需要两个运营商
+	UNSUPPORTEDOPERATION_INSUFFICIENTINTERNETSERVICEPROVIDERS = "UnsupportedOperation.InsufficientInternetServiceProviders"
 
 	// 不支持该操作。
 	UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
@@ -908,6 +926,9 @@ const (
 	// 公有云到黑石的对等连接不支持删除。
 	UNSUPPORTEDOPERATION_NOTSUPPORTDELETEVPCBMPEER = "UnsupportedOperation.NotSupportDeleteVpcBmPeer"
 
+	// 不支持的可用区
+	UNSUPPORTEDOPERATION_NOTSUPPORTZONE = "UnsupportedOperation.NotSupportZone"
+
 	// 该地址类型不支持释放操作。
 	UNSUPPORTEDOPERATION_NOTSUPPORTEDADDRESSIPSCHARGETYPE = "UnsupportedOperation.NotSupportedAddressIpsChargeType"
 
@@ -962,8 +983,14 @@ const (
 	// 未找到相关角色，请确认角色是否授权。
 	UNSUPPORTEDOPERATION_ROLENOTFOUND = "UnsupportedOperation.RoleNotFound"
 
+	// 当前路由表删除失败，请先检查是否存在关联的策略。
+	UNSUPPORTEDOPERATION_ROUTETABLECANNOTDELETE = "UnsupportedOperation.RouteTableCanNotDelete"
+
 	// 路由表绑定了子网。
 	UNSUPPORTEDOPERATION_ROUTETABLEHASSUBNETRULE = "UnsupportedOperation.RouteTableHasSubnetRule"
+
+	// SslVpnClientIds：`vpnc-20f9b3d7` 证书状态已禁用或Client证书状态不可用，不支持禁用证书。
+	UNSUPPORTEDOPERATION_SSLCLIENTCERTALREADYDISABLEORCERTABNORMAL = "UnsupportedOperation.SSLClientCertAlreadyDisableOrCertAbnormal"
 
 	// SslVpnClientIds：`vpnc-20f9b3d7` 证书状态已启用或Client证书状态不可用，不支持启用证书。
 	UNSUPPORTEDOPERATION_SSLCLIENTCERTALREADYENABLEORCERTABNORMAL = "UnsupportedOperation.SSLClientCertAlreadyEnableOrCertAbnormal"
@@ -1084,6 +1111,12 @@ const (
 
 	// 对端网关BGP ASN和已有的通道对端或云上VPN的BGP ASN相同。
 	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPASNEQUAL = "UnsupportedOperation.VpnUnsupportedBgpAsnEqual"
+
+	// `%(value)s`，不支持降低VPN带宽。
+	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDMODIFYBANDWIDTH = "UnsupportedOperation.VpnUnsupportedModifyBandwidth"
+
+	// VPN不支持修改BGP ASN。
+	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDMODIFYBGPASN = "UnsupportedOperation.VpnUnsupportedModifyBgpAsn"
 
 	// VPN未配置BGP ASN。
 	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDNOTEXISTBGPASN = "UnsupportedOperation.VpnUnsupportedNotExistBgpAsn"
