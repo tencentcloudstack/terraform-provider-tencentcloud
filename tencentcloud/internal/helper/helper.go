@@ -256,6 +256,9 @@ func MapToString(param map[string]interface{}) (string, bool) {
 }
 
 func JsonToMap(str string) (map[string]interface{}, error) {
+	if str == "" {
+		return nil, nil
+	}
 	var temp map[string]interface{}
 
 	err := json.Unmarshal([]byte(str), &temp)

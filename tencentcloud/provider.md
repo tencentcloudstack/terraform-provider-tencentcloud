@@ -1924,6 +1924,7 @@ ClickHouse(CDWCH)
     tencentcloud_clickhouse_backup_tables
     tencentcloud_clickhouse_spec
     tencentcloud_clickhouse_instance_shards
+    tencentcloud_clickhouse_instance_nodes
 
   Resource
     tencentcloud_clickhouse_instance

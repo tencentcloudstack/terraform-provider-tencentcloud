@@ -1,3 +1,20 @@
+## 1.81.68 (January 17, 2024)
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_scale_worker: fix DescribeClusters return parameter `Property` parsing code ([#2480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2480))
+
+## 1.81.67 (January 17, 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_clickhouse_instance_nodes` ([#2483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2483))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_monitor_grafana_instance: support `auto_voucher` field ([#2473](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2473))
+* resource/tencentcloud_vpc_end_point: Support set `security_groups_ids` ([#2482](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2482))
+
 ## 1.81.66 (January 15, 2024)
 
 ENHANCEMENTS:

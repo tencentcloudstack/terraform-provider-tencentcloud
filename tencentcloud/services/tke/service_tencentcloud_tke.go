@@ -377,9 +377,11 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 			errRet = err
 			return
 		}
-		if projectMap["VpcCniType"] != nil {
-			vpcCniType := projectMap["VpcCniType"].(string)
-			clusterInfo.VpcCniType = vpcCniType
+		if projectMap != nil {
+			if projectMap["VpcCniType"] != nil {
+				vpcCniType := projectMap["VpcCniType"].(string)
+				clusterInfo.VpcCniType = vpcCniType
+			}
 		}
 
 		if len(cluster.TagSpecification) > 0 {
@@ -461,13 +463,15 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 		errRet = err
 		return
 	}
-	if projectMap["VpcCniType"] != nil {
-		vpcCniType := projectMap["VpcCniType"].(string)
-		clusterInfo.VpcCniType = vpcCniType
-	}
-	if projectMap["NetworkType"] != nil {
-		networkType := projectMap["NetworkType"].(string)
-		clusterInfo.NetworkType = networkType
+	if projectMap != nil {
+		if projectMap["VpcCniType"] != nil {
+			vpcCniType := projectMap["VpcCniType"].(string)
+			clusterInfo.VpcCniType = vpcCniType
+		}
+		if projectMap["NetworkType"] != nil {
+			networkType := projectMap["NetworkType"].(string)
+			clusterInfo.NetworkType = networkType
+		}
 	}
 
 	if len(cluster.TagSpecification) > 0 {

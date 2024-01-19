@@ -73,7 +73,7 @@ The following arguments are supported:
 * `ike_version` - (Optional, String) Version of the IKE operation specification, values: `IKEV1`, `IKEV2`. Default value is `IKEV1`.
 * `ipsec_encrypt_algorithm` - (Optional, String) Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-192`, `AES-CBC-256`, `DES-CBC`, `SM4`, `NULL`, `AES128GCM128`, `AES192GCM128`, `AES256GCM128`. Default value is `3DES-CBC`.
 * `ipsec_integrity_algorithm` - (Optional, String) Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`, `SHA-256`. Default value is `MD5`.
-* `ipsec_pfs_dh_group` - (Optional, String) PFS DH group. Valid value: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.
+* `ipsec_pfs_dh_group` - (Optional, String) PFS DH group. Valid value: `DH-GROUP1`, `DH-GROUP2`, `DH-GROUP5`, `DH-GROUP14`, `DH-GROUP24`, `NULL`. Default value is `NULL`.
 * `ipsec_sa_lifetime_seconds` - (Optional, Int) SA lifetime of the IPSEC operation specification, unit is second. Valid value ranges: [180~604800]. Default value is 3600 seconds.
 * `ipsec_sa_lifetime_traffic` - (Optional, Int) SA lifetime of the IPSEC operation specification, unit is KB. The value should not be less then 2560. Default value is 1843200.
 * `route_type` - (Optional, String, ForceNew) Route type of the VPN connection. Valid value: `STATIC`, `StaticRoute`, `Policy`.
