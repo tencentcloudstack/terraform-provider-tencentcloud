@@ -4,19 +4,25 @@ import (
 	"encoding/csv"
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 )
 
 const (
-	CSV_FILE_DIR = "tmp/"
+	SWEEPER_RESOURCE_SCAN_DIR = "./tmp/resource_scan/"
 )
 
 func WriteCsvFileData(data [][]string) error {
+	err := os.MkdirAll(SWEEPER_RESOURCE_SCAN_DIR, 0755)
+	if err != nil {
+		log.Printf("[CRITAL] create directory %s error: %v", SWEEPER_RESOURCE_SCAN_DIR, err.Error())
+		return err
+	}
+
 	currentDate := time.Now().Format("20060102")
-	filePath := CSV_FILE_DIR + currentDate + ".csv"
+	filePath := filepath.Join(SWEEPER_RESOURCE_SCAN_DIR, currentDate+".csv")
 
-	_, err := os.Stat(filePath)
-
+	_, err = os.Stat(filePath)
 	if os.IsNotExist(err) {
 		err = GenerateCsvFile(filePath)
 		if err != nil {
@@ -68,7 +74,7 @@ func GenerateCsvFile(filePath string) error {
 
 func DeleteCsvFile() error {
 	currentDate := time.Now().Format("20060102")
-	filePath := CSV_FILE_DIR + currentDate + ".csv"
+	filePath := SWEEPER_RESOURCE_SCAN_DIR + currentDate + ".csv"
 
 	_, err := os.Stat(filePath)
 

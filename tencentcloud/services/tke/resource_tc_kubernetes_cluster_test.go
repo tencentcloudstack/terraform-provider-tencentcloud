@@ -37,6 +37,18 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			data := make([][]string, len(clusters))
+			for i, v := range clusters {
+				data[i] = []string{
+					"tke",
+					"cluster",
+					v.ClusterId,
+					v.ClusterName,
+				}
+			}
+			tccommon.WriteCsvFileData(data)
+
 			for _, v := range clusters {
 				id := v.ClusterId
 				name := v.ClusterName

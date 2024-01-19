@@ -43,12 +43,12 @@ func testSweepSubnet(region string) error {
 
 	// add scanning resources
 	data := make([][]string, len(instances))
-	for i, instance := range instances {
+	for i, v := range instances {
 		data[i] = []string{
 			"vpc",
 			"subnet",
-			instance.SubnetId(),
-			instance.Name(),
+			v.SubnetId(),
+			v.Name(),
 		}
 	}
 	tccommon.WriteCsvFileData(data)
