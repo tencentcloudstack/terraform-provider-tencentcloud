@@ -2335,6 +2335,7 @@ func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context,
 			}
 
 			key := strings.Join(info, tccommon.FILED_SP)
+			fmt.Println("read cdr", key)
 			if _, ok := associationsSet[key]; ok {
 				result = append(result, key)
 			}

@@ -317,6 +317,7 @@ func margeReadRequest(d *schema.ResourceData) ([]string, map[string]struct{}) {
 			}
 
 			associationsSet[strings.Join(ids, tccommon.FILED_SP)] = struct{}{}
+			fmt.Println("create cdr", strings.Join(ids, tccommon.FILED_SP))
 		}
 	}
 	if len(targetGroupList) < 1 && !isBindFromClb(resourceId) {
@@ -330,7 +331,7 @@ func processIds(id string, dMap map[string]interface{}, key string, clbFlag bool
 	} else if !clbFlag && key == "target_group_id" {
 		*ids = append(*ids, id)
 	} else {
-		if v, ok := dMap[key]; ok {
+		if v, ok := dMap[key]; ok && v.(string) != "" {
 			*ids = append(*ids, v.(string))
 		} else {
 			*ids = append(*ids, "null")
