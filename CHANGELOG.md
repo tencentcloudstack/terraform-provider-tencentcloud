@@ -1,3 +1,14 @@
+## 1.81.69 (January 19, 2024)
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_customer_gateways: Optimization parameter error ([#2491](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2491))
+* resource/tencentcloud_cfw_edge_policy: Add return parameters ([#2481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2481))
+* resource/tencentcloud_cfw_nat_policy: Add return parameters ([#2481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2481))
+* resource/tencentcloud_cfw_vpc_policy: Add return parameters ([#2481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2481))
+* resource/tencentcloud_clb_instance: Support set specified `vip` ([#2485](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2485))
+* resource/tencentcloud_vpn_connection: fix description for `ipsec_pfs_dh_group` ([#2486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2486))
+
 ## 1.81.68 (January 17, 2024)
 
 BUG FIXES:
