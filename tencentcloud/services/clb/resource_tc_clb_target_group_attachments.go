@@ -21,7 +21,6 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbTargetGroupAttachmentsCreate,
 		Read:   resourceTencentCloudClbTargetGroupAttachmentsRead,
-		Update: resourceTencentCloudClbTargetGroupAttachmentsUpdate,
 		Delete: resourceTencentCloudClbTargetGroupAttachmentsDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -31,15 +30,18 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 			"load_balancer_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "CLB instance ID, (load_balancer_id and target_group_id require at least one).",
 			},
 			"target_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Target group ID, (load_balancer_id and target_group_id require at least one).",
 			},
 			"associations": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeSet,
 				MaxItems:    20,
 				Description: "Association array, the combination cannot exceed 20.",
@@ -203,23 +205,18 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 			_ = d.Set("target_group_id", info[1])
 			associationsMap["load_balancer_id"] = info[0]
 		}
-
-		associationsMap["listener_id"] = info[2]
-		associationsMap["location_id"] = info[3]
-
+		if info[2] != "" {
+			associationsMap["listener_id"] = info[2]
+		}
+		if info[3] != "" {
+			associationsMap["location_id"] = info[3]
+		}
 		associationsList = append(associationsList, associationsMap)
 	}
 
 	_ = d.Set("associations", associationsList)
 
 	return nil
-}
-
-func resourceTencentCloudClbTargetGroupAttachmentsUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_clb_target_group_attachments.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	return resourceTencentCloudClbTargetGroupAttachmentsRead(d, meta)
 }
 
 func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData, meta interface{}) error {
@@ -268,7 +265,9 @@ func parseParamToRequest(d *schema.ResourceData, param string, id string) (assoc
 			targetGroupAssociation := clb.TargetGroupAssociation{}
 			dMap[param] = id
 			for name := range dMap {
-				setString(name, dMap[name].(string), &targetGroupAssociation)
+				if dMap[name].(string) != "" {
+					setString(name, dMap[name].(string), &targetGroupAssociation)
+				}
 			}
 			associations = append(associations, &targetGroupAssociation)
 		}
