@@ -116,6 +116,37 @@ output "domain" {
 }
 ```
 
+Specified  Vip Instance
+
+```hcl
+resource "tencentcloud_security_group" "foo" {
+  name = "clb-instance-open-sg"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "clb-instance-open-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_clb_instance" "clb_open" {
+  network_type              = "OPEN"
+  clb_name                  = "clb-instance-open"
+  project_id                = 0
+  vpc_id                    = tencentcloud_vpc.foo.id
+  security_groups           = [tencentcloud_security_group.foo.id]
+
+  vip = "111.230.4.204"
+
+  tags = {
+    test = "tf"
+  }
+}
+
+output "domain" {
+  value = tencentcloud_clb_instance.vip
+}
+```
+
 Default enable
 
 ```hcl

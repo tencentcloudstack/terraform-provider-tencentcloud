@@ -443,7 +443,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("instance_charge_type"); ok {
 		instanceChargeType := v.(string)
 		request.InstanceChargeType = &instanceChargeType
-		if instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
+		if instanceChargeType == CVM_CHARGE_TYPE_PREPAID || instanceChargeType == CVM_CHARGE_TYPE_UNDERWRITE {
 			request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
 			if period, ok := d.GetOk("instance_charge_type_prepaid_period"); ok {
 				periodInt64 := int64(period.(int))

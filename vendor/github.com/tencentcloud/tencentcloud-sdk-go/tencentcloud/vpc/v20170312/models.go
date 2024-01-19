@@ -463,6 +463,10 @@ type Address struct {
 
 	// 高防包ID,当EIP类型为高防EIP时，返回EIP绑定的高防包ID.
 	AntiDDoSPackageId *string `json:"AntiDDoSPackageId,omitnil" name:"AntiDDoSPackageId"`
+
+	// 当前EIP是否自动续费，只有按月带宽预付费的EIP才会显示该字段，具体值示例如下:
+	// <li>NOTIFY_AND_MANUAL_RENEW:正常续费</li><li>NOTIFY_AND_AUTO_RENEW:自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW:到期不续费 </li>
+	RenewFlag *string `json:"RenewFlag,omitnil" name:"RenewFlag"`
 }
 
 type AddressChargePrepaid struct {
@@ -1017,6 +1021,9 @@ type AssignIpv6SubnetCidrBlockRequestParams struct {
 
 	// 分配 `IPv6` 子网段列表。
 	Ipv6SubnetCidrBlocks []*Ipv6SubnetCidrBlock `json:"Ipv6SubnetCidrBlocks,omitnil" name:"Ipv6SubnetCidrBlocks"`
+
+	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	ClientToken *string `json:"ClientToken,omitnil" name:"ClientToken"`
 }
 
 type AssignIpv6SubnetCidrBlockRequest struct {
@@ -1027,6 +1034,9 @@ type AssignIpv6SubnetCidrBlockRequest struct {
 
 	// 分配 `IPv6` 子网段列表。
 	Ipv6SubnetCidrBlocks []*Ipv6SubnetCidrBlock `json:"Ipv6SubnetCidrBlocks,omitnil" name:"Ipv6SubnetCidrBlocks"`
+
+	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	ClientToken *string `json:"ClientToken,omitnil" name:"ClientToken"`
 }
 
 func (r *AssignIpv6SubnetCidrBlockRequest) ToJsonString() string {
@@ -1043,6 +1053,7 @@ func (r *AssignIpv6SubnetCidrBlockRequest) FromJsonString(s string) error {
 	}
 	delete(f, "VpcId")
 	delete(f, "Ipv6SubnetCidrBlocks")
+	delete(f, "ClientToken")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssignIpv6SubnetCidrBlockRequest has unknown keys!", "")
 	}
@@ -1954,7 +1965,7 @@ type BandwidthPackage struct {
 	// 带宽包类型，包括'BGP','SINGLEISP','ANYCAST','SINGLEISP_CMCC','SINGLEISP_CTCC','SINGLEISP_CUCC'
 	NetworkType *string `json:"NetworkType,omitnil" name:"NetworkType"`
 
-	// 带宽包计费类型，包括'TOP5_POSTPAID_BY_MONTH'和'PERCENT95_POSTPAID_BY_MONTH'
+	// 带宽包计费类型，包括:<li>'TOP5_POSTPAID_BY_MONTH':按月后付费TOP5计费</li><li> 'PERCENT95_POSTPAID_BY_MONTH':按月后付费月95计费</li><li>'ENHANCED95_POSTPAID_BY_MONTH':按月后付费增强型95计费</li><li>'FIXED_PREPAID_BY_MONTH':包月预付费计费</li><li>‘PEAK_BANDWIDTH_POSTPAID_BY_DAY’: 后付费日结按带宽计费</li>
 	ChargeType *string `json:"ChargeType,omitnil" name:"ChargeType"`
 
 	// 带宽包名称
@@ -1975,6 +1986,10 @@ type BandwidthPackage struct {
 	// 网络出口
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Egress *string `json:"Egress,omitnil" name:"Egress"`
+
+	// 带宽包到期时间，只有预付费会返回，按量计费返回为null
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Deadline *string `json:"Deadline,omitnil" name:"Deadline"`
 }
 
 type BandwidthPackageBillBandwidth struct {
@@ -9824,10 +9839,10 @@ type DescribeBandwidthPackagesRequestParams struct {
 	BandwidthPackageIds []*string `json:"BandwidthPackageIds,omitnil" name:"BandwidthPackageIds"`
 
 	// 每次请求的`Filters`的上限为10。参数不支持同时指定`BandwidthPackageIds`和`Filters`。详细的过滤条件如下：
-	// <li> bandwidth-package_id - String - 是否必填：否 - （过滤条件）按照带宽包的唯一标识ID过滤。</li>
+	// <li> bandwidth-package-id - String - 是否必填：否 - （过滤条件）按照带宽包的唯一标识ID过滤。</li>
 	// <li> bandwidth-package-name - String - 是否必填：否 - （过滤条件）按照 带宽包名称过滤。不支持模糊过滤。</li>
 	// <li> network-type - String - 是否必填：否 - （过滤条件）按照带宽包的类型过滤。类型包括'HIGH_QUALITY_BGP','BGP','SINGLEISP'和'ANYCAST'。</li>
-	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型包括'TOP5_POSTPAID_BY_MONTH'和'PERCENT95_POSTPAID_BY_MONTH'。</li>
+	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型包括: <li>'TOP5_POSTPAID_BY_MONTH':按月后付费TOP5计费</li><li> 'PERCENT95_POSTPAID_BY_MONTH':按月后付费月95计费</li><li>'ENHANCED95_POSTPAID_BY_MONTH':按月后付费增强型95计费</li><li>'FIXED_PREPAID_BY_MONTH':包月预付费计费</li><li>‘PEAK_BANDWIDTH_POSTPAID_BY_DAY’: 后付费日结按带宽计费</li>
 	// <li> resource.resource-type - String - 是否必填：否 - （过滤条件）按照带宽包资源类型过滤。资源类型包括'Address'和'LoadBalance'</li>
 	// <li> resource.resource-id - String - 是否必填：否 - （过滤条件）按照带宽包资源Id过滤。资源Id形如'eip-xxxx','lb-xxxx'</li>
 	// <li> resource.address-ip - String - 是否必填：否 - （过滤条件）按照带宽包资源Ip过滤。</li>
@@ -9850,10 +9865,10 @@ type DescribeBandwidthPackagesRequest struct {
 	BandwidthPackageIds []*string `json:"BandwidthPackageIds,omitnil" name:"BandwidthPackageIds"`
 
 	// 每次请求的`Filters`的上限为10。参数不支持同时指定`BandwidthPackageIds`和`Filters`。详细的过滤条件如下：
-	// <li> bandwidth-package_id - String - 是否必填：否 - （过滤条件）按照带宽包的唯一标识ID过滤。</li>
+	// <li> bandwidth-package-id - String - 是否必填：否 - （过滤条件）按照带宽包的唯一标识ID过滤。</li>
 	// <li> bandwidth-package-name - String - 是否必填：否 - （过滤条件）按照 带宽包名称过滤。不支持模糊过滤。</li>
 	// <li> network-type - String - 是否必填：否 - （过滤条件）按照带宽包的类型过滤。类型包括'HIGH_QUALITY_BGP','BGP','SINGLEISP'和'ANYCAST'。</li>
-	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型包括'TOP5_POSTPAID_BY_MONTH'和'PERCENT95_POSTPAID_BY_MONTH'。</li>
+	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型包括: <li>'TOP5_POSTPAID_BY_MONTH':按月后付费TOP5计费</li><li> 'PERCENT95_POSTPAID_BY_MONTH':按月后付费月95计费</li><li>'ENHANCED95_POSTPAID_BY_MONTH':按月后付费增强型95计费</li><li>'FIXED_PREPAID_BY_MONTH':包月预付费计费</li><li>‘PEAK_BANDWIDTH_POSTPAID_BY_DAY’: 后付费日结按带宽计费</li>
 	// <li> resource.resource-type - String - 是否必填：否 - （过滤条件）按照带宽包资源类型过滤。资源类型包括'Address'和'LoadBalance'</li>
 	// <li> resource.resource-id - String - 是否必填：否 - （过滤条件）按照带宽包资源Id过滤。资源Id形如'eip-xxxx','lb-xxxx'</li>
 	// <li> resource.address-ip - String - 是否必填：否 - （过滤条件）按照带宽包资源Ip过滤。</li>
@@ -14751,6 +14766,9 @@ type DescribeUsedIpAddressRequestParams struct {
 	// 查询是否占用的ip列表，ip需要在vpc或子网内。最多允许一次查询100个IP。
 	IpAddresses []*string `json:"IpAddresses,omitnil" name:"IpAddresses"`
 
+	// 过滤条件，不支持同时指定IpAddresses和Filters参数。 支持的过滤条件如下： <li>ip-addresses：IP地址。</li> <li>resource-id：资源ID。</li>
+	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+
 	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
 
@@ -14769,6 +14787,9 @@ type DescribeUsedIpAddressRequest struct {
 
 	// 查询是否占用的ip列表，ip需要在vpc或子网内。最多允许一次查询100个IP。
 	IpAddresses []*string `json:"IpAddresses,omitnil" name:"IpAddresses"`
+
+	// 过滤条件，不支持同时指定IpAddresses和Filters参数。 支持的过滤条件如下： <li>ip-addresses：IP地址。</li> <li>resource-id：资源ID。</li>
+	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
 
 	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
@@ -14792,6 +14813,7 @@ func (r *DescribeUsedIpAddressRequest) FromJsonString(s string) error {
 	delete(f, "VpcId")
 	delete(f, "SubnetId")
 	delete(f, "IpAddresses")
+	delete(f, "Filters")
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
@@ -14937,7 +14959,7 @@ type DescribeVpcEndPointServiceRequestParams struct {
 	// 终端节点服务ID。不支持同时传入参数 EndPointServiceIds and Filters。
 	EndPointServiceIds []*string `json:"EndPointServiceIds,omitnil" name:"EndPointServiceIds"`
 
-	// <li>不支持同时传入参数 Filters 。</li> <li>列出授权给当前账号的的终端节点服务信息。可以配合EndPointServiceIds参数进行过滤，那些终端节点服务授权了该账户。</li>
+	// <li>不支持同时传入参数 Filters 。</li> <li>列出授权给当前账号的终端节点服务信息。可以配合EndPointServiceIds参数进行过滤，那些终端节点服务授权了该账户。</li>
 	IsListAuthorizedEndPointService *bool `json:"IsListAuthorizedEndPointService,omitnil" name:"IsListAuthorizedEndPointService"`
 }
 
@@ -14960,7 +14982,7 @@ type DescribeVpcEndPointServiceRequest struct {
 	// 终端节点服务ID。不支持同时传入参数 EndPointServiceIds and Filters。
 	EndPointServiceIds []*string `json:"EndPointServiceIds,omitnil" name:"EndPointServiceIds"`
 
-	// <li>不支持同时传入参数 Filters 。</li> <li>列出授权给当前账号的的终端节点服务信息。可以配合EndPointServiceIds参数进行过滤，那些终端节点服务授权了该账户。</li>
+	// <li>不支持同时传入参数 Filters 。</li> <li>列出授权给当前账号的终端节点服务信息。可以配合EndPointServiceIds参数进行过滤，那些终端节点服务授权了该账户。</li>
 	IsListAuthorizedEndPointService *bool `json:"IsListAuthorizedEndPointService,omitnil" name:"IsListAuthorizedEndPointService"`
 }
 
@@ -18133,6 +18155,14 @@ type EndPointService struct {
 
 	// 挂载的PAAS服务类型，CLB,CDB,CRS
 	ServiceType *string `json:"ServiceType,omitnil" name:"ServiceType"`
+
+	// Uin
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceUin *string `json:"ServiceUin,omitnil" name:"ServiceUin"`
+
+	// 服务IP类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BusinessIpType *int64 `json:"BusinessIpType,omitnil" name:"BusinessIpType"`
 }
 
 type Filter struct {
@@ -18611,6 +18641,8 @@ type IPSECOptionsSpecification struct {
 
 	// 认证算法：可选值：'MD5', 'SHA1'，'SHA-256' 默认为
 	// 注意：此字段可能返回 null，表示取不到有效值。
+	//
+	// Deprecated: IntegrityAlgorith is deprecated.
 	IntegrityAlgorith *string `json:"IntegrityAlgorith,omitnil" name:"IntegrityAlgorith"`
 
 	// IPsec SA lifetime(s)：单位秒，取值范围：180-604800
@@ -18624,6 +18656,10 @@ type IPSECOptionsSpecification struct {
 	// IPsec SA lifetime(KB)：单位KB，取值范围：2560-604800
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPSECSaLifetimeTraffic *uint64 `json:"IPSECSaLifetimeTraffic,omitnil" name:"IPSECSaLifetimeTraffic"`
+
+	// 认证算法：可选值：'MD5', 'SHA1'，'SHA-256' 默认为
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil" name:"IntegrityAlgorithm"`
 }
 
 // Predefined struct for user
@@ -19963,6 +19999,12 @@ type ModifyCcnAttributeRequestParams struct {
 
 	// CCN描述信息，最大长度不能超过100个字节，限制：CcnName和CcnDescription必须至少选择一个参数输入，否则报错。
 	CcnDescription *string `json:"CcnDescription,omitnil" name:"CcnDescription"`
+
+	// 是否开启等价路由功能。`False` 不开启，`True` 开启。
+	RouteECMPFlag *bool `json:"RouteECMPFlag,omitnil" name:"RouteECMPFlag"`
+
+	// 是否开启路由重叠功能。`False` 不开启，`True` 开启。
+	RouteOverlapFlag *bool `json:"RouteOverlapFlag,omitnil" name:"RouteOverlapFlag"`
 }
 
 type ModifyCcnAttributeRequest struct {
@@ -19976,6 +20018,12 @@ type ModifyCcnAttributeRequest struct {
 
 	// CCN描述信息，最大长度不能超过100个字节，限制：CcnName和CcnDescription必须至少选择一个参数输入，否则报错。
 	CcnDescription *string `json:"CcnDescription,omitnil" name:"CcnDescription"`
+
+	// 是否开启等价路由功能。`False` 不开启，`True` 开启。
+	RouteECMPFlag *bool `json:"RouteECMPFlag,omitnil" name:"RouteECMPFlag"`
+
+	// 是否开启路由重叠功能。`False` 不开启，`True` 开启。
+	RouteOverlapFlag *bool `json:"RouteOverlapFlag,omitnil" name:"RouteOverlapFlag"`
 }
 
 func (r *ModifyCcnAttributeRequest) ToJsonString() string {
@@ -19993,6 +20041,8 @@ func (r *ModifyCcnAttributeRequest) FromJsonString(s string) error {
 	delete(f, "CcnId")
 	delete(f, "CcnName")
 	delete(f, "CcnDescription")
+	delete(f, "RouteECMPFlag")
+	delete(f, "RouteOverlapFlag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCcnAttributeRequest has unknown keys!", "")
 	}
@@ -20089,6 +20139,9 @@ type ModifyCustomerGatewayAttributeRequestParams struct {
 
 	// 对端网关名称，可任意命名，但不得超过60个字符。
 	CustomerGatewayName *string `json:"CustomerGatewayName,omitnil" name:"CustomerGatewayName"`
+
+	// BGP ASN。只有开启BGP白名单才可以修改此参数。
+	BgpAsn *uint64 `json:"BgpAsn,omitnil" name:"BgpAsn"`
 }
 
 type ModifyCustomerGatewayAttributeRequest struct {
@@ -20099,6 +20152,9 @@ type ModifyCustomerGatewayAttributeRequest struct {
 
 	// 对端网关名称，可任意命名，但不得超过60个字符。
 	CustomerGatewayName *string `json:"CustomerGatewayName,omitnil" name:"CustomerGatewayName"`
+
+	// BGP ASN。只有开启BGP白名单才可以修改此参数。
+	BgpAsn *uint64 `json:"BgpAsn,omitnil" name:"BgpAsn"`
 }
 
 func (r *ModifyCustomerGatewayAttributeRequest) ToJsonString() string {
@@ -20115,6 +20171,7 @@ func (r *ModifyCustomerGatewayAttributeRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CustomerGatewayId")
 	delete(f, "CustomerGatewayName")
+	delete(f, "BgpAsn")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCustomerGatewayAttributeRequest has unknown keys!", "")
 	}
@@ -22642,6 +22699,9 @@ type ModifyVpnGatewayAttributeRequestParams struct {
 
 	// VPN网关计费模式，目前只支持预付费（即包年包月）到后付费（即按量计费）的转换。即参数只支持：POSTPAID_BY_HOUR。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil" name:"InstanceChargeType"`
+
+	// BGP ASN。ASN取值范围为1- 4294967295，默认值64551，其中139341、45090和58835不可用。
+	BgpAsn *uint64 `json:"BgpAsn,omitnil" name:"BgpAsn"`
 }
 
 type ModifyVpnGatewayAttributeRequest struct {
@@ -22655,6 +22715,9 @@ type ModifyVpnGatewayAttributeRequest struct {
 
 	// VPN网关计费模式，目前只支持预付费（即包年包月）到后付费（即按量计费）的转换。即参数只支持：POSTPAID_BY_HOUR。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil" name:"InstanceChargeType"`
+
+	// BGP ASN。ASN取值范围为1- 4294967295，默认值64551，其中139341、45090和58835不可用。
+	BgpAsn *uint64 `json:"BgpAsn,omitnil" name:"BgpAsn"`
 }
 
 func (r *ModifyVpnGatewayAttributeRequest) ToJsonString() string {
@@ -22672,6 +22735,7 @@ func (r *ModifyVpnGatewayAttributeRequest) FromJsonString(s string) error {
 	delete(f, "VpnGatewayId")
 	delete(f, "VpnGatewayName")
 	delete(f, "InstanceChargeType")
+	delete(f, "BgpAsn")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpnGatewayAttributeRequest has unknown keys!", "")
 	}

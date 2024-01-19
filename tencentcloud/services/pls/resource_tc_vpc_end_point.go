@@ -55,6 +55,14 @@ func ResourceTencentCloudVpcEndPoint() *schema.Resource {
 				Description: "VIP of endpoint ip.",
 			},
 
+			"security_groups_ids": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Ordered security groups associated with the endpoint.",
+			},
+
 			"end_point_owner": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -121,10 +129,29 @@ func resourceTencentCloudVpcEndPointCreate(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s create vpc endPoint failed, reason:%+v", logId, err)
 		return err
 	}
-
 	endPointId = *response.Response.EndPoint.EndPointId
 	d.SetId(endPointId)
 
+	if v, ok := d.GetOk("security_groups_ids"); ok {
+		request := vpc.NewModifyVpcEndPointAttributeRequest()
+		request.EndPointId = helper.String(endPointId)
+		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyVpcEndPointAttribute(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create vpc endPoint failed, reason:%+v", logId, err)
+			return err
+		}
+
+	}
 	return resourceTencentCloudVpcEndPointRead(d, meta)
 }
 
@@ -182,6 +209,10 @@ func resourceTencentCloudVpcEndPointRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("create_time", endPoint.CreateTime)
 	}
 
+	if endPoint.GroupSet != nil {
+		_ = d.Set("security_groups_ids", endPoint.GroupSet)
+	}
+
 	return nil
 }
 
@@ -209,9 +240,13 @@ func resourceTencentCloudVpcEndPointUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if d.HasChange("end_point_name") {
+	if d.HasChange("end_point_name") || d.HasChange("security_groups_ids") {
 		if v, ok := d.GetOk("end_point_name"); ok {
 			request.EndPointName = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("security_groups_ids"); ok {
+			request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
 		}
 	}
 
