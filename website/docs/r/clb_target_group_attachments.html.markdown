@@ -45,9 +45,9 @@ resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" 
 
 The following arguments are supported:
 
-* `associations` - (Required, Set) Association array, the combination cannot exceed 20.
-* `load_balancer_id` - (Optional, String) CLB instance ID, (load_balancer_id and target_group_id require at least one).
-* `target_group_id` - (Optional, String) Target group ID, (load_balancer_id and target_group_id require at least one).
+* `associations` - (Required, Set, ForceNew) Association array, the combination cannot exceed 20.
+* `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, (load_balancer_id and target_group_id require at least one).
+* `target_group_id` - (Optional, String, ForceNew) Target group ID, (load_balancer_id and target_group_id require at least one).
 
 The `associations` object supports the following:
 
