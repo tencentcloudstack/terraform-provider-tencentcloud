@@ -140,7 +140,7 @@ The following arguments are supported:
 * `mem_size` - (Required, Int) Memory size (in MB).
 * `volume_size` - (Required, Int) Disk size (in GB).
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. NOTES: Only supported prepaid instance.
-* `availability_zone` - (Optional, String, ForceNew) Indicates which availability zone will be used.
+* `availability_zone` - (Optional, String) Indicates which availability zone will be used.
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cpu` - (Optional, Int) CPU cores.
 * `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
