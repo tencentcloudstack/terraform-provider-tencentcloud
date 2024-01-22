@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	SWEEPER_RESOURCE_SCAN_DIR = "../../tmp/resource_scan/"
+	SWEEPER_RESOURCE_SCAN_DIR = "../../../tmp/resource_scan/"
 )
 
 func WriteCsvFileData(data [][]string) error {
