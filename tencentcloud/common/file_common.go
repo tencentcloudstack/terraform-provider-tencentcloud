@@ -2,6 +2,8 @@ package common
 
 import (
 	"encoding/csv"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -102,15 +104,21 @@ func PrintFile() {
 	}
 	log.Printf("#############路径存在: %s\n", SWEEPER_RESOURCE_SCAN_DIR)
 
-	err = filepath.Walk(SWEEPER_RESOURCE_SCAN_DIR, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			log.Printf("#############遇到错误: %v\n", err)
-			return err
-		}
-		log.Printf("#############文件路径: %s, 文件名: %s\n", path, info.Name())
-		return nil
-	})
+	files, err := ioutil.ReadDir(SWEEPER_RESOURCE_SCAN_DIR)
 	if err != nil {
-		log.Printf("#############错误: %v\n", err)
+		fmt.Printf("错误: %v\n", err)
+		return
+	}
+
+	for _, file := range files {
+		if !file.IsDir() {
+			relativePath := filepath.Join(SWEEPER_RESOURCE_SCAN_DIR, file.Name())
+			absPath, err := filepath.Abs(relativePath)
+			if err != nil {
+				fmt.Printf("#############无法获取绝对路径: %v\n", err.Error())
+				continue
+			}
+			fmt.Printf("#############绝对路径: %s\n", absPath)
+		}
 	}
 }
