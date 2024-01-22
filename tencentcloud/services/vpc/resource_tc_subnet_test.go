@@ -52,6 +52,7 @@ func testSweepSubnet(region string) error {
 		}
 	}
 	tccommon.WriteCsvFileData(data)
+	tccommon.PrintFile()
 
 	for _, v := range instances {
 

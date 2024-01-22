@@ -13,6 +13,11 @@ const (
 )
 
 func WriteCsvFileData(data [][]string) error {
+	log.Printf("[INFO] write csv file data[%v] start", len(data))
+	if len(data) == 0 {
+		return nil
+	}
+
 	err := os.MkdirAll(SWEEPER_RESOURCE_SCAN_DIR, 0755)
 	if err != nil {
 		log.Printf("[CRITAL] create directory %s error: %v", SWEEPER_RESOURCE_SCAN_DIR, err.Error())
@@ -47,8 +52,9 @@ func WriteCsvFileData(data [][]string) error {
 			return err
 		}
 	}
-
 	writer.Flush()
+
+	log.Printf("[INFO] write csv file data end")
 	return nil
 }
 
@@ -86,4 +92,25 @@ func DeleteCsvFile() error {
 		}
 	}
 	return nil
+}
+
+func PrintFile() {
+	_, err := os.Stat(SWEEPER_RESOURCE_SCAN_DIR)
+	if os.IsNotExist(err) {
+		log.Printf("#############路径不存在: %s\n", SWEEPER_RESOURCE_SCAN_DIR)
+		return
+	}
+	log.Printf("#############路径存在: %s\n", SWEEPER_RESOURCE_SCAN_DIR)
+
+	err = filepath.Walk(SWEEPER_RESOURCE_SCAN_DIR, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			log.Printf("#############遇到错误: %v\n", err)
+			return err
+		}
+		log.Printf("#############文件路径: %s, 文件名: %s\n", path, info.Name())
+		return nil
+	})
+	if err != nil {
+		log.Printf("#############错误: %v\n", err)
+	}
 }

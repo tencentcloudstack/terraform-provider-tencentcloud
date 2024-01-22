@@ -51,6 +51,7 @@ func testSweepVpcInstance(region string) error {
 		}
 	}
 	tccommon.WriteCsvFileData(data)
+	tccommon.PrintFile()
 
 	for _, v := range instances {
 		instanceId := v.VpcId()

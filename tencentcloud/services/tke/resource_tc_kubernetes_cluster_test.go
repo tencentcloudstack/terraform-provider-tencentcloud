@@ -48,6 +48,7 @@ func init() {
 				}
 			}
 			tccommon.WriteCsvFileData(data)
+			tccommon.PrintFile()
 
 			for _, v := range clusters {
 				id := v.ClusterId
