@@ -284,7 +284,7 @@ The following arguments are supported:
 * `target_region_info_region` - (Optional, String) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional, String) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `vip_isp` - (Optional, String, ForceNew) Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).
-* `vip` - (Optional, String, ForceNew) Applies for CLB instances for a specified VIP, only applicable to open CLB.
+* `vip` - (Optional, String, ForceNew) Specifies the VIP for the application of a CLB instance. This parameter is optional. If you do not specify this parameter, the system automatically assigns a value for the parameter. IPv4 and IPv6 CLB instances support this parameter, but IPv6 NAT64 CLB instances do not.
 * `vpc_id` - (Optional, String, ForceNew) VPC ID of the CLB.
 * `zone_id` - (Optional, String) Available zone id, only applicable to open CLB.
 
