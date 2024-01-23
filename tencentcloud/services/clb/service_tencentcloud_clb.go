@@ -877,7 +877,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		healthCheck.HttpVersion = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("health_check_context_type"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
+		if !((protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCP) && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_context_type can only be set with protocol CUSTOM of TCP")
 			errRet = errors.WithStack(errRet)
@@ -887,7 +887,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		healthCheck.ContextType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("health_check_send_context"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
+		if !((protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCP) && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_send_context can only be set with protocol CUSTOM of TCP")
 			errRet = errors.WithStack(errRet)
@@ -897,7 +897,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		healthCheck.SendContext = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("health_check_recv_context"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
+		if !((protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCP) && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_recv_context can only be set with protocol CUSTOM of TCP")
 			errRet = errors.WithStack(errRet)
