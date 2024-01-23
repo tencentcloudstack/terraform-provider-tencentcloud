@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_clb_attachment: support cross-domain binding, `target` status writing
+```
+
