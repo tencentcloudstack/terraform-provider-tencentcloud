@@ -396,7 +396,47 @@ func TestAccTencentCloudClbListener_tcpssl(t *testing.T) {
 		},
 	})
 }
+func TestAccTencentCloudClbListener_udp(t *testing.T) {
+	t.Parallel()
 
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListener_udp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_basic_udp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_basic_udp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "protocol", "UDP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "listener_name", "listener_basic_udp"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "port", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "scheduler", "WRR"),
+				),
+			},
+			{
+				Config: testAccClbListener_udpUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_basic_udp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_basic_udp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "protocol", "UDP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "listener_name", "listener_basic_udp_update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "port", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic_udp", "health_check_type", "CUSTOM"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener.listener_basic_udp",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
 func testAccCheckClbListenerDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -471,7 +511,39 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   target_type         = "TARGETGROUP"
 }
 `
+const testAccClbListener_udp = `
+resource "tencentcloud_clb_instance" "clb_basic_udp" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-basic"
+}
 
+resource "tencentcloud_clb_listener" "listener_basic_udp" {
+  clb_id              = tencentcloud_clb_instance.clb_basic_udp.id
+  port                = 1
+  protocol            = "UDP"
+  listener_name       = "listener_basic_udp"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
+}
+`
+const testAccClbListener_udpUpdate = `
+resource "tencentcloud_clb_instance" "clb_basic_udp" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-basic"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic_udp" {
+  clb_id              = tencentcloud_clb_instance.clb_basic_udp.id
+  port                = 1
+  protocol            = "UDP"
+  listener_name       = "listener_basic_udp_update"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
+  health_check_type   =  "CUSTOM"
+}
+`
 const testAccClbListener_portRange = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
