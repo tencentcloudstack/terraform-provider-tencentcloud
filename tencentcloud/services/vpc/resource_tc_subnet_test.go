@@ -49,10 +49,10 @@ func testSweepSubnet(region string) error {
 			"subnet",
 			v.SubnetId(),
 			v.Name(),
+			tccommon.IsResourceKeep(v.Name()),
 		}
 	}
 	tccommon.WriteCsvFileData(data)
-	tccommon.PrintFile()
 
 	for _, v := range instances {
 

@@ -48,10 +48,10 @@ func testSweepVpcInstance(region string) error {
 			"",
 			v.VpcId(),
 			v.Name(),
+			tccommon.IsResourceKeep(v.Name()),
 		}
 	}
 	tccommon.WriteCsvFileData(data)
-	tccommon.PrintFile()
 
 	for _, v := range instances {
 		instanceId := v.VpcId()

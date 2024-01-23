@@ -45,10 +45,10 @@ func init() {
 					"cluster",
 					v.ClusterId,
 					v.ClusterName,
+					tccommon.IsResourceKeep(v.ClusterName),
 				}
 			}
 			tccommon.WriteCsvFileData(data)
-			tccommon.PrintFile()
 
 			for _, v := range clusters {
 				id := v.ClusterId
