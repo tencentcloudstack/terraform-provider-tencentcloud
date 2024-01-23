@@ -889,7 +889,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_send_context"); ok {
 		if !((protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCP) && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_send_context can only be set with protocol CUSTOM of TCPTCP/UDP")
+			errRet = fmt.Errorf("health_check_send_context can only be set with protocol CUSTOM of TCP/UDP")
 			errRet = errors.WithStack(errRet)
 			return
 		}
@@ -899,7 +899,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_recv_context"); ok {
 		if !((protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCP) && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_recv_context can only be set with protocol CUSTOM of TCPTCP/UDP")
+			errRet = fmt.Errorf("health_check_recv_context can only be set with protocol CUSTOM of TCP/UDP")
 			errRet = errors.WithStack(errRet)
 			return
 		}
