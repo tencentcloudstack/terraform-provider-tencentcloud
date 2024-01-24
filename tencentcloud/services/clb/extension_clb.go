@@ -134,6 +134,7 @@ const (
 const (
 	CLB_BACKEND_TYPE_CVM = "CVM"
 	CLB_BACKEND_TYPE_ENI = "ENI"
+	CLB_BACKEND_TYPE_NAT = "NAT"
 )
 
 const (
