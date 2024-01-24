@@ -173,7 +173,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "Applies for CLB instances for a specified VIP, only applicable to open CLB.",
+				Description: "Specifies the VIP for the application of a CLB instance. This parameter is optional. If you do not specify this parameter, the system automatically assigns a value for the parameter. IPv4 and IPv6 CLB instances support this parameter, but IPv6 NAT64 CLB instances do not.",
 			},
 			"load_balancer_pass_to_target": {
 				Type:        schema.TypeBool,
@@ -282,9 +282,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	//vip
 	if v, ok := d.GetOk("vip"); ok {
-		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support vip setting")
-		}
 		request.Vip = helper.String(v.(string))
 	}
 
