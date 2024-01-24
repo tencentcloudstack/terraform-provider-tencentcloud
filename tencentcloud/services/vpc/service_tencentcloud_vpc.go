@@ -1381,20 +1381,40 @@ func (me *VpcService) DeleteSecurityGroup(ctx context.Context, id string) error 
 	return nil
 }
 
+func chunkIDs(ids []string, chunkSize int) [][]string {
+	var chunks [][]string
+	for i := 0; i < len(ids); i += chunkSize {
+		end := i + chunkSize
+		if end > len(ids) {
+			end = len(ids)
+		}
+		chunks = append(chunks, ids[i:end])
+	}
+	return chunks
+}
+
 func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids []string) ([]*vpc.SecurityGroupAssociationStatistics, error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := vpc.NewDescribeSecurityGroupAssociationStatisticsRequest()
-	request.SecurityGroupIds = common.StringPtrs(ids)
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeSecurityGroupAssociationStatistics(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
-		return nil, err
+	idChunks := chunkIDs(ids, 50)
+
+	var allAssociationStatistics []*vpc.SecurityGroupAssociationStatistics
+
+	for _, chunk := range idChunks {
+		request := vpc.NewDescribeSecurityGroupAssociationStatisticsRequest()
+		request.SecurityGroupIds = common.StringPtrs(chunk)
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeSecurityGroupAssociationStatistics(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return nil, err
+		}
+
+		allAssociationStatistics = append(allAssociationStatistics, response.Response.SecurityGroupAssociationStatisticsSet...)
 	}
 
-	return response.Response.SecurityGroupAssociationStatisticsSet, nil
+	return allAssociationStatistics, nil
 }
 
 // Deprecated: the redundant type struct cause cause unnecessary mental burden, use sdk request directly

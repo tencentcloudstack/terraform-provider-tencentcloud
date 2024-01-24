@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_security_groups: Supports more than one hundred data returns
+```
