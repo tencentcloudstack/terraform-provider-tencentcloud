@@ -435,101 +435,87 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 		request.GroupName = helper.String(v.(string))
 	}
 
-	if d.HasChange("amp_receivers") {
-		if v, ok := d.GetOk("amp_receivers"); ok {
-			aMPReceiversSet := v.(*schema.Set).List()
-			for i := range aMPReceiversSet {
-				if aMPReceiversSet[i] != nil {
-					aMPReceivers := aMPReceiversSet[i].(string)
-					request.AMPReceivers = append(request.AMPReceivers, &aMPReceivers)
-				}
+	if v, ok := d.GetOk("amp_receivers"); ok {
+		aMPReceiversSet := v.(*schema.Set).List()
+		for i := range aMPReceiversSet {
+			if aMPReceiversSet[i] != nil {
+				aMPReceivers := aMPReceiversSet[i].(string)
+				request.AMPReceivers = append(request.AMPReceivers, &aMPReceivers)
 			}
 		}
 	}
 
-	if d.HasChange("custom_receiver") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "custom_receiver"); ok {
-			prometheusAlertCustomReceiver := monitor.PrometheusAlertCustomReceiver{}
-			if v, ok := dMap["type"]; ok {
-				prometheusAlertCustomReceiver.Type = helper.String(v.(string))
-			}
-			if v, ok := dMap["url"]; ok {
-				prometheusAlertCustomReceiver.Url = helper.String(v.(string))
-			}
-			if v, ok := dMap["allowed_time_ranges"]; ok {
-				for _, item := range v.([]interface{}) {
-					allowedTimeRangesMap := item.(map[string]interface{})
-					prometheusAlertAllowTimeRange := monitor.PrometheusAlertAllowTimeRange{}
-					if v, ok := allowedTimeRangesMap["start"]; ok {
-						prometheusAlertAllowTimeRange.Start = helper.String(v.(string))
-					}
-					if v, ok := allowedTimeRangesMap["end"]; ok {
-						prometheusAlertAllowTimeRange.End = helper.String(v.(string))
-					}
-					prometheusAlertCustomReceiver.AllowedTimeRanges = append(prometheusAlertCustomReceiver.AllowedTimeRanges, &prometheusAlertAllowTimeRange)
-				}
-			}
-			if v, ok := dMap["cluster_id"]; ok {
-				prometheusAlertCustomReceiver.ClusterId = helper.String(v.(string))
-			}
-			if v, ok := dMap["cluster_type"]; ok {
-				prometheusAlertCustomReceiver.ClusterType = helper.String(v.(string))
-			}
-			request.CustomReceiver = &prometheusAlertCustomReceiver
+	if dMap, ok := helper.InterfacesHeadMap(d, "custom_receiver"); ok {
+		prometheusAlertCustomReceiver := monitor.PrometheusAlertCustomReceiver{}
+		if v, ok := dMap["type"]; ok {
+			prometheusAlertCustomReceiver.Type = helper.String(v.(string))
 		}
-	}
-
-	if d.HasChange("repeat_interval") {
-		if v, ok := d.GetOk("repeat_interval"); ok {
-			request.RepeatInterval = helper.String(v.(string))
+		if v, ok := dMap["url"]; ok {
+			prometheusAlertCustomReceiver.Url = helper.String(v.(string))
 		}
-	}
-
-	if d.HasChange("rules") {
-		if v, ok := d.GetOk("rules"); ok {
+		if v, ok := dMap["allowed_time_ranges"]; ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				prometheusAlertGroupRuleSet := monitor.PrometheusAlertGroupRuleSet{}
-				if v, ok := dMap["rule_name"]; ok {
-					prometheusAlertGroupRuleSet.RuleName = helper.String(v.(string))
+				allowedTimeRangesMap := item.(map[string]interface{})
+				prometheusAlertAllowTimeRange := monitor.PrometheusAlertAllowTimeRange{}
+				if v, ok := allowedTimeRangesMap["start"]; ok {
+					prometheusAlertAllowTimeRange.Start = helper.String(v.(string))
 				}
-				if v, ok := dMap["labels"]; ok {
-					for _, item := range v.([]interface{}) {
-						labelsMap := item.(map[string]interface{})
-						prometheusRuleKV := monitor.PrometheusRuleKV{}
-						if v, ok := labelsMap["key"]; ok {
-							prometheusRuleKV.Key = helper.String(v.(string))
-						}
-						if v, ok := labelsMap["value"]; ok {
-							prometheusRuleKV.Value = helper.String(v.(string))
-						}
-						prometheusAlertGroupRuleSet.Labels = append(prometheusAlertGroupRuleSet.Labels, &prometheusRuleKV)
-					}
+				if v, ok := allowedTimeRangesMap["end"]; ok {
+					prometheusAlertAllowTimeRange.End = helper.String(v.(string))
 				}
-				if v, ok := dMap["annotations"]; ok {
-					for _, item := range v.([]interface{}) {
-						annotationsMap := item.(map[string]interface{})
-						prometheusRuleKV := monitor.PrometheusRuleKV{}
-						if v, ok := annotationsMap["key"]; ok {
-							prometheusRuleKV.Key = helper.String(v.(string))
-						}
-						if v, ok := annotationsMap["value"]; ok {
-							prometheusRuleKV.Value = helper.String(v.(string))
-						}
-						prometheusAlertGroupRuleSet.Annotations = append(prometheusAlertGroupRuleSet.Annotations, &prometheusRuleKV)
-					}
-				}
-				if v, ok := dMap["duration"]; ok {
-					prometheusAlertGroupRuleSet.Duration = helper.String(v.(string))
-				}
-				if v, ok := dMap["expr"]; ok {
-					prometheusAlertGroupRuleSet.Expr = helper.String(v.(string))
-				}
-				if v, ok := dMap["state"]; ok {
-					prometheusAlertGroupRuleSet.State = helper.IntInt64(v.(int))
-				}
-				request.Rules = append(request.Rules, &prometheusAlertGroupRuleSet)
+				prometheusAlertCustomReceiver.AllowedTimeRanges = append(prometheusAlertCustomReceiver.AllowedTimeRanges, &prometheusAlertAllowTimeRange)
 			}
+		}
+		if v, ok := dMap["cluster_id"]; ok {
+			prometheusAlertCustomReceiver.ClusterId = helper.String(v.(string))
+		}
+		if v, ok := dMap["cluster_type"]; ok {
+			prometheusAlertCustomReceiver.ClusterType = helper.String(v.(string))
+		}
+		request.CustomReceiver = &prometheusAlertCustomReceiver
+	}
+
+	if v, ok := d.GetOk("repeat_interval"); ok {
+		request.RepeatInterval = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("rules"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			prometheusAlertGroupRuleSet := monitor.PrometheusAlertGroupRuleSet{}
+			if v, ok := dMap["rule_name"]; ok {
+				prometheusAlertGroupRuleSet.RuleName = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["labels"]; ok {
+				labelsMap := v.(map[string]interface{})
+				for k, v := range labelsMap {
+					prometheusRuleKV := monitor.PrometheusRuleKV{}
+					prometheusRuleKV.Key = helper.String(k)
+					prometheusRuleKV.Value = helper.String(v.(string))
+					prometheusAlertGroupRuleSet.Labels = append(prometheusAlertGroupRuleSet.Labels, &prometheusRuleKV)
+				}
+			}
+
+			if v, ok := dMap["annotations"]; ok {
+				annotationsMap := v.(map[string]interface{})
+				for k, v := range annotationsMap {
+					prometheusRuleKV := monitor.PrometheusRuleKV{}
+					prometheusRuleKV.Key = helper.String(k)
+					prometheusRuleKV.Value = helper.String(v.(string))
+					prometheusAlertGroupRuleSet.Annotations = append(prometheusAlertGroupRuleSet.Annotations, &prometheusRuleKV)
+				}
+			}
+			if v, ok := dMap["duration"]; ok {
+				prometheusAlertGroupRuleSet.Duration = helper.String(v.(string))
+			}
+			if v, ok := dMap["expr"]; ok {
+				prometheusAlertGroupRuleSet.Expr = helper.String(v.(string))
+			}
+			if v, ok := dMap["state"]; ok {
+				prometheusAlertGroupRuleSet.State = helper.IntInt64(v.(int))
+			}
+			request.Rules = append(request.Rules, &prometheusAlertGroupRuleSet)
 		}
 	}
 

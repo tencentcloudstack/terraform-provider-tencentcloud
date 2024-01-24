@@ -34,6 +34,13 @@ func TestAccTencentCloudMonitorTmpAlertGroupResource_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			{
+				Config: testAccMonitorTmpAlertGroupUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAlertGroupExists("tencentcloud_monitor_tmp_alert_group.tmp_alert_group"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_alert_group.tmp_alert_group", "id"),
+				),
+			},
 		},
 	})
 }
@@ -121,6 +128,39 @@ resource "tencentcloud_monitor_tmp_alert_group" "tmp_alert_group" {
     annotations = {
       "summary"     = "Agent health check"
       "description" = "Agent {{$labels.instance}} is deactivated, please pay attention!"
+    }
+
+    labels = {
+      "severity" = "critical"
+    }
+  }
+}
+
+`
+
+const testAccMonitorTmpAlertGroupUp = testInstance_basic + `
+
+resource "tencentcloud_monitor_tmp_alert_group" "tmp_alert_group" {
+  amp_receivers = [
+    "notice-om017kc2",
+  ]
+  group_name      = "tf-test-up"
+  instance_id     = tencentcloud_monitor_tmp_instance.basic.id
+  repeat_interval = "1h"
+
+  custom_receiver {
+    type = "amp"
+  }
+
+  rules {
+    duration  = "1m"
+    expr      = "up{job=\"prometheus-agent\"} != 1"
+    rule_name = "Agent health check up"
+    state     = 2
+
+    annotations = {
+      "summary"     = "Agent health check"
+      "description" = "Agent {{$labels.instance}} is deactivated, please pay attention!!"
     }
 
     labels = {
