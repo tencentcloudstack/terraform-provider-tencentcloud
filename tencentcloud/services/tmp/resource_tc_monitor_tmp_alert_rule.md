@@ -1,5 +1,7 @@
 Provides a resource to create a monitor tmpAlertRule
 
+~> **NOTE:** This resource will be deprecated in a future version, please use `tencentcloud_monitor_tmp_alert_group`.
+
 Example Usage
 
 ```hcl
