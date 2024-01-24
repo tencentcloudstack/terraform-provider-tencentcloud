@@ -59,8 +59,9 @@ func NewAssociateTargetGroupsRequest() (request *AssociateTargetGroupsRequest) {
 func NewAssociateTargetGroupsResponse() (response *AssociateTargetGroupsResponse) {
     response = &AssociateTargetGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateTargetGroups
@@ -121,8 +122,9 @@ func NewAutoRewriteRequest() (request *AutoRewriteRequest) {
 func NewAutoRewriteResponse() (response *AutoRewriteResponse) {
     response = &AutoRewriteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AutoRewrite
@@ -203,8 +205,9 @@ func NewBatchDeregisterTargetsRequest() (request *BatchDeregisterTargetsRequest)
 func NewBatchDeregisterTargetsResponse() (response *BatchDeregisterTargetsResponse) {
     response = &BatchDeregisterTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeregisterTargets
@@ -269,6 +272,67 @@ func (c *Client) BatchDeregisterTargetsWithContext(ctx context.Context, request 
     return
 }
 
+func NewBatchModifyTargetTagRequest() (request *BatchModifyTargetTagRequest) {
+    request = &BatchModifyTargetTagRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "BatchModifyTargetTag")
+    
+    
+    return
+}
+
+func NewBatchModifyTargetTagResponse() (response *BatchModifyTargetTagResponse) {
+    response = &BatchModifyTargetTagResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// BatchModifyTargetTag
+// BatchModifyTargetTag 接口用于批量修改负载均衡监听器绑定的后端机器的标签。批量修改的资源数量上限为500。本接口为同步接口。<br/>负载均衡的4层和7层监听器支持此接口，传统型负载均衡不支持。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) BatchModifyTargetTag(request *BatchModifyTargetTagRequest) (response *BatchModifyTargetTagResponse, err error) {
+    return c.BatchModifyTargetTagWithContext(context.Background(), request)
+}
+
+// BatchModifyTargetTag
+// BatchModifyTargetTag 接口用于批量修改负载均衡监听器绑定的后端机器的标签。批量修改的资源数量上限为500。本接口为同步接口。<br/>负载均衡的4层和7层监听器支持此接口，传统型负载均衡不支持。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) BatchModifyTargetTagWithContext(ctx context.Context, request *BatchModifyTargetTagRequest) (response *BatchModifyTargetTagResponse, err error) {
+    if request == nil {
+        request = NewBatchModifyTargetTagRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BatchModifyTargetTag require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBatchModifyTargetTagResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewBatchModifyTargetWeightRequest() (request *BatchModifyTargetWeightRequest) {
     request = &BatchModifyTargetWeightRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -283,8 +347,9 @@ func NewBatchModifyTargetWeightRequest() (request *BatchModifyTargetWeightReques
 func NewBatchModifyTargetWeightResponse() (response *BatchModifyTargetWeightResponse) {
     response = &BatchModifyTargetWeightResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchModifyTargetWeight
@@ -343,8 +408,9 @@ func NewBatchRegisterTargetsRequest() (request *BatchRegisterTargetsRequest) {
 func NewBatchRegisterTargetsResponse() (response *BatchRegisterTargetsResponse) {
     response = &BatchRegisterTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchRegisterTargets
@@ -421,8 +487,9 @@ func NewCloneLoadBalancerRequest() (request *CloneLoadBalancerRequest) {
 func NewCloneLoadBalancerResponse() (response *CloneLoadBalancerResponse) {
     response = &CloneLoadBalancerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloneLoadBalancer
@@ -432,15 +499,35 @@ func NewCloneLoadBalancerResponse() (response *CloneLoadBalancerResponse) {
 //
 // 限制说明：
 //
-// 不支持基础网络和传统型负载均衡、IPv6和NAT64
+// 实例属性维度限制
 //
-// 不支持包年包月CLB
+//   仅支持克隆按量计费实例，不支持包年包月实例。
 //
-// 不支持监听器为 QUIC、端口段
+//   不支持克隆未关联实例计费项的 CLB。
 //
-// 不支持后端类型为 目标组、SCF云函数
+//   不支持克隆传统型负载均衡实例和高防 CLB。
 //
-// 个性化配置、重定向配置、安全组默认放通开关 将不会被克隆，须手工配置
+//   不支持克隆基础网络类型的实例。
+//
+//   不支持克隆 IPv6、IPv6 NAT64 版本以及混绑的实例。
+//
+//   个性化配置、重定向配置、安全组默认放通开关的配置将不会被克隆，需重新配置。
+//
+//   执行克隆操作前，请确保实例上没有使用已过期证书，否则会导致克隆失败。
+//
+// 监听器维度限制
+//
+//   不支持克隆监听器为 QUIC 类型和端口段的实例。
+//
+//   不支持监听器为 TCP_SSL 的内网型负载均衡的实例。
+//
+//   不支持克隆七层监听器没有转发规则的实例。
+//
+//   当实例的监听器个数超过50个时，不支持克隆。
+//
+// 后端服务维度限制
+//
+//   不支持克隆绑定的后端服务类型为目标组和 SCF 云函数的实例。
 //
 // 
 //
@@ -450,7 +537,7 @@ func NewCloneLoadBalancerResponse() (response *CloneLoadBalancerResponse) {
 //
 // 独占集群克隆必须传对应的参数，否则按共享型创建
 //
-// 功能内测中，[申请开通](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&step=1)。
+// 功能内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/1akuvsmyn0g)。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -484,15 +571,35 @@ func (c *Client) CloneLoadBalancer(request *CloneLoadBalancerRequest) (response 
 //
 // 限制说明：
 //
-// 不支持基础网络和传统型负载均衡、IPv6和NAT64
+// 实例属性维度限制
 //
-// 不支持包年包月CLB
+//   仅支持克隆按量计费实例，不支持包年包月实例。
 //
-// 不支持监听器为 QUIC、端口段
+//   不支持克隆未关联实例计费项的 CLB。
 //
-// 不支持后端类型为 目标组、SCF云函数
+//   不支持克隆传统型负载均衡实例和高防 CLB。
 //
-// 个性化配置、重定向配置、安全组默认放通开关 将不会被克隆，须手工配置
+//   不支持克隆基础网络类型的实例。
+//
+//   不支持克隆 IPv6、IPv6 NAT64 版本以及混绑的实例。
+//
+//   个性化配置、重定向配置、安全组默认放通开关的配置将不会被克隆，需重新配置。
+//
+//   执行克隆操作前，请确保实例上没有使用已过期证书，否则会导致克隆失败。
+//
+// 监听器维度限制
+//
+//   不支持克隆监听器为 QUIC 类型和端口段的实例。
+//
+//   不支持监听器为 TCP_SSL 的内网型负载均衡的实例。
+//
+//   不支持克隆七层监听器没有转发规则的实例。
+//
+//   当实例的监听器个数超过50个时，不支持克隆。
+//
+// 后端服务维度限制
+//
+//   不支持克隆绑定的后端服务类型为目标组和 SCF 云函数的实例。
 //
 // 
 //
@@ -502,7 +609,7 @@ func (c *Client) CloneLoadBalancer(request *CloneLoadBalancerRequest) (response 
 //
 // 独占集群克隆必须传对应的参数，否则按共享型创建
 //
-// 功能内测中，[申请开通](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&step=1)。
+// 功能内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/1akuvsmyn0g)。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -555,8 +662,9 @@ func NewCreateClsLogSetRequest() (request *CreateClsLogSetRequest) {
 func NewCreateClsLogSetResponse() (response *CreateClsLogSetResponse) {
     response = &CreateClsLogSetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClsLogSet
@@ -619,8 +727,9 @@ func NewCreateListenerRequest() (request *CreateListenerRequest) {
 func NewCreateListenerResponse() (response *CreateListenerResponse) {
     response = &CreateListenerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateListener
@@ -630,6 +739,7 @@ func NewCreateListenerResponse() (response *CreateListenerResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -651,6 +761,7 @@ func (c *Client) CreateListener(request *CreateListenerRequest) (response *Creat
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -691,8 +802,9 @@ func NewCreateLoadBalancerRequest() (request *CreateLoadBalancerRequest) {
 func NewCreateLoadBalancerResponse() (response *CreateLoadBalancerResponse) {
     response = &CreateLoadBalancerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLoadBalancer
@@ -706,6 +818,7 @@ func NewCreateLoadBalancerResponse() (response *CreateLoadBalancerResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CLIENTTOKENLIMITEXCEEDED = "InvalidParameter.ClientTokenLimitExceeded"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
@@ -730,6 +843,7 @@ func (c *Client) CreateLoadBalancer(request *CreateLoadBalancerRequest) (respons
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CLIENTTOKENLIMITEXCEEDED = "InvalidParameter.ClientTokenLimitExceeded"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
@@ -769,8 +883,9 @@ func NewCreateLoadBalancerSnatIpsRequest() (request *CreateLoadBalancerSnatIpsRe
 func NewCreateLoadBalancerSnatIpsResponse() (response *CreateLoadBalancerSnatIpsResponse) {
     response = &CreateLoadBalancerSnatIpsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLoadBalancerSnatIps
@@ -837,8 +952,9 @@ func NewCreateRuleRequest() (request *CreateRuleRequest) {
 func NewCreateRuleResponse() (response *CreateRuleResponse) {
     response = &CreateRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRule
@@ -907,8 +1023,9 @@ func NewCreateTargetGroupRequest() (request *CreateTargetGroupRequest) {
 func NewCreateTargetGroupResponse() (response *CreateTargetGroupResponse) {
     response = &CreateTargetGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTargetGroup
@@ -918,6 +1035,7 @@ func NewCreateTargetGroupResponse() (response *CreateTargetGroupResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -932,6 +1050,7 @@ func (c *Client) CreateTargetGroup(request *CreateTargetGroupRequest) (response 
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -965,8 +1084,9 @@ func NewCreateTopicRequest() (request *CreateTopicRequest) {
 func NewCreateTopicResponse() (response *CreateTopicResponse) {
     response = &CreateTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTopic
@@ -1035,8 +1155,9 @@ func NewDeleteListenerRequest() (request *DeleteListenerRequest) {
 func NewDeleteListenerResponse() (response *DeleteListenerResponse) {
     response = &DeleteListenerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteListener
@@ -1099,8 +1220,9 @@ func NewDeleteLoadBalancerRequest() (request *DeleteLoadBalancerRequest) {
 func NewDeleteLoadBalancerResponse() (response *DeleteLoadBalancerResponse) {
     response = &DeleteLoadBalancerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLoadBalancer
@@ -1169,8 +1291,9 @@ func NewDeleteLoadBalancerListenersRequest() (request *DeleteLoadBalancerListene
 func NewDeleteLoadBalancerListenersResponse() (response *DeleteLoadBalancerListenersResponse) {
     response = &DeleteLoadBalancerListenersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLoadBalancerListeners
@@ -1235,8 +1358,9 @@ func NewDeleteLoadBalancerSnatIpsRequest() (request *DeleteLoadBalancerSnatIpsRe
 func NewDeleteLoadBalancerSnatIpsResponse() (response *DeleteLoadBalancerSnatIpsResponse) {
     response = &DeleteLoadBalancerSnatIpsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLoadBalancerSnatIps
@@ -1299,8 +1423,9 @@ func NewDeleteRewriteRequest() (request *DeleteRewriteRequest) {
 func NewDeleteRewriteResponse() (response *DeleteRewriteResponse) {
     response = &DeleteRewriteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRewrite
@@ -1373,8 +1498,9 @@ func NewDeleteRuleRequest() (request *DeleteRuleRequest) {
 func NewDeleteRuleResponse() (response *DeleteRuleResponse) {
     response = &DeleteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRule
@@ -1437,8 +1563,9 @@ func NewDeleteTargetGroupsRequest() (request *DeleteTargetGroupsRequest) {
 func NewDeleteTargetGroupsResponse() (response *DeleteTargetGroupsResponse) {
     response = &DeleteTargetGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTargetGroups
@@ -1493,8 +1620,9 @@ func NewDeregisterFunctionTargetsRequest() (request *DeregisterFunctionTargetsRe
 func NewDeregisterFunctionTargetsResponse() (response *DeregisterFunctionTargetsResponse) {
     response = &DeregisterFunctionTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeregisterFunctionTargets
@@ -1603,8 +1731,9 @@ func NewDeregisterTargetGroupInstancesRequest() (request *DeregisterTargetGroupI
 func NewDeregisterTargetGroupInstancesResponse() (response *DeregisterTargetGroupInstancesResponse) {
     response = &DeregisterTargetGroupInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeregisterTargetGroupInstances
@@ -1663,8 +1792,9 @@ func NewDeregisterTargetsRequest() (request *DeregisterTargetsRequest) {
 func NewDeregisterTargetsResponse() (response *DeregisterTargetsResponse) {
     response = &DeregisterTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeregisterTargets
@@ -1731,8 +1861,9 @@ func NewDeregisterTargetsFromClassicalLBRequest() (request *DeregisterTargetsFro
 func NewDeregisterTargetsFromClassicalLBResponse() (response *DeregisterTargetsFromClassicalLBResponse) {
     response = &DeregisterTargetsFromClassicalLBResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeregisterTargetsFromClassicalLB
@@ -1795,8 +1926,9 @@ func NewDescribeBlockIPListRequest() (request *DescribeBlockIPListRequest) {
 func NewDescribeBlockIPListResponse() (response *DescribeBlockIPListResponse) {
     response = &DescribeBlockIPListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlockIPList
@@ -1855,8 +1987,9 @@ func NewDescribeBlockIPTaskRequest() (request *DescribeBlockIPTaskRequest) {
 func NewDescribeBlockIPTaskResponse() (response *DescribeBlockIPTaskResponse) {
     response = &DescribeBlockIPTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlockIPTask
@@ -1907,8 +2040,9 @@ func NewDescribeClassicalLBByInstanceIdRequest() (request *DescribeClassicalLBBy
 func NewDescribeClassicalLBByInstanceIdResponse() (response *DescribeClassicalLBByInstanceIdResponse) {
     response = &DescribeClassicalLBByInstanceIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClassicalLBByInstanceId
@@ -1971,8 +2105,9 @@ func NewDescribeClassicalLBHealthStatusRequest() (request *DescribeClassicalLBHe
 func NewDescribeClassicalLBHealthStatusResponse() (response *DescribeClassicalLBHealthStatusResponse) {
     response = &DescribeClassicalLBHealthStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClassicalLBHealthStatus
@@ -2035,8 +2170,9 @@ func NewDescribeClassicalLBListenersRequest() (request *DescribeClassicalLBListe
 func NewDescribeClassicalLBListenersResponse() (response *DescribeClassicalLBListenersResponse) {
     response = &DescribeClassicalLBListenersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClassicalLBListeners
@@ -2101,8 +2237,9 @@ func NewDescribeClassicalLBTargetsRequest() (request *DescribeClassicalLBTargets
 func NewDescribeClassicalLBTargetsResponse() (response *DescribeClassicalLBTargetsResponse) {
     response = &DescribeClassicalLBTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClassicalLBTargets
@@ -2165,8 +2302,9 @@ func NewDescribeClsLogSetRequest() (request *DescribeClsLogSetRequest) {
 func NewDescribeClsLogSetResponse() (response *DescribeClsLogSetResponse) {
     response = &DescribeClsLogSetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClsLogSet
@@ -2219,8 +2357,9 @@ func NewDescribeClusterResourcesRequest() (request *DescribeClusterResourcesRequ
 func NewDescribeClusterResourcesResponse() (response *DescribeClusterResourcesResponse) {
     response = &DescribeClusterResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterResources
@@ -2283,8 +2422,9 @@ func NewDescribeCrossTargetsRequest() (request *DescribeCrossTargetsRequest) {
 func NewDescribeCrossTargetsResponse() (response *DescribeCrossTargetsResponse) {
     response = &DescribeCrossTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCrossTargets
@@ -2347,8 +2487,9 @@ func NewDescribeCustomizedConfigAssociateListRequest() (request *DescribeCustomi
 func NewDescribeCustomizedConfigAssociateListResponse() (response *DescribeCustomizedConfigAssociateListResponse) {
     response = &DescribeCustomizedConfigAssociateListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCustomizedConfigAssociateList
@@ -2409,8 +2550,9 @@ func NewDescribeCustomizedConfigListRequest() (request *DescribeCustomizedConfig
 func NewDescribeCustomizedConfigListResponse() (response *DescribeCustomizedConfigListResponse) {
     response = &DescribeCustomizedConfigListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCustomizedConfigList
@@ -2495,8 +2637,9 @@ func NewDescribeExclusiveClustersRequest() (request *DescribeExclusiveClustersRe
 func NewDescribeExclusiveClustersResponse() (response *DescribeExclusiveClustersResponse) {
     response = &DescribeExclusiveClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExclusiveClusters
@@ -2559,8 +2702,9 @@ func NewDescribeIdleLoadBalancersRequest() (request *DescribeIdleLoadBalancersRe
 func NewDescribeIdleLoadBalancersResponse() (response *DescribeIdleLoadBalancersResponse) {
     response = &DescribeIdleLoadBalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIdleLoadBalancers
@@ -2631,8 +2775,9 @@ func NewDescribeLBListenersRequest() (request *DescribeLBListenersRequest) {
 func NewDescribeLBListenersResponse() (response *DescribeLBListenersResponse) {
     response = &DescribeLBListenersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLBListeners
@@ -2697,8 +2842,9 @@ func NewDescribeListenersRequest() (request *DescribeListenersRequest) {
 func NewDescribeListenersResponse() (response *DescribeListenersResponse) {
     response = &DescribeListenersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListeners
@@ -2763,8 +2909,9 @@ func NewDescribeLoadBalancerListByCertIdRequest() (request *DescribeLoadBalancer
 func NewDescribeLoadBalancerListByCertIdResponse() (response *DescribeLoadBalancerListByCertIdResponse) {
     response = &DescribeLoadBalancerListByCertIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoadBalancerListByCertId
@@ -2823,8 +2970,9 @@ func NewDescribeLoadBalancerOverviewRequest() (request *DescribeLoadBalancerOver
 func NewDescribeLoadBalancerOverviewResponse() (response *DescribeLoadBalancerOverviewResponse) {
     response = &DescribeLoadBalancerOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoadBalancerOverview
@@ -2881,8 +3029,9 @@ func NewDescribeLoadBalancerTrafficRequest() (request *DescribeLoadBalancerTraff
 func NewDescribeLoadBalancerTrafficResponse() (response *DescribeLoadBalancerTrafficResponse) {
     response = &DescribeLoadBalancerTrafficResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoadBalancerTraffic
@@ -2937,8 +3086,9 @@ func NewDescribeLoadBalancersRequest() (request *DescribeLoadBalancersRequest) {
 func NewDescribeLoadBalancersResponse() (response *DescribeLoadBalancersResponse) {
     response = &DescribeLoadBalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoadBalancers
@@ -3005,8 +3155,9 @@ func NewDescribeLoadBalancersDetailRequest() (request *DescribeLoadBalancersDeta
 func NewDescribeLoadBalancersDetailResponse() (response *DescribeLoadBalancersDetailResponse) {
     response = &DescribeLoadBalancersDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoadBalancersDetail
@@ -3069,8 +3220,9 @@ func NewDescribeQuotaRequest() (request *DescribeQuotaRequest) {
 func NewDescribeQuotaResponse() (response *DescribeQuotaResponse) {
     response = &DescribeQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeQuota
@@ -3078,6 +3230,7 @@ func NewDescribeQuotaResponse() (response *DescribeQuotaResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeQuota(request *DescribeQuotaRequest) (response *DescribeQuotaResponse, err error) {
     return c.DescribeQuotaWithContext(context.Background(), request)
@@ -3088,6 +3241,7 @@ func (c *Client) DescribeQuota(request *DescribeQuotaRequest) (response *Describ
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeQuotaWithContext(ctx context.Context, request *DescribeQuotaRequest) (response *DescribeQuotaResponse, err error) {
     if request == nil {
@@ -3119,8 +3273,9 @@ func NewDescribeResourcesRequest() (request *DescribeResourcesRequest) {
 func NewDescribeResourcesResponse() (response *DescribeResourcesResponse) {
     response = &DescribeResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResources
@@ -3183,8 +3338,9 @@ func NewDescribeRewriteRequest() (request *DescribeRewriteRequest) {
 func NewDescribeRewriteResponse() (response *DescribeRewriteResponse) {
     response = &DescribeRewriteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRewrite
@@ -3251,8 +3407,9 @@ func NewDescribeTargetGroupInstancesRequest() (request *DescribeTargetGroupInsta
 func NewDescribeTargetGroupInstancesResponse() (response *DescribeTargetGroupInstancesResponse) {
     response = &DescribeTargetGroupInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTargetGroupInstances
@@ -3307,8 +3464,9 @@ func NewDescribeTargetGroupListRequest() (request *DescribeTargetGroupListReques
 func NewDescribeTargetGroupListResponse() (response *DescribeTargetGroupListResponse) {
     response = &DescribeTargetGroupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTargetGroupList
@@ -3363,8 +3521,9 @@ func NewDescribeTargetGroupsRequest() (request *DescribeTargetGroupsRequest) {
 func NewDescribeTargetGroupsResponse() (response *DescribeTargetGroupsResponse) {
     response = &DescribeTargetGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTargetGroups
@@ -3419,8 +3578,9 @@ func NewDescribeTargetHealthRequest() (request *DescribeTargetHealthRequest) {
 func NewDescribeTargetHealthResponse() (response *DescribeTargetHealthResponse) {
     response = &DescribeTargetHealthResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTargetHealth
@@ -3483,8 +3643,9 @@ func NewDescribeTargetsRequest() (request *DescribeTargetsRequest) {
 func NewDescribeTargetsResponse() (response *DescribeTargetsResponse) {
     response = &DescribeTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTargets
@@ -3547,8 +3708,9 @@ func NewDescribeTaskStatusRequest() (request *DescribeTaskStatusRequest) {
 func NewDescribeTaskStatusResponse() (response *DescribeTaskStatusResponse) {
     response = &DescribeTaskStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskStatus
@@ -3601,8 +3763,9 @@ func NewDisassociateTargetGroupsRequest() (request *DisassociateTargetGroupsRequ
 func NewDisassociateTargetGroupsResponse() (response *DisassociateTargetGroupsResponse) {
     response = &DisassociateTargetGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateTargetGroups
@@ -3647,6 +3810,234 @@ func (c *Client) DisassociateTargetGroupsWithContext(ctx context.Context, reques
     return
 }
 
+func NewInquiryPriceCreateLoadBalancerRequest() (request *InquiryPriceCreateLoadBalancerRequest) {
+    request = &InquiryPriceCreateLoadBalancerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "InquiryPriceCreateLoadBalancer")
+    
+    
+    return
+}
+
+func NewInquiryPriceCreateLoadBalancerResponse() (response *InquiryPriceCreateLoadBalancerResponse) {
+    response = &InquiryPriceCreateLoadBalancerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceCreateLoadBalancer
+// InquiryPriceCreateLoadBalancer接口查询创建负载均衡的价格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) InquiryPriceCreateLoadBalancer(request *InquiryPriceCreateLoadBalancerRequest) (response *InquiryPriceCreateLoadBalancerResponse, err error) {
+    return c.InquiryPriceCreateLoadBalancerWithContext(context.Background(), request)
+}
+
+// InquiryPriceCreateLoadBalancer
+// InquiryPriceCreateLoadBalancer接口查询创建负载均衡的价格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) InquiryPriceCreateLoadBalancerWithContext(ctx context.Context, request *InquiryPriceCreateLoadBalancerRequest) (response *InquiryPriceCreateLoadBalancerResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceCreateLoadBalancerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceCreateLoadBalancer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceCreateLoadBalancerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquiryPriceModifyLoadBalancerRequest() (request *InquiryPriceModifyLoadBalancerRequest) {
+    request = &InquiryPriceModifyLoadBalancerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "InquiryPriceModifyLoadBalancer")
+    
+    
+    return
+}
+
+func NewInquiryPriceModifyLoadBalancerResponse() (response *InquiryPriceModifyLoadBalancerResponse) {
+    response = &InquiryPriceModifyLoadBalancerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceModifyLoadBalancer
+// InquiryPriceModifyLoadBalancer接口修改负载均衡配置询价。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) InquiryPriceModifyLoadBalancer(request *InquiryPriceModifyLoadBalancerRequest) (response *InquiryPriceModifyLoadBalancerResponse, err error) {
+    return c.InquiryPriceModifyLoadBalancerWithContext(context.Background(), request)
+}
+
+// InquiryPriceModifyLoadBalancer
+// InquiryPriceModifyLoadBalancer接口修改负载均衡配置询价。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) InquiryPriceModifyLoadBalancerWithContext(ctx context.Context, request *InquiryPriceModifyLoadBalancerRequest) (response *InquiryPriceModifyLoadBalancerResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceModifyLoadBalancerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceModifyLoadBalancer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceModifyLoadBalancerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquiryPriceRefundLoadBalancerRequest() (request *InquiryPriceRefundLoadBalancerRequest) {
+    request = &InquiryPriceRefundLoadBalancerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "InquiryPriceRefundLoadBalancer")
+    
+    
+    return
+}
+
+func NewInquiryPriceRefundLoadBalancerResponse() (response *InquiryPriceRefundLoadBalancerResponse) {
+    response = &InquiryPriceRefundLoadBalancerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceRefundLoadBalancer
+// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+func (c *Client) InquiryPriceRefundLoadBalancer(request *InquiryPriceRefundLoadBalancerRequest) (response *InquiryPriceRefundLoadBalancerResponse, err error) {
+    return c.InquiryPriceRefundLoadBalancerWithContext(context.Background(), request)
+}
+
+// InquiryPriceRefundLoadBalancer
+// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+func (c *Client) InquiryPriceRefundLoadBalancerWithContext(ctx context.Context, request *InquiryPriceRefundLoadBalancerRequest) (response *InquiryPriceRefundLoadBalancerResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceRefundLoadBalancerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceRefundLoadBalancer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceRefundLoadBalancerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquiryPriceRenewLoadBalancerRequest() (request *InquiryPriceRenewLoadBalancerRequest) {
+    request = &InquiryPriceRenewLoadBalancerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "InquiryPriceRenewLoadBalancer")
+    
+    
+    return
+}
+
+func NewInquiryPriceRenewLoadBalancerResponse() (response *InquiryPriceRenewLoadBalancerResponse) {
+    response = &InquiryPriceRenewLoadBalancerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceRenewLoadBalancer
+// InquiryPriceRenewLoadBalancer接口查询对负载均衡续费的价格，只支持预付费负载均衡续费。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) InquiryPriceRenewLoadBalancer(request *InquiryPriceRenewLoadBalancerRequest) (response *InquiryPriceRenewLoadBalancerResponse, err error) {
+    return c.InquiryPriceRenewLoadBalancerWithContext(context.Background(), request)
+}
+
+// InquiryPriceRenewLoadBalancer
+// InquiryPriceRenewLoadBalancer接口查询对负载均衡续费的价格，只支持预付费负载均衡续费。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) InquiryPriceRenewLoadBalancerWithContext(ctx context.Context, request *InquiryPriceRenewLoadBalancerRequest) (response *InquiryPriceRenewLoadBalancerResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceRenewLoadBalancerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceRenewLoadBalancer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceRenewLoadBalancerResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewManualRewriteRequest() (request *ManualRewriteRequest) {
     request = &ManualRewriteRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3661,8 +4052,9 @@ func NewManualRewriteRequest() (request *ManualRewriteRequest) {
 func NewManualRewriteResponse() (response *ManualRewriteResponse) {
     response = &ManualRewriteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManualRewrite
@@ -3743,8 +4135,9 @@ func NewMigrateClassicalLoadBalancersRequest() (request *MigrateClassicalLoadBal
 func NewMigrateClassicalLoadBalancersResponse() (response *MigrateClassicalLoadBalancersResponse) {
     response = &MigrateClassicalLoadBalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // MigrateClassicalLoadBalancers
@@ -3807,8 +4200,9 @@ func NewModifyBlockIPListRequest() (request *ModifyBlockIPListRequest) {
 func NewModifyBlockIPListResponse() (response *ModifyBlockIPListResponse) {
     response = &ModifyBlockIPListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBlockIPList
@@ -3873,8 +4267,9 @@ func NewModifyDomainRequest() (request *ModifyDomainRequest) {
 func NewModifyDomainResponse() (response *ModifyDomainResponse) {
     response = &ModifyDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomain
@@ -3937,8 +4332,9 @@ func NewModifyDomainAttributesRequest() (request *ModifyDomainAttributesRequest)
 func NewModifyDomainAttributesResponse() (response *ModifyDomainAttributesResponse) {
     response = &ModifyDomainAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainAttributes
@@ -4005,8 +4401,9 @@ func NewModifyFunctionTargetsRequest() (request *ModifyFunctionTargetsRequest) {
 func NewModifyFunctionTargetsResponse() (response *ModifyFunctionTargetsResponse) {
     response = &ModifyFunctionTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFunctionTargets
@@ -4069,8 +4466,9 @@ func NewModifyListenerRequest() (request *ModifyListenerRequest) {
 func NewModifyListenerResponse() (response *ModifyListenerResponse) {
     response = &ModifyListenerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyListener
@@ -4080,6 +4478,7 @@ func NewModifyListenerResponse() (response *ModifyListenerResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -4098,6 +4497,7 @@ func (c *Client) ModifyListener(request *ModifyListenerRequest) (response *Modif
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -4135,8 +4535,9 @@ func NewModifyLoadBalancerAttributesRequest() (request *ModifyLoadBalancerAttrib
 func NewModifyLoadBalancerAttributesResponse() (response *ModifyLoadBalancerAttributesResponse) {
     response = &ModifyLoadBalancerAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLoadBalancerAttributes
@@ -4211,8 +4612,9 @@ func NewModifyLoadBalancerMixIpTargetRequest() (request *ModifyLoadBalancerMixIp
 func NewModifyLoadBalancerMixIpTargetResponse() (response *ModifyLoadBalancerMixIpTargetResponse) {
     response = &ModifyLoadBalancerMixIpTargetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLoadBalancerMixIpTarget
@@ -4279,8 +4681,9 @@ func NewModifyLoadBalancerSlaRequest() (request *ModifyLoadBalancerSlaRequest) {
 func NewModifyLoadBalancerSlaResponse() (response *ModifyLoadBalancerSlaResponse) {
     response = &ModifyLoadBalancerSlaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLoadBalancerSla
@@ -4343,6 +4746,69 @@ func (c *Client) ModifyLoadBalancerSlaWithContext(ctx context.Context, request *
     return
 }
 
+func NewModifyLoadBalancersProjectRequest() (request *ModifyLoadBalancersProjectRequest) {
+    request = &ModifyLoadBalancersProjectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "ModifyLoadBalancersProject")
+    
+    
+    return
+}
+
+func NewModifyLoadBalancersProjectResponse() (response *ModifyLoadBalancersProjectResponse) {
+    response = &ModifyLoadBalancersProjectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyLoadBalancersProject
+// 修改一个或多个负载均衡实例所属项目。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyLoadBalancersProject(request *ModifyLoadBalancersProjectRequest) (response *ModifyLoadBalancersProjectResponse, err error) {
+    return c.ModifyLoadBalancersProjectWithContext(context.Background(), request)
+}
+
+// ModifyLoadBalancersProject
+// 修改一个或多个负载均衡实例所属项目。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyLoadBalancersProjectWithContext(ctx context.Context, request *ModifyLoadBalancersProjectRequest) (response *ModifyLoadBalancersProjectResponse, err error) {
+    if request == nil {
+        request = NewModifyLoadBalancersProjectRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyLoadBalancersProject require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyLoadBalancersProjectResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyRuleRequest() (request *ModifyRuleRequest) {
     request = &ModifyRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4357,8 +4823,9 @@ func NewModifyRuleRequest() (request *ModifyRuleRequest) {
 func NewModifyRuleResponse() (response *ModifyRuleResponse) {
     response = &ModifyRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRule
@@ -4423,8 +4890,9 @@ func NewModifyTargetGroupAttributeRequest() (request *ModifyTargetGroupAttribute
 func NewModifyTargetGroupAttributeResponse() (response *ModifyTargetGroupAttributeResponse) {
     response = &ModifyTargetGroupAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTargetGroupAttribute
@@ -4479,8 +4947,9 @@ func NewModifyTargetGroupInstancesPortRequest() (request *ModifyTargetGroupInsta
 func NewModifyTargetGroupInstancesPortResponse() (response *ModifyTargetGroupInstancesPortResponse) {
     response = &ModifyTargetGroupInstancesPortResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTargetGroupInstancesPort
@@ -4541,8 +5010,9 @@ func NewModifyTargetGroupInstancesWeightRequest() (request *ModifyTargetGroupIns
 func NewModifyTargetGroupInstancesWeightResponse() (response *ModifyTargetGroupInstancesWeightResponse) {
     response = &ModifyTargetGroupInstancesWeightResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTargetGroupInstancesWeight
@@ -4601,8 +5071,9 @@ func NewModifyTargetPortRequest() (request *ModifyTargetPortRequest) {
 func NewModifyTargetPortResponse() (response *ModifyTargetPortResponse) {
     response = &ModifyTargetPortResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTargetPort
@@ -4667,8 +5138,9 @@ func NewModifyTargetWeightRequest() (request *ModifyTargetWeightRequest) {
 func NewModifyTargetWeightResponse() (response *ModifyTargetWeightResponse) {
     response = &ModifyTargetWeightResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTargetWeight
@@ -4733,8 +5205,9 @@ func NewRegisterFunctionTargetsRequest() (request *RegisterFunctionTargetsReques
 func NewRegisterFunctionTargetsResponse() (response *RegisterFunctionTargetsResponse) {
     response = &RegisterFunctionTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RegisterFunctionTargets
@@ -4849,8 +5322,9 @@ func NewRegisterTargetGroupInstancesRequest() (request *RegisterTargetGroupInsta
 func NewRegisterTargetGroupInstancesResponse() (response *RegisterTargetGroupInstancesResponse) {
     response = &RegisterTargetGroupInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RegisterTargetGroupInstances
@@ -4911,8 +5385,9 @@ func NewRegisterTargetsRequest() (request *RegisterTargetsRequest) {
 func NewRegisterTargetsResponse() (response *RegisterTargetsResponse) {
     response = &RegisterTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RegisterTargets
@@ -4983,8 +5458,9 @@ func NewRegisterTargetsWithClassicalLBRequest() (request *RegisterTargetsWithCla
 func NewRegisterTargetsWithClassicalLBResponse() (response *RegisterTargetsWithClassicalLBResponse) {
     response = &RegisterTargetsWithClassicalLBResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RegisterTargetsWithClassicalLB
@@ -5047,8 +5523,9 @@ func NewReplaceCertForLoadBalancersRequest() (request *ReplaceCertForLoadBalance
 func NewReplaceCertForLoadBalancersResponse() (response *ReplaceCertForLoadBalancersResponse) {
     response = &ReplaceCertForLoadBalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReplaceCertForLoadBalancers
@@ -5117,8 +5594,9 @@ func NewSetCustomizedConfigForLoadBalancerRequest() (request *SetCustomizedConfi
 func NewSetCustomizedConfigForLoadBalancerResponse() (response *SetCustomizedConfigForLoadBalancerResponse) {
     response = &SetCustomizedConfigForLoadBalancerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetCustomizedConfigForLoadBalancer
@@ -5183,8 +5661,9 @@ func NewSetLoadBalancerClsLogRequest() (request *SetLoadBalancerClsLogRequest) {
 func NewSetLoadBalancerClsLogResponse() (response *SetLoadBalancerClsLogResponse) {
     response = &SetLoadBalancerClsLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetLoadBalancerClsLog
@@ -5247,8 +5726,9 @@ func NewSetLoadBalancerSecurityGroupsRequest() (request *SetLoadBalancerSecurity
 func NewSetLoadBalancerSecurityGroupsResponse() (response *SetLoadBalancerSecurityGroupsResponse) {
     response = &SetLoadBalancerSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetLoadBalancerSecurityGroups
@@ -5317,8 +5797,9 @@ func NewSetSecurityGroupForLoadbalancersRequest() (request *SetSecurityGroupForL
 func NewSetSecurityGroupForLoadbalancersResponse() (response *SetSecurityGroupForLoadbalancersResponse) {
     response = &SetSecurityGroupForLoadbalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetSecurityGroupForLoadbalancers

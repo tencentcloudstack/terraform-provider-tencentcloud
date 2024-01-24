@@ -98,7 +98,7 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(HEALTH_CHECK_TYPE),
-				Description:  "Protocol used for health check. Valid values: `CUSTOM`, `TCP`, `HTTP`.",
+				Description:  "Protocol used for health check. Valid values: `CUSTOM`, `TCP`, `HTTP`,`HTTPS`, `PING`, `GRPC`.",
 			},
 			"health_check_port": {
 				Type:         schema.TypeInt,
@@ -145,6 +145,7 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 			"health_check_context_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CONTEX_TYPE),
 				Description: "Health check protocol. When the value of `health_check_type` of the health check protocol is `CUSTOM`, " +
 					"this field is required, which represents the input format of the health check. " +
