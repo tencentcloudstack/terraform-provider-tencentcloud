@@ -1,3 +1,17 @@
+## 1.81.70 (January 24, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_monitor_tmp_alert_group` ([#2487](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2487))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_attachment: support cross-domain binding, `target` status writing ([#2497](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2497))
+* resource/tencentcloud_clb_instance: Remove `vip` restrictions ([#2493](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2493))
+* resource/tencentcloud_clb_listener: Support UDP health detection and handle the problem of COSTOM returning to default value ([#2496](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2496))
+* resource/tencentcloud_mysql_instance: `availability_zone` modification supports error reporting ([#2495](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2495))
+* resource/tencentcloud_security_groups: Supports more than one hundred data returns ([#2494](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2494))
+
 ## 1.81.69 (January 19, 2024)
 
 ENHANCEMENTS:
