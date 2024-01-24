@@ -239,7 +239,6 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 
 		"availability_zone": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Computed:    true,
 			Description: "Indicates which availability zone will be used.",
@@ -1257,6 +1256,10 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 
 	if d.HasChange("param_template_id") {
 		return fmt.Errorf("argument `param_template_id` cannot be modified for now")
+	}
+
+	if d.HasChange("availability_zone") {
+		return fmt.Errorf("argument `availability_zone` cannot be modified for now")
 	}
 	return nil
 }
