@@ -41,17 +41,14 @@ func testSweepVpcInstance(region string) error {
 	}
 
 	// add scanning resources
-	data := make([][]string, len(instances))
-	for i, v := range instances {
-		data[i] = []string{
-			"vpc",
-			"",
-			v.VpcId(),
-			v.Name(),
-			tccommon.IsResourceKeep(v.Name()),
-		}
+	var resources []tccommon.ResourceInstance
+	for _, v := range instances {
+		resources = append(resources, tccommon.ResourceInstance{
+			Id:   v.VpcId(),
+			Name: v.Name(),
+		})
 	}
-	tccommon.WriteCsvFileData(data)
+	tccommon.ProcessResources(resources, "vpc", "")
 
 	for _, v := range instances {
 		instanceId := v.VpcId()
