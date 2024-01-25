@@ -36,6 +36,16 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources []*tccommon.ResourceInstance
+			for _, v := range instances {
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:   *v.RegistryId,
+					Name: *v.RegistryName,
+				})
+			}
+			tccommon.ProcessResources(resources, "tcr", "instance")
+
 			for i := range instances {
 				ins := instances[i]
 				id := *ins.RegistryId

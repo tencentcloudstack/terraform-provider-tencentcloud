@@ -39,6 +39,16 @@ func testSweepCosBuckets(region string) error {
 		return fmt.Errorf("list buckets error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources []*tccommon.ResourceInstance
+	for _, v := range buckets {
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:   "",
+			Name: *v.Name,
+		})
+	}
+	tccommon.ProcessResources(resources, "cos", "bucket")
+
 	//prefix := regexp.MustCompile("^(tf|test)-")
 
 	for _, v := range buckets {

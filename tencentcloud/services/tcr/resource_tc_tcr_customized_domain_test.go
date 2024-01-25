@@ -35,6 +35,16 @@ func testSweepTcrCustomizedDomain(r string) error {
 		return nil
 	}
 
+	// add scanning resources
+	var resources []*tccommon.ResourceInstance
+	for _, v := range domains {
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:   *v.RegistryId,
+			Name: *v.DomainName,
+		})
+	}
+	tccommon.ProcessResources(resources, "tcr", "customized_domain")
+
 	for _, v := range domains {
 		delName := *v.DomainName
 

@@ -3,6 +3,7 @@ package tcr_test
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -51,6 +52,16 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources []*tccommon.ResourceInstance
+			for _, v := range namespaces {
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:   strconv.FormatInt(*v.NamespaceId, 10),
+					Name: *v.Name,
+				})
+			}
+			tccommon.ProcessResources(resources, "tcr", "namespace")
 
 			for i := range namespaces {
 				n := namespaces[i]

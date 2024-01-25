@@ -54,6 +54,22 @@ func testSweepTCRRepository(r string) error {
 		return err
 	}
 
+	// add scanning resources
+	var resources []*tccommon.ResourceInstance
+	for _, v := range repos {
+		names := strings.Split(*v.Name, "/")
+		if len(names) != 2 {
+			continue
+		}
+		repoName := names[1]
+
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:   "",
+			Name: repoName,
+		})
+	}
+	tccommon.ProcessResources(resources, "tcr", "repository")
+
 	for i := range repos {
 		n := repos[i]
 		names := strings.Split(*n.Name, "/")

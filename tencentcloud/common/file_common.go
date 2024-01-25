@@ -18,6 +18,10 @@ const (
 
 // IsResourceKeep check whether to keep resource
 func IsResourceKeep(name string) string {
+	if name == "" {
+		return NonKeepResource
+	}
+
 	flag := regexp.MustCompile("^(keep|Default)").MatchString(name)
 	if flag {
 		return KeepResource

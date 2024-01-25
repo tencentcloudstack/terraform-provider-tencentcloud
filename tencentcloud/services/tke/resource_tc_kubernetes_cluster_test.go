@@ -38,9 +38,9 @@ func init() {
 			}
 
 			// add scanning resources
-			var resources []tccommon.ResourceInstance
+			var resources []*tccommon.ResourceInstance
 			for _, v := range clusters {
-				resources = append(resources, tccommon.ResourceInstance{
+				resources = append(resources, &tccommon.ResourceInstance{
 					Id:   v.ClusterId,
 					Name: v.ClusterName,
 				})

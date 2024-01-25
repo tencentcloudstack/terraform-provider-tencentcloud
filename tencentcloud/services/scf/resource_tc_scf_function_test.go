@@ -44,6 +44,17 @@ func init() {
 				if err != nil {
 					continue
 				}
+
+				// add scanning resources
+				var resources []*tccommon.ResourceInstance
+				for _, v := range funs {
+					resources = append(resources, &tccommon.ResourceInstance{
+						Id:   *v.FunctionId,
+						Name: *v.FunctionName,
+					})
+				}
+				tccommon.ProcessResources(resources, "scf", "")
+
 				for _, fun := range funs {
 					createTime := tccommon.StringToTime(*fun.AddTime)
 					now := time.Now()
