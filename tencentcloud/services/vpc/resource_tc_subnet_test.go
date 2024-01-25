@@ -42,9 +42,9 @@ func testSweepSubnet(region string) error {
 	}
 
 	// add scanning resources
-	var resources []tccommon.ResourceInstance
+	var resources []*tccommon.ResourceInstance
 	for _, v := range instances {
-		resources = append(resources, tccommon.ResourceInstance{
+		resources = append(resources, &tccommon.ResourceInstance{
 			Id:   v.SubnetId(),
 			Name: v.Name(),
 		})
