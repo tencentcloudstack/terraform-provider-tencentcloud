@@ -38,17 +38,7 @@ func init() {
 			}
 
 			// add scanning resources
-			data := make([][]string, len(clusters))
-			for i, v := range clusters {
-				data[i] = []string{
-					"tke",
-					"cluster",
-					v.ClusterId,
-					v.ClusterName,
-					tccommon.IsResourceKeep(v.ClusterName),
-				}
-			}
-			tccommon.WriteCsvFileData(data)
+			addScanningResources(clusters)
 
 			for _, v := range clusters {
 				id := v.ClusterId
@@ -65,6 +55,20 @@ func init() {
 			return nil
 		},
 	})
+}
+
+func addScanningResources(clusters []svctke.ClusterInfo) {
+	data := make([][]string, len(clusters))
+	for i, v := range clusters {
+		data[i] = []string{
+			"tke",
+			"cluster",
+			v.ClusterId,
+			v.ClusterName,
+			tccommon.IsResourceKeep(v.ClusterName),
+		}
+	}
+	tccommon.WriteCsvFileData(data)
 }
 
 func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {

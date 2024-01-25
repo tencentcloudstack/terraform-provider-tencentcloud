@@ -98,19 +98,3 @@ func GenerateCsvFile(filePath string) error {
 
 	return nil
 }
-
-func DeleteCsvFile() error {
-	currentDate := time.Now().Format("20060102")
-	filePath := SweeperResourceScanDir + currentDate + ".csv"
-
-	_, err := os.Stat(filePath)
-
-	if os.IsExist(err) {
-		err = os.Remove(filePath)
-		if err != nil {
-			log.Printf("[CRITAL] delete csv file error: %v", err.Error())
-			return err
-		}
-	}
-	return nil
-}
