@@ -28,6 +28,6 @@ jobs:
           git branch -r --list "origin/coding-test/*"  | grep -v HEAD | grep -v master | xargs -I {}  git checkout -t {}
           git branch -r --list "origin/pipeline/*"  | grep -v HEAD | grep -v master | xargs -I {}  git checkout -t {}
           git remote add tgit_origin https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@git.code.tencent.com/tencentcloudstack/terraform-provider-tencentcloud.git
-          git push -u tgit_origin --all
+          git push -u tgit_origin -f --all
           git push -u tgit_origin master:main
           git push -u tgit_origin --tags
