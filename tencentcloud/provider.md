@@ -2110,3 +2110,7 @@ Business Intelligence(BI)
 CDWPG
   Resource
     tencentcloud_cdwpg_instance
+
+CSIP
+  Resource
+    tencentcloud_csip_risk_center

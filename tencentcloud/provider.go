@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
+
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -73,6 +74,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/csip"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/css"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cwp"
@@ -1949,6 +1951,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_peer_connect_manager":                            vpc.ResourceTencentCloudVpcPeerConnectManager(),
 			"tencentcloud_vpc_peer_connect_accept_operation":                   vpc.ResourceTencentCloudVpcPeerConnectAcceptOperation(),
 			"tencentcloud_vpc_peer_connect_reject_operation":                   vpc.ResourceTencentCloudVpcPeerConnectRejectOperation(),
+			"tencentcloud_csip_risk_center":                                    csip.ResourceTencentCloudCsipRiskCenter(),
 		},
 
 		ConfigureFunc: providerConfigure,
