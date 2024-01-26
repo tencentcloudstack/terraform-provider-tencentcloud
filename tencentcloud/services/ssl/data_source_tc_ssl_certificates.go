@@ -2,7 +2,6 @@ package ssl
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strconv"
 
@@ -193,7 +192,8 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 			"CertEndTime":     "end time",
 			"InsertTime":      "create time",
 		}); len(nilNames) > 0 {
-			return fmt.Errorf("certificate %v are nil", nilNames)
+			log.Printf("the certificate is invalid, certificate %v are nil", nilNames)
+			continue
 		}
 
 		ids = append(ids, *certificate.CertificateId)
