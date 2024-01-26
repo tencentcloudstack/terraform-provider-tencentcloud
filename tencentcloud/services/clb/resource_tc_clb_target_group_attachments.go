@@ -50,20 +50,24 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 						"load_balancer_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "CLB instance ID, when the binding target is target group, load_balancer_id in associations is required.",
 						},
 						"target_group_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Target group ID, when the binding target is clb, the target_group_id in associations is required.",
 						},
 						"listener_id": {
 							Type:        schema.TypeString,
+							ForceNew:    true,
 							Optional:    true,
 							Description: "Listener ID.",
 						},
 						"location_id": {
 							Type:        schema.TypeString,
+							ForceNew:    true,
 							Optional:    true,
 							Description: "Forwarding rule ID.",
 						},
