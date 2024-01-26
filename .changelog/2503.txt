@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_instance: wait cvm private ip release when instance destroyed
+```
+
