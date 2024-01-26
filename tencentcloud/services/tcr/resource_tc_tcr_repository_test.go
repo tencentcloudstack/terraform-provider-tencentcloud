@@ -55,7 +55,7 @@ func testSweepTCRRepository(r string) error {
 	}
 
 	// add scanning resources
-	var resources []*tccommon.ResourceInstance
+	var resources, nonKeepResources []*tccommon.ResourceInstance
 	for _, v := range repos {
 		names := strings.Split(*v.Name, "/")
 		if len(names) != 2 {
@@ -63,12 +63,17 @@ func testSweepTCRRepository(r string) error {
 		}
 		repoName := names[1]
 
+		if !tccommon.CheckResourcePersist(repoName, *v.CreationTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Name: repoName,
+			})
+		}
 		resources = append(resources, &tccommon.ResourceInstance{
 			Name:      repoName,
 			CreatTime: *v.CreationTime,
 		})
 	}
-	tccommon.ProcessResources(resources, "tcr", "repository")
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "repository")
 
 	for i := range repos {
 		n := repos[i]

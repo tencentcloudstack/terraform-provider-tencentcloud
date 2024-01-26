@@ -55,15 +55,19 @@ func init() {
 			}
 
 			// add scanning resources
-			var resources []*tccommon.ResourceInstance
+			var resources, nonKeepResources []*tccommon.ResourceInstance
 			for _, v := range tokens {
+				if !tccommon.CheckResourcePersist("", *v.CreatedAt) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id: *v.Id,
+					})
+				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:          *v.Id,
-					DefaultKeep: true,
-					CreatTime:   *v.CreatedAt,
+					Id:        *v.Id,
+					CreatTime: *v.CreatedAt,
 				})
 			}
-			tccommon.ProcessResources(resources, "tcr", "token")
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "token")
 
 			for i := range tokens {
 				token := tokens[i]

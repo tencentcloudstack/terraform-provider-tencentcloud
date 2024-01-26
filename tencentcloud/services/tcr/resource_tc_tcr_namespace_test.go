@@ -54,15 +54,21 @@ func init() {
 			}
 
 			// add scanning resources
-			var resources []*tccommon.ResourceInstance
+			var resources, nonKeepResources []*tccommon.ResourceInstance
 			for _, v := range namespaces {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CreationTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   strconv.FormatInt(*v.NamespaceId, 10),
+						Name: *v.Name,
+					})
+				}
 				resources = append(resources, &tccommon.ResourceInstance{
 					Id:        strconv.FormatInt(*v.NamespaceId, 10),
 					Name:      *v.Name,
 					CreatTime: *v.CreationTime,
 				})
 			}
-			tccommon.ProcessResources(resources, "tcr", "namespace")
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "namespace")
 
 			for i := range namespaces {
 				n := namespaces[i]

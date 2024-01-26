@@ -36,14 +36,20 @@ func testSweepTcrCustomizedDomain(r string) error {
 	}
 
 	// add scanning resources
-	var resources []*tccommon.ResourceInstance
+	var resources, nonKeepResources []*tccommon.ResourceInstance
 	for _, v := range domains {
+		if !tccommon.CheckResourcePersist(*v.DomainName, "") {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.RegistryId,
+				Name: *v.DomainName,
+			})
+		}
 		resources = append(resources, &tccommon.ResourceInstance{
 			Id:   *v.RegistryId,
 			Name: *v.DomainName,
 		})
 	}
-	tccommon.ProcessResources(resources, "tcr", "customized_domain")
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "customized_domain")
 
 	for _, v := range domains {
 		delName := *v.DomainName

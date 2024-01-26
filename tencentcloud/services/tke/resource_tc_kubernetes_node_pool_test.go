@@ -66,14 +66,20 @@ func testNodePoolSweep(region string) error {
 	}
 
 	// add scanning resources
-	var resources []*tccommon.ResourceInstance
+	var resources, nonKeepResources []*tccommon.ResourceInstance
 	for _, v := range nodePools {
+		if !tccommon.CheckResourcePersist(*v.Name, "") {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.NodePoolId,
+				Name: *v.Name,
+			})
+		}
 		resources = append(resources, &tccommon.ResourceInstance{
 			Id:   *v.NodePoolId,
 			Name: *v.Name,
 		})
 	}
-	tccommon.ProcessResources(resources, "tke", "node_pool")
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tke", "node_pool")
 
 	for i := range nodePools {
 		poolId := *nodePools[i].NodePoolId

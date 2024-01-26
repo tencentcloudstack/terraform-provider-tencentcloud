@@ -9,34 +9,38 @@ import (
 )
 
 const (
-	SweeperResourceScanDir = "../../../tmp/resource_scan/"
+	SweeperResourceScanDir        = "../../../tmp/resource_scan/"
+	SweeperNonKeepResourceScanDir = "../../../tmp/non_keep_resource_scan/"
 )
 
+var ResourceScanHeader = []string{"ResourceType", "ResourceName", "InstanceId", "InstanceName", "Classification", "CreationDuration(D)"}
+var NonKeepResourceScanHeader = []string{"ResourceType", "ResourceName", "InstanceId", "InstanceName"}
+
 // WriteCsvFileData write data to csv file
-func WriteCsvFileData(data [][]string) error {
-	log.Printf("[INFO] write csv file data[%v] start", len(data))
+func WriteCsvFileData(dirPath string, header []string, data [][]string) error {
+	log.Printf("[INFO] write csv file data[%v] to path[%v] start", len(data), dirPath)
 
 	count := 0
 	defer func() {
-		log.Printf("[INFO] write csv file data success count[%v]", count)
+		log.Printf("[INFO] write csv file data to path[%v] success count[%v]", dirPath, count)
 	}()
 
 	if len(data) == 0 {
 		return nil
 	}
 
-	err := os.MkdirAll(SweeperResourceScanDir, 0755)
+	err := os.MkdirAll(dirPath, 0755)
 	if err != nil {
-		log.Printf("[CRITAL] create directory %s error: %v", SweeperResourceScanDir, err.Error())
+		log.Printf("[CRITAL] create directory %s error: %v", dirPath, err.Error())
 		return err
 	}
 
 	currentDate := time.Now().Format("20060102")
-	filePath := filepath.Join(SweeperResourceScanDir, currentDate+".csv")
+	filePath := filepath.Join(dirPath, currentDate+".csv")
 
 	_, err = os.Stat(filePath)
 	if os.IsNotExist(err) {
-		err = GenerateCsvFile(filePath)
+		err = GenerateCsvFile(filePath, header)
 		if err != nil {
 			log.Printf("[CRITAL] generate csv file error: %v", err.Error())
 			return err
@@ -66,7 +70,7 @@ func WriteCsvFileData(data [][]string) error {
 }
 
 // GenerateCsvFile generate when csv file does not exist
-func GenerateCsvFile(filePath string) error {
+func GenerateCsvFile(filePath string, header []string) error {
 	file, err := os.Create(filePath)
 	if err != nil {
 		log.Printf("[CRITAL] create csv file error: %v", err.Error())
@@ -75,7 +79,6 @@ func GenerateCsvFile(filePath string) error {
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
-	header := []string{"ResourceType", "ResourceName", "InstanceId", "InstanceName", "Classification", "CreationDuration(D)"}
 	err = writer.Write(header)
 	if err != nil {
 		log.Printf("[CRITAL] write header to csv file error: %v", err.Error())
