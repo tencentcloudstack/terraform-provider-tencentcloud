@@ -1456,11 +1456,11 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	}
 
 	// wait ip release
-	vpcService := vpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	params := make(map[string]interface{})
-	params["VpcId"] = instance.VirtualPrivateCloud.VpcId
-	params["SubnetId"] = instance.VirtualPrivateCloud.SubnetId
 	if len(instance.PrivateIpAddresses) > 0 {
+		vpcService := vpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		params := make(map[string]interface{})
+		params["VpcId"] = instance.VirtualPrivateCloud.VpcId
+		params["SubnetId"] = instance.VirtualPrivateCloud.SubnetId
 		params["IpAddresses"] = instance.PrivateIpAddresses
 		err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			usedIpAddress, errRet := vpcService.DescribeVpcUsedIpAddressByFilter(ctx, params)
