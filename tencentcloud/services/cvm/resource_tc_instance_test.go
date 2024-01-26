@@ -40,6 +40,23 @@ func testSweepCvmInstance(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.InstanceName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.InstanceId,
+				Name: *v.InstanceName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.InstanceId,
+			Name:      *v.InstanceName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "cvm", "instance")
+
 	for _, v := range instances {
 		instanceId := *v.InstanceId
 		//instanceName := *v.InstanceName

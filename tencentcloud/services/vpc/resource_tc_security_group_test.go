@@ -35,10 +35,26 @@ func testSweepSecurityGroups(region string) error {
 	service := svcvpc.NewVpcService(client.GetAPIV3Conn())
 
 	sgs, err := service.DescribeSecurityGroups(ctx, nil, nil, nil, nil)
-
 	if err != nil {
 		return fmt.Errorf("DescribeSecurityGroups error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range sgs {
+		if !tccommon.CheckResourcePersist(*v.SecurityGroupName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.SecurityGroupId,
+				Name: *v.SecurityGroupName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.SecurityGroupId,
+			Name:      *v.SecurityGroupName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "security_group")
 
 	for _, v := range sgs {
 		name := *v.SecurityGroupName

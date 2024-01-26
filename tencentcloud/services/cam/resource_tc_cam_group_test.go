@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -33,6 +34,24 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range groups {
+				if !tccommon.CheckResourcePersist(*v.GroupName, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   strconv.FormatUint(*v.GroupId, 10),
+						Name: *v.GroupName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:        strconv.FormatUint(*v.GroupId, 10),
+					Name:      *v.GroupName,
+					CreatTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "cam", "group")
+
 			for _, v := range groups {
 				name := *v.GroupName
 

@@ -27,10 +27,26 @@ func init() {
 			service := localcbs.NewCbsService(client)
 
 			disks, err := service.DescribeDisksByFilter(ctx, nil)
-
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range disks {
+				if !tccommon.CheckResourcePersist(*v.DiskName, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.DiskId,
+						Name: *v.DiskName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:        *v.DiskId,
+					Name:      *v.DiskName,
+					CreatTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "cbs", "storage")
 
 			for i := range disks {
 				disk := disks[i]

@@ -42,6 +42,23 @@ func testSweepVpnGateway(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.VpnGatewayName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.VpnGatewayId,
+				Name: *v.VpnGatewayName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.VpnGatewayId,
+			Name:      *v.VpnGatewayName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpn", "gateway")
+
 	for _, v := range instances {
 
 		vpnGwId := *v.VpnGatewayId

@@ -47,12 +47,30 @@ func testSweepMySQLInstance(region string) error {
 	if err != nil {
 		return err
 	}
+	items := response.Response.Items
 
-	if len(response.Response.Items) == 0 {
+	if len(items) == 0 {
 		return nil
 	}
 
-	for _, v := range response.Response.Items {
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range items {
+		if !tccommon.CheckResourcePersist(*v.InstanceId, *v.CreateTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.InstanceId,
+				Name: *v.InstanceName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.InstanceId,
+			Name:      *v.InstanceName,
+			CreatTime: *v.CreateTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "msql", "instance")
+
+	for _, v := range items {
 		id := *v.InstanceId
 		name := *v.InstanceName
 		if tcacctest.IsResourcePersist(name, nil) {

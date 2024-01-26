@@ -41,6 +41,23 @@ func testSweepEniInstance(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.NetworkInterfaceName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.NetworkInterfaceId,
+				Name: *v.NetworkInterfaceName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.NetworkInterfaceId,
+			Name:      *v.NetworkInterfaceName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "eni")
+
 	for _, v := range instances {
 		instanceId := *v.NetworkInterfaceId
 		instanceName := v.NetworkInterfaceName

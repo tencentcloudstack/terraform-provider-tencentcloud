@@ -36,6 +36,23 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range instances {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.InstanceId,
+						Name: *v.Name,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:        *v.InstanceId,
+					Name:      *v.Name,
+					CreatTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "sqlserver", "instance")
+
 			err = batchDeleteSQLServerInstances(ctx, service, instances)
 
 			if err != nil {

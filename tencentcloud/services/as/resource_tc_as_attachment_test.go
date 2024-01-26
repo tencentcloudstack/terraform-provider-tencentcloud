@@ -35,6 +35,23 @@ func testSweepAsAttachment(r string) error {
 		return fmt.Errorf("list scaling group error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range scalingGroups {
+		if !tccommon.CheckResourcePersist(*v.AutoScalingGroupName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.AutoScalingGroupId,
+				Name: *v.AutoScalingGroupName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.AutoScalingGroupId,
+			Name:      *v.AutoScalingGroupName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "as", "attachment")
+
 	for _, v := range scalingGroups {
 		scalingGroupId := *v.AutoScalingGroupId
 		scalingGroupName := *v.AutoScalingGroupName

@@ -43,6 +43,23 @@ func testSweepHaVipInstance(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.HaVipName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.HaVipId,
+				Name: *v.HaVipName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.HaVipId,
+			Name:      *v.HaVipName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "ha_vip")
+
 	for _, v := range instances {
 		instanceId := *v.HaVipId
 		instanceName := *v.HaVipName
