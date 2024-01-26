@@ -248,7 +248,7 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 	}
 	if d.HasChange("weight") {
 		weight := d.Get("weight").(int)
-		request.TTL = helper.IntUint64(weight)
+		request.Weight = helper.IntUint64(weight)
 	}
 	d.Partial(true)
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
