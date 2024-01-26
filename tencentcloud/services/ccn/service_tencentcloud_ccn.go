@@ -390,11 +390,37 @@ func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, ccnId,
 func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId string) (infos []CcnAttachedInstanceInfo, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
-	request := vpc.NewDescribeCcnAttachedInstancesRequest()
-	request.CcnId = &ccnId
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
+	var (
+		request  = vpc.NewDescribeCcnAttachedInstancesRequest()
+		response = vpc.NewDescribeCcnAttachedInstancesResponse()
+		result   []*vpc.CcnAttachedInstance
+		err      error
+		limit    uint64 = 100
+		offset   uint64 = 0
+	)
 
+	request.CcnId = &ccnId
+	request.Limit = &limit
+	request.Offset = &offset
+	ratelimit.Check(request.GetAction())
+
+	for {
+		response, err = me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response.Response == nil || response.Response.InstanceSet == nil {
+			errRet = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+			return
+		}
+
+		result = append(result, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
+			break
+		}
+		offset += limit
+	}
 	defer func() {
 		if errRet != nil {
 			responseStr := ""
@@ -420,9 +446,9 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 		request.ToJsonString(),
 		response.ToJsonString())
 
-	infos = make([]CcnAttachedInstanceInfo, 0, len(response.Response.InstanceSet))
+	infos = make([]CcnAttachedInstanceInfo, 0, len(result))
 
-	for _, item := range response.Response.InstanceSet {
+	for _, item := range result {
 
 		var info CcnAttachedInstanceInfo
 
