@@ -11,6 +11,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
+func NewCsipService(client *connectivity.TencentCloudClient) CsipService {
+	return CsipService{client: client}
+}
+
 type CsipService struct {
 	client *connectivity.TencentCloudClient
 }

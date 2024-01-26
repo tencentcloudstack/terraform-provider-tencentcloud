@@ -1387,8 +1387,8 @@ func (me *TencentCloudClient) UseCsipClient() *csip.Client {
 
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
-	me.cdwpgConn, _ = cdwpg.NewClient(me.Credential, me.Region, cpf)
-	me.cdwpgConn.WithHttpTransport(&LogRoundTripper{})
+	me.csipConn, _ = csip.NewClient(me.Credential, me.Region, cpf)
+	me.csipConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.csipConn
 }
