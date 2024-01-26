@@ -50,7 +50,6 @@ func testSweepTcrImmutableTagRule(r string) error {
 	for _, v := range rules {
 		resources = append(resources, &tccommon.ResourceInstance{
 			Id:          helper.Int64ToStr(*v.RuleId),
-			Name:        "",
 			DefaultKeep: true,
 		})
 	}

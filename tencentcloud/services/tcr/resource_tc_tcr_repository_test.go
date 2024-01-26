@@ -64,8 +64,8 @@ func testSweepTCRRepository(r string) error {
 		repoName := names[1]
 
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:   "",
-			Name: repoName,
+			Name:      repoName,
+			CreatTime: *v.CreationTime,
 		})
 	}
 	tccommon.ProcessResources(resources, "tcr", "repository")

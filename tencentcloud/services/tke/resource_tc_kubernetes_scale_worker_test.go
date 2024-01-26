@@ -67,8 +67,9 @@ func init() {
 
 				for _, v := range workers {
 					resources = append(resources, &tccommon.ResourceInstance{
-						Id:   v.InstanceId,
-						Name: *instance.InstanceName,
+						Id:        v.InstanceId,
+						Name:      *instance.InstanceName,
+						CreatTime: v.CreatedTime,
 					})
 				}
 

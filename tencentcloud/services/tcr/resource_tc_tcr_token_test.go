@@ -58,8 +58,9 @@ func init() {
 			var resources []*tccommon.ResourceInstance
 			for _, v := range tokens {
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:   *v.Id,
-					Name: "",
+					Id:          *v.Id,
+					DefaultKeep: true,
+					CreatTime:   *v.CreatedAt,
 				})
 			}
 			tccommon.ProcessResources(resources, "tcr", "token")

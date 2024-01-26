@@ -5,29 +5,12 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"regexp"
 	"time"
 )
 
 const (
 	SweeperResourceScanDir = "../../../tmp/resource_scan/"
-
-	KeepResource    = "keep"
-	NonKeepResource = "non-keep"
 )
-
-// IsResourceKeep check whether to keep resource
-func IsResourceKeep(name string) string {
-	if name == "" {
-		return NonKeepResource
-	}
-
-	flag := regexp.MustCompile("^(keep|Default)").MatchString(name)
-	if flag {
-		return KeepResource
-	}
-	return NonKeepResource
-}
 
 // WriteCsvFileData write data to csv file
 func WriteCsvFileData(data [][]string) error {
@@ -92,7 +75,7 @@ func GenerateCsvFile(filePath string) error {
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
-	header := []string{"ResourceType", "ResourceName", "InstanceId", "InstanceName", "Classification"}
+	header := []string{"ResourceType", "ResourceName", "InstanceId", "InstanceName", "Classification", "CreationDuration(D)"}
 	err = writer.Write(header)
 	if err != nil {
 		log.Printf("[CRITAL] write header to csv file error: %v", err.Error())

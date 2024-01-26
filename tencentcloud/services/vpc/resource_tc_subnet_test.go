@@ -45,8 +45,9 @@ func testSweepSubnet(region string) error {
 	var resources []*tccommon.ResourceInstance
 	for _, v := range instances {
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:   v.SubnetId(),
-			Name: v.Name(),
+			Id:        v.SubnetId(),
+			Name:      v.Name(),
+			CreatTime: v.CreateTime(),
 		})
 	}
 	tccommon.ProcessResources(resources, "vpc", "subnet")

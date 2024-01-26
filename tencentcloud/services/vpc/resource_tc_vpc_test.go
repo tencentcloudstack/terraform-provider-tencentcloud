@@ -44,8 +44,9 @@ func testSweepVpcInstance(region string) error {
 	var resources []*tccommon.ResourceInstance
 	for _, v := range instances {
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:   v.VpcId(),
-			Name: v.Name(),
+			Id:        v.VpcId(),
+			Name:      v.Name(),
+			CreatTime: v.CreateTime(),
 		})
 	}
 	tccommon.ProcessResources(resources, "vpc", "")

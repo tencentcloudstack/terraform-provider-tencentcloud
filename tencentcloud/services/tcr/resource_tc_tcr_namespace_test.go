@@ -57,8 +57,9 @@ func init() {
 			var resources []*tccommon.ResourceInstance
 			for _, v := range namespaces {
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:   strconv.FormatInt(*v.NamespaceId, 10),
-					Name: *v.Name,
+					Id:        strconv.FormatInt(*v.NamespaceId, 10),
+					Name:      *v.Name,
+					CreatTime: *v.CreationTime,
 				})
 			}
 			tccommon.ProcessResources(resources, "tcr", "namespace")

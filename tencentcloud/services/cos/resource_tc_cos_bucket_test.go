@@ -43,8 +43,9 @@ func testSweepCosBuckets(region string) error {
 	var resources []*tccommon.ResourceInstance
 	for _, v := range buckets {
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:   "",
-			Name: *v.Name,
+			Id:        "",
+			Name:      *v.Name,
+			CreatTime: v.CreationDate.Format("2006-01-02 15:04:05"),
 		})
 	}
 	tccommon.ProcessResources(resources, "cos", "bucket")

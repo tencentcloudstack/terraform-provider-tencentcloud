@@ -49,8 +49,9 @@ func init() {
 				var resources []*tccommon.ResourceInstance
 				for _, v := range funs {
 					resources = append(resources, &tccommon.ResourceInstance{
-						Id:   *v.FunctionId,
-						Name: *v.FunctionName,
+						Id:        *v.FunctionId,
+						Name:      *v.FunctionName,
+						CreatTime: *v.AddTime,
 					})
 				}
 				tccommon.ProcessResources(resources, "scf", "")
