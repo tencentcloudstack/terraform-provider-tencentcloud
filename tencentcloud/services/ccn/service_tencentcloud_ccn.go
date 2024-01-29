@@ -395,26 +395,26 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 		response = vpc.NewDescribeCcnAttachedInstancesResponse()
 		result   []*vpc.CcnAttachedInstance
 		err      error
-		limit    uint64 = 100
+		limit    uint64 = 20
 		offset   uint64 = 0
 	)
 
 	request.CcnId = &ccnId
-	request.Limit = &limit
-	request.Offset = &offset
+
 	ratelimit.Check(request.GetAction())
 
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		response, err = me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
 		if err != nil {
 			errRet = err
 			return
 		}
-		if response.Response == nil || response.Response.InstanceSet == nil {
-			errRet = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
-			return
-		}
 
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
 		result = append(result, response.Response.InstanceSet...)
 		if len(response.Response.InstanceSet) < int(limit) {
 			break
