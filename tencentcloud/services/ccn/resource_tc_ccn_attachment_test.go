@@ -124,6 +124,8 @@ resource tencentcloud_ccn main {
   name        = "ci-temp-test-ccn"
   description = "ci-temp-test-ccn-des"
   qos         = "AG"
+  charge_type = "PREPAID"
+  bandwidth_limit_type = "INTER_REGION_LIMIT"
 }
 
 resource tencentcloud_ccn_attachment attachment {
@@ -155,6 +157,8 @@ resource tencentcloud_ccn vpngw_ccn_main {
   name        = "ci-temp-test-vpngw-ccn"
   description = "ci-temp-test-vpngw-ccn-des"
   qos         = "AG"
+  charge_type = "PREPAID"
+  bandwidth_limit_type = "INTER_REGION_LIMIT"
 }
 
 resource tencentcloud_ccn_attachment vpngw_ccn_attachment {
