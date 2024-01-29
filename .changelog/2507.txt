@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_ccn_attachment: support tke cluster addon modify
+```
+
