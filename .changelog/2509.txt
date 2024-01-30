@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_instance: fix private ip release problem
+```
+
