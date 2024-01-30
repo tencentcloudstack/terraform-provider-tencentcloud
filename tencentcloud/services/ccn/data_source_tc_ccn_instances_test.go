@@ -56,6 +56,8 @@ resource tencentcloud_ccn main {
   name        = "ci-temp-test-ccn"
   description = "ci-temp-test-ccn-des"
   qos         = "AG"
+  charge_type = "PREPAID"
+  bandwidth_limit_type = "INTER_REGION_LIMIT"
 }
 
 data tencentcloud_ccn_instances id_instances {

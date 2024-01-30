@@ -135,13 +135,15 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_zone.create")()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		request = privatedns.NewCreatePrivateZoneRequest()
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request  = privatedns.NewCreatePrivateZoneRequest()
+		response = privatedns.NewCreatePrivateZoneResponse()
 	)
 
-	domain := d.Get("domain").(string)
-	request.Domain = &domain
+	if v, ok := d.GetOk("domain"); ok {
+		request.Domain = helper.String(v.(string))
+	}
 
 	if v, ok := d.GetOk("tag_set"); ok {
 		tagSet := make([]*privatedns.TagInfo, 0, 10)
@@ -151,8 +153,10 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 				TagKey:   helper.String(m["tag_key"].(string)),
 				TagValue: helper.String(m["tag_value"].(string)),
 			}
+
 			tagSet = append(tagSet, &tagInfo)
 		}
+
 		request.TagSet = tagSet
 	}
 
@@ -164,19 +168,19 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 				UniqVpcId: helper.String(m["uniq_vpc_id"].(string)),
 				Region:    helper.String(m["region"].(string)),
 			}
+
 			vpcSet = append(vpcSet, &vpcInfo)
 		}
+
 		request.VpcSet = vpcSet
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
-		remark := v.(string)
-		request.Remark = helper.String(remark)
+		request.Remark = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("dns_forward_status"); ok {
-		dnsForwardStatus := v.(string)
-		request.DnsForwardStatus = helper.String(dnsForwardStatus)
+		request.DnsForwardStatus = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("account_vpc_set"); ok {
@@ -189,24 +193,38 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 				Region:    helper.String(m["region"].(string)),
 				VpcName:   helper.String(m["vpc_name"].(string)),
 			}
+
 			accountVpcSet = append(accountVpcSet, &accountVpcInfo)
 		}
+
 		request.AccountVpcSet = accountVpcSet
 	}
 
 	if v, ok := d.GetOk("cname_speedup_status"); ok {
-		cnameSpeedupStatus := v.(string)
-		request.CnameSpeedupStatus = helper.String(cnameSpeedupStatus)
+		request.CnameSpeedupStatus = helper.String(v.(string))
 	}
 
-	result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().CreatePrivateZone(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().CreatePrivateZone(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil {
+			e = fmt.Errorf("create PrivateDns failed")
+			return resource.NonRetryableError(e)
+		}
+
+		response = result
+		return nil
+	})
 
 	if err != nil {
 		log.Printf("[CRITAL]%s create PrivateDns failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-
-	response := result
 
 	id := *response.Response.ZoneId
 	d.SetId(id)
@@ -214,7 +232,6 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(client)
 	region := client.Region
-
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := tccommon.BuildTagResourceName("privatedns", "zone", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {

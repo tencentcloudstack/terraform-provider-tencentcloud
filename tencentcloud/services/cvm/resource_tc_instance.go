@@ -13,6 +13,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svccbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -1415,7 +1416,12 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	instance, err := cvmService.DescribeInstanceById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cvmService.DeleteInstance(ctx, instanceId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
@@ -1447,6 +1453,29 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	})
 	if err != nil {
 		return err
+	}
+
+	// wait ip release
+	if len(instance.PrivateIpAddresses) > 0 {
+		vpcService := vpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		params := make(map[string]interface{})
+		params["VpcId"] = instance.VirtualPrivateCloud.VpcId
+		params["SubnetId"] = instance.VirtualPrivateCloud.SubnetId
+		params["IpAddresses"] = instance.PrivateIpAddresses
+		err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			usedIpAddress, errRet := vpcService.DescribeVpcUsedIpAddressByFilter(ctx, params)
+			if errRet != nil {
+				return tccommon.RetryError(errRet, tccommon.InternalError)
+			}
+			if len(usedIpAddress) > 0 {
+				return resource.RetryableError(fmt.Errorf("wait cvm private ip release..."))
+			}
+
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	if notExist || !forceDelete {

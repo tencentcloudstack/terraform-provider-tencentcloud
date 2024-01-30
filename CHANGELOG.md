@@ -1,3 +1,12 @@
+## 1.81.71 (January 26, 2024)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_ssl_certificates: Filter out invalid certificates without reporting errors directly ([#2500](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2500))
+* resource/tencentcloud_dnspod_record: fix modify dnspod record weight ([#2506](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2506))
+* resource/tencentcloud_instance: wait cvm private ip release when instance destroyed ([#2503](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2503))
+* resource/tencentcloud_private_dns_zone: Increase the waiting time for instance creation ([#2504](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2504))
+
 ## 1.81.70 (January 24, 2024)
 
 FEATURES:
