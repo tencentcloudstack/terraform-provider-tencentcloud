@@ -212,15 +212,17 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Firewall template ID. If this parameter is not specified, the default firewall policy is used.",
 			},
-			"public_address": {
-				Type:        schema.TypeString,
+			"public_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Computed:    true,
-				Description: "Public address.",
+				Description: "Public addresses.",
 			},
-			"private_address": {
-				Type:        schema.TypeString,
+			"private_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Computed:    true,
-				Description: "Private address.",
+				Description: "Private addresses.",
 			},
 		},
 	}
@@ -423,11 +425,11 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	if len(instance.PublicAddresses) > 0 {
-		_ = d.Set("public_address", instance.PublicAddresses[0])
+		_ = d.Set("public_addresses", instance.PublicAddresses)
 	}
 
 	if len(instance.PrivateAddresses) > 0 {
-		_ = d.Set("private_address", instance.PrivateAddresses[0])
+		_ = d.Set("private_addresses", instance.PrivateAddresses)
 	}
 
 	return nil

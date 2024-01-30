@@ -141,8 +141,8 @@ The `volumes` object of `containers` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `private_address` - Private address.
-* `public_address` - Public address.
+* `private_addresses` - Private addresses.
+* `public_addresses` - Public addresses.
 
 
 ## Import
