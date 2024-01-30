@@ -39,6 +39,21 @@ func testSweepCosBuckets(region string) error {
 		return fmt.Errorf("list buckets error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range buckets {
+		if !tccommon.CheckResourcePersist(*v.Name, v.CreationDate.Format("2006-01-02 15:04:05")) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Name: *v.Name,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Name:      *v.Name,
+			CreatTime: v.CreationDate.Format("2006-01-02 15:04:05"),
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "cos", "bucket")
+
 	//prefix := regexp.MustCompile("^(tf|test)-")
 
 	for _, v := range buckets {

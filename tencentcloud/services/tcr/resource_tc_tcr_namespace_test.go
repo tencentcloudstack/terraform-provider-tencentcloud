@@ -3,6 +3,7 @@ package tcr_test
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -51,6 +52,23 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range namespaces {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CreationTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   strconv.FormatInt(*v.NamespaceId, 10),
+						Name: *v.Name,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:        strconv.FormatInt(*v.NamespaceId, 10),
+					Name:      *v.Name,
+					CreatTime: *v.CreationTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "namespace")
 
 			for i := range namespaces {
 				n := namespaces[i]

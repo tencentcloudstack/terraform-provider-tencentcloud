@@ -37,6 +37,23 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range clusters {
+				if !tccommon.CheckResourcePersist(v.ClusterName, v.CreatedTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   v.ClusterId,
+						Name: v.ClusterName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:        v.ClusterId,
+					Name:      v.ClusterName,
+					CreatTime: v.CreatedTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tke", "cluster")
+
 			for _, v := range clusters {
 				id := v.ClusterId
 				name := v.ClusterName

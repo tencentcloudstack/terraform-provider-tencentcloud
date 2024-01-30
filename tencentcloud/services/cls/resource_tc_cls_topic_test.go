@@ -40,6 +40,23 @@ func testSweepClsTopic(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.TopicName, *v.CreateTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.TopicId,
+				Name: *v.TopicName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.TopicId,
+			Name:      *v.TopicName,
+			CreatTime: *v.CreateTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "cls", "topic")
+
 	for _, v := range instances {
 		instanceId := v.TopicId
 		instanceName := v.TopicName

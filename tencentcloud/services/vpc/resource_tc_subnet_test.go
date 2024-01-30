@@ -41,6 +41,23 @@ func testSweepSubnet(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(v.Name(), v.CreateTime()) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   v.SubnetId(),
+				Name: v.Name(),
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        v.SubnetId(),
+			Name:      v.Name(),
+			CreatTime: v.CreateTime(),
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "subnet")
+
 	for _, v := range instances {
 
 		instanceId := v.SubnetId()

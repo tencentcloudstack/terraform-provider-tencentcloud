@@ -46,6 +46,21 @@ func init() {
 
 			accounts, _ := service.DescribeSqlserverAccounts(ctx, instanceId)
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range accounts {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Name: *v.Name,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Name:      *v.Name,
+					CreatTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "sqlserver", "account")
+
 			for i := range accounts {
 				account := accounts[i]
 				name := *account.Name

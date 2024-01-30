@@ -45,6 +45,20 @@ func testSweepTcrImmutableTagRule(r string) error {
 		return err
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range rules {
+		if !tccommon.CheckResourcePersist("", "") {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id: helper.Int64ToStr(*v.RuleId),
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id: helper.Int64ToStr(*v.RuleId),
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "immutable_tag_rule")
+
 	for _, rule := range rules {
 		ruleId := helper.Int64ToStr(*rule.RuleId)
 

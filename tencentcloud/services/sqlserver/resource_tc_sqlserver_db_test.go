@@ -51,10 +51,24 @@ func init() {
 			}
 
 			dbs, err := service.DescribeDBsOfInstance(ctx, insId)
-
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range dbs {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Name: *v.Name,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Name:      *v.Name,
+					CreatTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "sqlserver", "db")
 
 			for i := range dbs {
 				db := dbs[i]

@@ -47,6 +47,23 @@ func testSweepClbInstance(region string) error {
 		return err
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range res {
+		if !tccommon.CheckResourcePersist(*v.LoadBalancerName, *v.CreateTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.LoadBalancerId,
+				Name: *v.LoadBalancerName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.LoadBalancerId,
+			Name:      *v.LoadBalancerName,
+			CreatTime: *v.CreateTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "clb", "instance")
+
 	if len(res) > 0 {
 		for _, v := range res {
 			id := *v.LoadBalancerId

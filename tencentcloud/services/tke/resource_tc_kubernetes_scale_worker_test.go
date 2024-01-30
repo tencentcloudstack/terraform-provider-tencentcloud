@@ -50,6 +50,9 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+
 			cvmService := svccvm.NewCvmService(client)
 			instanceIds := make([]string, 0)
 			for i := range workers {
@@ -62,6 +65,18 @@ func init() {
 					continue
 				}
 
+				if !tccommon.CheckResourcePersist(*instance.InstanceName, worker.CreatedTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   worker.InstanceId,
+						Name: *instance.InstanceName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:        worker.InstanceId,
+					Name:      *instance.InstanceName,
+					CreatTime: worker.CreatedTime,
+				})
+
 				created, err := time.Parse(tccommon.TENCENTCLOUD_COMMON_TIME_LAYOUT, worker.CreatedTime)
 				if err != nil {
 					created = time.Time{}
@@ -71,6 +86,8 @@ func init() {
 				}
 				instanceIds = append(instanceIds, worker.InstanceId)
 			}
+
+			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tke", "scale_worker")
 
 			err = service.DeleteClusterInstances(ctx, clusterId, instanceIds)
 			if err != nil {

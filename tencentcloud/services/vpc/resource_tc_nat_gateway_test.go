@@ -41,6 +41,23 @@ func testSweepNatInstance(region string) error {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.NatGatewayName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.NatGatewayId,
+				Name: *v.NatGatewayName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.NatGatewayId,
+			Name:      *v.NatGatewayName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "nat_gateway")
+
 	for _, v := range instances {
 		instanceId := *v.NatGatewayId
 		instanceName := v.NatGatewayName
