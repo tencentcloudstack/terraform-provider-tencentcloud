@@ -102,6 +102,32 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstanceResource_PrepaidBasic(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.cvm_prepaid_basic"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { tcacctest.AccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstancePrepaidBasic,
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "private_ip"),
+					resource.TestCheckResourceAttrSet(id, "vpc_id"),
+					resource.TestCheckResourceAttrSet(id, "subnet_id"),
+					resource.TestCheckResourceAttrSet(id, "project_id"),
+					resource.TestCheckResourceAttr(id, "tags.hostname", "tci"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudInstanceResource_WithDataDisk(t *testing.T) {
 	t.Parallel()
 
@@ -750,6 +776,26 @@ resource "tencentcloud_instance" "cvm_basic" {
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 
+  tags = {
+    hostname = "tci"
+  }
+}
+`
+
+const testAccTencentCloudInstancePrepaidBasic = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "cvm_prepaid_basic" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+  instance_charge_type                    = "PREPAID"
+  instance_charge_type_prepaid_period     = 1
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  force_delete = true
   tags = {
     hostname = "tci"
   }
