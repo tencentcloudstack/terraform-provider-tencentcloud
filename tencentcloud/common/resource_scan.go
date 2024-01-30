@@ -57,7 +57,10 @@ func ProcessResources(resources []*ResourceInstance, resourceType, resourceName 
 			creationDuration,
 		}
 	}
-	WriteCsvFileData(SweeperResourceScanDir, ResourceScanHeader, data)
+	err := WriteCsvFileData(SweeperResourceScanDir, ResourceScanHeader, data)
+	if err != nil {
+		log.Printf("[CRITAL] write csv file data error: %v", err.Error())
+	}
 }
 
 // ProcessNonKeepResources Processing scanned non-keep cloud resources
@@ -71,7 +74,10 @@ func ProcessNonKeepResources(nonKeepResources []*ResourceInstance, resourceType,
 			r.Name,
 		}
 	}
-	WriteCsvFileData(SweeperNonKeepResourceScanDir, NonKeepResourceScanHeader, data)
+	err := WriteCsvFileData(SweeperNonKeepResourceScanDir, NonKeepResourceScanHeader, data)
+	if err != nil {
+		log.Printf("[CRITAL] write csv file data error: %v", err.Error())
+	}
 }
 
 // CheckResourceNameKeep check whether to keep resource name
