@@ -53,7 +53,7 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{

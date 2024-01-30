@@ -44,7 +44,7 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 			},
 			"period": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				Description: "Subscription period in months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.",
 			},
 			"renew_flag": {
@@ -61,6 +61,7 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 			"zone": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "List of availability zones. A random AZ is selected by default.",
 			},
 			"dry_run": {
@@ -206,6 +207,16 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Firewall template ID. If this parameter is not specified, the default firewall policy is used.",
 			},
+			"public_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Public address.",
+			},
+			"private_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Private address.",
+			},
 		},
 	}
 }
@@ -259,7 +270,7 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		if v, ok := loginConfigurationMap["auto_generate_password"]; ok {
 			loginConfiguration.AutoGeneratePassword = helper.String(v.(string))
 		}
-		if v, ok := loginConfigurationMap["password"]; ok {
+		if v, ok := loginConfigurationMap["password"]; ok && v.(string) != "" {
 			loginConfiguration.Password = helper.String(v.(string))
 		}
 		request.LoginConfiguration = &loginConfiguration
@@ -404,6 +415,14 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 
 	if instance.Zone != nil {
 		_ = d.Set("zone", instance.Zone)
+	}
+
+	if len(instance.PublicAddresses) > 0 {
+		_ = d.Set("public_address", instance.PublicAddresses[0])
+	}
+
+	if len(instance.PrivateAddresses) > 0 {
+		_ = d.Set("private_address", instance.PrivateAddresses[0])
 	}
 
 	return nil
