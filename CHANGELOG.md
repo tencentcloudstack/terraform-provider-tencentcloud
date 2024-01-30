@@ -1,3 +1,11 @@
+## 1.81.72 (January 30, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ccn_attachment: support tke cluster addon modify ([#2507](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2507))
+* resource/tencentcloud_instance: fix private ip release problem ([#2509](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2509))
+* resource/tencentcloud_mysql_instance: Optimize the availability zone problem when modifying the configuration after active/standby switchover. ([#2502](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2502))
+
 ## 1.81.71 (January 26, 2024)
 
 ENHANCEMENTS:
