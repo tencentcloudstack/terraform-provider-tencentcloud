@@ -23,7 +23,12 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 		Delete: resourceTencentCloudLighthouseInstanceDelete,
 		Update: resourceTencentCloudLighthouseInstanceUpdate,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				_ = d.Set("is_update_bundle_id_auto_voucher", false)
+				_ = d.Set("isolate_data_disk", true)
+
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"bundle_id": {
