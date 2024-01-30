@@ -1455,30 +1455,17 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	// wait ip release
-	if len(instance.PrivateIpAddresses) > 0 {
-		vpcService := vpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-		params := make(map[string]interface{})
-		params["VpcId"] = instance.VirtualPrivateCloud.VpcId
-		params["SubnetId"] = instance.VirtualPrivateCloud.SubnetId
-		params["IpAddresses"] = instance.PrivateIpAddresses
-		err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			usedIpAddress, errRet := vpcService.DescribeVpcUsedIpAddressByFilter(ctx, params)
-			if errRet != nil {
-				return tccommon.RetryError(errRet, tccommon.InternalError)
-			}
-			if len(usedIpAddress) > 0 {
-				return resource.RetryableError(fmt.Errorf("wait cvm private ip release..."))
-			}
+	vpcService := vpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-			return nil
-		})
+	if notExist {
+		err := waitIpRelease(ctx, vpcService, instance)
 		if err != nil {
 			return err
 		}
+		return nil
 	}
 
-	if notExist || !forceDelete {
+	if !forceDelete {
 		return nil
 	}
 
@@ -1592,6 +1579,11 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			}
 		}
 	}
+
+	err = waitIpRelease(ctx, vpcService, instance)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -1699,6 +1691,31 @@ func waitForOperationFinished(d *schema.ResourceData, meta interface{}, timeout 
 	})
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func waitIpRelease(ctx context.Context, vpcService vpc.VpcService, instance *cvm.Instance) error {
+	// wait ip release
+	if len(instance.PrivateIpAddresses) > 0 {
+		params := make(map[string]interface{})
+		params["VpcId"] = instance.VirtualPrivateCloud.VpcId
+		params["SubnetId"] = instance.VirtualPrivateCloud.SubnetId
+		params["IpAddresses"] = instance.PrivateIpAddresses
+		err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			usedIpAddress, errRet := vpcService.DescribeVpcUsedIpAddressByFilter(ctx, params)
+			if errRet != nil {
+				return tccommon.RetryError(errRet, tccommon.InternalError)
+			}
+			if len(usedIpAddress) > 0 {
+				return resource.RetryableError(fmt.Errorf("wait cvm private ip release..."))
+			}
+
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
