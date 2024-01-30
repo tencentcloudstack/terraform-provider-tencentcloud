@@ -428,6 +428,7 @@ In addition to all arguments above, the following attributes are exported:
       * `s3_secret_id` - The key ID required to upload files to the AWS S3 object.
       * `s3_secret_key` - The key required to upload files to the AWS S3 object.
     * `type` - The storage type for a media processing output file. Valid values:`COS`: Tencent Cloud COS. `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.
+  * `resource_id` - The resource ID. If there is no associated resource ID, fill it with the account's main resource ID.
   * `schedule_id` - The scheme ID.
   * `schedule_name` - The scheme name.Note: This field may return null, indicating that no valid values can be obtained.
   * `status` - The scheme status. Valid values:`Enabled``Disabled`Note: This field may return null, indicating that no valid values can be obtained.

@@ -347,6 +347,8 @@ type AiAnalysisResult struct {
 	// <li>Tag：智能标签</li>
 	// <li>FrameTag：智能按帧标签</li>
 	// <li>Highlight：智能精彩集锦</li>
+	// <li>DeLogo：智能去水印</li>
+	// <li>Description：大模型摘要</li>
 	Type *string `json:"Type,omitnil" name:"Type"`
 
 	// 视频内容分析智能分类任务的查询结果，当任务类型为 Classification 时有效。
@@ -372,6 +374,10 @@ type AiAnalysisResult struct {
 	// 视频内容分析去水印任务的查询结果，当任务类型为 DeLogo 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeLogoTask *AiAnalysisTaskDelLogoResult `json:"DeLogoTask,omitnil" name:"DeLogoTask"`
+
+	// 视频内容分析摘要任务的查询结果，当任务类型为 Description 时有效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DescriptionTask *AiAnalysisTaskDescriptionResult `json:"DescriptionTask,omitnil" name:"DescriptionTask"`
 }
 
 type AiAnalysisTaskClassificationInput struct {
@@ -468,6 +474,34 @@ type AiAnalysisTaskDelLogoResult struct {
 	// 智能去水印任务输出。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Output *AiAnalysisTaskDelLogoOutput `json:"Output,omitnil" name:"Output"`
+}
+
+type AiAnalysisTaskDescriptionInput struct {
+	// 视频智能描述模板 ID。
+	Definition *uint64 `json:"Definition,omitnil" name:"Definition"`
+}
+
+type AiAnalysisTaskDescriptionOutput struct {
+	// 视频智能描述列表。
+	DescriptionSet []*MediaAiAnalysisDescriptionItem `json:"DescriptionSet,omitnil" name:"DescriptionSet"`
+}
+
+type AiAnalysisTaskDescriptionResult struct {
+	// 任务状态，有 PROCESSING，SUCCESS 和 FAIL 三种。
+	Status *string `json:"Status,omitnil" name:"Status"`
+
+	// 错误码，0：成功，其他值：失败。
+	ErrCode *int64 `json:"ErrCode,omitnil" name:"ErrCode"`
+
+	// 错误信息。
+	Message *string `json:"Message,omitnil" name:"Message"`
+
+	// 智能描述任务输入。
+	Input *AiAnalysisTaskDescriptionInput `json:"Input,omitnil" name:"Input"`
+
+	// 智能描述任务输出。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Output *AiAnalysisTaskDescriptionOutput `json:"Output,omitnil" name:"Output"`
 }
 
 type AiAnalysisTaskFrameTagInput struct {
@@ -640,6 +674,20 @@ type AiContentReviewTaskInput struct {
 	Definition *uint64 `json:"Definition,omitnil" name:"Definition"`
 }
 
+type AiParagraphInfo struct {
+	// 分段摘要
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Summary *string `json:"Summary,omitnil" name:"Summary"`
+
+	// 分段起始时间点，秒
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTimeOffset *float64 `json:"StartTimeOffset,omitnil" name:"StartTimeOffset"`
+
+	// 分段结束时间点，秒
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTimeOffset *float64 `json:"EndTimeOffset,omitnil" name:"EndTimeOffset"`
+}
+
 type AiQualityControlTaskInput struct {
 	// 视频质检模板 ID 。暂时可以直接使用 预设模板ID 10，后面控制台支持用户配置自定义模板。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -717,6 +765,10 @@ type AiRecognitionTaskAsrFullTextResult struct {
 	// 语音全文识别任务输出信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Output *AiRecognitionTaskAsrFullTextResultOutput `json:"Output,omitnil" name:"Output"`
+
+	// 任务进度。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Progress *uint64 `json:"Progress,omitnil" name:"Progress"`
 }
 
 type AiRecognitionTaskAsrFullTextResultInput struct {
@@ -1084,6 +1136,10 @@ type AiRecognitionTaskTransTextResult struct {
 	// 翻译任务输出信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Output *AiRecognitionTaskTransTextResultOutput `json:"Output,omitnil" name:"Output"`
+
+	// 任务进度。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Progress *uint64 `json:"Progress,omitnil" name:"Progress"`
 }
 
 type AiRecognitionTaskTransTextResultInput struct {
@@ -1840,6 +1896,8 @@ type AudioSeparateConfig struct {
 
 type AudioTemplateInfo struct {
 	// 音频流的编码格式。
+	// 当不需要对音频进行转码时，可选值为：
+	// <li>copy。</li>
 	// 当外层参数 Container 为 mp3 时，可选值为：
 	// <li>libmp3lame。</li>
 	// 当外层参数 Container 为 ogg 或 flac 时，可选值为：
@@ -1850,7 +1908,8 @@ type AudioTemplateInfo struct {
 	// <li>ac3。</li>
 	// 当外层参数 Container 为 mp4 或 flv 时，可选值为：
 	// <li>libfdk_aac：更适合 mp4；</li>
-	// <li>libmp3lame：更适合 flv。</li>
+	// <li>libmp3lame：更适合 flv；</li>
+	// <li>mp2。</li>
 	// 当外层参数 Container 为 hls 时，可选值为：
 	// <li>libfdk_aac；</li>
 	// <li>libmp3lame。</li>
@@ -1870,14 +1929,16 @@ type AudioTemplateInfo struct {
 	// 音频通道方式，可选值：
 	// <li>1：单通道</li>
 	// <li>2：双通道</li>
-	// <li>6：立体声</li>
-	// 当媒体的封装格式是音频格式时（flac，ogg，mp3，m4a）时，声道数不允许设为立体声。
+	// <li>6：5.1声道</li>
+	// 当媒体的封装格式是音频格式时（flac，ogg，mp3，m4a）时，声道数不允许设为5.1声道。
 	// 默认值：2。
 	AudioChannel *int64 `json:"AudioChannel,omitnil" name:"AudioChannel"`
 }
 
 type AudioTemplateInfoForUpdate struct {
 	// 音频流的编码格式。
+	// 当不需要对音频进行转码时，可选值为：
+	// <li>copy。</li>
 	// 当外层参数 Container 为 mp3 时，可选值为：
 	// <li>libmp3lame。</li>
 	// 当外层参数 Container 为 ogg 或 flac 时，可选值为：
@@ -2222,6 +2283,11 @@ type ComposeAudioStream struct {
 	// <li>1：单声道 。</li>
 	// <li>2：双声道（默认）。</li>
 	AudioChannel *int64 `json:"AudioChannel,omitnil" name:"AudioChannel"`
+
+	// 参考码率，单位 kbps，范围：26~10000。
+	// 如果设置，编码时会尽量按该码率进行编码。
+	// 如果不设置，服务将根据音频参数自动采用合适的码率。
+	Bitrate *int64 `json:"Bitrate,omitnil" name:"Bitrate"`
 }
 
 type ComposeCanvas struct {
@@ -2608,6 +2674,11 @@ type ComposeVideoStream struct {
 	// 视频帧率，取值范围：[0, 60]，单位：Hz。  
 	// 默认值：0，表示和第一个视频帧率一致。
 	Fps *int64 `json:"Fps,omitnil" name:"Fps"`
+
+	// 参考码率，单位 kbps，范围：50~35000。
+	// 如果设置，编码时会尽量按该码率进行编码。
+	// 如果不设置，服务将通过画面复杂度自动采用合适的码率。
+	Bitrate *int64 `json:"Bitrate,omitnil" name:"Bitrate"`
 }
 
 type ContentReviewTemplateItem struct {
@@ -3886,6 +3957,9 @@ type CreateScheduleRequestParams struct {
 
 	// 任务的事件通知配置，不填代表不获取事件通知。
 	TaskNotifyConfig *TaskNotifyConfig `json:"TaskNotifyConfig,omitnil" name:"TaskNotifyConfig"`
+
+	// 资源ID，需要保证对应资源是开启状态。默认为帐号主资源ID。
+	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
 }
 
 type CreateScheduleRequest struct {
@@ -3909,6 +3983,9 @@ type CreateScheduleRequest struct {
 
 	// 任务的事件通知配置，不填代表不获取事件通知。
 	TaskNotifyConfig *TaskNotifyConfig `json:"TaskNotifyConfig,omitnil" name:"TaskNotifyConfig"`
+
+	// 资源ID，需要保证对应资源是开启状态。默认为帐号主资源ID。
+	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
 }
 
 func (r *CreateScheduleRequest) ToJsonString() string {
@@ -3929,6 +4006,7 @@ func (r *CreateScheduleRequest) FromJsonString(s string) error {
 	delete(f, "OutputStorage")
 	delete(f, "OutputDir")
 	delete(f, "TaskNotifyConfig")
+	delete(f, "ResourceId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateScheduleRequest has unknown keys!", "")
 	}
@@ -10183,6 +10261,11 @@ type LiveStreamTagRecognitionResult struct {
 }
 
 type LiveStreamTaskNotifyConfig struct {
+	// 通知类型，默认CMQ，指定URL时HTTP回调推送到 NotifyUrl 指定的地址。
+	// 
+	// <font color="red"> 注：不填或为空时默认 CMQ，如需采用其他类型需填写对应类型值。 </font>
+	NotifyType *string `json:"NotifyType,omitnil" name:"NotifyType"`
+
 	// CMQ 的模型，有 Queue 和 Topic 两种，目前仅支持 Queue。
 	CmqModel *string `json:"CmqModel,omitnil" name:"CmqModel"`
 
@@ -10194,11 +10277,6 @@ type LiveStreamTaskNotifyConfig struct {
 
 	// 当模型为 Topic 时有效，表示接收事件通知的 CMQ 的主题名。
 	TopicName *string `json:"TopicName,omitnil" name:"TopicName"`
-
-	// 通知类型，默认CMQ，指定URL时HTTP回调推送到 NotifyUrl 指定的地址。
-	// 
-	// <font color="red"> 注：不填或为空时默认 CMQ，如需采用其他类型需填写对应类型值。 </font>
-	NotifyType *string `json:"NotifyType,omitnil" name:"NotifyType"`
 
 	// HTTP回调地址，NotifyType为URL时必填。
 	NotifyUrl *string `json:"NotifyUrl,omitnil" name:"NotifyUrl"`
@@ -10332,6 +10410,18 @@ type MediaAiAnalysisCoverItem struct {
 
 	// 智能封面的可信度，取值范围是 0 到 100。
 	Confidence *float64 `json:"Confidence,omitnil" name:"Confidence"`
+}
+
+type MediaAiAnalysisDescriptionItem struct {
+	// 智能描述。
+	Description *string `json:"Description,omitnil" name:"Description"`
+
+	// 智能描述的可信度，取值范围是 0 到 100。
+	Confidence *float64 `json:"Confidence,omitnil" name:"Confidence"`
+
+	// 分段结果。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Paragraphs []*AiParagraphInfo `json:"Paragraphs,omitnil" name:"Paragraphs"`
 }
 
 type MediaAiAnalysisFrameTagItem struct {
@@ -12093,6 +12183,9 @@ type ModifyScheduleRequestParams struct {
 
 	// 任务的事件通知配置。
 	TaskNotifyConfig *TaskNotifyConfig `json:"TaskNotifyConfig,omitnil" name:"TaskNotifyConfig"`
+
+	// 资源ID，需要保证对应资源是开启状态。
+	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
 }
 
 type ModifyScheduleRequest struct {
@@ -12120,6 +12213,9 @@ type ModifyScheduleRequest struct {
 
 	// 任务的事件通知配置。
 	TaskNotifyConfig *TaskNotifyConfig `json:"TaskNotifyConfig,omitnil" name:"TaskNotifyConfig"`
+
+	// 资源ID，需要保证对应资源是开启状态。
+	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
 }
 
 func (r *ModifyScheduleRequest) ToJsonString() string {
@@ -12141,6 +12237,7 @@ func (r *ModifyScheduleRequest) FromJsonString(s string) error {
 	delete(f, "OutputStorage")
 	delete(f, "OutputDir")
 	delete(f, "TaskNotifyConfig")
+	delete(f, "ResourceId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyScheduleRequest has unknown keys!", "")
 	}
@@ -13613,7 +13710,8 @@ type ProcessMediaRequestParams struct {
 	// 编排ID。
 	// 注意1：对于OutputStorage、OutputDir参数：
 	// <li>当服务编排中子任务节点配置了OutputStorage、OutputDir时，该子任务节点中配置的输出作为子任务的输出。</li>
-	// <li>当服务编排中子任务节点没有配置OutputStorage、OutputDir时，若创建任务接口（ProcessMedia）有输出，将覆盖原有编排的默认输出。</li>
+	// <li>当服务编排中子任务节点没有配置OutputStorage、OutputDir时，若创建任务接口（ProcessMedia）有指定输出，将覆盖原有编排的默认输出。</li>
+	// <li>即输出设置的优先级：编排子任务节点 > 任务接口指定 > 对应编排内的配置 </li>
 	// 注意2：对于TaskNotifyConfig参数，若创建任务接口（ProcessMedia）有设置，将覆盖原有编排的默认回调。
 	// 
 	// 注意3：编排的 Trigger 只是用来自动化触发场景，在手动发起的请求中已经配置的 Trigger 无意义。
@@ -13668,7 +13766,8 @@ type ProcessMediaRequest struct {
 	// 编排ID。
 	// 注意1：对于OutputStorage、OutputDir参数：
 	// <li>当服务编排中子任务节点配置了OutputStorage、OutputDir时，该子任务节点中配置的输出作为子任务的输出。</li>
-	// <li>当服务编排中子任务节点没有配置OutputStorage、OutputDir时，若创建任务接口（ProcessMedia）有输出，将覆盖原有编排的默认输出。</li>
+	// <li>当服务编排中子任务节点没有配置OutputStorage、OutputDir时，若创建任务接口（ProcessMedia）有指定输出，将覆盖原有编排的默认输出。</li>
+	// <li>即输出设置的优先级：编排子任务节点 > 任务接口指定 > 对应编排内的配置 </li>
 	// 注意2：对于TaskNotifyConfig参数，若创建任务接口（ProcessMedia）有设置，将覆盖原有编排的默认回调。
 	// 
 	// 注意3：编排的 Trigger 只是用来自动化触发场景，在手动发起的请求中已经配置的 Trigger 无意义。
@@ -14538,6 +14637,10 @@ type SchedulesInfo struct {
 	// 最后编辑时间，使用  [ISO 日期格式](https://cloud.tencent.com/document/product/862/37710#52)。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+
+	// 资源ID，对于没有关联资源ID的，用账号主资源ID填充。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
 }
 
 type ScratchRepairConfig struct {
