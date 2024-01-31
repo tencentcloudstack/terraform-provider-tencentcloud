@@ -1,7 +1,6 @@
 package mps_test
 
 import (
-	"fmt"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -28,7 +27,7 @@ func TestAccTencentCloudMpsSchedulesDataSource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: fmt.Sprintf(testAccMpsSchedulesDataSource_specific_one),
+				Config: testAccMpsSchedulesDataSource_specific_one,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_mps_schedules.schedules"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mps_schedules.schedules", "schedule_ids.#"),
