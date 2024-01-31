@@ -2566,7 +2566,7 @@ func DataSourceTencentCloudMpsSchedules() *schema.Resource {
 							Description: "The last updated time in [ISO date format](https://intl.cloud.tencent.com/document/product/862/37710?from_cn_redirect=1#52).Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"resource_id": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The resource ID. If there is no associated resource ID, fill it with the account's main resource ID.",
 						},
