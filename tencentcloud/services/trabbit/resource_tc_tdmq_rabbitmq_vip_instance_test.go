@@ -32,6 +32,11 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
+				ResourceName:      "tencentcloud_tdmq_rabbitmq_vip_instance.template",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccTdmqRabbitmqVipInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
