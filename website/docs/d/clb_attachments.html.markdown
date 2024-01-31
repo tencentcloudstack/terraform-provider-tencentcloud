@@ -40,6 +40,7 @@ In addition to all arguments above, the following attributes are exported:
   * `protocol_type` - Type of protocol within the listener, and available values include `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`. NOTES: `TCP_SSL` is testing internally, please apply if you need to use.
   * `rule_id` - ID of the CLB listener rule.
   * `targets` - Information of the backends to be attached.
+    * `eni_ip` - Elastic network card unique ID.
     * `instance_id` - Id of the backend server.
     * `port` - Port of the backend server.
     * `weight` - Forwarding weight of the backend service, the range of [0, 100], defaults to `10`.
