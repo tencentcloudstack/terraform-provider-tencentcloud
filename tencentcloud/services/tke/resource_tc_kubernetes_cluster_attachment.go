@@ -83,7 +83,7 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 						Optional:     true,
 						Default:      svcas.SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
-						Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
+						Description:  "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
 					},
 					"disk_size": {
 						Type:        schema.TypeInt,
