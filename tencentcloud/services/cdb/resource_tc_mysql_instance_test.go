@@ -642,7 +642,7 @@ resource "tencentcloud_mysql_instance" "mysql8" {
 	mem_size          = 1000
 	volume_size       = 25
 	intranet_port     = 3306
-	security_groups   = ["sg-3k7vtgf7"]
+	security_groups   = ["sg-05f7wnhn"]
   
 	tags = {
 	  createdBy = "terraform"
