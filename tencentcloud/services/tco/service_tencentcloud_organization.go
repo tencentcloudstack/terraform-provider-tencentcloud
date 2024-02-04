@@ -804,3 +804,59 @@ func (me *OrganizationService) DescribeOrganizationOrgShareAreaByFilter(ctx cont
 	orgShareArea = response.Response.Items
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitById(ctx context.Context, area, unitId string) (orgShareUnit *organization.ManagerShareUnit, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribeShareUnitsRequest()
+	request.SearchKey = &unitId
+	request.Area = &area
+	request.Limit = helper.IntUint64(20)
+	request.Offset = helper.IntUint64(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeShareUnits(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Items) < 1 {
+		return
+	}
+
+	orgShareUnit = response.Response.Items[0]
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgShareUnitById(ctx context.Context, unitId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeleteShareUnitRequest()
+	request.UnitId = &unitId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DeleteShareUnit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
