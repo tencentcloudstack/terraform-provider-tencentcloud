@@ -6,11 +6,15 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 const (
 	KeepResource    = "keep"
 	NonKeepResource = "non-keep"
+
+	RemarkResourceFree = "资源免费"
 )
 
 // TimeFormats add all possible time formats
@@ -27,15 +31,17 @@ type ResourceInstance struct {
 	DefaultKeep bool
 }
 
-func ProcessScanCloudResources(resources, nonKeepResources []*ResourceInstance, resourceType, resourceName string) {
-	ProcessResources(resources, resourceType, resourceName)
+func ProcessScanCloudResources(client *connectivity.TencentCloudClient, resources, nonKeepResources []*ResourceInstance, resourceType, resourceName string) {
+	ProcessResources(client, resources, resourceType, resourceName)
 
-	ProcessNonKeepResources(nonKeepResources, resourceType, resourceName)
+	ProcessNonKeepResources(client, nonKeepResources, resourceType, resourceName)
 }
 
 // ProcessResources Process all scanned cloud resources
-func ProcessResources(resources []*ResourceInstance, resourceType, resourceName string) {
+func ProcessResources(client *connectivity.TencentCloudClient, resources []*ResourceInstance, resourceType, resourceName string) {
 	data := make([][]string, len(resources))
+	resourceIdToSubAccountInfoMap := CloudDescribeBillResourceSummary(client, resources)
+
 	for i, r := range resources {
 		isResourceKeep := CheckResourceNameKeep(r.Name)
 		// some resources default to keep
@@ -48,6 +54,15 @@ func ProcessResources(resources []*ResourceInstance, resourceType, resourceName 
 			log.Printf("[CRITAL] compute resource creation duration error: %v", err.Error())
 		}
 
+		var userId, userName string
+		creatorAccountInfo := resourceIdToSubAccountInfoMap[r.Id]
+		if creatorAccountInfo != nil {
+			userId = creatorAccountInfo.UserId
+			userName = creatorAccountInfo.UserName
+		} else {
+			userName = RemarkResourceFree
+		}
+
 		data[i] = []string{
 			resourceType,
 			resourceName,
@@ -55,6 +70,8 @@ func ProcessResources(resources []*ResourceInstance, resourceType, resourceName 
 			r.Name,
 			isResourceKeep,
 			creationDuration,
+			userId,
+			userName,
 		}
 	}
 	err := WriteCsvFileData(SweeperResourceScanDir, ResourceScanHeader, data)
@@ -64,14 +81,27 @@ func ProcessResources(resources []*ResourceInstance, resourceType, resourceName 
 }
 
 // ProcessNonKeepResources Processing scanned non-keep cloud resources
-func ProcessNonKeepResources(nonKeepResources []*ResourceInstance, resourceType, resourceName string) {
+func ProcessNonKeepResources(client *connectivity.TencentCloudClient, nonKeepResources []*ResourceInstance, resourceType, resourceName string) {
 	data := make([][]string, len(nonKeepResources))
+	resourceIdToSubAccountInfoMap := CloudDescribeBillResourceSummary(client, nonKeepResources)
+
 	for i, r := range nonKeepResources {
+		var userId, userName string
+		creatorAccountInfo := resourceIdToSubAccountInfoMap[r.Id]
+		if creatorAccountInfo != nil {
+			userId = creatorAccountInfo.UserId
+			userName = creatorAccountInfo.UserName
+		} else {
+			userName = RemarkResourceFree
+		}
+
 		data[i] = []string{
 			resourceType,
 			resourceName,
 			r.Id,
 			r.Name,
+			userId,
+			userName,
 		}
 	}
 	err := WriteCsvFileData(SweeperNonKeepResourceScanDir, NonKeepResourceScanHeader, data)
