@@ -1,0 +1,3 @@
+```release-note:new-datasource
+tencentcloud_organization_org_share_area
+```
