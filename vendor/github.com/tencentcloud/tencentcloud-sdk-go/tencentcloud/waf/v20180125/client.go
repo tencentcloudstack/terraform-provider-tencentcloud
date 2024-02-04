@@ -1302,9 +1302,7 @@ func NewDeleteHostResponse() (response *DeleteHostResponse) {
 }
 
 // DeleteHost
-// 删除CLB-WAF防护域名
-//
-// 支持批量操作
+// 删除负载均衡型域名，支持批量操作。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1325,9 +1323,7 @@ func (c *Client) DeleteHost(request *DeleteHostRequest) (response *DeleteHostRes
 }
 
 // DeleteHost
-// 删除CLB-WAF防护域名
-//
-// 支持批量操作
+// 删除负载均衡型域名，支持批量操作。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1491,7 +1487,7 @@ func NewDeleteSpartaProtectionResponse() (response *DeleteSpartaProtectionRespon
 }
 
 // DeleteSpartaProtection
-// Saas型WAF删除防护域名
+// SaaS型WAF删除防护域名
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1503,7 +1499,7 @@ func (c *Client) DeleteSpartaProtection(request *DeleteSpartaProtectionRequest) 
 }
 
 // DeleteSpartaProtection
-// Saas型WAF删除防护域名
+// SaaS型WAF删除防护域名
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -4531,7 +4527,7 @@ func NewDescribeTlsVersionResponse() (response *DescribeTlsVersionResponse) {
 }
 
 // DescribeTlsVersion
-// 查询用户TLS版本
+// 查询SaaS型WAF支持的TLS版本
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4558,7 +4554,7 @@ func (c *Client) DescribeTlsVersion(request *DescribeTlsVersionRequest) (respons
 }
 
 // DescribeTlsVersion
-// 查询用户TLS版本
+// 查询SaaS型WAF支持的TLS版本
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6656,6 +6652,91 @@ func (c *Client) ModifyDomainIpv6StatusWithContext(ctx context.Context, request 
     return
 }
 
+func NewModifyDomainPostActionRequest() (request *ModifyDomainPostActionRequest) {
+    request = &ModifyDomainPostActionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyDomainPostAction")
+    
+    
+    return
+}
+
+func NewModifyDomainPostActionResponse() (response *ModifyDomainPostActionResponse) {
+    response = &ModifyDomainPostActionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDomainPostAction
+// 修改域名投递状态
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyDomainPostAction(request *ModifyDomainPostActionRequest) (response *ModifyDomainPostActionResponse, err error) {
+    return c.ModifyDomainPostActionWithContext(context.Background(), request)
+}
+
+// ModifyDomainPostAction
+// 修改域名投递状态
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyDomainPostActionWithContext(ctx context.Context, request *ModifyDomainPostActionRequest) (response *ModifyDomainPostActionResponse, err error) {
+    if request == nil {
+        request = NewModifyDomainPostActionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDomainPostAction require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDomainPostActionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDomainWhiteRuleRequest() (request *ModifyDomainWhiteRuleRequest) {
     request = &ModifyDomainWhiteRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6911,7 +6992,7 @@ func NewModifyHostResponse() (response *ModifyHostResponse) {
 }
 
 // ModifyHost
-// clb-waf编辑防护域名配置
+// 编辑负载均衡型WAF防护域名配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6933,7 +7014,7 @@ func (c *Client) ModifyHost(request *ModifyHostRequest) (response *ModifyHostRes
 }
 
 // ModifyHost
-// clb-waf编辑防护域名配置
+// 编辑负载均衡型WAF防护域名配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6986,7 +7067,7 @@ func NewModifyHostFlowModeResponse() (response *ModifyHostFlowModeResponse) {
 }
 
 // ModifyHostFlowMode
-// clb-waf 设置防护域名的流量模式
+// 设置负载均衡型WAF防护域名的流量模式，切换镜像模式和清洗模式
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -7007,7 +7088,7 @@ func (c *Client) ModifyHostFlowMode(request *ModifyHostFlowModeRequest) (respons
 }
 
 // ModifyHostFlowMode
-// clb-waf 设置防护域名的流量模式
+// 设置负载均衡型WAF防护域名的流量模式，切换镜像模式和清洗模式
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -7664,7 +7745,7 @@ func NewModifySpartaProtectionResponse() (response *ModifySpartaProtectionRespon
 }
 
 // ModifySpartaProtection
-// 修改域名配置
+// 编辑SaaS型WAF域名配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -7693,7 +7774,7 @@ func (c *Client) ModifySpartaProtection(request *ModifySpartaProtectionRequest) 
 }
 
 // ModifySpartaProtection
-// 修改域名配置
+// 编辑SaaS型WAF域名配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"

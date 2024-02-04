@@ -199,6 +199,8 @@ The following arguments are supported:
 * `is_keep_alive` - (Optional, String) Whether to enable keep-alive, 0 disable, 1 enable.
 * `is_websocket` - (Optional, Int) Is WebSocket support enabled. 1 means enabled, 0 does not.
 * `load_balance` - (Optional, String) Load balancing strategy, where 0 represents polling and 1 represents IP hash and 2 weighted round robin.
+* `post_ckafka_action` - (Optional, Int) 0-off, 1-on. default is 0.
+* `post_cls_action` - (Optional, Int) 0-off, 1-on. default is 0.
 * `private_key` - (Optional, String) Certificate key, When CertType=1, this parameter needs to be filled.
 * `proxy_read_timeout` - (Optional, Int) 300s.
 * `proxy_send_timeout` - (Optional, Int) 300s.
