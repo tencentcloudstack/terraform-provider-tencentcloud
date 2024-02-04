@@ -44,7 +44,14 @@ func GetResourceCreatorAccountInfo(client *connectivity.TencentCloudClient, reso
 	request.TopicId = helper.String(DefaultTopicId)
 
 	for _, r := range resources {
-		query := resourceCreateAction + QueryGrammarRule + r.Id
+		query := resourceCreateAction + QueryGrammarRule
+		if r.Id != "" {
+			query = query + r.Id
+		} else if r.Name != "" {
+			query = query + r.Name
+		} else {
+			continue
+		}
 		request.Query = helper.String(query)
 
 		response, err := client.UseClsClient().SearchLog(request)
