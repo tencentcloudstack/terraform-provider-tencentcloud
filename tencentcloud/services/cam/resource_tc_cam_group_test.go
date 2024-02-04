@@ -50,7 +50,7 @@ func init() {
 					CreatTime: *v.CreateTime,
 				})
 			}
-			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "cam", "group")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
 
 			for _, v := range groups {
 				name := *v.GroupName

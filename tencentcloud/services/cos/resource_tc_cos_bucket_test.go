@@ -52,7 +52,7 @@ func testSweepCosBuckets(region string) error {
 			CreatTime: v.CreationDate.Format("2006-01-02 15:04:05"),
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "cos", "bucket")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
 
 	//prefix := regexp.MustCompile("^(tf|test)-")
 

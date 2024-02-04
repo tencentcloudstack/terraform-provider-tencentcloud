@@ -55,7 +55,7 @@ func testSweepVpcInstance(region string) error {
 			CreatTime: v.CreateTime(),
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "vpc", "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateVpc")
 
 	for _, v := range instances {
 		instanceId := v.VpcId()

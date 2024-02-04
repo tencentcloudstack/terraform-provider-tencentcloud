@@ -55,7 +55,7 @@ func testSweepCvmInstance(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "cvm", "instance")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "RunInstances")
 
 	for _, v := range instances {
 		instanceId := *v.InstanceId

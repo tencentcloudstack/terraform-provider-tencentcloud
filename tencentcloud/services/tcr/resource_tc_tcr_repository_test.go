@@ -74,7 +74,7 @@ func testSweepTCRRepository(r string) error {
 			CreatTime: *v.CreationTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "tcr", "repository")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
 
 	for i := range repos {
 		n := repos[i]

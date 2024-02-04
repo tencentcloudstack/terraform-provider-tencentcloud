@@ -1,77 +1,88 @@
 package common
 
 import (
+	"encoding/json"
+	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
-	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 const (
-	BillingStartMonth = "2018-05"
+	// DefaultSearchLogStartTimestamp sync logs start time 2023-11-07 16:41:00
+	DefaultSearchLogStartTimestamp = 1699346460000
+
+	DefaultTopicId = "aef50d54-b17d-4782-8618-a7873203ec29"
 )
 
-// CreatorAccountInfo 创建者账号信息
-type CreatorAccountInfo struct {
-	UserId   string // 用户ID
-	UserName string // 用户名
+// ResourceAccountInfo 资源账户信息
+type ResourceAccountInfo struct {
+	ResourceType string // 资源类型
+	ResourceName string // 资源名称
+	AccountId    string // 主账号ID
+	PrincipalId  string // 用户ID
+	UserName     string // 用户名
 }
 
-// CloudDescribeBillResourceSummary get billing resource summary data
-func CloudDescribeBillResourceSummary(client *connectivity.TencentCloudClient, resources []*ResourceInstance) map[string]*CreatorAccountInfo {
-	resourceIdToSubAccountInfoMap := make(map[string]*CreatorAccountInfo)
+// GetResourceCreatorAccountInfo get resource creator user info
+func GetResourceCreatorAccountInfo(client *connectivity.TencentCloudClient, resourceCreateAction string, resources []*ResourceInstance) map[string]*ResourceAccountInfo {
+	resourceIdToSubAccountInfoMap := make(map[string]*ResourceAccountInfo)
+	if resourceCreateAction == "" {
+		return resourceIdToSubAccountInfoMap
+	}
 
-	request := billing.NewDescribeBillResourceSummaryRequest()
-	request.Offset = helper.Uint64(0)
-	request.Limit = helper.Uint64(1)
-	request.NeedRecordNum = helper.Int64(1)
+	request := cls.NewSearchLogRequest()
+	request.From = helper.IntInt64(DefaultSearchLogStartTimestamp)
+	request.To = helper.Int64(CurrentTimeMillisecond())
+	request.TopicId = helper.String(DefaultTopicId)
+	request.Query = helper.String(resourceCreateAction)
 
-	currentMonth := GetCurrentMonth()
 	for _, r := range resources {
-		if r.Id == "" {
-			continue
+		response, err := client.UseClsClient().SearchLog(request)
+		if err != nil {
+			log.Printf("[CRITAL] search resource[%v] log data error: %v", r.Id, err.Error())
+			return resourceIdToSubAccountInfoMap
+		}
+		if response == nil || response.Response == nil {
+			log.Printf("[CRITAL] search resource[%v] log data response is nil", r.Id)
+			return resourceIdToSubAccountInfoMap
+		}
+		if len(response.Response.Results) == 0 {
+			log.Printf("[CRITAL] search resource[%v] log data response results is empty", r.Id)
+			return resourceIdToSubAccountInfoMap
 		}
 
-		request.ResourceId = helper.String(r.Id)
-		prevMonth := currentMonth
-		for {
-			if prevMonth == BillingStartMonth {
-				break
+		result := response.Response.Results[0]
+		if result != nil {
+			var jsonData string
+			if len(*result.LogJson) > 2 {
+				jsonData = *result.LogJson
+			} else if len(*result.RawLog) > 2 {
+				jsonData = *result.RawLog
+			} else {
+				continue
 			}
 
-			request.Month = helper.String(prevMonth)
-			response, err := client.UseBillingClient().DescribeBillResourceSummary(request)
-			if err != nil {
-				log.Printf("[CRITAL] get billing resource[%v] summary data error: %v", r.Id, err.Error())
-				break
+			resourceAccountInfo := ParseLogJsonData(jsonData)
+			if resourceAccountInfo.PrincipalId == resourceAccountInfo.UserName &&
+				resourceAccountInfo.PrincipalId != resourceAccountInfo.AccountId {
+				userName := GetSubAccountUserName(client, resourceAccountInfo.PrincipalId)
+				resourceAccountInfo.UserName = userName
 			}
-			if response == nil || response.Response == nil {
-				log.Printf("[CRITAL] get billing resource[%v] summary data response is nil", r.Id)
-				break
-			}
-			if *response.Response.Total == 1 {
-				billResourceSummary := response.Response.ResourceSummarySet[0]
-				userName := CloudDescribeSubAccounts(client, *billResourceSummary.OperateUin)
-
-				resourceIdToSubAccountInfoMap[r.Id] = &CreatorAccountInfo{
-					UserId:   *billResourceSummary.OperateUin,
-					UserName: userName,
-				}
-				break
-			}
-
-			prevMonth = PrevMonth(prevMonth)
+			resourceIdToSubAccountInfoMap[r.Id] = resourceAccountInfo
 		}
 	}
+
 	return resourceIdToSubAccountInfoMap
 }
 
-// CloudDescribeSubAccounts get sub account data
-func CloudDescribeSubAccounts(client *connectivity.TencentCloudClient, uin string) string {
+// GetSubAccountUserName get sub account user name
+func GetSubAccountUserName(client *connectivity.TencentCloudClient, uin string) string {
 	uinNum, err := strconv.ParseUint(uin, 10, 64)
 	if err != nil {
 		log.Printf("[CRITAL] parse uin[%v] to uint64 type error: %v", uin, err.Error())
@@ -97,19 +108,66 @@ func CloudDescribeSubAccounts(client *connectivity.TencentCloudClient, uin strin
 	return *name
 }
 
-// GetCurrentMonth get current month
-func GetCurrentMonth() string {
-	currentTime := time.Now()
-	formattedMonth := currentTime.Format("2006-01")
-	return formattedMonth
+// CurrentTimeMillisecond get the current millisecond timestamp
+func CurrentTimeMillisecond() int64 {
+	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
-// PrevMonth get prev month
-func PrevMonth(date string) string {
-	t, _ := time.Parse("2006-01", date)
-	t = t.AddDate(0, -1, 0)
-	if t.Before(time.Date(2018, 5, 1, 0, 0, 0, 0, time.UTC)) {
-		return BillingStartMonth
+func ParseLogJsonData(jsonData string) *ResourceAccountInfo {
+	if jsonData == "" {
+		return nil
 	}
-	return t.Format("2006-01")
+
+	var data map[string]interface{}
+	err := json.Unmarshal([]byte(jsonData), &data)
+	if err != nil {
+		log.Printf("[CRITAL] parse log json data[%v] error: %v", jsonData, err.Error())
+		return nil
+	}
+
+	resourceType := ""
+	if v, ok := data["resourceType"]; ok {
+		resourceType = v.(string)
+	}
+	resourceName := ""
+	if v, ok := data["resourceName"]; ok {
+		resourceName = v.(string)
+		if resourceName != "" {
+			resourceName = strings.Split(resourceName, "/")[0]
+		}
+	}
+	accountId, principalId, userName := parseUserIdentityFields(data)
+
+	return &ResourceAccountInfo{
+		ResourceType: resourceType,
+		ResourceName: resourceName,
+		AccountId:    accountId,
+		PrincipalId:  principalId,
+		UserName:     userName,
+	}
+}
+
+func parseUserIdentityFields(data map[string]interface{}) (accountId, principalId, userName string) {
+	if v, ok := data["userIdentity.accountId"]; ok {
+		accountId = v.(string)
+	}
+	if v, ok := data["userIdentity.principalId"]; ok {
+		principalId = v.(string)
+	}
+	if v, ok := data["userIdentity.userName"]; ok {
+		userName = v.(string)
+	}
+	if v, ok := data["userIdentity"]; ok {
+		switch v := v.(type) {
+		case string:
+			var userIdentity map[string]string
+			err := json.Unmarshal([]byte(v), &userIdentity)
+			if err == nil {
+				accountId = userIdentity["accountId"]
+				principalId = userIdentity["principalId"]
+				userName = userIdentity["userName"]
+			}
+		}
+	}
+	return
 }

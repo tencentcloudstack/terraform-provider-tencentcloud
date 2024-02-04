@@ -58,7 +58,7 @@ func testSweepHaVipInstance(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "vpc", "ha_vip")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
 
 	for _, v := range instances {
 		instanceId := *v.HaVipId

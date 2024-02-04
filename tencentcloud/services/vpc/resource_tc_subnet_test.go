@@ -56,7 +56,7 @@ func testSweepSubnet(region string) error {
 			CreatTime: v.CreateTime(),
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "vpc", "subnet")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
 
 	for _, v := range instances {
 

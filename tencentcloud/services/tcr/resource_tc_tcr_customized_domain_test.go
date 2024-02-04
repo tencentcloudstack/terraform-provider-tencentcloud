@@ -50,7 +50,7 @@ func testSweepTcrCustomizedDomain(r string) error {
 			Name: *v.DomainName,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "tcr", "customized_domain")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
 
 	for _, v := range domains {
 		delName := *v.DomainName

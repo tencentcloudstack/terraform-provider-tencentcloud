@@ -56,7 +56,7 @@ func testSweepCcnInstance(region string) error {
 			CreatTime: v.CreateTime(),
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "ccn", "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
 
 	for _, v := range instances {
 		instanceId := v.CcnId()
