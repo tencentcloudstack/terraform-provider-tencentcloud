@@ -13,9 +13,9 @@ import (
 
 func ResourceTencentCloudAPIGatewayUpdateService() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudApigatewayUpdateServiceCreate,
-		Read:   resourceTencentCloudApigatewayUpdateServiceRead,
-		Delete: resourceTencentCloudApigatewayUpdateServiceDelete,
+		Create: resourceTencentCloudAPIGatewayUpdateServiceCreate,
+		Read:   resourceTencentCloudAPIGatewayUpdateServiceRead,
+		Delete: resourceTencentCloudAPIGatewayUpdateServiceDelete,
 
 		Schema: map[string]*schema.Schema{
 			"service_id": {
@@ -41,8 +41,8 @@ func ResourceTencentCloudAPIGatewayUpdateService() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudApigatewayUpdateServiceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_apigateway_update_service.create")()
+func resourceTencentCloudAPIGatewayUpdateServiceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_api_gateway_update_service.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -81,18 +81,18 @@ func resourceTencentCloudApigatewayUpdateServiceCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(serviceId)
-	return resourceTencentCloudApigatewayUpdateServiceRead(d, meta)
+	return resourceTencentCloudAPIGatewayUpdateServiceRead(d, meta)
 }
 
-func resourceTencentCloudApigatewayUpdateServiceRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_apigateway_update_service.read")()
+func resourceTencentCloudAPIGatewayUpdateServiceRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_api_gateway_update_service.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudApigatewayUpdateServiceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_apigateway_update_service.delete")()
+func resourceTencentCloudAPIGatewayUpdateServiceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_api_gateway_update_service.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
