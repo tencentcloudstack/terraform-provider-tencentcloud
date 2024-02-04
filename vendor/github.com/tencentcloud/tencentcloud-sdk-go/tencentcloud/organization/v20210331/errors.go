@@ -17,7 +17,10 @@ package v20210331
 const (
 	// 此产品的特有错误码
 
-	// 该帐号已被注册。
+	// 操作失败。
+	FAILEDOPERATION = "FailedOperation"
+
+	// 该账号已被注册。
 	FAILEDOPERATION_ACCOUNTALREADYREGISTER = "FailedOperation.AccountAlreadyRegister"
 
 	// 用户未实名。
@@ -83,6 +86,9 @@ const (
 	// 查询策略失败。
 	FAILEDOPERATION_GETPOLICYDETAIL = "FailedOperation.GetPolicyDetail"
 
+	// 共享单元存在不同的共享资源类型
+	FAILEDOPERATION_HASDIFFERENTRESOURCETYPE = "FailedOperation.HasDifferentResourceType"
+
 	// 邮箱绑定失败。
 	FAILEDOPERATION_MEMBERBINDEMAILERROR = "FailedOperation.MemberBindEmailError"
 
@@ -107,7 +113,7 @@ const (
 	// 成员授权策略名已存在。
 	FAILEDOPERATION_MEMBERPOLICYNAMEEXIST = "FailedOperation.MemberPolicyNameExist"
 
-	// 成员正在共享资源。
+	// 成员正在共享资源，不允许退出组织。
 	FAILEDOPERATION_MEMBERSHARERESOURCE = "FailedOperation.MemberShareResource"
 
 	// 企业组织单元成员不为空。
@@ -119,7 +125,7 @@ const (
 	// 操作策略失败。
 	FAILEDOPERATION_OPERATEPOLICY = "FailedOperation.OperatePolicy"
 
-	// 成员是主体管理账号不允许删除。
+	// 成员是主体管理账号，不允许退出组织。
 	FAILEDOPERATION_ORGANIZATIONAUTHMANAGENOTALLOWDELETE = "FailedOperation.OrganizationAuthManageNotAllowDelete"
 
 	// 企业组织已经存在。
@@ -161,6 +167,9 @@ const (
 	// 集团策略不是禁用状态。
 	FAILEDOPERATION_ORGANIZATIONPOLICYISNOTDISABLED = "FailedOperation.OrganizationPolicyIsNotDisabled"
 
+	// 调用经销系统报错。
+	FAILEDOPERATION_PARTNERMANAGEMENTERR = "FailedOperation.PartnerManagementErr"
+
 	// 代付者不合法。
 	FAILEDOPERATION_PAYUINILLEGAL = "FailedOperation.PayUinIllegal"
 
@@ -173,11 +182,26 @@ const (
 	// 退出共享单元失败。
 	FAILEDOPERATION_QUITESHAREUNIT = "FailedOperation.QuiteShareUnit"
 
+	// 资源超过最大上限。
+	FAILEDOPERATION_RESOURCEOVERLIMIT = "FailedOperation.ResourceOverLimit"
+
+	// 共享地域不存在。
+	FAILEDOPERATION_SHAREAREANOTEXIST = "FailedOperation.ShareAreaNotExist"
+
 	// 成员正在使用共享资源。
 	FAILEDOPERATION_SHARERESOURCEMEMBERINUSE = "FailedOperation.ShareResourceMemberInUse"
 
+	// 共享资源不存在。
+	FAILEDOPERATION_SHARERESOURCENOTEXIST = "FailedOperation.ShareResourceNotExist"
+
+	// 共享资源类型不存在。
+	FAILEDOPERATION_SHARERESOURCETYPENOTEXIST = "FailedOperation.ShareResourceTypeNotExist"
+
 	// 共享单元不为空。
 	FAILEDOPERATION_SHAREUNITNOTEMPTY = "FailedOperation.ShareUnitNotEmpty"
+
+	// 共享单元不存在。
+	FAILEDOPERATION_SHAREUNITNOTEXIST = "FailedOperation.ShareUnitNotExist"
 
 	// 存在不属于当前组织的uin。
 	FAILEDOPERATION_SOMEUINSNOTINORGANIZATION = "FailedOperation.SomeUinsNotInOrganization"
@@ -236,8 +260,20 @@ const (
 	// 手机超过绑定上限。
 	LIMITEXCEEDED_PHONENUMBOUND = "LimitExceeded.PhoneNumBound"
 
+	// 当次操作的共享成员超过上限。
+	LIMITEXCEEDED_SHAREUNITMEMBEROVERLIMIT = "LimitExceeded.ShareUnitMemberOverLimit"
+
+	// 当次操作的共享资源超过上限。
+	LIMITEXCEEDED_SHAREUNITRESOURCEOVERLIMIT = "LimitExceeded.ShareUnitResourceOverLimit"
+
 	// 修改成员绑定信息超过限制。
 	LIMITEXCEEDED_UPDATEEMAILBINDOVERLIMIT = "LimitExceeded.UpdateEmailBindOverLimit"
+
+	// 操作被拒绝。
+	OPERATIONDENIED = "OperationDenied"
+
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
 
 	// 邮箱绑定记录不存在。
 	RESOURCENOTFOUND_EMAILBINDRECORDNOTEXIST = "ResourceNotFound.EmailBindRecordNotExist"
@@ -250,6 +286,9 @@ const (
 
 	// 组织成员策略不存在。
 	RESOURCENOTFOUND_MEMBERPOLICYNOTEXIST = "ResourceNotFound.MemberPolicyNotExist"
+
+	// 认证主体不存在。
+	RESOURCENOTFOUND_ORGANIZATIONAUTHRELATIONNOTEXIST = "ResourceNotFound.OrganizationAuthRelationNotExist"
 
 	// 组织身份不存在。
 	RESOURCENOTFOUND_ORGANIZATIONIDENTITYNOTEXIST = "ResourceNotFound.OrganizationIdentityNotExist"
@@ -272,8 +311,14 @@ const (
 	// 用户不存在。
 	RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 
+	// 资源不可用。
+	RESOURCEUNAVAILABLE = "ResourceUnavailable"
+
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// 代付者财务状态异常，不支持代付费。
+	UNSUPPORTEDOPERATION_ABNORMALFINANCIALSTATUSOFADMIN = "UnsupportedOperation.AbnormalFinancialStatusOfAdmin"
 
 	// 不允许添加代付关系。
 	UNSUPPORTEDOPERATION_ADDDELEGATEPAYERNOTALLOW = "UnsupportedOperation.AddDelegatePayerNotAllow"
@@ -284,11 +329,14 @@ const (
 	// 创建的成员不允许创建组织。
 	UNSUPPORTEDOPERATION_CREATEMEMBERNOTALLOWCREATEORGANIZATION = "UnsupportedOperation.CreateMemberNotAllowCreateOrganization"
 
-	// 创建的成员不允许删除。
+	// 创建的成员不允许移除组织。
 	UNSUPPORTEDOPERATION_CREATEMEMBERNOTALLOWDELETE = "UnsupportedOperation.CreateMemberNotAllowDelete"
 
 	// 创建的成员不允许退出。
 	UNSUPPORTEDOPERATION_CREATEMEMBERNOTALLOWQUIT = "UnsupportedOperation.CreateMemberNotAllowQuit"
+
+	// 成员删除许可未开启。
+	UNSUPPORTEDOPERATION_DELETEACCOUNTDISABLED = "UnsupportedOperation.DeleteAccountDisabled"
 
 	// 不允许删除代付关系。
 	UNSUPPORTEDOPERATION_DELETEDELEGATEPAYERNOTALLOW = "UnsupportedOperation.DeleteDelegatePayerNotAllow"
@@ -302,11 +350,17 @@ const (
 	// 用户类型不一致。
 	UNSUPPORTEDOPERATION_INCONSISTENTUSERTYPES = "UnsupportedOperation.InconsistentUserTypes"
 
+	// 邀请的成员不允许删除。
+	UNSUPPORTEDOPERATION_INVITEACCOUNTNOTALLOWDELETE = "UnsupportedOperation.InviteAccountNotAllowDelete"
+
 	// 调用经管系统报错。
 	UNSUPPORTEDOPERATION_MANAGEMENTSYSTEMERROR = "UnsupportedOperation.ManagementSystemError"
 
 	// 成员账户欠费。
 	UNSUPPORTEDOPERATION_MEMBERACCOUNTARREARS = "UnsupportedOperation.MemberAccountArrears"
+
+	// 成员账号存在资源，不允许删除。
+	UNSUPPORTEDOPERATION_MEMBERACCOUNTEXISTRESOURCE = "UnsupportedOperation.MemberAccountExistResource"
 
 	// 成员存在优惠继承。
 	UNSUPPORTEDOPERATION_MEMBERDISCOUNTINHERITEXISTED = "UnsupportedOperation.MemberDiscountInheritExisted"
@@ -317,7 +371,7 @@ const (
 	// 成员设置了操作审批,不允许删除。
 	UNSUPPORTEDOPERATION_MEMBEREXISTOPERATEPROCESSNOTALLOWDELETE = "UnsupportedOperation.MemberExistOperateProcessNotAllowDelete"
 
-	// 组织成员被委派集团服务，不允许退出。
+	// 成员是集团服务委派管理员，不允许退出组织。
 	UNSUPPORTEDOPERATION_MEMBEREXISTSERVICENOTALLOWDELETE = "UnsupportedOperation.MemberExistServiceNotAllowDelete"
 
 	// 账号是代理商或代客。
@@ -328,6 +382,9 @@ const (
 
 	// 成员不支持主动退出。
 	UNSUPPORTEDOPERATION_MEMBERNOTALLOWQUIT = "UnsupportedOperation.MemberNotAllowQuit"
+
+	// 成员不支持操作。
+	UNSUPPORTEDOPERATION_MEMBERUNSUPPORTEDOPERATION = "UnsupportedOperation.MemberUnsupportedOperation"
 
 	// 存在在途订单。
 	UNSUPPORTEDOPERATION_ORDERINPROGRESSEXISTED = "UnsupportedOperation.OrderInProgressExisted"
@@ -340,4 +397,7 @@ const (
 
 	// 代付者存在账户级优惠。
 	UNSUPPORTEDOPERATION_PAYEREXISTACCOUNTLEVELDISCOUNTINHERIT = "UnsupportedOperation.PayerExistAccountLevelDiscountInherit"
+
+	// 存在二级经销商子客，不支持代付费。
+	UNSUPPORTEDOPERATION_SECONDARYDISTRIBUTORSUBCLIENTEXISTED = "UnsupportedOperation.SecondaryDistributorSubClientExisted"
 )
