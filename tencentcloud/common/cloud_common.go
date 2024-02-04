@@ -18,6 +18,8 @@ const (
 	DefaultSearchLogStartTimestamp = 1699346460000
 
 	DefaultTopicId = "aef50d54-b17d-4782-8618-a7873203ec29"
+
+	QueryGrammarRule = " AND "
 )
 
 // ResourceAccountInfo 资源账户信息
@@ -40,9 +42,11 @@ func GetResourceCreatorAccountInfo(client *connectivity.TencentCloudClient, reso
 	request.From = helper.IntInt64(DefaultSearchLogStartTimestamp)
 	request.To = helper.Int64(CurrentTimeMillisecond())
 	request.TopicId = helper.String(DefaultTopicId)
-	request.Query = helper.String(resourceCreateAction)
 
 	for _, r := range resources {
+		query := resourceCreateAction + QueryGrammarRule + r.Id
+		request.Query = helper.String(query)
+
 		response, err := client.UseClsClient().SearchLog(request)
 		if err != nil {
 			log.Printf("[CRITAL] search resource[%v] log data error: %v", r.Id, err.Error())

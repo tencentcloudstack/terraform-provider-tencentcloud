@@ -87,7 +87,7 @@ func init() {
 				instanceIds = append(instanceIds, worker.InstanceId)
 			}
 
-			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateClusterInstances")
 
 			err = service.DeleteClusterInstances(ctx, clusterId, instanceIds)
 			if err != nil {

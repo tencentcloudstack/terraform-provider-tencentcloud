@@ -58,7 +58,7 @@ func testSweepTcrImmutableTagRule(r string) error {
 			Id: helper.Int64ToStr(*v.RuleId),
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateImmutableTagRules")
 
 	for _, rule := range rules {
 		ruleId := helper.Int64ToStr(*rule.RuleId)

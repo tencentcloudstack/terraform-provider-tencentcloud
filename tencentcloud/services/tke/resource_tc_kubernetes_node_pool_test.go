@@ -79,7 +79,7 @@ func testNodePoolSweep(region string) error {
 			Name: *v.Name,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateClusterNodePool")
 
 	for i := range nodePools {
 		poolId := *nodePools[i].NodePoolId

@@ -52,7 +52,7 @@ func init() {
 					CreatTime: v.CreatedTime,
 				})
 			}
-			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCluster")
 
 			for _, v := range clusters {
 				id := v.ClusterId

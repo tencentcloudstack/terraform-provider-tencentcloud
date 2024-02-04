@@ -55,7 +55,7 @@ func testSweepClsTopic(region string) error {
 			CreatTime: *v.CreateTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateTopic")
 
 	for _, v := range instances {
 		instanceId := v.TopicId

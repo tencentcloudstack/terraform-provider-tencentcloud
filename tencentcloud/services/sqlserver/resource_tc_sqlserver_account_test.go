@@ -59,7 +59,7 @@ func init() {
 					CreatTime: *v.CreateTime,
 				})
 			}
-			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateAccount")
 
 			for i := range accounts {
 				account := accounts[i]

@@ -57,7 +57,7 @@ func testSweepVpnGateway(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateVpnGateway")
 
 	for _, v := range instances {
 

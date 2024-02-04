@@ -51,7 +51,7 @@ func testSweepAsAttachment(r string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateAutoScalingGroup")
 
 	for _, v := range scalingGroups {
 		scalingGroupId := *v.AutoScalingGroupId

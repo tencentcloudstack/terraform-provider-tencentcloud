@@ -54,7 +54,7 @@ func testSweepSecurityGroups(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSecurityGroup")
 
 	for _, v := range sgs {
 		name := *v.SecurityGroupName

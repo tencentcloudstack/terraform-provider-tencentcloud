@@ -68,7 +68,7 @@ func init() {
 					CreatTime: *v.CreationTime,
 				})
 			}
-			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNamespace")
 
 			for i := range namespaces {
 				n := namespaces[i]

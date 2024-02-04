@@ -51,7 +51,7 @@ func init() {
 					CreatTime: *v.CreateTime,
 				})
 			}
-			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateDBInstances")
 
 			err = batchDeleteSQLServerInstances(ctx, service, instances)
 

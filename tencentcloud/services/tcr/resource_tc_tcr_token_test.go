@@ -67,7 +67,7 @@ func init() {
 					CreatTime: *v.CreatedAt,
 				})
 			}
-			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateInstanceToken")
 
 			for i := range tokens {
 				token := tokens[i]

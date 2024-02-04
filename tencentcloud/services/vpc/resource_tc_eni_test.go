@@ -56,7 +56,7 @@ func testSweepEniInstance(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNetworkInterface")
 
 	for _, v := range instances {
 		instanceId := *v.NetworkInterfaceId

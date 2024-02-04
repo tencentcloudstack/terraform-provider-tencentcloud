@@ -56,7 +56,7 @@ func testSweepNatInstance(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNatGateway")
 
 	for _, v := range instances {
 		instanceId := *v.NatGatewayId
