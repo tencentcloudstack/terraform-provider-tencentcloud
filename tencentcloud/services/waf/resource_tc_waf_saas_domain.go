@@ -255,6 +255,20 @@ func ResourceTencentCloudWafSaasDomain() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedIntValue(CLS_STATUS),
 				Description:  "Whether to enable access logs, 1 enable, 0 disable.",
 			},
+			"post_cls_action": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      POST_CLS_ACTION_0,
+				ValidateFunc: tccommon.ValidateAllowedIntValue(POST_CLS_ACTION),
+				Description:  "0-off, 1-on. default is 0.",
+			},
+			"post_ckafka_action": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      POST_CKAFKA_ACTION_0,
+				ValidateFunc: tccommon.ValidateAllowedIntValue(POST_CKAFKA_ACTION),
+				Description:  "0-off, 1-on. default is 0.",
+			},
 			//"ipv6_status": {
 			//	Type:         schema.TypeInt,
 			//	Optional:     true,
@@ -296,6 +310,8 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		apiSafeStatus    uint64
 		clsStatus        uint64
 		protectionStatus uint64
+		postCLSAction    int
+		postCKafkaAction int
 		isCdn            int
 		//ipv6Status    int64
 
@@ -710,6 +726,38 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	// set domain post
+	if v, ok := d.GetOkExists("post_cls_action"); ok {
+		postCLSAction = v.(int)
+	}
+
+	if v, ok := d.GetOkExists("post_ckafka_action"); ok {
+		postCKafkaAction = v.(int)
+	}
+
+	if postCLSAction == POST_CLS_ACTION_1 || postCKafkaAction == POST_CKAFKA_ACTION_1 {
+		modifyDomainPostActionRequest := waf.NewModifyDomainPostActionRequest()
+		modifyDomainPostActionRequest.Domain = helper.String(domain)
+		modifyDomainPostActionRequest.PostCLSAction = helper.IntInt64(postCLSAction)
+		modifyDomainPostActionRequest.PostCLSAction = helper.IntInt64(postCKafkaAction)
+
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafClient().ModifyDomainPostAction(modifyDomainPostActionRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainPostActionRequest.GetAction(), modifyDomainPostActionRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify waf clbDomain post action failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	// set ipv6
 	//if v, ok := d.GetOkExists("ipv6_status"); ok {
 	//	tmpIpv6Status := v.(int)
@@ -998,13 +1046,15 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = tccommon.GetLogId(tccommon.ContextNil)
-		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service       = WafService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		request       = waf.NewModifySpartaProtectionRequest()
-		botStatus     uint64
-		apiSafeStatus uint64
-		clsStatus     uint64
+		logId            = tccommon.GetLogId(tccommon.ContextNil)
+		ctx              = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service          = WafService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request          = waf.NewModifySpartaProtectionRequest()
+		botStatus        uint64
+		apiSafeStatus    uint64
+		clsStatus        uint64
+		postCLSAction    int
+		postCKafkaAction int
 		//ipv6Status    int64
 		loadBalance string
 		isCdn       int
@@ -1461,6 +1511,41 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 				return err
 			}
 		}
+	}
+
+	// set domain post
+	if d.HasChange("post_cls_action") || d.HasChange("post_ckafka_action") {
+		if v, ok := d.GetOkExists("post_cls_action"); ok {
+			postCLSAction = v.(int)
+		}
+
+		if v, ok := d.GetOkExists("post_ckafka_action"); ok {
+			postCKafkaAction = v.(int)
+		}
+
+		if postCLSAction == POST_CLS_ACTION_1 || postCKafkaAction == POST_CKAFKA_ACTION_1 {
+			modifyDomainPostActionRequest := waf.NewModifyDomainPostActionRequest()
+			modifyDomainPostActionRequest.Domain = helper.String(domain)
+			modifyDomainPostActionRequest.PostCLSAction = helper.IntInt64(postCLSAction)
+			modifyDomainPostActionRequest.PostCLSAction = helper.IntInt64(postCKafkaAction)
+
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafClient().ModifyDomainPostAction(modifyDomainPostActionRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainPostActionRequest.GetAction(), modifyDomainPostActionRequest.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify waf clbDomain post action failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+
 	}
 
 	// set ipv6
