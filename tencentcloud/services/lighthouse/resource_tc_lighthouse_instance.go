@@ -583,13 +583,6 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s operate lighthouse modifyInstanceRenewFlag failed, reason:%+v", logId, err)
 			return err
 		}
-		service := LightHouseService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*tccommon.ReadRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(id, []string{}))
-
-		if _, e := conf.WaitForState(); e != nil {
-			return e
-		}
 	}
 
 	if d.HasChange("zone") {
