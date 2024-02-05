@@ -9,9 +9,3 @@ resource "tencentcloud_organization_policy_sub_account_attachment" "policy_sub_a
   policy_id                = 144256499
 }
 ```
-Import
-
-organization policy_sub_account_attachment can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_organization_policy_sub_account_attachment.policy_sub_account_attachment policyId#memberUin#orgSubAccountUin
-```
