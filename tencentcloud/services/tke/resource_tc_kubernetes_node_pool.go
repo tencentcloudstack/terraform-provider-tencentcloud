@@ -65,7 +65,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      svcas.SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 			ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
-			Description:  "Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.",
+			Description:  "Type of a CVM disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`. Default is `CLOUD_PREMIUM`.",
 		},
 		"system_disk_size": {
 			Type:         schema.TypeInt,
@@ -86,7 +86,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 						//ForceNew:     true,
 						Default:      svcas.SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
-						Description:  "Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
+						Description:  "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
 					},
 					"disk_size": {
 						Type:     schema.TypeInt,
