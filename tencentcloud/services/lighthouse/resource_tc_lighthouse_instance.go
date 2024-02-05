@@ -23,7 +23,12 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 		Delete: resourceTencentCloudLighthouseInstanceDelete,
 		Update: resourceTencentCloudLighthouseInstanceUpdate,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				_ = d.Set("is_update_bundle_id_auto_voucher", false)
+				_ = d.Set("isolate_data_disk", true)
+
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"bundle_id": {
@@ -44,7 +49,7 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 			},
 			"period": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				Description: "Subscription period in months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.",
 			},
 			"renew_flag": {
@@ -61,6 +66,7 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 			"zone": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "List of availability zones. A random AZ is selected by default.",
 			},
 			"dry_run": {
@@ -206,6 +212,18 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Firewall template ID. If this parameter is not specified, the default firewall policy is used.",
 			},
+			"public_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed:    true,
+				Description: "Public addresses.",
+			},
+			"private_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed:    true,
+				Description: "Private addresses.",
+			},
 		},
 	}
 }
@@ -259,7 +277,7 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		if v, ok := loginConfigurationMap["auto_generate_password"]; ok {
 			loginConfiguration.AutoGeneratePassword = helper.String(v.(string))
 		}
-		if v, ok := loginConfigurationMap["password"]; ok {
+		if v, ok := loginConfigurationMap["password"]; ok && v.(string) != "" {
 			loginConfiguration.Password = helper.String(v.(string))
 		}
 		request.LoginConfiguration = &loginConfiguration
@@ -404,6 +422,14 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 
 	if instance.Zone != nil {
 		_ = d.Set("zone", instance.Zone)
+	}
+
+	if len(instance.PublicAddresses) > 0 {
+		_ = d.Set("public_addresses", instance.PublicAddresses)
+	}
+
+	if len(instance.PrivateAddresses) > 0 {
+		_ = d.Set("private_addresses", instance.PrivateAddresses)
 	}
 
 	return nil
@@ -556,13 +582,6 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			log.Printf("[CRITAL]%s operate lighthouse modifyInstanceRenewFlag failed, reason:%+v", logId, err)
 			return err
-		}
-		service := LightHouseService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*tccommon.ReadRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(id, []string{}))
-
-		if _, e := conf.WaitForState(); e != nil {
-			return e
 		}
 	}
 

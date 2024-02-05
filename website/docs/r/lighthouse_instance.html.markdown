@@ -93,7 +93,6 @@ The following arguments are supported:
 * `blueprint_id` - (Required, String) ID of the Lighthouse image.
 * `bundle_id` - (Required, String) ID of the Lighthouse package.
 * `instance_name` - (Required, String) The display name of the Lighthouse instance.
-* `period` - (Required, Int) Subscription period in months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.
 * `renew_flag` - (Required, String) Auto-Renewal flag. Valid values: NOTIFY_AND_AUTO_RENEW: notify upon expiration and renew automatically; NOTIFY_AND_MANUAL_RENEW: notify upon expiration but do not renew automatically. You need to manually renew DISABLE_NOTIFY_AND_AUTO_RENEW: neither notify upon expiration nor renew automatically. Default value: NOTIFY_AND_MANUAL_RENEW.
 * `client_token` - (Optional, String) A unique string supplied by the client to ensure that the request is idempotent. Its maximum length is 64 ASCII characters. If this parameter is not specified, the idem-potency of the request cannot be guaranteed.
 * `containers` - (Optional, List) Configuration of the containers to create.
@@ -102,6 +101,7 @@ The following arguments are supported:
 * `is_update_bundle_id_auto_voucher` - (Optional, Bool) Whether the voucher is deducted automatically when update bundle id. Value range: `true`: indicates automatic deduction of vouchers, `false`: does not automatically deduct vouchers. Default value: `false`.
 * `isolate_data_disk` - (Optional, Bool) Whether to return the mounted data disk. `true`: returns both the instance and the mounted data disk; `false`: returns the instance and no longer returns its mounted data disk. Default: `true`.
 * `login_configuration` - (Optional, List) Login password of the instance. It is only available for Windows instances. If it is not specified, it means that the user choose to set the login password after the instance creation.
+* `period` - (Optional, Int) Subscription period in months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.
 * `permit_default_key_pair_login` - (Optional, String, **Deprecated**) It has been deprecated from version v1.81.8. Use `tencentcloud_lighthouse_key_pair_attachment` manage key pair. Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.
 * `zone` - (Optional, String) List of availability zones. A random AZ is selected by default.
 
@@ -141,7 +141,8 @@ The `volumes` object of `containers` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `private_addresses` - Private addresses.
+* `public_addresses` - Public addresses.
 
 
 ## Import
