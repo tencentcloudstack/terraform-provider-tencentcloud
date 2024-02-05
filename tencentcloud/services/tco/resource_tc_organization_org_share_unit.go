@@ -41,6 +41,12 @@ func ResourceTencentCloudOrganizationOrgShareUnit() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Shared unit description. Up to 128 characters.",
 			},
+
+			"unit_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Shared unit region. The regions that support sharing can be obtained through the DescribeShareAreas interface.",
+			},
 		},
 	}
 }
@@ -126,6 +132,10 @@ func resourceTencentCloudOrganizationOrgShareUnitRead(d *schema.ResourceData, me
 		_ = d.Set("area", orgShareUnit.Area)
 	}
 
+	if orgShareUnit.UnitId != nil {
+		_ = d.Set("unit_id", orgShareUnit.UnitId)
+	}
+
 	if orgShareUnit.Description != nil {
 		_ = d.Set("description", orgShareUnit.Description)
 	}
@@ -141,11 +151,13 @@ func resourceTencentCloudOrganizationOrgShareUnitUpdate(d *schema.ResourceData, 
 
 	request := organization.NewUpdateShareUnitRequest()
 
-	unitId := d.Id()
-
+	split := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(split) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	unitId := split[1]
 	request.UnitId = &unitId
-
-	immutableArgs := []string{"area"}
+	immutableArgs := []string{"area", "unit_id"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -195,8 +207,11 @@ func resourceTencentCloudOrganizationOrgShareUnitDelete(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	unitId := d.Id()
-
+	split := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(split) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	unitId := split[1]
 	if err := service.DeleteOrganizationOrgShareUnitById(ctx, unitId); err != nil {
 		return err
 	}
