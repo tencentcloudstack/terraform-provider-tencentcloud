@@ -42,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 organization org_share_unit can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_organization_org_share_unit.org_share_unit org_share_unit_id
+terraform import tencentcloud_organization_org_share_unit.org_share_unit area#unit_id
 ```
 
