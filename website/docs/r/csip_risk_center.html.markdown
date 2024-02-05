@@ -49,38 +49,39 @@ resource "tencentcloud_csip_risk_center" "example" {
 ### If task_mode is 2
 
 ```hcl
-resource "tencentcloud_csip_risk_center" "example" {
+resource "tencentcloud_csip_risk_center" "example1" {
   task_name       = "tf_example"
   scan_asset_type = 2
-  scan_item       = ["port", "poc"]
+  scan_item       = ["port", "configrisk", "poc", "weakpass"]
   task_mode       = 2
 
   assets {
-    asset_name    = "iac-test"
-    instance_type = "1"
-    asset_type    = "PublicIp"
-    asset         = "49.232.172.248"
-    region        = "ap-beijing"
-  }
-
-  assets {
-    asset_name    = "iac-test"
-    instance_type = "POSTGRES"
-    asset_type    = "Db"
-    asset         = "postgres-fnexv5bj"
+    asset_name    = "sub machine of tke"
+    instance_type = "Instance"
+    asset_type    = "CVM"
+    asset         = "ins-9p3dkkwy"
     region        = "ap-guangzhou"
   }
 
   task_advance_cfg {
     port_risk {
       check_type = 0
-      detail     = "22、8080、80、443、3380、3389常见流量端口"
+      detail     = "22、8080、80、443、3380、3389常见流量端"
       port_sets  = "常见端口"
       enable     = 1
     }
     vul_risk {
-      risk_id = "b52a4fcc1f24fa323b87cc41f370aa43"
+      risk_id = "f79e371ce5f644f0fdc72a143144c4b2"
       enable  = 1
+    }
+    weak_pwd_risk {
+      check_item_id = 50
+      enable        = 1
+    }
+    cfg_risk {
+      item_id       = "02c9337f-a6da-49b4-8858-64663a02b79f"
+      enable        = 1
+      resource_type = "cdb;rds"
     }
   }
 }
