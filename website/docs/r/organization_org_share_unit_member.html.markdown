@@ -48,11 +48,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-organization org_share_unit_member can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_organization_org_share_unit_member.org_share_unit_member org_share_unit_member_id
-```
-
