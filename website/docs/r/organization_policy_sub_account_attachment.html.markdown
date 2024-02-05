@@ -43,10 +43,3 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time.
 
 
-## Import
-
-organization policy_sub_account_attachment can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_organization_policy_sub_account_attachment.policy_sub_account_attachment policyId#memberUin#orgSubAccountUin
-```
-

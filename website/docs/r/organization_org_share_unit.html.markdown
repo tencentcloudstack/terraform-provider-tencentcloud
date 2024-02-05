@@ -37,3 +37,11 @@ In addition to all arguments above, the following attributes are exported:
 * `unit_id` - Shared unit region. The regions that support sharing can be obtained through the DescribeShareAreas interface.
 
 
+## Import
+
+organization org_share_unit can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_organization_org_share_unit.org_share_unit org_share_unit_id
+```
+

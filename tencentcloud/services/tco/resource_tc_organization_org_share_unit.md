@@ -10,3 +10,10 @@ resource "tencentcloud_organization_org_share_unit" "org_share_unit" {
 }
 ```
 
+Import
+
+organization org_share_unit can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_organization_org_share_unit.org_share_unit org_share_unit_id
+```
