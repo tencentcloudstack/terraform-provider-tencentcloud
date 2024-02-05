@@ -161,7 +161,7 @@ func ParsedTime(createTime string) (*time.Time, error) {
 	} else {
 		// try parsing input strings using different time formats
 		for _, format := range TimeFormats {
-			parsedTime, err = time.Parse(format, createTime)
+			parsedTime, err = time.ParseInLocation(format, createTime, time.Local)
 			if err == nil {
 				break
 			}
