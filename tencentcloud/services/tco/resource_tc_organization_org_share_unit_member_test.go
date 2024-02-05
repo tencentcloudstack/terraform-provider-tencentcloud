@@ -18,12 +18,11 @@ func TestAccTencentCloudOrganizationOrgShareUnitMemberResource_basic(t *testing.
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOrganizationOrgShareUnitMember,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_share_unit_member.org_share_unit_member", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_organization_org_share_unit_member.org_share_unit_member",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_share_unit_member.org_share_unit_member", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_org_share_unit_member.org_share_unit_member", "unit_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_org_share_unit_member.org_share_unit_member", "area"),
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_org_share_unit_member.org_share_unit_member", "members.#"),
+				),
 			},
 		},
 	})
