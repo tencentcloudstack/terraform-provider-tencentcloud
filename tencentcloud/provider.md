@@ -1642,6 +1642,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_policy_sub_account_attachment
     tencentcloud_organization_quit_organization_operation
     tencentcloud_organization_org_share_unit
+    tencentcloud_organization_org_share_unit_member
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
