@@ -19,7 +19,7 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheck(t)
 		},
 		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
 		Providers:    tcacctest.AccProviders,
