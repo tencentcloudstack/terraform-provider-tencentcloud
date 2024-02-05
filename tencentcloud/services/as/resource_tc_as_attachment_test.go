@@ -28,7 +28,8 @@ func testSweepAsAttachment(r string) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cli, _ := tcacctest.SharedClientForRegion(r)
-	asService := svcas.NewAsService(cli.(tccommon.ProviderMeta).GetAPIV3Conn())
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	asService := svcas.NewAsService(client)
 
 	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, "", "", "", nil)
 	if err != nil {
@@ -50,7 +51,7 @@ func testSweepAsAttachment(r string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "as", "attachment")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateAutoScalingGroup")
 
 	for _, v := range scalingGroups {
 		scalingGroupId := *v.AutoScalingGroupId

@@ -46,7 +46,7 @@ func init() {
 					CreatTime: *v.CreateTime,
 				})
 			}
-			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "cbs", "storage")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateDisks")
 
 			for i := range disks {
 				disk := disks[i]

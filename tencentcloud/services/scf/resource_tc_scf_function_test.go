@@ -60,7 +60,7 @@ func init() {
 						CreatTime: *v.AddTime,
 					})
 				}
-				tccommon.ProcessScanCloudResources(resources, nonKeepResources, "scf", "")
+				tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateFunction")
 
 				for _, fun := range funs {
 					createTime := tccommon.StringToTime(*fun.AddTime)

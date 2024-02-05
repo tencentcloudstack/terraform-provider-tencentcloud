@@ -31,9 +31,9 @@ func testSweepCvmInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	cvmService := svccvm.NewCvmService(client.GetAPIV3Conn())
+	cvmService := svccvm.NewCvmService(client)
 
 	instances, err := cvmService.DescribeInstanceByFilter(ctx, nil, nil)
 	if err != nil {
@@ -55,7 +55,7 @@ func testSweepCvmInstance(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "cvm", "instance")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "RunInstances")
 
 	for _, v := range instances {
 		instanceId := *v.InstanceId

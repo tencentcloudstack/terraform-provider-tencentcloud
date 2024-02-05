@@ -62,7 +62,7 @@ func testSweepClbInstance(region string) error {
 			CreatTime: *v.CreateTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "clb", "instance")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateLoadBalancer")
 
 	if len(res) > 0 {
 		for _, v := range res {

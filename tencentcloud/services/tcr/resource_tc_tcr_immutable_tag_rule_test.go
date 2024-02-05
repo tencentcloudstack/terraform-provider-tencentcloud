@@ -31,7 +31,8 @@ func testSweepTcrImmutableTagRule(r string) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cli, _ := tcacctest.SharedClientForRegion(r)
-	tcrService := svctcr.NewTCRService(cli.(tccommon.ProviderMeta).GetAPIV3Conn())
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tcrService := svctcr.NewTCRService(client)
 
 	// the non-keep namespace will be removed directly when run sweeper tencentcloud_tcr_namespace
 	// so... only need to care about the rules under the keep namespace
@@ -57,7 +58,7 @@ func testSweepTcrImmutableTagRule(r string) error {
 			Id: helper.Int64ToStr(*v.RuleId),
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "immutable_tag_rule")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateImmutableTagRules")
 
 	for _, rule := range rules {
 		ruleId := helper.Int64ToStr(*rule.RuleId)

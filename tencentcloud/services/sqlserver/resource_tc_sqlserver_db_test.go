@@ -68,7 +68,7 @@ func init() {
 					CreatTime: *v.CreateTime,
 				})
 			}
-			tccommon.ProcessScanCloudResources(resources, nonKeepResources, "sqlserver", "db")
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateDB")
 
 			for i := range dbs {
 				db := dbs[i]

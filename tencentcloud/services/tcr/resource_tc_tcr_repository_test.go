@@ -29,7 +29,8 @@ func testSweepTCRRepository(r string) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cli, _ := tcacctest.SharedClientForRegion(r)
-	tcrService := svctcr.NewTCRService(cli.(tccommon.ProviderMeta).GetAPIV3Conn())
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tcrService := svctcr.NewTCRService(client)
 
 	var filters []*tcr.Filter
 	filters = append(filters, &tcr.Filter{
@@ -73,7 +74,7 @@ func testSweepTCRRepository(r string) error {
 			CreatTime: *v.CreationTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "tcr", "repository")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateRepository")
 
 	for i := range repos {
 		n := repos[i]

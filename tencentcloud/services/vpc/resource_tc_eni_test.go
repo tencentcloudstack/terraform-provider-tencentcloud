@@ -32,9 +32,9 @@ func testSweepEniInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeEniByFilters(ctx, nil, nil, nil, nil, nil, nil, nil, nil)
 	if err != nil {
@@ -56,7 +56,7 @@ func testSweepEniInstance(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "eni")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNetworkInterface")
 
 	for _, v := range instances {
 		instanceId := *v.NetworkInterfaceId

@@ -13,8 +13,8 @@ const (
 	SweeperNonKeepResourceScanDir = "../../../tmp/non_keep_resource_scan/"
 )
 
-var ResourceScanHeader = []string{"资源类型", "资源名称", "实例ID", "实例名称", "分类", "创建时长(天)"}
-var NonKeepResourceScanHeader = []string{"ResourceType", "ResourceName", "InstanceId", "InstanceName"}
+var ResourceScanHeader = []string{"资源类型", "资源名称", "实例ID", "实例名称", "分类", "创建时长(天)", "创建者用户ID", "创建者用户名"}
+var NonKeepResourceScanHeader = []string{"ResourceType", "ResourceName", "InstanceId", "InstanceName", "PrincipalId", "UserName"}
 
 // WriteCsvFileData write data to csv file
 func WriteCsvFileData(dirPath string, header []string, data [][]string) error {

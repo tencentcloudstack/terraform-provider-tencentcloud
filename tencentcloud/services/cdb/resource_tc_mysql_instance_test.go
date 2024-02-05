@@ -68,7 +68,7 @@ func testSweepMySQLInstance(region string) error {
 			CreatTime: *v.CreateTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "msql", "instance")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateDBInstance")
 
 	for _, v := range items {
 		id := *v.InstanceId

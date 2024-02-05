@@ -33,9 +33,9 @@ func testSweepVpnGateway(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeVpnGwByFilter(ctx, nil)
 	if err != nil {
@@ -57,7 +57,7 @@ func testSweepVpnGateway(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpn", "gateway")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateVpnGateway")
 
 	for _, v := range instances {
 

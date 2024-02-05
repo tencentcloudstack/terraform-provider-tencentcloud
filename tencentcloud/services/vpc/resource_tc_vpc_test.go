@@ -31,9 +31,9 @@ func testSweepVpcInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeVpcs(ctx, "", "", nil, nil, "", "")
 	if err != nil {
@@ -55,7 +55,7 @@ func testSweepVpcInstance(region string) error {
 			CreatTime: v.CreateTime(),
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateVpc")
 
 	for _, v := range instances {
 		instanceId := v.VpcId()

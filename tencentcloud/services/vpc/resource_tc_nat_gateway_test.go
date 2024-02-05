@@ -32,9 +32,9 @@ func testSweepNatInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeNatGatewayByFilter(ctx, nil)
 	if err != nil {
@@ -56,7 +56,7 @@ func testSweepNatInstance(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "nat_gateway")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNatGateway")
 
 	for _, v := range instances {
 		instanceId := *v.NatGatewayId

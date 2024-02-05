@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 const (
@@ -27,14 +29,16 @@ type ResourceInstance struct {
 	DefaultKeep bool
 }
 
-func ProcessScanCloudResources(resources, nonKeepResources []*ResourceInstance, resourceType, resourceName string) {
-	ProcessResources(resources, resourceType, resourceName)
+func ProcessScanCloudResources(client *connectivity.TencentCloudClient, resources, nonKeepResources []*ResourceInstance, resourceCreateAction string) {
+	ProcessResources(client, resources, resourceCreateAction)
 
-	ProcessNonKeepResources(nonKeepResources, resourceType, resourceName)
+	ProcessNonKeepResources(client, nonKeepResources, resourceCreateAction)
 }
 
 // ProcessResources Process all scanned cloud resources
-func ProcessResources(resources []*ResourceInstance, resourceType, resourceName string) {
+func ProcessResources(client *connectivity.TencentCloudClient, resources []*ResourceInstance, resourceCreateAction string) {
+	resourceIdToSubAccountInfoMap := GetResourceCreatorAccountInfo(client, resourceCreateAction, resources)
+
 	data := make([][]string, len(resources))
 	for i, r := range resources {
 		isResourceKeep := CheckResourceNameKeep(r.Name)
@@ -48,6 +52,15 @@ func ProcessResources(resources []*ResourceInstance, resourceType, resourceName 
 			log.Printf("[CRITAL] compute resource creation duration error: %v", err.Error())
 		}
 
+		var resourceType, resourceName, principalId, userName string
+		creatorAccountInfo := resourceIdToSubAccountInfoMap[r.Id]
+		if creatorAccountInfo != nil {
+			resourceType = creatorAccountInfo.ResourceType
+			resourceName = creatorAccountInfo.ResourceName
+			principalId = creatorAccountInfo.PrincipalId
+			userName = creatorAccountInfo.UserName
+		}
+
 		data[i] = []string{
 			resourceType,
 			resourceName,
@@ -55,6 +68,8 @@ func ProcessResources(resources []*ResourceInstance, resourceType, resourceName 
 			r.Name,
 			isResourceKeep,
 			creationDuration,
+			principalId,
+			userName,
 		}
 	}
 	err := WriteCsvFileData(SweeperResourceScanDir, ResourceScanHeader, data)
@@ -64,14 +79,27 @@ func ProcessResources(resources []*ResourceInstance, resourceType, resourceName 
 }
 
 // ProcessNonKeepResources Processing scanned non-keep cloud resources
-func ProcessNonKeepResources(nonKeepResources []*ResourceInstance, resourceType, resourceName string) {
+func ProcessNonKeepResources(client *connectivity.TencentCloudClient, nonKeepResources []*ResourceInstance, resourceCreateAction string) {
+	resourceIdToSubAccountInfoMap := GetResourceCreatorAccountInfo(client, resourceCreateAction, nonKeepResources)
+
 	data := make([][]string, len(nonKeepResources))
 	for i, r := range nonKeepResources {
+		var resourceType, resourceName, principalId, userName string
+		creatorAccountInfo := resourceIdToSubAccountInfoMap[r.Id]
+		if creatorAccountInfo != nil {
+			resourceType = creatorAccountInfo.ResourceType
+			resourceName = creatorAccountInfo.ResourceName
+			principalId = creatorAccountInfo.PrincipalId
+			userName = creatorAccountInfo.UserName
+		}
+
 		data[i] = []string{
 			resourceType,
 			resourceName,
 			r.Id,
 			r.Name,
+			principalId,
+			userName,
 		}
 	}
 	err := WriteCsvFileData(SweeperNonKeepResourceScanDir, NonKeepResourceScanHeader, data)
@@ -133,7 +161,7 @@ func ParsedTime(createTime string) (*time.Time, error) {
 	} else {
 		// try parsing input strings using different time formats
 		for _, format := range TimeFormats {
-			parsedTime, err = time.Parse(format, createTime)
+			parsedTime, err = time.ParseInLocation(format, createTime, time.Local)
 			if err == nil {
 				break
 			}

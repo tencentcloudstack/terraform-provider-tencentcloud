@@ -31,8 +31,8 @@ func testSweepSecurityGroups(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
-	service := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
+	service := svcvpc.NewVpcService(client)
 
 	sgs, err := service.DescribeSecurityGroups(ctx, nil, nil, nil, nil)
 	if err != nil {
@@ -54,7 +54,7 @@ func testSweepSecurityGroups(region string) error {
 			CreatTime: *v.CreatedTime,
 		})
 	}
-	tccommon.ProcessScanCloudResources(resources, nonKeepResources, "vpc", "security_group")
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSecurityGroup")
 
 	for _, v := range sgs {
 		name := *v.SecurityGroupName
