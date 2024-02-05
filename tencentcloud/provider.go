@@ -10,38 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/wedata"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tpulsar"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trabbit"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trocket"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tse"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/waf"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcm"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmg"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmq"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdksts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
-
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -113,6 +85,29 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/sts"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmq"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tpulsar"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trabbit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trocket"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tse"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/waf"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/wedata"
 )
 
 const (
@@ -982,6 +977,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_spec":                              cdwch.DataSourceTencentCloudClickhouseSpec(),
 			"tencentcloud_clickhouse_instance_shards":                   cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
 			"tencentcloud_clickhouse_instance_nodes":                    cdwch.DataSourceTencentCloudClickhouseInstanceNodes(),
+			"tencentcloud_organization_org_share_area":                  tco.DataSourceTencentCloudOrganizationOrgShareArea(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

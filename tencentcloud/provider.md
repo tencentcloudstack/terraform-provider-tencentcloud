@@ -1630,6 +1630,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_financial_by_member
     tencentcloud_organization_org_financial_by_month
     tencentcloud_organization_org_financial_by_product
+    tencentcloud_organization_org_share_area
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node

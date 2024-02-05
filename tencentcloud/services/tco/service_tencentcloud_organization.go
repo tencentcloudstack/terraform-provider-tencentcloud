@@ -769,3 +769,38 @@ func (me *OrganizationService) DescribeOrganizationMembersByFilter(ctx context.C
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrgShareAreaByFilter(ctx context.Context, param map[string]interface{}) (orgShareArea []*organization.ShareArea, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewDescribeShareAreasRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Lang" {
+			request.Lang = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeShareAreas(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	orgShareArea = response.Response.Items
+	return
+}
