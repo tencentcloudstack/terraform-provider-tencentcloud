@@ -1946,6 +1946,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_peer_connect_manager":                            vpc.ResourceTencentCloudVpcPeerConnectManager(),
 			"tencentcloud_vpc_peer_connect_accept_operation":                   vpc.ResourceTencentCloudVpcPeerConnectAcceptOperation(),
 			"tencentcloud_vpc_peer_connect_reject_operation":                   vpc.ResourceTencentCloudVpcPeerConnectRejectOperation(),
+			"tencentcloud_organization_org_share_unit_member":                  tco.ResourceTencentCloudOrganizationOrgShareUnitMember(),
+			"tencentcloud_organization_org_share_unit":                         tco.ResourceTencentCloudOrganizationOrgShareUnit(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -2,7 +2,9 @@ package tco
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -766,6 +768,154 @@ func (me *OrganizationService) DescribeOrganizationMembersByFilter(ctx context.C
 
 		offset += limit
 	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitById(ctx context.Context, area, unitId string) (orgShareUnit *organization.ManagerShareUnit, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribeShareUnitsRequest()
+	request.SearchKey = &unitId
+	request.Area = &area
+	request.Limit = helper.IntUint64(20)
+	request.Offset = helper.IntUint64(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeShareUnits(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Items) < 1 {
+		return
+	}
+
+	orgShareUnit = response.Response.Items[0]
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgShareUnitById(ctx context.Context, unitId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeleteShareUnitRequest()
+	request.UnitId = &unitId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DeleteShareUnit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitMemberById(ctx context.Context, unitId, area, shareMemberUins string) (orgShareUnitMembers []*organization.ShareUnitMember, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribeShareUnitMembersRequest()
+	request.UnitId = &unitId
+	request.Area = &area
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	var (
+		offset uint64 = 0
+		limit  uint64 = 10
+	)
+	var tmp []*organization.ShareUnitMember
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeShareUnitMembers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		tmp = append(tmp, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	memberIdMap := make(map[string]struct{})
+
+	for _, item := range tmp {
+		memberIdMap[helper.Int64ToStr(*item.ShareMemberUin)] = struct{}{}
+	}
+
+	split := strings.Split(shareMemberUins, tccommon.COMMA_SP)
+	if len(split) < 1 {
+		errRet = fmt.Errorf("shareMemberUins is broken, %s", shareMemberUins)
+		return
+	}
+	for _, v := range split {
+		if _, ok := memberIdMap[v]; !ok {
+			return
+		}
+	}
+	orgShareUnitMembers = tmp
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgShareUnitMemberById(ctx context.Context, unitId, area, shareMemberUins string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeleteShareUnitMembersRequest()
+	request.UnitId = &unitId
+	request.Area = &area
+	split := strings.Split(shareMemberUins, tccommon.COMMA_SP)
+	if len(split) < 1 {
+		errRet = fmt.Errorf("shareMemberUins is broken, %s", shareMemberUins)
+		return
+	}
+	for _, v := range split {
+		request.Members = append(request.Members, &organization.ShareMember{ShareMemberUin: helper.StrToInt64Point(v)})
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DeleteShareUnitMembers(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
