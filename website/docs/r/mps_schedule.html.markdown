@@ -160,6 +160,7 @@ The following arguments are supported:
 * `trigger` - (Required, List) The trigger of the scheme. If a file is uploaded to the specified bucket, the scheme will be triggered.
 * `output_dir` - (Optional, String) The directory to save the media processing output file, which must start and end with `/`, such as `/movie/201907/`.If you do not specify this, the file will be saved to the trigger directory.
 * `output_storage` - (Optional, List) The bucket to save the output file. If you do not specify this parameter, the bucket in `Trigger` will be used.
+* `resource_id` - (Optional, String) Resource ID, you need to ensure that the corresponding resource is open. The default is the account main resource ID.
 * `task_notify_config` - (Optional, List) The notification configuration. If you do not specify this parameter, notifications will not be sent.
 
 The `activities` object supports the following:

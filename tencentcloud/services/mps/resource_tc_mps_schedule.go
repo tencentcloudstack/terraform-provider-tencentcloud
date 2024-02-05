@@ -2650,6 +2650,12 @@ func ResourceTencentCloudMpsSchedule() *schema.Resource {
 					},
 				},
 			},
+
+			"resource_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Resource ID, you need to ensure that the corresponding resource is open. The default is the account main resource ID.",
+			},
 		},
 	}
 }
@@ -4077,6 +4083,10 @@ func resourceTencentCloudMpsScheduleCreate(d *schema.ResourceData, meta interfac
 			taskNotifyConfig.AwsSQS = &awsSQS
 		}
 		request.TaskNotifyConfig = &taskNotifyConfig
+	}
+
+	if v, ok := d.GetOk("resource_id"); ok {
+		request.ResourceId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -6047,6 +6057,10 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("task_notify_config", []interface{}{taskNotifyConfigMap})
 	}
 
+	if schedule.ResourceId != nil {
+		_ = d.Set("resource_id", schedule.ResourceId)
+	}
+
 	return nil
 }
 
@@ -7485,6 +7499,12 @@ func resourceTencentCloudMpsScheduleUpdate(d *schema.ResourceData, meta interfac
 				taskNotifyConfig.AwsSQS = &awsSQS
 			}
 			request.TaskNotifyConfig = &taskNotifyConfig
+		}
+	}
+
+	if d.HasChange("resource_id") {
+		if v, ok := d.GetOk("resource_id"); ok {
+			request.ResourceId = helper.String(v.(string))
 		}
 	}
 
