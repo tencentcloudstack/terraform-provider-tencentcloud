@@ -39,7 +39,7 @@ jobs:
       #  a set of commands using the runners shell
       - name: doc diff
         run: |
-          diff=`git diff --name-only website/docs/`
+          diff=`git diff --name-only website/`
           if [ "$diff" != "" ]; then
           printf "There are docs updated when checking, 'git add' it first.\n"
           printf "COMMIT FAILED\n"
