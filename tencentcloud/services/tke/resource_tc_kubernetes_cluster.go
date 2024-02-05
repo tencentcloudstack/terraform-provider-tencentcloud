@@ -653,8 +653,8 @@ func ResourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"cluster_internet": {
 			Type:     schema.TypeBool,
-			Default:  false,
 			Optional: true,
+			Computed: true,
 			Description: "Open internet access or not." +
 				" If this field is set 'true', the field below `worker_config` must be set." +
 				" Because only cluster with node is allowed enable access endpoint. You may open it through `tencentcloud_kubernetes_cluster_endpoint`.",
@@ -667,8 +667,8 @@ func ResourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"cluster_intranet": {
 			Type:     schema.TypeBool,
-			Default:  false,
 			Optional: true,
+			Computed: true,
 			Description: "Open intranet access or not." +
 				" If this field is set 'true', the field below `worker_config` must be set." +
 				" Because only cluster with node is allowed enable access endpoint. You may open it through `tencentcloud_kubernetes_cluster_endpoint`.",

@@ -409,7 +409,124 @@ variable "addons_update" {
 
 const TkeDeps = tcacctest.TkeExclusiveNetwork + tcacctest.TkeInstanceType + tcacctest.TkeCIDRs + tcacctest.DefaultImages + tcacctest.DefaultSecurityGroupData
 
-const testAccTkeCluster = TkeDeps + `
+const TkeNewDeps = `
+//TkeExclusiveNetwork
+variable "vpc_cidr" {
+  default = "172.16.0.0/16"
+}
+
+variable "subnet_cidr1" {
+  default = "172.16.0.0/20"
+}
+
+variable "subnet_cidr2" {
+  default = "172.16.16.0/20"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "tf_tke_vpc_test"
+  cidr_block = var.vpc_cidr
+}
+
+resource "tencentcloud_subnet" "subnet1" {
+  name              = "tf_tke_subnet_test1"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  cidr_block        = var.subnet_cidr1
+  is_multicast      = false
+}
+
+resource "tencentcloud_subnet" "subnet2" {
+  name              = "tf_tke_subnet_test2"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  cidr_block        = var.subnet_cidr2
+  is_multicast      = false
+}
+
+locals {
+  vpc_id     = tencentcloud_vpc.vpc.id
+  subnet_id1 = tencentcloud_subnet.subnet1.id
+  subnet_id2 = tencentcloud_subnet.subnet2.id
+}
+
+//TkeInstanceType
+data "tencentcloud_instance_types" "ins_type" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+
+  cpu_core_count = 2
+  memory_size    = 2
+}
+
+locals {
+  type1 = [
+    for i in data.tencentcloud_instance_types.ins_type.instance_types : i
+    if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"
+  ]
+  type2      = [for i in data.tencentcloud_instance_types.ins_type.instance_types : i]
+  final_type = concat(local.type1, local.type2)[0].instance_type
+}
+
+//TkeCIDRs
+variable "tke_cidr_a" {
+  default = [
+    "10.31.0.0/23",
+    "10.31.2.0/24",
+    "10.31.3.0/24",
+    "10.31.16.0/24",
+    "10.31.32.0/24"
+  ]
+}
+
+variable "tke_cidr_b" {
+  default = [
+    "172.18.0.0/20",
+    "172.18.16.0/21",
+    "172.18.24.0/21",
+    "172.18.32.0/20",
+    "172.18.48.0/20"
+  ]
+}
+
+variable "tke_cidr_c" {
+  default = [
+    "192.168.0.0/18",
+    "192.168.64.0/19",
+    "192.168.96.0/20",
+    "192.168.112.0/21",
+    "192.168.120.0/21"
+  ]
+}
+
+//DefaultImages
+variable "default_img_id" {
+  default = "img-2lr9q49h"
+}
+
+//DefaultSecurityGroupData
+resource "tencentcloud_security_group" "example" {
+  name        = "tf_tke_sg_test"
+  description = "sg test"
+}
+
+data "tencentcloud_security_groups" "internal" {
+  name = tencentcloud_security_group.example.name
+}
+
+data "tencentcloud_security_groups" "exclusive" {
+  name = tencentcloud_security_group.example.name
+}
+
+locals {
+  sg_id  = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+  sg_id2 = data.tencentcloud_security_groups.exclusive.security_groups.0.security_group_id
+}
+`
+
+const testAccTkeCluster = TkeNewDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -429,7 +546,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
-  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_intranet_subnet_id                 = local.subnet_id1
   cluster_internet_security_group               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
@@ -441,7 +558,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
 
@@ -478,7 +595,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 `
 
-const testAccTkeClusterUpdateAccess = TkeDeps + `
+const testAccTkeClusterUpdateAccess = TkeNewDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -508,7 +625,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
 
@@ -549,7 +666,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 }
 `
-const testAccTkeClusterUpdateLevel = TkeDeps + `
+const testAccTkeClusterUpdateLevel = TkeNewDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -576,7 +693,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
 
@@ -613,7 +730,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 `
 
-const testAccTkeClusterLogsAddons = TkeDeps + testAccTkeExtensionAddons + `
+const testAccTkeClusterLogsAddons = TkeNewDeps + testAccTkeExtensionAddons + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -640,7 +757,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 10
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
     enhanced_security_service = false
@@ -670,7 +787,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 }`
 
-const testAccTkeClusterLogsAddonsUpdate = TkeDeps + testAccTkeExtensionAddons + `
+const testAccTkeClusterLogsAddonsUpdate = TkeNewDeps + testAccTkeExtensionAddons + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -705,7 +822,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 10
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
     enhanced_security_service = false
@@ -729,7 +846,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 }`
 
-const testAccTkeClusterEnableVpcCni = TkeDeps + `
+const testAccTkeClusterEnableVpcCni = TkeNewDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -749,13 +866,13 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
-  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_intranet_subnet_id                 = local.subnet_id1
   cluster_internet_security_group               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   
   vpc_cni_type								 = "tke-route-eni"
   is_non_static_ip_mode                      = false
-  eni_subnet_ids							 = ["subnet-ljyn7h30"]
+  eni_subnet_ids							 = [local.subnet_id1]
   claim_expired_seconds                      = 300
   
   worker_config {
@@ -767,7 +884,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
 
@@ -804,7 +921,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 `
 
-const testAccTkeClusterUpdateVpcCni = TkeDeps + `
+const testAccTkeClusterUpdateVpcCni = TkeNewDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -824,13 +941,13 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
-  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_intranet_subnet_id                 = local.subnet_id1
   cluster_internet_security_group               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   
   vpc_cni_type								 = "tke-route-eni"
   is_non_static_ip_mode                      = false
-  eni_subnet_ids							 = ["subnet-ljyn7h30", "subnet-domfffi4"]
+  eni_subnet_ids							 = [local.subnet_id1, local.subnet_id2]
   claim_expired_seconds                      = 300
   
   worker_config {
@@ -842,7 +959,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
 
@@ -879,7 +996,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 `
 
-const testAccTkeClusterCloseVpcCni = TkeDeps + `
+const testAccTkeClusterCloseVpcCni = TkeNewDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -899,7 +1016,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
-  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_intranet_subnet_id                 = local.subnet_id1
   cluster_internet_security_group               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
 
@@ -915,7 +1032,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = local.subnet_id
+    subnet_id                  = local.subnet_id1
     img_id                     = var.default_img_id
     security_group_ids         = [local.sg_id]
 
