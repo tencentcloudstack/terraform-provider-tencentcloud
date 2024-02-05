@@ -147,7 +147,8 @@ API GateWay(apigateway)
     tencentcloud_api_gateway_upstream
     tencentcloud_api_gateway_api_app_attachment
     tencentcloud_api_gateway_update_api_app_key
-    tencentcloud_api_gateway_import_open_api
+    tencentcloud_api_gateway_import_open_api 
+    tencentcloud_api_gateway_update_service
 
 Cloud Audit(Audit)
   Data Source

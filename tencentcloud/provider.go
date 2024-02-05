@@ -1437,6 +1437,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_plugin_attachment":                       apigateway.ResourceTencentCloudAPIGatewayPluginAttachment(),
 			"tencentcloud_api_gateway_upstream":                                apigateway.ResourceTencentCloudAPIGatewayUpstream(),
 			"tencentcloud_api_gateway_api_app_attachment":                      apigateway.ResourceTencentCloudAPIGatewayApiAppAttachment(),
+			"tencentcloud_api_gateway_update_service":                          apigateway.ResourceTencentCloudAPIGatewayUpdateService(),
 			"tencentcloud_sqlserver_basic_instance":                            sqlserver.ResourceTencentCloudSqlserverBasicInstance(),
 			"tencentcloud_sqlserver_instance_tde":                              sqlserver.ResourceTencentCloudSqlserverInstanceTDE(),
 			"tencentcloud_sqlserver_database_tde":                              sqlserver.ResourceTencentCloudSqlserverDatabaseTDE(),
