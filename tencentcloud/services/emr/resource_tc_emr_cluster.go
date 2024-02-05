@@ -165,10 +165,12 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Description: "The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).",
 			},
 			"login_settings": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "Instance login settings.",
+				Type:      schema.TypeMap,
+				Optional:  true,
+				Sensitive: true,
+				Description: "Instance login settings. There are two optional fields:" +
+					"- password: Instance login password: 8-16 characters, including uppercase letters, lowercase letters, numbers and special characters. Special symbols only support! @% ^ *. The first bit of the password cannot be a special character;" +
+					"- public_key_id: Public key id. After the key is associated, the instance can be accessed through the corresponding private key.",
 			},
 			"extend_fs_field": {
 				Type:        schema.TypeString,
