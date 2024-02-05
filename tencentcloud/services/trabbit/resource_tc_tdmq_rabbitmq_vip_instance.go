@@ -21,7 +21,9 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 		Read:   resourceTencentCloudTdmqRabbitmqVipInstanceRead,
 		Update: resourceTencentCloudTdmqRabbitmqVipInstanceUpdate,
 		Delete: resourceTencentCloudTdmqRabbitmqVipInstanceDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_ids": {
 				Required:    true,

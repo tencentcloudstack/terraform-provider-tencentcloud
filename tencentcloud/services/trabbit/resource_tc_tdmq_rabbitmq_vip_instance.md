@@ -31,3 +31,12 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   time_span                             = 1
 }
 ```
+
+Import
+
+tdmq rabbitmq_vip_instance can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tdmq_rabbitmq_vip_instance.example amqp-mok52gmn
+```
+

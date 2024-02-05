@@ -19,7 +19,7 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheck(t)
 		},
 		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
 		Providers:    tcacctest.AccProviders,
@@ -30,6 +30,11 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "id"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_tdmq_rabbitmq_vip_instance.template",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			{
 				Config: testAccTdmqRabbitmqVipInstanceUpdate,

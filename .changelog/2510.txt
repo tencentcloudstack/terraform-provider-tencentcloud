@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_tdmq_rabbitmq_vip_instance: Adapt to imported resources
+```
+
