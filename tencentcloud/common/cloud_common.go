@@ -16,7 +16,7 @@ import (
 
 const (
 	// DefaultSearchLogStartTimestamp sync logs start time 2023-11-07 16:41:00
-	DefaultSearchLogStartTimestamp = 1699346460000
+	DefaultSearchLogStartTimestamp int64 = 1699346460000
 
 	DefaultTopicId = "aef50d54-b17d-4782-8618-a7873203ec29"
 
@@ -40,7 +40,7 @@ func GetResourceCreatorAccountInfo(client *connectivity.TencentCloudClient, reso
 	}
 
 	request := cls.NewSearchLogRequest()
-	request.From = helper.IntInt64(DefaultSearchLogStartTimestamp)
+	request.From = helper.Int64(DefaultSearchLogStartTimestamp)
 	request.To = helper.Int64(CurrentTimeMillisecond())
 	request.TopicId = helper.String(DefaultTopicId)
 
