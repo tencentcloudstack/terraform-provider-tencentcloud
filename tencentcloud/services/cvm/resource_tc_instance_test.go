@@ -31,14 +31,31 @@ func testSweepCvmInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	cvmService := svccvm.NewCvmService(client.GetAPIV3Conn())
+	cvmService := svccvm.NewCvmService(client)
 
 	instances, err := cvmService.DescribeInstanceByFilter(ctx, nil, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.InstanceName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.InstanceId,
+				Name: *v.InstanceName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.InstanceId,
+			Name:      *v.InstanceName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "RunInstances")
 
 	for _, v := range instances {
 		instanceId := *v.InstanceId
@@ -97,6 +114,32 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 				ResourceName:            id,
 				ImportState:             true,
 				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "force_delete"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceResource_PrepaidBasic(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.cvm_prepaid_basic"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { tcacctest.AccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstancePrepaidBasic,
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "private_ip"),
+					resource.TestCheckResourceAttrSet(id, "vpc_id"),
+					resource.TestCheckResourceAttrSet(id, "subnet_id"),
+					resource.TestCheckResourceAttrSet(id, "project_id"),
+					resource.TestCheckResourceAttr(id, "tags.hostname", "tci"),
+				),
 			},
 		},
 	})
@@ -750,6 +793,26 @@ resource "tencentcloud_instance" "cvm_basic" {
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 
+  tags = {
+    hostname = "tci"
+  }
+}
+`
+
+const testAccTencentCloudInstancePrepaidBasic = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "cvm_prepaid_basic" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+  instance_charge_type                    = "PREPAID"
+  instance_charge_type_prepaid_period     = 1
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  force_delete = true
   tags = {
     hostname = "tci"
   }

@@ -25,7 +25,8 @@ func testSweepTcrCustomizedDomain(r string) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cli, _ := tcacctest.SharedClientForRegion(r)
-	tcrService := svctcr.NewTCRService(cli.(tccommon.ProviderMeta).GetAPIV3Conn())
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tcrService := svctcr.NewTCRService(client)
 
 	domains, err := tcrService.DescribeTcrCustomizedDomainById(ctx, tcacctest.DefaultTCRInstanceId, nil)
 	if err != nil {
@@ -34,6 +35,22 @@ func testSweepTcrCustomizedDomain(r string) error {
 	if domains == nil {
 		return nil
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range domains {
+		if !tccommon.CheckResourcePersist(*v.DomainName, "") {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.RegistryId,
+				Name: *v.DomainName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:   *v.RegistryId,
+			Name: *v.DomainName,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateInstanceCustomizedDomain")
 
 	for _, v := range domains {
 		delName := *v.DomainName

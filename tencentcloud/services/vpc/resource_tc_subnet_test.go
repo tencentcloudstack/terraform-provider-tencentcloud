@@ -31,15 +31,32 @@ func testSweepSubnet(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeSubnets(ctx, "", "", "", "",
 		nil, nil, nil, "", "")
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(v.Name(), v.CreateTime()) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   v.SubnetId(),
+				Name: v.Name(),
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        v.SubnetId(),
+			Name:      v.Name(),
+			CreatTime: v.CreateTime(),
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSubnet")
 
 	for _, v := range instances {
 

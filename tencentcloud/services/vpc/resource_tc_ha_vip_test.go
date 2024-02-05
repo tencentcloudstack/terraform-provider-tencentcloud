@@ -34,14 +34,31 @@ func testSweepHaVipInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeHaVipByFilter(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.HaVipName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.HaVipId,
+				Name: *v.HaVipName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.HaVipId,
+			Name:      *v.HaVipName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateHaVip")
 
 	for _, v := range instances {
 		instanceId := *v.HaVipId

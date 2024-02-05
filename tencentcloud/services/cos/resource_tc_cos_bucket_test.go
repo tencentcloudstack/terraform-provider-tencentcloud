@@ -31,13 +31,28 @@ func testSweepCosBuckets(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	cosService := localcos.NewCosService(client.GetAPIV3Conn())
+	cosService := localcos.NewCosService(client)
 	buckets, err := cosService.ListBuckets(ctx)
 	if err != nil {
 		return fmt.Errorf("list buckets error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range buckets {
+		if !tccommon.CheckResourcePersist(*v.Name, v.CreationDate.Format("2006-01-02 15:04:05")) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Name: *v.Name,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Name:      *v.Name,
+			CreatTime: v.CreationDate.Format("2006-01-02 15:04:05"),
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "PutBucket")
 
 	//prefix := regexp.MustCompile("^(tf|test)-")
 

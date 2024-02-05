@@ -32,14 +32,31 @@ func testSweepCcnInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := localccn.NewVpcService(client.GetAPIV3Conn())
+	vpcService := localccn.NewVpcService(client)
 
 	instances, err := vpcService.DescribeCcns(ctx, "", "")
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(v.Name(), v.CreateTime()) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   v.CcnId(),
+				Name: v.Name(),
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        v.CcnId(),
+			Name:      v.Name(),
+			CreatTime: v.CreateTime(),
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCcn")
 
 	for _, v := range instances {
 		instanceId := v.CcnId()

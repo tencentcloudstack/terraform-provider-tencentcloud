@@ -75,6 +75,11 @@ func DataSourceTencentCloudClbServerAttachments() *schema.Resource {
 										Computed:    true,
 										Description: "Id of the backend server.",
 									},
+									"eni_ip": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Elastic network card unique ID.",
+									},
 									"port": {
 										Type:        schema.TypeInt,
 										Computed:    true,

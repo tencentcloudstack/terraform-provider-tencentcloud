@@ -29,7 +29,8 @@ func testSweepTCRRepository(r string) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cli, _ := tcacctest.SharedClientForRegion(r)
-	tcrService := svctcr.NewTCRService(cli.(tccommon.ProviderMeta).GetAPIV3Conn())
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tcrService := svctcr.NewTCRService(client)
 
 	var filters []*tcr.Filter
 	filters = append(filters, &tcr.Filter{
@@ -53,6 +54,27 @@ func testSweepTCRRepository(r string) error {
 	if err != nil {
 		return err
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range repos {
+		names := strings.Split(*v.Name, "/")
+		if len(names) != 2 {
+			continue
+		}
+		repoName := names[1]
+
+		if !tccommon.CheckResourcePersist(repoName, *v.CreationTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Name: repoName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Name:      repoName,
+			CreatTime: *v.CreationTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateRepository")
 
 	for i := range repos {
 		n := repos[i]

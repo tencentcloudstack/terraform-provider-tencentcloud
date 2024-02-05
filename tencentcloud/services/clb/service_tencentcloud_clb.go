@@ -1232,13 +1232,12 @@ func (me *ClbService) DescribeTargetGroups(ctx context.Context, targetGroupId st
 	if targetGroupId != "" {
 		request.TargetGroupIds = []*string{&targetGroupId}
 	}
-	request.Filters = make([]*clb.Filter, 0, len(filters))
 	for k, v := range filters {
-		filter := clb.Filter{
+		tmpFilter := clb.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
-		request.Filters = append(request.Filters, &filter)
+		request.Filters = append(request.Filters, &tmpFilter)
 	}
 
 	var offset uint64 = 0

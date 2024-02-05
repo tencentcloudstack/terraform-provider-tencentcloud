@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -287,6 +288,29 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "task_advance_cfg"); ok {
 		taskAdvanceCFG := csip.TaskAdvanceCFG{}
+		if v, ok := dMap["port_risk"]; ok {
+			for _, item := range v.([]interface{}) {
+				portRiskMap := item.(map[string]interface{})
+				portRiskAdvanceCFGParamItem := csip.PortRiskAdvanceCFGParamItem{}
+				if v, ok := portRiskMap["port_sets"]; ok {
+					portRiskAdvanceCFGParamItem.PortSets = helper.String(v.(string))
+				}
+
+				if v, ok := portRiskMap["check_type"]; ok {
+					portRiskAdvanceCFGParamItem.CheckType = helper.IntInt64(v.(int))
+				}
+
+				if v, ok := portRiskMap["detail"]; ok {
+					portRiskAdvanceCFGParamItem.Detail = helper.String(v.(string))
+				}
+
+				if v, ok := portRiskMap["enable"]; ok {
+					portRiskAdvanceCFGParamItem.Enable = helper.IntInt64(v.(int))
+				}
+				taskAdvanceCFG.PortRisk = append(taskAdvanceCFG.PortRisk, &portRiskAdvanceCFGParamItem)
+			}
+		}
+
 		if v, ok := dMap["vul_risk"]; ok {
 			for _, item := range v.([]interface{}) {
 				vulRiskMap := item.(map[string]interface{})
@@ -381,7 +405,7 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 		},
 	}
 
-	err = resource.Retry(tccommon.ReadRetryTimeout*40, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout*60, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCsipClient().DescribeScanTaskList(waitRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -440,7 +464,8 @@ func resourceTencentCloudCsipRiskCenterRead(d *schema.ResourceData, meta interfa
 	}
 
 	if riskCenter.ScanItem != nil {
-		_ = d.Set("scan_item", riskCenter.ScanItem)
+		tmpList := strings.Split(*riskCenter.ScanItem, tccommon.COMMA_SP)
+		_ = d.Set("scan_item", tmpList)
 	}
 
 	if riskCenter.Assets != nil {
@@ -509,6 +534,7 @@ func resourceTencentCloudCsipRiskCenterUpdate(d *schema.ResourceData, meta inter
 	)
 
 	request.TaskId = &taskId
+	request.ScanPlanType = helper.IntInt64(1)
 
 	if v, ok := d.GetOk("task_name"); ok {
 		request.TaskName = helper.String(v.(string))
@@ -574,6 +600,29 @@ func resourceTencentCloudCsipRiskCenterUpdate(d *schema.ResourceData, meta inter
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "task_advance_cfg"); ok {
 		taskAdvanceCFG := csip.TaskAdvanceCFG{}
+		if v, ok := dMap["port_risk"]; ok {
+			for _, item := range v.([]interface{}) {
+				portRiskMap := item.(map[string]interface{})
+				portRiskAdvanceCFGParamItem := csip.PortRiskAdvanceCFGParamItem{}
+				if v, ok := portRiskMap["port_sets"]; ok {
+					portRiskAdvanceCFGParamItem.PortSets = helper.String(v.(string))
+				}
+
+				if v, ok := portRiskMap["check_type"]; ok {
+					portRiskAdvanceCFGParamItem.CheckType = helper.IntInt64(v.(int))
+				}
+
+				if v, ok := portRiskMap["detail"]; ok {
+					portRiskAdvanceCFGParamItem.Detail = helper.String(v.(string))
+				}
+
+				if v, ok := portRiskMap["enable"]; ok {
+					portRiskAdvanceCFGParamItem.Enable = helper.IntInt64(v.(int))
+				}
+				taskAdvanceCFG.PortRisk = append(taskAdvanceCFG.PortRisk, &portRiskAdvanceCFGParamItem)
+			}
+		}
+
 		if v, ok := dMap["vul_risk"]; ok {
 			for _, item := range v.([]interface{}) {
 				vulRiskMap := item.(map[string]interface{})

@@ -1068,7 +1068,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			memSize := int64(d.Get("mem_size").(int))
 			cpu := int64(d.Get("cpu").(int))
 			volumeSize := int64(d.Get("volume_size").(int))
-			slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
+			var slaveDeployMode int64 = -1
 			slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
 			deviceType := ""
 			firstSlaveZone := ""
@@ -1093,6 +1093,12 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 
 			if v, ok := d.GetOkExists("wait_switch"); ok {
 				waitSwitch = int64(v.(int))
+			}
+
+			if d.HasChange("slave_deploy_mode") {
+				if v, ok := d.GetOkExists("slave_deploy_mode"); ok {
+					slaveDeployMode = int64(v.(int))
+				}
 			}
 
 			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone, waitSwitch)

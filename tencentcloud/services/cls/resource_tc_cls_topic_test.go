@@ -31,14 +31,31 @@ func testSweepClsTopic(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	clsService := localcls.NewClsService(client.GetAPIV3Conn())
+	clsService := localcls.NewClsService(client)
 
 	instances, err := clsService.DescribeClsTopicByFilter(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.TopicName, *v.CreateTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.TopicId,
+				Name: *v.TopicName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.TopicId,
+			Name:      *v.TopicName,
+			CreatTime: *v.CreateTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateTopic")
 
 	for _, v := range instances {
 		instanceId := v.TopicId

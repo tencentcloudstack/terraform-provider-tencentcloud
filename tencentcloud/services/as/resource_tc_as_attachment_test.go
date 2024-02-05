@@ -28,12 +28,30 @@ func testSweepAsAttachment(r string) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cli, _ := tcacctest.SharedClientForRegion(r)
-	asService := svcas.NewAsService(cli.(tccommon.ProviderMeta).GetAPIV3Conn())
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	asService := svcas.NewAsService(client)
 
 	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, "", "", "", nil)
 	if err != nil {
 		return fmt.Errorf("list scaling group error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range scalingGroups {
+		if !tccommon.CheckResourcePersist(*v.AutoScalingGroupName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.AutoScalingGroupId,
+				Name: *v.AutoScalingGroupName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:        *v.AutoScalingGroupId,
+			Name:      *v.AutoScalingGroupName,
+			CreatTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateAutoScalingGroup")
 
 	for _, v := range scalingGroups {
 		scalingGroupId := *v.AutoScalingGroupId

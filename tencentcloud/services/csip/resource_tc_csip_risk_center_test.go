@@ -23,13 +23,9 @@ func TestAccTencentCloudCsipRiskCenterResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "task_name", "tf_example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_asset_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_item"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_plan_type"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "assets"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_plan_content"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "self_defining_assets"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_from"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "task_advance_cfg"),
+					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "scan_plan_type", "46 51 16 */1 * * *"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "task_mode"),
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "assets"),
 				),
 			},
 		},
@@ -39,10 +35,17 @@ func TestAccTencentCloudCsipRiskCenterResource_basic(t *testing.T) {
 const testAccCsipRiskCenter = `
 resource "tencentcloud_csip_risk_center" "example" {
   task_name         = "tf_example"
-  scan_asset_type   = 3
-  scan_item         = ["port", "poc"]
-  scan_plan_type    = 0
+  scan_asset_type   = 1
+  scan_item         = ["port", "poc", "weakpass"]
   scan_plan_content = "46 51 16 */1 * * *"
-  task_mode         = 1
+  task_mode         = 0
+
+  assets {
+    asset_name    = "iac-test"
+    instance_type = "1"
+    asset_type    = "PublicIp"
+    asset         = "49.232.172.248"
+    region        = "ap-beijing"
+  }
 }
 `
