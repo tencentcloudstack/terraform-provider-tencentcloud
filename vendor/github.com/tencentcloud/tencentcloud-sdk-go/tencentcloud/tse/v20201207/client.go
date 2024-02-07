@@ -45,6 +45,101 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewBindAutoScalerResourceStrategyToGroupsRequest() (request *BindAutoScalerResourceStrategyToGroupsRequest) {
+    request = &BindAutoScalerResourceStrategyToGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "BindAutoScalerResourceStrategyToGroups")
+    
+    
+    return
+}
+
+func NewBindAutoScalerResourceStrategyToGroupsResponse() (response *BindAutoScalerResourceStrategyToGroupsResponse) {
+    response = &BindAutoScalerResourceStrategyToGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// BindAutoScalerResourceStrategyToGroups
+// 弹性伸缩策略批量绑定网关分组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) BindAutoScalerResourceStrategyToGroups(request *BindAutoScalerResourceStrategyToGroupsRequest) (response *BindAutoScalerResourceStrategyToGroupsResponse, err error) {
+    return c.BindAutoScalerResourceStrategyToGroupsWithContext(context.Background(), request)
+}
+
+// BindAutoScalerResourceStrategyToGroups
+// 弹性伸缩策略批量绑定网关分组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) BindAutoScalerResourceStrategyToGroupsWithContext(ctx context.Context, request *BindAutoScalerResourceStrategyToGroupsRequest) (response *BindAutoScalerResourceStrategyToGroupsResponse, err error) {
+    if request == nil {
+        request = NewBindAutoScalerResourceStrategyToGroupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BindAutoScalerResourceStrategyToGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBindAutoScalerResourceStrategyToGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCloseWafProtectionRequest() (request *CloseWafProtectionRequest) {
     request = &CloseWafProtectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -132,6 +227,91 @@ func (c *Client) CloseWafProtectionWithContext(ctx context.Context, request *Clo
     request.SetContext(ctx)
     
     response = NewCloseWafProtectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAutoScalerResourceStrategyRequest() (request *CreateAutoScalerResourceStrategyRequest) {
+    request = &CreateAutoScalerResourceStrategyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateAutoScalerResourceStrategy")
+    
+    
+    return
+}
+
+func NewCreateAutoScalerResourceStrategyResponse() (response *CreateAutoScalerResourceStrategyResponse) {
+    response = &CreateAutoScalerResourceStrategyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAutoScalerResourceStrategy
+// 创建弹性伸缩策略
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UPDATEERROR = "InternalError.UpdateError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) CreateAutoScalerResourceStrategy(request *CreateAutoScalerResourceStrategyRequest) (response *CreateAutoScalerResourceStrategyResponse, err error) {
+    return c.CreateAutoScalerResourceStrategyWithContext(context.Background(), request)
+}
+
+// CreateAutoScalerResourceStrategy
+// 创建弹性伸缩策略
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UPDATEERROR = "InternalError.UpdateError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) CreateAutoScalerResourceStrategyWithContext(ctx context.Context, request *CreateAutoScalerResourceStrategyRequest) (response *CreateAutoScalerResourceStrategyResponse, err error) {
+    if request == nil {
+        request = NewCreateAutoScalerResourceStrategyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAutoScalerResourceStrategy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAutoScalerResourceStrategyResponse()
     err = c.Send(request, response)
     return
 }
@@ -415,6 +595,63 @@ func (c *Client) CreateCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     request.SetContext(ctx)
     
     response = NewCreateCloudNativeAPIGatewayCertificateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayPublicNetworkRequest() (request *CreateCloudNativeAPIGatewayPublicNetworkRequest) {
+    request = &CreateCloudNativeAPIGatewayPublicNetworkRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateCloudNativeAPIGatewayPublicNetwork")
+    
+    
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayPublicNetworkResponse() (response *CreateCloudNativeAPIGatewayPublicNetworkResponse) {
+    response = &CreateCloudNativeAPIGatewayPublicNetworkResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudNativeAPIGatewayPublicNetwork
+// 创建公网网络配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) CreateCloudNativeAPIGatewayPublicNetwork(request *CreateCloudNativeAPIGatewayPublicNetworkRequest) (response *CreateCloudNativeAPIGatewayPublicNetworkResponse, err error) {
+    return c.CreateCloudNativeAPIGatewayPublicNetworkWithContext(context.Background(), request)
+}
+
+// CreateCloudNativeAPIGatewayPublicNetwork
+// 创建公网网络配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) CreateCloudNativeAPIGatewayPublicNetworkWithContext(ctx context.Context, request *CreateCloudNativeAPIGatewayPublicNetworkRequest) (response *CreateCloudNativeAPIGatewayPublicNetworkResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudNativeAPIGatewayPublicNetworkRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudNativeAPIGatewayPublicNetwork require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudNativeAPIGatewayPublicNetworkResponse()
     err = c.Send(request, response)
     return
 }
@@ -1014,6 +1251,81 @@ func (c *Client) CreateWafDomainsWithContext(ctx context.Context, request *Creat
     return
 }
 
+func NewDeleteAutoScalerResourceStrategyRequest() (request *DeleteAutoScalerResourceStrategyRequest) {
+    request = &DeleteAutoScalerResourceStrategyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteAutoScalerResourceStrategy")
+    
+    
+    return
+}
+
+func NewDeleteAutoScalerResourceStrategyResponse() (response *DeleteAutoScalerResourceStrategyResponse) {
+    response = &DeleteAutoScalerResourceStrategyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteAutoScalerResourceStrategy
+// 删除弹性伸缩策略
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteAutoScalerResourceStrategy(request *DeleteAutoScalerResourceStrategyRequest) (response *DeleteAutoScalerResourceStrategyResponse, err error) {
+    return c.DeleteAutoScalerResourceStrategyWithContext(context.Background(), request)
+}
+
+// DeleteAutoScalerResourceStrategy
+// 删除弹性伸缩策略
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteAutoScalerResourceStrategyWithContext(ctx context.Context, request *DeleteAutoScalerResourceStrategyRequest) (response *DeleteAutoScalerResourceStrategyResponse, err error) {
+    if request == nil {
+        request = NewDeleteAutoScalerResourceStrategyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAutoScalerResourceStrategy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAutoScalerResourceStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteCloudNativeAPIGatewayRequest() (request *DeleteCloudNativeAPIGatewayRequest) {
     request = &DeleteCloudNativeAPIGatewayRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1271,6 +1583,59 @@ func (c *Client) DeleteCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     request.SetContext(ctx)
     
     response = NewDeleteCloudNativeAPIGatewayCertificateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayPublicNetworkRequest() (request *DeleteCloudNativeAPIGatewayPublicNetworkRequest) {
+    request = &DeleteCloudNativeAPIGatewayPublicNetworkRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewayPublicNetwork")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayPublicNetworkResponse() (response *DeleteCloudNativeAPIGatewayPublicNetworkResponse) {
+    response = &DeleteCloudNativeAPIGatewayPublicNetworkResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewayPublicNetwork
+// 删除公网网络配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DeleteCloudNativeAPIGatewayPublicNetwork(request *DeleteCloudNativeAPIGatewayPublicNetworkRequest) (response *DeleteCloudNativeAPIGatewayPublicNetworkResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewayPublicNetworkWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewayPublicNetwork
+// 删除公网网络配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DeleteCloudNativeAPIGatewayPublicNetworkWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewayPublicNetworkRequest) (response *DeleteCloudNativeAPIGatewayPublicNetworkResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewayPublicNetworkRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewayPublicNetwork require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewayPublicNetworkResponse()
     err = c.Send(request, response)
     return
 }
@@ -1848,6 +2213,188 @@ func (c *Client) DeleteWafDomainsWithContext(ctx context.Context, request *Delet
     request.SetContext(ctx)
     
     response = NewDeleteWafDomainsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAutoScalerResourceStrategiesRequest() (request *DescribeAutoScalerResourceStrategiesRequest) {
+    request = &DescribeAutoScalerResourceStrategiesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeAutoScalerResourceStrategies")
+    
+    
+    return
+}
+
+func NewDescribeAutoScalerResourceStrategiesResponse() (response *DescribeAutoScalerResourceStrategiesResponse) {
+    response = &DescribeAutoScalerResourceStrategiesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAutoScalerResourceStrategies
+// 查看弹性伸缩策略列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UPDATEERROR = "InternalError.UpdateError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DescribeAutoScalerResourceStrategies(request *DescribeAutoScalerResourceStrategiesRequest) (response *DescribeAutoScalerResourceStrategiesResponse, err error) {
+    return c.DescribeAutoScalerResourceStrategiesWithContext(context.Background(), request)
+}
+
+// DescribeAutoScalerResourceStrategies
+// 查看弹性伸缩策略列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UPDATEERROR = "InternalError.UpdateError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DescribeAutoScalerResourceStrategiesWithContext(ctx context.Context, request *DescribeAutoScalerResourceStrategiesRequest) (response *DescribeAutoScalerResourceStrategiesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAutoScalerResourceStrategiesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAutoScalerResourceStrategies require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAutoScalerResourceStrategiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAutoScalerResourceStrategyBindingGroupsRequest() (request *DescribeAutoScalerResourceStrategyBindingGroupsRequest) {
+    request = &DescribeAutoScalerResourceStrategyBindingGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeAutoScalerResourceStrategyBindingGroups")
+    
+    
+    return
+}
+
+func NewDescribeAutoScalerResourceStrategyBindingGroupsResponse() (response *DescribeAutoScalerResourceStrategyBindingGroupsResponse) {
+    response = &DescribeAutoScalerResourceStrategyBindingGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAutoScalerResourceStrategyBindingGroups
+// 查看弹性伸缩策略绑定的网关分组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeAutoScalerResourceStrategyBindingGroups(request *DescribeAutoScalerResourceStrategyBindingGroupsRequest) (response *DescribeAutoScalerResourceStrategyBindingGroupsResponse, err error) {
+    return c.DescribeAutoScalerResourceStrategyBindingGroupsWithContext(context.Background(), request)
+}
+
+// DescribeAutoScalerResourceStrategyBindingGroups
+// 查看弹性伸缩策略绑定的网关分组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeAutoScalerResourceStrategyBindingGroupsWithContext(ctx context.Context, request *DescribeAutoScalerResourceStrategyBindingGroupsRequest) (response *DescribeAutoScalerResourceStrategyBindingGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAutoScalerResourceStrategyBindingGroupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAutoScalerResourceStrategyBindingGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAutoScalerResourceStrategyBindingGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -2878,6 +3425,7 @@ func NewDescribeCloudNativeAPIGatewaysResponse() (response *DescribeCloudNativeA
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
 //  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
 //  FAILEDOPERATION_ROLE = "FailedOperation.Role"
@@ -2906,6 +3454,7 @@ func (c *Client) DescribeCloudNativeAPIGateways(request *DescribeCloudNativeAPIG
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
 //  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
 //  FAILEDOPERATION_ROLE = "FailedOperation.Role"
@@ -3193,6 +3742,81 @@ func (c *Client) DescribeOneCloudNativeAPIGatewayServiceWithContext(ctx context.
     request.SetContext(ctx)
     
     response = NewDescribeOneCloudNativeAPIGatewayServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePublicNetworkRequest() (request *DescribePublicNetworkRequest) {
+    request = &DescribePublicNetworkRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribePublicNetwork")
+    
+    
+    return
+}
+
+func NewDescribePublicNetworkResponse() (response *DescribePublicNetworkResponse) {
+    response = &DescribePublicNetworkResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePublicNetwork
+// 查询云原生API网关实例公网详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribePublicNetwork(request *DescribePublicNetworkRequest) (response *DescribePublicNetworkResponse, err error) {
+    return c.DescribePublicNetworkWithContext(context.Background(), request)
+}
+
+// DescribePublicNetwork
+// 查询云原生API网关实例公网详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribePublicNetworkWithContext(ctx context.Context, request *DescribePublicNetworkRequest) (response *DescribePublicNetworkResponse, err error) {
+    if request == nil {
+        request = NewDescribePublicNetworkRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePublicNetwork require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePublicNetworkResponse()
     err = c.Send(request, response)
     return
 }
@@ -3672,6 +4296,85 @@ func (c *Client) DescribeZookeeperServerInterfacesWithContext(ctx context.Contex
     return
 }
 
+func NewModifyAutoScalerResourceStrategyRequest() (request *ModifyAutoScalerResourceStrategyRequest) {
+    request = &ModifyAutoScalerResourceStrategyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyAutoScalerResourceStrategy")
+    
+    
+    return
+}
+
+func NewModifyAutoScalerResourceStrategyResponse() (response *ModifyAutoScalerResourceStrategyResponse) {
+    response = &ModifyAutoScalerResourceStrategyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyAutoScalerResourceStrategy
+// 更新弹性伸缩策略
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyAutoScalerResourceStrategy(request *ModifyAutoScalerResourceStrategyRequest) (response *ModifyAutoScalerResourceStrategyResponse, err error) {
+    return c.ModifyAutoScalerResourceStrategyWithContext(context.Background(), request)
+}
+
+// ModifyAutoScalerResourceStrategy
+// 更新弹性伸缩策略
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyAutoScalerResourceStrategyWithContext(ctx context.Context, request *ModifyAutoScalerResourceStrategyRequest) (response *ModifyAutoScalerResourceStrategyResponse, err error) {
+    if request == nil {
+        request = NewModifyAutoScalerResourceStrategyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAutoScalerResourceStrategy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAutoScalerResourceStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyCloudNativeAPIGatewayRequest() (request *ModifyCloudNativeAPIGatewayRequest) {
     request = &ModifyCloudNativeAPIGatewayRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3869,6 +4572,7 @@ func NewModifyCloudNativeAPIGatewayCertificateResponse() (response *ModifyCloudN
 //  FAILEDOPERATION_ROLE = "FailedOperation.Role"
 //  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
 //  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
@@ -3900,6 +4604,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayCertificate(request *ModifyCloudNati
 //  FAILEDOPERATION_ROLE = "FailedOperation.Role"
 //  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
 //  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
@@ -4299,6 +5004,77 @@ func (c *Client) ModifyCloudNativeAPIGatewayServiceRateLimitWithContext(ctx cont
     return
 }
 
+func NewModifyConsoleNetworkRequest() (request *ModifyConsoleNetworkRequest) {
+    request = &ModifyConsoleNetworkRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyConsoleNetwork")
+    
+    
+    return
+}
+
+func NewModifyConsoleNetworkResponse() (response *ModifyConsoleNetworkResponse) {
+    response = &ModifyConsoleNetworkResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConsoleNetwork
+// 修改网关实例Konga网络配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyConsoleNetwork(request *ModifyConsoleNetworkRequest) (response *ModifyConsoleNetworkResponse, err error) {
+    return c.ModifyConsoleNetworkWithContext(context.Background(), request)
+}
+
+// ModifyConsoleNetwork
+// 修改网关实例Konga网络配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyConsoleNetworkWithContext(ctx context.Context, request *ModifyConsoleNetworkRequest) (response *ModifyConsoleNetworkResponse, err error) {
+    if request == nil {
+        request = NewModifyConsoleNetworkRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConsoleNetwork require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConsoleNetworkResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyNativeGatewayServerGroupRequest() (request *ModifyNativeGatewayServerGroupRequest) {
     request = &ModifyNativeGatewayServerGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4374,6 +5150,148 @@ func (c *Client) ModifyNativeGatewayServerGroupWithContext(ctx context.Context, 
     return
 }
 
+func NewModifyNetworkAccessStrategyRequest() (request *ModifyNetworkAccessStrategyRequest) {
+    request = &ModifyNetworkAccessStrategyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyNetworkAccessStrategy")
+    
+    
+    return
+}
+
+func NewModifyNetworkAccessStrategyResponse() (response *ModifyNetworkAccessStrategyResponse) {
+    response = &ModifyNetworkAccessStrategyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyNetworkAccessStrategy
+// 修改云原生API网关实例Kong访问策略，支持白名单或者黑名单。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyNetworkAccessStrategy(request *ModifyNetworkAccessStrategyRequest) (response *ModifyNetworkAccessStrategyResponse, err error) {
+    return c.ModifyNetworkAccessStrategyWithContext(context.Background(), request)
+}
+
+// ModifyNetworkAccessStrategy
+// 修改云原生API网关实例Kong访问策略，支持白名单或者黑名单。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyNetworkAccessStrategyWithContext(ctx context.Context, request *ModifyNetworkAccessStrategyRequest) (response *ModifyNetworkAccessStrategyResponse, err error) {
+    if request == nil {
+        request = NewModifyNetworkAccessStrategyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyNetworkAccessStrategy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyNetworkAccessStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyNetworkBasicInfoRequest() (request *ModifyNetworkBasicInfoRequest) {
+    request = &ModifyNetworkBasicInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyNetworkBasicInfo")
+    
+    
+    return
+}
+
+func NewModifyNetworkBasicInfoResponse() (response *ModifyNetworkBasicInfoResponse) {
+    response = &ModifyNetworkBasicInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyNetworkBasicInfo
+// 修改云原生API网关实例网络基本信息，例如带宽以及描述，只支持修改客户端公网/内网的信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyNetworkBasicInfo(request *ModifyNetworkBasicInfoRequest) (response *ModifyNetworkBasicInfoResponse, err error) {
+    return c.ModifyNetworkBasicInfoWithContext(context.Background(), request)
+}
+
+// ModifyNetworkBasicInfo
+// 修改云原生API网关实例网络基本信息，例如带宽以及描述，只支持修改客户端公网/内网的信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyNetworkBasicInfoWithContext(ctx context.Context, request *ModifyNetworkBasicInfoRequest) (response *ModifyNetworkBasicInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyNetworkBasicInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyNetworkBasicInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyNetworkBasicInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyUpstreamNodeStatusRequest() (request *ModifyUpstreamNodeStatusRequest) {
     request = &ModifyUpstreamNodeStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4399,12 +5317,10 @@ func NewModifyUpstreamNodeStatusResponse() (response *ModifyUpstreamNodeStatusRe
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
 //  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
-//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
-//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
 //  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
 //  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
 //  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
@@ -4421,12 +5337,10 @@ func (c *Client) ModifyUpstreamNodeStatus(request *ModifyUpstreamNodeStatusReque
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
 //  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
-//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
-//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
 //  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
 //  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
 //  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
@@ -4538,6 +5452,103 @@ func (c *Client) OpenWafProtectionWithContext(ctx context.Context, request *Open
     request.SetContext(ctx)
     
     response = NewOpenWafProtectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUnbindAutoScalerResourceStrategyFromGroupsRequest() (request *UnbindAutoScalerResourceStrategyFromGroupsRequest) {
+    request = &UnbindAutoScalerResourceStrategyFromGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "UnbindAutoScalerResourceStrategyFromGroups")
+    
+    
+    return
+}
+
+func NewUnbindAutoScalerResourceStrategyFromGroupsResponse() (response *UnbindAutoScalerResourceStrategyFromGroupsResponse) {
+    response = &UnbindAutoScalerResourceStrategyFromGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UnbindAutoScalerResourceStrategyFromGroups
+// 弹性伸缩策略批量解绑网关分组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) UnbindAutoScalerResourceStrategyFromGroups(request *UnbindAutoScalerResourceStrategyFromGroupsRequest) (response *UnbindAutoScalerResourceStrategyFromGroupsResponse, err error) {
+    return c.UnbindAutoScalerResourceStrategyFromGroupsWithContext(context.Background(), request)
+}
+
+// UnbindAutoScalerResourceStrategyFromGroups
+// 弹性伸缩策略批量解绑网关分组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_GATEWAYID = "InvalidParameterValue.GatewayId"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND_FORBIDDEN = "ResourceNotFound.Forbidden"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) UnbindAutoScalerResourceStrategyFromGroupsWithContext(ctx context.Context, request *UnbindAutoScalerResourceStrategyFromGroupsRequest) (response *UnbindAutoScalerResourceStrategyFromGroupsResponse, err error) {
+    if request == nil {
+        request = NewUnbindAutoScalerResourceStrategyFromGroupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UnbindAutoScalerResourceStrategyFromGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUnbindAutoScalerResourceStrategyFromGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -4655,7 +5666,7 @@ func NewUpdateCloudNativeAPIGatewaySpecResponse() (response *UpdateCloudNativeAP
 }
 
 // UpdateCloudNativeAPIGatewaySpec
-// 修改云原生API网关实例的节点规格信息，比如节点扩缩容或者升降配
+// 修改云原生API网关实例的节点规格信息，例如节点扩缩容或者升降配
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
@@ -4674,7 +5685,7 @@ func (c *Client) UpdateCloudNativeAPIGatewaySpec(request *UpdateCloudNativeAPIGa
 }
 
 // UpdateCloudNativeAPIGatewaySpec
-// 修改云原生API网关实例的节点规格信息，比如节点扩缩容或者升降配
+// 修改云原生API网关实例的节点规格信息，例如节点扩缩容或者升降配
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
@@ -4784,6 +5795,7 @@ func NewUpdateUpstreamHealthCheckConfigResponse() (response *UpdateUpstreamHealt
 // 更新云原生网关健康检查配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
 func (c *Client) UpdateUpstreamHealthCheckConfig(request *UpdateUpstreamHealthCheckConfigRequest) (response *UpdateUpstreamHealthCheckConfigResponse, err error) {
     return c.UpdateUpstreamHealthCheckConfigWithContext(context.Background(), request)
@@ -4793,6 +5805,7 @@ func (c *Client) UpdateUpstreamHealthCheckConfig(request *UpdateUpstreamHealthCh
 // 更新云原生网关健康检查配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
 func (c *Client) UpdateUpstreamHealthCheckConfigWithContext(ctx context.Context, request *UpdateUpstreamHealthCheckConfigRequest) (response *UpdateUpstreamHealthCheckConfigResponse, err error) {
     if request == nil {
@@ -4834,6 +5847,7 @@ func NewUpdateUpstreamTargetsResponse() (response *UpdateUpstreamTargetsResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
 func (c *Client) UpdateUpstreamTargets(request *UpdateUpstreamTargetsRequest) (response *UpdateUpstreamTargetsResponse, err error) {
     return c.UpdateUpstreamTargetsWithContext(context.Background(), request)
 }
@@ -4843,6 +5857,7 @@ func (c *Client) UpdateUpstreamTargets(request *UpdateUpstreamTargetsRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
 func (c *Client) UpdateUpstreamTargetsWithContext(ctx context.Context, request *UpdateUpstreamTargetsRequest) (response *UpdateUpstreamTargetsResponse, err error) {
     if request == nil {
         request = NewUpdateUpstreamTargetsRequest()

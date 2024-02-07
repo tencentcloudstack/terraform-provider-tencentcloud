@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -1200,6 +1201,7 @@ func (me *TseService) DescribeTseGroupsByFilter(ctx context.Context, param map[s
 func (me *TseService) CheckTseNativeAPIGatewayGroupStatusById(ctx context.Context, gatewayId, groupId, operate string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
+	time.Sleep(5 * time.Second)
 	err := resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		gateway, e := me.DescribeTseCngwGroupById(ctx, gatewayId, groupId)
 		if e != nil && operate != "delete" {
@@ -1447,6 +1449,185 @@ func (me *TseService) DeleteTseWafDomainsById(ctx context.Context, gatewayId str
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseTseClient().DeleteWafDomains(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwStrategyBindGroupById(ctx context.Context, gatewayId, strategyId, groupId string) (cngwStrategyBindGroup *tse.CloudNativeAPIGatewayStrategyBindingGroupInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tse.NewDescribeAutoScalerResourceStrategyBindingGroupsRequest()
+	request.GatewayId = &gatewayId
+	request.StrategyId = &strategyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeAutoScalerResourceStrategyBindingGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.GroupInfos) < 1 {
+			break
+		}
+
+		for _, v := range response.Response.Result.GroupInfos {
+			if *v.GroupId == groupId {
+				cngwStrategyBindGroup = v
+				return
+			}
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
+func (me *TseService) DescribeTseCngwNetworkById(ctx context.Context, gatewayId, groupId, networkId string) (cngwNetwork *tse.DescribePublicNetworkResult, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tse.NewDescribePublicNetworkRequest()
+	request.GatewayId = &gatewayId
+	request.GroupId = &groupId
+	request.NetworkId = &networkId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribePublicNetwork(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	cngwNetwork = response.Response.Result
+	return
+}
+
+func (me *TseService) DeleteTseCngwNetworkById(ctx context.Context, gatewayId, groupId, networkId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayPublicNetworkRequest()
+	request.GatewayId = &gatewayId
+	request.GroupId = &groupId
+
+	object, err := me.DescribeTseCngwNetworkById(ctx, gatewayId, groupId, networkId)
+	if err != nil {
+		return err
+	}
+
+	if object == nil || object.PublicNetwork == nil {
+		return nil
+	}
+
+	request.Vip = object.PublicNetwork.Vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayPublicNetwork(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) TseCngwNetworkStateRefreshFunc(gatewayId, groupId, networkId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+
+		object, err := me.DescribeTseCngwNetworkById(ctx, gatewayId, groupId, networkId)
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.PublicNetwork.Status), nil
+	}
+}
+
+func (me *TseService) DescribeTseCngwStrategyById(ctx context.Context, gatewayId string, strategyId string) (cngwStrategy *tse.CloudNativeAPIGatewayStrategy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tse.NewDescribeAutoScalerResourceStrategiesRequest()
+	request.GatewayId = &gatewayId
+	request.StrategyId = &strategyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeAutoScalerResourceStrategies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Result == nil || response.Response.Result.StrategyList == nil {
+		return
+	}
+
+	cngwStrategy = response.Response.Result.StrategyList[0]
+	return
+}
+func (me *TseService) DeleteTseCngwStrategyById(ctx context.Context, gatewayId string, strategyId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tse.NewDeleteAutoScalerResourceStrategyRequest()
+	request.GatewayId = &gatewayId
+	request.StrategyId = &strategyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteAutoScalerResourceStrategy(request)
 	if err != nil {
 		errRet = err
 		return
