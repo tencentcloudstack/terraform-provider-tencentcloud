@@ -2,6 +2,7 @@ package tke
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -227,6 +228,11 @@ func DataSourceTencentCloudKubernetesClusters() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
+			"kube_config_file_prefix": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The path prefix of kube config. You can store KubeConfig in a specified directory by specifying this field, such as ~/.kube/k8s, then public network access will use ~/.kube/k8s-clusterID-kubeconfig naming, and intranet access will use ~/.kube /k8s-clusterID-kubeconfig-intranet naming. If this field is not set, the KubeConfig will not be exported.",
+			},
 
 			"list": {
 				Type:        schema.TypeList,
@@ -251,8 +257,9 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 	}
 
 	var (
-		id   string
-		name string
+		id                   string
+		name                 string
+		kubeConfigFilePrefix string
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -288,6 +295,10 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		} else {
 			return *ptr
 		}
+	}
+
+	if v, ok := d.GetOk("kube_config_file_prefix"); ok {
+		kubeConfigFilePrefix = v.(string)
 	}
 
 LOOP:
@@ -410,6 +421,18 @@ LOOP:
 
 		infoMap["kube_config"] = config
 		infoMap["kube_config_intranet"] = intranetConfig
+
+		if kubeConfigFilePrefix != "" {
+			kubeConfigFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig", info.ClusterId)
+			if err = tccommon.WriteToFile(kubeConfigFile, config); err != nil {
+				return err
+			}
+			kubeConfigIntranetFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig-intranet", info.ClusterId)
+			if err = tccommon.WriteToFile(kubeConfigIntranetFile, intranetConfig); err != nil {
+				return err
+			}
+		}
+
 		list = append(list, infoMap)
 	}
 
