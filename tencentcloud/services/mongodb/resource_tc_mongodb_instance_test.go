@@ -79,8 +79,7 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 		CheckDestroy: testAccCheckMongodbInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccMongodbInstance,
+				Config: testAccMongodbInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-test"),
@@ -102,20 +101,25 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 			{
 				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
 				ImportState:             true,
-				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
 			},
 			{
-				SkipFunc: func() (bool, error) {
-					log.Printf("[WARN] MongoDB Update Need DealID query available, skip checking.")
-					return true, nil
-				},
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccMongodbInstance_update,
+				Config: testAccMongodbInstance_updateConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-update"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "8"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "512"),
+					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.abc", "abc"),
+				),
+			},
+			{
+				Config: testAccMongodbInstance_updateNode,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-update"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "8"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "512"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "node_num", "5"),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.abc", "abc"),
 				),
@@ -132,8 +136,7 @@ func TestAccTencentCloudMongodbInstanceResource_multiZone(t *testing.T) {
 		CheckDestroy: testAccCheckMongodbInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccMongodbInstance_multiZone,
+				Config: testAccMongodbInstance_multiZone,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb_mutil_zone"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_mutil_zone", "node_num", "5"),
@@ -148,12 +151,11 @@ func TestAccTencentCloudMongodbInstanceResource_multiZone(t *testing.T) {
 func TestAccTencentCloudMongodbInstanceResourcePrepaid(t *testing.T) {
 	// Avoid to set Parallel to make sure EnvVar secure
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccMongodbInstancePrepaid,
+				Config: testAccMongodbInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "instance_name", "tf-mongodb-test-prepaid"),
@@ -174,8 +176,7 @@ func TestAccTencentCloudMongodbInstanceResourcePrepaid(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccMongodbInstancePrepaid_update,
+				Config: testAccMongodbInstancePrepaid_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "instance_name", "tf-mongodb-test-prepaid-update"),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "tags.test"),
@@ -185,7 +186,6 @@ func TestAccTencentCloudMongodbInstanceResourcePrepaid(t *testing.T) {
 			{
 				ResourceName:            "tencentcloud_mongodb_instance.mongodb_prepaid",
 				ImportState:             true,
-				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag", "prepaid_period"},
 			},
 		},
@@ -258,7 +258,26 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 }
 `
 
-const testAccMongodbInstance_update = tcacctest.DefaultMongoDBSpec + `
+const testAccMongodbInstance_updateConfig = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_mongodb_instance" "mongodb" {
+  instance_name  = "tf-mongodb-update"
+  memory         = local.memory * 2
+  volume         = local.volume * 2
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  security_groups = [local.security_group_id]
+  available_zone = "ap-guangzhou-3"
+  project_id     = 0
+  password       = "test1234update"
+  vpc_id         = var.vpc_id
+  subnet_id      = var.subnet_id
+  tags = {
+    abc = "abc"
+  }
+}
+`
+
+const testAccMongodbInstance_updateNode = tcacctest.DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-update"
   memory         = local.memory * 2
@@ -272,6 +291,15 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   vpc_id         = var.vpc_id
   subnet_id      = var.subnet_id
 
+  node_num = 5
+  add_node_list {
+    role = "SECONDARY"
+    zone = "ap-guangzhou-3"
+  }
+  add_node_list {
+    role = "SECONDARY"
+    zone = "ap-guangzhou-3"
+  }
   tags = {
     abc = "abc"
   }

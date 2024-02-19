@@ -818,17 +818,17 @@ locals {
 
 // MongoDB
 const (
-	DefaultMongoDBVPCId    = "vpc-rwj54lfr"
-	DefaultMongoDBSubnetId = "subnet-nyt57zps"
+	DefaultMongoDBVPCId    = "vpc-axrsmmrv"
+	DefaultMongoDBSubnetId = "subnet-9hcctbue"
 )
 const DefaultMongoDBSecurityGroupId = "sg-if748odn"
 const DefaultMongoDBSpec = `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
-  available_zone = "ap-guangzhou-6"
+  available_zone = "ap-guangzhou-3"
 }
 
 data "tencentcloud_security_group" "foo" {
-  name = "default"
+  name = "keep-mongodb-sg"
 }
 
 variable "engine_versions" {
@@ -850,22 +850,22 @@ variable "subnet_id" {
 }
 
 locals {
-  filtered_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") != "3.2"]
+  filtered_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") == "4.4" && lookup(i, "memory") == 4096 && lookup(i, "default_storage") == 256000]
   spec = concat(local.filtered_spec, data.tencentcloud_mongodb_zone_config.zone_config.list)
   machine_type = local.spec.0.machine_type
   cluster_type = local.spec.0.cluster_type
   memory = local.spec.0.memory / 1024
-  volume = local.spec.0.min_storage / 1024
+  volume = local.spec.0.default_storage / 1000
   engine_version = lookup(var.engine_versions, local.spec.0.engine_version)
   security_group_id = data.tencentcloud_security_group.foo.id
 }
 
 locals {
-  filtered_sharding_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0 && lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") != "3.2"]
+  filtered_sharding_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0 && lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") == "4.4" && lookup(i, "memory") == 4096 && lookup(i, "default_storage") == 256000]
   sharding_spec = concat(local.filtered_sharding_spec, [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0])
   sharding_machine_type = local.sharding_spec.0.machine_type
   sharding_memory = local.sharding_spec.0.memory / 1024
-  sharding_volume = local.sharding_spec.0.min_storage / 1024
+  sharding_volume = local.sharding_spec.0.default_storage / 1000
   sharding_engine_version = lookup(var.engine_versions, local.sharding_spec.0.engine_version)
 }
 `

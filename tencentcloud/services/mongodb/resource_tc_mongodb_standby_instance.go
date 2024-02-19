@@ -402,7 +402,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
-		err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume)
+		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, nil)
 		if err != nil {
 			return err
 		}
