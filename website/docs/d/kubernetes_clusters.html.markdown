@@ -29,6 +29,7 @@ The following arguments are supported:
 
 * `cluster_id` - (Optional, String) ID of the cluster. Conflict with cluster_name, can not be set at the same time.
 * `cluster_name` - (Optional, String) Name of the cluster. Conflict with cluster_id, can not be set at the same time.
+* `kube_config_file_prefix` - (Optional, String) The path prefix of kube config. You can store KubeConfig in a specified directory by specifying this field, such as ~/.kube/k8s, then public network access will use ~/.kube/k8s-clusterID-kubeconfig naming, and intranet access will use ~/.kube /k8s-clusterID-kubeconfig-intranet naming. If this field is not set, the KubeConfig will not be exported.
 * `result_output_file` - (Optional, String) Used to save results.
 * `tags` - (Optional, Map) Tags of the cluster.
 
