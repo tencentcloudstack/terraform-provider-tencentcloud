@@ -38,6 +38,7 @@ The following arguments are supported:
 * `machine_type` - (Required, String, ForceNew) Type of Mongodb instance, and available values include `HIO`(or `GIO` which will be deprecated, represents high IO) and `HIO10G`(or `TGIO` which will be deprecated, represents 10-gigabit high IO).
 * `memory` - (Required, Int) Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
+* `add_node_list` - (Optional, List) Add node attribute list.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
 * `availability_zone_list` - (Optional, List: [`String`]) A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
 			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
@@ -50,10 +51,32 @@ The following arguments are supported:
 * `password` - (Optional, String) Password of this Mongodb account.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int) ID of the project which the instance belongs.
+* `remove_node_list` - (Optional, List) Add node attribute list.
 * `security_groups` - (Optional, Set: [`String`], ForceNew) ID of the security group.
 * `subnet_id` - (Optional, String, ForceNew) ID of the subnet within this VPC. The value is required if `vpc_id` is set.
 * `tags` - (Optional, Map) The tags of the Mongodb. Key name `project` is system reserved and can't be used.
 * `vpc_id` - (Optional, String, ForceNew) ID of the VPC.
+
+The `add_node_list` object supports the following:
+
+* `role` - (Required, String) The node role that needs to be added.
+- SECONDARY: Mongod node;
+- READONLY: read-only node;
+- MONGOS: Mongos node.
+* `zone` - (Required, String) The availability zone corresponding to the node.
+- single availability zone, where all nodes are in the same availability zone;
+- multiple availability zones: the current standard specification is the distribution of three availability zones, and the master and slave nodes are not in the same availability zone. You should pay attention to configuring the availability zone corresponding to the new node, and the rule that the number of nodes in any two availability zones is greater than the third availability zone must be met after the addition.
+
+The `remove_node_list` object supports the following:
+
+* `node_name` - (Required, String) The node ID to delete. The shard cluster must specify the name of the node to be deleted by a group of shards, and the rest of the shards should be grouped and aligned.
+* `role` - (Required, String) The node role that needs to be deleted.
+- SECONDARY: Mongod node;
+- READONLY: read-only node;
+- MONGOS: Mongos node.
+* `zone` - (Required, String) The availability zone corresponding to the node.
+- single availability zone, where all nodes are in the same availability zone;
+- multiple availability zones: the current standard specification is the distribution of three availability zones, and the master and slave nodes are not in the same availability zone. You should pay attention to configuring the availability zone corresponding to the new node, and the rule that the number of nodes in any two availability zones is greater than the third availability zone must be met after the addition.
 
 ## Attributes Reference
 

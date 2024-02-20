@@ -115,12 +115,36 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 	return nil
 }
 
-func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string, memory int, volume int) (errRet error) {
+func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string, memory int, volume int, params map[string]interface{}) (dealId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewModifyDBInstanceSpecRequest()
 	request.InstanceId = &instanceId
 	request.Memory = helper.IntUint64(memory)
 	request.Volume = helper.IntUint64(volume)
+	if v, ok := params["node_num"]; ok {
+		request.NodeNum = helper.IntUint64(v.(int))
+	}
+	if v, ok := params["add_node_list"]; ok {
+		addNodeList := v.([]interface{})
+		for _, addNode := range addNodeList {
+			addNodeMap := addNode.(map[string]interface{})
+			request.AddNodeList = append(request.AddNodeList, &mongodb.AddNodeList{
+				Role: helper.String(addNodeMap["role"].(string)),
+				Zone: helper.String(addNodeMap["zone"].(string)),
+			})
+		}
+	}
+	if v, ok := params["remove_node_list"]; ok {
+		removeNodeList := v.([]interface{})
+		for _, removeNode := range removeNodeList {
+			removeNodeMap := removeNode.(map[string]interface{})
+			request.RemoveNodeList = append(request.RemoveNodeList, &mongodb.RemoveNodeList{
+				Role:     helper.String(removeNodeMap["role"].(string)),
+				Zone:     helper.String(removeNodeMap["zone"].(string)),
+				NodeName: helper.String(removeNodeMap["node_name"].(string)),
+			})
+		}
+	}
 	var response *mongodb.ModifyDBInstanceSpecResponse
 	tradeError := false
 	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -146,11 +170,17 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 		return nil
 	})
 	if err != nil {
-		return err
+		errRet = err
+		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	return nil
+
+	if response != nil && response.Response != nil && response.Response.DealId != nil {
+		dealId = *response.Response.DealId
+	}
+
+	return
 }
 
 func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string, projectId int) (errRet error) {
@@ -828,6 +858,31 @@ func (me *MongodbService) DescribeMongodbInstanceSlowLogByFilter(ctx context.Con
 
 		offset += limit
 	}
+
+	return
+}
+
+func (me *MongodbService) DescribeDBInstanceDeal(ctx context.Context, dealId string) (dealResponseParams *mongodb.DescribeDBInstanceDealResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewDescribeDBInstanceDealRequest()
+	request.DealId = helper.String(dealId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeDBInstanceDeal(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	dealResponseParams = response.Response
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
