@@ -491,11 +491,7 @@ func getClusterNetworkStatus(ctx context.Context, service *TkeService, clusterId
 	if status == TkeInternetStatusCreated {
 		isOpened = true
 	}
-	if isInternet {
-		networkStatus = isOpened
-	} else {
-		networkStatus = isOpened
-	}
+	networkStatus = isOpened
 
 	return networkStatus, nil
 }
