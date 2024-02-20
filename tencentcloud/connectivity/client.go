@@ -104,9 +104,6 @@ import (
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-
 const (
 	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
 	PROVIDER_CBS_REQUEST_TIMEOUT = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
@@ -201,8 +198,6 @@ type TencentCloudClient struct {
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
 	billingConn        *billing.Client
-	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1391,9 +1386,6 @@ func (me *TencentCloudClient) UseBillingClient() *billing.Client {
 
 	return me.billingConn
 }
-
-//internal version: replace useClient begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace useClient end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func getEnvDefault(key string, defVal int) int {
 	val, ex := os.LookupEnv(key)
