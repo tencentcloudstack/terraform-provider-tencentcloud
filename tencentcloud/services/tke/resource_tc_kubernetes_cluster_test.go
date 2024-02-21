@@ -194,7 +194,7 @@ func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 			{
 				PreConfig: func() {
 					// do not update so fast
-					time.Sleep(10 * time.Second)
+					time.Sleep(10 * time.Minute)
 				},
 				Config: testAccTkeClusterLogsAddonsUpdate,
 				Check: resource.ComposeTestCheckFunc(
@@ -512,17 +512,9 @@ resource "tencentcloud_security_group" "example" {
   description = "sg test"
 }
 
-data "tencentcloud_security_groups" "internal" {
-  name = tencentcloud_security_group.example.name
-}
-
-data "tencentcloud_security_groups" "exclusive" {
-  name = tencentcloud_security_group.example.name
-}
-
 locals {
-  sg_id  = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-  sg_id2 = data.tencentcloud_security_groups.exclusive.security_groups.0.security_group_id
+  sg_id  = tencentcloud_security_group.example.id
+  sg_id2 = tencentcloud_security_group.example.id
 }
 `
 

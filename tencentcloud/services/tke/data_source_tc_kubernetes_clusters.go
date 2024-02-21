@@ -422,14 +422,29 @@ LOOP:
 		infoMap["kube_config"] = config
 		infoMap["kube_config_intranet"] = intranetConfig
 
+		clusterInternet, err := getClusterNetworkStatus(ctx, &service, info.ClusterId, true)
+		if err != nil {
+			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters get cluster internet status fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		clusterIntranet, err := getClusterNetworkStatus(ctx, &service, info.ClusterId, false)
+		if err != nil {
+			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters get cluster intranet status fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
 		if kubeConfigFilePrefix != "" {
-			kubeConfigFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig", info.ClusterId)
-			if err = tccommon.WriteToFile(kubeConfigFile, config); err != nil {
-				return err
+			if clusterInternet {
+				kubeConfigFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig", info.ClusterId)
+				if err = tccommon.WriteToFile(kubeConfigFile, config); err != nil {
+					return err
+				}
 			}
-			kubeConfigIntranetFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig-intranet", info.ClusterId)
-			if err = tccommon.WriteToFile(kubeConfigIntranetFile, intranetConfig); err != nil {
-				return err
+			if clusterIntranet {
+				kubeConfigIntranetFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig-intranet", info.ClusterId)
+				if err = tccommon.WriteToFile(kubeConfigIntranetFile, intranetConfig); err != nil {
+					return err
+				}
 			}
 		}
 
@@ -450,4 +465,33 @@ LOOP:
 		}
 	}
 	return nil
+}
+
+func getClusterNetworkStatus(ctx context.Context, service *TkeService, clusterId string, isInternet bool) (networkStatus bool, err error) {
+	var status string
+	var isOpened bool
+	var errRet error
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		status, _, errRet = service.DescribeClusterEndpointStatus(ctx, clusterId, isInternet)
+		if errRet != nil {
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+		if status == TkeInternetStatusCreating || status == TkeInternetStatusDeleting {
+			return resource.RetryableError(
+				fmt.Errorf("%s create cluster internet endpoint status still is %s", clusterId, status))
+		}
+		return nil
+	})
+	if err != nil {
+		return false, err
+	}
+	if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted {
+		isOpened = false
+	}
+	if status == TkeInternetStatusCreated {
+		isOpened = true
+	}
+	networkStatus = isOpened
+
+	return networkStatus, nil
 }

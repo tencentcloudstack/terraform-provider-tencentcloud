@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -331,6 +332,11 @@ func WriteToFile(filePath string, data interface{}) error {
 		if err := os.Remove(filePath); err != nil {
 			return fmt.Errorf("delete old file error,reason %s", err.Error())
 		}
+	}
+
+	dir := filepath.Dir(filePath)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("create directory error, reason: %s", err.Error())
 	}
 
 	if IsString(data) {
