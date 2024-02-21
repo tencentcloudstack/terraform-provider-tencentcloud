@@ -2616,7 +2616,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 				return err
 			}
 			time.Sleep(3 * time.Second)
-			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				ipamdResp, inErr := tkeService.DescribeIPAMD(ctx, id)
 				enableIPAMD := *ipamdResp.EnableIPAMD
 				disableVpcCniMode := *ipamdResp.DisableVpcCniMode
