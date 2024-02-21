@@ -1,3 +1,12 @@
+## 1.81.74 (February 21, 2024)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kubernetes_clusters: add `kube_config_file_prefix` field ([#2530](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2530))
+* resource/tencentcloud_kubernetes_cluster: Optimize the change problem of `cluster_internet_security_group` and `cluster_intranet_subnet_id` fields ([#2533](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2533))
+* resource/tencentcloud_mongodb_instance: support params `add_node_list` and `remove_node_list` ([#2531](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2531))
+* resource/tencentcloud_monitor_tmp_exporter_integration: Documentation example added. ([#2527](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2527))
+
 ## 1.81.73 (February 5, 2024)
 
 FEATURES:
