@@ -32,10 +32,10 @@ resource "tencentcloud_mongodb_instance_account" "instance_account" {
 The following arguments are supported:
 
 * `instance_id` - (Required, String, ForceNew) Instance ID, the format is: cmgo-9d0p6umb.Same as the instance ID displayed in the cloud database console page.
-* `mongo_user_password` - (Required, String, ForceNew) The password corresponding to the mongouser account. mongouser is the system default account, which is the password set when creating an instance.
-* `password` - (Required, String) New account password. Password complexity requirements are as follows: character length range [8,32]. Contains at least letters, numbers and special characters (exclamation point!, at@, pound sign #, percent sign %, caret ^, asterisk *, parentheses (), underscore _).
 * `user_name` - (Required, String, ForceNew) The new account name. Its format requirements are as follows: character range [1,32]. Characters in the range of [A,Z], [a,z], [1,9] as well as underscore _ and dash - can be input.
 * `auth_role` - (Optional, List) The read and write permission information of the account.
+* `mongo_user_password` - (Optional, String, ForceNew) The password corresponding to the mongouser account. mongouser is the system default account, which is the password set when creating an instance.
+* `password` - (Optional, String) New account password. Password complexity requirements are as follows: character length range [8,32]. Contains at least letters, numbers and special characters (exclamation point!, at@, pound sign #, percent sign %, caret ^, asterisk *, parentheses (), underscore _).
 * `user_desc` - (Optional, String) Account remarks.
 
 The `auth_role` object supports the following:
