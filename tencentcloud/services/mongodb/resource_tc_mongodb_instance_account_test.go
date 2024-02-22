@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudNeedFixMongodbInstanceAccountResource_basic(t *testing.T) {
+func TestAccTencentCloudMongodbInstanceAccountResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
