@@ -383,13 +383,13 @@ resource "tencentcloud_clb_listener" "public_listeners" {
   protocol      = "TCP"
   port          = "8090"
   listener_name = "iac-test-attach"
+  target_type         = "TARGETGROUP"
 }
 resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" {
-  target_group_id = "lbtg-fa1l7oh2"
+  target_group_id = "lbtg-nxd0dmcm"
   associations  {
     load_balancer_id = tencentcloud_clb_instance.clb_basic.id
     listener_id = tencentcloud_clb_listener.public_listeners.listener_id
   }
-}
 }
 `

@@ -209,10 +209,10 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 			_ = d.Set("target_group_id", info[1])
 			associationsMap["load_balancer_id"] = info[0]
 		}
-		if info[2] != "" {
+		if info[2] != "" && info[2] != "null" {
 			associationsMap["listener_id"] = info[2]
 		}
-		if info[3] != "" {
+		if info[3] != "" && info[3] != "null" {
 			associationsMap["location_id"] = info[3]
 		}
 		associationsList = append(associationsList, associationsMap)
@@ -269,7 +269,8 @@ func parseParamToRequest(d *schema.ResourceData, param string, id string) (assoc
 			targetGroupAssociation := clb.TargetGroupAssociation{}
 			dMap[param] = id
 			for name := range dMap {
-				if dMap[name].(string) != "" {
+				fmt.Println(name, dMap[name])
+				if dMap[name] != nil && dMap[name].(string) != "" {
 					setString(name, dMap[name].(string), &targetGroupAssociation)
 				}
 			}
