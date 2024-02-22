@@ -269,7 +269,6 @@ func parseParamToRequest(d *schema.ResourceData, param string, id string) (assoc
 			targetGroupAssociation := clb.TargetGroupAssociation{}
 			dMap[param] = id
 			for name := range dMap {
-				fmt.Println(name, dMap[name])
 				if dMap[name] != nil && dMap[name].(string) != "" {
 					setString(name, dMap[name].(string), &targetGroupAssociation)
 				}
@@ -322,7 +321,6 @@ func margeReadRequest(d *schema.ResourceData) ([]string, map[string]struct{}) {
 			}
 
 			associationsSet[strings.Join(ids, tccommon.FILED_SP)] = struct{}{}
-			fmt.Println("create cdr", strings.Join(ids, tccommon.FILED_SP))
 		}
 	}
 	if len(targetGroupList) < 1 && !isBindFromClb(resourceId) {
