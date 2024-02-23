@@ -1,3 +1,10 @@
+## 1.81.75 (February 23, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_cluster_endpoint: Endpoint resources increase sleep time ([#2538](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2538))
+* resource/tencentcloud_mongodb_instance_account: support import ([#2536](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2536))
+
 ## 1.81.74 (February 21, 2024)
 
 ENHANCEMENTS:
