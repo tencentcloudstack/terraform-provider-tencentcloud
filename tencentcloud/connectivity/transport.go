@@ -25,6 +25,11 @@ func SetReqClient(name string) {
 }
 
 type LogRoundTripper struct {
+	InstanceId string
+}
+
+type IacExtInfo struct {
+	InstanceId string
 }
 
 func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Response, errRet error) {
@@ -47,7 +52,15 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	if routeUserID := os.Getenv(ENV_TESTING_ROUTE_USER_ID); routeUserID != "" {
 		request.Header.Set(ENV_TESTING_ROUTE_HEADER_KEY, routeUserID)
 	}
-	request.Header.Set("X-TC-RequestClient", ReqClient)
+
+	var iacExtInfoStr string
+	if me.InstanceId != "" {
+		iacExtInfoStr = fmt.Sprintf("%s,id=%s", ReqClient, me.InstanceId)
+	} else {
+		iacExtInfoStr = ReqClient
+	}
+
+	request.Header.Set("X-TC-RequestClient", iacExtInfoStr)
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {

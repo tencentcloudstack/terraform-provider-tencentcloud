@@ -400,7 +400,7 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 }
 
 // UseCvmClient returns cvm client for service
-func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
+func (me *TencentCloudClient) UseCvmClient(specArgs ...IacExtInfo) *cvm.Client {
 	if me.cvmConn != nil {
 		return me.cvmConn
 	}
@@ -408,7 +408,13 @@ func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
 	var reqTimeout = getEnvDefault(PROVIDER_CVM_REQUEST_TIMEOUT, 300)
 	cpf := me.NewClientProfile(reqTimeout)
 	me.cvmConn, _ = cvm.NewClient(me.Credential, me.Region, cpf)
-	me.cvmConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.cvmConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.cvmConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.cvmConn
 }

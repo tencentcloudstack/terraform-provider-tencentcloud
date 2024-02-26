@@ -24,6 +24,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
+var importFlag = false
+
 func ResourceTencentCloudInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudInstanceCreate,
@@ -31,7 +33,16 @@ func ResourceTencentCloudInstance() *schema.Resource {
 		Update: resourceTencentCloudInstanceUpdate,
 		Delete: resourceTencentCloudInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				importFlag = true
+				defaultValues := map[string]interface{}{}
+
+				for k, v := range defaultValues {
+					_ = d.Set(k, v)
+				}
+
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(15 * time.Minute),
@@ -744,21 +755,21 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	defer tccommon.LogElapsed("resource.tencentcloud_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		cvmService = CvmService{client: client}
+		cbsService = svccbs.NewCbsService(client)
+		instanceId = d.Id()
+	)
 
-	instanceId := d.Id()
 	forceDelete := false
 	if v, ok := d.GetOkExists("force_delete"); ok {
 		forceDelete = v.(bool)
 		_ = d.Set("force_delete", forceDelete)
 	}
 
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	cvmService := CvmService{
-		client: client,
-	}
-	cbsService := svccbs.NewCbsService(client)
 	var instance *cvm.Instance
 	var errRet error
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -766,14 +777,18 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if instance != nil && instance.LatestOperationState != nil && *instance.LatestOperationState == "OPERATING" {
 			return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", *instance.InstanceId))
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if instance == nil || *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
 		d.SetId("")
 		log.Printf("[CRITAL]instance %s not exist or launch failed", instanceId)
