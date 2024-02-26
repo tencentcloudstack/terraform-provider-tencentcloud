@@ -186,3 +186,39 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 
 	return
 }
+
+func (me *PrivateDnsService) DescribePrivatednsPrivateZoneListByFilter(ctx context.Context, param map[string]interface{}) (privateZoneList []*privatedns.PrivateZone, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = privatedns.NewDescribePrivateZoneListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*privatedns.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePrivateDnsClient().DescribePrivateZoneList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.PrivateZoneSet) < 1 {
+		return
+	}
+
+	privateZoneList = response.Response.PrivateZoneSet
+	return
+}
