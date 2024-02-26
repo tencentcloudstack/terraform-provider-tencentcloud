@@ -1,4 +1,4 @@
-package cls
+package cls_test
 
 import (
 	"testing"

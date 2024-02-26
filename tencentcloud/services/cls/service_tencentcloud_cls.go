@@ -590,12 +590,10 @@ func (me *ClsService) DeleteClsCosShipper(ctx context.Context, id string) (errRe
 	return
 }
 
-// cls config
-func (me *ClsService) DescribeClsConfigById(ctx context.Context, configId string) (config *cls.ConfigInfo, errRet error) {
+func (me *ClsService) DescribeClsConfigById(ctx context.Context, configId string) (ret *cls.ConfigInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeConfigsRequest()
-
 	filter := &cls.Filter{
 		Key:    helper.String("configId"),
 		Values: []*string{&configId},
@@ -614,7 +612,7 @@ func (me *ClsService) DescribeClsConfigById(ctx context.Context, configId string
 		offset int64 = 0
 		limit  int64 = 20
 	)
-	instances := make([]*cls.ConfigInfo, 0)
+	var instances []*cls.ConfigInfo
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
@@ -639,7 +637,7 @@ func (me *ClsService) DescribeClsConfigById(ctx context.Context, configId string
 	if len(instances) < 1 {
 		return
 	}
-	config = instances[0]
+	ret = instances[0]
 	return
 }
 
@@ -772,7 +770,7 @@ func (me *ClsService) DeleteClsIndex(ctx context.Context, id string) (errRet err
 	return
 }
 
-func (me *ClsService) DescribeClsAlarmById(ctx context.Context, alarmId string) (alarm *cls.AlarmInfo, errRet error) {
+func (me *ClsService) DescribeClsAlarmById(ctx context.Context, alarmId string) (ret *cls.AlarmInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeAlarmsRequest()
@@ -794,7 +792,7 @@ func (me *ClsService) DescribeClsAlarmById(ctx context.Context, alarmId string) 
 		offset int64 = 0
 		limit  int64 = 20
 	)
-	instances := make([]*cls.AlarmInfo, 0)
+	var instances []*cls.AlarmInfo
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
@@ -819,7 +817,7 @@ func (me *ClsService) DescribeClsAlarmById(ctx context.Context, alarmId string) 
 	if len(instances) < 1 {
 		return
 	}
-	alarm = instances[0]
+	ret = instances[0]
 	return
 }
 
@@ -847,7 +845,7 @@ func (me *ClsService) DeleteClsAlarmById(ctx context.Context, alarmId string) (e
 	return
 }
 
-func (me *ClsService) DescribeClsAlarmNoticeById(ctx context.Context, alarmNoticeId string) (alarmNotice *cls.AlarmNotice, errRet error) {
+func (me *ClsService) DescribeClsAlarmNoticeById(ctx context.Context, alarmNoticeId string) (ret *cls.AlarmNotice, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeAlarmNoticesRequest()
@@ -869,7 +867,7 @@ func (me *ClsService) DescribeClsAlarmNoticeById(ctx context.Context, alarmNotic
 		offset int64 = 0
 		limit  int64 = 20
 	)
-	instances := make([]*cls.AlarmNotice, 0)
+	var instances []*cls.AlarmNotice
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
@@ -894,7 +892,7 @@ func (me *ClsService) DescribeClsAlarmNoticeById(ctx context.Context, alarmNotic
 	if len(instances) < 1 {
 		return
 	}
-	alarmNotice = instances[0]
+	ret = instances[0]
 	return
 }
 
@@ -922,7 +920,7 @@ func (me *ClsService) DeleteClsAlarmNoticeById(ctx context.Context, alarmNoticeI
 	return
 }
 
-func (me *ClsService) DescribeClsCkafkaConsumerById(ctx context.Context, topicId string) (ckafkaConsumer *cls.DescribeConsumerResponseParams, errRet error) {
+func (me *ClsService) DescribeClsCkafkaConsumerById(ctx context.Context, topicId string) (ret *cls.DescribeConsumerResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeConsumerRequest()
@@ -943,7 +941,7 @@ func (me *ClsService) DescribeClsCkafkaConsumerById(ctx context.Context, topicId
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	ckafkaConsumer = response.Response
+	ret = response.Response
 	return
 }
 
@@ -971,7 +969,7 @@ func (me *ClsService) DeleteClsCkafkaConsumerById(ctx context.Context, topicId s
 	return
 }
 
-func (me *ClsService) DescribeClsCosRechargeById(ctx context.Context, topicId string, rechargeId string) (cosRecharge *cls.CosRechargeInfo, errRet error) {
+func (me *ClsService) DescribeClsCosRechargeById(ctx context.Context, topicId string, rechargeId string) (ret *cls.CosRechargeInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeCosRechargesRequest()
@@ -992,16 +990,20 @@ func (me *ClsService) DescribeClsCosRechargeById(ctx context.Context, topicId st
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response == nil || len(response.Response.Data) < 1 {
+		return
+	}
+
 	for _, info := range response.Response.Data {
-		if *info.Id == rechargeId {
-			cosRecharge = info
+		if info.Id != nil && *info.Id == rechargeId {
+			ret = info
 			break
 		}
 	}
 	return
 }
 
-func (me *ClsService) DescribeClsExportById(ctx context.Context, topicId string, exportId string) (export *cls.ExportInfo, errRet error) {
+func (me *ClsService) DescribeClsExportById(ctx context.Context, topicId string, exportId string) (ret *cls.ExportInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeExportsRequest()
@@ -1022,13 +1024,16 @@ func (me *ClsService) DescribeClsExportById(ctx context.Context, topicId string,
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response == nil || len(response.Response.Exports) < 1 {
+		return
+	}
+
 	for _, info := range response.Response.Exports {
-		if *info.ExportId == exportId {
-			export = info
+		if info.ExportId != nil && *info.ExportId == exportId {
+			ret = info
 			break
 		}
 	}
-
 	return
 }
 
@@ -1056,7 +1061,7 @@ func (me *ClsService) DeleteClsExportById(ctx context.Context, exportId string) 
 	return
 }
 
-func (me *ClsService) DescribeClsShipperTasksByFilter(ctx context.Context, param map[string]interface{}) (shipperTasks []*cls.ShipperTaskInfo, errRet error) {
+func (me *ClsService) DescribeClsShipperTasksByFilter(ctx context.Context, param map[string]interface{}) (ret []*cls.ShipperTaskInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cls.NewDescribeShipperTasksRequest()
@@ -1089,12 +1094,15 @@ func (me *ClsService) DescribeClsShipperTasksByFilter(ctx context.Context, param
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	shipperTasks = response.Response.Tasks
+	if len(response.Response.Tasks) < 1 {
+		return
+	}
 
+	ret = response.Response.Tasks
 	return
 }
 
-func (me *ClsService) DescribeClsMachinesByFilter(ctx context.Context, param map[string]interface{}) (machines []*cls.MachineInfo, errRet error) {
+func (me *ClsService) DescribeClsMachinesByFilter(ctx context.Context, param map[string]interface{}) (ret []*cls.MachineInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cls.NewDescribeMachinesRequest()
@@ -1119,13 +1127,17 @@ func (me *ClsService) DescribeClsMachinesByFilter(ctx context.Context, param map
 		errRet = err
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	machines = response.Response.Machines
+	if len(response.Response.Machines) < 1 {
+		return
+	}
 
+	ret = response.Response.Machines
 	return
 }
 
-func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context, param map[string]interface{}) (machineGroupConfigs []*cls.ConfigInfo, errRet error) {
+func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cls.ConfigInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cls.NewDescribeMachineGroupConfigsRequest()
@@ -1152,7 +1164,11 @@ func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	machineGroupConfigs = response.Response.Configs
+	if len(response.Response.Configs) < 1 {
+		return
+	}
+
+	ret = response.Response.Configs
 	return
 }
 
@@ -1305,6 +1321,30 @@ func (me *ClsService) DeleteClsScheduledSqlById(ctx context.Context, taskId stri
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseClsClient().DeleteScheduledSql(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DeleteClsConfigById(ctx context.Context, configId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDeleteConfigRequest()
+	request.ConfigId = &configId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteConfig(request)
 	if err != nil {
 		errRet = err
 		return
