@@ -67,9 +67,16 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   resolution_adaptive = false
 }
 
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_procedure_template" "foo" {
   name    = "tf-procedure"
   comment = "test"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   media_process_task {
     adaptive_dynamic_streaming_task_list {
       definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id

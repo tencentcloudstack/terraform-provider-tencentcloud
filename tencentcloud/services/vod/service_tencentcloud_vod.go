@@ -171,10 +171,12 @@ func (me *VodService) DescribeProcedureTemplatesByFilter(ctx context.Context, fi
 func (me *VodService) DescribeProcedureTemplatesById(ctx context.Context, templateId string, subAppId int) (templateInfo *vod.ProcedureTemplate, has bool, errRet error) {
 	var (
 		filter = map[string]interface{}{
-			"name":      []string{templateId},
-			"sub_appid": subAppId,
+			"name": []string{templateId},
 		}
 	)
+	if subAppId != 0 {
+		filter["sub_appid"] = subAppId
+	}
 
 	templates, errRet := me.DescribeProcedureTemplatesByFilter(ctx, filter)
 	if errRet != nil {
