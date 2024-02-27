@@ -1173,6 +1173,10 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		nodeConfig["docker_graph_path"] = "/var/lib/docker"
 	}
 
+	if helper.PString(nodePool.PreStartUserScript) != "" {
+		nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
+	}
+
 	if importFlag {
 		if nodePool.ExtraArgs != nil && len(nodePool.ExtraArgs.Kubelet) > 0 {
 			extraArgs := make([]string, 0)

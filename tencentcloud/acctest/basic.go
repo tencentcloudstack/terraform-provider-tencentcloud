@@ -101,7 +101,7 @@ const (
 
 	DefaultSecurityGroup = "sg-ijato2x1"
 
-	DefaultProjectId = "1250480"
+	DefaultProjectId = "0"
 
 	DefaultTkeOSImageId   = "img-2lr9q49h"
 	DefaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
