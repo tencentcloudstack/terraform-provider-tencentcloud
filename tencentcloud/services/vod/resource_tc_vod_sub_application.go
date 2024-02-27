@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -96,8 +97,13 @@ func resourceTencentCloudVodSubApplicationCreate(d *schema.ResourceData, meta in
 			ratelimit.Check(statusResquest.GetAction())
 			_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySubAppIdStatus(statusResquest)
 			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "FailedOperation" && sdkError.Message == "invalid vod user" {
+						return resource.RetryableError(err)
+					}
+				}
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return tccommon.RetryError(err)
+				return resource.NonRetryableError(err)
 			}
 			return nil
 		}); err != nil {
@@ -209,8 +215,13 @@ func resourceTencentCloudVodSubApplicationUpdate(d *schema.ResourceData, meta in
 			ratelimit.Check(statusRequest.GetAction())
 			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySubAppIdStatus(statusRequest)
 			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "FailedOperation" && sdkError.Message == "invalid vod user" {
+						return resource.RetryableError(err)
+					}
+				}
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, statusRequest.GetAction(), err.Error())
-				return tccommon.RetryError(err)
+				return resource.NonRetryableError(err)
 			}
 			return nil
 		})
