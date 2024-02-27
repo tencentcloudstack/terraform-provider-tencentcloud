@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_vod_sub_application: fix status update problem
+```
+
+```release-note:enhancement
+resource/tencentcloud_vod_procedure_template: fix api must set SubAppId
+```
