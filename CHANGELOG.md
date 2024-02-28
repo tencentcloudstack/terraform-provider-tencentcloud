@@ -1,3 +1,18 @@
+## 1.81.76 (February 28, 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_private_dns_private_zone_list` ([#2539](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2539))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kubernetes_clusters: Fix `lan_ip` field return value ([#2541](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2541))
+* resource/tencentcloud_kubernetes_node_pool: add `pre_start_user_script` field ([#2543](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2543))
+
+BUG FIXES:
+
+* resource/tencentcloud_clb_target_group_attachments: Fixed the problem of not supporting four-layer LB ([#2489](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2489))
+
 ## 1.81.75 (February 23, 2024)
 
 ENHANCEMENTS:
