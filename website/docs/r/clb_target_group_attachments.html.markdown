@@ -45,16 +45,16 @@ resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" 
 
 The following arguments are supported:
 
-* `associations` - (Required, Set) Association array, the combination cannot exceed 20.
-* `load_balancer_id` - (Optional, String) CLB instance ID, (load_balancer_id and target_group_id require at least one).
-* `target_group_id` - (Optional, String) Target group ID, (load_balancer_id and target_group_id require at least one).
+* `associations` - (Required, Set, ForceNew) Association array, the combination cannot exceed 20.
+* `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, (load_balancer_id and target_group_id require at least one).
+* `target_group_id` - (Optional, String, ForceNew) Target group ID, (load_balancer_id and target_group_id require at least one).
 
 The `associations` object supports the following:
 
-* `listener_id` - (Optional, String) Listener ID.
-* `load_balancer_id` - (Optional, String) CLB instance ID, when the binding target is target group, load_balancer_id in associations is required.
-* `location_id` - (Optional, String) Forwarding rule ID.
-* `target_group_id` - (Optional, String) Target group ID, when the binding target is clb, the target_group_id in associations is required.
+* `listener_id` - (Optional, String, ForceNew) Listener ID.
+* `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, when the binding target is target group, load_balancer_id in associations is required.
+* `location_id` - (Optional, String, ForceNew) Forwarding rule ID.
+* `target_group_id` - (Optional, String, ForceNew) Target group ID, when the binding target is clb, the target_group_id in associations is required.
 
 ## Attributes Reference
 
