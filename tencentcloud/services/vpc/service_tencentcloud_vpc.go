@@ -407,7 +407,16 @@ getMoreData:
 	var response *vpc.DescribeVpcsResponse
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseVpcClient().DescribeVpcs(request)
+		var result *vpc.DescribeVpcsResponse
+		var err error
+		if vpcId != "" {
+			var specArgs connectivity.IacExtInfo
+			specArgs.InstanceId = vpcId
+			result, err = me.client.UseVpcClient(specArgs).DescribeVpcs(request)
+		} else {
+			result, err = me.client.UseVpcClient().DescribeVpcs(request)
+		}
+
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
@@ -2357,9 +2366,12 @@ func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *v
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()
 	request.AddressIds = []*string{&eipId}
-
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeAddresses(request)
+
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = eipId
+
+	response, err := me.client.UseVpcClient(specArgs).DescribeAddresses(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

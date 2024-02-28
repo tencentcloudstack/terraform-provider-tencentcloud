@@ -177,7 +177,10 @@ func (me *TCRService) DescribeTCRInstanceById(ctx context.Context, instanceId st
 	request.Registryids = []*string{&instanceId}
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTCRClient().DescribeInstances(request)
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
+
+	response, err := me.client.UseTCRClient(specArgs).DescribeInstances(request)
 	if err != nil {
 		ee, ok := err.(*sdkErrors.TencentCloudSDKError)
 		if !ok {

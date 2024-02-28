@@ -440,7 +440,9 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 	request.DBInstanceId = &instanceId
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
+	response, err := me.client.UsePostgresqlClient(specArgs).DescribeDBInstanceAttribute(request)
 	if err != nil {
 		errRet = err
 		return
