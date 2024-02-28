@@ -56,7 +56,9 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 	request := clb.NewDescribeLoadBalancersRequest()
 	request.LoadBalancerIds = []*string{&clbId}
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = clbId
+	response, err := me.client.UseClbClient(specArgs).DescribeLoadBalancers(request)
 	if err != nil {
 		errRet = errors.WithStack(err)
 		return

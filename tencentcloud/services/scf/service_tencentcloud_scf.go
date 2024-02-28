@@ -148,16 +148,16 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 }
 
 func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace string) (resp *scf.GetFunctionResponse, err error) {
-	client := me.client.UseScfClient()
-
 	request := scf.NewGetFunctionRequest()
 	request.FunctionName = &name
 	request.Namespace = &namespace
 
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
+		var specArgs connectivity.IacExtInfo
+		specArgs.InstanceId = strings.Join([]string{name, namespace}, tccommon.FILED_SP)
 
-		response, err := client.GetFunction(request)
+		response, err := me.client.UseScfClient(specArgs).GetFunction(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {
