@@ -1309,6 +1309,7 @@ PrivateDNS
     tencentcloud_private_dns_zone_vpc_attachment
   Data Source
     tencentcloud_private_dns_records
+    tencentcloud_private_dns_private_zone_list
 
 Cloud Log Service(CLS)
   Resource

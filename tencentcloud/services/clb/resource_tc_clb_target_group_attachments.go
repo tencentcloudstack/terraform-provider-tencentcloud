@@ -21,7 +21,6 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbTargetGroupAttachmentsCreate,
 		Read:   resourceTencentCloudClbTargetGroupAttachmentsRead,
-		Update: resourceTencentCloudClbTargetGroupAttachmentsUpdate,
 		Delete: resourceTencentCloudClbTargetGroupAttachmentsDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -31,15 +30,18 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 			"load_balancer_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "CLB instance ID, (load_balancer_id and target_group_id require at least one).",
 			},
 			"target_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Target group ID, (load_balancer_id and target_group_id require at least one).",
 			},
 			"associations": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeSet,
 				MaxItems:    20,
 				Description: "Association array, the combination cannot exceed 20.",
@@ -48,20 +50,24 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 						"load_balancer_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "CLB instance ID, when the binding target is target group, load_balancer_id in associations is required.",
 						},
 						"target_group_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Target group ID, when the binding target is clb, the target_group_id in associations is required.",
 						},
 						"listener_id": {
 							Type:        schema.TypeString,
+							ForceNew:    true,
 							Optional:    true,
 							Description: "Listener ID.",
 						},
 						"location_id": {
 							Type:        schema.TypeString,
+							ForceNew:    true,
 							Optional:    true,
 							Description: "Forwarding rule ID.",
 						},
@@ -203,23 +209,18 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 			_ = d.Set("target_group_id", info[1])
 			associationsMap["load_balancer_id"] = info[0]
 		}
-
-		associationsMap["listener_id"] = info[2]
-		associationsMap["location_id"] = info[3]
-
+		if info[2] != "" && info[2] != "null" {
+			associationsMap["listener_id"] = info[2]
+		}
+		if info[3] != "" && info[3] != "null" {
+			associationsMap["location_id"] = info[3]
+		}
 		associationsList = append(associationsList, associationsMap)
 	}
 
 	_ = d.Set("associations", associationsList)
 
 	return nil
-}
-
-func resourceTencentCloudClbTargetGroupAttachmentsUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_clb_target_group_attachments.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	return resourceTencentCloudClbTargetGroupAttachmentsRead(d, meta)
 }
 
 func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData, meta interface{}) error {
@@ -268,7 +269,9 @@ func parseParamToRequest(d *schema.ResourceData, param string, id string) (assoc
 			targetGroupAssociation := clb.TargetGroupAssociation{}
 			dMap[param] = id
 			for name := range dMap {
-				setString(name, dMap[name].(string), &targetGroupAssociation)
+				if dMap[name] != nil && dMap[name].(string) != "" {
+					setString(name, dMap[name].(string), &targetGroupAssociation)
+				}
 			}
 			associations = append(associations, &targetGroupAssociation)
 		}
@@ -331,7 +334,7 @@ func processIds(id string, dMap map[string]interface{}, key string, clbFlag bool
 	} else if !clbFlag && key == "target_group_id" {
 		*ids = append(*ids, id)
 	} else {
-		if v, ok := dMap[key]; ok {
+		if v, ok := dMap[key]; ok && v.(string) != "" {
 			*ids = append(*ids, v.(string))
 		} else {
 			*ids = append(*ids, "null")

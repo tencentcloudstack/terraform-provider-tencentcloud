@@ -361,6 +361,7 @@ LOOP:
 			tempMap["instance_role"] = cvm.InstanceRole
 			tempMap["instance_state"] = cvm.InstanceState
 			tempMap["failed_reason"] = cvm.FailedReason
+			tempMap["lan_ip"] = cvm.LanIp
 			workerInstancesList = append(workerInstancesList, tempMap)
 		}
 

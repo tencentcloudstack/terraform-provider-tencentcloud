@@ -919,6 +919,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_data_source_list":                      wedata.DataSourceTencentCloudWedataDataSourceList(),
 			"tencentcloud_wedata_data_source_without_info":              wedata.DataSourceTencentCloudWedataDataSourceWithoutInfo(),
 			"tencentcloud_private_dns_records":                          privatedns.DataSourceTencentCloudPrivateDnsRecords(),
+			"tencentcloud_private_dns_private_zone_list":                privatedns.DataSourceTencentCloudPrivateDnsPrivateZoneList(),
 			"tencentcloud_waf_ciphers":                                  waf.DataSourceTencentCloudWafCiphers(),
 			"tencentcloud_waf_tls_versions":                             waf.DataSourceTencentCloudWafTlsVersions(),
 			"tencentcloud_waf_domains":                                  waf.DataSourceTencentCloudWafDomains(),

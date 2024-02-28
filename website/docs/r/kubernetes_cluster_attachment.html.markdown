@@ -161,6 +161,7 @@ The `worker_config_overrides` object supports the following:
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
+* `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 The `worker_config` object supports the following:
@@ -172,6 +173,7 @@ The `worker_config` object supports the following:
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
+* `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference

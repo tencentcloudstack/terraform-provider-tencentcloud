@@ -135,6 +135,12 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Base64-encoded User Data text, the length limit is 16KB.",
 		},
+		"pre_start_user_script": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
+		},
 		"is_schedule": {
 			Type:        schema.TypeBool,
 			ForceNew:    true,
@@ -301,6 +307,10 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 
 	if v, ok := dMap["user_data"]; ok {
 		setting.UserScript = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["pre_start_user_script"]; ok {
+		setting.PreStartUserScript = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["docker_graph_path"]; ok {
