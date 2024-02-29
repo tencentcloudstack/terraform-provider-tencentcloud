@@ -8,12 +8,9 @@ import (
 	"strconv"
 	"time"
 
-<<<<<<< HEAD
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 
-=======
->>>>>>> a6d6e64b16cba30913e59a9b3cebe666e209c4b4
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
 
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
@@ -205,11 +202,8 @@ type TencentCloudClient struct {
 	trocketConn        *trocket.Client
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
-<<<<<<< HEAD
 	csipConn           *csip.Client
 	billingConn        *billing.Client
-=======
->>>>>>> a6d6e64b16cba30913e59a9b3cebe666e209c4b4
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 }
@@ -1387,7 +1381,6 @@ func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
 	return me.cdwpgConn
 }
 
-<<<<<<< HEAD
 // UseBillingClient returns billing client for service
 func (me *TencentCloudClient) UseBillingClient() *billing.Client {
 	if me.billingConn != nil {
@@ -1416,8 +1409,6 @@ func (me *TencentCloudClient) UseCsipClient() *csip.Client {
 	return me.csipConn
 }
 
-=======
->>>>>>> a6d6e64b16cba30913e59a9b3cebe666e209c4b4
 //internal version: replace useClient begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 //internal version: replace useClient end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 

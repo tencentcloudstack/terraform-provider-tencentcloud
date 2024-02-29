@@ -4,10 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_csip_risk_center"
 sidebar_current: "docs-tencentcloud-resource-csip_risk_center"
 description: |-
-  Provides a resource to create a csip risk_center
+  ~> **NOTE:** Currently, only tasks with a physical examination time of no more than 6 hours are supported.
 ---
 
 # tencentcloud_csip_risk_center
+
+~> **NOTE:** Currently, only tasks with a physical examination time of no more than 6 hours are supported.
 
 Provides a resource to create a csip risk_center
 

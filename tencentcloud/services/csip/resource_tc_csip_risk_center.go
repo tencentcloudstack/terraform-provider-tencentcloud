@@ -405,7 +405,7 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 		},
 	}
 
-	err = resource.Retry(tccommon.ReadRetryTimeout*60, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout*120, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCsipClient().DescribeScanTaskList(waitRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -552,10 +552,6 @@ func resourceTencentCloudCsipRiskCenterUpdate(d *schema.ResourceData, meta inter
 				request.ScanItem = append(request.ScanItem, &scanItem)
 			}
 		}
-	}
-
-	if v, ok := d.GetOkExists("scan_plan_type"); ok {
-		request.ScanPlanType = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("assets"); ok {

@@ -1,9 +1,10 @@
-package csip
+package csip_test
 
 import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
@@ -22,10 +23,10 @@ func TestAccTencentCloudCsipRiskCenterResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "task_name", "tf_example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_asset_type"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_item"),
-					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "scan_plan_type", "46 51 16 */1 * * *"),
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_item.#"),
+					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "scan_plan_content", "46 51 16 */1 * * *"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "task_mode"),
-					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "assets"),
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "assets.#"),
 				),
 			},
 		},
