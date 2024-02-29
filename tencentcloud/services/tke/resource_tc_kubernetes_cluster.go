@@ -653,8 +653,8 @@ func ResourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"cluster_internet": {
 			Type:     schema.TypeBool,
-			Default:  false,
 			Optional: true,
+			Computed: true,
 			Description: "Open internet access or not." +
 				" If this field is set 'true', the field below `worker_config` must be set." +
 				" Because only cluster with node is allowed enable access endpoint. You may open it through `tencentcloud_kubernetes_cluster_endpoint`.",
@@ -667,8 +667,8 @@ func ResourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"cluster_intranet": {
 			Type:     schema.TypeBool,
-			Default:  false,
 			Optional: true,
+			Computed: true,
 			Description: "Open intranet access or not." +
 				" If this field is set 'true', the field below `worker_config` must be set." +
 				" Because only cluster with node is allowed enable access endpoint. You may open it through `tencentcloud_kubernetes_cluster_endpoint`.",
@@ -682,6 +682,7 @@ func ResourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_internet_security_group": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Specify security group, NOTE: This argument must not be empty if cluster internet enabled.",
 		},
 		"managed_cluster_internet_security_policies": {
@@ -696,6 +697,7 @@ func ResourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_intranet_subnet_id": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 			Description: "Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true." +
 				" `cluster_intranet_subnet_id` can not modify once be set.",
 		},
@@ -2614,7 +2616,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 				return err
 			}
 			time.Sleep(3 * time.Second)
-			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				ipamdResp, inErr := tkeService.DescribeIPAMD(ctx, id)
 				enableIPAMD := *ipamdResp.EnableIPAMD
 				disableVpcCniMode := *ipamdResp.DisableVpcCniMode

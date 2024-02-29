@@ -1,3 +1,55 @@
+## 1.81.76 (February 28, 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_private_dns_private_zone_list` ([#2539](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2539))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kubernetes_clusters: Fix `lan_ip` field return value ([#2541](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2541))
+* resource/tencentcloud_kubernetes_node_pool: add `pre_start_user_script` field ([#2543](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2543))
+
+BUG FIXES:
+
+* resource/tencentcloud_clb_target_group_attachments: Fixed the problem of not supporting four-layer LB ([#2489](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2489))
+
+## 1.81.75 (February 23, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_cluster_endpoint: Endpoint resources increase sleep time ([#2538](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2538))
+* resource/tencentcloud_mongodb_instance_account: support import ([#2536](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2536))
+
+## 1.81.74 (February 21, 2024)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kubernetes_clusters: add `kube_config_file_prefix` field ([#2530](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2530))
+* resource/tencentcloud_kubernetes_cluster: Optimize the change problem of `cluster_internet_security_group` and `cluster_intranet_subnet_id` fields ([#2533](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2533))
+* resource/tencentcloud_mongodb_instance: support params `add_node_list` and `remove_node_list` ([#2531](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2531))
+* resource/tencentcloud_monitor_tmp_exporter_integration: Documentation example added. ([#2527](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2527))
+
+## 1.81.73 (February 5, 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_organization_org_share_area` ([#2520](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2520))
+* **New Resource:** `tencentcloud_api_gateway_update_service` ([#2518](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2518))
+* **New Resource:** `tencentcloud_organization_org_share_unit` ([#2521](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2521))
+* **New Resource:** `tencentcloud_organization_org_share_unit_member` ([#2521](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2521))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_attachments: support param `eni_ip` ([#2512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2512))
+* resource/tencentcloud_emr_cluster: update `login_settings` description ([#2515](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2515))
+* resource/tencentcloud_kubernetes_cluster: Optimize `cluster_internet` and `cluster_intranet` fields ([#2511](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2511))
+* resource/tencentcloud_kubernetes_node_pool: update `system_disk_type` and `disk_type` field description ([#2514](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2514))
+* resource/tencentcloud_lighthouse_instance: support params `public_addresses` and `private_addresses` ([#2508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2508))
+* resource/tencentcloud_mps_schedule: Add `resource_id` field ([#2513](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2513))
+* resource/tencentcloud_mps_schedules: Add `resource_id` field ([#2513](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2513))
+* resource/tencentcloud_mysql_instance: Support configuration modification when active/standby switchover occurs. ([#2516](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2516))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: Adapt to imported resources ([#2510](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2510))
+
 ## 1.81.72 (January 30, 2024)
 
 ENHANCEMENTS:

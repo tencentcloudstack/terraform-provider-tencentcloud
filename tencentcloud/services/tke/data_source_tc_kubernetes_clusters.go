@@ -2,6 +2,7 @@ package tke
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -227,6 +228,11 @@ func DataSourceTencentCloudKubernetesClusters() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
+			"kube_config_file_prefix": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The path prefix of kube config. You can store KubeConfig in a specified directory by specifying this field, such as ~/.kube/k8s, then public network access will use ~/.kube/k8s-clusterID-kubeconfig naming, and intranet access will use ~/.kube /k8s-clusterID-kubeconfig-intranet naming. If this field is not set, the KubeConfig will not be exported.",
+			},
 
 			"list": {
 				Type:        schema.TypeList,
@@ -251,8 +257,9 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 	}
 
 	var (
-		id   string
-		name string
+		id                   string
+		name                 string
+		kubeConfigFilePrefix string
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -288,6 +295,10 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		} else {
 			return *ptr
 		}
+	}
+
+	if v, ok := d.GetOk("kube_config_file_prefix"); ok {
+		kubeConfigFilePrefix = v.(string)
 	}
 
 LOOP:
@@ -350,6 +361,7 @@ LOOP:
 			tempMap["instance_role"] = cvm.InstanceRole
 			tempMap["instance_state"] = cvm.InstanceState
 			tempMap["failed_reason"] = cvm.FailedReason
+			tempMap["lan_ip"] = cvm.LanIp
 			workerInstancesList = append(workerInstancesList, tempMap)
 		}
 
@@ -410,6 +422,33 @@ LOOP:
 
 		infoMap["kube_config"] = config
 		infoMap["kube_config_intranet"] = intranetConfig
+
+		clusterInternet, err := getClusterNetworkStatus(ctx, &service, info.ClusterId, true)
+		if err != nil {
+			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters get cluster internet status fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		clusterIntranet, err := getClusterNetworkStatus(ctx, &service, info.ClusterId, false)
+		if err != nil {
+			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters get cluster intranet status fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
+		if kubeConfigFilePrefix != "" {
+			if clusterInternet {
+				kubeConfigFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig", info.ClusterId)
+				if err = tccommon.WriteToFile(kubeConfigFile, config); err != nil {
+					return err
+				}
+			}
+			if clusterIntranet {
+				kubeConfigIntranetFile := kubeConfigFilePrefix + fmt.Sprintf("-%s-kubeconfig-intranet", info.ClusterId)
+				if err = tccommon.WriteToFile(kubeConfigIntranetFile, intranetConfig); err != nil {
+					return err
+				}
+			}
+		}
+
 		list = append(list, infoMap)
 	}
 
@@ -427,4 +466,33 @@ LOOP:
 		}
 	}
 	return nil
+}
+
+func getClusterNetworkStatus(ctx context.Context, service *TkeService, clusterId string, isInternet bool) (networkStatus bool, err error) {
+	var status string
+	var isOpened bool
+	var errRet error
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		status, _, errRet = service.DescribeClusterEndpointStatus(ctx, clusterId, isInternet)
+		if errRet != nil {
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+		if status == TkeInternetStatusCreating || status == TkeInternetStatusDeleting {
+			return resource.RetryableError(
+				fmt.Errorf("%s create cluster internet endpoint status still is %s", clusterId, status))
+		}
+		return nil
+	})
+	if err != nil {
+		return false, err
+	}
+	if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted {
+		isOpened = false
+	}
+	if status == TkeInternetStatusCreated {
+		isOpened = true
+	}
+	networkStatus = isOpened
+
+	return networkStatus, nil
 }

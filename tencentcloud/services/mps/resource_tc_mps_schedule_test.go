@@ -126,6 +126,7 @@ func TestAccTencentCloudMpsScheduleResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mps_schedule.schedule", "output_storage.0.cos_output_storage.0.region", tcacctest.DefaultRegion),
 
 					resource.TestCheckResourceAttr("tencentcloud_mps_schedule.schedule", "output_dir", "output/"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_schedule.schedule", "resource_id"),
 				),
 			},
 			{
@@ -184,6 +185,7 @@ func TestAccTencentCloudMpsScheduleResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mps_schedule.schedule", "output_storage.0.cos_output_storage.0.region", tcacctest.DefaultRegion),
 
 					resource.TestCheckResourceAttr("tencentcloud_mps_schedule.schedule", "output_dir", "output_chagned/"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_schedule.schedule", "resource_id"),
 				),
 			},
 			{
@@ -196,15 +198,17 @@ func TestAccTencentCloudMpsScheduleResource_basic(t *testing.T) {
 }
 
 const testAccMpsSchedule = tcacctest.UserInfoData + `
-data "tencentcloud_cos_bucket_object" "object" {
-  bucket = "keep-bucket-${local.app_id}"
-  key    = "/mps-test/test.mov"
-}
-
 resource "tencentcloud_cos_bucket" "output" {
   bucket      = "tf-bucket-mps-schedule-output-${local.app_id}"
   force_clean = true
   acl         = "public-read"
+}
+
+resource "tencentcloud_cos_bucket_object" "object" {
+  bucket       = tencentcloud_cos_bucket.output.bucket
+  key          = "/mps-test/test.mov"
+  content      = "aaaaaaaaaaaaaaaa"
+  content_type = "binary/octet-stream"
 }
 
 resource "tencentcloud_mps_schedule" "schedule" {
@@ -213,7 +217,7 @@ resource "tencentcloud_mps_schedule" "schedule" {
   trigger {
     type = "CosFileUpload"
     cos_file_upload_trigger {
-      bucket  = data.tencentcloud_cos_bucket_object.object.bucket
+      bucket  = tencentcloud_cos_bucket_object.object.bucket
       region  = "%s"
       dir     = "/upload/"
       formats = ["flv", "mov"]
@@ -328,21 +332,24 @@ resource "tencentcloud_mps_schedule" "schedule" {
   }
 
   output_dir = "output/"
+  resource_id = "vts-2600014161-0"
 }
 
 
 `
 
 const testAccMpsSchedule_update = tcacctest.UserInfoData + `
-data "tencentcloud_cos_bucket_object" "object" {
-  bucket = "keep-bucket-${local.app_id}"
-  key    = "/mps-test/test.mov"
-}
-
 resource "tencentcloud_cos_bucket" "output" {
   bucket      = "tf-bucket-mps-schedule-output-${local.app_id}"
   force_clean = true
   acl         = "public-read"
+}
+
+resource "tencentcloud_cos_bucket_object" "object" {
+  bucket       = tencentcloud_cos_bucket.output.bucket
+  key          = "/mps-test/test.mov"
+  content      = "aaaaaaaaaaaaaaaa"
+  content_type = "binary/octet-stream"
 }
 
 resource "tencentcloud_mps_schedule" "schedule" {
@@ -351,7 +358,7 @@ resource "tencentcloud_mps_schedule" "schedule" {
   trigger {
     type = "CosFileUpload"
     cos_file_upload_trigger {
-      bucket  = data.tencentcloud_cos_bucket_object.object.bucket
+      bucket  = tencentcloud_cos_bucket_object.object.bucket
       region  = "%s"
       dir     = "/upload_changed/"
       formats = ["mp4", "mov"]
@@ -466,6 +473,7 @@ resource "tencentcloud_mps_schedule" "schedule" {
   }
 
   output_dir = "output_chagned/"
+  resource_id = "vts-2600014161-0"
 }
 
 

@@ -1083,12 +1083,25 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				deviceType = v.(string)
 			}
 
-			if v, ok := d.GetOk("first_slave_zone"); ok {
-				firstSlaveZone = v.(string)
-			}
+			if d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") {
+				if v, ok := d.GetOk("first_slave_zone"); ok {
+					firstSlaveZone = v.(string)
+				}
 
-			if v, ok := d.GetOk("second_slave_zone"); ok {
-				secondSlaveZone = v.(string)
+				if v, ok := d.GetOk("second_slave_zone"); ok {
+					secondSlaveZone = v.(string)
+				}
+			} else {
+				mysqlInfo, e := tencentMsyqlBasicInfoRead(ctx, d, meta, true)
+				if e != nil {
+					return e
+				}
+				if mysqlInfo != nil && mysqlInfo.SlaveInfo != nil && mysqlInfo.SlaveInfo.First != nil && mysqlInfo.SlaveInfo.First.Zone != nil {
+					firstSlaveZone = *mysqlInfo.SlaveInfo.First.Zone
+				}
+				if mysqlInfo != nil && mysqlInfo.SlaveInfo != nil && mysqlInfo.SlaveInfo.Second != nil && mysqlInfo.SlaveInfo.Second.Zone != nil {
+					firstSlaveZone = *mysqlInfo.SlaveInfo.Second.Zone
+				}
 			}
 
 			if v, ok := d.GetOkExists("wait_switch"); ok {

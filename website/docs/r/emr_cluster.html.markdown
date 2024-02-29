@@ -126,7 +126,7 @@ The following arguments are supported:
 * `vpc_settings` - (Required, Map, ForceNew) The private net config of EMR instance.
 * `display_strategy` - (Optional, String, **Deprecated**) It will be deprecated in later versions. Display strategy of EMR instance.
 * `extend_fs_field` - (Optional, String) Access the external file system.
-* `login_settings` - (Optional, Map) Instance login settings.
+* `login_settings` - (Optional, Map) Instance login settings. There are two optional fields:- password: Instance login password: 8-16 characters, including uppercase letters, lowercase letters, numbers and special characters. Special symbols only support! @% ^ *. The first bit of the password cannot be a special character;- public_key_id: Public key id. After the key is associated, the instance can be accessed through the corresponding private key.
 * `need_master_wan` - (Optional, String, ForceNew) Whether to enable the cluster Master node public network. Value range:
 				- NEED_MASTER_WAN: Indicates that the cluster Master node public network is enabled.
 				- NOT_NEED_MASTER_WAN: Indicates that it is not turned on.

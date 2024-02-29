@@ -83,7 +83,7 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 						Optional:     true,
 						Default:      svcas.SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
-						Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
+						Description:  "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
 					},
 					"disk_size": {
 						Type:        schema.TypeInt,
@@ -134,6 +134,12 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Description: "Base64-encoded User Data text, the length limit is 16KB.",
+		},
+		"pre_start_user_script": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
 		},
 		"is_schedule": {
 			Type:        schema.TypeBool,
@@ -301,6 +307,10 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 
 	if v, ok := dMap["user_data"]; ok {
 		setting.UserScript = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["pre_start_user_script"]; ok {
+		setting.PreStartUserScript = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["docker_graph_path"]; ok {

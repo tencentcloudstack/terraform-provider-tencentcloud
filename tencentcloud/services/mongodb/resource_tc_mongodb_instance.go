@@ -12,6 +12,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -47,6 +48,59 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			Optional:    true,
 			Computed:    true,
 			Description: "The number of nodes in each replica set. Default value: 3.",
+		},
+		"add_node_list": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Add node attribute list.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"role": {
+						Type:     schema.TypeString,
+						Required: true,
+						Description: "The node role that needs to be added.\n" +
+							"- SECONDARY: Mongod node;\n" +
+							"- READONLY: read-only node;\n" +
+							"- MONGOS: Mongos node.",
+					},
+					"zone": {
+						Type:     schema.TypeString,
+						Required: true,
+						Description: "The availability zone corresponding to the node.\n" +
+							"- single availability zone, where all nodes are in the same availability zone;\n" +
+							"- multiple availability zones: the current standard specification is the distribution of three availability zones, and the master and slave nodes are not in the same availability zone. You should pay attention to configuring the availability zone corresponding to the new node, and the rule that the number of nodes in any two availability zones is greater than the third availability zone must be met after the addition.",
+					},
+				},
+			},
+		},
+		"remove_node_list": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Add node attribute list.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"role": {
+						Type:     schema.TypeString,
+						Required: true,
+						Description: "The node role that needs to be deleted.\n" +
+							"- SECONDARY: Mongod node;\n" +
+							"- READONLY: read-only node;\n" +
+							"- MONGOS: Mongos node.",
+					},
+					"node_name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "The node ID to delete. The shard cluster must specify the name of the node to be deleted by a group of shards, and the rest of the shards should be grouped and aligned.",
+					},
+					"zone": {
+						Type:     schema.TypeString,
+						Required: true,
+						Description: "The availability zone corresponding to the node.\n" +
+							"- single availability zone, where all nodes are in the same availability zone;\n" +
+							"- multiple availability zones: the current standard specification is the distribution of three availability zones, and the master and slave nodes are not in the same availability zone. You should pay attention to configuring the availability zone corresponding to the new node, and the rule that the number of nodes in any two availability zones is greater than the third availability zone must be met after the addition.",
+					},
+				},
+			},
 		},
 		"availability_zone_list": {
 			Type:     schema.TypeList,
@@ -446,7 +500,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	d.Partial(true)
 
-	immutableArgs := []string{"node_num", "availability_zone_list", "hidden_zone"}
+	immutableArgs := []string{"availability_zone_list", "hidden_zone"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -454,28 +508,45 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if d.HasChange("memory") || d.HasChange("volume") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
-		err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume)
+		params := make(map[string]interface{})
+		var nodeNum int
+		if v, ok := d.GetOk("node_num"); ok {
+			nodeNum = v.(int)
+			params["node_num"] = nodeNum
+		}
+		if v, ok := d.GetOk("add_node_list"); ok {
+			addNodeList := v.([]interface{})
+			params["add_node_list"] = addNodeList
+		}
+		if v, ok := d.GetOk("remove_node_list"); ok {
+			removeNodeList := v.([]interface{})
+			params["remove_node_list"] = removeNodeList
+		}
+		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
 			return err
 		}
 
-		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
+		if dealId == "" {
+			return fmt.Errorf("deal id is empty")
+		}
+
 		errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
-			if e != nil {
-				return resource.NonRetryableError(e)
-			}
-			if !has {
-				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb instance failed, instance doesn't exist", logId))
+			dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
+			if err != nil {
+				if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
+					if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
+						return resource.RetryableError(err)
+					}
+				}
+				return resource.NonRetryableError(err)
 			}
 
-			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
-			volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
-			if memory != int(memoryDes) || volume != int(volumeDes) {
-				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+			if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS {
+				return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
 			}
 			return nil
 		})

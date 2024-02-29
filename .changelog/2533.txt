@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: Optimize the change problem of `cluster_internet_security_group` and `cluster_intranet_subnet_id` fields
+```

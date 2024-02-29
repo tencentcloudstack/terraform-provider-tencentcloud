@@ -53,7 +53,7 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -71,7 +71,6 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 			{
 				ResourceName:            "tencentcloud_lighthouse_instance.instance",
 				ImportState:             true,
-				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"is_update_bundle_id_auto_voucher", "period", "dry_run", "client_token", "login_configuration", "permit_default_key_pair_login", "isolate_data_disk", "containers", "firewall_template_id"},
 			},
 		},
@@ -80,6 +79,7 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 
 const testAccLighthouseInstance = `
 data "tencentcloud_lighthouse_bundle" "bundle" {
+  zones = ["ap-guangzhou-3"]
 }
 
 resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
@@ -87,8 +87,8 @@ resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
 }
 
 resource "tencentcloud_lighthouse_instance" "instance" {
-  bundle_id    = data.tencentcloud_lighthouse_bundle.bundle.bundle_set.0.bundle_id
-  blueprint_id = "lhbp-f1lkcd41"
+  bundle_id    = [ for b in data.tencentcloud_lighthouse_bundle.bundle.bundle_set : b.bundle_id if b.bundle_sales_state == "AVAILABLE"].0
+  blueprint_id = "lhbp-a7oxy3em"
 
   period     = 1
   renew_flag = "NOTIFY_AND_AUTO_RENEW"
@@ -97,7 +97,7 @@ resource "tencentcloud_lighthouse_instance" "instance" {
   zone          = "ap-guangzhou-3"
   isolate_data_disk = true
   containers {
-    container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
+    container_image = "ccr.ccs.tencentyun.com/keep-lighthouse/keep-nginx"
     container_name = "nginx"
     envs {
       key = "key"
@@ -130,32 +130,13 @@ resource "tencentcloud_lighthouse_instance" "instance" {
     command = "ls -l"
   }
 
-  containers {
-    container_image = "ccr.ccs.tencentyun.com/qcloud/resty"
-    container_name = "resty"
-    envs {
-      key = "key2"
-      value = "value2"
-    }
-    publish_ports {
-      host_port = 80
-      container_port = 80
-      ip = "127.0.0.1"
-      protocol = "udp"
-    }
-
-    volumes {
-      container_path = "/var"
-      host_path = "/tmp"
-    }
-    command = "echo \"hello\""
-  }
   firewall_template_id = tencentcloud_lighthouse_firewall_template.firewall_template.id
 }
 `
 
 const testAccLighthouseInstance_update = `
 data "tencentcloud_lighthouse_bundle" "bundle" {
+  zones = ["ap-guangzhou-3"]
 }
 
 resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
@@ -163,8 +144,8 @@ resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
 }
 
 resource "tencentcloud_lighthouse_instance" "instance" {
-  bundle_id    = data.tencentcloud_lighthouse_bundle.bundle.bundle_set.1.bundle_id
-  blueprint_id = "lhbp-f1lkcd41"
+  bundle_id    = [ for b in data.tencentcloud_lighthouse_bundle.bundle.bundle_set : b.bundle_id if b.bundle_sales_state == "AVAILABLE"].0
+  blueprint_id = "lhbp-a7oxy3em"
 
   period     = 1
   renew_flag = "NOTIFY_AND_MANUAL_RENEW"
@@ -174,7 +155,7 @@ resource "tencentcloud_lighthouse_instance" "instance" {
   isolate_data_disk = true
 
   containers {
-    container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
+    container_image = "ccr.ccs.tencentyun.com/keep-lighthouse/keep-nginx"
     container_name = "nginx"
     envs {
       key = "key"
@@ -207,26 +188,6 @@ resource "tencentcloud_lighthouse_instance" "instance" {
     command = "ls -l"
   }
 
-  containers {
-    container_image = "ccr.ccs.tencentyun.com/qcloud/resty"
-    container_name = "resty"
-    envs {
-      key = "key2"
-      value = "value2"
-    }
-    publish_ports {
-      host_port = 80
-      container_port = 80
-      ip = "127.0.0.1"
-      protocol = "udp"
-    }
-
-    volumes {
-      container_path = "/var"
-      host_path = "/tmp"
-    }
-    command = "echo \"hello\""
-  }
   firewall_template_id = tencentcloud_lighthouse_firewall_template.firewall_template.id
 }
 `

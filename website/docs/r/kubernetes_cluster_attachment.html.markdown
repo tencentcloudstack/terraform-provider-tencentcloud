@@ -123,7 +123,7 @@ The `data_disk` object of `worker_config_overrides` supports the following:
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 
@@ -132,7 +132,7 @@ The `data_disk` object of `worker_config` supports the following:
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 
@@ -161,6 +161,7 @@ The `worker_config_overrides` object supports the following:
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
+* `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 The `worker_config` object supports the following:
@@ -172,6 +173,7 @@ The `worker_config` object supports the following:
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
+* `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference

@@ -112,6 +112,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					testAccCheckTkeNodePoolExists,
 					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_config.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_config.0.pre_start_user_script", "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "50"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "1"),
@@ -180,8 +181,8 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "NEWEST_INSTANCE"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "testI"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np3", "testIII"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "test1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np3", "test3"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.orderly_security_group_ids.#", "4"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name", "12.123.1.1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name_style", "UNIQUE"),
@@ -382,6 +383,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     extra_args = [
       "root-dir=/var/lib/kubelet"
     ]
+    pre_start_user_script = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
   }
 }
 `
@@ -446,6 +448,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     extra_args = [
       "root-dir=/var/lib/kubelet"
     ]
+	pre_start_user_script = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
   }
 }
 `
@@ -514,14 +517,15 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   }
 
   tags = {
-    keep-test-np1 = "testI"
-    keep-test-np3 = "testIII"
+    keep-test-np1 = "test1"
+    keep-test-np3 = "test3"
   }
 
   node_config {
     extra_args = [
       "root-dir=/var/lib/kubelet"
     ]
+	pre_start_user_script = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
   }
 }
 `
@@ -627,8 +631,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   }
 
   tags = {
-    keep-test-np1 = "testI"
-    keep-test-np3 = "testIII"
+    keep-test-np1 = "test1"
+    keep-test-np3 = "test3"
   }
 
   node_config {

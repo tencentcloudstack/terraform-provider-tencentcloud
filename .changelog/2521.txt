@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_organization_org_share_unit
+```
+
+```release-note:new-resource
+tencentcloud_organization_org_share_unit_member
+```

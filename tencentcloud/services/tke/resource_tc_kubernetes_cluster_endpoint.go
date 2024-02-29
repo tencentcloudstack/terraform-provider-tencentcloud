@@ -3,6 +3,7 @@ package tke
 import (
 	"context"
 	"fmt"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -230,6 +231,7 @@ func resourceTencentCloudTkeClusterEndpointCreate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
+		time.Sleep(2 * time.Minute)
 	}
 
 	d.SetId(id)

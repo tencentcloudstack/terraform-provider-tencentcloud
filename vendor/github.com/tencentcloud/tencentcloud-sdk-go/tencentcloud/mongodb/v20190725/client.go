@@ -59,8 +59,9 @@ func NewAssignProjectRequest() (request *AssignProjectRequest) {
 func NewAssignProjectResponse() (response *AssignProjectResponse) {
     response = &AssignProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssignProject
@@ -113,8 +114,9 @@ func NewCreateAccountUserRequest() (request *CreateAccountUserRequest) {
 func NewCreateAccountUserResponse() (response *CreateAccountUserResponse) {
     response = &CreateAccountUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAccountUser
@@ -169,8 +171,9 @@ func NewCreateBackupDBInstanceRequest() (request *CreateBackupDBInstanceRequest)
 func NewCreateBackupDBInstanceResponse() (response *CreateBackupDBInstanceResponse) {
     response = &CreateBackupDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBackupDBInstance
@@ -229,8 +232,9 @@ func NewCreateBackupDownloadTaskRequest() (request *CreateBackupDownloadTaskRequ
 func NewCreateBackupDownloadTaskResponse() (response *CreateBackupDownloadTaskResponse) {
     response = &CreateBackupDownloadTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBackupDownloadTask
@@ -285,8 +289,9 @@ func NewCreateDBInstanceRequest() (request *CreateDBInstanceRequest) {
 func NewCreateDBInstanceResponse() (response *CreateDBInstanceResponse) {
     response = &CreateDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDBInstance
@@ -365,8 +370,9 @@ func NewCreateDBInstanceHourRequest() (request *CreateDBInstanceHourRequest) {
 func NewCreateDBInstanceHourResponse() (response *CreateDBInstanceHourResponse) {
     response = &CreateDBInstanceHourResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDBInstanceHour
@@ -447,8 +453,9 @@ func NewDeleteAccountUserRequest() (request *DeleteAccountUserRequest) {
 func NewDeleteAccountUserResponse() (response *DeleteAccountUserResponse) {
     response = &DeleteAccountUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAccountUser
@@ -529,8 +536,9 @@ func NewDescribeAccountUsersRequest() (request *DescribeAccountUsersRequest) {
 func NewDescribeAccountUsersResponse() (response *DescribeAccountUsersResponse) {
     response = &DescribeAccountUsersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountUsers
@@ -539,6 +547,7 @@ func NewDescribeAccountUsersResponse() (response *DescribeAccountUsersResponse) 
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) DescribeAccountUsers(request *DescribeAccountUsersRequest) (response *DescribeAccountUsersResponse, err error) {
     return c.DescribeAccountUsersWithContext(context.Background(), request)
 }
@@ -549,6 +558,7 @@ func (c *Client) DescribeAccountUsers(request *DescribeAccountUsersRequest) (res
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) DescribeAccountUsersWithContext(ctx context.Context, request *DescribeAccountUsersRequest) (response *DescribeAccountUsersResponse, err error) {
     if request == nil {
         request = NewDescribeAccountUsersRequest()
@@ -579,8 +589,9 @@ func NewDescribeAsyncRequestInfoRequest() (request *DescribeAsyncRequestInfoRequ
 func NewDescribeAsyncRequestInfoResponse() (response *DescribeAsyncRequestInfoResponse) {
     response = &DescribeAsyncRequestInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAsyncRequestInfo
@@ -631,8 +642,9 @@ func NewDescribeBackupDownloadTaskRequest() (request *DescribeBackupDownloadTask
 func NewDescribeBackupDownloadTaskResponse() (response *DescribeBackupDownloadTaskResponse) {
     response = &DescribeBackupDownloadTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupDownloadTask
@@ -687,8 +699,9 @@ func NewDescribeClientConnectionsRequest() (request *DescribeClientConnectionsRe
 func NewDescribeClientConnectionsResponse() (response *DescribeClientConnectionsResponse) {
     response = &DescribeClientConnectionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClientConnections
@@ -743,8 +756,9 @@ func NewDescribeCurrentOpRequest() (request *DescribeCurrentOpRequest) {
 func NewDescribeCurrentOpResponse() (response *DescribeCurrentOpResponse) {
     response = &DescribeCurrentOpResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCurrentOp
@@ -799,8 +813,9 @@ func NewDescribeDBBackupsRequest() (request *DescribeDBBackupsRequest) {
 func NewDescribeDBBackupsResponse() (response *DescribeDBBackupsResponse) {
     response = &DescribeDBBackupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBBackups
@@ -851,8 +866,9 @@ func NewDescribeDBInstanceDealRequest() (request *DescribeDBInstanceDealRequest)
 func NewDescribeDBInstanceDealResponse() (response *DescribeDBInstanceDealResponse) {
     response = &DescribeDBInstanceDealResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceDeal
@@ -903,8 +919,9 @@ func NewDescribeDBInstanceNodePropertyRequest() (request *DescribeDBInstanceNode
 func NewDescribeDBInstanceNodePropertyResponse() (response *DescribeDBInstanceNodePropertyResponse) {
     response = &DescribeDBInstanceNodePropertyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceNodeProperty
@@ -959,8 +976,9 @@ func NewDescribeDBInstancesRequest() (request *DescribeDBInstancesRequest) {
 func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
     response = &DescribeDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstances
@@ -1017,8 +1035,9 @@ func NewDescribeInstanceParamsRequest() (request *DescribeInstanceParamsRequest)
 func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsResponse) {
     response = &DescribeInstanceParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceParams
@@ -1075,12 +1094,13 @@ func NewDescribeSecurityGroupRequest() (request *DescribeSecurityGroupRequest) {
 func NewDescribeSecurityGroupResponse() (response *DescribeSecurityGroupResponse) {
     response = &DescribeSecurityGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityGroup
-// 本就口（DescribeSecurityGroup）用于查询实例绑定的安全组。
+// 本接口（DescribeSecurityGroup）用于查询实例绑定的安全组。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1092,7 +1112,7 @@ func (c *Client) DescribeSecurityGroup(request *DescribeSecurityGroupRequest) (r
 }
 
 // DescribeSecurityGroup
-// 本就口（DescribeSecurityGroup）用于查询实例绑定的安全组。
+// 本接口（DescribeSecurityGroup）用于查询实例绑定的安全组。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1129,8 +1149,9 @@ func NewDescribeSlowLogPatternsRequest() (request *DescribeSlowLogPatternsReques
 func NewDescribeSlowLogPatternsResponse() (response *DescribeSlowLogPatternsResponse) {
     response = &DescribeSlowLogPatternsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSlowLogPatterns
@@ -1191,8 +1212,9 @@ func NewDescribeSlowLogsRequest() (request *DescribeSlowLogsRequest) {
 func NewDescribeSlowLogsResponse() (response *DescribeSlowLogsResponse) {
     response = &DescribeSlowLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSlowLogs
@@ -1253,8 +1275,9 @@ func NewDescribeSpecInfoRequest() (request *DescribeSpecInfoRequest) {
 func NewDescribeSpecInfoResponse() (response *DescribeSpecInfoResponse) {
     response = &DescribeSpecInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSpecInfo
@@ -1305,8 +1328,9 @@ func NewFlushInstanceRouterConfigRequest() (request *FlushInstanceRouterConfigRe
 func NewFlushInstanceRouterConfigResponse() (response *FlushInstanceRouterConfigResponse) {
     response = &FlushInstanceRouterConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FlushInstanceRouterConfig
@@ -1359,8 +1383,9 @@ func NewInquirePriceCreateDBInstancesRequest() (request *InquirePriceCreateDBIns
 func NewInquirePriceCreateDBInstancesResponse() (response *InquirePriceCreateDBInstancesResponse) {
     response = &InquirePriceCreateDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceCreateDBInstances
@@ -1423,8 +1448,9 @@ func NewInquirePriceModifyDBInstanceSpecRequest() (request *InquirePriceModifyDB
 func NewInquirePriceModifyDBInstanceSpecResponse() (response *InquirePriceModifyDBInstanceSpecResponse) {
     response = &InquirePriceModifyDBInstanceSpecResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceModifyDBInstanceSpec
@@ -1475,8 +1501,9 @@ func NewInquirePriceRenewDBInstancesRequest() (request *InquirePriceRenewDBInsta
 func NewInquirePriceRenewDBInstancesResponse() (response *InquirePriceRenewDBInstancesResponse) {
     response = &InquirePriceRenewDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceRenewDBInstances
@@ -1531,8 +1558,9 @@ func NewIsolateDBInstanceRequest() (request *IsolateDBInstanceRequest) {
 func NewIsolateDBInstanceResponse() (response *IsolateDBInstanceResponse) {
     response = &IsolateDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateDBInstance
@@ -1593,8 +1621,9 @@ func NewKillOpsRequest() (request *KillOpsRequest) {
 func NewKillOpsResponse() (response *KillOpsResponse) {
     response = &KillOpsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // KillOps
@@ -1643,8 +1672,9 @@ func NewModifyDBInstanceNetworkAddressRequest() (request *ModifyDBInstanceNetwor
 func NewModifyDBInstanceNetworkAddressResponse() (response *ModifyDBInstanceNetworkAddressResponse) {
     response = &ModifyDBInstanceNetworkAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceNetworkAddress
@@ -1701,8 +1731,9 @@ func NewModifyDBInstanceSecurityGroupRequest() (request *ModifyDBInstanceSecurit
 func NewModifyDBInstanceSecurityGroupResponse() (response *ModifyDBInstanceSecurityGroupResponse) {
     response = &ModifyDBInstanceSecurityGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceSecurityGroup
@@ -1761,14 +1792,16 @@ func NewModifyDBInstanceSpecRequest() (request *ModifyDBInstanceSpecRequest) {
 func NewModifyDBInstanceSpecResponse() (response *ModifyDBInstanceSpecResponse) {
     response = &ModifyDBInstanceSpecResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceSpec
-// 本接口(ModifyDBInstanceSpec)用于调整MongoDB云数据库实例配置。接口支持的售卖规格，可从查询云数据库的售卖规格（DescribeSpecInfo）获取。
+// 本接口（ModifyDBInstanceSpec）用于调整MongoDB云数据库实例配置。接口支持的售卖规格，可从查询云数据库的售卖规格（DescribeSpecInfo）获取。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETER_ZONECLOSED = "InvalidParameter.ZoneClosed"
 //  INVALIDPARAMETERVALUE_INVALIDTRADEOPERATION = "InvalidParameterValue.InvalidTradeOperation"
 //  INVALIDPARAMETERVALUE_MODIFYMODEERROR = "InvalidParameterValue.ModifyModeError"
@@ -1782,9 +1815,10 @@ func (c *Client) ModifyDBInstanceSpec(request *ModifyDBInstanceSpecRequest) (res
 }
 
 // ModifyDBInstanceSpec
-// 本接口(ModifyDBInstanceSpec)用于调整MongoDB云数据库实例配置。接口支持的售卖规格，可从查询云数据库的售卖规格（DescribeSpecInfo）获取。
+// 本接口（ModifyDBInstanceSpec）用于调整MongoDB云数据库实例配置。接口支持的售卖规格，可从查询云数据库的售卖规格（DescribeSpecInfo）获取。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETER_ZONECLOSED = "InvalidParameter.ZoneClosed"
 //  INVALIDPARAMETERVALUE_INVALIDTRADEOPERATION = "InvalidParameterValue.InvalidTradeOperation"
 //  INVALIDPARAMETERVALUE_MODIFYMODEERROR = "InvalidParameterValue.ModifyModeError"
@@ -1823,8 +1857,9 @@ func NewOfflineIsolatedDBInstanceRequest() (request *OfflineIsolatedDBInstanceRe
 func NewOfflineIsolatedDBInstanceResponse() (response *OfflineIsolatedDBInstanceResponse) {
     response = &OfflineIsolatedDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OfflineIsolatedDBInstance
@@ -1881,8 +1916,9 @@ func NewRenameInstanceRequest() (request *RenameInstanceRequest) {
 func NewRenameInstanceResponse() (response *RenameInstanceResponse) {
     response = &RenameInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenameInstance
@@ -1939,8 +1975,9 @@ func NewRenewDBInstancesRequest() (request *RenewDBInstancesRequest) {
 func NewRenewDBInstancesResponse() (response *RenewDBInstancesResponse) {
     response = &RenewDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewDBInstances
@@ -1991,8 +2028,9 @@ func NewResetDBInstancePasswordRequest() (request *ResetDBInstancePasswordReques
 func NewResetDBInstancePasswordResponse() (response *ResetDBInstancePasswordResponse) {
     response = &ResetDBInstancePasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetDBInstancePassword
@@ -2055,8 +2093,9 @@ func NewSetAccountUserPrivilegeRequest() (request *SetAccountUserPrivilegeReques
 func NewSetAccountUserPrivilegeResponse() (response *SetAccountUserPrivilegeResponse) {
     response = &SetAccountUserPrivilegeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetAccountUserPrivilege
@@ -2107,8 +2146,9 @@ func NewTerminateDBInstancesRequest() (request *TerminateDBInstancesRequest) {
 func NewTerminateDBInstancesResponse() (response *TerminateDBInstancesResponse) {
     response = &TerminateDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateDBInstances

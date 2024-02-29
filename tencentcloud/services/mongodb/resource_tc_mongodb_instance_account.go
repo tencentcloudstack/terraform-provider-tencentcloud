@@ -24,6 +24,9 @@ func ResourceTencentCloudMongodbInstanceAccount() *schema.Resource {
 		Read:   resourceTencentCloudMongodbInstanceAccountRead,
 		Update: resourceTencentCloudMongodbInstanceAccountUpdate,
 		Delete: resourceTencentCloudMongodbInstanceAccountDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -40,13 +43,15 @@ func ResourceTencentCloudMongodbInstanceAccount() *schema.Resource {
 			},
 
 			"password": {
-				Required:    true,
+				Optional:    true,
+				Sensitive:   true,
 				Type:        schema.TypeString,
 				Description: "New account password. Password complexity requirements are as follows: character length range [8,32]. Contains at least letters, numbers and special characters (exclamation point!, at@, pound sign #, percent sign %, caret ^, asterisk *, parentheses (), underscore _).",
 			},
 
 			"mongo_user_password": {
-				Required:    true,
+				Optional:    true,
+				Sensitive:   true,
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Description: "The password corresponding to the mongouser account. mongouser is the system default account, which is the password set when creating an instance.",

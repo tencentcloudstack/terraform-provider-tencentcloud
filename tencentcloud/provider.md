@@ -147,7 +147,8 @@ API GateWay(apigateway)
     tencentcloud_api_gateway_upstream
     tencentcloud_api_gateway_api_app_attachment
     tencentcloud_api_gateway_update_api_app_key
-    tencentcloud_api_gateway_import_open_api
+    tencentcloud_api_gateway_import_open_api 
+    tencentcloud_api_gateway_update_service
 
 Cloud Audit(Audit)
   Data Source
@@ -1214,7 +1215,6 @@ Virtual Private Cloud(VPC)
     tencentcloud_vpc_peer_connect_reject_operation
     tencentcloud_subnet
     tencentcloud_security_group
-    tencentcloud_security_group_rule
     tencentcloud_security_group_rule_set
     tencentcloud_security_group_lite_rule
     tencentcloud_address_template
@@ -1309,6 +1309,7 @@ PrivateDNS
     tencentcloud_private_dns_zone_vpc_attachment
   Data Source
     tencentcloud_private_dns_records
+    tencentcloud_private_dns_private_zone_list
 
 Cloud Log Service(CLS)
   Resource
@@ -1630,6 +1631,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_financial_by_member
     tencentcloud_organization_org_financial_by_month
     tencentcloud_organization_org_financial_by_product
+    tencentcloud_organization_org_share_area
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node
@@ -1640,6 +1642,8 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_member_policy_attachment
     tencentcloud_organization_policy_sub_account_attachment
     tencentcloud_organization_quit_organization_operation
+    tencentcloud_organization_org_share_unit
+    tencentcloud_organization_org_share_unit_member
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source

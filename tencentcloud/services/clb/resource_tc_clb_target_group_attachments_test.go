@@ -67,6 +67,25 @@ func TestAccTencentCloudClbTargetGroupAttachmentsResource_sync(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClbTargetGroupAttachmentsResource_tcp(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbTargetGroupAttachmentsTCP,
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_attachments.target_group_attachments", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_attachments.target_group_attachments", "target_group_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_attachments.target_group_attachments", "associations.#"),
+				),
+			},
+		},
+	})
+}
+
 const testAccClbTargetGroupAttachments = `
 
 resource "tencentcloud_clb_instance" "clb_basic" {
@@ -350,6 +369,27 @@ resource "tencentcloud_clb_target_group_attachments" "target_group_attachments1"
     listener_id = tencentcloud_clb_listener.public_listeners2.listener_id
     location_id=tencentcloud_clb_listener_rule.rule_basic2.rule_id
 
+  }
+}
+`
+const testAccClbTargetGroupAttachmentsTCP = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf_test_clb_attach_1"
+  vpc_id = "vpc-efc9vddt"
+}
+resource "tencentcloud_clb_listener" "public_listeners" {
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
+  protocol      = "TCP"
+  port          = "8090"
+  listener_name = "iac-test-attach"
+  target_type         = "TARGETGROUP"
+}
+resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" {
+  target_group_id = "lbtg-nxd0dmcm"
+  associations  {
+    load_balancer_id = tencentcloud_clb_instance.clb_basic.id
+    listener_id = tencentcloud_clb_listener.public_listeners.listener_id
   }
 }
 `

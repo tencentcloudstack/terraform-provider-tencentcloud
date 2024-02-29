@@ -68,6 +68,10 @@ const (
 	MONGODB_TASK_SUCCESS = "success"
 )
 
+const (
+	MONGODB_STATUS_DELIVERY_SUCCESS = 4
+)
+
 func TencentMongodbBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_name": {

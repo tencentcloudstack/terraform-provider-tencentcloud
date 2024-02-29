@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_mps_schedule: Add `resource_id` field
+```
+
+```release-note:enhancement
+resource/tencentcloud_mps_schedules: Add `resource_id` field
+```
