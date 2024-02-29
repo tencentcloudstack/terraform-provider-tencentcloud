@@ -31,5 +31,5 @@ Import
 cls topic can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cls_topic.topic 2f5764c1-c833-44c5-84c7-950979b2a278
+$ terraform import tencentcloud_cls_topic.example 2f5764c1-c833-44c5-84c7-950979b2a278
 ```
