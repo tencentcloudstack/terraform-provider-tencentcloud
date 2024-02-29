@@ -63,13 +63,24 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				Description: "Log topic storage class. Valid values: hot: real-time storage; cold: offline storage. Default value: hot. If cold is passed in, " +
-					"please contact the customer service to add the log topic to the allowlist first..",
+					"please contact the customer service to add the log topic to the allowlist first.",
 			},
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
 				Description: "Lifecycle in days. Value range: 1~366. Default value: 30.",
+			},
+			"hot_period": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "0: Turn off log sinking. Non 0: The number of days of standard storage after enabling log settling. HotPeriod needs to be greater than or equal to 7 and less than Period. Only effective when StorageType is hot.",
+			},
+			"describes": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Log Topic Description.",
 			},
 		},
 	}
@@ -78,9 +89,8 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_topic.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = cls.NewCreateTopicRequest()
 		response *cls.CreateTopicResponse
 	)
@@ -93,7 +103,7 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		request.TopicName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("partition_count"); ok {
+	if v, ok := d.GetOkExists("partition_count"); ok {
 		request.PartitionCount = helper.IntInt64(v.(int))
 	}
 
@@ -112,7 +122,7 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		request.AutoSplit = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOk("max_split_partitions"); ok {
+	if v, ok := d.GetOkExists("max_split_partitions"); ok {
 		request.MaxSplitPartitions = helper.IntInt64(v.(int))
 	}
 
@@ -120,8 +130,18 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		request.StorageType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("period"); ok {
+	if v, ok := d.GetOkExists("period"); ok {
 		request.Period = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("hot_period"); ok {
+		request.HotPeriod = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("describes"); ok {
+		request.Describes = helper.String(v.(string))
+	} else {
+		request.Describes = helper.String("")
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -132,6 +152,12 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil {
+			e = fmt.Errorf("create cls topic failed")
+			return resource.NonRetryableError(e)
+		}
+
 		response = result
 		return nil
 	})
@@ -150,14 +176,14 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_topic.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	id := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		id      = d.Id()
+	)
 
 	topic, err := service.DescribeClsTopicById(ctx, id)
-
 	if err != nil {
 		return err
 	}
@@ -175,36 +201,42 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 	for _, tag := range topic.Tags {
 		tags[*tag.Key] = *tag.Value
 	}
+
 	_ = d.Set("tags", tags)
 	_ = d.Set("auto_split", topic.AutoSplit)
 	_ = d.Set("max_split_partitions", topic.MaxSplitPartitions)
 	_ = d.Set("storage_type", topic.StorageType)
 	_ = d.Set("period", topic.Period)
+	_ = d.Set("hot_period", topic.HotPeriod)
+	_ = d.Set("describes", topic.Describes)
 
 	return nil
 }
 
 func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_topic.update")()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	request := cls.NewModifyTopicRequest()
 
-	request.TopicId = helper.String(d.Id())
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		request = cls.NewModifyTopicRequest()
+		id      = d.Id()
+	)
 
-	if d.HasChange("partition_count") {
-		return fmt.Errorf("`partition_count` do not support change now.")
+	immutableArgs := []string{"partition_count", "storage_type"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if d.HasChange("storage_type") {
-		return fmt.Errorf("`storage_type` do not support change now.")
-	}
+	request.TopicId = helper.String(id)
 
 	if d.HasChange("topic_name") {
 		request.TopicName = helper.String(d.Get("topic_name").(string))
 	}
 
 	if d.HasChange("tags") {
-
 		tags := d.Get("tags").(map[string]interface{})
 		request.Tags = make([]*cls.Tag, 0, len(tags))
 		for k, v := range tags {
@@ -229,6 +261,14 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 		request.Period = helper.IntInt64(d.Get("period").(int))
 	}
 
+	if d.HasChange("hot_period") {
+		request.HotPeriod = helper.IntUint64(d.Get("hot_period").(int))
+	}
+
+	if d.HasChange("describes") {
+		request.Describes = helper.String(d.Get("describes").(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
 		if e != nil {
@@ -237,6 +277,7 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
 
@@ -250,10 +291,12 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudClsTopicDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_topic.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	id := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		id      = d.Id()
+	)
 
 	if err := service.DeleteClsTopic(ctx, id); err != nil {
 		return err

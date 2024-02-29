@@ -91,7 +91,7 @@ func TestAccTencentCloudClsTopic_basic(t *testing.T) {
 				Config: testAccClsTopic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClsTopicExists("tencentcloud_cls_topic.topic"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_topic.topic", "topic_name", "tf-topic-test"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_topic.topic", "topic_name", "tf_example"),
 				),
 			},
 			{
@@ -129,23 +129,25 @@ func testAccCheckClsTopicExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClsTopic = `
-resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "tf-topic-test"
+resource "tencentcloud_cls_logset" "example" {
+  logset_name = "tf_example"
   tags        = {
-    "test" = "test"
+    "demo" = "test"
   }
 }
 
-resource "tencentcloud_cls_topic" "topic" {
-  auto_split           = true
-  logset_id            = tencentcloud_cls_logset.logset.id
+resource "tencentcloud_cls_topic" "example" {
+  topic_name           = "tf_example"
+  logset_id            = tencentcloud_cls_logset.example.id
+  auto_split           = false
   max_split_partitions = 20
   partition_count      = 1
-  period               = 10
+  period               = 30
   storage_type         = "hot"
+  describes            = "Test Demo."
+  hot_period           = 10
   tags                 = {
-    "test" = "test"
+    "test" = "test",
   }
-  topic_name           = "tf-topic-test"
 }
 `
