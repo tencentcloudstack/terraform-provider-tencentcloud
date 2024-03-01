@@ -225,12 +225,13 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId        = tccommon.GetLogId(tccommon.ContextNil)
-		request      = csip.NewCreateRiskCenterScanTaskRequest()
-		response     = csip.NewCreateRiskCenterScanTaskResponse()
-		taskId       string
-		scanPlanType int
-		taskMode     int
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		request       = csip.NewCreateRiskCenterScanTaskRequest()
+		response      = csip.NewCreateRiskCenterScanTaskResponse()
+		taskId        string
+		scanPlanType  int
+		scanAssetType int
+		taskMode      int
 	)
 
 	if v, ok := d.GetOk("task_name"); ok {
@@ -244,14 +245,15 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOkExists("scan_asset_type"); ok {
 		request.ScanAssetType = helper.IntInt64(v.(int))
+		scanAssetType = v.(int)
 	}
 
 	if v, ok := d.GetOkExists("task_mode"); ok {
 		request.TaskMode = helper.IntInt64(v.(int))
 		taskMode = v.(int)
 		if taskMode == SCAN_TASK_MODE_1 {
-			if scanPlanType != SCAN_PLAN_TYPE_1 {
-				return fmt.Errorf("If task_mode is `1`, scan_plan_type should be set to `1`.")
+			if scanPlanType != SCAN_PLAN_TYPE_1 || scanAssetType != SCAN_ASSET_TYPE_1 {
+				return fmt.Errorf("If task_mode is `1`, scan_plan_type and scan_asset_type should be set to `1`.")
 			}
 		}
 	}
