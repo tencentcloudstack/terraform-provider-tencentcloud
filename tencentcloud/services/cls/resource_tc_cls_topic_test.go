@@ -80,6 +80,7 @@ func testSweepClsTopic(region string) error {
 	return nil
 }
 
+// go test -i; go test -test.run TestAccTencentCloudClsTopic_basic -v
 func TestAccTencentCloudClsTopic_basic(t *testing.T) {
 	t.Parallel()
 
@@ -90,14 +91,25 @@ func TestAccTencentCloudClsTopic_basic(t *testing.T) {
 			{
 				Config: testAccClsTopic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckClsTopicExists("tencentcloud_cls_topic.topic"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_topic.topic", "topic_name", "tf-topic-test"),
+					testAccCheckClsTopicExists("tencentcloud_cls_topic.example"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_topic.example", "topic_name", "tf_example"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_topic.example", "storage_type", "hot"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_topic.example", "describes", "Test Demo."),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cls_topic.topic",
+				ResourceName:      "tencentcloud_cls_topic.example",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccClsTopicUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClsTopicExists("tencentcloud_cls_topic.example"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_topic.example", "topic_name", "tf_example_update"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_topic.example", "storage_type", "hot"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_topic.example", "describes", "Test Demo Update."),
+				),
 			},
 		},
 	})
@@ -129,23 +141,49 @@ func testAccCheckClsTopicExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClsTopic = `
-resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "tf-topic-test"
+resource "tencentcloud_cls_logset" "example" {
+  logset_name = "tf_example"
   tags        = {
-    "test" = "test"
+    "demo" = "test"
   }
 }
 
-resource "tencentcloud_cls_topic" "topic" {
-  auto_split           = true
-  logset_id            = tencentcloud_cls_logset.logset.id
+resource "tencentcloud_cls_topic" "example" {
+  topic_name           = "tf_example"
+  logset_id            = tencentcloud_cls_logset.example.id
+  auto_split           = false
   max_split_partitions = 20
   partition_count      = 1
-  period               = 10
+  period               = 30
   storage_type         = "hot"
+  describes            = "Test Demo."
+  hot_period           = 10
   tags                 = {
-    "test" = "test"
+    "test" = "test",
   }
-  topic_name           = "tf-topic-test"
+}
+`
+
+const testAccClsTopicUpdate = `
+resource "tencentcloud_cls_logset" "example" {
+  logset_name = "tf_example"
+  tags        = {
+    "demo" = "test"
+  }
+}
+
+resource "tencentcloud_cls_topic" "example" {
+  topic_name           = "tf_example_update"
+  logset_id            = tencentcloud_cls_logset.example.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 30
+  storage_type         = "hot"
+  describes            = "Test Demo Update."
+  hot_period           = 15
+  tags                 = {
+    "test" = "test",
+  }
 }
 `

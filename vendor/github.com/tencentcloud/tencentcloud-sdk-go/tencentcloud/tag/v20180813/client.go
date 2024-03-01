@@ -59,8 +59,9 @@ func NewAddProjectRequest() (request *AddProjectRequest) {
 func NewAddProjectResponse() (response *AddProjectResponse) {
     response = &AddProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddProject
@@ -113,8 +114,9 @@ func NewAddResourceTagRequest() (request *AddResourceTagRequest) {
 func NewAddResourceTagResponse() (response *AddResourceTagResponse) {
     response = &AddResourceTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddResourceTag
@@ -122,6 +124,7 @@ func NewAddResourceTagResponse() (response *AddResourceTagResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
@@ -142,6 +145,7 @@ func (c *Client) AddResourceTag(request *AddResourceTagRequest) (response *AddRe
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
@@ -183,8 +187,9 @@ func NewAttachResourcesTagRequest() (request *AttachResourcesTagRequest) {
 func NewAttachResourcesTagResponse() (response *AttachResourcesTagResponse) {
     response = &AttachResourcesTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachResourcesTag
@@ -193,6 +198,7 @@ func NewAttachResourcesTagResponse() (response *AttachResourcesTagResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCEAPPIDNOTSAME = "FailedOperation.ResourceAppIdNotSame"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
@@ -221,6 +227,7 @@ func (c *Client) AttachResourcesTag(request *AttachResourcesTagRequest) (respons
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCEAPPIDNOTSAME = "FailedOperation.ResourceAppIdNotSame"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
@@ -269,8 +276,9 @@ func NewCreateTagRequest() (request *CreateTagRequest) {
 func NewCreateTagResponse() (response *CreateTagResponse) {
     response = &CreateTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTag
@@ -281,6 +289,7 @@ func NewCreateTagResponse() (response *CreateTagResponse) {
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESERVEDTAGKEY = "InvalidParameterValue.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
+//  INVALIDPARAMETERVALUE_TAGKEYDUPLICATE = "InvalidParameterValue.TagKeyDuplicate"
 //  INVALIDPARAMETERVALUE_TAGKEYEMPTY = "InvalidParameterValue.TagKeyEmpty"
 //  INVALIDPARAMETERVALUE_TAGKEYLENGTHEXCEEDED = "InvalidParameterValue.TagKeyLengthExceeded"
 //  INVALIDPARAMETERVALUE_TAGVALUECHARACTERILLEGAL = "InvalidParameterValue.TagValueCharacterIllegal"
@@ -301,6 +310,7 @@ func (c *Client) CreateTag(request *CreateTagRequest) (response *CreateTagRespon
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESERVEDTAGKEY = "InvalidParameterValue.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
+//  INVALIDPARAMETERVALUE_TAGKEYDUPLICATE = "InvalidParameterValue.TagKeyDuplicate"
 //  INVALIDPARAMETERVALUE_TAGKEYEMPTY = "InvalidParameterValue.TagKeyEmpty"
 //  INVALIDPARAMETERVALUE_TAGKEYLENGTHEXCEEDED = "InvalidParameterValue.TagKeyLengthExceeded"
 //  INVALIDPARAMETERVALUE_TAGVALUECHARACTERILLEGAL = "InvalidParameterValue.TagValueCharacterIllegal"
@@ -339,8 +349,9 @@ func NewCreateTagsRequest() (request *CreateTagsRequest) {
 func NewCreateTagsResponse() (response *CreateTagsResponse) {
     response = &CreateTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTags
@@ -350,6 +361,7 @@ func NewCreateTagsResponse() (response *CreateTagsResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
+//  INVALIDPARAMETER_TAG = "InvalidParameter.Tag"
 //  INVALIDPARAMETERVALUE_RESERVEDTAGKEY = "InvalidParameterValue.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
 //  INVALIDPARAMETERVALUE_TAGKEYEMPTY = "InvalidParameterValue.TagKeyEmpty"
@@ -371,6 +383,7 @@ func (c *Client) CreateTags(request *CreateTagsRequest) (response *CreateTagsRes
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
+//  INVALIDPARAMETER_TAG = "InvalidParameter.Tag"
 //  INVALIDPARAMETERVALUE_RESERVEDTAGKEY = "InvalidParameterValue.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
 //  INVALIDPARAMETERVALUE_TAGKEYEMPTY = "InvalidParameterValue.TagKeyEmpty"
@@ -411,8 +424,9 @@ func NewDeleteResourceTagRequest() (request *DeleteResourceTagRequest) {
 func NewDeleteResourceTagResponse() (response *DeleteResourceTagResponse) {
     response = &DeleteResourceTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteResourceTag
@@ -420,6 +434,7 @@ func NewDeleteResourceTagResponse() (response *DeleteResourceTagResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
@@ -435,6 +450,7 @@ func (c *Client) DeleteResourceTag(request *DeleteResourceTagRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
@@ -471,8 +487,9 @@ func NewDeleteTagRequest() (request *DeleteTagRequest) {
 func NewDeleteTagResponse() (response *DeleteTagResponse) {
     response = &DeleteTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTag
@@ -537,8 +554,9 @@ func NewDeleteTagsRequest() (request *DeleteTagsRequest) {
 func NewDeleteTagsResponse() (response *DeleteTagsResponse) {
     response = &DeleteTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTags
@@ -607,8 +625,9 @@ func NewDescribeProjectsRequest() (request *DescribeProjectsRequest) {
 func NewDescribeProjectsResponse() (response *DescribeProjectsResponse) {
     response = &DescribeProjectsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProjects
@@ -661,8 +680,9 @@ func NewDescribeResourceTagsRequest() (request *DescribeResourceTagsRequest) {
 func NewDescribeResourceTagsResponse() (response *DescribeResourceTagsResponse) {
     response = &DescribeResourceTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceTags
@@ -709,8 +729,9 @@ func NewDescribeResourceTagsByResourceIdsRequest() (request *DescribeResourceTag
 func NewDescribeResourceTagsByResourceIdsResponse() (response *DescribeResourceTagsByResourceIdsResponse) {
     response = &DescribeResourceTagsByResourceIdsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceTagsByResourceIds
@@ -769,8 +790,9 @@ func NewDescribeResourceTagsByResourceIdsSeqRequest() (request *DescribeResource
 func NewDescribeResourceTagsByResourceIdsSeqResponse() (response *DescribeResourceTagsByResourceIdsSeqResponse) {
     response = &DescribeResourceTagsByResourceIdsSeqResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceTagsByResourceIdsSeq
@@ -827,8 +849,9 @@ func NewDescribeResourceTagsByTagKeysRequest() (request *DescribeResourceTagsByT
 func NewDescribeResourceTagsByTagKeysResponse() (response *DescribeResourceTagsByTagKeysResponse) {
     response = &DescribeResourceTagsByTagKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceTagsByTagKeys
@@ -889,8 +912,9 @@ func NewDescribeResourcesByTagsRequest() (request *DescribeResourcesByTagsReques
 func NewDescribeResourcesByTagsResponse() (response *DescribeResourcesByTagsResponse) {
     response = &DescribeResourcesByTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourcesByTags
@@ -945,8 +969,9 @@ func NewDescribeResourcesByTagsUnionRequest() (request *DescribeResourcesByTagsU
 func NewDescribeResourcesByTagsUnionResponse() (response *DescribeResourcesByTagsUnionResponse) {
     response = &DescribeResourcesByTagsUnionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourcesByTagsUnion
@@ -999,8 +1024,9 @@ func NewDescribeTagKeysRequest() (request *DescribeTagKeysRequest) {
 func NewDescribeTagKeysResponse() (response *DescribeTagKeysResponse) {
     response = &DescribeTagKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagKeys
@@ -1049,8 +1075,9 @@ func NewDescribeTagValuesRequest() (request *DescribeTagValuesRequest) {
 func NewDescribeTagValuesResponse() (response *DescribeTagValuesResponse) {
     response = &DescribeTagValuesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagValues
@@ -1101,8 +1128,9 @@ func NewDescribeTagValuesSeqRequest() (request *DescribeTagValuesSeqRequest) {
 func NewDescribeTagValuesSeqResponse() (response *DescribeTagValuesSeqResponse) {
     response = &DescribeTagValuesSeqResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagValuesSeq
@@ -1151,8 +1179,9 @@ func NewDescribeTagsRequest() (request *DescribeTagsRequest) {
 func NewDescribeTagsResponse() (response *DescribeTagsResponse) {
     response = &DescribeTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTags
@@ -1201,8 +1230,9 @@ func NewDescribeTagsSeqRequest() (request *DescribeTagsSeqRequest) {
 func NewDescribeTagsSeqResponse() (response *DescribeTagsSeqResponse) {
     response = &DescribeTagsSeqResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagsSeq
@@ -1253,8 +1283,9 @@ func NewDetachResourcesTagRequest() (request *DetachResourcesTagRequest) {
 func NewDetachResourcesTagResponse() (response *DetachResourcesTagResponse) {
     response = &DetachResourcesTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachResourcesTag
@@ -1263,14 +1294,17 @@ func NewDetachResourcesTagResponse() (response *DetachResourcesTagResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCEAPPIDNOTSAME = "FailedOperation.ResourceAppIdNotSame"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_REGIONINVALID = "InvalidParameterValue.RegionInvalid"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_RESOURCEIDINVALID = "InvalidParameterValue.ResourceIdInvalid"
 //  INVALIDPARAMETERVALUE_RESOURCEPREFIXINVALID = "InvalidParameterValue.ResourcePrefixInvalid"
 //  INVALIDPARAMETERVALUE_SERVICETYPEINVALID = "InvalidParameterValue.ServiceTypeInvalid"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
+//  INVALIDPARAMETERVALUE_TAGKEYEMPTY = "InvalidParameterValue.TagKeyEmpty"
 //  INVALIDPARAMETERVALUE_UININVALID = "InvalidParameterValue.UinInvalid"
 //  LIMITEXCEEDED_RESOURCENUMPERREQUEST = "LimitExceeded.ResourceNumPerRequest"
 //  RESOURCENOTFOUND_ATTACHEDTAGKEYNOTFOUND = "ResourceNotFound.AttachedTagKeyNotFound"
@@ -1284,14 +1318,17 @@ func (c *Client) DetachResourcesTag(request *DetachResourcesTagRequest) (respons
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCEAPPIDNOTSAME = "FailedOperation.ResourceAppIdNotSame"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_REGIONINVALID = "InvalidParameterValue.RegionInvalid"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_RESOURCEIDINVALID = "InvalidParameterValue.ResourceIdInvalid"
 //  INVALIDPARAMETERVALUE_RESOURCEPREFIXINVALID = "InvalidParameterValue.ResourcePrefixInvalid"
 //  INVALIDPARAMETERVALUE_SERVICETYPEINVALID = "InvalidParameterValue.ServiceTypeInvalid"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
+//  INVALIDPARAMETERVALUE_TAGKEYEMPTY = "InvalidParameterValue.TagKeyEmpty"
 //  INVALIDPARAMETERVALUE_UININVALID = "InvalidParameterValue.UinInvalid"
 //  LIMITEXCEEDED_RESOURCENUMPERREQUEST = "LimitExceeded.ResourceNumPerRequest"
 //  RESOURCENOTFOUND_ATTACHEDTAGKEYNOTFOUND = "ResourceNotFound.AttachedTagKeyNotFound"
@@ -1325,8 +1362,9 @@ func NewGetResourcesRequest() (request *GetResourcesRequest) {
 func NewGetResourcesResponse() (response *GetResourcesResponse) {
     response = &GetResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetResources
@@ -1403,8 +1441,9 @@ func NewGetTagKeysRequest() (request *GetTagKeysRequest) {
 func NewGetTagKeysResponse() (response *GetTagKeysResponse) {
     response = &GetTagKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetTagKeys
@@ -1459,8 +1498,9 @@ func NewGetTagValuesRequest() (request *GetTagValuesRequest) {
 func NewGetTagValuesResponse() (response *GetTagValuesResponse) {
     response = &GetTagValuesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetTagValues
@@ -1517,8 +1557,9 @@ func NewGetTagsRequest() (request *GetTagsRequest) {
 func NewGetTagsResponse() (response *GetTagsResponse) {
     response = &GetTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetTags
@@ -1575,8 +1616,9 @@ func NewModifyResourceTagsRequest() (request *ModifyResourceTagsRequest) {
 func NewModifyResourceTagsResponse() (response *ModifyResourceTagsResponse) {
     response = &ModifyResourceTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourceTags
@@ -1584,6 +1626,7 @@ func NewModifyResourceTagsResponse() (response *ModifyResourceTagsResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETER_TAG = "InvalidParameter.Tag"
 //  INVALIDPARAMETERVALUE_DELETETAGSPARAMERROR = "InvalidParameterValue.DeleteTagsParamError"
@@ -1606,6 +1649,7 @@ func (c *Client) ModifyResourceTags(request *ModifyResourceTagsRequest) (respons
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETER_TAG = "InvalidParameter.Tag"
 //  INVALIDPARAMETERVALUE_DELETETAGSPARAMERROR = "InvalidParameterValue.DeleteTagsParamError"
@@ -1649,8 +1693,9 @@ func NewModifyResourcesTagValueRequest() (request *ModifyResourcesTagValueReques
 func NewModifyResourcesTagValueResponse() (response *ModifyResourcesTagValueResponse) {
     response = &ModifyResourcesTagValueResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourcesTagValue
@@ -1659,6 +1704,7 @@ func NewModifyResourcesTagValueResponse() (response *ModifyResourcesTagValueResp
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCEAPPIDNOTSAME = "FailedOperation.ResourceAppIdNotSame"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_REGIONINVALID = "InvalidParameterValue.RegionInvalid"
@@ -1684,6 +1730,7 @@ func (c *Client) ModifyResourcesTagValue(request *ModifyResourcesTagValueRequest
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCEAPPIDNOTSAME = "FailedOperation.ResourceAppIdNotSame"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_REGIONINVALID = "InvalidParameterValue.RegionInvalid"
@@ -1729,8 +1776,9 @@ func NewTagResourcesRequest() (request *TagResourcesRequest) {
 func NewTagResourcesResponse() (response *TagResourcesResponse) {
     response = &TagResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TagResources
@@ -1739,6 +1787,7 @@ func NewTagResourcesResponse() (response *TagResourcesResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCETAGPROCESSING = "FailedOperation.ResourceTagProcessing"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
@@ -1765,6 +1814,7 @@ func (c *Client) TagResources(request *TagResourcesRequest) (response *TagResour
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCETAGPROCESSING = "FailedOperation.ResourceTagProcessing"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
@@ -1811,8 +1861,9 @@ func NewUnTagResourcesRequest() (request *UnTagResourcesRequest) {
 func NewUnTagResourcesResponse() (response *UnTagResourcesResponse) {
     response = &UnTagResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnTagResources
@@ -1821,6 +1872,7 @@ func NewUnTagResourcesResponse() (response *UnTagResourcesResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCETAGPROCESSING = "FailedOperation.ResourceTagProcessing"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
@@ -1843,6 +1895,7 @@ func (c *Client) UnTagResources(request *UnTagResourcesRequest) (response *UnTag
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  FAILEDOPERATION_RESOURCETAGPROCESSING = "FailedOperation.ResourceTagProcessing"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
@@ -1885,8 +1938,9 @@ func NewUpdateProjectRequest() (request *UpdateProjectRequest) {
 func NewUpdateProjectResponse() (response *UpdateProjectResponse) {
     response = &UpdateProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateProject
@@ -1894,6 +1948,7 @@ func NewUpdateProjectResponse() (response *UpdateProjectResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PROJECTDISABLED = "FailedOperation.ProjectDisabled"
+//  FAILEDOPERATION_PROJECTNUMEXCEED = "FailedOperation.ProjectNumExceed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PROJECTNAMEEXISTED = "InvalidParameter.ProjectNameExisted"
 //  RESOURCENOTFOUND_RECORDNOTFOUND = "ResourceNotFound.RecordNotFound"
@@ -1906,6 +1961,7 @@ func (c *Client) UpdateProject(request *UpdateProjectRequest) (response *UpdateP
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PROJECTDISABLED = "FailedOperation.ProjectDisabled"
+//  FAILEDOPERATION_PROJECTNUMEXCEED = "FailedOperation.ProjectNumExceed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PROJECTNAMEEXISTED = "InvalidParameter.ProjectNameExisted"
 //  RESOURCENOTFOUND_RECORDNOTFOUND = "ResourceNotFound.RecordNotFound"
@@ -1939,8 +1995,9 @@ func NewUpdateResourceTagValueRequest() (request *UpdateResourceTagValueRequest)
 func NewUpdateResourceTagValueResponse() (response *UpdateResourceTagValueResponse) {
     response = &UpdateResourceTagValueResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateResourceTagValue
@@ -1948,6 +2005,7 @@ func NewUpdateResourceTagValueResponse() (response *UpdateResourceTagValueRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
@@ -1964,6 +2022,7 @@ func (c *Client) UpdateResourceTagValue(request *UpdateResourceTagValueRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_POLICYENFORCEDINVALID = "FailedOperation.PolicyEnforcedInvalid"
 //  INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 //  INVALIDPARAMETERVALUE_RESOURCEDESCRIPTIONERROR = "InvalidParameterValue.ResourceDescriptionError"
 //  INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
