@@ -1,3 +1,19 @@
+## 1.81.77 (March 1, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_csip_risk_center` ([#2498](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2498))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_topic: support hot_period, describes params ([#2545](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2545))
+* resource/tencentcloud_vod_procedure_template: fix api must set SubAppId ([#2542](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2542))
+* resource/tencentcloud_vod_sub_application: fix status update problem ([#2542](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2542))
+
+BUG FIXES:
+
+* datasource/tencentcloud_tcmq_topic: fix `topic_list.topic_id` value ([#2546](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2546))
+
 ## 1.81.76 (February 28, 2024)
 
 FEATURES:
