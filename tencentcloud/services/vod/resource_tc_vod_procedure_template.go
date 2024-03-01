@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"strconv"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -42,7 +43,7 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 			"sub_app_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.",
+				Description: "Subapplication ID in VOD. For customers who activate VOD from December 25, 2023, if they access the resources in the VOD application (whether it is the default application or the newly created application), you must fill in this field as Application ID.",
 			},
 			"media_process_task": {
 				Type:        schema.TypeList,
@@ -531,12 +532,18 @@ func resourceTencentCloudVodProcedureTemplateCreate(d *schema.ResourceData, meta
 		request = vod.NewCreateProcedureTemplateRequest()
 	)
 
-	request.Name = helper.String(d.Get("name").(string))
+	name := d.Get("name").(string)
+	request.Name = helper.String(name)
 	if v, ok := d.GetOk("comment"); ok {
 		request.Comment = helper.String(v.(string))
 	}
+
+	resourceId := name
 	if v, ok := d.GetOk("sub_app_id"); ok {
-		request.SubAppId = helper.IntUint64(v.(int))
+		subAppId := v.(int)
+		resourceId += tccommon.FILED_SP
+		resourceId += helper.IntToStr(subAppId)
+		request.SubAppId = helper.IntUint64(subAppId)
 	}
 	if _, ok := d.GetOk("media_process_task"); ok {
 		mediaReq := generateMediaProcessTask(d)
@@ -556,7 +563,8 @@ func resourceTencentCloudVodProcedureTemplateCreate(d *schema.ResourceData, meta
 	if err != nil {
 		return err
 	}
-	d.SetId(d.Get("name").(string))
+
+	d.SetId(resourceId)
 
 	return resourceTencentCloudVodProcedureTemplateRead(d, meta)
 }
@@ -566,14 +574,22 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
+		name       string
+		subAppId   int
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		id         = d.Id()
-		subAppId   = d.Get("sub_app_id").(int)
 		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
-	template, has, err := vodService.DescribeProcedureTemplatesById(ctx, id, subAppId)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		name = idSplit[0]
+		subAppId = helper.StrToInt(idSplit[1])
+	} else {
+		name = id
+	}
+	template, has, err := vodService.DescribeProcedureTemplatesById(ctx, name, subAppId)
 	if err != nil {
 		return err
 	}
@@ -586,6 +602,9 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 	_ = d.Set("comment", template.Comment)
 	_ = d.Set("create_time", template.CreateTime)
 	_ = d.Set("update_time", template.UpdateTime)
+	if subAppId != 0 {
+		_ = d.Set("sub_app_id", subAppId)
+	}
 
 	mediaProcessTaskElem := make(map[string]interface{})
 	if template.MediaProcessTask != nil {
@@ -788,15 +807,23 @@ func resourceTencentCloudVodProcedureTemplateUpdate(d *schema.ResourceData, meta
 		changeFlag = false
 	)
 
-	request.Name = &id
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		request.Name = helper.String(idSplit[0])
+		subAppId := helper.StrToInt(idSplit[1])
+		request.SubAppId = helper.IntUint64(subAppId)
+	} else {
+		request.Name = &id
+		if v, ok := d.GetOk("sub_app_id"); ok {
+			request.SubAppId = helper.IntUint64(v.(int))
+		}
+	}
+
 	if d.HasChange("comment") {
 		changeFlag = true
 		request.Comment = helper.String(d.Get("comment").(string))
 	}
-	if d.HasChange("sub_app_id") {
-		changeFlag = true
-		request.SubAppId = helper.IntUint64(d.Get("sub_app_id").(int))
-	}
+
 	if d.HasChange("media_process_task") {
 		changeFlag = true
 		mediaReq := generateMediaProcessTask(d)
@@ -831,11 +858,25 @@ func resourceTencentCloudVodProcedureTemplateDelete(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
+	idSplit := strings.Split(id, tccommon.FILED_SP)
+	var (
+		name     string
+		subAppId int
+	)
+	if len(idSplit) == 2 {
+		name = idSplit[0]
+		subAppId = helper.StrToInt(idSplit[1])
+	} else {
+		name = id
+		if v, ok := d.GetOk("sub_app_id"); ok {
+			subAppId = v.(int)
+		}
+	}
 	vodService := VodService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	if err := vodService.DeleteProcedureTemplate(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {
+	if err := vodService.DeleteProcedureTemplate(ctx, name, uint64(subAppId)); err != nil {
 		return err
 	}
 
