@@ -20,11 +20,26 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 请求未授权。
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
 	// 告警策略通知模板已经绑定到了某个告警策略上。
 	FAILEDOPERATION_BINDEDALARM = "FailedOperation.BindedAlarm"
+
+	// 桶内无相应前缀文件，请使用正确的桶、文件前缀和压缩方式。
+	FAILEDOPERATION_BUCKETNOFILE = "FailedOperation.BucketNoFile"
+
+	// 文件解压缩失败，请选择正确的压缩方式。
+	FAILEDOPERATION_DECOMPRESSFILE = "FailedOperation.DecompressFile"
+
+	// 文件下载失败，请稍后再试。
+	FAILEDOPERATION_DOWNLOADFILE = "FailedOperation.DownLoadFile"
+
+	// 获取文件列表失败，请稍后再试。
+	FAILEDOPERATION_GETLISTFILE = "FailedOperation.GetListFile"
 
 	// 检索日志触发最大条数限制。
 	FAILEDOPERATION_GETLOGREACHLIMIT = "FailedOperation.GetlogReachLimit"
@@ -53,8 +68,14 @@ const (
 	// 修改的生命周期被禁止。
 	FAILEDOPERATION_PERIODMODIFYFORBIDDEN = "FailedOperation.PeriodModifyForbidden"
 
+	// 文件预览失败，请稍后再试。
+	FAILEDOPERATION_PREVIEWFILE = "FailedOperation.PreviewFile"
+
 	// 查询语句运行失败。
 	FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
+
+	// 读取文件内容失败，请确认文件可读。
+	FAILEDOPERATION_READFILE = "FailedOperation.ReadFile"
 
 	// 读qps超过限制。
 	FAILEDOPERATION_READQPSLIMIT = "FailedOperation.ReadQpsLimit"
@@ -70,6 +91,9 @@ const (
 
 	// 请求标签服务限频。
 	FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+
+	// 操作超时
+	FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 
 	// 日志主题已关闭。
 	FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
@@ -88,6 +112,18 @@ const (
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
+
+	// DB错误。
+	INTERNALERROR_DBERROR = "InternalError.DbError"
+
+	// 角色非法。
+	INTERNALERROR_ILLEGALROLE = "InternalError.IllegalRole"
+
+	// 检索错误
+	INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
+
+	// 检索失败
+	INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
@@ -131,6 +167,9 @@ const (
 	// 同名机器组已经存在。
 	INVALIDPARAMETER_MACHINEGROUPCONFLICT = "InvalidParameter.MachineGroupConflict"
 
+	// 参数错误。
+	INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+
 	// 投递规则命名冲突。
 	INVALIDPARAMETER_SHIPPERCONFLICT = "InvalidParameter.ShipperConflict"
 
@@ -172,6 +211,9 @@ const (
 
 	// 分区超过限制。
 	LIMITEXCEEDED_PARTITION = "LimitExceeded.Partition"
+
+	// 记录超过限制
+	LIMITEXCEEDED_RECORDOUTOFLIMIT = "LimitExceeded.RecordOutOfLimit"
 
 	// 检索内存超限。
 	LIMITEXCEEDED_SEARCHRESOURCES = "LimitExceeded.SearchResources"
@@ -248,6 +290,9 @@ const (
 	// 指定的采集规则配置不存在。
 	RESOURCENOTFOUND_CONFIGNOTEXIST = "ResourceNotFound.ConfigNotExist"
 
+	// 数据加工任务不存在。
+	RESOURCENOTFOUND_DATAFROMTASKNOTEXIST = "ResourceNotFound.DataFromTaskNotExist"
+
 	// 日志导出不存在。
 	RESOURCENOTFOUND_EXPORTNOTEXIST = "ResourceNotFound.ExportNotExist"
 
@@ -263,6 +308,9 @@ const (
 	// 分区不存在。
 	RESOURCENOTFOUND_PARTITIONNOTEXIST = "ResourceNotFound.PartitionNotExist"
 
+	// 记录不存在
+	RESOURCENOTFOUND_RECORDNOTEXIST = "ResourceNotFound.RecordNotExist"
+
 	// 投递规则不存在。
 	RESOURCENOTFOUND_SHIPPERNOTEXIST = "ResourceNotFound.ShipperNotExist"
 
@@ -271,6 +319,12 @@ const (
 
 	// 日志主题不存在。
 	RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+
+	// 未授权操作。
+	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 未知参数错误。
+	UNKNOWNPARAMETER = "UnknownParameter"
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
