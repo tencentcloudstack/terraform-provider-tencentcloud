@@ -4,12 +4,10 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_csip_risk_center"
 sidebar_current: "docs-tencentcloud-resource-csip_risk_center"
 description: |-
-  ~> **NOTE:** Currently, only tasks with a physical examination time of no more than 6 hours are supported.
+  Provides a resource to create a csip risk_center
 ---
 
 # tencentcloud_csip_risk_center
-
-~> **NOTE:** Currently, only tasks with a physical examination time of no more than 6 hours are supported.
 
 Provides a resource to create a csip risk_center
 
@@ -20,9 +18,10 @@ Provides a resource to create a csip risk_center
 ```hcl
 resource "tencentcloud_csip_risk_center" "example" {
   task_name         = "tf_example"
-  scan_asset_type   = 1
+  scan_plan_type    = 0
+  scan_asset_type   = 2
   scan_item         = ["port", "poc", "weakpass"]
-  scan_plan_content = "46 51 16 */1 * * *"
+  scan_plan_content = "0 0 0 */1 * * *"
   task_mode         = 0
 
   assets {
@@ -39,23 +38,24 @@ resource "tencentcloud_csip_risk_center" "example" {
 
 ```hcl
 resource "tencentcloud_csip_risk_center" "example" {
-  task_name         = "tf_example"
-  scan_asset_type   = 3
-  scan_item         = ["port", "poc"]
-  scan_plan_type    = 0
-  scan_plan_content = "46 51 16 */1 * * *"
-  task_mode         = 1
+  task_name       = "tf_example"
+  scan_plan_type  = 1
+  scan_asset_type = 1
+  scan_item       = ["port", "poc"]
+  task_mode       = 1
 }
 ```
 
 ### If task_mode is 2
 
 ```hcl
-resource "tencentcloud_csip_risk_center" "example1" {
-  task_name       = "tf_example"
-  scan_asset_type = 2
-  scan_item       = ["port", "configrisk", "poc", "weakpass"]
-  task_mode       = 2
+resource "tencentcloud_csip_risk_center" "example" {
+  task_name         = "tf_example"
+  scan_plan_type    = 2
+  scan_asset_type   = 2
+  scan_item         = ["port", "configrisk", "poc", "weakpass"]
+  task_mode         = 2
+  scan_plan_content = "0 0 0 20 3 * 2024"
 
   assets {
     asset_name    = "sub machine of tke"
@@ -93,14 +93,15 @@ resource "tencentcloud_csip_risk_center" "example1" {
 
 The following arguments are supported:
 
-* `scan_asset_type` - (Required, Int) 0- Full scan, 1- Specify asset scan, 2- Exclude asset scan, 3- Manually fill in the scan. If 1 and 2 are required, the Assets field is required. If 3 is required, SelfDefiningAssets is required.
-* `scan_item` - (Required, Set: [`String`]) Scan Project. Example: port/poc/weakpass/webcontent/configrisk/exposedserver.
+* `scan_asset_type` - (Required, Int, ForceNew) 0- Full scan, 1- Specify asset scan, 2- Exclude asset scan, 3- Manually fill in the scan. If 1 and 2 are required, the Assets field is required. If 3 is required, SelfDefiningAssets is required.
+* `scan_item` - (Required, Set: [`String`], ForceNew) Scan Project. Example: port/poc/weakpass/webcontent/configrisk/exposedserver.
+* `scan_plan_type` - (Required, Int, ForceNew) 0- Periodic task, 1- immediate scan, 2- periodic scan, 3- Custom; 0, 2 and 3 are required for scan_plan_content.
 * `task_name` - (Required, String) Task Name.
-* `assets` - (Optional, List) Scan the asset information list.
-* `scan_plan_content` - (Optional, String) Scan plan details.
-* `self_defining_assets` - (Optional, Set: [`String`]) Ip/domain/url array.
-* `task_advance_cfg` - (Optional, List) Advanced configuration.
-* `task_mode` - (Optional, Int) Physical examination mode, 0-standard mode, 1-fast mode, 2-advanced mode, default standard mode.
+* `assets` - (Optional, List, ForceNew) Scan the asset information list.
+* `scan_plan_content` - (Optional, String, ForceNew) Scan plan details.
+* `self_defining_assets` - (Optional, Set: [`String`], ForceNew) Ip/domain/url array.
+* `task_advance_cfg` - (Optional, List, ForceNew) Advanced configuration.
+* `task_mode` - (Optional, Int, ForceNew) Physical examination mode, 0-standard mode, 1-fast mode, 2-advanced mode, default standard mode.
 
 The `assets` object supports the following:
 

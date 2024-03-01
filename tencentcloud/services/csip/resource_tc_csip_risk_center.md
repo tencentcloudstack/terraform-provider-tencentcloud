@@ -1,5 +1,3 @@
-~> **NOTE:** Currently, only tasks with a physical examination time of no more than 6 hours are supported.
-
 Provides a resource to create a csip risk_center
 
 Example Usage
@@ -9,9 +7,10 @@ If task_mode is 0
 ```hcl
 resource "tencentcloud_csip_risk_center" "example" {
   task_name         = "tf_example"
-  scan_asset_type   = 1
+  scan_plan_type    = 0
+  scan_asset_type   = 2
   scan_item         = ["port", "poc", "weakpass"]
-  scan_plan_content = "46 51 16 */1 * * *"
+  scan_plan_content = "0 0 0 */1 * * *"
   task_mode         = 0
 
   assets {
@@ -28,23 +27,24 @@ If task_mode is 1
 
 ```hcl
 resource "tencentcloud_csip_risk_center" "example" {
-  task_name         = "tf_example"
-  scan_asset_type   = 3
-  scan_item         = ["port", "poc"]
-  scan_plan_type    = 0
-  scan_plan_content = "46 51 16 */1 * * *"
-  task_mode         = 1
+  task_name       = "tf_example"
+  scan_plan_type  = 1
+  scan_asset_type = 1
+  scan_item       = ["port", "poc"]
+  task_mode       = 1
 }
 ```
 
 If task_mode is 2
 
 ```hcl
-resource "tencentcloud_csip_risk_center" "example1" {
+resource "tencentcloud_csip_risk_center" "example" {
   task_name       = "tf_example"
+  scan_plan_type  = 2
   scan_asset_type = 2
   scan_item       = ["port", "configrisk", "poc", "weakpass"]
   task_mode       = 2
+  scan_plan_content = "0 0 0 20 3 * 2024"
 
   assets {
     asset_name    = "sub machine of tke"

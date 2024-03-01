@@ -57,6 +57,35 @@ func (me *CsipService) DescribeCsipRiskCenterById(ctx context.Context, taskId st
 	return
 }
 
+func (me *CsipService) StopCsipRiskCenterById(ctx context.Context, taskId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := csip.NewStopRiskCenterTaskRequest()
+	request.TaskIdList = []*csip.TaskIdListKey{
+		{
+			TaskId: common.StringPtr(taskId),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCsipClient().StopRiskCenterTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *CsipService) DeleteCsipRiskCenterById(ctx context.Context, taskId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

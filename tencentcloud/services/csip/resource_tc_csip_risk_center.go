@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -27,20 +26,30 @@ func ResourceTencentCloudCsipRiskCenter() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Task Name.",
 			},
+			"scan_plan_type": {
+				Required:     true,
+				ForceNew:     true,
+				Type:         schema.TypeInt,
+				ValidateFunc: tccommon.ValidateAllowedIntValue(SCAN_PLAN_TYPE),
+				Description:  "0- Periodic task, 1- immediate scan, 2- periodic scan, 3- Custom; 0, 2 and 3 are required for scan_plan_content.",
+			},
 			"scan_asset_type": {
 				Required:     true,
+				ForceNew:     true,
 				Type:         schema.TypeInt,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(SCAN_ASSET_TYPE),
 				Description:  "0- Full scan, 1- Specify asset scan, 2- Exclude asset scan, 3- Manually fill in the scan. If 1 and 2 are required, the Assets field is required. If 3 is required, SelfDefiningAssets is required.",
 			},
 			"scan_item": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Scan Project. Example: port/poc/weakpass/webcontent/configrisk/exposedserver.",
 			},
 			"assets": {
 				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Scan the asset information list.",
@@ -81,11 +90,13 @@ func ResourceTencentCloudCsipRiskCenter() *schema.Resource {
 			},
 			"scan_plan_content": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Scan plan details.",
 			},
 			"self_defining_assets": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Ip/domain/url array.",
@@ -97,6 +108,7 @@ func ResourceTencentCloudCsipRiskCenter() *schema.Resource {
 			},
 			"task_advance_cfg": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "Advanced configuration.",
@@ -198,6 +210,7 @@ func ResourceTencentCloudCsipRiskCenter() *schema.Resource {
 			},
 			"task_mode": {
 				Optional:     true,
+				ForceNew:     true,
 				Type:         schema.TypeInt,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(SCAN_TASK_MODE),
 				Default:      SCAN_TASK_MODE_0,
@@ -212,18 +225,35 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		request  = csip.NewCreateRiskCenterScanTaskRequest()
-		response = csip.NewCreateRiskCenterScanTaskResponse()
-		taskId   string
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		request      = csip.NewCreateRiskCenterScanTaskRequest()
+		response     = csip.NewCreateRiskCenterScanTaskResponse()
+		taskId       string
+		scanPlanType int
+		taskMode     int
 	)
 
 	if v, ok := d.GetOk("task_name"); ok {
 		request.TaskName = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("scan_plan_type"); ok {
+		request.ScanPlanType = helper.IntInt64(v.(int))
+		scanPlanType = v.(int)
+	}
+
 	if v, ok := d.GetOkExists("scan_asset_type"); ok {
 		request.ScanAssetType = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("task_mode"); ok {
+		request.TaskMode = helper.IntInt64(v.(int))
+		taskMode = v.(int)
+		if taskMode == SCAN_TASK_MODE_1 {
+			if scanPlanType != SCAN_PLAN_TYPE_1 {
+				return fmt.Errorf("If task_mode is `1`, scan_plan_type should be set to `1`.")
+			}
+		}
 	}
 
 	if v, ok := d.GetOk("scan_item"); ok {
@@ -235,8 +265,6 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 			}
 		}
 	}
-
-	request.ScanPlanType = helper.IntInt64(1)
 
 	if v, ok := d.GetOk("assets"); ok {
 		for _, item := range v.([]interface{}) {
@@ -364,10 +392,6 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 		request.TaskAdvanceCFG = &taskAdvanceCFG
 	}
 
-	if v, ok := d.GetOkExists("task_mode"); ok {
-		request.TaskMode = helper.IntInt64(v.(int))
-	}
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCsipClient().CreateRiskCenterScanTask(request)
 		if e != nil {
@@ -394,41 +418,41 @@ func resourceTencentCloudCsipRiskCenterCreate(d *schema.ResourceData, meta inter
 	d.SetId(taskId)
 
 	// wait
-	waitRequest := csip.NewDescribeScanTaskListRequest()
-	waitRequest.Filter = &csip.Filter{
-		Filters: []*csip.WhereFilter{
-			{
-				Name:         common.StringPtr("TaskId"),
-				Values:       common.StringPtrs([]string{taskId}),
-				OperatorType: common.Int64Ptr(1),
-			},
-		},
-	}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout*120, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCsipClient().DescribeScanTaskList(waitRequest)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-
-		if result == nil || len(result.Response.Data) != 1 {
-			e = fmt.Errorf("csip riskCenter not exists")
-			return resource.NonRetryableError(e)
-		}
-
-		if *result.Response.Data[0].Percent == 100 {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("creating csip riskCenter, Percent %f ", *result.Response.Data[0].Percent))
-		}
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create csip riskCenter failed, reason:%+v", logId, err)
-		return err
-	}
+	//waitRequest := csip.NewDescribeScanTaskListRequest()
+	//waitRequest.Filter = &csip.Filter{
+	//	Filters: []*csip.WhereFilter{
+	//		{
+	//			Name:         common.StringPtr("TaskId"),
+	//			Values:       common.StringPtrs([]string{taskId}),
+	//			OperatorType: common.Int64Ptr(1),
+	//		},
+	//	},
+	//}
+	//
+	//err = resource.Retry(tccommon.ReadRetryTimeout*120, func() *resource.RetryError {
+	//	result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCsipClient().DescribeScanTaskList(waitRequest)
+	//	if e != nil {
+	//		return tccommon.RetryError(e)
+	//	} else {
+	//		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	//	}
+	//
+	//	if result == nil || len(result.Response.Data) != 1 {
+	//		e = fmt.Errorf("csip riskCenter not exists")
+	//		return resource.NonRetryableError(e)
+	//	}
+	//
+	//	if *result.Response.Data[0].Percent == 100 {
+	//		return nil
+	//	} else {
+	//		return resource.RetryableError(fmt.Errorf("creating csip riskCenter, Percent %f ", *result.Response.Data[0].Percent))
+	//	}
+	//})
+	//
+	//if err != nil {
+	//	log.Printf("[CRITAL]%s create csip riskCenter failed, reason:%+v", logId, err)
+	//	return err
+	//}
 
 	return resourceTencentCloudCsipRiskCenterRead(d, meta)
 }
@@ -457,6 +481,10 @@ func resourceTencentCloudCsipRiskCenterRead(d *schema.ResourceData, meta interfa
 
 	if riskCenter.TaskName != nil {
 		_ = d.Set("task_name", riskCenter.TaskName)
+	}
+
+	if riskCenter.TaskType != nil {
+		_ = d.Set("scan_plan_type", riskCenter.TaskType)
 	}
 
 	if riskCenter.ScanAssetType != nil {
@@ -534,10 +562,13 @@ func resourceTencentCloudCsipRiskCenterUpdate(d *schema.ResourceData, meta inter
 	)
 
 	request.TaskId = &taskId
-	request.ScanPlanType = helper.IntInt64(1)
 
 	if v, ok := d.GetOk("task_name"); ok {
 		request.TaskName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("scan_plan_type"); ok {
+		request.ScanPlanType = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOkExists("scan_asset_type"); ok {
@@ -712,6 +743,12 @@ func resourceTencentCloudCsipRiskCenterDelete(d *schema.ResourceData, meta inter
 		taskId  = d.Id()
 	)
 
+	// stop
+	if err := service.StopCsipRiskCenterById(ctx, taskId); err != nil {
+		return err
+	}
+
+	// delete
 	if err := service.DeleteCsipRiskCenterById(ctx, taskId); err != nil {
 		return err
 	}

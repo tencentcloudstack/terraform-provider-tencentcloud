@@ -24,7 +24,19 @@ func TestAccTencentCloudCsipRiskCenterResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "task_name", "tf_example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_asset_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_item.#"),
-					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "scan_plan_content", "46 51 16 */1 * * *"),
+					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "scan_plan_content", "0 0 0 */1 * * *"),
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "task_mode"),
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "assets.#"),
+				),
+			},
+			{
+				Config: testAccCsipRiskCenterUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "task_name", "tf_example_update"),
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_asset_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "scan_item.#"),
+					resource.TestCheckResourceAttr("tencentcloud_csip_risk_center.example", "scan_plan_content", "0 0 0 */1 * * *"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "task_mode"),
 					resource.TestCheckResourceAttrSet("tencentcloud_csip_risk_center.example", "assets.#"),
 				),
@@ -36,9 +48,29 @@ func TestAccTencentCloudCsipRiskCenterResource_basic(t *testing.T) {
 const testAccCsipRiskCenter = `
 resource "tencentcloud_csip_risk_center" "example" {
   task_name         = "tf_example"
-  scan_asset_type   = 1
+  scan_plan_type    = 0
+  scan_asset_type   = 2
   scan_item         = ["port", "poc", "weakpass"]
-  scan_plan_content = "46 51 16 */1 * * *"
+  scan_plan_content = "0 0 0 */1 * * *"
+  task_mode         = 0
+
+  assets {
+    asset_name    = "iac-test"
+    instance_type = "1"
+    asset_type    = "PublicIp"
+    asset         = "49.232.172.248"
+    region        = "ap-beijing"
+  }
+}
+`
+
+const testAccCsipRiskCenterUpdate = `
+resource "tencentcloud_csip_risk_center" "example" {
+  task_name         = "tf_example_update"
+  scan_plan_type    = 0
+  scan_asset_type   = 2
+  scan_item         = ["port", "poc", "weakpass"]
+  scan_plan_content = "0 0 0 */1 * * *"
   task_mode         = 0
 
   assets {
