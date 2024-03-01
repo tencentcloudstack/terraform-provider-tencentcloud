@@ -93,7 +93,7 @@ resource "tencentcloud_csip_risk_center" "example" {
 
 The following arguments are supported:
 
-* `scan_asset_type` - (Required, Int, ForceNew) 0- Full scan, 1- Specify asset scan, 2- Exclude asset scan, 3- Manually fill in the scan. If 1 and 2 are required, the Assets field is required. If 3 is required, SelfDefiningAssets is required.
+* `scan_asset_type` - (Required, Int, ForceNew) 0- Full scan, 1- Specify asset scan, 2- Exclude asset scan, 3- Manually fill in the scan. If 1 and 2 are required while task_mode not 1, the Assets field is required. If 3 is required, SelfDefiningAssets is required.
 * `scan_item` - (Required, Set: [`String`], ForceNew) Scan Project. Example: port/poc/weakpass/webcontent/configrisk/exposedserver.
 * `scan_plan_type` - (Required, Int, ForceNew) 0- Periodic task, 1- immediate scan, 2- periodic scan, 3- Custom; 0, 2 and 3 are required for scan_plan_content.
 * `task_name` - (Required, String) Task Name.

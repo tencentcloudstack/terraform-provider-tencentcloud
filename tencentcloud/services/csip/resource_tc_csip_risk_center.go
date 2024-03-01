@@ -38,7 +38,7 @@ func ResourceTencentCloudCsipRiskCenter() *schema.Resource {
 				ForceNew:     true,
 				Type:         schema.TypeInt,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(SCAN_ASSET_TYPE),
-				Description:  "0- Full scan, 1- Specify asset scan, 2- Exclude asset scan, 3- Manually fill in the scan. If 1 and 2 are required, the Assets field is required. If 3 is required, SelfDefiningAssets is required.",
+				Description:  "0- Full scan, 1- Specify asset scan, 2- Exclude asset scan, 3- Manually fill in the scan. If 1 and 2 are required while task_mode not 1, the Assets field is required. If 3 is required, SelfDefiningAssets is required.",
 			},
 			"scan_item": {
 				Required:    true,
