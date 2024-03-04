@@ -3,10 +3,12 @@ package vod_test
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svcvod "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -84,10 +86,9 @@ func TestAccTencentCloudVodProcedureTemplateResource(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_vod_procedure_template.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"sub_app_id"},
+				ResourceName:      "tencentcloud_vod_procedure_template.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -102,11 +103,16 @@ func testAccCheckVodProcedureTemplateDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_vod_procedure_template" {
 			continue
 		}
-		var (
-			filter = map[string]interface{}{
-				"name": []string{rs.Primary.ID},
-			}
-		)
+		id := rs.Primary.ID
+		filter := map[string]interface{}{}
+
+		idSplit := strings.Split(id, tccommon.FILED_SP)
+		if len(idSplit) == 2 {
+			filter["name"] = []string{idSplit[0]}
+			filter["sub_appid"] = helper.StrToInt(idSplit[1])
+		} else {
+			return fmt.Errorf("can not get sub_appid")
+		}
 
 		templates, err := vodService.DescribeProcedureTemplatesByFilter(ctx, filter)
 		if err != nil {
@@ -133,11 +139,16 @@ func testAccCheckVodProcedureTemplateExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("vod procedure template id is not set")
 		}
 		vodService := svcvod.NewVodService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
-		var (
-			filter = map[string]interface{}{
-				"name": []string{rs.Primary.ID},
-			}
-		)
+		id := rs.Primary.ID
+		filter := map[string]interface{}{}
+
+		idSplit := strings.Split(id, tccommon.FILED_SP)
+		if len(idSplit) == 2 {
+			filter["name"] = []string{idSplit[0]}
+			filter["sub_appid"] = helper.StrToInt(idSplit[1])
+		} else {
+			return fmt.Errorf("can not get sub_appid")
+		}
 		templates, err := vodService.DescribeProcedureTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
@@ -150,9 +161,16 @@ func testAccCheckVodProcedureTemplateExists(n string) resource.TestCheckFunc {
 }
 
 const testAccVodProcedureTemplate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodSnapshotByTimeOffsetTemplate + testAccVodImageSpriteTemplate + `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_procedure_template" "foo" {
   name    = "tf-procedure0"
   comment = "test"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   media_process_task {
     adaptive_dynamic_streaming_task_list {
       definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
@@ -171,9 +189,16 @@ resource "tencentcloud_vod_procedure_template" "foo" {
 `
 
 const testAccVodProcedureTemplateUpdate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodSnapshotByTimeOffsetTemplate + testAccVodImageSpriteTemplate + `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_procedure_template" "foo" {
   name    = "tf-procedure0"
   comment = "test-update"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   media_process_task {
     adaptive_dynamic_streaming_task_list {
       definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id

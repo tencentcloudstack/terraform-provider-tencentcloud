@@ -78,9 +78,16 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   resolution_adaptive = false
 }
 
+resource "tencentcloud_vod_sub_application" "sub_application" {
+  name        = "subapplication"
+  status      = "On"
+  description = "this is sub application"
+}
+
 resource "tencentcloud_vod_procedure_template" "foo" {
-  name    = "tf-procedure"
-  comment = "test"
+  name       = "tf-procedure"
+  comment    = "test"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   media_process_task {
     adaptive_dynamic_streaming_task_list {
       definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
@@ -105,7 +112,7 @@ The following arguments are supported:
 * `name` - (Required, String, ForceNew) Task flow name (up to 20 characters).
 * `comment` - (Optional, String) Template description. Length limit: 256 characters.
 * `media_process_task` - (Optional, List) Parameter of video processing task.
-* `sub_app_id` - (Optional, Int) Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.
+* `sub_app_id` - (Optional, Int) Subapplication ID in VOD. For customers who activate VOD from December 25, 2023, if they access the resources in the VOD application (whether it is the default application or the newly created application), you must fill in this field as Application ID.
 
 The `adaptive_dynamic_streaming_task_list` object of `media_process_task` supports the following:
 

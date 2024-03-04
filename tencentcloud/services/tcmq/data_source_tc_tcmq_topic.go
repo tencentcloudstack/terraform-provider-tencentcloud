@@ -260,8 +260,8 @@ func dataSourceTencentCloudTcmqTopicRead(d *schema.ResourceData, meta interface{
 	for _, topic := range topicList {
 		topicNames = append(topicNames, *topic.TopicName)
 		topicItem := make(map[string]interface{})
-		if topic.TenantId != nil {
-			topicItem["topic_id"] = *topic.TenantId
+		if topic.TopicId != nil {
+			topicItem["topic_id"] = *topic.TopicId
 		}
 		if topic.TopicName != nil {
 			topicItem["topic_name"] = *topic.TopicName
