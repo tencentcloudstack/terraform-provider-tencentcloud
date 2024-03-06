@@ -95,7 +95,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.804
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.845
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.833
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.792
