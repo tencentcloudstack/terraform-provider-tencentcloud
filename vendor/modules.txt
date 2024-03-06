@@ -1157,10 +1157,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.865
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.860
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.865
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.860
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1168,7 +1168,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.865
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
@@ -1282,7 +1282,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.524
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.865
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.860
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat v1.0.634
