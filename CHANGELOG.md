@@ -1,3 +1,14 @@
+## 1.81.78 (March 3, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mysql_instance: Fixed the problem of clienttoken duplication caused by creation retry. ([#2549](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2549))
+
+BUG FIXES:
+
+* resource/tencentcloud_instance: fix the issue of invalid parameters when creating CVM. ([#2551](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2551))
+* resource/tencentcloud_monitor_tmp_tke_cluster_agent: Fix the error reported when modifying the associated cluster. ([#2550](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2550))
+
 ## 1.81.77 (March 1, 2024)
 
 FEATURES:
