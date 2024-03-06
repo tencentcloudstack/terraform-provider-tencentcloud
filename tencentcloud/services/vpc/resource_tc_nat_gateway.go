@@ -1,11 +1,11 @@
 package vpc
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
-
 	"context"
 	"fmt"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"log"
 	"time"
 
@@ -218,7 +218,9 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	request.NatGatewayIds = []*string{&natGatewayId}
 	var response *vpc.DescribeNatGatewaysResponse
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeNatGateways(request)
+		var specArgs connectivity.IacExtInfo
+		specArgs.InstanceId = natGatewayId
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(specArgs).DescribeNatGateways(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())

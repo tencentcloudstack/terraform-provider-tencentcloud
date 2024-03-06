@@ -2,6 +2,7 @@ package vpn
 
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
@@ -135,7 +136,9 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 	request.CustomerGatewayIds = []*string{&customerGatewayId}
 	var response *vpc.DescribeCustomerGatewaysResponse
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeCustomerGateways(request)
+		var specArgs connectivity.IacExtInfo
+		specArgs.InstanceId = customerGatewayId
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(specArgs).DescribeCustomerGateways(request)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)
 			if !ok {

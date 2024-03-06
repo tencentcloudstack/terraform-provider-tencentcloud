@@ -295,14 +295,20 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 }
 
 // UseMysqlClient returns mysql(cdb) client for service
-func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
+func (me *TencentCloudClient) UseMysqlClient(specArgs ...IacExtInfo) *cdb.Client {
 	if me.mysqlConn != nil {
 		return me.mysqlConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
-	me.mysqlConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.mysqlConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.mysqlConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.mysqlConn
 }
@@ -495,15 +501,20 @@ func (me *TencentCloudClient) UseTdmqClient(specArgs ...IacExtInfo) *tdmq.Client
 }
 
 // UseGaapClient returns gaap client for service
-func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
+func (me *TencentCloudClient) UseGaapClient(specArgs ...IacExtInfo) *gaap.Client {
 	if me.gaapConn != nil {
 		return me.gaapConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.gaapConn, _ = gaap.NewClient(me.Credential, me.Region, cpf)
-	me.gaapConn.WithHttpTransport(&LogRoundTripper{})
-
+	if len(specArgs) != 0 {
+		me.gaapConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.gaapConn.WithHttpTransport(&LogRoundTripper{})
+	}
 	return me.gaapConn
 }
 
@@ -608,14 +619,20 @@ func (me *TencentCloudClient) UseDayuClient() *dayu.Client {
 }
 
 // UseCdnClient returns cdn client for service
-func (me *TencentCloudClient) UseCdnClient() *cdn.Client {
+func (me *TencentCloudClient) UseCdnClient(specArgs ...IacExtInfo) *cdn.Client {
 	if me.cdnConn != nil {
 		return me.cdnConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.cdnConn, _ = cdn.NewClient(me.Credential, me.Region, cpf)
-	me.cdnConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.cdnConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.cdnConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.cdnConn
 }
@@ -634,7 +651,7 @@ func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 }
 
 // UseEsClient returns es client for service
-func (me *TencentCloudClient) UseEsClient() *es.Client {
+func (me *TencentCloudClient) UseEsClient(specArgs ...IacExtInfo) *es.Client {
 	if me.esConn != nil {
 		return me.esConn
 	}
@@ -642,7 +659,13 @@ func (me *TencentCloudClient) UseEsClient() *es.Client {
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
 	me.esConn, _ = es.NewClient(me.Credential, me.Region, cpf)
-	me.esConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.esConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.esConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.esConn
 }
@@ -839,25 +862,37 @@ func (me *TencentCloudClient) UseEmrClient() *emr.Client {
 }
 
 // UseClsClient return CLS client for service
-func (me *TencentCloudClient) UseClsClient() *cls.Client {
+func (me *TencentCloudClient) UseClsClient(specArgs ...IacExtInfo) *cls.Client {
 	if me.clsConn != nil {
 		return me.clsConn
 	}
 	cpf := me.NewClientProfile(300)
 	me.clsConn, _ = cls.NewClient(me.Credential, me.Region, cpf)
-	me.clsConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.clsConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.clsConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.clsConn
 }
 
 // UseLighthouseClient return Lighthouse client for service
-func (me *TencentCloudClient) UseLighthouseClient() *lighthouse.Client {
+func (me *TencentCloudClient) UseLighthouseClient(specArgs ...IacExtInfo) *lighthouse.Client {
 	if me.lighthouseConn != nil {
 		return me.lighthouseConn
 	}
 	cpf := me.NewClientProfile(300)
 	me.lighthouseConn, _ = lighthouse.NewClient(me.Credential, me.Region, cpf)
-	me.lighthouseConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.lighthouseConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.lighthouseConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.lighthouseConn
 }
@@ -875,13 +910,19 @@ func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
 }
 
 // UsePrivateDnsClient return PrivateDns client for service
-func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
+func (me *TencentCloudClient) UsePrivateDnsClient(specArgs ...IacExtInfo) *privatedns.Client {
 	if me.privateDnsConn != nil {
 		return me.privateDnsConn
 	}
 	cpf := me.NewClientProfile(300)
 	me.privateDnsConn, _ = privatedns.NewClient(me.Credential, me.Region, cpf)
-	me.privateDnsConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.privateDnsConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.privateDnsConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.privateDnsConn
 }
@@ -925,14 +966,20 @@ func (me *TencentCloudClient) UseTemClient() *tem.Client {
 }
 
 // UseTeoClient returns teo client for service
-func (me *TencentCloudClient) UseTeoClient() *teo.Client {
+func (me *TencentCloudClient) UseTeoClient(specArgs ...IacExtInfo) *teo.Client {
 	if me.teoConn != nil {
 		return me.teoConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.teoConn, _ = teo.NewClient(me.Credential, me.Region, cpf)
-	me.teoConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.teoConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.teoConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.teoConn
 }
@@ -1016,14 +1063,20 @@ func (me *TencentCloudClient) UseCatClient() *cat.Client {
 }
 
 // UseMariadbClient returns mariadb client for service
-func (me *TencentCloudClient) UseMariadbClient() *mariadb.Client {
+func (me *TencentCloudClient) UseMariadbClient(specArgs ...IacExtInfo) *mariadb.Client {
 	if me.mariadbConn != nil {
 		return me.mariadbConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.mariadbConn, _ = mariadb.NewClient(me.Credential, me.Region, cpf)
-	me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.mariadbConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.mariadbConn
 }
@@ -1068,15 +1121,20 @@ func (me *TencentCloudClient) UseOrganizationClient() *organization.Client {
 }
 
 // UseTdcpgClient returns tdcpg client for service
-func (me *TencentCloudClient) UseTdcpgClient() *tdcpg.Client {
+func (me *TencentCloudClient) UseTdcpgClient(specArgs ...IacExtInfo) *tdcpg.Client {
 	if me.tdcpgConn != nil {
 		return me.tdcpgConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.tdcpgConn, _ = tdcpg.NewClient(me.Credential, me.Region, cpf)
-	me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
-
+	if len(specArgs) != 0 {
+		me.tdcpgConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
+	}
 	return me.tdcpgConn
 }
 
@@ -1365,7 +1423,7 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	return me.wedataConn
 }
 
-func (me *TencentCloudClient) UseWafClient() *waf.Client {
+func (me *TencentCloudClient) UseWafClient(specArgs ...IacExtInfo) *waf.Client {
 	if me.wafConn != nil {
 		return me.wafConn
 	}
@@ -1373,12 +1431,18 @@ func (me *TencentCloudClient) UseWafClient() *waf.Client {
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
 	me.wafConn, _ = waf.NewClient(me.Credential, me.Region, cpf)
-	me.wafConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.wafConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.wafConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.wafConn
 }
 
-func (me *TencentCloudClient) UseCfwClient() *cfw.Client {
+func (me *TencentCloudClient) UseCfwClient(specArgs ...IacExtInfo) *cfw.Client {
 	if me.cfwConn != nil {
 		return me.cfwConn
 	}
@@ -1386,7 +1450,13 @@ func (me *TencentCloudClient) UseCfwClient() *cfw.Client {
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
 	me.cfwConn, _ = cfw.NewClient(me.Credential, me.Region, cpf)
-	me.cfwConn.WithHttpTransport(&LogRoundTripper{})
+	if len(specArgs) != 0 {
+		me.cfwConn.WithHttpTransport(&LogRoundTripper{
+			InstanceId: specArgs[0].InstanceId,
+		})
+	} else {
+		me.cfwConn.WithHttpTransport(&LogRoundTripper{})
+	}
 
 	return me.cfwConn
 }

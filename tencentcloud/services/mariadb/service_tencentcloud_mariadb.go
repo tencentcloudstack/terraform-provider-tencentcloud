@@ -755,8 +755,10 @@ func (me *MariadbService) DescribeMariadbDbInstanceDetail(ctx context.Context, i
 	}()
 
 	request.InstanceId = &instanceId
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
 
-	response, err := me.client.UseMariadbClient().DescribeDBInstanceDetail(request)
+	response, err := me.client.UseMariadbClient(specArgs).DescribeDBInstanceDetail(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -1125,8 +1127,10 @@ func (me *MariadbService) DescribeMariadbInstanceById(ctx context.Context, insta
 	}()
 
 	ratelimit.Check(request.GetAction())
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
 
-	response, err := me.client.UseMariadbClient().DescribeDBInstances(request)
+	response, err := me.client.UseMariadbClient(specArgs).DescribeDBInstances(request)
 	if err != nil {
 		errRet = err
 		return
