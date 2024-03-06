@@ -61,6 +61,15 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	}
 
 	request.Header.Set("X-TC-RequestClient", iacExtInfoStr)
+
+	fmt.Println(1111111111)
+	fmt.Println(1111111111)
+	fmt.Println(1111111111)
+	fmt.Println(request.Header.Get("X-TC-RequestClient"))
+	fmt.Println(1111111111)
+	fmt.Println(1111111111)
+	fmt.Println(1111111111)
+
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {
