@@ -570,6 +570,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	var response *cdb.CreateDBInstanceResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		// shadowed response will not pass to outside
+		clientToken := helper.BuildToken()
+		request.ClientToken = &clientToken
 		r, inErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstance(request)
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -621,6 +623,8 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 	var response *cdb.CreateDBInstanceHourResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		// shadowed response will not pass to outside
+		clientToken := helper.BuildToken()
+		request.ClientToken = &clientToken
 		r, inErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstanceHour(request)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)

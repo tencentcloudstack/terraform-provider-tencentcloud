@@ -411,7 +411,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentUpdate(d *schema.ResourceData,
 		return err
 	}
 
-	return resourceTencentCloudTkeTmpAlertPolicyRead(d, meta)
+	return resourceTencentCloudMonitorTmpTkeClusterAgentRead(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpTkeClusterAgentDelete(d *schema.ResourceData, meta interface{}) error {
