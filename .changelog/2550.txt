@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_monitor_tmp_tke_cluster_agent: Fix the error reported when modifying the associated cluster.
+```
