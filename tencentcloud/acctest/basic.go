@@ -755,7 +755,8 @@ variable "tke_cidr_c" {
 
 const TkeDefaultNodeInstanceVar = `
 variable "ins_type" {
-  default = "SA2.LARGE8"
+  //default = "SA2.LARGE8"
+  default = "S2.MEDIUM2"
 }
 `
 

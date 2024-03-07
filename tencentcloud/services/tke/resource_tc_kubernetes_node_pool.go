@@ -1326,6 +1326,7 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 
 	labels := GetTkeLabels(d, "labels")
 	taints := GetTkeTaints(d, "taints")
+	tags := GetTkeTags(d, "tags")
 
 	//compose InstanceAdvancedSettings
 	if workConfig, ok := helper.InterfacesHeadMap(d, "node_config"); ok {
@@ -1353,7 +1354,7 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	nodePoolId, err := service.CreateClusterNodePool(ctx, clusterId, name, groupParaStr, configParaStr, enableAutoScale, nodeOs, nodeOsType, labels, taints, iAdvanced, deletionProtection)
+	nodePoolId, err := service.CreateClusterNodePool(ctx, clusterId, name, groupParaStr, configParaStr, enableAutoScale, nodeOs, nodeOsType, labels, taints, iAdvanced, deletionProtection, tags)
 	if err != nil {
 		return err
 	}

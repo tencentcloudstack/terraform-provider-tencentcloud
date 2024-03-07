@@ -1478,6 +1478,16 @@ func GetTkeTaints(d *schema.ResourceData, k string) []*tke.Taint {
 	return taints
 }
 
+func GetTkeTags(d *schema.ResourceData, k string) []*tke.Tag {
+	tags := make([]*tke.Tag, 0)
+	if raw, ok := d.GetOk(k); ok {
+		for k, v := range raw.(map[string]interface{}) {
+			tags = append(tags, &tke.Tag{Key: helper.String(k), Value: helper.String(v.(string))})
+		}
+	}
+	return tags
+}
+
 func (me *TkeService) ModifyClusterAsGroupAttribute(ctx context.Context, id, asGroupId string, maxSize, minSize int64) (errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
@@ -1505,7 +1515,7 @@ func (me *TkeService) ModifyClusterAsGroupAttribute(ctx context.Context, id, asG
 	return
 }
 
-func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name, groupPara, configPara string, enableAutoScale bool, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, iAdvanced tke.InstanceAdvancedSettings, deletionProtection bool) (asGroupId string, errRet error) {
+func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name, groupPara, configPara string, enableAutoScale bool, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, iAdvanced tke.InstanceAdvancedSettings, deletionProtection bool, tags []*tke.Tag) (asGroupId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tke.NewCreateClusterNodePoolRequest()
 
@@ -1532,6 +1542,10 @@ func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name
 
 	if len(taints) > 0 {
 		request.Taints = taints
+	}
+
+	if len(tags) > 0 {
+		request.Tags = tags
 	}
 
 	ratelimit.Check(request.GetAction())
