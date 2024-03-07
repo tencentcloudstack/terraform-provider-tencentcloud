@@ -52,7 +52,7 @@ func TestAccTencentCloudVodWatermarkTemplateResource_basic(t *testing.T) {
 
 const testAccVodWatermarkTemplate = `
 
-resource  "tencentcloud_vod_sub_application" "sub_application" {
+resource  "tencentcloud_vod_sub_application" "watermark_template_sub_application" {
 	name = "watermarkTemplateSubApplication"
 	status = "On"
 	description = "this is sub application"
@@ -60,7 +60,7 @@ resource  "tencentcloud_vod_sub_application" "sub_application" {
 
 resource "tencentcloud_vod_watermark_template" "watermark_template" {
 	type = "image"
-	sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+	sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.watermark_template_sub_application.id)[1])
 	name = "myImageWatermark"
 	comment = "a png watermark"
 	coordinate_origin = "TopLeft"
@@ -76,7 +76,7 @@ resource "tencentcloud_vod_watermark_template" "watermark_template" {
 
 const testAccVodWatermarkTemplateUpdate = `
 
-resource  "tencentcloud_vod_sub_application" "sub_application" {
+resource  "tencentcloud_vod_sub_application" "watermark_template_sub_application" {
 	name = "watermarkTemplateSubApplication"
 	status = "On"
 	description = "this is sub application"
@@ -84,7 +84,7 @@ resource  "tencentcloud_vod_sub_application" "sub_application" {
 
 resource "tencentcloud_vod_watermark_template" "watermark_template" {
 	type = "image"
-	sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+	sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.watermark_template_sub_application.id)[1])
 	name = "myImageWatermark"
 	comment = "a png watermark update"
 	coordinate_origin = "TopLeft"

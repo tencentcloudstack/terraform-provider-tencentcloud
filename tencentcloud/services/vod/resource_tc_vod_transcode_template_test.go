@@ -61,7 +61,7 @@ func TestAccTencentCloudVodTranscodeTemplateResource_basic(t *testing.T) {
 }
 
 const testAccVodTranscodeTemplate = `
-resource  "tencentcloud_vod_sub_application" "sub_application" {
+resource  "tencentcloud_vod_sub_application" "transcode_template_sub_application" {
 	name = "transcodeTemplateSubApplication"
 	status = "On"
 	description = "this is sub application"
@@ -69,7 +69,7 @@ resource  "tencentcloud_vod_sub_application" "sub_application" {
 
 resource "tencentcloud_vod_transcode_template" "transcode_template" {
   container = "mp4"
-  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.transcode_template_sub_application.id)[1])
   name = "720pTranscodeTemplate"
   comment = "test transcode mp4 720p"
   remove_video = 0
@@ -99,15 +99,15 @@ resource "tencentcloud_vod_transcode_template" "transcode_template" {
 `
 
 const testAccVodTranscodeTemplateUpdate = `
-resource  "tencentcloud_vod_sub_application" "sub_application" {
-	name = "subapplication"
+resource  "tencentcloud_vod_sub_application" "transcode_template_sub_application" {
+	name = "transcodeTemplateSubApplication"
 	status = "On"
 	description = "this is sub application"
 }
 
 resource "tencentcloud_vod_transcode_template" "transcode_template" {
   container = "mp4"
-  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.transcode_template_sub_application.id)[1])
   name = "720pTranscodeTemplate"
   comment = "test transcode mp4 720p update"
   remove_video = 0

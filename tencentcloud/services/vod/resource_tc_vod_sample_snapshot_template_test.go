@@ -20,7 +20,7 @@ func TestAccTencentCloudVodSampleSnapshotTemplateResource_basic(t *testing.T) {
 			{
 				Config: testAccVodSampleSnapshotTemplate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_vod_sample_snapshot_template.sample_snapshot_template", "id"),
+					resource.TestCheckResourceAttrSet(SampleSnapshotTemplateResourceKey, "id"),
 					resource.TestCheckResourceAttr(SampleSnapshotTemplateResourceKey, "sample_type", "Percent"),
 					resource.TestCheckResourceAttr(SampleSnapshotTemplateResourceKey, "sample_interval", "10"),
 					resource.TestCheckResourceAttrSet(SampleSnapshotTemplateResourceKey, "sub_app_id"),
@@ -36,14 +36,14 @@ func TestAccTencentCloudVodSampleSnapshotTemplateResource_basic(t *testing.T) {
 			{
 				Config: testAccVodSampleSnapshotTemplateUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_vod_sample_snapshot_template.sample_snapshot_template", "id"),
+					resource.TestCheckResourceAttrSet(SampleSnapshotTemplateResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(SampleSnapshotTemplateResourceKey, "sub_app_id"),
 					resource.TestCheckResourceAttr(SampleSnapshotTemplateResourceKey, "width", "600"),
 					resource.TestCheckResourceAttr(SampleSnapshotTemplateResourceKey, "height", "500"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_vod_sample_snapshot_template.sample_snapshot_template",
+				ResourceName:      SampleSnapshotTemplateResourceKey,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -52,7 +52,7 @@ func TestAccTencentCloudVodSampleSnapshotTemplateResource_basic(t *testing.T) {
 }
 
 const testAccVodSampleSnapshotTemplate = `
-resource  "tencentcloud_vod_sub_application" "sub_application" {
+resource  "tencentcloud_vod_sub_application" "snapshot_template_sub_application" {
 	name = "snapshotTemplateSubApplication"
 	status = "On"
 	description = "this is sub application"
@@ -61,7 +61,7 @@ resource  "tencentcloud_vod_sub_application" "sub_application" {
 resource "tencentcloud_vod_sample_snapshot_template" "sample_snapshot_template" {
   sample_type = "Percent"
   sample_interval = 10
-  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.snapshot_template_sub_application.id)[1])
   name = "testSampleSnapshot"
   width = 500
   height = 400
@@ -73,8 +73,8 @@ resource "tencentcloud_vod_sample_snapshot_template" "sample_snapshot_template" 
 `
 
 const testAccVodSampleSnapshotTemplateUpdate = `
-resource  "tencentcloud_vod_sub_application" "sub_application" {
-	name = "subapplication"
+resource  "tencentcloud_vod_sub_application" "snapshot_template_sub_application" {
+	name = "snapshotTemplateSubApplication"
 	status = "On"
 	description = "this is sub application"
 }
@@ -82,7 +82,7 @@ resource  "tencentcloud_vod_sub_application" "sub_application" {
 resource "tencentcloud_vod_sample_snapshot_template" "sample_snapshot_template" {
   sample_type = "Percent"
   sample_interval = 10
-  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.snapshot_template_sub_application.id)[1])
   name = "testSampleSnapshot"
   width = 600
   height = 500
