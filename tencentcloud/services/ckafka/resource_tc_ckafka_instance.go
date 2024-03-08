@@ -426,21 +426,9 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("instanceId is nil")
 	}
 	// wait sync instance
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		_, has, err := service.DescribeCkafkaById(ctx, *instanceId)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if has {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("wait until the instance synchronization is complete"))
-	})
-	if err != nil {
-		return err
-	}
+	time.Sleep(5 * time.Second)
 
-	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		has, ready, err := service.CheckCkafkaInstanceReady(ctx, *instanceId)
 		if err != nil {
 			return resource.NonRetryableError(err)
