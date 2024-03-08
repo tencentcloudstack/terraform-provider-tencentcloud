@@ -519,13 +519,13 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 
 const testAccKafkaInstanceType = `
 resource "tencentcloud_vpc" "vpc" {
-  name       = "tmp"
+  name       = "kafka-type-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
-  name              = "subnet-example"
+  name              = "kafka-type-subnet"
   cidr_block        = "10.0.0.0/16"
   availability_zone = "ap-guangzhou-7"
 }
