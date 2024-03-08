@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_vod_sample_snapshot_template
+```
+
+```release-note:new-resource
+tencentcloud_vod_transcode_template
+```
+
+```release-note:new-resource
+tencentcloud_vod_watermark_template
+```

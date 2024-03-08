@@ -510,3 +510,168 @@ func (me *VodService) DeleteSuperPlayerConfig(ctx context.Context, configId stri
 
 	return
 }
+
+func (me *VodService) DescribeVodSampleSnapshotTemplateById(ctx context.Context, subAppId, definition uint64) (sampleSnapshotTemplate *vod.SampleSnapshotTemplate, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vod.NewDescribeSampleSnapshotTemplatesRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.Definitions = []*uint64{helper.Uint64(definition)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVodClient().DescribeSampleSnapshotTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SampleSnapshotTemplateSet) < 1 {
+		return
+	}
+
+	sampleSnapshotTemplate = response.Response.SampleSnapshotTemplateSet[0]
+	return
+}
+
+func (me *VodService) DeleteVodSampleSnapshotTemplateById(ctx context.Context, subAppId, definition uint64) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vod.NewDeleteSampleSnapshotTemplateRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.Definition = helper.Uint64(definition)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVodClient().DeleteSampleSnapshotTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VodService) DescribeVodTranscodeTemplateById(ctx context.Context, subAppId uint64, definition int64) (transcodeTemplate *vod.TranscodeTemplate, errRet error) {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	request := vod.NewDescribeTranscodeTemplatesRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.Definitions = []*int64{helper.Int64(definition)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVodClient().DescribeTranscodeTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.TranscodeTemplateSet) < 1 {
+		return
+	}
+
+	transcodeTemplate = response.Response.TranscodeTemplateSet[0]
+	return
+}
+
+func (me *VodService) DeleteVodTranscodeTemplateById(ctx context.Context, subAppId uint64, definition int64) (errRet error) {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	request := vod.NewDeleteTranscodeTemplateRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.Definition = helper.Int64(definition)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVodClient().DeleteTranscodeTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VodService) DescribeVodWatermarkTemplateById(ctx context.Context, subAppId uint64, definition int64) (watermarkTemplate *vod.WatermarkTemplate, errRet error) {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	request := vod.NewDescribeWatermarkTemplatesRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.Definitions = []*int64{helper.Int64(definition)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVodClient().DescribeWatermarkTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.WatermarkTemplateSet) < 1 {
+		return
+	}
+
+	watermarkTemplate = response.Response.WatermarkTemplateSet[0]
+	return
+}
+
+func (me *VodService) DeleteVodWatermarkTemplateById(ctx context.Context, subAppId uint64, definition int64) (errRet error) {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	request := vod.NewDeleteWatermarkTemplateRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.Definition = helper.Int64(definition)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVodClient().DeleteWatermarkTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
