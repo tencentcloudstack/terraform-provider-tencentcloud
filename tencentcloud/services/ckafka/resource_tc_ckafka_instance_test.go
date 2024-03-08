@@ -58,7 +58,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 			},
 			{
 				PreConfig: func() {
-					time.Sleep(time.Minute)
+					time.Sleep(2 * time.Minute)
 				},
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
@@ -137,7 +137,7 @@ func TestAccTencentCloudCkafkaInstanceResource_maz(t *testing.T) {
 			},
 			{
 				PreConfig: func() {
-					time.Sleep(time.Minute)
+					time.Sleep(2 * time.Minute)
 				},
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
@@ -165,7 +165,7 @@ func TestAccTencentCloudCkafkaInstanceResource_type(t *testing.T) {
 			},
 			{
 				PreConfig: func() {
-					time.Sleep(time.Minute)
+					time.Sleep(2 * time.Minute)
 				},
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
