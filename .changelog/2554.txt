@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_node_pool: Fix the problem of creating node pool tags field.
+```
