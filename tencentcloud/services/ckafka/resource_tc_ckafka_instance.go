@@ -425,7 +425,22 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	if instanceId == nil {
 		return fmt.Errorf("instanceId is nil")
 	}
-	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	// wait sync instance
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		_, has, err := service.DescribeCkafkaById(ctx, *instanceId)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if has {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("wait until the instance synchronization is complete"))
+	})
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		has, ready, err := service.CheckCkafkaInstanceReady(ctx, *instanceId)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -594,6 +609,15 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
+	if info.ExpireTime != nil {
+		if *info.ExpireTime > 0 {
+			_ = d.Set("charge_type", CKAFKA_CHARGE_TYPE_PREPAID)
+		} else if *info.ExpireTime == 0 {
+			_ = d.Set("charge_type", CKAFKA_CHARGE_TYPE_POSTPAID)
+		} else {
+			return fmt.Errorf("expireTime less than 0")
+		}
+	}
 	_ = d.Set("instance_name", info.InstanceName)
 	_ = d.Set("zone_id", info.ZoneId)
 	_ = d.Set("vpc_id", info.VpcId)

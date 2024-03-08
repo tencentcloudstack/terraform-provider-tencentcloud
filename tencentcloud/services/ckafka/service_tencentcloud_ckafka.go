@@ -469,7 +469,7 @@ func (me *CkafkaService) DescribeInstanceById(ctx context.Context, instanceId st
 		response, err = me.client.UseCkafkaClient().DescribeInstanceAttributes(request)
 		if err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == CkafkaInstanceNotFound || sdkErr.Code == CkafkaFailedOperation {
+				if sdkErr.Code == CkafkaInstanceNotFound || sdkErr.Code == CkafkaFailedOperation || sdkErr.Code == CkafkaResourceNotFound {
 					return nil
 				}
 			}
