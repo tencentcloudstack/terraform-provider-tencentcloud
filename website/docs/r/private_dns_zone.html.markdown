@@ -71,7 +71,7 @@ resource "tencentcloud_private_dns_zone" "example" {
 
 The following arguments are supported:
 
-* `domain` - (Required, String) Domain name, which must be in the format of standard TLD.
+* `domain` - (Required, String, ForceNew) Domain name, which must be in the format of standard TLD.
 * `account_vpc_set` - (Optional, List) List of authorized accounts' VPCs to associate with the private domain.
 * `cname_speedup_status` - (Optional, String) CNAME acceleration: ENABLED, DISABLED, Default value is ENABLED.
 * `dns_forward_status` - (Optional, String) Whether to enable subdomain recursive DNS. Valid values: ENABLED, DISABLED. Default value: DISABLED.
