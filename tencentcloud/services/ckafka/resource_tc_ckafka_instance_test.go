@@ -63,7 +63,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy"},
 			},
 		},
 	})
