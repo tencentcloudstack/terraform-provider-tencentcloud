@@ -52,6 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 API gateway attach access key can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_api_gateway_api_key_attachment.attach (your api_key_id)#usagePlan-gyeafpab
+$ terraform import tencentcloud_api_gateway_api_key_attachment.attach [your api_key_id]#usagePlan-gyeafpab
 ```
 
