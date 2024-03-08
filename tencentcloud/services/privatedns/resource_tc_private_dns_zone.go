@@ -29,6 +29,7 @@ func ResourceTencentCloudPrivateDnsZone() *schema.Resource {
 			"domain": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Domain name, which must be in the format of standard TLD.",
 			},
 			"tag_set": {
