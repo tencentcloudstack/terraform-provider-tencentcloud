@@ -237,6 +237,12 @@ const (
 	DefaultGrafanaVersion               = "1.2.0"
 )
 
+// monitor
+const (
+	DefaultTmpVpcId    = "vpc-axrsmmrv"
+	DefaultTmpSubnetId = "subnet-b23ua6gk"
+)
+
 /*
 ---------------------------------------------------
 The following are common test case used as templates.
@@ -755,7 +761,8 @@ variable "tke_cidr_c" {
 
 const TkeDefaultNodeInstanceVar = `
 variable "ins_type" {
-  default = "SA2.LARGE8"
+  //default = "SA2.LARGE8"
+  default = "S2.MEDIUM2"
 }
 `
 

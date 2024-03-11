@@ -1,3 +1,31 @@
+## 1.81.79 (March 8, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vod_sample_snapshot_template` ([#2553](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2553))
+* **New Resource:** `tencentcloud_vod_transcode_template` ([#2553](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2553))
+* **New Resource:** `tencentcloud_vod_watermark_template` ([#2553](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2553))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_api_gateway_api_key_attachment: Remove private information from documents. ([#2556](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2556))
+* resource/tencentcloud_private_dns_zone: Add ForceNew attribute to domain parameter. ([#2555](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2555))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_node_pool: Fix the problem of creating node pool tags field. ([#2554](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2554))
+
+## 1.81.78 (March 3, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mysql_instance: Fixed the problem of clienttoken duplication caused by creation retry. ([#2549](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2549))
+
+BUG FIXES:
+
+* resource/tencentcloud_instance: fix the issue of invalid parameters when creating CVM. ([#2551](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2551))
+* resource/tencentcloud_monitor_tmp_tke_cluster_agent: Fix the error reported when modifying the associated cluster. ([#2550](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2550))
+
 ## 1.81.77 (March 1, 2024)
 
 FEATURES:

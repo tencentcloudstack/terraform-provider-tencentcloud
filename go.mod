@@ -45,8 +45,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.748
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.865
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.865
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.860
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -82,7 +82,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.822
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.691
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.524
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.865
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat v1.0.634
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.547
@@ -95,7 +95,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.804
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.845
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.833
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.792
@@ -109,7 +109,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.856
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.865
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.798
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/wI2L/jsondiff v0.3.0

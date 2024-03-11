@@ -105,10 +105,10 @@ func testAccCheckInstanceExists(r string) resource.TestCheckFunc {
 
 const testInstanceVar = tcacctest.DefaultAzVariable + `
 variable "vpc_id" {
-  default = "` + tcacctest.DefaultEMRVpcId + `"
+  default = "` + tcacctest.DefaultTmpVpcId + `"
 }
 variable "subnet_id" {
-  default = "` + tcacctest.DefaultEMRSubnetId + `"
+  default = "` + tcacctest.DefaultTmpSubnetId + `"
 }
 `
 const testInstance_basic = testInstanceVar + `

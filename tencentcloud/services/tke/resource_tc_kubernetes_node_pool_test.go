@@ -598,6 +598,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     spot_instance_type = "one-time"
     spot_max_price = "1000"
     cam_role_name = "TCB_QcsRole"
+	
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
