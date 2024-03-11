@@ -232,6 +232,8 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 		},
 	}
 	ratelimit.Check(request.GetAction())
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = topicId
 	var (
 		offset    int64 = 0
 		pageSize  int64 = 100
@@ -242,8 +244,6 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		var specArgs connectivity.IacExtInfo
-		specArgs.InstanceId = topicId
 		response, err := me.client.UseClsClient(specArgs).DescribeTopics(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
