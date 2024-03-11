@@ -24,8 +24,6 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-var importFlag = false
-
 func ResourceTencentCloudInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudInstanceCreate,
@@ -33,16 +31,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 		Update: resourceTencentCloudInstanceUpdate,
 		Delete: resourceTencentCloudInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-				importFlag = true
-				defaultValues := map[string]interface{}{}
-
-				for k, v := range defaultValues {
-					_ = d.Set(k, v)
-				}
-
-				return []*schema.ResourceData{d}, nil
-			},
+			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(15 * time.Minute),
