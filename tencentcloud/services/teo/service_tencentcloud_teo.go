@@ -179,7 +179,7 @@ func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId, orig
 
 	request := teo.NewDeleteOriginGroupRequest()
 	request.ZoneId = &zoneId
-	request.OriginGroupId = &originGroupId
+	// request.OriginGroupId = &originGroupId
 
 	defer func() {
 		if errRet != nil {
@@ -852,4 +852,152 @@ func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId,
 	}
 
 	return nil
+}
+
+func (me *TeoService) DescribeTeoL4proxyById(ctx context.Context, zoneId, proxyId string) (l4proxy *teo.L4Proxy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeL4ProxyRequest()
+	request.ZoneId = &zoneId
+	request.Filters = []*teo.Filter{
+		{
+			Name:   helper.String("proxy-id"),
+			Values: helper.Strings([]string{proxyId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeL4Proxy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.L4Proxies) < 1 {
+		return
+	}
+
+	l4proxy = response.Response.L4Proxies[0]
+	return
+}
+
+func (me *TeoService) DeleteTeoL4proxyById(ctx context.Context, zoneId, proxyId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDeleteL4ProxyRequest()
+	request.ZoneId = &zoneId
+	request.ProxyId = &proxyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DeleteL4Proxy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TeoService) TeoL4proxyStateRefreshFunc(zoneId, proxyId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+
+		object, err := me.DescribeTeoL4proxyById(ctx, zoneId, proxyId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *TeoService) DescribeTeoL4proxyRuleById(ctx context.Context, zoneId string, proxyId string, ruleId string) (l4proxy_rule *teo.L4ProxyRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeL4ProxyRulesRequest()
+	request.ZoneId = &zoneId
+	request.ProxyId = &proxyId
+	// request.Filters = []*teo.Filter{
+	// 	{
+	// 		Name:   helper.String("rule-tag"),
+	// 		Values: helper.Strings([]string{ruleId}),
+	// 	},
+	// }
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeL4ProxyRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.L4ProxyRules) < 1 {
+		return
+	}
+
+	l4proxy_rule = response.Response.L4ProxyRules[0]
+	return
+}
+func (me *TeoService) DeleteTeoL4proxyRuleById(ctx context.Context, zoneId string, proxyId string, ruleId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDeleteL4ProxyRulesRequest()
+	request.ZoneId = &zoneId
+	request.ProxyId = &proxyId
+	request.RuleIds = []*string{&ruleId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DeleteL4ProxyRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+func (me *TeoService) TeoL4proxyRuleStateRefreshFunc(zoneId, proxyId, ruleId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+
+		object, err := me.DescribeTeoL4proxyRuleById(ctx, zoneId, proxyId, ruleId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
 }
