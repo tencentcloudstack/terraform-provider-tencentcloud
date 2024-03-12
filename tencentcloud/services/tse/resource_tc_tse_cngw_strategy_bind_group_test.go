@@ -21,6 +21,9 @@ func TestAccTencentCloudTseCngwStrategyBindGroupResource_basic(t *testing.T) {
 				Config: testAccTseCngwStrategyBindGroup,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "strategy_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "option", "bind"),
 				),
 			},
 			{
@@ -32,6 +35,9 @@ func TestAccTencentCloudTseCngwStrategyBindGroupResource_basic(t *testing.T) {
 				Config: testAccTseCngwStrategyBindGroupUp,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "strategy_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_strategy_bind_group.cngw_strategy_bind_group", "option", "unbind"),
 				),
 			},
 		},
