@@ -425,6 +425,9 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	if instanceId == nil {
 		return fmt.Errorf("instanceId is nil")
 	}
+	// wait sync instance
+	time.Sleep(5 * time.Second)
+
 	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		has, ready, err := service.CheckCkafkaInstanceReady(ctx, *instanceId)
 		if err != nil {
@@ -594,6 +597,15 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
+	if info.ExpireTime != nil {
+		if *info.ExpireTime > 0 {
+			_ = d.Set("charge_type", CKAFKA_CHARGE_TYPE_PREPAID)
+		} else if *info.ExpireTime == 0 {
+			_ = d.Set("charge_type", CKAFKA_CHARGE_TYPE_POSTPAID)
+		} else {
+			return fmt.Errorf("expireTime less than 0")
+		}
+	}
 	_ = d.Set("instance_name", info.InstanceName)
 	_ = d.Set("zone_id", info.ZoneId)
 	_ = d.Set("vpc_id", info.VpcId)

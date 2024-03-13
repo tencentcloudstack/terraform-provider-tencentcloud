@@ -1,3 +1,9 @@
+## 1.81.80 (March 11, 2024)
+
+BUG FIXES:
+
+* resource/tencentcloud_ckafka_instance: fix `charge_type` has change after import. ([#2557](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2557))
+
 ## 1.81.79 (March 8, 2024)
 
 FEATURES:

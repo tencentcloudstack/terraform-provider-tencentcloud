@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_ckafka_instance: fix `charge_type` has change after import.
+```

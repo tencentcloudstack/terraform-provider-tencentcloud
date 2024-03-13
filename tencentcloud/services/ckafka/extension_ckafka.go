@@ -86,6 +86,7 @@ var CKAFKA_PERMISSION_TYPE_TO_STRING = map[int64]string{
 
 // sdk ckafka not found error
 const CkafkaInstanceNotFound = "InvalidParameterValue.InstanceNotExist"
+const CkafkaResourceNotFound = "ResourceNotFound"
 const CkafkaFailedOperation = "FailedOperation"
 
 const (

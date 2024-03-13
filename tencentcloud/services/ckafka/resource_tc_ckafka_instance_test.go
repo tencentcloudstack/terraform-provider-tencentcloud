@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -17,7 +18,7 @@ import (
 func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccTencentCloudKafkaInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -27,6 +28,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100007"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "charge_type", "PREPAID"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "msg_retention_time", "1300"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "max_message_byte", "1024"),
@@ -44,6 +46,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100007"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "charge_type", "PREPAID"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "msg_retention_time", "1200"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "max_message_byte", "1025"),
@@ -54,10 +57,13 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 				),
 			},
 			{
+				PreConfig: func() {
+					time.Sleep(2 * time.Minute)
+				},
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy"},
 			},
 		},
 	})
@@ -66,7 +72,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 func TestAccTencentCloudCkafkaInstanceResource_postpaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccTencentCloudKafkaInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -107,7 +113,7 @@ func TestAccTencentCloudCkafkaInstanceResource_postpaid(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance_postpaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy"},
 			},
 		},
 	})
@@ -116,7 +122,7 @@ func TestAccTencentCloudCkafkaInstanceResource_postpaid(t *testing.T) {
 func TestAccTencentCloudCkafkaInstanceResource_maz(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccTencentCloudKafkaInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -130,10 +136,13 @@ func TestAccTencentCloudCkafkaInstanceResource_maz(t *testing.T) {
 				),
 			},
 			{
+				PreConfig: func() {
+					time.Sleep(2 * time.Minute)
+				},
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy"},
 			},
 		},
 	})
@@ -142,7 +151,7 @@ func TestAccTencentCloudCkafkaInstanceResource_maz(t *testing.T) {
 func TestAccTencentCloudCkafkaInstanceResource_type(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccTencentCloudKafkaInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -151,15 +160,17 @@ func TestAccTencentCloudCkafkaInstanceResource_type(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-type-tf-test"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "specifications_type", "standard"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "specifications_type", "profession"),
 				),
 			},
 			{
+				PreConfig: func() {
+					time.Sleep(2 * time.Minute)
+				},
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy"},
 			},
 		},
 	})
@@ -173,7 +184,7 @@ func testAccTencentCloudKafkaInstanceDestroy(s *terraform.State) error {
 		if r.Type != "tencentcloud_ckafka_instance" {
 			continue
 		}
-		_, has, error := ckafkcService.DescribeInstanceById(ctx, r.Primary.ID)
+		_, has, error := ckafkcService.DescribeCkafkaById(ctx, r.Primary.ID)
 		if error != nil {
 			return error
 		}
@@ -219,12 +230,25 @@ func testAccCheckKafkaInstanceExists(n string) resource.TestCheckFunc {
 }
 
 const testAccKafkaInstance = tcacctest.DefaultKafkaVariable + `
+resource "tencentcloud_vpc" "kafka_vpc" {
+	name       = "kafka-vpc"
+	cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "kafka_subnet" {
+	vpc_id            = tencentcloud_vpc.kafka_vpc.id
+	name              = "kafka-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-7"
+	is_multicast      = false
+}
+
 resource "tencentcloud_ckafka_instance" "kafka_instance" {
   instance_name      = "ckafka-instance-prepaid"
   zone_id            = 100007
   period             = 1
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = tencentcloud_vpc.kafka_vpc.id
+  subnet_id          = tencentcloud_subnet.kafka_subnet.id
   msg_retention_time = 1300
   max_message_byte   = 1024
   renew_flag         = 0
@@ -247,13 +271,26 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 }
 `
 
-const testAccKafkaInstanceUpdate = tcacctest.DefaultKafkaVariable + `
+const testAccKafkaInstanceUpdate = `
+resource "tencentcloud_vpc" "kafka_vpc" {
+	name       = "kafka-vpc"
+	cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "kafka_subnet" {
+	vpc_id            = tencentcloud_vpc.kafka_vpc.id
+	name              = "kafka-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-7"
+	is_multicast      = false
+}
+
 resource "tencentcloud_ckafka_instance" "kafka_instance" {
   instance_name      = "ckafka-instance-prepaid"
   zone_id            = 100007
   period             = 1
-  vpc_id             =  var.vpc_id
-  subnet_id          =  var.subnet_id
+  vpc_id             = tencentcloud_vpc.kafka_vpc.id
+  subnet_id          = tencentcloud_subnet.kafka_subnet.id
   msg_retention_time = 1200
   max_message_byte   = 1025
   renew_flag         = 0
@@ -280,12 +317,25 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 }
 `
 
-const testAccKafkaInstancePostpaid = tcacctest.DefaultKafkaVariable + `
+const testAccKafkaInstancePostpaid = `
+resource "tencentcloud_vpc" "kafka_vpc" {
+	name       = "postpaid-kafka-vpc"
+	cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "kafka_subnet" {
+	vpc_id            = tencentcloud_vpc.kafka_vpc.id
+	name              = "postpaid-kafka-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-7"
+	is_multicast      = false
+}
+
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
   zone_id            = 100007
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = tencentcloud_vpc.kafka_vpc.id
+  subnet_id          = tencentcloud_subnet.kafka_subnet.id
   msg_retention_time = 1300
   kafka_version      = "1.1.1"
   disk_size          = 500
@@ -318,12 +368,25 @@ resource "tencentcloud_ckafka_topic" "foo" {
 }
 `
 
-const testAccKafkaInstanceUpdatePostpaid = tcacctest.DefaultKafkaVariable + `
+const testAccKafkaInstanceUpdatePostpaid = `
+resource "tencentcloud_vpc" "kafka_vpc" {
+	name       = "postpaid-kafka-vpc"
+	cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "kafka_subnet" {
+	vpc_id            = tencentcloud_vpc.kafka_vpc.id
+	name              = "postpaid-kafka-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-7"
+	is_multicast      = false
+}
+
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
   zone_id            = 100007
-  vpc_id             =  var.vpc_id
-  subnet_id          =  var.subnet_id
+  vpc_id             = tencentcloud_vpc.kafka_vpc.id
+  subnet_id          = tencentcloud_subnet.kafka_subnet.id
   msg_retention_time = 1200
   kafka_version      = "1.1.1"
   disk_type          = "CLOUD_BASIC"
@@ -359,12 +422,25 @@ resource "tencentcloud_ckafka_topic" "foo" {
 }
 `
 
-const testAccKafkaInstanceUpdatePostpaidDiskSize = tcacctest.DefaultKafkaVariable + `
+const testAccKafkaInstanceUpdatePostpaidDiskSize = `
+resource "tencentcloud_vpc" "kafka_vpc" {
+	name       = "postpaid-kafka-vpc"
+	cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "kafka_subnet" {
+	vpc_id            = tencentcloud_vpc.kafka_vpc.id
+	name              = "postpaid-kafka-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-7"
+	is_multicast      = false
+}
+
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
   zone_id            = 100007
-  vpc_id             =  var.vpc_id
-  subnet_id          =  var.subnet_id
+  vpc_id             = tencentcloud_vpc.kafka_vpc.id
+  subnet_id          = tencentcloud_subnet.kafka_subnet.id
   msg_retention_time = 1200
   kafka_version      = "1.1.1"
   disk_type          = "CLOUD_BASIC"
@@ -400,15 +476,28 @@ resource "tencentcloud_ckafka_topic" "foo" {
 }
 `
 
-const testAccKafkaInstanceMAZ = tcacctest.DefaultKafkaVariable + `
+const testAccKafkaInstanceMAZ = `
+resource "tencentcloud_vpc" "kafka_vpc" {
+	name       = "maz-kafka-vpc"
+	cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "kafka_subnet" {
+	vpc_id            = tencentcloud_vpc.kafka_vpc.id
+	name              = "maz-kafka-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-7"
+	is_multicast      = false
+}
+
 resource "tencentcloud_ckafka_instance" "kafka_instance" {
   instance_name      = "ckafka-instance-maz-tf-test"
   zone_id            = 100007
   multi_zone_flag    = true
   zone_ids           = [100007, 100006]
   period             = 1
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = tencentcloud_vpc.kafka_vpc.id
+  subnet_id          = tencentcloud_subnet.kafka_subnet.id
   msg_retention_time = 1300
   renew_flag         = 0
   kafka_version      = "1.1.1"
@@ -430,13 +519,13 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 
 const testAccKafkaInstanceType = `
 resource "tencentcloud_vpc" "vpc" {
-  name       = "tmp"
+  name       = "kafka-type-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
-  name              = "subnet-example"
+  name              = "kafka-type-subnet"
   cidr_block        = "10.0.0.0/16"
   availability_zone = "ap-guangzhou-7"
 }
@@ -448,11 +537,11 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   subnet_id          = tencentcloud_subnet.subnet.id
   msg_retention_time = 1300
   kafka_version      = "1.1.1"
-  specifications_type = "standard"
-  instance_type       = 2
-  disk_size          = 1000
+  specifications_type = "profession"
+  disk_size          = 200
   disk_type          = "CLOUD_BASIC"
-  band_width         = 100
+  band_width         = 20
+  partition          = 400
   charge_type        = "POSTPAID_BY_HOUR"
 
   config {
