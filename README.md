@@ -26,7 +26,9 @@
 * [![Documentation](https://img.shields.io/badge/documentation-blue)](https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs)
 * [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 * Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
+* Wechat Group:
 
+    <img src=".github/02_Tcloud_wechat.jpg" width="200"/>
 
 ## Requirements
 
