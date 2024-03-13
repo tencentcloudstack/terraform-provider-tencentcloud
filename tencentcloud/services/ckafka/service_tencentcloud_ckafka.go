@@ -89,10 +89,10 @@ func (me *CkafkaService) DescribeCkafkaInstanceById(ctx context.Context,
 		}
 	}()
 	request.InstanceId = &instanceId
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		var specArgs connectivity.IacExtInfo
-		specArgs.InstanceId = instanceId
-		result, err := me.client.UseCkafkaClient(specArgs).DescribeInstancesDetail(request)
+		result, err := me.client.UseCkafkaClient(iacExtInfo).DescribeInstancesDetail(request)
 		if err != nil {
 			return tccommon.RetryError(err)
 		}

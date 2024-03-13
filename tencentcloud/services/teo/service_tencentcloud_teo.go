@@ -47,8 +47,8 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 	}
 
 	ratelimit.Check(request.GetAction())
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = zoneId
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = zoneId
 
 	var offset int64 = 0
 	var pageSize int64 = 100
@@ -58,7 +58,7 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTeoClient(specArgs).DescribeZones(request)
+		response, err := me.client.UseTeoClient(iacExtInfo).DescribeZones(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())

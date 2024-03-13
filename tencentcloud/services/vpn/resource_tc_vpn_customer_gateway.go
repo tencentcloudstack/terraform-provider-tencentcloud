@@ -135,10 +135,10 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 	request := vpc.NewDescribeCustomerGatewaysRequest()
 	request.CustomerGatewayIds = []*string{&customerGatewayId}
 	var response *vpc.DescribeCustomerGatewaysResponse
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = customerGatewayId
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		var specArgs connectivity.IacExtInfo
-		specArgs.InstanceId = customerGatewayId
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(specArgs).DescribeCustomerGateways(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(iacExtInfo).DescribeCustomerGateways(request)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)
 			if !ok {

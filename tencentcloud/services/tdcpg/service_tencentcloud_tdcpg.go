@@ -394,14 +394,14 @@ func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param
 		}
 	}
 	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = tmpId
 
 	for {
 		request.PageNumber = helper.IntUint64(currNumber)
 		request.PageSize = helper.IntUint64(pageSize)
 		if tmpId != "" {
-			var specArgs connectivity.IacExtInfo
-			specArgs.InstanceId = tmpId
-			response, err = me.client.UseTdcpgClient(specArgs).DescribeClusters(request)
+			response, err = me.client.UseTdcpgClient(iacExtInfo).DescribeClusters(request)
 		} else {
 			response, err = me.client.UseTdcpgClient().DescribeClusters(request)
 		}
@@ -487,15 +487,15 @@ func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clus
 		}
 	}
 	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = tmpId
 
 	for {
 		request.PageNumber = helper.IntUint64(currNumber)
 		request.PageSize = helper.IntUint64(pageSize)
 		request.ClusterId = clusterId
 		if tmpId != "" {
-			var specArgs connectivity.IacExtInfo
-			specArgs.InstanceId = tmpId
-			response, err = me.client.UseTdcpgClient(specArgs).DescribeClusterInstances(request)
+			response, err = me.client.UseTdcpgClient(iacExtInfo).DescribeClusterInstances(request)
 		} else {
 			response, err = me.client.UseTdcpgClient().DescribeClusterInstances(request)
 		}

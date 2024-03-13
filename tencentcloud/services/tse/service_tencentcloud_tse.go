@@ -42,9 +42,9 @@ func (me *TseService) DescribeTseInstanceById(ctx context.Context, instanceId st
 	}()
 
 	ratelimit.Check(request.GetAction())
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = instanceId
-	response, err := me.client.UseTseClient(specArgs).DescribeSREInstances(request)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	response, err := me.client.UseTseClient(iacExtInfo).DescribeSREInstances(request)
 	if err != nil {
 		errRet = err
 		return
