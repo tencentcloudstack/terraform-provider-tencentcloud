@@ -108,7 +108,7 @@ func ResourceTencentCloudVodTranscodeTemplate() *schema.Resource {
 						"vcrf": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The video constant rate factor (CRF). Value range: 1-51.If this parameter is specified, CRF encoding will be used and the bitrate parameter will be ignored.If `Codec` is `H.266`, this parameter is required (`28` is recommended).We don’t recommend using this parameter unless you have special requirements.",
+							Description: "The video constant rate factor (CRF). Value range: 1-51.If this parameter is specified, CRF encoding will be used and the bitrate parameter will be ignored.If `Codec` is `H.266`, this parameter is required (`28` is recommended).We don't recommend using this parameter unless you have special requirements.",
 						},
 						"gop": {
 							Type:        schema.TypeInt,
