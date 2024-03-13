@@ -21,7 +21,7 @@ func TestAccTencentCloudKubernetesClusterInstancesDataSource_basic(t *testing.T)
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_kubernetes_cluster_instances.cluster_instances"),
 					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_id", "ins-kqmx8dm2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_id", "ins-1fb82v28"),
 					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_role", "WORKER"),
 					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_state", "running"),
 				),
@@ -30,7 +30,7 @@ func TestAccTencentCloudKubernetesClusterInstancesDataSource_basic(t *testing.T)
 				Config: testAccKubernetesClusterInstancesDataSourceFilter,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_kubernetes_cluster_instances.cluster_instances"),
-					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.#", "0"),
+					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.#", "1"),
 				),
 			},
 		},
@@ -39,20 +39,20 @@ func TestAccTencentCloudKubernetesClusterInstancesDataSource_basic(t *testing.T)
 
 const testAccKubernetesClusterInstancesDataSource = `
 data "tencentcloud_kubernetes_cluster_instances" "cluster_instances" {
-  cluster_id    = "cls-ely08ic4"
-  instance_ids  = ["ins-kqmx8dm2"]
+  cluster_id    = "cls-6l3thsra"
+  instance_ids  = ["ins-1fb82v28"]
   instance_role = "WORKER"
 }
 `
 
 const testAccKubernetesClusterInstancesDataSourceFilter = `
 data "tencentcloud_kubernetes_cluster_instances" "cluster_instances" {
-  cluster_id    = "cls-ely08ic4"
-  instance_ids  = ["ins-kqmx8dm2"]
+  cluster_id    = "cls-6l3thsra"
+  instance_ids  = ["ins-qzkwjklk"]
   instance_role = "WORKER"
   filters {
     name   = "nodepool-id"
-    values = ["np-p4e6whqu"]
+    values = ["np-qrez0ayk"]
   }
 }
 `

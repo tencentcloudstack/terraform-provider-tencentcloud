@@ -2716,20 +2716,38 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
+	var offset int64 = 0
+	var limit int64 = 20
+	var total int64 = -1
 
-	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
-	if err != nil {
-		errRet = err
-		return
+	for {
+		if total >= 0 && offset >= total {
+			break
+		}
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if total < 0 {
+			total = int64(*response.Response.TotalCount)
+		}
+
+		if len(response.Response.InstanceSet) == 0 {
+			// get empty set, we're done
+			break
+		}
+
+		offset += limit
+
+		clusterInstances = append(clusterInstances, response.Response.InstanceSet...)
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.InstanceSet) < 1 {
-		return
-	}
-
-	clusterInstances = response.Response.InstanceSet
 	return
 }
 
