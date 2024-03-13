@@ -1,3 +1,16 @@
+## 1.81.81 (March 13, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tse_cngw_network` ([#2526](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2526))
+* **New Resource:** `tencentcloud_tse_cngw_strategy` ([#2526](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2526))
+* **New Resource:** `tencentcloud_tse_cngw_strategy_bind_group` ([#2526](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2526))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kubernetes_cluster_instances: optimize cluster instance queries ([#2560](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2560))
+* resource/tencentcloud_tse_cngw_group: Add `group_id` field to output. ([#2526](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2526))
+
 ## 1.81.80 (March 11, 2024)
 
 BUG FIXES:
