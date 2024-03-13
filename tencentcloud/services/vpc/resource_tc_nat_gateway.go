@@ -218,10 +218,10 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	request := vpc.NewDescribeNatGatewaysRequest()
 	request.NatGatewayIds = []*string{&natGatewayId}
 	var response *vpc.DescribeNatGatewaysResponse
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = natGatewayId
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		var specArgs connectivity.IacExtInfo
-		specArgs.InstanceId = natGatewayId
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(specArgs).DescribeNatGateways(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(iacExtInfo).DescribeNatGateways(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())

@@ -44,12 +44,11 @@ func (me *TdmqService) DescribeTdmqInstanceById(ctx context.Context,
 
 	var response *tdmq.DescribeClustersResponse
 
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = clusterId
-
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = clusterId
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseTdmqClient(specArgs).DescribeClusters(request)
+		result, err := me.client.UseTdmqClient(iacExtInfo).DescribeClusters(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
@@ -645,10 +644,9 @@ func (me *TdmqService) DescribeTdmqProfessionalClusterById(ctx context.Context, 
 	}()
 
 	ratelimit.Check(request.GetAction())
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = clusterId
-
-	response, err := me.client.UseTdmqClient(specArgs).DescribePulsarProInstanceDetail(request)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = clusterId
+	response, err := me.client.UseTdmqClient(iacExtInfo).DescribePulsarProInstanceDetail(request)
 	if err != nil {
 		errRet = err
 		return
@@ -701,8 +699,8 @@ func (me *TdmqService) DescribePulsarProInstances(ctx context.Context, clusterId
 	}()
 
 	ratelimit.Check(request.GetAction())
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = clusterId
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = clusterId
 
 	var (
 		offset uint64 = 0
@@ -712,7 +710,7 @@ func (me *TdmqService) DescribePulsarProInstances(ctx context.Context, clusterId
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTdmqClient(specArgs).DescribePulsarProInstances(request)
+		response, err := me.client.UseTdmqClient(iacExtInfo).DescribePulsarProInstances(request)
 		if err != nil {
 			errRet = err
 			return
@@ -1625,10 +1623,9 @@ func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceById(ctx context.Context, 
 	}()
 
 	ratelimit.Check(request.GetAction())
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = instanceId
-
-	response, err := me.client.UseTdmqClient(specArgs).DescribeRabbitMQVipInstance(request)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	response, err := me.client.UseTdmqClient(iacExtInfo).DescribeRabbitMQVipInstance(request)
 	if err != nil {
 		errRet = err
 		return

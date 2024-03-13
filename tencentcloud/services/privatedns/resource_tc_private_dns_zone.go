@@ -257,11 +257,10 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 	)
 
 	request.ZoneId = &id
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = id
-
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = id
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient(specArgs).DescribePrivateZone(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient(iacExtInfo).DescribePrivateZone(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

@@ -405,14 +405,14 @@ getMoreData:
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
 	var response *vpc.DescribeVpcsResponse
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = vpcId
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		var result *vpc.DescribeVpcsResponse
 		var err error
 		if vpcId != "" {
-			var specArgs connectivity.IacExtInfo
-			specArgs.InstanceId = vpcId
-			result, err = me.client.UseVpcClient(specArgs).DescribeVpcs(request)
+			result, err = me.client.UseVpcClient(iacExtInfo).DescribeVpcs(request)
 		} else {
 			result, err = me.client.UseVpcClient().DescribeVpcs(request)
 		}

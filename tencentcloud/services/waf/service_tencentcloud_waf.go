@@ -625,9 +625,9 @@ func (me *WafService) DescribeWafInstanceById(ctx context.Context, instanceId st
 	}()
 
 	ratelimit.Check(request.GetAction())
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = instanceId
-	response, err := me.client.UseWafClient(specArgs).DescribeInstances(request)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	response, err := me.client.UseWafClient(iacExtInfo).DescribeInstances(request)
 	if err != nil {
 		errRet = err
 		return

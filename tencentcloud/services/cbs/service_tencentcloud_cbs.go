@@ -52,10 +52,9 @@ func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk
 	request.Limit = helper.IntUint64(100)
 	ratelimit.Check(request.GetAction())
 
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = diskId
-
-	response, err := me.client.UseCbsClient(specArgs).DescribeDisks(request)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = diskId
+	response, err := me.client.UseCbsClient(iacExtInfo).DescribeDisks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -85,14 +84,13 @@ func (me *CbsService) DescribeDiskList(ctx context.Context, diskIds []*string) (
 	request.Limit = helper.IntUint64(100)
 	ratelimit.Check(request.GetAction())
 
-	var specArgs connectivity.IacExtInfo
+	var iacExtInfo connectivity.IacExtInfo
 	tmpList := make([]string, len(diskIds))
 	for k, v := range diskIds {
 		tmpList[k] = *v
 	}
-	specArgs.InstanceId = strings.Join(tmpList, tccommon.FILED_SP)
-
-	response, err := me.client.UseCbsClient(specArgs).DescribeDisks(request)
+	iacExtInfo.InstanceId = strings.Join(tmpList, tccommon.FILED_SP)
+	response, err := me.client.UseCbsClient(iacExtInfo).DescribeDisks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

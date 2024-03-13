@@ -331,14 +331,14 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 	}
 	var offset, limit int64 = 0, 20
 
-	var specArgs connectivity.IacExtInfo
-	specArgs.InstanceId = instanceId
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
 
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseSqlserverClient(specArgs).DescribeDBInstances(request)
+		response, err := me.client.UseSqlserverClient(iacExtInfo).DescribeDBInstances(request)
 		if err != nil {
 			errRet = err
 			return
