@@ -103,6 +103,6 @@ The `node_config` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `group_id` - gateway group id.
 
 

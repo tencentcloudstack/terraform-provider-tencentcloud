@@ -1924,6 +1924,9 @@ Tencent Cloud Service Engine(TSE)
     tencentcloud_tse_cngw_certificate
     tencentcloud_tse_waf_protection
     tencentcloud_tse_waf_domains
+    tencentcloud_tse_cngw_network
+    tencentcloud_tse_cngw_strategy
+    tencentcloud_tse_cngw_strategy_bind_group
 
 ClickHouse(CDWCH)
   Data Source

@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_tse_cngw_network
+```
+
+```release-note:new-resource
+tencentcloud_tse_cngw_strategy
+```
+
+```release-note:new-resource
+tencentcloud_tse_cngw_strategy_bind_group
+```
+
+```release-note:enhancement
+resource/tencentcloud_tse_cngw_group: Add `group_id` field to output.
+```
