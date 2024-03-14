@@ -1119,6 +1119,9 @@ Video on Demand(VOD)
     tencentcloud_vod_image_sprite_template
     tencentcloud_vod_super_player_config
     tencentcloud_vod_sub_application
+    tencentcloud_vod_sample_snapshot_template
+    tencentcloud_vod_transcode_template
+    tencentcloud_vod_watermark_template
 
 Oceanus
   Data Source
@@ -1921,6 +1924,9 @@ Tencent Cloud Service Engine(TSE)
     tencentcloud_tse_cngw_certificate
     tencentcloud_tse_waf_protection
     tencentcloud_tse_waf_domains
+    tencentcloud_tse_cngw_network
+    tencentcloud_tse_cngw_strategy
+    tencentcloud_tse_cngw_strategy_bind_group
 
 ClickHouse(CDWCH)
   Data Source

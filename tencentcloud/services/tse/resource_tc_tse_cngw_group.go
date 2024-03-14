@@ -126,6 +126,12 @@ func ResourceTencentCloudTseCngwGroup() *schema.Resource {
 					},
 				},
 			},
+
+			"group_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "gateway group id.",
+			},
 		},
 	}
 }
@@ -261,6 +267,8 @@ func resourceTencentCloudTseCngwGroupRead(d *schema.ResourceData, meta interface
 	if cngwGroup.GatewayId != nil {
 		_ = d.Set("gateway_id", cngwGroup.GatewayId)
 	}
+
+	_ = d.Set("group_id", groupId)
 
 	if cngwGroup.Name != nil {
 		_ = d.Set("name", cngwGroup.Name)

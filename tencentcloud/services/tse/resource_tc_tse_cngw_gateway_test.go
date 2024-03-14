@@ -32,7 +32,7 @@ func TestAccTencentCloudTseCngwGatewayResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "description", "terraform test"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "enable_cls", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "engine_region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "feature_version", "STANDARD"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "feature_version", "PROFESSIONAL"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "gateway_version", "2.5.1"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "ingress_class_name", "tse-nginx-ingress"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "internet_max_bandwidth_out", "0"),
@@ -60,7 +60,7 @@ func TestAccTencentCloudTseCngwGatewayResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "description", "terraform test update"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "enable_cls", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "engine_region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "feature_version", "STANDARD"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "feature_version", "PROFESSIONAL"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "gateway_version", "2.5.1"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "ingress_class_name", "tse-nginx-ingress"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "internet_max_bandwidth_out", "0"),
@@ -153,7 +153,7 @@ resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
   description                = "terraform test"
   enable_cls                 = false
   engine_region              = "ap-guangzhou"
-  feature_version            = "STANDARD"
+  feature_version            = "PROFESSIONAL"
   gateway_version            = "2.5.1"
   ingress_class_name         = "tse-nginx-ingress"
   internet_max_bandwidth_out = 0
@@ -183,7 +183,7 @@ resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
   description                = "terraform test update"
   enable_cls                 = true
   engine_region              = "ap-guangzhou"
-  feature_version            = "STANDARD"
+  feature_version            = "PROFESSIONAL"
   gateway_version            = "2.5.1"
   ingress_class_name         = "tse-nginx-ingress"
   internet_max_bandwidth_out = 0
