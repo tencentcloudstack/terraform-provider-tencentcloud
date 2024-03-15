@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -732,6 +733,8 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 		log.Printf("[CRITAL]%s modify proxy configuration failed, reason: %v", logId, err)
 		return err
 	}
+
+	time.Sleep(5 * time.Second)
 
 	describeRequest := gaap.NewDescribeProxiesRequest()
 	describeRequest.ProxyIds = []*string{&id}
