@@ -67,7 +67,7 @@ func resourceTencentCloudDasbDeviceAccountCreate(d *schema.ResourceData, meta in
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response.Id != nil {
+		if result == nil || result.Response.Id == nil {
 			e = fmt.Errorf("dasb DeviceAccount not exists")
 			return resource.NonRetryableError(e)
 		}
