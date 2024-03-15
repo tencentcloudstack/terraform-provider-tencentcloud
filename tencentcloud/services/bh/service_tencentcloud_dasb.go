@@ -308,6 +308,7 @@ func (me *DasbService) DescribeDasbDeviceGroupMembersById(ctx context.Context, d
 	request := dasb.NewDescribeDeviceGroupMembersRequest()
 	deviceGroupIdInt, _ := strconv.ParseUint(deviceGroupId, 10, 64)
 	request.Id = &deviceGroupIdInt
+	request.Bound = common.BoolPtr(true)
 
 	defer func() {
 		if errRet != nil {
@@ -378,6 +379,7 @@ func (me *DasbService) DescribeDasbUserGroupMembersById(ctx context.Context, use
 	request := dasb.NewDescribeUserGroupMembersRequest()
 	userGroupIdInt, _ := strconv.ParseUint(userGroupId, 10, 64)
 	request.Id = &userGroupIdInt
+	request.Bound = common.BoolPtr(true)
 
 	defer func() {
 		if errRet != nil {

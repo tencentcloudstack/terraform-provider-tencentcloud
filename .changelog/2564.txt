@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_dasb_user_group_members: Fix errors in querying user group members
+```

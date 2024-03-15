@@ -4,7 +4,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dasb_user_group" "example" {
-  name = "tf_example_update"
+  name = "tf_example"
 }
 ```
 
@@ -12,7 +12,7 @@ Or
 
 ```hcl
 resource "tencentcloud_dasb_user_group" "example" {
-  name          = "tf_example_update"
+  name          = "tf_example"
   department_id = "1.2"
 }
 ```

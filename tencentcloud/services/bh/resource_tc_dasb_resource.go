@@ -149,7 +149,7 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response.ResourceId == nil {
+		if result == nil || *result.Response.ResourceId == "" {
 			e = fmt.Errorf("dasb Resource not exists")
 			return resource.NonRetryableError(e)
 		}
@@ -165,6 +165,8 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 
 	resourceId = *response.Response.ResourceId
 	d.SetId(resourceId)
+
+	// deploy resource
 
 	// wait
 	describeRequest.ResourceIds = helper.Strings([]string{resourceId})

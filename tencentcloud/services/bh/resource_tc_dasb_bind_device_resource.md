@@ -4,7 +4,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dasb_bind_device_resource" "example" {
-  resource_id   = "bh-saas-ocmzo6lgxiv"
+  resource_id   = "bh-saas-weyosfym"
   device_id_set = [17, 18]
 }
 ```

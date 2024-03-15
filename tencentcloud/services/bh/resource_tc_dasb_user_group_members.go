@@ -125,7 +125,8 @@ func resourceTencentCloudDasbUserGroupMembersRead(d *schema.ResourceData, meta i
 		return nil
 	}
 
-	_ = d.Set("user_group_id", userGroupId)
+	userGroupIdInt, _ := strconv.Atoi(userGroupId)
+	_ = d.Set("user_group_id", userGroupIdInt)
 	_ = d.Set("member_id_set", UserGroupMembers)
 
 	return nil

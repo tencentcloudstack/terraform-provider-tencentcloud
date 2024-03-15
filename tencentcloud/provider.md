@@ -2088,7 +2088,6 @@ Bastion Host(BH)
     tencentcloud_dasb_device_group_members
     tencentcloud_dasb_user_group_members
     tencentcloud_dasb_bind_device_resource
-    tencentcloud_dasb_resource
     tencentcloud_dasb_device
     tencentcloud_dasb_user_group
     tencentcloud_dasb_reset_user
