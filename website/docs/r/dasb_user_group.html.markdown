@@ -15,7 +15,7 @@ Provides a resource to create a dasb user_group
 
 ```hcl
 resource "tencentcloud_dasb_user_group" "example" {
-  name = "tf_example_update"
+  name = "tf_example"
 }
 ```
 
@@ -23,7 +23,7 @@ resource "tencentcloud_dasb_user_group" "example" {
 
 ```hcl
 resource "tencentcloud_dasb_user_group" "example" {
-  name          = "tf_example_update"
+  name          = "tf_example"
   department_id = "1.2"
 }
 ```

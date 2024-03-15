@@ -149,11 +149,13 @@ func ResourceTencentCloudDasbAcl() *schema.Resource {
 			},
 			"validate_from": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Access permission effective time, such as: 2021-09-22T00:00:00+08:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.",
 			},
 			"validate_to": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Access permission expiration time, such as: 2021-09-23T00:00:00+08:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.",
 			},

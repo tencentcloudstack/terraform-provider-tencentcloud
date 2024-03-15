@@ -47,16 +47,19 @@ func ResourceTencentCloudDasbUser() *schema.Resource {
 			},
 			"validate_from": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "User effective time, such as: 2021-09-22T00:00:00+00:00If the effective and expiry time are not filled in, the user will be valid for a long time.",
 			},
 			"validate_to": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "User expiration time, such as: 2021-09-23T00:00:00+00:00If the effective and expiry time are not filled in, the user will be valid for a long time.",
 			},
 			"group_id_set": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 				Description: "The set of user group IDs to which it belongs.",
