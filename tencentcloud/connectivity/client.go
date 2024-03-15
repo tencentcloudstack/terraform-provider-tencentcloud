@@ -1132,13 +1132,13 @@ func (me *TencentCloudClient) UseTdcpgClient(iacExtInfo ...IacExtInfo) *tdcpg.Cl
 	}
 
 	if me.tdcpgConn != nil {
-		me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
+		me.tdcpgConn.WithHttpTransport(&logRoundTripper)
 		return me.tdcpgConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.tdcpgConn, _ = tdcpg.NewClient(me.Credential, me.Region, cpf)
-	me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
+	me.tdcpgConn.WithHttpTransport(&logRoundTripper)
 
 	return me.tdcpgConn
 }
