@@ -1,3 +1,9 @@
+## 1.81.82 (March 15, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dasb_user_group_members: Fix errors in querying user group members ([#2564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2564))
+
 ## 1.81.81 (March 13, 2024)
 
 FEATURES:
