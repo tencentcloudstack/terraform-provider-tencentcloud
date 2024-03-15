@@ -124,7 +124,8 @@ func resourceTencentCloudDasbDeviceGroupMembersRead(d *schema.ResourceData, meta
 		return nil
 	}
 
-	_ = d.Set("device_group_id", deviceGroupId)
+	deviceGroupIdInt, _ := strconv.Atoi(deviceGroupId)
+	_ = d.Set("device_group_id", deviceGroupIdInt)
 	_ = d.Set("member_id_set", DeviceGroupMembers)
 
 	return nil

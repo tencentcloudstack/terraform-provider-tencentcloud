@@ -55,6 +55,7 @@ func ResourceTencentCloudDasbDevice() *schema.Resource {
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
+				Computed:    true,
 				Description: "Asset multi-node: fields ip and port.",
 			},
 		},
@@ -159,8 +160,8 @@ func resourceTencentCloudDasbDeviceRead(d *schema.ResourceData, meta interface{}
 			_ = d.Set("os_name", device.OsName)
 		}
 
-		if device.PublicIp != nil {
-			_ = d.Set("ip", device.PublicIp)
+		if device.PrivateIp != nil {
+			_ = d.Set("ip", device.PrivateIp)
 		}
 
 		if device.Port != nil {
