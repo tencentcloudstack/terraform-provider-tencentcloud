@@ -2080,6 +2080,7 @@ Cloud Firewall(CFW)
 
 Bastion Host(BH)
   Resource
+    tencentcloud_dasb_resource
     tencentcloud_dasb_acl
     tencentcloud_dasb_cmd_template
     tencentcloud_dasb_device_group
