@@ -40,11 +40,3 @@ resource "tencentcloud_dasb_resource" "example" {
   package_bandwidth = 1
 }
 ```
-
-Import
-
-dasb resource can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dasb_resource.example bh-saas-kk5rabk0
-```

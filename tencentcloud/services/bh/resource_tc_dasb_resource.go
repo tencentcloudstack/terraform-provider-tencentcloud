@@ -21,9 +21,7 @@ func ResourceTencentCloudDasbResource() *schema.Resource {
 		Read:   resourceTencentCloudDasbResourceRead,
 		Update: resourceTencentCloudDasbResourceUpdate,
 		Delete: resourceTencentCloudDasbResourceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"deploy_region": {
 				Required:    true,

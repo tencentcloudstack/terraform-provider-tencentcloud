@@ -76,11 +76,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-dasb resource can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dasb_resource.example bh-saas-kk5rabk0
-```
-
