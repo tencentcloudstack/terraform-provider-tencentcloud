@@ -21,7 +21,9 @@ func ResourceTencentCloudDasbResource() *schema.Resource {
 		Read:   resourceTencentCloudDasbResourceRead,
 		Update: resourceTencentCloudDasbResourceUpdate,
 		Delete: resourceTencentCloudDasbResourceDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"deploy_region": {
 				Required:    true,
@@ -50,16 +52,14 @@ func ResourceTencentCloudDasbResource() *schema.Resource {
 				Description: "Number of resource nodes.",
 			},
 			"time_unit": {
-				Required:     true,
-				Type:         schema.TypeString,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"m"}),
-				Description:  "Billing cycle, only support m: month.",
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Billing cycle, only support m: month. This field is mandatory, fill in m.",
 			},
 			"time_span": {
-				Required:     true,
-				Type:         schema.TypeInt,
-				ValidateFunc: tccommon.ValidateIntegerMin(1),
-				Description:  "Billing time.",
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Billing time. This field is mandatory, with a minimum value of 1.",
 			},
 			"auto_renew_flag": {
 				Required:     true,

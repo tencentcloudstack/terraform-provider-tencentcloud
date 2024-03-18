@@ -36,6 +36,11 @@ func TestAccTencentCloudNeedFixDasbResourceResource_basic(t *testing.T) {
 				),
 			},
 			{
+				ResourceName:      "tencentcloud_dasb_resource.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccDasbResourceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "id"),

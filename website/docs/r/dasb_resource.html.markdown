@@ -62,11 +62,11 @@ The following arguments are supported:
 * `resource_edition` - (Required, String) Resource type.Value:standard/pro.
 * `resource_node` - (Required, Int) Number of resource nodes.
 * `subnet_id` - (Required, String) Deploy resource subnetId.
-* `time_span` - (Required, Int) Billing time.
-* `time_unit` - (Required, String) Billing cycle, only support m: month.
 * `vpc_cidr_block` - (Required, String) The network segment corresponding to the VPC that requires service activation.
 * `vpc_id` - (Required, String) Deploy resource vpcId.
 * `package_bandwidth` - (Optional, Int) Number of bandwidth expansion packets (4M), The set value is an integer multiple of 4.
+* `time_span` - (Optional, Int) Billing time. This field is mandatory, with a minimum value of 1.
+* `time_unit` - (Optional, String) Billing cycle, only support m: month. This field is mandatory, fill in m.
 
 ## Attributes Reference
 
@@ -75,4 +75,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+
+## Import
+
+dasb resource can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dasb_resource.example bh-saas-kgckynrt
+```
 

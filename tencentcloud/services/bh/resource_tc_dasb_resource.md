@@ -1,7 +1,5 @@
 Provides a resource to create a dasb resource
 
-
-
 Example Usage
 
 Create a standard version instance
@@ -24,6 +22,7 @@ resource "tencentcloud_dasb_resource" "example" {
 ```
 
 Create a professional instance
+
 ```hcl
 resource "tencentcloud_dasb_resource" "example" {
   deploy_region     = "ap-guangzhou"
@@ -39,4 +38,12 @@ resource "tencentcloud_dasb_resource" "example" {
   auto_renew_flag   = 1
   package_bandwidth = 1
 }
+```
+
+Import
+
+dasb resource can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dasb_resource.example bh-saas-kgckynrt
 ```
