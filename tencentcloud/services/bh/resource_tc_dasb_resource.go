@@ -218,6 +218,11 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 		return nil
 	})
 
+	if err != nil {
+		log.Printf("[CRITAL]%s deploy dasb Resource failed, reason:%+v", logId, err)
+		return err
+	}
+
 	// wait
 	describeRequest.ResourceIds = helper.Strings([]string{resourceId})
 	err = resource.Retry(tccommon.WriteRetryTimeout*6, func() *resource.RetryError {
