@@ -1,3 +1,14 @@
+## 1.81.83 (March 20, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dasb_resource` ([#2566](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2566))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: Output `Uuid` of cvm instance ([#2568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2568))
+* resource/tencentcloud_private_dns_record: params `zone_id` Add ForceNew ([#2567](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2567))
+
 ## 1.81.82 (March 15, 2024)
 
 ENHANCEMENTS:
