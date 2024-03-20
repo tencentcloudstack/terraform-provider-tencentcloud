@@ -22,8 +22,8 @@ func TestAccTencentCloudNeedFixDasbResourceResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "deploy_region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "vpc_id", "vpc-q1of50wz"),
-					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "subnet_id", "subnet-7uhvm46o"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "vpc_id", "vpc-fmz6l9nz"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "subnet_id", "subnet-g7jhwhi2"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "resource_edition", "standard"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "resource_node"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "time_unit", "m"),
@@ -31,7 +31,8 @@ func TestAccTencentCloudNeedFixDasbResourceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "auto_renew_flag"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "deploy_zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "package_bandwidth"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "package_node"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "vpc_cidr_block", "10.35.0.0/16"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "cidr_block", "10.35.20.0/24"),
 				),
 			},
 			{
@@ -44,8 +45,8 @@ func TestAccTencentCloudNeedFixDasbResourceResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "deploy_region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "vpc_id", "vpc-q1of50wz"),
-					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "subnet_id", "subnet-7uhvm46o"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "vpc_id", "vpc-fmz6l9nz"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "subnet_id", "subnet-g7jhwhi2"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "resource_edition", "pro"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "resource_node"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "time_unit", "m"),
@@ -53,7 +54,8 @@ func TestAccTencentCloudNeedFixDasbResourceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "auto_renew_flag"),
 					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "deploy_zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "package_bandwidth"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_resource.example", "package_node"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "vpc_cidr_block", "10.35.0.0/16"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_resource.example", "cidr_block", "10.35.20.0/24"),
 				),
 			},
 		},
@@ -63,31 +65,33 @@ func TestAccTencentCloudNeedFixDasbResourceResource_basic(t *testing.T) {
 const testAccDasbResource = `
 resource "tencentcloud_dasb_resource" "example" {
   deploy_region     = "ap-guangzhou"
-  vpc_id            = "vpc-q1of50wz"
-  subnet_id         = "subnet-7uhvm46o"
+  deploy_zone       = "ap-guangzhou-6"
+  vpc_id            = "vpc-fmz6l9nz"
+  subnet_id         = "subnet-g7jhwhi2"
+  vpc_cidr_block    = "10.35.0.0/16"
+  cidr_block        = "10.35.20.0/24"
   resource_edition  = "standard"
-  resource_node     = 2
+  resource_node     = 50
   time_unit         = "m"
   time_span         = 1
   auto_renew_flag   = 1
-  deploy_zone       = "ap-guangzhou-6"
-  package_bandwidth = 10
-  package_node      = 50
+  package_bandwidth = 1
 }
 `
 
 const testAccDasbResourceUpdate = `
 resource "tencentcloud_dasb_resource" "example" {
   deploy_region     = "ap-guangzhou"
-  vpc_id            = "vpc-q1of50wz"
-  subnet_id         = "subnet-7uhvm46o"
+  deploy_zone       = "ap-guangzhou-6"
+  vpc_id            = "vpc-fmz6l9nz"
+  subnet_id         = "subnet-g7jhwhi2"
+  vpc_cidr_block    = "10.35.0.0/16"
+  cidr_block        = "10.35.20.0/24"
   resource_edition  = "pro"
-  resource_node     = 4
+  resource_node     = 100
   time_unit         = "m"
   time_span         = 1
   auto_renew_flag   = 1
-  deploy_zone       = "ap-guangzhou-6"
-  package_bandwidth = 20
-  package_node      = 100
+  package_bandwidth = 2
 }
 `

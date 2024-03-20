@@ -52,16 +52,14 @@ func ResourceTencentCloudDasbResource() *schema.Resource {
 				Description: "Number of resource nodes.",
 			},
 			"time_unit": {
-				Required:     true,
-				Type:         schema.TypeString,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"m"}),
-				Description:  "Billing cycle, only support m: month.",
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Billing cycle, only support m: month. This field is mandatory, fill in m.",
 			},
 			"time_span": {
-				Required:     true,
-				Type:         schema.TypeInt,
-				ValidateFunc: tccommon.ValidateIntegerMin(1),
-				Description:  "Billing time.",
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Billing time. This field is mandatory, with a minimum value of 1.",
 			},
 			"auto_renew_flag": {
 				Required:     true,
@@ -70,22 +68,32 @@ func ResourceTencentCloudDasbResource() *schema.Resource {
 				Description:  "Automatic renewal. 1 is auto renew flag, 0 is not.",
 			},
 			"deploy_zone": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Deploy zone.",
+			},
+			"cidr_block": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "Subnet segments that require service activation.",
+			},
+			"vpc_cidr_block": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "The network segment corresponding to the VPC that requires service activation.",
 			},
 			"package_bandwidth": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Number of bandwidth expansion packets (4M).",
+				Description: "Number of bandwidth expansion packets (4M), The set value is an integer multiple of 4.",
 			},
-			"package_node": {
-				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "Number of authorized point extension packages (50 points).",
-			},
+			//"package_node": {
+			//	Optional:    true,
+			//	Computed:    true,
+			//	Type:        schema.TypeInt,
+			//	Description: "Number of authorized point extension packages (50 points). Cannot exceed 100.",
+			//},
 		},
 	}
 }
@@ -98,21 +106,31 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 		logId           = tccommon.GetLogId(tccommon.ContextNil)
 		request         = dasb.NewCreateResourceRequest()
 		response        = dasb.NewCreateResourceResponse()
+		deployRequest   = dasb.NewDeployResourceRequest()
 		describeRequest = dasb.NewDescribeResourcesRequest()
 		modifyRequest   = dasb.NewModifyResourceRequest()
 		resourceId      string
+		vpcId           string
+		subnetId        string
+		deployRegion    string
+		deployZone      string
+		cidrBlock       string
+		vpcCidrBlock    string
 	)
 
 	if v, ok := d.GetOk("deploy_region"); ok {
 		request.DeployRegion = helper.String(v.(string))
+		deployRegion = v.(string)
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
+		vpcId = v.(string)
 	}
 
 	if v, ok := d.GetOk("subnet_id"); ok {
 		request.SubnetId = helper.String(v.(string))
+		subnetId = v.(string)
 	}
 
 	if v, ok := d.GetOk("resource_edition"); ok {
@@ -139,6 +157,15 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("deploy_zone"); ok {
 		request.DeployZone = helper.String(v.(string))
+		deployZone = v.(string)
+	}
+
+	if v, ok := d.GetOk("cidr_block"); ok {
+		cidrBlock = v.(string)
+	}
+
+	if v, ok := d.GetOk("vpc_cidr_block"); ok {
+		vpcCidrBlock = v.(string)
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -167,10 +194,38 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 	d.SetId(resourceId)
 
 	// deploy resource
+	deployRequest.ResourceId = helper.String(resourceId)
+	deployRequest.ApCode = helper.String(deployRegion)
+	deployRequest.Zone = helper.String(deployZone)
+	deployRequest.VpcId = helper.String(vpcId)
+	deployRequest.SubnetId = helper.String(subnetId)
+	deployRequest.CidrBlock = helper.String(cidrBlock)
+	deployRequest.VpcCidrBlock = helper.String(vpcCidrBlock)
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().DeployResource(deployRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, deployRequest.GetAction(), deployRequest.ToJsonString(), deployRequest.ToJsonString())
+		}
+
+		if result == nil {
+			e = fmt.Errorf("dasb Resource deploy error")
+			return resource.NonRetryableError(e)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s deploy dasb Resource failed, reason:%+v", logId, err)
+		return err
+	}
 
 	// wait
 	describeRequest.ResourceIds = helper.Strings([]string{resourceId})
-	err = resource.Retry(tccommon.WriteRetryTimeout*4, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout*6, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().DescribeResources(describeRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -180,6 +235,11 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 
 		if result == nil || len(result.Response.ResourceSet) != 1 {
 			e = fmt.Errorf("dasb Resource not exists")
+			return resource.NonRetryableError(e)
+		}
+
+		if *result.Response.ResourceSet[0].Status == 4 {
+			e = fmt.Errorf("dasb Resource deploy error")
 			return resource.NonRetryableError(e)
 		}
 
@@ -195,15 +255,16 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	// modify
 	if v, ok := d.GetOkExists("package_bandwidth"); ok {
 		modifyRequest.PackageBandwidth = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOkExists("package_node"); ok {
-		modifyRequest.PackageNode = helper.IntInt64(v.(int))
-	}
+	//if v, ok := d.GetOkExists("package_node"); ok {
+	//	modifyRequest.PackageNode = helper.IntInt64(v.(int))
+	//}
 
-	if modifyRequest.PackageBandwidth != nil || modifyRequest.PackageNode != nil {
+	if modifyRequest.PackageBandwidth != nil {
 		modifyRequest.ResourceId = &resourceId
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().ModifyResource(modifyRequest)
@@ -284,13 +345,21 @@ func resourceTencentCloudDasbResourceRead(d *schema.ResourceData, meta interface
 		_ = d.Set("deploy_zone", Resource.Zone)
 	}
 
+	if Resource.CidrBlock != nil {
+		_ = d.Set("cidr_block", Resource.CidrBlock)
+	}
+
+	if Resource.VpcCidrBlock != nil {
+		_ = d.Set("vpc_cidr_block", Resource.VpcCidrBlock)
+	}
+
 	if Resource.PackageBandwidth != nil {
 		_ = d.Set("package_bandwidth", Resource.PackageBandwidth)
 	}
 
-	if Resource.PackageNode != nil {
-		_ = d.Set("package_node", Resource.PackageNode)
-	}
+	//if Resource.PackageNode != nil {
+	//	_ = d.Set("package_node", Resource.PackageNode)
+	//}
 
 	return nil
 }
@@ -305,7 +374,7 @@ func resourceTencentCloudDasbResourceUpdate(d *schema.ResourceData, meta interfa
 		resourceId = d.Id()
 	)
 
-	immutableArgs := []string{"deploy_region", "vpc_id", "subnet_id", "time_unit", "time_span", "pay_mode", "deploy_zone"}
+	immutableArgs := []string{"deploy_region", "vpc_id", "subnet_id", "time_unit", "time_span", "pay_mode", "deploy_zone", "cidr_block", "vpc_cidr_block"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -338,11 +407,11 @@ func resourceTencentCloudDasbResourceUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if d.HasChange("package_node") {
-		if v, ok := d.GetOkExists("package_node"); ok {
-			request.PackageNode = helper.IntInt64(v.(int))
-		}
-	}
+	//if d.HasChange("package_node") {
+	//	if v, ok := d.GetOkExists("package_node"); ok {
+	//		request.PackageNode = helper.IntInt64(v.(int))
+	//	}
+	//}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().ModifyResource(request)
