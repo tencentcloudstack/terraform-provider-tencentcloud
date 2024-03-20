@@ -14,8 +14,30 @@ Provide a resource to create a Private Dns Record.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_private_dns_record" "foo" {
-  zone_id      = "zone-rqndjnki"
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_private_dns_zone" "example" {
+  domain = "domain.com"
+  remark = "remark."
+
+  vpc_set {
+    region      = "ap-guangzhou"
+    uniq_vpc_id = tencentcloud_vpc.vpc.id
+  }
+
+  dns_forward_status   = "DISABLED"
+  cname_speedup_status = "ENABLED"
+
+  tags = {
+    createdBy : "terraform"
+  }
+}
+
+resource "tencentcloud_private_dns_record" "example" {
+  zone_id      = tencentcloud_private_dns_zone.example.id
   record_type  = "A"
   record_value = "192.168.1.2"
   sub_domain   = "www"
@@ -30,9 +52,9 @@ resource "tencentcloud_private_dns_record" "foo" {
 The following arguments are supported:
 
 * `record_type` - (Required, String) Record type. Valid values: "A", "AAAA", "CNAME", "MX", "TXT", "PTR".
-* `record_value` - (Required, String) Record value, such as IP: 192.168.10.2, CNAME: cname.qcloud.com, and MX: mail.qcloud.com..
+* `record_value` - (Required, String) Record value, such as IP: 192.168.10.2, CNAME: cname.qcloud.com, and MX: mail.qcloud.com.
 * `sub_domain` - (Required, String) Subdomain, such as "www", "m", and "@".
-* `zone_id` - (Required, String) Private domain ID.
+* `zone_id` - (Required, String, ForceNew) Private domain ID.
 * `mx` - (Optional, Int) MX priority, which is required when the record type is MX. Valid values: 5, 10, 15, 20, 30, 40, 50.
 * `ttl` - (Optional, Int) Record cache time. The smaller the value, the faster the record will take effect. Value range: 1~86400s.
 * `weight` - (Optional, Int) Record weight. Value range: 1~100.
@@ -50,6 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 Private Dns Record can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_private_dns_zone.foo zone_id#record_id
+$ terraform import tencentcloud_private_dns_record.example zone-iza3a33s#1983030
 ```
 

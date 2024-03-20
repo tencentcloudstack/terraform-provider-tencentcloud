@@ -29,6 +29,7 @@ func ResourceTencentCloudPrivateDnsRecord() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Private domain ID.",
 			},
 			"record_type": {
@@ -42,10 +43,9 @@ func ResourceTencentCloudPrivateDnsRecord() *schema.Resource {
 				Description: "Subdomain, such as \"www\", \"m\", and \"@\".",
 			},
 			"record_value": {
-				Type:     schema.TypeString,
-				Required: true,
-				Description: "Record value, such as IP: 192.168.10.2," +
-					" CNAME: cname.qcloud.com, and MX: mail.qcloud.com..",
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Record value, such as IP: 192.168.10.2, CNAME: cname.qcloud.com, and MX: mail.qcloud.com.",
 			},
 			"weight": {
 				Type:        schema.TypeInt,
@@ -59,10 +59,10 @@ func ResourceTencentCloudPrivateDnsRecord() *schema.Resource {
 					" Valid values: 5, 10, 15, 20, 30, 40, 50.",
 			},
 			"ttl": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Description: "Record cache time. The smaller the value, the faster the record will take effect." +
-					" Value range: 1~86400s.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Record cache time. The smaller the value, the faster the record will take effect. Value range: 1~86400s.",
 			},
 		},
 	}
@@ -71,41 +71,63 @@ func ResourceTencentCloudPrivateDnsRecord() *schema.Resource {
 func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_record.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		request  = privatedns.NewCreatePrivateZoneRecordRequest()
+		response = privatedns.NewCreatePrivateZoneRecordResponse()
+		zoneId   string
+	)
 
-	request := privatedns.NewCreatePrivateZoneRecordRequest()
+	if v, ok := d.GetOk("zone_id"); ok {
+		request.ZoneId = helper.String(v.(string))
+		zoneId = v.(string)
+	}
 
-	zoneId := d.Get("zone_id").(string)
-	request.ZoneId = &zoneId
+	if v, ok := d.GetOk("record_type"); ok {
+		request.RecordType = helper.String(v.(string))
+	}
 
-	recordType := d.Get("record_type").(string)
-	request.RecordType = &recordType
+	if v, ok := d.GetOk("sub_domain"); ok {
+		request.SubDomain = helper.String(v.(string))
+	}
 
-	subDomain := d.Get("sub_domain").(string)
-	request.SubDomain = &subDomain
+	if v, ok := d.GetOk("record_value"); ok {
+		request.RecordValue = helper.String(v.(string))
+	}
 
-	recordValue := d.Get("record_value").(string)
-	request.RecordValue = &recordValue
-
-	if v, ok := d.GetOk("weight"); ok {
+	if v, ok := d.GetOkExists("weight"); ok {
 		request.Weight = helper.Int64(int64(v.(int)))
 	}
 
-	if v, ok := d.GetOk("mx"); ok {
+	if v, ok := d.GetOkExists("mx"); ok {
 		request.MX = helper.Int64(int64(v.(int)))
 	}
-	if v, ok := d.GetOk("ttl"); ok {
+
+	if v, ok := d.GetOkExists("ttl"); ok {
 		request.TTL = helper.Int64(int64(v.(int)))
 	}
 
-	result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().CreatePrivateZoneRecord(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().CreatePrivateZoneRecord(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil {
+			e = fmt.Errorf("create PrivateDns record failed")
+			return resource.NonRetryableError(e)
+		}
+
+		response = result
+		return nil
+	})
 
 	if err != nil {
 		log.Printf("[CRITAL]%s create PrivateDns record failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-
-	response := result
 
 	recordId := *response.Response.RecordId
 	d.SetId(strings.Join([]string{zoneId, recordId}, tccommon.FILED_SP))
@@ -117,17 +139,17 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_zone.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := PrivateDnsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = PrivateDnsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("record id strategy is can't read, id is borken, id is %s", d.Id())
 	}
+
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
@@ -169,73 +191,57 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 func resourceTencentCloudDPrivateDnsRecordUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_record.update")()
 
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		request = privatedns.NewModifyPrivateZoneRecordRequest()
+	)
+
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("record id strategy is can't read, id is borken, id is %s", d.Id())
 	}
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
-	request := privatedns.NewModifyPrivateZoneRecordRequest()
 	request.ZoneId = helper.String(zoneId)
 	request.RecordId = helper.String(recordId)
-
-	needModify := false
-	if d.HasChange("record_type") {
-		needModify = true
+	if v, ok := d.GetOk("record_type"); ok {
+		request.RecordType = helper.String(v.(string))
 	}
 
-	if d.HasChange("sub_domain") {
-		needModify = true
+	if v, ok := d.GetOk("sub_domain"); ok {
+		request.SubDomain = helper.String(v.(string))
 	}
 
-	if d.HasChange("record_value") {
-		needModify = true
+	if v, ok := d.GetOk("record_value"); ok {
+		request.RecordValue = helper.String(v.(string))
 	}
 
-	if d.HasChange("weight") {
-		needModify = true
-		if v, ok := d.GetOk("weight"); ok {
-			request.Weight = helper.Int64(int64(v.(int)))
-		}
+	if v, ok := d.GetOk("weight"); ok {
+		request.Weight = helper.Int64(int64(v.(int)))
 	}
 
-	if d.HasChange("mx") {
-		needModify = true
-		if v, ok := d.GetOk("mx"); ok {
-			request.MX = helper.Int64(int64(v.(int)))
-		}
+	if v, ok := d.GetOk("mx"); ok {
+		request.MX = helper.Int64(int64(v.(int)))
 	}
 
-	if d.HasChange("ttl") {
-		needModify = true
-		if v, ok := d.GetOk("ttl"); ok {
-			request.TTL = helper.Int64(int64(v.(int)))
-		}
+	if v, ok := d.GetOk("ttl"); ok {
+		request.TTL = helper.Int64(int64(v.(int)))
 	}
 
-	if needModify {
-		if v, ok := d.GetOk("record_type"); ok {
-			request.RecordType = helper.String(v.(string))
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().ModifyPrivateZoneRecord(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-		if v, ok := d.GetOk("sub_domain"); ok {
-			request.SubDomain = helper.String(v.(string))
-		}
-		if v, ok := d.GetOk("record_value"); ok {
-			request.RecordValue = helper.String(v.(string))
-		}
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().ModifyPrivateZoneRecord(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s modify privateDns record info failed, reason:%s\n", logId, err.Error())
-			return err
-		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s modify privateDns record info failed, reason:%s\n", logId, err.Error())
+		return err
 	}
 
 	return resourceTencentCloudDPrivateDnsRecordRead(d, meta)
@@ -244,21 +250,22 @@ func resourceTencentCloudDPrivateDnsRecordUpdate(d *schema.ResourceData, meta in
 func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_record.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		request = privatedns.NewDescribePrivateZoneRequest()
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("record id strategy is can't read, id is borken, id is %s", d.Id())
 	}
+
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
 	// unbind
-	request := privatedns.NewDescribePrivateZoneRequest()
-	request.ZoneId = helper.String(zoneId)
-
 	var response *privatedns.DescribePrivateZoneResponse
-
+	request.ZoneId = helper.String(zoneId)
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DescribePrivateZone(request)
 		if e != nil {
@@ -268,6 +275,7 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read private dns failed, reason:%s\n", logId, err.Error())
 		return err
@@ -287,8 +295,10 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s unbind privateDns zone vpc failed, reason:%s\n", logId, err.Error())
 		return err
@@ -304,8 +314,10 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete privateDns record failed, reason:%s\n", logId, err.Error())
 		return err
@@ -333,8 +345,10 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s rebind privateDns zone vpc failed, reason:%s\n", logId, err.Error())
 		return err
