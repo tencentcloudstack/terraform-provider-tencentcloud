@@ -61,6 +61,7 @@ func ResourceTencentCloudPrivateDnsRecord() *schema.Resource {
 			"ttl": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Record cache time. The smaller the value, the faster the record will take effect. Value range: 1~86400s.",
 			},
 		},
