@@ -394,6 +394,11 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Public IP of the instance.",
 			},
+			"uuid": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Globally unique ID of the instance.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -820,6 +825,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("expired_time", instance.ExpiredTime)
 	_ = d.Set("cam_role_name", instance.CamRoleName)
 	_ = d.Set("disable_api_termination", instance.DisableApiTermination)
+
+	if instance.Uuid != nil {
+		_ = d.Set("uuid", instance.Uuid)
+	}
 
 	if *instance.InstanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
 		_ = d.Set("cdh_instance_type", instance.InstanceType)

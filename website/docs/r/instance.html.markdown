@@ -169,6 +169,7 @@ In addition to all arguments above, the following attributes are exported:
 * `expired_time` - Expired time of the instance.
 * `instance_status` - Current status of the instance.
 * `public_ip` - Public IP of the instance.
+* `uuid` - Globally unique ID of the instance.
 
 
 ## Import
