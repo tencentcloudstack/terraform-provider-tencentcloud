@@ -12,6 +12,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -130,8 +131,13 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate(d *schema.Resourc
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateSnapshotByTimeOffsetTemplate(request)
 		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation" && sdkError.Message == "invalid vod user" {
+					return resource.RetryableError(err)
+				}
+			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return tccommon.RetryError(err)
+			return resource.NonRetryableError(err)
 		}
 		return nil
 	})
