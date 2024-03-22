@@ -44,14 +44,17 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Creation time of template in ISO date format.
+* `type` - Template type, value range:
+- Preset: system preset template;
+- Custom: user-defined templates.
 * `update_time` - Last modified time of template in ISO date format.
 
 
 ## Import
 
-VOD snapshot by time offset template can be imported using the id, e.g.
+VOD snapshot by time offset template can be imported using the id($subAppId#$templateId), e.g.
 
 ```
-$ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo 46906
+$ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo $subAppId#$templateId
 ```
 
