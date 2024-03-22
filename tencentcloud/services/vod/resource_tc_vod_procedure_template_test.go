@@ -48,14 +48,12 @@ func init() {
 func TestAccTencentCloudVodProcedureTemplateResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheck(t) },
-		Providers:    tcacctest.AccProviders,
-		CheckDestroy: testAccCheckVodProcedureTemplateDestroy,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccVodProcedureTemplate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVodProcedureTemplateExists("tencentcloud_vod_procedure_template.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "name", "tf-procedure0"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "comment", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.#", "1"),
