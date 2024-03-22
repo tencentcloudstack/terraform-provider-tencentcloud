@@ -106,7 +106,7 @@ func resourceTencentCloudIpv6AddressBandwidthCreate(d *schema.ResourceData, meta
 
 	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 1*tccommon.ReadRetryTimeout, time.Second, service.VpcIpv6AddressStateRefreshFunc(taskId, []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"SUCCESS", "FAILED"}, 1*tccommon.ReadRetryTimeout, time.Second, service.VpcIpv6AddressStateRefreshFunc(taskId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
