@@ -3,10 +3,12 @@ package vod_test
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svcvod "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -23,7 +25,6 @@ func TestAccTencentCloudVodImageSpriteTemplateResource(t *testing.T) {
 			{
 				Config: testAccVodImageSpriteTemplate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVodImageSpriteTemplateExists("tencentcloud_vod_image_sprite_template.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "sample_type", "Percent"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "sample_interval", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "row_count", "3"),
@@ -34,8 +35,10 @@ func TestAccTencentCloudVodImageSpriteTemplateResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "width", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "height", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "resolution_adaptive", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "format", "jpg"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_image_sprite_template.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_image_sprite_template.foo", "update_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_image_sprite_template.foo", "type"),
 				),
 			},
 			{
@@ -54,10 +57,9 @@ func TestAccTencentCloudVodImageSpriteTemplateResource(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_vod_image_sprite_template.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"sub_app_id"},
+				ResourceName:      "tencentcloud_vod_image_sprite_template.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -72,9 +74,13 @@ func testAccCheckVodImageSpriteTemplateDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_vod_image_sprite_template" {
 			continue
 		}
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
+		subAppId := helper.StrToInt(idSplit[0])
+		definition := idSplit[1]
 		var (
 			filter = map[string]interface{}{
-				"definitions": []string{rs.Primary.ID},
+				"definitions": []string{definition},
+				"sub_appid":   subAppId,
 			}
 		)
 
@@ -103,9 +109,13 @@ func testAccCheckVodImageSpriteTemplateExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("vod image sprite template id is not set")
 		}
 		vodService := svcvod.NewVodService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
+		subAppId := helper.StrToInt(idSplit[0])
+		definition := idSplit[1]
 		var (
 			filter = map[string]interface{}{
-				"definitions": []string{rs.Primary.ID},
+				"definitions": []string{definition},
+				"sub_appid":   subAppId,
 			}
 		)
 		templates, err := vodService.DescribeImageSpriteTemplatesByFilter(ctx, filter)
@@ -120,8 +130,15 @@ func testAccCheckVodImageSpriteTemplateExists(n string) resource.TestCheckFunc {
 }
 
 const testAccVodImageSpriteTemplate = `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "image-sprite-subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_image_sprite_template" "foo" {
   sample_type         = "Percent"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   sample_interval     = 10
   row_count           = 3
   column_count        = 3
@@ -135,8 +152,15 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
 `
 
 const testAccVodImageSpriteTemplateUpdate = `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "image-sprite-subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_image_sprite_template" "foo" {
   sample_type         = "Time"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   sample_interval     = 11
   row_count           = 4
   column_count        = 4

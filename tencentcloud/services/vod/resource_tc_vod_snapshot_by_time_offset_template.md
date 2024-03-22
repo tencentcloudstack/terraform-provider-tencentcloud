@@ -16,8 +16,8 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
 
 Import
 
-VOD snapshot by time offset template can be imported using the id, e.g.
+VOD snapshot by time offset template can be imported using the id($subAppId#$templateId), e.g.
 
 ```
-$ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo 46906
+$ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo $subAppId#$templateId
 ```
