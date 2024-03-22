@@ -1111,7 +1111,7 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 			for _, revireviewContent := range template.ReviewAudioVideoTask.ReviewContents {
 				reviewContentList = append(reviewContentList, *revireviewContent)
 			}
-
+			reviewAudioVideoTask["review_contents"] = reviewContentList
 		}
 	}
 	_ = d.Set("review_audio_video_task", []interface{}{reviewAudioVideoTask})
