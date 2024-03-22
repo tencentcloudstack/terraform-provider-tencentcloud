@@ -182,7 +182,7 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
 
 const testAccVodSnapshotByTimeOffsetTemplateUpdate = `
 resource  "tencentcloud_vod_sub_application" "sub_application" {
-	name = "image-sprite-subapplication"
+	name = "sbtot-subapplication"
 	status = "On"
 	description = "this is sub application"
 }
