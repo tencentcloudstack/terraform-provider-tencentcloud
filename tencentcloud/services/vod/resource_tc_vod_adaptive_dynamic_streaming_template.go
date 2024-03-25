@@ -68,7 +68,7 @@ func ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 			"sub_app_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.",
+				Description: "The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.",
 			},
 			"stream_info": {
 				Type:        schema.TypeList,
@@ -144,7 +144,7 @@ func ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 									"preserve_hdr_switch": {
 										Type:     schema.TypeString,
 										Optional: true,
-										Default:  "OFF",
+										Computed: true,
 										Description: "Whether the transcoding output still maintains HDR when the original video is HDR (High Dynamic Range). Value range:\n" +
 											"- ON: if the original file is HDR, the transcoding output remains HDR;, otherwise the transcoding output is SDR (Standard Dynamic Range);\n" +
 											"- OFF: regardless of whether the original file is HDR or SDR, the transcoding output is SDR;\n" +
@@ -153,7 +153,7 @@ func ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 									"codec_tag": {
 										Type:     schema.TypeString,
 										Optional: true,
-										Default:  "hvc1",
+										Computed: true,
 										Description: "Encoding label, valid only if the encoding format of the video stream is H.265 encoding. Available values:\n" +
 											"- hvc1: stands for hvc1 tag;\n" +
 											"- hev1: stands for the hev1 tag;\n" +
@@ -203,7 +203,7 @@ func ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 						"remove_video": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Default:     false,
+							Computed:    true,
 							Description: "Whether to remove video stream. Valid values: `false`: no, `true`: yes. `false` by default.",
 						},
 						"tehd_config": {
@@ -225,7 +225,7 @@ func ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 									"max_video_bitrate": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Default:     0,
+										Computed:    true,
 										Description: "Video bitrate limit, which is valid when Type specifies extreme speed HD type. If you leave it empty or enter 0, there is no video bitrate limit.",
 									},
 								},
@@ -276,12 +276,11 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 	}
 	streamInfos := d.Get("stream_info").([]interface{})
 	request.StreamInfos = make([]*vod.AdaptiveStreamTemplate, 0, len(streamInfos))
-	for idx, item := range streamInfos {
+	for _, item := range streamInfos {
 		v := item.(map[string]interface{})
 		video := v["video"].([]interface{})[0].(map[string]interface{})
 		audio := v["audio"].([]interface{})[0].(map[string]interface{})
 		rAudio := REMOVE_AUDIO_TO_UNINT[v["remove_audio"].(bool)]
-		rVideo := REMOVE_AUDIO_TO_UNINT[v["remove_video"].(bool)]
 		videoTemplateInfo := &vod.VideoTemplateInfo{
 			Codec:              helper.String(video["codec"].(string)),
 			Fps:                helper.IntUint64(video["fps"].(int)),
@@ -290,17 +289,24 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 			Width:              helper.IntUint64(video["width"].(int)),
 			Height:             helper.IntUint64(video["height"].(int)),
 			FillType:           helper.String(video["fill_type"].(string)),
-			Vcrf:               helper.IntUint64(video["vcrf"].(int)),
-			Gop:                helper.IntUint64(video["gop"].(int)),
-			PreserveHDRSwitch:  helper.String(video["preserve_hdr_switch"].(string)),
-			CodecTag:           helper.String(video["codec_tag"].(string)),
 		}
-		if v, ok := d.GetOkExists(fmt.Sprintf("stream_info.%d.vcrf", idx)); ok {
+		var rVideo uint64
+		if v, ok := video["remove_video"]; ok && v.(bool) {
+			rVideo = REMOVE_AUDIO_TO_UNINT[v.(bool)]
+		}
+		if v, ok := video["vcrf"]; ok && v.(int) != 0 {
 			videoTemplateInfo.Vcrf = helper.IntUint64(v.(int))
 		}
-		if v, ok := d.GetOkExists(fmt.Sprintf("stream_info.%d.gop", idx)); ok {
+		if v, ok := video["gop"]; ok {
 			videoTemplateInfo.Gop = helper.IntUint64(v.(int))
 		}
+		if v, ok := video["preserve_hdr_switch"]; ok && v.(string) != "" {
+			videoTemplateInfo.PreserveHDRSwitch = helper.String(v.(string))
+		}
+		if v, ok := video["codec_tag"]; ok && v.(string) != "" {
+			videoTemplateInfo.CodecTag = helper.String(v.(string))
+		}
+
 		var tehdConfig map[string]interface{}
 		if len(v["tehd_config"].([]interface{})) > 0 {
 			tehdConfig = v["tehd_config"].([]interface{})[0].(map[string]interface{})
@@ -320,10 +326,13 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 				if tehdConfig == nil {
 					return nil
 				}
-				return &vod.TEHDConfig{
-					Type:            helper.String(tehdConfig["type"].(string)),
-					MaxVideoBitrate: helper.IntUint64(tehdConfig["max_video_bitrate"].(int)),
+				tehd := &vod.TEHDConfig{
+					Type: helper.String(tehdConfig["type"].(string)),
 				}
+				if v, ok := tehdConfig["max_video_bitrate"]; ok {
+					tehd.MaxVideoBitrate = helper.IntUint64(v.(int))
+				}
+				return tehd
 			}(),
 		})
 	}
@@ -510,7 +519,10 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 				tehdConfig = v["tehd_config"].([]interface{})[0].(map[string]interface{})
 			}
 			rAudio := REMOVE_AUDIO_TO_UNINT[v["remove_audio"].(bool)]
-			rVideo := REMOVE_AUDIO_TO_UNINT[v["remove_video"].(bool)]
+			var rVideo uint64
+			if v, ok := video["remove_video"]; ok && v.(bool) {
+				rVideo = REMOVE_AUDIO_TO_UNINT[v.(bool)]
+			}
 			request.StreamInfos = append(request.StreamInfos, &vod.AdaptiveStreamTemplate{
 				Video: &vod.VideoTemplateInfo{
 					Codec:              helper.String(video["codec"].(string)),
@@ -529,11 +541,31 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 						}
 						return helper.IntUint64(height)
 					}(video["height"].(int)),
-					FillType:          helper.String(video["fill_type"].(string)),
-					Vcrf:              helper.IntUint64(video["vcrf"].(int)),
-					Gop:               helper.IntUint64(video["gop"].(int)),
-					PreserveHDRSwitch: helper.String(video["preserve_hdr_switch"].(string)),
-					CodecTag:          helper.String(video["codec_tag"].(string)),
+					FillType: helper.String(video["fill_type"].(string)),
+					Vcrf: func() *uint64 {
+						if v, ok := video["vcrf"]; !ok || v.(int) == 0 {
+							return nil
+						}
+						return helper.IntUint64(video["vcrf"].(int))
+					}(),
+					Gop: func() *uint64 {
+						if _, ok := video["gop"]; !ok {
+							return nil
+						}
+						return helper.IntUint64(video["gop"].(int))
+					}(),
+					PreserveHDRSwitch: func() *string {
+						if v, ok := video["preserve_hdr_switch"]; !ok || v.(string) == "" {
+							return nil
+						}
+						return helper.String(video["preserve_hdr_switch"].(string))
+					}(),
+					CodecTag: func() *string {
+						if v, ok := video["codec_tag"]; !ok || v.(string) == "" {
+							return nil
+						}
+						return helper.String(video["codec_tag"].(string))
+					}(),
 				},
 				Audio: &vod.AudioTemplateInfo{
 					Codec:        helper.String(audio["codec"].(string)),
@@ -547,10 +579,13 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 					if tehdConfig == nil {
 						return nil
 					}
-					return &vod.TEHDConfig{
-						Type:            helper.String(tehdConfig["type"].(string)),
-						MaxVideoBitrate: helper.IntUint64(tehdConfig["max_video_bitrate"].(int)),
+					tehd := &vod.TEHDConfig{
+						Type: helper.String(tehdConfig["type"].(string)),
 					}
+					if v, ok := tehdConfig["max_video_bitrate"]; ok {
+						tehd.MaxVideoBitrate = helper.IntUint64(v.(int))
+					}
+					return tehd
 				}(),
 			})
 		}

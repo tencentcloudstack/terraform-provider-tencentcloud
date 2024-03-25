@@ -68,7 +68,7 @@ func ResourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
 			"sub_app_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.",
+				Description: "The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.",
 			},
 			"fill_type": {
 				Type:        schema.TypeString,

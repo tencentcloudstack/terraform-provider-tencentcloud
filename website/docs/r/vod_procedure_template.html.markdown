@@ -150,7 +150,7 @@ The following arguments are supported:
 * `comment` - (Optional, String) Template description. Length limit: 256 characters.
 * `media_process_task` - (Optional, List) Parameter of video processing task.
 * `review_audio_video_task` - (Optional, List) Type parameter of AI-based content recognition task.
-* `sub_app_id` - (Optional, Int) Subapplication ID in VOD. For customers who activate VOD from December 25, 2023, if they access the resources in the VOD application (whether it is the default application or the newly created application), you must fill in this field as Application ID.
+* `sub_app_id` - (Optional, Int) The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.
 
 The `adaptive_dynamic_streaming_task_list` object of `media_process_task` supports the following:
 
