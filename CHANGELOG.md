@@ -1,3 +1,14 @@
+## 1.81.84 (March 25, 2024)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_ckafka_topics: Update ckafka topics docs ([#2570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2570))
+* resource/tencentcloud_vod_adaptive_dynamic_streaming_template: Add vcrf, gop, preserve_hdr_switch, codec_tag. Adjust resource unique id to subAppId#templateId. ([#2569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2569))
+* resource/tencentcloud_vod_image_sprite_template: Add format, type. Adjust resource unique id to subAppId#templateId. ([#2569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2569))
+* resource/tencentcloud_vod_procedure_template: Update params media_process_task, add ai_analysis_task, ai_recognition_task, review_audio_video_task, type. Adjust resource unique id to subAppId#templateId. ([#2569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2569))
+* resource/tencentcloud_vod_sample_snapshot_template: Adjust resource unique id to subAppId#templateId. ([#2569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2569))
+* resource/tencentcloud_vod_snapshot_by_time_offset_template: Add type. Adjust resource unique id to subAppId#templateId. ([#2569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2569))
+
 ## 1.81.83 (March 20, 2024)
 
 FEATURES:
