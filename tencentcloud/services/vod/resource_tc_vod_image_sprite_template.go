@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -88,7 +90,17 @@ func ResourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 			"sub_app_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.",
+				Description: "The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.",
+			},
+			"format": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Image format, Valid values:\n" +
+					"- jpg: jpg format;\n" +
+					"- png: png format;\n" +
+					"- webp: webp format;\n" +
+					"Default value: jpg.",
 			},
 			// computed
 			"create_time": {
@@ -100,6 +112,13 @@ func ResourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Last modified time of template in ISO date format.",
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: "Template type, value range:\n" +
+					"- Preset: system preset template;\n" +
+					"- Custom: user-defined templates.",
 			},
 		},
 	}
@@ -125,8 +144,15 @@ func resourceTencentCloudVodImageSpriteTemplateCreate(d *schema.ResourceData, me
 	request.Width = helper.IntUint64(d.Get("width").(int))
 	request.Height = helper.IntUint64(d.Get("height").(int))
 	request.ResolutionAdaptive = helper.String(RESOLUTION_ADAPTIVE_TO_STRING[d.Get("resolution_adaptive").(bool)])
+	var resourceId string
 	if v, ok := d.GetOk("sub_app_id"); ok {
-		request.SubAppId = helper.IntUint64(v.(int))
+		subAppId := v.(int)
+		resourceId += helper.IntToStr(subAppId)
+		resourceId += tccommon.FILED_SP
+		request.SubAppId = helper.IntUint64(subAppId)
+	}
+	if v, ok := d.GetOk("format"); ok {
+		request.Format = helper.String(v.(string))
 	}
 
 	var response *vod.CreateImageSpriteTemplateResponse
@@ -135,8 +161,13 @@ func resourceTencentCloudVodImageSpriteTemplateCreate(d *schema.ResourceData, me
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateImageSpriteTemplate(request)
 		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation" && sdkError.Message == "invalid vod user" {
+					return resource.RetryableError(err)
+				}
+			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return tccommon.RetryError(err)
+			return resource.NonRetryableError(err)
 		}
 		return nil
 	})
@@ -146,7 +177,8 @@ func resourceTencentCloudVodImageSpriteTemplateCreate(d *schema.ResourceData, me
 	if response == nil || response.Response == nil {
 		return fmt.Errorf("for image sprite template creation, response is nil")
 	}
-	d.SetId(strconv.FormatUint(*response.Response.Definition, 10))
+	resourceId += strconv.FormatUint(*response.Response.Definition, 10)
+	d.SetId(resourceId)
 
 	return resourceTencentCloudVodImageSpriteTemplateRead(d, meta)
 }
@@ -158,14 +190,21 @@ func resourceTencentCloudVodImageSpriteTemplateRead(d *schema.ResourceData, meta
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		id         = d.Id()
-		subAppId   = d.Get("sub_app_id").(int)
+		subAppId   int
+		definition string
 		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		subAppId = helper.StrToInt(idSplit[0])
+		definition = idSplit[1]
+	} else {
+		definition = d.Id()
+	}
 	// waiting for refreshing cache
 	time.Sleep(30 * time.Second)
-	template, has, err := vodService.DescribeImageSpriteTemplatesById(ctx, id, subAppId)
+	template, has, err := vodService.DescribeImageSpriteTemplatesById(ctx, definition, subAppId)
 	if err != nil {
 		return err
 	}
@@ -186,6 +225,11 @@ func resourceTencentCloudVodImageSpriteTemplateRead(d *schema.ResourceData, meta
 	_ = d.Set("resolution_adaptive", *template.ResolutionAdaptive == "open")
 	_ = d.Set("create_time", template.CreateTime)
 	_ = d.Set("update_time", template.UpdateTime)
+	_ = d.Set("format", template.Format)
+	_ = d.Set("type", template.Type)
+	if subAppId != 0 {
+		_ = d.Set("sub_app_id", subAppId)
+	}
 
 	return nil
 }
@@ -196,12 +240,31 @@ func resourceTencentCloudVodImageSpriteTemplateUpdate(d *schema.ResourceData, me
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewModifyImageSpriteTemplateRequest()
-		id         = d.Id()
 		changeFlag = false
+		subAppId   int
+		definition string
 	)
 
-	idUint, _ := strconv.ParseUint(id, 0, 64)
-	request.Definition = &idUint
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		subAppId = helper.StrToInt(idSplit[0])
+		definition = idSplit[1]
+		request.SubAppId = helper.IntUint64(subAppId)
+	} else {
+		definition = d.Id()
+		if v, ok := d.GetOk("sub_app_id"); ok {
+			request.SubAppId = helper.IntUint64(v.(int))
+		}
+	}
+	request.Definition = helper.StrToUint64Point(definition)
+	immutableArgs := []string{"sub_app_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("sample_type") {
 		changeFlag = true
 		request.SampleType = helper.String(d.Get("sample_type").(string))
@@ -236,9 +299,9 @@ func resourceTencentCloudVodImageSpriteTemplateUpdate(d *schema.ResourceData, me
 		request.Height = helper.IntUint64(d.Get("height").(int))
 		request.ResolutionAdaptive = helper.String(RESOLUTION_ADAPTIVE_TO_STRING[d.Get("resolution_adaptive").(bool)])
 	}
-	if d.HasChange("sub_app_id") {
+	if d.HasChange("format") {
 		changeFlag = true
-		request.SubAppId = helper.IntUint64(d.Get("sub_app_id").(int))
+		request.Format = helper.String(d.Get("format").(string))
 	}
 
 	if changeFlag {
@@ -268,12 +331,25 @@ func resourceTencentCloudVodImageSpriteTemplateDelete(d *schema.ResourceData, me
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	id := d.Id()
+	var (
+		subAppId   int
+		definition string
+	)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		subAppId = helper.StrToInt(idSplit[0])
+		definition = idSplit[1]
+	} else {
+		definition = d.Id()
+		if v, ok := d.GetOk("sub_app_id"); ok {
+			subAppId = v.(int)
+		}
+	}
 	vodService := VodService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	if err := vodService.DeleteImageSpriteTemplate(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {
+	if err := vodService.DeleteImageSpriteTemplate(ctx, definition, uint64(subAppId)); err != nil {
 		return err
 	}
 

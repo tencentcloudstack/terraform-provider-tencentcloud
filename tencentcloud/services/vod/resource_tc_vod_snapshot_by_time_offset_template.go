@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -66,7 +68,7 @@ func ResourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
 			"sub_app_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.",
+				Description: "The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.",
 			},
 			"fill_type": {
 				Type:        schema.TypeString,
@@ -84,6 +86,13 @@ func ResourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Last modified time of template in ISO date format.",
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: "Template type, value range:\n" +
+					"- Preset: system preset template;\n" +
+					"- Custom: user-defined templates.",
 			},
 		},
 	}
@@ -107,8 +116,12 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate(d *schema.Resourc
 	if v, ok := d.GetOk("comment"); ok {
 		request.Comment = helper.String(v.(string))
 	}
+	var resourceId string
 	if v, ok := d.GetOk("sub_app_id"); ok {
-		request.SubAppId = helper.IntUint64(v.(int))
+		subAppId := v.(int)
+		resourceId += helper.IntToStr(subAppId)
+		resourceId += tccommon.FILED_SP
+		request.SubAppId = helper.IntUint64(subAppId)
 	}
 	request.FillType = helper.String(d.Get("fill_type").(string))
 
@@ -118,8 +131,13 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate(d *schema.Resourc
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateSnapshotByTimeOffsetTemplate(request)
 		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation" && sdkError.Message == "invalid vod user" {
+					return resource.RetryableError(err)
+				}
+			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return tccommon.RetryError(err)
+			return resource.NonRetryableError(err)
 		}
 		return nil
 	})
@@ -129,7 +147,8 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate(d *schema.Resourc
 	if response == nil || response.Response == nil {
 		return fmt.Errorf("for vod snapshot by time offset template creation, response is nil")
 	}
-	d.SetId(strconv.FormatUint(*response.Response.Definition, 10))
+	resourceId += strconv.FormatUint(*response.Response.Definition, 10)
+	d.SetId(resourceId)
 
 	return resourceTencentCloudVodSnapshotByTimeOffsetTemplateRead(d, meta)
 }
@@ -141,14 +160,21 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateRead(d *schema.ResourceD
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		id         = d.Id()
-		subAppId   = d.Get("sub_app_id").(int)
+		subAppId   int
+		definition string
 		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		subAppId = helper.StrToInt(idSplit[0])
+		definition = idSplit[1]
+	} else {
+		definition = d.Id()
+	}
 	// waiting for refreshing cache
 	time.Sleep(30 * time.Second)
-	template, has, err := vodService.DescribeSnapshotByTimeOffsetTemplatesById(ctx, id, subAppId)
+	template, has, err := vodService.DescribeSnapshotByTimeOffsetTemplatesById(ctx, definition, subAppId)
 	if err != nil {
 		return err
 	}
@@ -158,6 +184,7 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateRead(d *schema.ResourceD
 	}
 
 	_ = d.Set("name", template.Name)
+	_ = d.Set("type", template.Type)
 	_ = d.Set("width", template.Width)
 	_ = d.Set("height", template.Height)
 	_ = d.Set("resolution_adaptive", *template.ResolutionAdaptive == "open")
@@ -166,6 +193,9 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateRead(d *schema.ResourceD
 	_ = d.Set("fill_type", template.FillType)
 	_ = d.Set("create_time", template.CreateTime)
 	_ = d.Set("update_time", template.UpdateTime)
+	if subAppId != 0 {
+		_ = d.Set("sub_app_id", subAppId)
+	}
 
 	return nil
 }
@@ -176,12 +206,33 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateUpdate(d *schema.Resourc
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewModifySnapshotByTimeOffsetTemplateRequest()
-		id         = d.Id()
+		subAppId   int
+		definition string
 		changeFlag = false
 	)
 
-	idUint, _ := strconv.ParseUint(id, 0, 64)
-	request.Definition = &idUint
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		subAppId = helper.StrToInt(idSplit[0])
+		definition = idSplit[1]
+		request.SubAppId = helper.IntUint64(subAppId)
+	} else {
+		definition = d.Id()
+		if v, ok := d.GetOk("sub_app_id"); ok {
+			request.SubAppId = helper.IntUint64(v.(int))
+		}
+	}
+
+	request.Definition = helper.StrToUint64Point(definition)
+
+	immutableArgs := []string{"sub_app_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("name") {
 		changeFlag = true
 		request.Name = helper.String(d.Get("name").(string))
@@ -199,10 +250,6 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateUpdate(d *schema.Resourc
 	if d.HasChange("comment") {
 		changeFlag = true
 		request.Comment = helper.String(d.Get("comment").(string))
-	}
-	if d.HasChange("sub_app_id") {
-		changeFlag = true
-		request.SubAppId = helper.IntUint64(d.Get("sub_app_id").(int))
 	}
 	if d.HasChange("fill_type") {
 		changeFlag = true
@@ -236,12 +283,25 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateDelete(d *schema.Resourc
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	id := d.Id()
+	var (
+		subAppId   int
+		definition string
+	)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 2 {
+		subAppId = helper.StrToInt(idSplit[0])
+		definition = idSplit[1]
+	} else {
+		definition = d.Id()
+		if v, ok := d.GetOk("sub_app_id"); ok {
+			subAppId = v.(int)
+		}
+	}
 	vodService := VodService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	if err := vodService.DeleteSnapshotByTimeOffsetTemplate(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {
+	if err := vodService.DeleteSnapshotByTimeOffsetTemplate(ctx, definition, uint64(subAppId)); err != nil {
 		return err
 	}
 

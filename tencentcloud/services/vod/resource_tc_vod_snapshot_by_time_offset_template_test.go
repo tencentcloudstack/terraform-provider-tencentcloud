@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svcvod "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -74,6 +76,7 @@ func TestAccTencentCloudVodSnapshotByTimeOffsetTemplateResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "fill_type", "white"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_snapshot_by_time_offset_template.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_snapshot_by_time_offset_template.foo", "update_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_snapshot_by_time_offset_template.foo", "type"),
 				),
 			},
 			{
@@ -89,10 +92,9 @@ func TestAccTencentCloudVodSnapshotByTimeOffsetTemplateResource(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_vod_snapshot_by_time_offset_template.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"sub_app_id"},
+				ResourceName:      "tencentcloud_vod_snapshot_by_time_offset_template.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -107,11 +109,13 @@ func testAccCheckVodSnapshotByTimeOffsetTemplateDestroy(s *terraform.State) erro
 		if rs.Type != "tencentcloud_vod_snapshot_by_time_offset_template" {
 			continue
 		}
-		var (
-			filter = map[string]interface{}{
-				"definitions": []string{rs.Primary.ID},
-			}
-		)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
+		subAppId := helper.StrToInt(idSplit[0])
+		definition := idSplit[1]
+		filter := map[string]interface{}{
+			"definitions": []string{definition},
+			"sub_appid":   subAppId,
+		}
 
 		templates, err := vodService.DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx, filter)
 		if err != nil {
@@ -139,11 +143,13 @@ func testAccCheckVodSnapshotByTimeOffsetTemplateExists(n string) resource.TestCh
 		}
 		vodService := svcvod.NewVodService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
-		var (
-			filter = map[string]interface{}{
-				"definitions": []string{rs.Primary.ID},
-			}
-		)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
+		subAppId := helper.StrToInt(idSplit[0])
+		definition := idSplit[1]
+		filter := map[string]interface{}{
+			"definitions": []string{definition},
+			"sub_appid":   subAppId,
+		}
 		templates, err := vodService.DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
@@ -156,8 +162,15 @@ func testAccCheckVodSnapshotByTimeOffsetTemplateExists(n string) resource.TestCh
 }
 
 const testAccVodSnapshotByTimeOffsetTemplate = `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "sbtot-subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   width               = 128
   height              = 128
   resolution_adaptive = false
@@ -168,8 +181,15 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
 `
 
 const testAccVodSnapshotByTimeOffsetTemplateUpdate = `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "sbtot-subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot-update"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   width               = 129
   height              = 129
   resolution_adaptive = true

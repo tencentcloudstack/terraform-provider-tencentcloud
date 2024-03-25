@@ -178,13 +178,18 @@ func resourceTencentCloudVodSampleSnapshotTemplateRead(d *schema.ResourceData, m
 
 	service := VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
+	var (
+		subAppId   int
+		definition string
+	)
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("sample snapshot id is borken, id is %s", d.Id())
+	if len(idSplit) == 2 {
+		subAppId = helper.StrToInt(idSplit[0])
+		definition = idSplit[1]
+	} else {
+		definition = d.Id()
 	}
-	subAppId := idSplit[0]
-	definition := idSplit[1]
-	sampleSnapshotTemplate, err := service.DescribeVodSampleSnapshotTemplateById(ctx, helper.StrToUInt64(subAppId), helper.StrToUInt64(definition))
+	sampleSnapshotTemplate, err := service.DescribeVodSampleSnapshotTemplateById(ctx, uint64(subAppId), helper.StrToUInt64(definition))
 	if err != nil {
 		return err
 	}
@@ -195,7 +200,9 @@ func resourceTencentCloudVodSampleSnapshotTemplateRead(d *schema.ResourceData, m
 		return nil
 	}
 
-	_ = d.Set("sub_app_id", helper.StrToInt(subAppId))
+	if subAppId != 0 {
+		_ = d.Set("sub_app_id", subAppId)
+	}
 	if sampleSnapshotTemplate.SampleType != nil {
 		_ = d.Set("sample_type", sampleSnapshotTemplate.SampleType)
 	}
@@ -294,7 +301,13 @@ func resourceTencentCloudVodSampleSnapshotTemplateUpdate(d *schema.ResourceData,
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySampleSnapshotTemplate(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation" && sdkError.Message == "invalid vod user" {
+					return resource.RetryableError(e)
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.NonRetryableError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}

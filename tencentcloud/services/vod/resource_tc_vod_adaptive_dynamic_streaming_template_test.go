@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svcvod "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -53,7 +55,6 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 			{
 				Config: testAccVodAdaptiveDynamicStreamingTemplate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVodAdaptiveDynamicStreamingTemplateExists("tencentcloud_vod_adaptive_dynamic_streaming_template.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "format", "HLS"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "name", "tf-adaptive"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "drm_type", "SimpleAES"),
@@ -81,6 +82,7 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.remove_audio", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "update_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "sub_app_id"),
 				),
 			},
 			{
@@ -104,13 +106,14 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.sample_rate", "44100"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.audio_channel", "dual"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.remove_audio", "false"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "sub_app_id"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.tehd_config.0.type", "TEHD-100"),
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_vod_adaptive_dynamic_streaming_template.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"sub_app_id"},
+				ResourceName:      "tencentcloud_vod_adaptive_dynamic_streaming_template.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -125,11 +128,13 @@ func testAccCheckVodAdaptiveDynamicStreamingTemplateDestroy(s *terraform.State) 
 		if rs.Type != "tencentcloud_vod_adaptive_dynamic_streaming_template" {
 			continue
 		}
-		var (
-			filter = map[string]interface{}{
-				"definitions": []string{rs.Primary.ID},
-			}
-		)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
+		subAppId := helper.StrToInt(idSplit[0])
+		definition := idSplit[1]
+		filter := map[string]interface{}{
+			"definitions": []string{definition},
+			"sub_appid":   subAppId,
+		}
 
 		templates, err := vodService.DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx, filter)
 		if err != nil {
@@ -156,9 +161,13 @@ func testAccCheckVodAdaptiveDynamicStreamingTemplateExists(n string) resource.Te
 			return fmt.Errorf("vod adaptive dynamic streaming template id is not set")
 		}
 		vodService := svcvod.NewVodService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
+		subAppId := helper.StrToInt(idSplit[0])
+		definition := idSplit[1]
 		var (
 			filter = map[string]interface{}{
-				"definitions": []string{rs.Primary.ID},
+				"definitions": []string{definition},
+				"sub_appid":   subAppId,
 			}
 		)
 
@@ -174,9 +183,16 @@ func testAccCheckVodAdaptiveDynamicStreamingTemplateExists(n string) resource.Te
 }
 
 const testAccVodAdaptiveDynamicStreamingTemplate = `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "adaptive-subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   drm_type                        = "SimpleAES"
   disable_higher_video_bitrate    = false
   disable_higher_video_resolution = false
@@ -212,9 +228,16 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
 `
 
 const testAccVodAdaptiveDynamicStreamingTemplateUpdate = `
+resource  "tencentcloud_vod_sub_application" "sub_application" {
+	name = "adaptive-subapplication"
+	status = "On"
+	description = "this is sub application"
+}
+
 resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive-update"
+  sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
   drm_type                        = "SimpleAES"
   disable_higher_video_bitrate    = true
   disable_higher_video_resolution = true
@@ -237,6 +260,9 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       audio_channel = "dual"
     }
     remove_audio = false
+	tehd_config {
+		type = "TEHD-100"
+	}
   }
 }
 `

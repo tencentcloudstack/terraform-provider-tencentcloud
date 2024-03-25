@@ -35,7 +35,7 @@ The following arguments are supported:
 * `format` - (Optional, String) Image format. Valid values: `jpg`, `png`. Default value: `jpg`.
 * `height` - (Optional, Int) Maximum value of the `height` (or short side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`.
 * `resolution_adaptive` - (Optional, Bool) Resolution adaption. Valid values: `true`,`false`. `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`.
-* `sub_app_id` - (Optional, Int) Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.
+* `sub_app_id` - (Optional, Int) The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.
 * `width` - (Optional, Int) Maximum value of the `width` (or long side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, width will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`.
 
 ## Attributes Reference
@@ -44,14 +44,17 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Creation time of template in ISO date format.
+* `type` - Template type, value range:
+- Preset: system preset template;
+- Custom: user-defined templates.
 * `update_time` - Last modified time of template in ISO date format.
 
 
 ## Import
 
-VOD snapshot by time offset template can be imported using the id, e.g.
+VOD snapshot by time offset template can be imported using the id($subAppId#$templateId), e.g.
 
 ```
-$ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo 46906
+$ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo $subAppId#$templateId
 ```
 

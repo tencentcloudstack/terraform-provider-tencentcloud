@@ -2,6 +2,7 @@ package vod
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -43,7 +44,7 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 			"sub_app_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Subapplication ID in VOD. For customers who activate VOD from December 25, 2023, if they access the resources in the VOD application (whether it is the default application or the newly created application), you must fill in this field as Application ID.",
+				Description: "The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.",
 			},
 			"media_process_task": {
 				Type:        schema.TypeList,
@@ -121,6 +122,68 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 											},
 										},
 									},
+									"trace_watermark": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Digital watermark.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Whether to use digital watermarks. This parameter is required. Valid values: ON, OFF.",
+												},
+											},
+										},
+									},
+									"copy_right_watermark": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "opyright watermark.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"text": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Copyright information, maximum length is 200 characters.",
+												},
+											},
+										},
+									},
+									"head_tail_list": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										Description: "List of video opening/closing credits configuration template IDs. You can enter up to 10 IDs.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"definition": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Video opening/closing credits configuration template ID.",
+												},
+											},
+										},
+									},
+									"start_time_offset": {
+										Type:        schema.TypeFloat,
+										Optional:    true,
+										Computed:    true,
+										Description: "Start time offset of blur in seconds. If this parameter is left empty or `0` is entered, the blur will appear upon the first video frame. If this parameter is left empty or `0` is entered, the blur will appear upon the first video frame; If this value is greater than `0` (e.g., n), the blur will appear at second n after the first video frame; If this value is smaller than `0` (e.g., -n), the blur will appear at second n before the last video frame.",
+									},
+									"end_time_offset": {
+										Type:        schema.TypeFloat,
+										Optional:    true,
+										Computed:    true,
+										Description: "End time offset of blur in seconds. If this parameter is left empty or `0` is entered, the blur will exist till the last video frame; If this value is greater than `0` (e.g., n), the blur will exist till second n; If this value is smaller than `0` (e.g., -n), the blur will exist till second n before the last video frame.",
+									},
 								},
 							},
 						},
@@ -173,6 +236,15 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 										MaxItems:    10,
 										Description: "List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.",
 										Elem:        VodWatermarkResource(),
+									},
+									"time_offset_list": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										Description: "List of time points for screencapturing in milliseconds. Note: this field may return null, indicating that no valid values can be obtained.",
+										Elem: &schema.Schema{
+											Type: schema.TypeFloat,
+										},
 									},
 								},
 							},
@@ -268,6 +340,62 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 					},
 				},
 			},
+			"ai_analysis_task": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Parameter of AI-based content analysis task.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"definition": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Video content analysis template ID.",
+						},
+					},
+				},
+			},
+			"ai_recognition_task": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Type parameter of AI-based content recognition task.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"definition": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Intelligent video recognition template ID.",
+						},
+					},
+				},
+			},
+			"review_audio_video_task": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Type parameter of AI-based content recognition task.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"review_contents": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "The type of moderated content. Valid values:\n" +
+								"- `Media`: The original audio/video;\n" +
+								"- `Cover`: Thumbnails.",
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -277,6 +405,13 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Last modified time of template in ISO date format.",
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: "Template type, value range:\n" +
+					"- Preset: system preset template;\n" +
+					"- Custom: user-defined templates.",
 			},
 		},
 	}
@@ -407,6 +542,68 @@ func generateMediaProcessTask(d *schema.ResourceData) (mediaReq *vod.MediaProces
 				}(item["definition"].(string)),
 				WatermarkSet: genWatermarkList(item),
 				MosaicSet:    genMosaicList(item),
+				TraceWatermark: func() *vod.TraceWatermarkInput {
+					if _, ok := item["trace_watermark"]; !ok {
+						return nil
+					}
+					traceWatermarks := item["trace_watermark"].([]interface{})
+					if len(traceWatermarks) <= 0 {
+						return nil
+					}
+					traceWatermarkInput := &vod.TraceWatermarkInput{}
+					traceWatermarkItem := traceWatermarks[0].(map[string]interface{})
+					if v, ok := traceWatermarkItem["switch"]; ok {
+						traceWatermarkInput.Switch = helper.String(v.(string))
+					}
+					return traceWatermarkInput
+				}(),
+				CopyRightWatermark: func() *vod.CopyRightWatermarkInput {
+					if _, ok := item["copy_right_watermark"]; !ok {
+						return nil
+					}
+					copyRightWatermarks := item["copy_right_watermark"].([]interface{})
+					if len(copyRightWatermarks) <= 0 {
+						return nil
+					}
+
+					copyRightWatermarkInput := &vod.CopyRightWatermarkInput{}
+					copyRightWatermarkItem := copyRightWatermarks[0].(map[string]interface{})
+					if vv, ok := copyRightWatermarkItem["text"]; ok {
+						copyRightWatermarkInput = &vod.CopyRightWatermarkInput{
+							Text: helper.String(vv.(string)),
+						}
+					}
+					return copyRightWatermarkInput
+				}(),
+				HeadTailSet: func() (list []*vod.HeadTailTaskInput) {
+					if _, ok := item["head_tail_list"]; !ok {
+						return
+					}
+					headTailSet := item["head_tail_list"].([]interface{})
+					list = make([]*vod.HeadTailTaskInput, 0, len(headTailSet))
+					for _, headTail := range headTailSet {
+						headTailMap := headTail.(map[string]interface{})
+						list = append(list, &vod.HeadTailTaskInput{
+							Definition: func(str string) *int64 {
+								definition, _ := strconv.ParseInt(str, 0, 64)
+								return &definition
+							}(headTailMap["definition"].(string)),
+						})
+					}
+					return
+				}(),
+				StartTimeOffset: func() *float64 {
+					if _, ok := item["start_time_offset"]; !ok {
+						return nil
+					}
+					return helper.Float64(item["start_time_offset"].(float64))
+				}(),
+				EndTimeOffset: func() *float64 {
+					if _, ok := item["end_time_offset"]; !ok {
+						return nil
+					}
+					return helper.Float64(item["end_time_offset"].(float64))
+				}(),
 			})
 		}
 		mediaReq.TranscodeTaskSet = transcodeReq
@@ -448,6 +645,17 @@ func generateMediaProcessTask(d *schema.ResourceData) (mediaReq *vod.MediaProces
 					list = make([]*string, 0, len(extTimeV))
 					for _, extTimeVV := range extTimeV {
 						list = append(list, helper.String(extTimeVV.(string)))
+					}
+					return list
+				}(),
+				TimeOffsetSet: func() (list []*float64) {
+					if _, ok := item["time_offset_list"]; !ok {
+						return nil
+					}
+					timeOffsetSet := item["time_offset_list"].([]interface{})
+					list = make([]*float64, 0, len(timeOffsetSet))
+					for _, timeOffset := range timeOffsetSet {
+						list = append(list, helper.Float64(timeOffset.(float64)))
 					}
 					return list
 				}(),
@@ -549,7 +757,44 @@ func resourceTencentCloudVodProcedureTemplateCreate(d *schema.ResourceData, meta
 		mediaReq := generateMediaProcessTask(d)
 		request.MediaProcessTask = mediaReq
 	}
+	//ai_analysis_task
+	if aiAnalysisTask, ok := d.GetOk("ai_analysis_task"); ok {
+		aiAnalysisTaskList := aiAnalysisTask.([]interface{})
+		aiAnalysisTaskItem := aiAnalysisTaskList[0].(map[string]interface{})
 
+		request.AiAnalysisTask = &vod.AiAnalysisTaskInput{
+			Definition: helper.StrToUint64Point(aiAnalysisTaskItem["definition"].(string)),
+		}
+	}
+	//ai_recognition_task
+	if aiRecognitionTask, ok := d.GetOk("ai_recognition_task"); ok {
+		aiRecognitionTaskList := aiRecognitionTask.([]interface{})
+		aiRecognitionTaskItem := aiRecognitionTaskList[0].(map[string]interface{})
+
+		request.AiRecognitionTask = &vod.AiRecognitionTaskInput{
+			Definition: helper.StrToUint64Point(aiRecognitionTaskItem["definition"].(string)),
+		}
+	}
+	//review_audio_video_task
+	if reviewAudioVideoTask, ok := d.GetOk("review_audio_video_task"); ok {
+		reviewAudioVideoTaskList := reviewAudioVideoTask.([]interface{})
+		reviewAudioVideoTaskItem := reviewAudioVideoTaskList[0].(map[string]interface{})
+
+		request.ReviewAudioVideoTask = &vod.ProcedureReviewAudioVideoTaskInput{
+			Definition: helper.StrToUint64Point(reviewAudioVideoTaskItem["definition"].(string)),
+			ReviewContents: func() (list []*string) {
+				if _, ok := reviewAudioVideoTaskItem["review_contents"]; !ok {
+					return
+				}
+				reviewContentList := reviewAudioVideoTaskItem["review_contents"].([]interface{})
+				list = make([]*string, 0, len(reviewContentList))
+				for _, reviewContent := range reviewContentList {
+					list = append(list, helper.String(reviewContent.(string)))
+				}
+				return
+			}(),
+		}
+	}
 	var err error
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -599,6 +844,7 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 	}
 
 	_ = d.Set("name", template.Name)
+	_ = d.Set("type", template.Type)
 	_ = d.Set("comment", template.Comment)
 	_ = d.Set("create_time", template.CreateTime)
 	_ = d.Set("update_time", template.UpdateTime)
@@ -648,6 +894,48 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 						}
 						return mosaicList
 					}(),
+					"trace_watermark": func() interface{} {
+						if item.TraceWatermark == nil {
+							return nil
+						}
+						traceWatermark := map[string]interface{}{
+							"switch": item.TraceWatermark.Switch,
+						}
+						return []interface{}{traceWatermark}
+					}(),
+					"copy_right_watermark": func() interface{} {
+						if item.CopyRightWatermark == nil {
+							return nil
+						}
+						copyRightWatermark := map[string]interface{}{
+							"text": item.CopyRightWatermark.Text,
+						}
+						return []interface{}{copyRightWatermark}
+					}(),
+					"head_tail_list": func() interface{} {
+						if item.HeadTailSet == nil {
+							return nil
+						}
+						headTailList := make([]interface{}, 0, len(item.HeadTailSet))
+						for _, headTail := range item.HeadTailSet {
+							headTailList = append(headTailList, map[string]interface{}{
+								"definition": headTail.Definition,
+							})
+						}
+						return headTailList
+					}(),
+					"start_time_offset": func() *float64 {
+						if item.StartTimeOffset == nil {
+							return nil
+						}
+						return item.StartTimeOffset
+					}(),
+					"end_time_offset": func() *float64 {
+						if item.EndTimeOffset == nil {
+							return nil
+						}
+						return item.EndTimeOffset
+					}(),
 				})
 			}
 			mediaProcessTaskElem["transcode_task_list"] = list
@@ -695,6 +983,16 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 							extList = append(extList, extV)
 						}
 						return extList
+					}(),
+					"time_offset_list": func() interface{} {
+						if item.TimeOffsetSet == nil {
+							return nil
+						}
+						timeOffsetList := make([]interface{}, 0, len(item.TimeOffsetSet))
+						for _, timeOffset := range item.TimeOffsetSet {
+							timeOffsetList = append(timeOffsetList, timeOffset)
+						}
+						return timeOffsetList
 					}(),
 				})
 			}
@@ -793,7 +1091,30 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 
 		_ = d.Set("media_process_task", []interface{}{mediaProcessTaskElem})
 	}
-
+	aiAnalysisTask := make(map[string]interface{})
+	if template.AiAnalysisTask != nil && template.AiAnalysisTask.Definition != nil {
+		aiAnalysisTask["definition"] = template.AiAnalysisTask.Definition
+	}
+	_ = d.Set("ai_analysis_task", []interface{}{aiAnalysisTask})
+	aiRecognitionTask := make(map[string]interface{})
+	if template.AiRecognitionTask != nil && template.AiRecognitionTask.Definition != nil {
+		aiRecognitionTask["definition"] = template.AiRecognitionTask.Definition
+	}
+	_ = d.Set("ai_recognition_task", []interface{}{aiRecognitionTask})
+	reviewAudioVideoTask := make(map[string]interface{})
+	if template.ReviewAudioVideoTask != nil {
+		if template.ReviewAudioVideoTask.Definition != nil {
+			reviewAudioVideoTask["definition"] = template.ReviewAudioVideoTask.Definition
+		}
+		if template.ReviewAudioVideoTask.ReviewContents != nil {
+			reviewContentList := make([]string, 0, len(template.ReviewAudioVideoTask.ReviewContents))
+			for _, revireviewContent := range template.ReviewAudioVideoTask.ReviewContents {
+				reviewContentList = append(reviewContentList, *revireviewContent)
+			}
+			reviewAudioVideoTask["review_contents"] = reviewContentList
+		}
+	}
+	_ = d.Set("review_audio_video_task", []interface{}{reviewAudioVideoTask})
 	return nil
 }
 
@@ -819,6 +1140,14 @@ func resourceTencentCloudVodProcedureTemplateUpdate(d *schema.ResourceData, meta
 		}
 	}
 
+	immutableArgs := []string{"sub_app_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("comment") {
 		changeFlag = true
 		request.Comment = helper.String(d.Get("comment").(string))
@@ -828,6 +1157,51 @@ func resourceTencentCloudVodProcedureTemplateUpdate(d *schema.ResourceData, meta
 		changeFlag = true
 		mediaReq := generateMediaProcessTask(d)
 		request.MediaProcessTask = mediaReq
+	}
+
+	if d.HasChange("ai_analysis_task") {
+		changeFlag = true
+		if aiAnalysisTask, ok := d.GetOk("ai_analysis_task"); ok {
+			aiAnalysisTaskList := aiAnalysisTask.([]interface{})
+			aiAnalysisTaskItem := aiAnalysisTaskList[0].(map[string]interface{})
+
+			request.AiAnalysisTask = &vod.AiAnalysisTaskInput{
+				Definition: helper.StrToUint64Point(aiAnalysisTaskItem["definition"].(string)),
+			}
+		}
+	}
+
+	if d.HasChange("ai_recognition_task") {
+		changeFlag = true
+		if aiRecognitionTask, ok := d.GetOk("ai_recognition_task"); ok {
+			aiRecognitionTaskList := aiRecognitionTask.([]interface{})
+			aiRecognitionTaskItem := aiRecognitionTaskList[0].(map[string]interface{})
+
+			request.AiRecognitionTask = &vod.AiRecognitionTaskInput{
+				Definition: helper.StrToUint64Point(aiRecognitionTaskItem["definition"].(string)),
+			}
+		}
+	}
+	if d.HasChange("review_audio_video_task") {
+		changeFlag = true
+		if reviewAudioVideoTask, ok := d.GetOk("review_audio_video_task"); ok {
+			reviewAudioVideoTaskList := reviewAudioVideoTask.([]interface{})
+			reviewAudioVideoTaskItem := reviewAudioVideoTaskList[0].(map[string]interface{})
+			request.ReviewAudioVideoTask = &vod.ProcedureReviewAudioVideoTaskInput{
+				Definition: helper.StrToUint64Point(reviewAudioVideoTaskItem["definition"].(string)),
+				ReviewContents: func() (list []*string) {
+					if _, ok := reviewAudioVideoTaskItem["review_contents"]; !ok {
+						return
+					}
+					reviewContentList := reviewAudioVideoTaskItem["review_contents"].([]interface{})
+					list = make([]*string, 0, len(reviewContentList))
+					for _, reviewContent := range reviewContentList {
+						list = append(list, helper.String(reviewContent.(string)))
+					}
+					return
+				}(),
+			}
+		}
 	}
 
 	if changeFlag {

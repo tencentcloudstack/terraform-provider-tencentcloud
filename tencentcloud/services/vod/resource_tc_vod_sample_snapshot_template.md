@@ -25,7 +25,7 @@ resource "tencentcloud_vod_sample_snapshot_template" "sample_snapshot_template" 
 
 Import
 
-vod snapshot template can be imported using the id, e.g.
+vod snapshot template can be imported using the id($subAppId#$templateId), e.g.
 
 ```
 terraform import tencentcloud_vod_sample_snapshot_template.sample_snapshot_template $subAppId#$templateId

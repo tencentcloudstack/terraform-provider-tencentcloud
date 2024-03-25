@@ -75,9 +75,12 @@ func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesById(ctx context.
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
-			"sub_appid":   subAppId,
 		}
 	)
+
+	if subAppId != 0 {
+		filter["sub_appid"] = subAppId
+	}
 
 	templates, errRet := me.DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx, filter)
 	if errRet != nil {
@@ -369,10 +372,12 @@ func (me *VodService) DescribeImageSpriteTemplatesById(ctx context.Context, temp
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
-			"sub_appid":   subAppId,
 		}
 	)
 
+	if subAppId != 0 {
+		filter["sub_appid"] = subAppId
+	}
 	templates, errRet := me.DescribeImageSpriteTemplatesByFilter(ctx, filter)
 	if errRet != nil {
 		return
@@ -515,7 +520,9 @@ func (me *VodService) DescribeVodSampleSnapshotTemplateById(ctx context.Context,
 	logId := tccommon.GetLogId(ctx)
 
 	request := vod.NewDescribeSampleSnapshotTemplatesRequest()
-	request.SubAppId = helper.Uint64(subAppId)
+	if subAppId != 0 {
+		request.SubAppId = helper.Uint64(subAppId)
+	}
 	request.Definitions = []*uint64{helper.Uint64(definition)}
 
 	defer func() {
