@@ -301,7 +301,13 @@ func resourceTencentCloudVodSampleSnapshotTemplateUpdate(d *schema.ResourceData,
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySampleSnapshotTemplate(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation" && sdkError.Message == "invalid vod user" {
+					return resource.RetryableError(e)
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.NonRetryableError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
