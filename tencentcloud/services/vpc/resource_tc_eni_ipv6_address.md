@@ -1,6 +1,4 @@
-Provides a resource to create a vpc ipv6_eni_address
-
-~> **NOTE:** It has been deprecated and replaced by `tencentcloud_eni_ipv6_address`.
+Provides a resource to create a vpc eni_ipv6_address
 
 Example Usage
 
@@ -32,12 +30,16 @@ resource "tencentcloud_vpc_ipv6_cidr_block" "example" {
   vpc_id = tencentcloud_vpc.vpc.id
 }
 
-resource "tencentcloud_vpc_ipv6_eni_address" "ipv6_eni_address" {
-  vpc_id               = tencentcloud_vpc.vpc.id
+resource "tencentcloud_eni_ipv6_address" "ipv6_eni_address" {
   network_interface_id = tencentcloud_eni.eni.id
-  ipv6_addresses {
-    address     = "xxxxxxxxxxxxxx"
-    description = "desc."
-  }
+  ipv6_address_count   = 1
 }
+```
+
+Import
+
+vpc eni_ipv6_address can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_eni_ipv6_address.ipv6_eni_address eni_id
 ```

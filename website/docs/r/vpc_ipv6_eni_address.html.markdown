@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a vpc ipv6_eni_address
 
+~> **NOTE:** It has been deprecated and replaced by `tencentcloud_eni_ipv6_address`.
+
 ## Example Usage
 
 ```hcl
@@ -45,7 +47,7 @@ resource "tencentcloud_vpc_ipv6_eni_address" "ipv6_eni_address" {
   vpc_id               = tencentcloud_vpc.vpc.id
   network_interface_id = tencentcloud_eni.eni.id
   ipv6_addresses {
-    address     = tencentcloud_vpc_ipv6_cidr_block.example.ipv6_cidr_block
+    address     = "xxxxxxxxxxxxxx"
     description = "desc."
   }
 }
