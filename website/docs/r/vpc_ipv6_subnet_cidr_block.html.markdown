@@ -37,7 +37,7 @@ resource "tencentcloud_vpc_ipv6_subnet_cidr_block" "example" {
   vpc_id = tencentcloud_vpc.vpc.id
   ipv6_subnet_cidr_blocks {
     subnet_id       = tencentcloud_subnet.subnet.id
-    ipv6_cidr_block = tencentcloud_vpc_ipv6_cidr_block.example.ipv6_cidr_block
+    ipv6_cidr_block = "xxxxxxxxx"
   }
 }
 ```
