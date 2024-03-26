@@ -22,7 +22,7 @@ func ResourceTencentCloudVpcIpv6EniAddress() *schema.Resource {
 		Read:               resourceTencentCloudVpcIpv6EniAddressRead,
 		Update:             resourceTencentCloudVpcIpv6EniAddressUpdate,
 		Delete:             resourceTencentCloudVpcIpv6EniAddressDelete,
-		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.84.5. Please use 'tencentcloud_eni_ipv6_address' instead.",
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.81.85. Please use 'tencentcloud_eni_ipv6_address' instead.",
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {
 				Required:    true,
