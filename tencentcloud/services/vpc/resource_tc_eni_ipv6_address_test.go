@@ -22,7 +22,6 @@ func TestAccTencentCloudNeedFixEniIpv6AddressResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					//testAccCheckBandwidthPackageAttachmentExists("tencentcloud_vpc_ipv6_eni_address"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eni_ipv6_address.ipv6_eni_address", "network_interface_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eni_ipv6_address.ipv6_eni_address", "ipv6_addresses"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eni_ipv6_address.ipv6_eni_address", "ipv6_addresses.0.address"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eni_ipv6_address.ipv6_eni_address", "ipv6_addresses.0.primary"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eni_ipv6_address.ipv6_eni_address", "ipv6_addresses.0.address_id"),
