@@ -1,3 +1,10 @@
+## 1.81.85 (March 27, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_eni_ipv4_address` ([#2574](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2574))
+* **New Resource:** `tencentcloud_eni_ipv6_address` ([#2573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2573))
+
 ## 1.81.84 (March 25, 2024)
 
 ENHANCEMENTS:
