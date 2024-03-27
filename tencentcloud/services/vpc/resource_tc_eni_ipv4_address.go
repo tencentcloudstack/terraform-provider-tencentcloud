@@ -1,48 +1,17 @@
-/*
-Provides a resource to create a vpc eni_ipv4_address
-
-Example Usage
-
-```hcl
-resource "tencentcloud_vpc_eni_ipv4_address" "eni_ipv4_address" {
-  network_interface_id = ""
-  private_ip_addresses {
-		private_ip_address = ""
-		primary =
-		public_ip_address = ""
-		address_id = ""
-		description = ""
-		is_wan_ip_blocked =
-		state = ""
-		qos_level = ""
-
-  }
-  secondary_private_ip_address_count =
-  qos_level = ""
-}
-```
-
-Import
-
-vpc eni_ipv4_address can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_vpc_eni_ipv4_address.eni_ipv4_address eni_ipv4_address_id
-```
-*/
 package vpc
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
-func resourceTencentCloudEniIpv4Address() *schema.Resource {
+func ResourceTencentCloudEniIpv4Address() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEniIpv4AddressCreate,
 		Read:   resourceTencentCloudEniIpv4AddressRead,
@@ -59,53 +28,67 @@ func resourceTencentCloudEniIpv4Address() *schema.Resource {
 			},
 
 			"private_ip_addresses": {
-				Optional:    true,
-				Type:        schema.TypeSet,
-				Computed: true,
+				Optional:      true,
+				Type:          schema.TypeSet,
+				Computed:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"secondary_private_ip_address_count", "qos_level"},
-				Description: "The information on private IP addresses, of which you can specify a maximum of 10 at a time. You should provide either this parameter or SecondaryPrivateIpAddressCount, or both.",
+				Description:   "The information on private IP addresses, of which you can specify a maximum of 10 at a time. You should provide either this parameter or SecondaryPrivateIpAddressCount, or both.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"private_ip_address": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:      true,
+							ForceNew:    true,
 							Description: "Private IP address.",
 						},
 						"primary": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Whether it is a primary IP.",
 						},
 						"public_ip_address": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Public IP address.",
 						},
 						"address_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "EIP instance ID, such as `eip-11112222`.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Private IP description.",
 						},
 						"is_wan_ip_blocked": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Whether the public IP is blocked.",
 						},
 						"state": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "IP status: `PENDING`: Creating, `MIGRATING`: Migrating, `DELETING`: Deleting, `AVAILABLE`: Available.",
 						},
 						"qos_level": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "IP service level. Values: PT` (Gold), `AU` (Silver), `AG `(Bronze) and DEFAULT` (Default).",
 						},
 					},
@@ -113,21 +96,21 @@ func resourceTencentCloudEniIpv4Address() *schema.Resource {
 			},
 
 			"secondary_private_ip_address_count": {
-				Optional:    true,
-				Type:        schema.TypeInt,
+				Optional:      true,
+				Type:          schema.TypeInt,
 				Computed:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"private_ip_addresses"},
-				Description: "The number of newly-applied private IP addresses. You should provide either this parameter or PrivateIpAddresses, or both. The total number of private IP addresses cannot exceed the quota. For more information, see&amp;amp;lt;a href=&amp;amp;quot;/document/product/576/18527&amp;amp;quot;&amp;amp;gt;ENI Use Limits&amp;amp;lt;/a&amp;amp;gt;.",
+				Description:   "The number of newly-applied private IP addresses. You should provide either this parameter or PrivateIpAddresses, or both. The total number of private IP addresses cannot exceed the quota.",
 			},
 
 			"qos_level": {
-				Optional:    true,
+				Optional:      true,
 				Computed:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"private_ip_addresses"},
-				Type:        schema.TypeString,
-				Description: "IP service level. It is used together with `SecondaryPrivateIpAddressCount`. Values: PT`(Gold), `AU`(Silver), `AG `(Bronze) and DEFAULT (Default).",
+				Type:          schema.TypeString,
+				Description:   "IP service level. It is used together with `SecondaryPrivateIpAddressCount`. Values: PT`(Gold), `AU`(Silver), `AG `(Bronze) and DEFAULT (Default).",
 			},
 		},
 	}
@@ -141,7 +124,6 @@ func resourceTencentCloudEniIpv4AddressCreate(d *schema.ResourceData, meta inter
 
 	var (
 		request            = vpc.NewAssignPrivateIpAddressesRequest()
-		response           = vpc.NewAssignPrivateIpAddressesResponse()
 		networkInterfaceId string
 	)
 	if v, ok := d.GetOk("network_interface_id"); ok {
@@ -150,7 +132,7 @@ func resourceTencentCloudEniIpv4AddressCreate(d *schema.ResourceData, meta inter
 	}
 
 	if v, ok := d.GetOk("private_ip_addresses"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			privateIpAddressSpecification := vpc.PrivateIpAddressSpecification{}
 			if v, ok := dMap["private_ip_address"]; ok {
@@ -159,22 +141,22 @@ func resourceTencentCloudEniIpv4AddressCreate(d *schema.ResourceData, meta inter
 			if v, ok := dMap["primary"]; ok {
 				privateIpAddressSpecification.Primary = helper.Bool(v.(bool))
 			}
-			if v, ok := dMap["public_ip_address"]; ok {
+			if v, ok := dMap["public_ip_address"]; ok && v != "" {
 				privateIpAddressSpecification.PublicIpAddress = helper.String(v.(string))
 			}
-			if v, ok := dMap["address_id"]; ok {
+			if v, ok := dMap["address_id"]; ok && v != "" {
 				privateIpAddressSpecification.AddressId = helper.String(v.(string))
 			}
-			if v, ok := dMap["description"]; ok {
+			if v, ok := dMap["description"]; ok && v != "" {
 				privateIpAddressSpecification.Description = helper.String(v.(string))
 			}
 			if v, ok := dMap["is_wan_ip_blocked"]; ok {
 				privateIpAddressSpecification.IsWanIpBlocked = helper.Bool(v.(bool))
 			}
-			if v, ok := dMap["state"]; ok {
+			if v, ok := dMap["state"]; ok && v != "" {
 				privateIpAddressSpecification.State = helper.String(v.(string))
 			}
-			if v, ok := dMap["qos_level"]; ok {
+			if v, ok := dMap["qos_level"]; ok && v != "" {
 				privateIpAddressSpecification.QosLevel = helper.String(v.(string))
 			}
 			request.PrivateIpAddresses = append(request.PrivateIpAddresses, &privateIpAddressSpecification)
@@ -196,7 +178,6 @@ func resourceTencentCloudEniIpv4AddressCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -241,21 +222,23 @@ func resourceTencentCloudEniIpv4AddressRead(d *schema.ResourceData, meta interfa
 
 	ipv4s := make([]map[string]interface{}, 0, len(eni.PrivateIpAddressSet))
 	for _, ipv4 := range eni.PrivateIpAddressSet {
-		ipv4s = append(ipv4s, map[string]interface{}{
-			"private_ip_address": ipv4.PrivateIpAddress,
-			"primary":            ipv4.Primary,
-			"public_ip_address":  ipv4.AddressId,
-			"address_id":         ipv4.AddressId,
-			"description":        ipv4.Description,
-			"is_wan_ip_blocked":  ipv4.IsWanIpBlocked,
-			"state":              ipv4.State,
-			"qos_level":          ipv4.QosLevel,
-		})
+		if !*ipv4.Primary {
+			ipv4s = append(ipv4s, map[string]interface{}{
+				"private_ip_address": ipv4.PrivateIpAddress,
+				"primary":            ipv4.Primary,
+				"public_ip_address":  ipv4.AddressId,
+				"address_id":         ipv4.AddressId,
+				"description":        ipv4.Description,
+				"is_wan_ip_blocked":  ipv4.IsWanIpBlocked,
+				"state":              ipv4.State,
+				"qos_level":          ipv4.QosLevel,
+			})
+		}
 	}
 
 	_ = d.Set("network_interface_id", networkInterfaceId)
 	_ = d.Set("private_ip_addresses", ipv4s)
-	_ = d.Set("secondary_private_ip_address_count", len(eni.PrivateIpAddressSet))
+	_ = d.Set("secondary_private_ip_address_count", len(ipv4s))
 	if len(eni.PrivateIpAddressSet) > 0 {
 		_ = d.Set("qos_level", eni.PrivateIpAddressSet[0].QosLevel)
 	}
@@ -264,16 +247,36 @@ func resourceTencentCloudEniIpv4AddressRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudEniIpv4AddressDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eni_ipv4_address.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eni_ipv6_address.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	networkInterfaceId := d.Id()
 
-	if err := service.DeleteVpcEniIpv4AddressById(ctx, networkInterfaceId); err != nil {
+	enis, err := service.DescribeEniById(ctx, []string{networkInterfaceId})
+
+	if err != nil {
+		return err
+	}
+
+	if len(enis) < 1 {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `EniIpv4Address` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	eni := enis[0]
+	ipv4s := make([]*string, 0, len(eni.PrivateIpAddressSet))
+	for _, ipv4 := range eni.PrivateIpAddressSet {
+		if !*ipv4.Primary {
+			ipv4s = append(ipv4s, ipv4.PrivateIpAddress)
+		}
+	}
+
+	if err := service.DeleteEniIpv4AddressById(ctx, networkInterfaceId, ipv4s); err != nil {
 		return err
 	}
 
