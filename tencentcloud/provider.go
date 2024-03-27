@@ -141,7 +141,7 @@ type TencentCloudClient struct {
 var _ tccommon.ProviderMeta = &TencentCloudClient{}
 
 func init() {
-	commonJson.UseEmptyNil = false
+	commonJson.OmitBehaviour = commonJson.OmitEmpty
 }
 
 // GetAPIV3Conn 返回访问云 API 的客户端连接对象
