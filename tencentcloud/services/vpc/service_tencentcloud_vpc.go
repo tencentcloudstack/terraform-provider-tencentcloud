@@ -6879,6 +6879,36 @@ func (me *VpcService) DeleteEniIpv6AddressById(ctx context.Context, networkInter
 	return
 }
 
+func (me *VpcService) DeleteEniIpv4AddressById(ctx context.Context, networkInterfaceId string, ipv4Addresses []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewUnassignPrivateIpAddressesRequest()
+	request.NetworkInterfaceId = &networkInterfaceId
+
+	for _, ipv4Address := range ipv4Addresses {
+		address := vpc.PrivateIpAddressSpecification{}
+		address.PrivateIpAddress = ipv4Address
+		request.PrivateIpAddresses = append(request.PrivateIpAddresses, &address)
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().UnassignPrivateIpAddresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *VpcService) DescribeVpcLocalGatewayById(ctx context.Context, localGatewayId string) (localGateway *vpc.LocalGateway, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
