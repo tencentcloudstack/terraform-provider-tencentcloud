@@ -1199,6 +1199,8 @@ Virtual Private Cloud(VPC)
     tencentcloud_eni
     tencentcloud_eni_attachment
     tencentcloud_eni_sg_attachment
+    tencentcloud_eni_ipv4_address
+    tencentcloud_eni_ipv6_address
     tencentcloud_vpc
     tencentcloud_vpc_acl
     tencentcloud_vpc_acl_attachment

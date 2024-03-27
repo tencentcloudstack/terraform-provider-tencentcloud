@@ -1,0 +1,7 @@
+```release-note:deprecation
+resource/tencentcloud_vpc_ipv6_eni_address
+```
+
+```release-note:new-resource
+tencentcloud_eni_ipv6_address
+```

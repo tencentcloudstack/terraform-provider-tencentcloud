@@ -18,7 +18,7 @@ import (
 
 func ResourceTencentCloudSecurityGroupRule() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource will be offline and no longer supported, beacause single security rule is hardly ordered. Please use 'tencentcloud_security_group_rule_set' instead.",
+		DeprecationMessage: "This resource will be offline and no longer supported, because single security rule is hardly ordered. Please use 'tencentcloud_security_group_rule_set' instead.",
 		Create:             resourceTencentCloudSecurityGroupRuleCreate,
 		Read:               resourceTencentCloudSecurityGroupRuleRead,
 		Delete:             resourceTencentCloudSecurityGroupRuleDelete,
