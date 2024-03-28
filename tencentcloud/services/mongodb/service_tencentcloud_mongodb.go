@@ -29,10 +29,13 @@ func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId s
 	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
+
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
 	var response *mongodb.DescribeDBInstancesResponse
 	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, e := me.client.UseMongodbClient().DescribeDBInstances(request)
+		result, e := me.client.UseMongodbClient(iacExtInfo).DescribeDBInstances(request)
 		if e != nil {
 			return resource.NonRetryableError(e)
 		}

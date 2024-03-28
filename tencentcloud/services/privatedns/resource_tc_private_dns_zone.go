@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -256,9 +257,10 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 	)
 
 	request.ZoneId = &id
-
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = id
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DescribePrivateZone(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient(iacExtInfo).DescribePrivateZone(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

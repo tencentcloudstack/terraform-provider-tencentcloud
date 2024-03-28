@@ -1,13 +1,14 @@
 package vpc
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
-
 	"context"
 	"fmt"
 	"log"
 	"time"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -217,8 +218,10 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	request := vpc.NewDescribeNatGatewaysRequest()
 	request.NatGatewayIds = []*string{&natGatewayId}
 	var response *vpc.DescribeNatGatewaysResponse
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = natGatewayId
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeNatGateways(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(iacExtInfo).DescribeNatGateways(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())

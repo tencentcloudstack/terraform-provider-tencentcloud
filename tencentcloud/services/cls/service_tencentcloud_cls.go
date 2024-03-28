@@ -48,12 +48,14 @@ func (me *ClsService) DescribeClsLogset(ctx context.Context, logsetId string) (l
 	var offset int64 = 0
 	var pageSize int64 = 100
 	instances := make([]*cls.LogsetInfo, 0)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = logsetId
 
 	for {
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClsClient().DescribeLogsets(request)
+		response, err := me.client.UseClsClient(iacExtInfo).DescribeLogsets(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -230,6 +232,8 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 		},
 	}
 	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = topicId
 	var (
 		offset    int64 = 0
 		pageSize  int64 = 100
@@ -240,7 +244,7 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClsClient().DescribeTopics(request)
+		response, err := me.client.UseClsClient(iacExtInfo).DescribeTopics(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())

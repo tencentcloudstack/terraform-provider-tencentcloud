@@ -3,6 +3,7 @@ package cbs
 import (
 	"context"
 	"log"
+	"strings"
 	"sync"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -10,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -44,14 +46,34 @@ func (me *CbsService) DescribeDiskSetByIds(ctx context.Context, diskSetIds strin
 }
 
 func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk *cbs.Disk, errRet error) {
-	disks, err := me.DescribeDiskList(ctx, []*string{&diskId})
+	logId := tccommon.GetLogId(ctx)
+	request := cbs.NewDescribeDisksRequest()
+	request.DiskIds = common.StringPtrs([]string{diskId})
+	request.Limit = helper.IntUint64(100)
+	ratelimit.Check(request.GetAction())
+
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = diskId
+	response, err := me.client.UseCbsClient(iacExtInfo).DescribeDisks(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	if len(disks) > 0 {
-		disk = disks[0]
+
+	if len(response.Response.DiskSet) > 0 {
+		disk = response.Response.DiskSet[0]
 	}
+
 	return
 }
 
@@ -61,7 +83,14 @@ func (me *CbsService) DescribeDiskList(ctx context.Context, diskIds []*string) (
 	request.DiskIds = diskIds
 	request.Limit = helper.IntUint64(100)
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCbsClient().DescribeDisks(request)
+
+	var iacExtInfo connectivity.IacExtInfo
+	tmpList := make([]string, len(diskIds))
+	for k, v := range diskIds {
+		tmpList[k] = *v
+	}
+	iacExtInfo.InstanceId = strings.Join(tmpList, tccommon.FILED_SP)
+	response, err := me.client.UseCbsClient(iacExtInfo).DescribeDisks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

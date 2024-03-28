@@ -330,9 +330,11 @@ func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param
 	var (
 		logId      = tccommon.GetLogId(ctx)
 		request    = tdcpg.NewDescribeClustersRequest()
+		response   = tdcpg.NewDescribeClustersResponse()
 		indx       = 0
 		currNumber = 1
 		pageSize   = 20
+		err        error
 	)
 
 	defer func() {
@@ -342,6 +344,7 @@ func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param
 		}
 	}()
 
+	var tmpId string
 	request.Filters = make([]*tdcpg.Filter, len(param))
 	for k, v := range param {
 		if k == "cluster_id" {
@@ -350,6 +353,7 @@ func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param
 				Values: []*string{v.(*string)},
 			}
 			indx++
+			tmpId = v.(string)
 			continue
 		}
 
@@ -390,12 +394,18 @@ func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param
 		}
 	}
 	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = tmpId
 
 	for {
 		request.PageNumber = helper.IntUint64(currNumber)
 		request.PageSize = helper.IntUint64(pageSize)
+		if tmpId != "" {
+			response, err = me.client.UseTdcpgClient(iacExtInfo).DescribeClusters(request)
+		} else {
+			response, err = me.client.UseTdcpgClient().DescribeClusters(request)
+		}
 
-		response, err := me.client.UseTdcpgClient().DescribeClusters(request)
 		if err != nil {
 			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -422,9 +432,11 @@ func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clus
 	var (
 		logId      = tccommon.GetLogId(ctx)
 		request    = tdcpg.NewDescribeClusterInstancesRequest()
+		response   = tdcpg.NewDescribeClusterInstancesResponse()
 		indx       = 0
 		currNumber = 1
 		pageSize   = 20
+		err        error
 	)
 
 	defer func() {
@@ -434,6 +446,7 @@ func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clus
 		}
 	}()
 
+	var tmpId string
 	request.Filters = make([]*tdcpg.Filter, len(param))
 	for k, v := range param {
 		if k == "instance_id" {
@@ -442,6 +455,7 @@ func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clus
 				Values: []*string{v.(*string)},
 			}
 			indx++
+			tmpId = v.(string)
 			continue
 		}
 
@@ -473,13 +487,18 @@ func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clus
 		}
 	}
 	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = tmpId
 
 	for {
 		request.PageNumber = helper.IntUint64(currNumber)
 		request.PageSize = helper.IntUint64(pageSize)
 		request.ClusterId = clusterId
-
-		response, err := me.client.UseTdcpgClient().DescribeClusterInstances(request)
+		if tmpId != "" {
+			response, err = me.client.UseTdcpgClient(iacExtInfo).DescribeClusterInstances(request)
+		} else {
+			response, err = me.client.UseTdcpgClient().DescribeClusterInstances(request)
+		}
 		if err != nil {
 			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())

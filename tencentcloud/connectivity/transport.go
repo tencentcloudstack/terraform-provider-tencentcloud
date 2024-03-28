@@ -25,6 +25,11 @@ func SetReqClient(name string) {
 }
 
 type LogRoundTripper struct {
+	InstanceId string
+}
+
+type IacExtInfo struct {
+	InstanceId string
 }
 
 func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Response, errRet error) {
@@ -39,22 +44,29 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	if errRet != nil {
 		return
 	}
+
 	var headName = "X-TC-Action"
 
 	if envReqClient := os.Getenv(REQUEST_CLIENT); envReqClient != "" {
 		ReqClient = envReqClient
 	}
+
 	if routeUserID := os.Getenv(ENV_TESTING_ROUTE_USER_ID); routeUserID != "" {
 		request.Header.Set(ENV_TESTING_ROUTE_HEADER_KEY, routeUserID)
 	}
+
+	if me.InstanceId != "" {
+		ReqClient = fmt.Sprintf("%s,id=%s", ReqClient, me.InstanceId)
+	}
+
 	request.Header.Set("X-TC-RequestClient", ReqClient)
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {
 		return
 	}
-	inBytes = append(inBytes, requestBody...)
 
+	inBytes = append(inBytes, requestBody...)
 	headName = "X-TC-Region"
 	appendMessage := []byte(fmt.Sprintf(
 		", (host %+v, region:%+v)",
@@ -63,15 +75,16 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	))
 
 	inBytes = append(inBytes, appendMessage...)
-
 	response, errRet = http.DefaultTransport.RoundTrip(request)
 	if errRet != nil {
 		return
 	}
+
 	outBytes, errRet = ioutil.ReadAll(response.Body)
 	if errRet != nil {
 		return
 	}
+
 	response.Body = ioutil.NopCloser(bytes.NewBuffer(outBytes))
 	return
 }
@@ -83,11 +96,13 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time
 	if err != nil {
 		tag = "[CRITICAL]"
 	}
+
 	buf.WriteString(tag)
 	if len(in) > 0 {
 		buf.WriteString("tencentcloud-sdk-go: ")
 		buf.Write(in)
 	}
+
 	if len(out) > 0 {
 		buf.WriteString("; response:")
 		err := json.Compact(&buf, out)
