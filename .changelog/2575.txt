@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_vod_event_config
+```
