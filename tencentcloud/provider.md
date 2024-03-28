@@ -1122,6 +1122,7 @@ Video on Demand(VOD)
     tencentcloud_vod_sample_snapshot_template
     tencentcloud_vod_transcode_template
     tencentcloud_vod_watermark_template
+    tencentcloud_vod_event_config
 
 Oceanus
   Data Source

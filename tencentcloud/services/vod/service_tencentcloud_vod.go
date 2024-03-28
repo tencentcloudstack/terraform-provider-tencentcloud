@@ -682,3 +682,28 @@ func (me *VodService) DeleteVodWatermarkTemplateById(ctx context.Context, subApp
 
 	return
 }
+
+func (me *VodService) DescribeVodEventConfig(ctx context.Context, subAppId uint64) (eventConfig *vod.DescribeEventConfigResponseParams, errRet error) {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	request := vod.NewDescribeEventConfigRequest()
+	request.SubAppId = &subAppId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVodClient().DescribeEventConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	eventConfig = response.Response
+	return
+}
