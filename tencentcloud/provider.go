@@ -1430,6 +1430,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vod_sample_snapshot_template":                        vod.ResourceTencentCloudVodSampleSnapshotTemplate(),
 			"tencentcloud_vod_transcode_template":                              vod.ResourceTencentCloudVodTranscodeTemplate(),
 			"tencentcloud_vod_watermark_template":                              vod.ResourceTencentCloudVodWatermarkTemplate(),
+			"tencentcloud_vod_event_config":                                    vod.ResourceTencentCloudVodEventConfig(),
 			"tencentcloud_sqlserver_publish_subscribe":                         sqlserver.ResourceTencentCloudSqlserverPublishSubscribe(),
 			"tencentcloud_api_gateway_usage_plan":                              apigateway.ResourceTencentCloudAPIGatewayUsagePlan(),
 			"tencentcloud_api_gateway_usage_plan_attachment":                   apigateway.ResourceTencentCloudAPIGatewayUsagePlanAttachment(),
