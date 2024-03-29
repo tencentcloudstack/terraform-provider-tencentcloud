@@ -2789,10 +2789,11 @@ func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Con
 	return
 }
 
-func (me *TkeService) DescribeKubernetesAuthAttachmentById(ctx context.Context) (ret *tke.DescribeClusterAuthenticationOptionsResponseParams, errRet error) {
+func (me *TkeService) DescribeKubernetesAuthAttachmentById(ctx context.Context, clusterId string) (ret *tke.DescribeClusterAuthenticationOptionsResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeClusterAuthenticationOptionsRequest()
+	request.ClusterId = &clusterId
 
 	defer func() {
 		if errRet != nil {

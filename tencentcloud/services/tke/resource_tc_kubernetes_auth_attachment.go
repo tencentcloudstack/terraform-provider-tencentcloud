@@ -190,13 +190,13 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 
 	_ = d.Set("cluster_id", clusterId)
 
-	respData, err := service.DescribeKubernetesAuthAttachmentById(ctx)
+	respData, err := service.DescribeKubernetesAuthAttachmentById(ctx, clusterId)
 	if err != nil {
 		return err
 	}
 
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeKubernetesAuthAttachmentById(ctx)
+		result, e := service.DescribeKubernetesAuthAttachmentById(ctx, clusterId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -254,7 +254,6 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 		return err
 	}
 
-	_ = clusterId
 	return nil
 }
 

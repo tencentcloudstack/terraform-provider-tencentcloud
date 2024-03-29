@@ -38,7 +38,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = var.tke_cidr_a.1
+  cluster_cidr            = "10.31.3.0/24"
   cluster_max_pod_num     = 32
   cluster_name            = "for-auth-attachment"
   cluster_desc            = "test cluster desc"
@@ -51,7 +51,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
   cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
-  issuer                               = ""
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
 }
