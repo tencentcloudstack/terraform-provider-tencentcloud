@@ -1,3 +1,9 @@
+## 1.81.86 (March 28, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vod_event_config` ([#2575](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2575))
+
 ## 1.81.85 (March 27, 2024)
 
 FEATURES:
