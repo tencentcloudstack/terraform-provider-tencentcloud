@@ -268,3 +268,11 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the node pool.
 
 
+## Import
+
+tke node pool can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_node_pool.test cls-xxx#np-xxx
+```
+
