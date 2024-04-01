@@ -474,6 +474,7 @@ func ResourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_subnet_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			ForceNew:    true,
 			Description: "Subnet ID of the cluster, such as: subnet-b3p7d7q5.",
 		},
 
@@ -2493,10 +2494,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	tkeService := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	region := client.Region
 	d.Partial(true)
-
-	if d.HasChange("cluster_subnet_id") {
-		return fmt.Errorf("argument cluster_subnet_id cannot be changed")
-	}
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
