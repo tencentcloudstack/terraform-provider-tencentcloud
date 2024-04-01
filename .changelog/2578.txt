@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: Field `cluster_subnet_id` supports ForceNew
+```
