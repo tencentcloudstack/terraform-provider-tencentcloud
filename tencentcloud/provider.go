@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	commonJson "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 	sdksts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -138,6 +139,10 @@ type TencentCloudClient struct {
 }
 
 var _ tccommon.ProviderMeta = &TencentCloudClient{}
+
+func init() {
+	commonJson.OmitBehaviour = commonJson.OmitEmpty
+}
 
 // GetAPIV3Conn 返回访问云 API 的客户端连接对象
 func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
