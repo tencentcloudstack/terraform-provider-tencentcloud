@@ -2,6 +2,7 @@ package tke
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -11,7 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudKubernetesAddonAttachmentCreatePreRequest0(d *schema.ResourceData, meta interface{}, req *tke.ForwardApplicationRequestV3Request) error {
+var addonResponseData = &AddonResponseData{}
+
+func resourceTencentCloudKubernetesAddonAttachmentCreatePostFillRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
 
 	var (
 		addonName     = d.Get("name").(string)
@@ -21,7 +26,6 @@ func resourceTencentCloudKubernetesAddonAttachmentCreatePreRequest0(d *schema.Re
 		rawValuesType *string
 		reqBody       = d.Get("request_body").(string)
 		service       = TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		ctx           = context.Background()
 	)
 	clusterName := *req.ClusterName
 	if version == "" {
@@ -60,7 +64,9 @@ func resourceTencentCloudKubernetesAddonAttachmentCreatePreRequest0(d *schema.Re
 	return nil
 }
 
-func resourceTencentCloudKubernetesAddonAttachmentCreatePostRequest0(ctx context.Context, d *schema.ResourceData, meta interface{}, req *tke.ForwardApplicationRequestV3Request, resp *tke.ForwardApplicationRequestV3Response) error {
+func resourceTencentCloudKubernetesAddonAttachmentCreatePostHandleResponse0(ctx context.Context, resp *tke.ForwardApplicationRequestV3Response) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
 	var (
 		clusterId string
 		name      string
@@ -97,8 +103,75 @@ func resourceTencentCloudKubernetesAddonAttachmentCreatePostRequest0(ctx context
 	}
 	return nil
 }
+func resourceTencentCloudKubernetesAddonAttachmentReadPreRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	var (
+		err error
+	)
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-func resourceTencentCloudKubernetesAddonAttachmentUpdatePreRequest0(ctx context.Context, d *schema.ResourceData, meta interface{}, req *tke.ForwardApplicationRequestV3Request) error {
+	has := false
+	clusterName := d.Get("cluster_id").(string)
+	addonName := d.Get("name").(string)
+
+	_, has, err = service.PollingAddonsPhase(ctx, clusterName, addonName, addonResponseData)
+
+	if err != nil || !has {
+		d.SetId("")
+		return err
+	}
+
+	request := tke.NewForwardApplicationRequestV3Request()
+	request.Method = helper.String("GET")
+	request.ClusterName = &clusterName
+	request.Path = helper.String(service.GetAddonsPath(clusterName, addonName))
+
+	return nil
+}
+
+func resourceTencentCloudKubernetesAddonAttachmentReadPostHandleResponse0(ctx context.Context, resp *tke.ForwardApplicationRequestV3ResponseParams) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+
+	spec := addonResponseData.Spec
+	statuses := addonResponseData.Status
+	clusterId := d.Get("cluster_id").(string)
+
+	if spec != nil {
+		_ = d.Set("cluster_id", clusterId)
+		_ = d.Set("name", spec.Chart.ChartName)
+		_ = d.Set("version", spec.Chart.ChartVersion)
+		if spec.Values != nil && len(spec.Values.Values) > 0 {
+
+			// Filter auto-filled values from addon creation
+			filteredValues := getFilteredValues(d, spec.Values.Values)
+			_ = d.Set("values", filteredValues)
+		}
+
+		if spec.Values != nil && spec.Values.RawValues != nil {
+			rawValues := spec.Values.RawValues
+			rawValuesType := spec.Values.RawValuesType
+
+			base64DecodeValues, _ := base64.StdEncoding.DecodeString(*rawValues)
+			jsonValues := string(base64DecodeValues)
+
+			_ = d.Set("raw_values", jsonValues)
+			_ = d.Set("raw_values_type", rawValuesType)
+		}
+	}
+
+	if statuses != nil || len(statuses) == 0 {
+		strMap := helper.CovertInterfaceMapToStrPtr(statuses)
+		err := d.Set("status", strMap)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func resourceTencentCloudKubernetesAddonAttachmentUpdatePostFillRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -136,6 +209,41 @@ func resourceTencentCloudKubernetesAddonAttachmentUpdatePreRequest0(ctx context.
 	req.RequestBody = &reqBody
 	return nil
 }
+func resourceTencentCloudKubernetesAddonAttachmentDeletePostFillRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
+
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	clusterName := d.Get("cluster_id").(string)
+	addonName := d.Get("name").(string)
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	request := tke.NewForwardApplicationRequestV3Request()
+	request.Method = helper.String("DELETE")
+	request.ClusterName = &clusterName
+	request.Path = helper.String(service.GetAddonsPath(clusterName, addonName))
+	return nil
+}
+func resourceTencentCloudKubernetesAddonAttachmentDeletePostHandleResponse0(ctx context.Context, resp *tke.ForwardApplicationRequestV3Response) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	var (
+		id        = d.Id()
+		split     = strings.Split(id, tccommon.FILED_SP)
+		clusterId = split[0]
+		addonName = split[1]
+		has       bool
+	)
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	// check if addon terminating or still exists
+	_, has, _ = service.PollingAddonsPhase(ctx, clusterId, addonName, nil)
+
+	if has {
+		return fmt.Errorf("addon %s still exists", addonName)
+	}
+	return nil
+}
+
 func getFilteredValues(d *schema.ResourceData, values []*string) []string {
 	rawValues := helper.InterfacesStrings(d.Get("values").([]interface{}))
 

@@ -303,7 +303,6 @@ func (me *TkeService) GetAddonNameFromJson(reqJson string) (name string, err err
 	}
 	return
 }
-
 func (me *TkeService) DescribeKubernetesAddonAttachmentById(ctx context.Context) (ret *tke.ForwardApplicationRequestV3ResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -317,6 +316,10 @@ func (me *TkeService) DescribeKubernetesAddonAttachmentById(ctx context.Context)
 
 	ratelimit.Check(request.GetAction())
 
+	if err := resourceTencentCloudKubernetesAddonAttachmentReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
 	response, err := me.client.UseTkeClient().ForwardApplicationRequestV3(request)
 	if err != nil {
 		errRet = err
@@ -327,7 +330,6 @@ func (me *TkeService) DescribeKubernetesAddonAttachmentById(ctx context.Context)
 	ret = response.Response
 	return
 }
-
 func (me *TkeService) DeleteKubernetesAddonAttachmentById(ctx context.Context) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
