@@ -41,6 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `db_version_id` - db version id.
   * `instance_id` - instance id.
   * `instance_name` - instance name.
+  * `internet_domain` - Public network access domain name.
+  * `internet_ip` - Public IP address.
+  * `internet_port` - Public network port.
   * `memory` - meory of instance.
   * `project_id` - project id.
   * `region` - region.
@@ -49,7 +52,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_value` - tag value.
   * `storage` - storage of instance.
   * `subnet_id` - subnet id.
+  * `vip` - Intranet IP address.
   * `vpc_id` - vpc id.
+  * `vport` - Intranet port.
   * `zone` - available zone.
 
 
