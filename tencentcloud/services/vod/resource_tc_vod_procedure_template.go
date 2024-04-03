@@ -337,6 +337,7 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 									"subtitle_list": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "Subtitle list, element is subtitle ID, support multiple subtitles, up to 16.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
