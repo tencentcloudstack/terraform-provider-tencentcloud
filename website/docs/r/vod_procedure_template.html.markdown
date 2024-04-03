@@ -155,6 +155,7 @@ The following arguments are supported:
 The `adaptive_dynamic_streaming_task_list` object of `media_process_task` supports the following:
 
 * `definition` - (Required, String) Adaptive bitrate streaming template ID.
+* `subtitle_list` - (Optional, List) Subtitle list, element is subtitle ID, support multiple subtitles, up to 16.
 * `watermark_list` - (Optional, List) List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.
 
 The `ai_analysis_task` object supports the following:
@@ -212,6 +213,7 @@ The `mosaic_list` object of `transcode_task_list` supports the following:
 
 The `review_audio_video_task` object supports the following:
 
+* `definition` - (Optional, String) Review template.
 * `review_contents` - (Optional, List) The type of moderated content. Valid values:
 - `Media`: The original audio/video;
 - `Cover`: Thumbnails.

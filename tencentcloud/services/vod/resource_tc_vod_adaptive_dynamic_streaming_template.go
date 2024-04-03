@@ -234,6 +234,15 @@ func ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 					},
 				},
 			},
+			"segment_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Segment type, valid when Format is HLS, optional values:\n" +
+					"- ts: ts segment;\n" +
+					"- fmp4: fmp4 segment;\n" +
+					"Default value: ts.",
+			},
 			// computed
 			"create_time": {
 				Type:        schema.TypeString,
@@ -257,6 +266,9 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 		request = vod.NewCreateAdaptiveDynamicStreamingTemplateRequest()
 	)
 
+	if v, ok := d.GetOk("segment_type"); ok {
+		request.SegmentType = helper.String(v.(string))
+	}
 	request.Format = helper.String(d.Get("format").(string))
 	request.Name = helper.String(d.Get("name").(string))
 	if v, ok := d.GetOk("drm_type"); ok {
@@ -403,6 +415,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 	_ = d.Set("comment", template.Comment)
 	_ = d.Set("create_time", template.CreateTime)
 	_ = d.Set("update_time", template.UpdateTime)
+	_ = d.Set("segment_type", template.SegmentType)
 
 	var streamInfos = make([]interface{}, 0, len(template.StreamInfos))
 	for _, v := range template.StreamInfos {

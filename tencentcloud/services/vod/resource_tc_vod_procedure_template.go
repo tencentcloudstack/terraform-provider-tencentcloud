@@ -334,6 +334,15 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 										Description: "List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.",
 										Elem:        VodWatermarkResource(),
 									},
+									"subtitle_list": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										Description: "Subtitle list, element is subtitle ID, support multiple subtitles, up to 16.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
 								},
 							},
 						},
@@ -392,6 +401,12 @@ func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 							Description: "The type of moderated content. Valid values:\n" +
 								"- `Media`: The original audio/video;\n" +
 								"- `Cover`: Thumbnails.",
+						},
+						"definition": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Review template.",
 						},
 					},
 				},
@@ -724,6 +739,17 @@ func generateMediaProcessTask(d *schema.ResourceData) (mediaReq *vod.MediaProces
 					return &idUint
 				}(item["definition"].(string)),
 				WatermarkSet: genWatermarkList(item),
+				SubtitleSet: func() (list []*string) {
+					if _, ok := item["subtitle_list"]; !ok {
+						return nil
+					}
+					subtitleList := item["subtitle_list"].([]interface{})
+					list = make([]*string, 0, len(subtitleList))
+					for _, subTitle := range subtitleList {
+						list = append(list, helper.String(subTitle.(string)))
+					}
+					return list
+				}(),
 			})
 		}
 		mediaReq.AdaptiveDynamicStreamingTaskSet = adaptiveReq
@@ -1083,6 +1109,16 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 							})
 						}
 						return waterList
+					}(),
+					"subtitle_list": func() interface{} {
+						if item.SubtitleSet == nil {
+							return nil
+						}
+						subtitleList := make([]interface{}, 0, len(item.SubtitleSet))
+						for _, subtitleV := range item.SubtitleSet {
+							subtitleList = append(subtitleList, subtitleV)
+						}
+						return subtitleList
 					}(),
 				})
 			}

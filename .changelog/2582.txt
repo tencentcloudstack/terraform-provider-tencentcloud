@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_vod_adaptive_dynamic_streaming_template: add param `segment_type` 
+```
+
+```release-note:enhancement
+resource/tencentcloud_vod_procedure_template: update param `adaptive_dynamic_streaming_task_list` and `review_audio_video_task`
+```
