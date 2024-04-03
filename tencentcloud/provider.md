@@ -1117,7 +1117,6 @@ Video on Demand(VOD)
     tencentcloud_vod_procedure_template
     tencentcloud_vod_snapshot_by_time_offset_template
     tencentcloud_vod_image_sprite_template
-    tencentcloud_vod_super_player_config
     tencentcloud_vod_sub_application
     tencentcloud_vod_sample_snapshot_template
     tencentcloud_vod_transcode_template

@@ -83,6 +83,7 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "update_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "sub_app_id"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "segment_type", "ts"),
 				),
 			},
 			{
