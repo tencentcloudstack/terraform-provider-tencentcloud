@@ -59,6 +59,10 @@ The following arguments are supported:
 * `disable_higher_video_bitrate` - (Optional, Bool) Whether to prohibit transcoding video from low bitrate to high bitrate. Valid values: `false`,`true`. `false`: no, `true`: yes. Default value: `false`.
 * `disable_higher_video_resolution` - (Optional, Bool) Whether to prohibit transcoding from low resolution to high resolution. Valid values: `false`,`true`. `false`: no, `true`: yes. Default value: `false`.
 * `drm_type` - (Optional, String, ForceNew) DRM scheme type. Valid values: `SimpleAES`. If this field is an empty string, DRM will not be performed on the video.
+* `segment_type` - (Optional, String) Segment type, valid when Format is HLS, optional values:
+- ts: ts segment;
+- fmp4: fmp4 segment;
+Default value: ts.
 * `sub_app_id` - (Optional, Int) The VOD [application](https://intl.cloud.tencent.com/document/product/266/14574) ID. For customers who activate VOD service from December 25, 2023, if they want to access resources in a VOD application (whether it's the default application or a newly created one), they must fill in this field with the application ID.
 
 The `audio` object of `stream_info` supports the following:
