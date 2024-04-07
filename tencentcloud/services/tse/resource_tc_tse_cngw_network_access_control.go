@@ -128,6 +128,10 @@ func resourceTencentCloudTseCngwNetworkAccessControlRead(d *schema.ResourceData,
 		return nil
 	}
 
+	_ = d.Set("gateway_id", gatewayId)
+	_ = d.Set("group_id", groupId)
+	_ = d.Set("network_id", networkId)
+
 	if cngwNetwork.PublicNetwork != nil {
 		internetConfig := cngwNetwork.PublicNetwork
 		if internetConfig.AccessControl != nil {
