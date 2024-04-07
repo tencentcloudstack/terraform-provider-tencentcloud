@@ -1929,6 +1929,7 @@ Tencent Cloud Service Engine(TSE)
     tencentcloud_tse_cngw_network
     tencentcloud_tse_cngw_strategy
     tencentcloud_tse_cngw_strategy_bind_group
+    tencentcloud_tse_cngw_network_access_control
 
 ClickHouse(CDWCH)
   Data Source
