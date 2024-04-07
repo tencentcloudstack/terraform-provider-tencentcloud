@@ -110,6 +110,31 @@ func DataSourceTencentCloudMariadbDbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "db version id.",
 						},
+						"vip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Intranet IP address.",
+						},
+						"vport": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Intranet port.",
+						},
+						"internet_domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Public network access domain name.",
+						},
+						"internet_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Public IP address.",
+						},
+						"internet_port": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Public network port.",
+						},
 						"resource_tags": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -230,6 +255,21 @@ func dataSourceTencentCloudMariadbDbInstancesRead(d *schema.ResourceData, meta i
 			}
 			if instance.DbVersionId != nil {
 				instanceMap["db_version_id"] = instance.DbVersionId
+			}
+			if instance.Vip != nil {
+				instanceMap["vip"] = instance.Vip
+			}
+			if instance.Vport != nil {
+				instanceMap["vport"] = instance.Vport
+			}
+			if instance.WanDomain != nil {
+				instanceMap["internet_domain"] = instance.WanDomain
+			}
+			if instance.WanVip != nil {
+				instanceMap["internet_ip"] = instance.WanVip
+			}
+			if instance.WanPort != nil {
+				instanceMap["internet_port"] = instance.WanPort
 			}
 			if instance.ResourceTags != nil {
 				resourceTagsList := []interface{}{}
