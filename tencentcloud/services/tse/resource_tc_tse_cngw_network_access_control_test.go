@@ -16,7 +16,7 @@ func TestAccTencentCloudNeedFixTseCngwNetworkAccessControlResource_basic(t *test
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTseCngwNetwork,
+				Config: testAccTseCngwNetworkAccessControl,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_network_access_control.cngw_network_access_control", "id")),
 			},
 			{
