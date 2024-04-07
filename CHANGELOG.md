@@ -1,3 +1,16 @@
+## 1.81.87 (April 7, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tse_cngw_network_access_control` ([#2581](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2581))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_mariadb_db_instances: Support `vip`, `vport`, `internet_domain`, `internet_ip`, `internet_port` field ([#2583](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2583))
+* resource/tencentcloud_kubernetes_cluster: Field `cluster_subnet_id` supports ForceNew ([#2578](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2578))
+* resource/tencentcloud_vod_adaptive_dynamic_streaming_template: add param `segment_type` ([#2582](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2582))
+* resource/tencentcloud_vod_procedure_template: update param `adaptive_dynamic_streaming_task_list` and `review_audio_video_task` ([#2582](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2582))
+
 ## 1.81.86 (March 28, 2024)
 
 FEATURES:
