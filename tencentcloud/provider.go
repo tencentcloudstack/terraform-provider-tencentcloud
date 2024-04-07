@@ -1850,6 +1850,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_waf_protection":                                  tse.ResourceTencentCloudTseWafProtection(),
 			"tencentcloud_tse_waf_domains":                                     tse.ResourceTencentCloudTseWafDomains(),
 			"tencentcloud_tse_cngw_network":                                    tse.ResourceTencentCloudTseCngwNetwork(),
+			"tencentcloud_tse_cngw_network_access_control":                     tse.ResourceTencentCloudTseCngwNetworkAccessControl(),
 			"tencentcloud_tse_cngw_strategy":                                   tse.ResourceTencentCloudTseCngwStrategy(),
 			"tencentcloud_tse_cngw_strategy_bind_group":                        tse.ResourceTencentCloudTseCngwStrategyBindGroup(),
 			"tencentcloud_clickhouse_instance":                                 cdwch.ResourceTencentCloudClickhouseInstance(),
