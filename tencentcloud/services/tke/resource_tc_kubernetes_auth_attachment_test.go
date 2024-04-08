@@ -38,7 +38,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = "10.31.4.0/24"
+  cluster_cidr            = "10.31.5.0/24"
   cluster_max_pod_num     = 32
   cluster_name            = "for-auth-attachment"
   cluster_desc            = "test cluster desc"

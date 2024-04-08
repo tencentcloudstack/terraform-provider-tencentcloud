@@ -101,6 +101,8 @@ func resourceTencentCloudKubernetesAuthAttachmentCreate(d *schema.ResourceData, 
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
 	var (
 		clusterId string
 	)
@@ -148,14 +150,14 @@ func resourceTencentCloudKubernetesAuthAttachmentCreate(d *schema.ResourceData, 
 	}
 	request.OIDCConfig = &oIDCConfigAuthenticationOptions
 
-	if err := resourceTencentCloudKubernetesAuthAttachmentCreatePreRequest0(d, meta, request); err != nil {
-		return err
-	}
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptions(request)
+		if err := resourceTencentCloudKubernetesAuthAttachmentCreatePreRequest0(ctx, request); err != nil {
+			return err
+		}
+
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
 		if e != nil {
-			if err := resourceTencentCloudKubernetesAuthAttachmentCreateRequestOnError0(d, meta, request, e); err != nil {
+			if err := resourceTencentCloudKubernetesAuthAttachmentCreateRequestOnError0(ctx, request, e); err != nil {
 				return err
 			}
 			return tccommon.RetryError(e)
@@ -171,6 +173,7 @@ func resourceTencentCloudKubernetesAuthAttachmentCreate(d *schema.ResourceData, 
 	}
 
 	_ = response
+
 	d.SetId(clusterId)
 
 	return resourceTencentCloudKubernetesAuthAttachmentRead(d, meta)
@@ -182,7 +185,7 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
@@ -200,7 +203,7 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		if err := resourceTencentCloudKubernetesAuthAttachmentReadRequestOnSuccess0(d, meta, result); err != nil {
+		if err := resourceTencentCloudKubernetesAuthAttachmentReadRequestOnSuccess0(ctx, result); err != nil {
 			return err
 		}
 		respData = result
@@ -250,10 +253,6 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 
 	}
 
-	if err := resourceTencentCloudKubernetesAuthAttachmentReadPostRequest0(ctx, d, meta, respData); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -263,7 +262,7 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.Background(), tccommon.LogIdKey, logId)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	immutableArgs := []string{"cluster_id"}
 	for _, v := range immutableArgs {
@@ -318,14 +317,14 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 		}
 		request.OIDCConfig = &oIDCConfigAuthenticationOptions
 
-		if err := resourceTencentCloudKubernetesAuthAttachmentUpdatePreRequest0(ctx, d, meta, request); err != nil {
-			return err
-		}
-
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptions(request)
+			if err := resourceTencentCloudKubernetesAuthAttachmentUpdatePreRequest0(ctx, request); err != nil {
+				return err
+			}
+
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
 			if e != nil {
-				if err := resourceTencentCloudKubernetesAuthAttachmentUpdateRequestOnError0(d, meta, request, e); err != nil {
+				if err := resourceTencentCloudKubernetesAuthAttachmentUpdateRequestOnError0(ctx, request, e); err != nil {
 					return err
 				}
 				return tccommon.RetryError(e)
@@ -348,14 +347,43 @@ func resourceTencentCloudKubernetesAuthAttachmentDelete(d *schema.ResourceData, 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	clusterId := d.Id()
 
-	if e := service.DeleteKubernetesAuthAttachmentById(ctx, clusterId); e != nil {
-		return e
+	var (
+		request  = tke.NewModifyClusterAuthenticationOptionsRequest()
+		response = tke.NewModifyClusterAuthenticationOptionsResponse()
+	)
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
+	}
+
+	request.ClusterId = &clusterId
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		if err := resourceTencentCloudKubernetesAuthAttachmentDeletePreRequest0(ctx, request); err != nil {
+			return err
+		}
+
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create kubernetes auth attachment failed, reason:%+v", logId, err)
+		return err
+	}
+
+	_ = response
+	if err := resourceTencentCloudKubernetesAuthAttachmentDeletePostHandleResponse0(ctx, response); err != nil {
+		return err
 	}
 
 	return nil
