@@ -2888,3 +2888,44 @@ func (me *TkeService) DescribeKubernetesClusterLevelsByFilter(ctx context.Contex
 	ret = response.Response.Items
 	return
 }
+
+func (me *TkeService) DescribeKubernetesClusterCommonNamesByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.CommonName, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewDescribeClusterCommonNamesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "SubaccountUins" {
+			request.SubaccountUins = v.([]*string)
+		}
+		if k == "RoleIds" {
+			request.RoleIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterCommonNames(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.CommonNames) < 1 {
+		return
+	}
+
+	ret = response.Response.CommonNames
+	return
+}
