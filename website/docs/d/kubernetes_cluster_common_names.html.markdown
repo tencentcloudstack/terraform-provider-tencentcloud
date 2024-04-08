@@ -25,7 +25,7 @@ data "tencentcloud_kubernetes_cluster_common_names" "foo" {
 The following arguments are supported:
 
 * `cluster_id` - (Optional, String) Cluster ID.
-* `result_output_file` - (Optional, String) Used for save result.
+* `result_output_file` - (Optional, String) Used to save results.
 * `role_ids` - (Optional, List: [`String`]) List of Role ID. Up to 50 sub-accounts can be passed in at a time.
 * `subaccount_uins` - (Optional, List: [`String`]) List of sub-account. Up to 50 sub-accounts can be passed in at a time.
 
