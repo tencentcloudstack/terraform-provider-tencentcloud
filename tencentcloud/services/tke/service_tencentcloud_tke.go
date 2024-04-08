@@ -2853,3 +2853,38 @@ func (me *TkeService) DescribeKubernetesClustersByFilter(ctx context.Context, pa
 	ret = response.Response.Clusters
 	return
 }
+
+func (me *TkeService) DescribeKubernetesClusterLevelsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.ClusterLevelAttribute, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewDescribeClusterLevelAttributeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterID" {
+			request.ClusterID = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterLevelAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	ret = response.Response.Items
+	return
+}
