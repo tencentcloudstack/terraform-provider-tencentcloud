@@ -93,26 +93,6 @@ func dataSourceTencentCloudKubernetesClusterCommonNamesRead(d *schema.ResourceDa
 		paramMap["ClusterId"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("subaccount_uins"); ok {
-		subaccountUinsList := []*string{}
-		subaccountUinsSet := v.(*schema.Set).List()
-		for i := range subaccountUinsSet {
-			subaccountUins := subaccountUinsSet[i].(string)
-			subaccountUinsList = append(subaccountUinsList, helper.String(subaccountUins))
-		}
-		paramMap["SubaccountUins"] = subaccountUinsList
-	}
-
-	if v, ok := d.GetOk("role_ids"); ok {
-		roleIdsList := []*string{}
-		roleIdsSet := v.(*schema.Set).List()
-		for i := range roleIdsSet {
-			roleIds := roleIdsSet[i].(string)
-			roleIdsList = append(roleIdsList, helper.String(roleIds))
-		}
-		paramMap["RoleIds"] = roleIdsList
-	}
-
 	var respData []*tke.CommonName
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterCommonNamesByFilter(ctx, paramMap)

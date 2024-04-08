@@ -2905,15 +2905,13 @@ func (me *TkeService) DescribeKubernetesClusterCommonNamesByFilter(ctx context.C
 		if k == "ClusterId" {
 			request.ClusterId = v.(*string)
 		}
-		if k == "SubaccountUins" {
-			request.SubaccountUins = v.([]*string)
-		}
-		if k == "RoleIds" {
-			request.RoleIds = v.([]*string)
-		}
 	}
 
 	ratelimit.Check(request.GetAction())
+
+	if err := dataSourceTencentCloudKubernetesClusterCommonNamesReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
 
 	response, err := me.client.UseTkeClient().DescribeClusterCommonNames(request)
 	if err != nil {
