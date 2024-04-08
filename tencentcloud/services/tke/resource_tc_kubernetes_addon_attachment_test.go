@@ -74,14 +74,14 @@ func TestAccTencentCloudKubernetesAddonAttachmentResource(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudKubernetesAddonAttachmentResource_update(t *testing.T) {
+func TestAccTencentCloudKubernetesAddonAttachmentResourceUpdate(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeAddonAttachmentCos_basic(),
+				Config: testAccTkeAddonAttachmentBasic(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
@@ -91,7 +91,7 @@ func TestAccTencentCloudKubernetesAddonAttachmentResource_update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTkeAddonAttachmentCos_update(),
+				Config: testAccTkeAddonAttachmentUpdate(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
@@ -112,7 +112,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "cos" {
 `, tcacctest.TkeDataSource, DefaultAddonName)
 }
 
-func testAccTkeAddonAttachmentCos_basic() string {
+func testAccTkeAddonAttachmentBasic() string {
 	return fmt.Sprintf(`
 %s
 
@@ -137,7 +137,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "cos" {
 `, tcacctest.TkeDataSource, DefaultAddonName)
 }
 
-func testAccTkeAddonAttachmentCos_update() string {
+func testAccTkeAddonAttachmentUpdate() string {
 	return fmt.Sprintf(`
 %s
 
