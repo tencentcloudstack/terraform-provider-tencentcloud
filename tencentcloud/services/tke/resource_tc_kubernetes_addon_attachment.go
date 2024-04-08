@@ -227,7 +227,7 @@ func resourceTencentCloudKubernetesAddonAttachmentUpdate(d *schema.ResourceData,
 	name := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"request_body"}
+	mutableArgs := []string{}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -237,14 +237,6 @@ func resourceTencentCloudKubernetesAddonAttachmentUpdate(d *schema.ResourceData,
 
 	if needChange {
 		request := tke.NewForwardApplicationRequestV3Request()
-
-		if v, ok := d.GetOk("request_body"); ok {
-			request.RequestBody = helper.String(v.(string))
-		}
-
-		if err := resourceTencentCloudKubernetesAddonAttachmentUpdatePostFillRequest0(ctx, request); err != nil {
-			return err
-		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ForwardApplicationRequestV3WithContext(ctx, request)
@@ -259,6 +251,10 @@ func resourceTencentCloudKubernetesAddonAttachmentUpdate(d *schema.ResourceData,
 			log.Printf("[CRITAL]%s update kubernetes addon attachment failed, reason:%+v", logId, err)
 			return err
 		}
+	}
+
+	if err := resourceTencentCloudKubernetesAddonAttachmentUpdateOnExit(ctx); err != nil {
+		return err
 	}
 
 	_ = clusterId

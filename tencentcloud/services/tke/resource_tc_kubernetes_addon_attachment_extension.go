@@ -122,10 +122,9 @@ func resourceTencentCloudKubernetesAddonAttachmentReadPreRequest0(ctx context.Co
 		return err
 	}
 
-	request := tke.NewForwardApplicationRequestV3Request()
-	request.Method = helper.String("GET")
-	request.ClusterName = &clusterName
-	request.Path = helper.String(service.GetAddonsPath(clusterName, addonName))
+	req.Method = helper.String("GET")
+	req.ClusterName = &clusterName
+	req.Path = helper.String(service.GetAddonsPath(clusterName, addonName))
 
 	return nil
 }
@@ -170,27 +169,29 @@ func resourceTencentCloudKubernetesAddonAttachmentReadPostHandleResponse0(ctx co
 	return nil
 }
 func resourceTencentCloudKubernetesAddonAttachmentUpdatePostFillRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
+
+	return nil
+}
+
+func resourceTencentCloudKubernetesAddonAttachmentUpdateOnExit(ctx context.Context) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
 
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	var (
+		id            = d.Id()
+		split         = strings.Split(id, tccommon.FILED_SP)
+		clusterId     = split[0]
+		addonName     = split[1]
 		version       = d.Get("version").(string)
 		values        = d.Get("values").([]interface{})
 		reqBody       = d.Get("request_body").(string)
+		err           error
 		rawValues     *string
 		rawValuesType *string
-		err           error
 	)
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	clusterName := idSplit[0]
-	addonName := idSplit[1]
-
-	if d.HasChange("version") || d.HasChange("values") || d.HasChange("raw_values") || d.HasChange("raw_values_type") {
+	if d.HasChange("request_body") && reqBody == "" || d.HasChange("version") || d.HasChange("values") || d.HasChange("raw_values") || d.HasChange("raw_values_type") {
 		if v, ok := d.GetOk("raw_values"); ok {
 			rawValues = helper.String(v.(string))
 		}
@@ -199,16 +200,19 @@ func resourceTencentCloudKubernetesAddonAttachmentUpdatePostFillRequest0(ctx con
 		}
 		reqBody, err = service.GetAddonReqBody(addonName, version, helper.InterfacesStringsPoint(values), rawValues, rawValuesType)
 	}
+
 	if err != nil {
 		return err
 	}
-	req.Method = helper.String("PATCH")
-	req.ContentType = helper.String("application/strategic-merge-patch+json")
-	req.ClusterName = helper.String(clusterName)
-	req.Path = helper.String(service.GetAddonsPath(clusterName, addonName))
-	req.RequestBody = &reqBody
+
+	err = service.UpdateExtensionAddon(ctx, clusterId, addonName, reqBody)
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
+
 func resourceTencentCloudKubernetesAddonAttachmentDeletePostFillRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
 
 	d := tccommon.ResourceDataFromContext(ctx)
@@ -217,10 +221,9 @@ func resourceTencentCloudKubernetesAddonAttachmentDeletePostFillRequest0(ctx con
 	addonName := d.Get("name").(string)
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	request := tke.NewForwardApplicationRequestV3Request()
-	request.Method = helper.String("DELETE")
-	request.ClusterName = &clusterName
-	request.Path = helper.String(service.GetAddonsPath(clusterName, addonName))
+	req.Method = helper.String("DELETE")
+	req.ClusterName = &clusterName
+	req.Path = helper.String(service.GetAddonsPath(clusterName, addonName))
 	return nil
 }
 func resourceTencentCloudKubernetesAddonAttachmentDeletePostHandleResponse0(ctx context.Context, resp *tke.ForwardApplicationRequestV3Response) error {

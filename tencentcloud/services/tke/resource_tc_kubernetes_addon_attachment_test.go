@@ -74,6 +74,33 @@ func TestAccTencentCloudKubernetesAddonAttachmentResource(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudKubernetesAddonAttachmentResource_update(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTkeAddonAttachmentCos_basic(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "version"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "request_body"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "version", "1.0.2"),
+				),
+			},
+			{
+				Config: testAccTkeAddonAttachmentCos_update(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "version", "1.0.3"),
+				),
+			},
+		},
+	})
+}
 func testAccTkeAddonAttachment() string {
 	return fmt.Sprintf(`
 %s
@@ -81,6 +108,43 @@ func testAccTkeAddonAttachment() string {
 resource "tencentcloud_kubernetes_addon_attachment" "cos" {
   cluster_id = local.cluster_id
   name = "%s"
+}
+`, tcacctest.TkeDataSource, DefaultAddonName)
+}
+
+func testAccTkeAddonAttachmentCos_basic() string {
+	return fmt.Sprintf(`
+%s
+
+resource "tencentcloud_kubernetes_addon_attachment" "cos" {
+  cluster_id = local.cluster_id
+  name = "%s"
+  request_body = jsonencode({
+	kind = "App"
+	spec = {
+	  chart = {
+		chartName    = "cos"
+		chartVersion = "1.0.2"
+	  }
+	  values = {
+		values        = []
+		rawValues     = "e30="
+		rawValuesType = "json"
+	  }
+	}
+  })
+}
+`, tcacctest.TkeDataSource, DefaultAddonName)
+}
+
+func testAccTkeAddonAttachmentCos_update() string {
+	return fmt.Sprintf(`
+%s
+
+resource "tencentcloud_kubernetes_addon_attachment" "cos" {
+  cluster_id = local.cluster_id
+  name = "%s"
+  version = "1.0.3"
 }
 `, tcacctest.TkeDataSource, DefaultAddonName)
 }
