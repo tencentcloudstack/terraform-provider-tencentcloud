@@ -2753,7 +2753,7 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 	return
 }
 
-func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (clusterNodePools []*tke.NodePool, errRet error) {
+func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.NodePool, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = tke.NewDescribeClusterNodePoolsRequest()
@@ -2787,7 +2787,7 @@ func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Con
 		return
 	}
 
-	clusterNodePools = response.Response.NodePoolSet
+	ret = response.Response.NodePoolSet
 	return
 }
 
