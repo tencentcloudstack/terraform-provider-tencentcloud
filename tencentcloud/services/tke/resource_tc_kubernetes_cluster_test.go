@@ -194,7 +194,7 @@ func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 			{
 				PreConfig: func() {
 					// do not update so fast
-					time.Sleep(10 * time.Minute)
+					time.Sleep(20 * time.Minute)
 				},
 				Config: testAccTkeClusterLogsAddonsUpdate,
 				Check: resource.ComposeTestCheckFunc(
