@@ -254,7 +254,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	d.SetId(id)
 
 	//wait for LANIP
-	time.Sleep(3 * time.Minute)
+	time.Sleep(tccommon.ReadRetryTimeout)
 	return resourceTencentCloudTkeScaleWorkerRead(d, meta)
 }
 
