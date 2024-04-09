@@ -168,10 +168,6 @@ func resourceTencentCloudKubernetesAddonAttachmentReadPostHandleResponse0(ctx co
 	}
 	return nil
 }
-func resourceTencentCloudKubernetesAddonAttachmentUpdatePostFillRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
-
-	return nil
-}
 
 func resourceTencentCloudKubernetesAddonAttachmentUpdateOnExit(ctx context.Context) error {
 	d := tccommon.ResourceDataFromContext(ctx)
