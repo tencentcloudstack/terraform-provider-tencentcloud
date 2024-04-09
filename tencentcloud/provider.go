@@ -1117,7 +1117,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_addon_attachment":                         tke.ResourceTencentCloudTkeAddonAttachment(),
 			"tencentcloud_kubernetes_auth_attachment":                          tke.ResourceTencentCloudTKEAuthAttachment(),
 			"tencentcloud_kubernetes_as_scaling_group":                         tke.ResourceTencentCloudKubernetesAsScalingGroup(),
-			"tencentcloud_kubernetes_scale_worker":                             tke.ResourceTencentCloudTkeScaleWorker(),
+			"tencentcloud_kubernetes_scale_worker":                             tke.ResourceTencentCloudKubernetesScaleWorker(),
 			"tencentcloud_kubernetes_cluster_attachment":                       tke.ResourceTencentCloudTkeClusterAttachment(),
 			"tencentcloud_kubernetes_node_pool":                                tke.ResourceTencentCloudKubernetesNodePool(),
 			"tencentcloud_kubernetes_serverless_node_pool":                     tke.ResourceTencentCloudTkeServerLessNodePool(),
