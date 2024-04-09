@@ -435,7 +435,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := tccommon.WriteToFile(output.(string), clustersList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), dataSourceTencentCloudKubernetesClustersReadOutputContent(ctx)); e != nil {
 			return e
 		}
 	}

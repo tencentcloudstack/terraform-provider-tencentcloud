@@ -250,6 +250,13 @@ func dataSourceTencentCloudKubernetesClustersReadPostHandleResponse0(ctx context
 			}
 			clsData["tags"] = tags
 		}
+
+		// cluster_extra_args
+		clsData["cluster_extra_args"] = []map[string]interface{}{{
+			"kube_apiserver":          []string(nil),
+			"kube_controller_manager": []string(nil),
+			"kube_scheduler":          []string(nil),
+		}}
 	}
 
 	_ = d.Set("list", listSlice)
@@ -284,4 +291,12 @@ func getClusterNetworkStatus(ctx context.Context, service *TkeService, clusterId
 	networkStatus = isOpened
 
 	return networkStatus, nil
+}
+
+func dataSourceTencentCloudKubernetesClustersReadOutputContent(ctx context.Context) interface{} {
+	d := tccommon.ResourceDataFromContext(ctx)
+	if d == nil {
+		return []interface{}(nil)
+	}
+	return d.Get("list")
 }
