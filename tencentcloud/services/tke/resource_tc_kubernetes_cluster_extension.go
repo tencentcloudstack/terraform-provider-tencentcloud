@@ -1050,6 +1050,9 @@ func resourceTencentCloudKubernetesClusterUpdatePostHandleResponse1(ctx context.
 			return resource.RetryableError(fmt.Errorf("cluster %s status %s, retry...", id, ins.ClusterStatus))
 		}
 	})
+	if err != nil {
+		return err
+	}
 
 	// upgrade instances version
 	upgrade := false
