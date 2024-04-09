@@ -969,11 +969,6 @@ func resourceTencentCloudKubernetesClusterUpdatePostFillRequest0(ctx context.Con
 	return nil
 }
 
-func resourceTencentCloudKubernetesClusterUpdatePostHandleResponse0(ctx context.Context, resp *tke.ModifyClusterAttributeResponse) error {
-	// TODO: implement me
-	panic("TODO: implement me")
-}
-
 func resourceTencentCloudKubernetesClusterUpdatePostFillRequest1(ctx context.Context, req *tke.UpdateClusterVersionRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
@@ -1066,21 +1061,6 @@ func resourceTencentCloudKubernetesClusterUpdatePostHandleResponse1(ctx context.
 		if err != nil {
 			return err
 		}
-	}
-	return nil
-}
-
-func resourceTencentCloudKubernetesClusterUpdatePostHandleResponse3(ctx context.Context, resp *tke.ModifyClusterAuthenticationOptionsResponse) error {
-	d := tccommon.ResourceDataFromContext(ctx)
-	meta := tccommon.ProviderMetaFromContext(ctx)
-
-	tkeService := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	id := d.Id()
-
-	// todo
-	_, _, err := tkeService.WaitForAuthenticationOptionsUpdateSuccess(ctx, id)
-	if err != nil {
-		return err
 	}
 	return nil
 }
