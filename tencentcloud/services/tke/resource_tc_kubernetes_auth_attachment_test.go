@@ -46,24 +46,25 @@ func TestAccTencentCloudKubernetesAuthAttachResource(t *testing.T) {
 	})
 }
 
-const testAccTkeAuthAttachDefault = `
+const testAccTkeAuthAttachDefault = tcacctest.TkeDataSource + `
+
 resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
-  cluster_id                           = "cls-r8gqwjw6"
+  cluster_id                           = local.cluster_id
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
 }`
 
-const testAccTkeAuthAttachNonDefault = `
+const testAccTkeAuthAttachNonDefault = tcacctest.TkeDataSource + `
 resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
-  cluster_id                           = "cls-r8gqwjw6"
+  cluster_id                           = local.cluster_id
   auto_create_discovery_anonymous_auth = true
   jwks_uri = "https://ap-guangzhou-oidc.tke.tencentcs.com/id/7cbe7ca92eba3abc76a17de1/openid/v1/jwks"
   issuer = "https://ap-guangzhou-oidc.tke.tencentcs.com/id/7cbe7ca92eba3abc76a17de1"
 }`
 
-const testAccTkeAuthAttachOidcUpdateOidc = `
+const testAccTkeAuthAttachOidcUpdateOidc = tcacctest.TkeDataSource + `
 resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
-  cluster_id                           = "cls-r8gqwjw6"
+  cluster_id                           = local.cluster_id
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
   auto_create_oidc_config = true
