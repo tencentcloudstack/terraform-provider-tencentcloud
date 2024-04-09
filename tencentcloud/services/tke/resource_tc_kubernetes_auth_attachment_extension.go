@@ -3,7 +3,6 @@ package tke
 import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -36,19 +35,6 @@ func resourceTencentCloudKubernetesAuthAttachmentReadRequestOnSuccess0(ctx conte
 		resp.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = tmpRespServiceAccount.AutoCreateDiscoveryAnonymousAuth
 	}
 
-	return nil
-}
-func resourceTencentCloudKubernetesAuthAttachmentReadPostRequest0(ctx context.Context, d *schema.ResourceData, meta interface{}, resp *tke.DescribeClusterAuthenticationOptionsResponseParams) error {
-	if resp != nil && resp.ServiceAccounts != nil {
-		if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
-			if resp.ServiceAccounts.Issuer != nil {
-				_ = d.Set("tke_default_issuer", resp.ServiceAccounts.Issuer)
-			}
-			if resp.ServiceAccounts.JWKSURI != nil {
-				_ = d.Set("tke_default_jwks_uri", resp.ServiceAccounts.JWKSURI)
-			}
-		}
-	}
 	return nil
 }
 func resourceTencentCloudKubernetesAuthAttachmentUpdatePreRequest0(ctx context.Context, req *tke.ModifyClusterAuthenticationOptionsRequest) *resource.RetryError {
