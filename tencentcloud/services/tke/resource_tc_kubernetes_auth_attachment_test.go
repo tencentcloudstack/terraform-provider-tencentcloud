@@ -38,7 +38,7 @@ func TestAccTencentCloudKubernetesAuthAttachResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_discovery_anonymous_auth", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "use_tke_default", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_oidc_config", "true"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_client_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_client_id.#"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_install_pod_identity_webhook_addon", "true"),
 				),
 			},

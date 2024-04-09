@@ -30,7 +30,10 @@ func resourceTencentCloudKubernetesAuthAttachmentReadRequestOnSuccess0(ctx conte
 		if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
 			resp.ServiceAccounts.Issuer = tmpRespServiceAccount.Issuer
 			resp.ServiceAccounts.JWKSURI = tmpRespServiceAccount.JWKSURI
+			_ = d.Set("tke_default_issuer", resp.ServiceAccounts.Issuer)
+			_ = d.Set("tke_default_jwks_uri", resp.ServiceAccounts.JWKSURI)
 		}
+
 		resp.ServiceAccounts.UseTKEDefault = tmpRespServiceAccount.UseTKEDefault
 		resp.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = tmpRespServiceAccount.AutoCreateDiscoveryAnonymousAuth
 	}

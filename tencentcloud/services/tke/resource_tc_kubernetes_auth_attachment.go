@@ -229,7 +229,7 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 		}
 
 		if respData.ServiceAccounts.JWKSURI != nil {
-			_ = d.Set("jwksuri", respData.ServiceAccounts.JWKSURI)
+			_ = d.Set("jwks_uri", respData.ServiceAccounts.JWKSURI)
 		}
 
 		if respData.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth != nil {
@@ -293,7 +293,7 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 		if v, ok := d.GetOk("issuer"); ok {
 			serviceAccountAuthenticationOptions.Issuer = helper.String(v.(string))
 		}
-		if v, ok := d.GetOk("jwksuri"); ok {
+		if v, ok := d.GetOk("jwks_uri"); ok {
 			serviceAccountAuthenticationOptions.JWKSURI = helper.String(v.(string))
 		}
 		if v, ok := d.GetOkExists("auto_create_discovery_anonymous_auth"); ok {
