@@ -8,8 +8,8 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-var testInternationalTkeClusterName = "tencentcloud_kubernetes_cluster"
-var testInternationalTkeClusterResourceKey = testInternationalTkeClusterName + ".managed_cluster"
+//var testInternationalTkeClusterName = "tencentcloud_kubernetes_cluster"
+//var testInternationalTkeClusterResourceKey = testInternationalTkeClusterName + ".managed_cluster"
 
 func TestAccTencentCloudInternationalKubernetesResource_cluster(t *testing.T) {
 	t.Parallel()
