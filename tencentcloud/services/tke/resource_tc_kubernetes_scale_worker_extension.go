@@ -220,9 +220,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Conte
 	d := tccommon.ResourceDataFromContext(ctx)
 
 	instances := make([]*cvm.Instance, 0)
-	for _, item := range resp.Response.InstanceSet {
-		instances = append(instances, item)
-	}
+	instances = append(instances, resp.Response.InstanceSet...)
 
 	instanceList := make([]interface{}, 0, len(instances))
 	for _, instance := range instances {

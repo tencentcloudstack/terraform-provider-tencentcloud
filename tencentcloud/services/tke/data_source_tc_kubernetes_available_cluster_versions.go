@@ -76,7 +76,7 @@ func dataSourceTencentCloudKubernetesAvailableClusterVersionsRead(d *schema.Reso
 	defer tccommon.LogElapsed("data_source.tencentcloud_kubernetes_available_cluster_versions.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(nil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
