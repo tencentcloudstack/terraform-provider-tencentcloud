@@ -77,82 +77,67 @@ func dataSourceTencentCloudKubernetesAvailableClusterVersionsRead(d *schema.Reso
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	var (
-		versions []*string
-		clusters []*tke.ClusterVersion
-		id       *string
-		ids      []string
-	)
-
-	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("cluster_id"); ok {
-		id = helper.String(v.(string))
-		paramMap["cluster_id"] = id
-	}
-
-	if v, ok := d.GetOk("cluster_ids"); ok {
-		clusterIdsSet := v.(*schema.Set).List()
-		ids = helper.InterfacesStrings(clusterIdsSet)
-		paramMap["cluster_ids"] = helper.InterfacesStringsPoint(clusterIdsSet)
-	}
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("cluster_id"); ok {
+		paramMap["ClusterId"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cluster_ids"); ok {
+		clusterIdsList := []*string{}
+		clusterIdsSet := v.(*schema.Set).List()
+		for i := range clusterIdsSet {
+			clusterIds := clusterIdsSet[i].(string)
+			clusterIdsList = append(clusterIdsList, helper.String(clusterIds))
+		}
+		paramMap["ClusterIds"] = clusterIdsList
+	}
+
+	var respData *tke.DescribeAvailableClusterVersionResponseParams
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesAvailableClusterVersionsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		if result != nil {
-			versions = result.Versions
-			clusters = result.Clusters
-		}
+		respData = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	if versions != nil {
-		_ = d.Set("versions", versions)
+	if respData.Versions != nil {
+		_ = d.Set("versions", respData.Versions)
 	}
 
-	tmpList := make([]map[string]interface{}, 0, len(clusters))
+	clustersList := make([]map[string]interface{}, 0, len(respData.Clusters))
+	if respData.Clusters != nil {
+		for _, clusters := range respData.Clusters {
+			clustersMap := map[string]interface{}{}
 
-	if clusters != nil {
-		for _, clusterVersion := range clusters {
-			clusterVersionMap := map[string]interface{}{}
-
-			if clusterVersion.ClusterId != nil {
-				clusterVersionMap["cluster_id"] = clusterVersion.ClusterId
+			if clusters.ClusterId != nil {
+				clustersMap["cluster_id"] = clusters.ClusterId
 			}
 
-			if clusterVersion.Versions != nil {
-				clusterVersionMap["versions"] = clusterVersion.Versions
+			if clusters.Versions != nil {
+				clustersMap["versions"] = clusters.Versions
 			}
 
-			tmpList = append(tmpList, clusterVersionMap)
+			clustersList = append(clustersList, clustersMap)
 		}
 
-		_ = d.Set("clusters", tmpList)
+		_ = d.Set("clusters", clustersList)
 	}
 
-	var clusterIds []string
-	if id != nil {
-		clusterIds = []string{*id}
-	} else {
-		clusterIds = ids
-	}
-
-	d.SetId(helper.DataResourceIdsHash(clusterIds))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), dataSourceTencentCloudKubernetesAvailableClusterVersionsReadOutputContent(ctx)); e != nil {
 			return e
 		}
 	}
+
 	return nil
 }
