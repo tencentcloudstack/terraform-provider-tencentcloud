@@ -249,7 +249,7 @@ resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
     internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
-    security_group_ids                      = ["sg-e9xmx2xv"]
+    security_group_ids                      = ["sg-cm7fbbf3"]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -286,7 +286,7 @@ resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
     system_disk_type     = "CLOUD_SSD"
     system_disk_size     = 50
     internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
-    security_group_ids   = ["sg-e9xmx2xv"]
+    security_group_ids   = ["sg-cm7fbbf3"]
     img_id               = "img-oyd1zdra"
 
     data_disk {
