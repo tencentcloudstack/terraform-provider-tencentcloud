@@ -12,8 +12,6 @@ func dataSourceTencentCloudKubernetesAvailableClusterVersionsReadPostRequest0(ct
 	d := tccommon.ResourceDataFromContext(ctx)
 
 	var (
-		versions   []*string
-		clusters   []*tke.ClusterVersion
 		clusterIds []string
 		id         *string
 		ids        []string
@@ -28,35 +26,6 @@ func dataSourceTencentCloudKubernetesAvailableClusterVersionsReadPostRequest0(ct
 		ids = helper.InterfacesStrings(clusterIdsSet)
 	}
 
-	if resp != nil {
-		versions = resp.Response.Versions
-		clusters = resp.Response.Clusters
-	}
-
-	if versions != nil {
-		_ = d.Set("versions", versions)
-	}
-
-	tmpList := make([]map[string]interface{}, 0, len(clusters))
-
-	if clusters != nil {
-		for _, clusterVersion := range clusters {
-			clusterVersionMap := map[string]interface{}{}
-
-			if clusterVersion.ClusterId != nil {
-				clusterVersionMap["cluster_id"] = clusterVersion.ClusterId
-			}
-
-			if clusterVersion.Versions != nil {
-				clusterVersionMap["versions"] = clusterVersion.Versions
-			}
-
-			tmpList = append(tmpList, clusterVersionMap)
-		}
-
-		_ = d.Set("clusters", tmpList)
-	}
-
 	if id != nil {
 		clusterIds = []string{*id}
 	} else {
@@ -65,4 +34,8 @@ func dataSourceTencentCloudKubernetesAvailableClusterVersionsReadPostRequest0(ct
 
 	d.SetId(helper.DataResourceIdsHash(clusterIds))
 	return nil
+}
+
+func dataSourceTencentCloudKubernetesAvailableClusterVersionsReadOutputContent(ctx context.Context) interface{} {
+	return "clustersList"
 }

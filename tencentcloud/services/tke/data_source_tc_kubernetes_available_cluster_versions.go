@@ -109,11 +109,32 @@ func dataSourceTencentCloudKubernetesAvailableClusterVersionsRead(d *schema.Reso
 		return err
 	}
 
-	_ = respData
+	if respData.Versions != nil {
+		_ = d.Set("versions", respData.Versions)
+	}
+
+	clustersList := make([]map[string]interface{}, 0, len(respData.Clusters))
+	if respData.Clusters != nil {
+		for _, clusters := range respData.Clusters {
+			clustersMap := map[string]interface{}{}
+
+			if clusters.ClusterId != nil {
+				clustersMap["cluster_id"] = clusters.ClusterId
+			}
+
+			if clusters.Versions != nil {
+				clustersMap["versions"] = clusters.Versions
+			}
+
+			clustersList = append(clustersList, clustersMap)
+		}
+
+		_ = d.Set("clusters", clustersList)
+	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := tccommon.WriteToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), dataSourceTencentCloudKubernetesAvailableClusterVersionsReadOutputContent(ctx)); e != nil {
 			return e
 		}
 	}
