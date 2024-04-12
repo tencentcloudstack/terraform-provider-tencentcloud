@@ -405,9 +405,18 @@ getMoreData:
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
 	var response *vpc.DescribeVpcsResponse
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = vpcId
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseVpcClient().DescribeVpcs(request)
+		var result *vpc.DescribeVpcsResponse
+		var err error
+		if vpcId != "" {
+			result, err = me.client.UseVpcClient(iacExtInfo).DescribeVpcs(request)
+		} else {
+			result, err = me.client.UseVpcClient().DescribeVpcs(request)
+		}
+
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
@@ -2357,9 +2366,12 @@ func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *v
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()
 	request.AddressIds = []*string{&eipId}
-
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeAddresses(request)
+
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = eipId
+
+	response, err := me.client.UseVpcClient(specArgs).DescribeAddresses(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -2899,6 +2911,7 @@ func (me *VpcService) describeEnis(
 	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDescribeNetworkInterfacesRequest()
+	response := vpc.NewDescribeNetworkInterfacesResponse()
 
 	if len(ids) > 0 {
 		request.NetworkInterfaceIds = common.StringPtrs(ids)
@@ -2975,8 +2988,14 @@ func (me *VpcService) describeEnis(
 	for count == ENI_DESCRIBE_LIMIT {
 		if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-
-			response, err := me.client.UseVpcClient().DescribeNetworkInterfaces(request)
+			if len(ids) > 0 {
+				var specArgs connectivity.IacExtInfo
+				tmpIds := strings.Join(ids, tccommon.FILED_SP)
+				specArgs.InstanceId = tmpIds
+				response, err = me.client.UseVpcClient(specArgs).DescribeNetworkInterfaces(request)
+			} else {
+				response, err = me.client.UseVpcClient().DescribeNetworkInterfaces(request)
+			}
 			if err != nil {
 				count = 0
 
@@ -4167,7 +4186,9 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 	)
 	request.VpnGatewayIds = []*string{&vpngwId}
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		response, err = me.client.UseVpcClient().DescribeVpnGateways(request)
+		var specArgs connectivity.IacExtInfo
+		specArgs.InstanceId = vpngwId
+		response, err = me.client.UseVpcClient(specArgs).DescribeVpnGateways(request)
 		if err != nil {
 			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
 			if !ok {

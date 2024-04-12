@@ -810,7 +810,9 @@ func (me *MysqlService) _innerDescribeDBInstanceById(ctx context.Context, mysqlI
 		}
 	}()
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = mysqlId
+	response, err := me.client.UseMysqlClient(iacExtInfo).DescribeDBInstances(request)
 	if err != nil {
 		errRet = err
 		return

@@ -414,8 +414,10 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 
 	request.ClusterIds = []*string{&id}
 
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = id
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	response, err := me.client.UseTkeClient(iacExtInfo).DescribeClusters(request)
 
 	if err != nil {
 		errRet = err
