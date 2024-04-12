@@ -40,8 +40,13 @@ func (me *LightHouseService) DescribeLighthouseInstanceById(ctx context.Context,
 
 	request.InstanceIds = append(request.InstanceIds, helper.String(instanceId))
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = instanceId
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 
 	var offset int64 = 0
 	var pageSize int64 = 100
@@ -51,7 +56,11 @@ func (me *LightHouseService) DescribeLighthouseInstanceById(ctx context.Context,
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 		response, err := me.client.UseLighthouseClient(iacExtInfo).DescribeInstances(request)
+=======
+		response, err := me.client.UseLighthouseClient(specArgs).DescribeInstances(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())

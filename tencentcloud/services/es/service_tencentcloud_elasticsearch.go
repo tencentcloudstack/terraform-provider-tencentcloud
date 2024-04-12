@@ -30,9 +30,15 @@ func (me *ElasticsearchService) DescribeInstanceById(ctx context.Context, instan
 	request.InstanceIds = []*string{&instanceId}
 
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = instanceId
 	response, err := me.client.UseEsClient(iacExtInfo).DescribeInstances(request)
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
+	response, err := me.client.UseEsClient(specArgs).DescribeInstances(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

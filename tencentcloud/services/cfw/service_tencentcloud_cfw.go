@@ -245,9 +245,15 @@ func (me *CfwService) DescribeCfwNatInstanceById(ctx context.Context, natinsId s
 	}()
 
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = natinsId
 	response, err := me.client.UseCfwClient(iacExtInfo).DescribeNatFwInstancesInfo(request)
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = natinsId
+	response, err := me.client.UseCfwClient(specArgs).DescribeNatFwInstancesInfo(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 	if err != nil {
 		errRet = err
 		return
@@ -443,9 +449,16 @@ func (me *CfwService) DescribeCfwVpcInstanceById(ctx context.Context, fwGroupId 
 	}()
 
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = fwGroupId
 	response, err := me.client.UseCfwClient(iacExtInfo).DescribeFwGroupInstanceInfo(request)
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = fwGroupId
+
+	response, err := me.client.UseCfwClient(specArgs).DescribeFwGroupInstanceInfo(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 	if err != nil {
 		errRet = err
 		return

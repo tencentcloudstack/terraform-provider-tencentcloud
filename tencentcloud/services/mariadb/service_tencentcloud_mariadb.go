@@ -755,9 +755,16 @@ func (me *MariadbService) DescribeMariadbDbInstanceDetail(ctx context.Context, i
 	}()
 
 	request.InstanceId = &instanceId
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = instanceId
 	response, err := me.client.UseMariadbClient(iacExtInfo).DescribeDBInstanceDetail(request)
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
+
+	response, err := me.client.UseMariadbClient(specArgs).DescribeDBInstanceDetail(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -1126,9 +1133,16 @@ func (me *MariadbService) DescribeMariadbInstanceById(ctx context.Context, insta
 	}()
 
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = instanceId
 	response, err := me.client.UseMariadbClient(iacExtInfo).DescribeDBInstances(request)
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
+
+	response, err := me.client.UseMariadbClient(specArgs).DescribeDBInstances(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 	if err != nil {
 		errRet = err
 		return

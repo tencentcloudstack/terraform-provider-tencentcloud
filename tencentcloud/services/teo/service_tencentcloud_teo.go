@@ -3,9 +3,8 @@ package teo
 import (
 	"context"
 	"fmt"
-	"log"
-
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -47,8 +46,13 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 	}
 
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = zoneId
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = zoneId
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 
 	var offset int64 = 0
 	var pageSize int64 = 100
@@ -58,7 +62,11 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 		response, err := me.client.UseTeoClient(iacExtInfo).DescribeZones(request)
+=======
+		response, err := me.client.UseTeoClient(specArgs).DescribeZones(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())

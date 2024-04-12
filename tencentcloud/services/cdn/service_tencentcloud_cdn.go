@@ -41,9 +41,15 @@ func (me *CdnService) DescribeDomainsConfigByDomain(ctx context.Context, domain 
 	request.Filters = append(request.Filters, filter)
 
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = domain
 	response, err := me.client.UseCdnClient(iacExtInfo).DescribeDomainsConfig(request)
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = domain
+	response, err := me.client.UseCdnClient(specArgs).DescribeDomainsConfig(request)
+>>>>>>> 4325051ae (feat/iacExtInfo2)
 	if err != nil {
 		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
 			if sdkErr.Code == CDN_HOST_NOT_FOUND {
