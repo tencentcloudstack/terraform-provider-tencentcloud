@@ -238,8 +238,13 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 		},
 	}
 	ratelimit.Check(request.GetAction())
+<<<<<<< HEAD
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = topicId
+=======
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = topicId
+>>>>>>> 104ebccd8 (add)
 	var (
 		offset    int64 = 0
 		pageSize  int64 = 100
@@ -251,10 +256,13 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
 <<<<<<< HEAD
+<<<<<<< HEAD
 		response, err := me.client.UseClsClient(iacExtInfo).DescribeTopics(request)
 =======
 		var specArgs connectivity.IacExtInfo
 		specArgs.InstanceId = topicId
+=======
+>>>>>>> 104ebccd8 (add)
 		response, err := me.client.UseClsClient(specArgs).DescribeTopics(request)
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 		if err != nil {

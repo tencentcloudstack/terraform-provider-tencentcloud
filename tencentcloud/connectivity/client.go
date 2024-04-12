@@ -306,7 +306,18 @@ func (me *TencentCloudClient) UseMysqlClient(iacExtInfo ...IacExtInfo) *cdb.Clie
 func (me *TencentCloudClient) UseMysqlClient(specArgs ...IacExtInfo) *cdb.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.mysqlConn != nil {
+<<<<<<< HEAD
 		me.mysqlConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.mysqlConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.mysqlConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.mysqlConn
 	}
 
@@ -361,7 +372,18 @@ func (me *TencentCloudClient) UseVpcClient(iacExtInfo ...IacExtInfo) *vpc.Client
 	}
 
 	if me.vpcConn != nil {
+<<<<<<< HEAD
 		me.vpcConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.vpcConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.vpcConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.vpcConn
 	}
 
@@ -380,7 +402,18 @@ func (me *TencentCloudClient) UseCbsClient(iacExtInfo ...IacExtInfo) *cbs.Client
 	}
 
 	if me.cbsConn != nil {
+<<<<<<< HEAD
 		me.cbsConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.cbsConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.cbsConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.cbsConn
 	}
 
@@ -413,7 +446,18 @@ func (me *TencentCloudClient) UseMongodbClient(iacExtInfo ...IacExtInfo) *mongod
 	}
 
 	if me.mongodbConn != nil {
+<<<<<<< HEAD
 		me.mongodbConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.mongodbConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.mongodbConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.mongodbConn
 	}
 
@@ -432,7 +476,18 @@ func (me *TencentCloudClient) UseClbClient(iacExtInfo ...IacExtInfo) *clb.Client
 	}
 
 	if me.clbConn != nil {
+<<<<<<< HEAD
 		me.clbConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.clbConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.clbConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.clbConn
 	}
 
@@ -451,7 +506,18 @@ func (me *TencentCloudClient) UseCvmClient(iacExtInfo ...IacExtInfo) *cvm.Client
 	}
 
 	if me.cvmConn != nil {
+<<<<<<< HEAD
 		me.cvmConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.cvmConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.cvmConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.cvmConn
 	}
 
@@ -484,7 +550,18 @@ func (me *TencentCloudClient) UseTkeClient(iacExtInfo ...IacExtInfo) *tke.Client
 	}
 
 	if me.tkeConn != nil {
+<<<<<<< HEAD
 		me.tkeConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.tkeConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.tkeConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.tkeConn
 	}
 
@@ -503,7 +580,18 @@ func (me *TencentCloudClient) UseTdmqClient(iacExtInfo ...IacExtInfo) *tdmq.Clie
 	}
 
 	if me.tdmqConn != nil {
+<<<<<<< HEAD
 		me.tdmqConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.tdmqConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.tdmqConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.tdmqConn
 	}
 
@@ -526,7 +614,18 @@ func (me *TencentCloudClient) UseGaapClient(iacExtInfo ...IacExtInfo) *gaap.Clie
 func (me *TencentCloudClient) UseGaapClient(specArgs ...IacExtInfo) *gaap.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.gaapConn != nil {
+<<<<<<< HEAD
 		me.gaapConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.gaapConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.gaapConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.gaapConn
 	}
 
@@ -543,7 +642,11 @@ func (me *TencentCloudClient) UseGaapClient(specArgs ...IacExtInfo) *gaap.Client
 	} else {
 		me.gaapConn.WithHttpTransport(&LogRoundTripper{})
 	}
+<<<<<<< HEAD
 >>>>>>> 4325051ae (feat/iacExtInfo2)
+=======
+
+>>>>>>> 104ebccd8 (add)
 	return me.gaapConn
 }
 
@@ -610,7 +713,18 @@ func (me *TencentCloudClient) UseScfClient(iacExtInfo ...IacExtInfo) *scf.Client
 	}
 
 	if me.scfConn != nil {
+<<<<<<< HEAD
 		me.scfConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.scfConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.scfConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.scfConn
 	}
 
@@ -659,7 +773,18 @@ func (me *TencentCloudClient) UseCdnClient(iacExtInfo ...IacExtInfo) *cdn.Client
 func (me *TencentCloudClient) UseCdnClient(specArgs ...IacExtInfo) *cdn.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.cdnConn != nil {
+<<<<<<< HEAD
 		me.cdnConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.cdnConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.cdnConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.cdnConn
 	}
 
@@ -705,7 +830,18 @@ func (me *TencentCloudClient) UseEsClient(iacExtInfo ...IacExtInfo) *es.Client {
 func (me *TencentCloudClient) UseEsClient(specArgs ...IacExtInfo) *es.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.esConn != nil {
+<<<<<<< HEAD
 		me.esConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.esConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.esConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.esConn
 	}
 
@@ -735,7 +871,18 @@ func (me *TencentCloudClient) UsePostgresqlClient(iacExtInfo ...IacExtInfo) *pos
 	}
 
 	if me.postgreConn != nil {
+<<<<<<< HEAD
 		me.postgreConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.postgreConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.postgreConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.postgreConn
 	}
 
@@ -754,7 +901,18 @@ func (me *TencentCloudClient) UseSqlserverClient(iacExtInfo ...IacExtInfo) *sqls
 	}
 
 	if me.sqlserverConn != nil {
+<<<<<<< HEAD
 		me.sqlserverConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.sqlserverConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.sqlserverConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.sqlserverConn
 	}
 
@@ -773,7 +931,18 @@ func (me *TencentCloudClient) UseCkafkaClient(iacExtInfo ...IacExtInfo) *ckafka.
 	}
 
 	if me.ckafkaConn != nil {
+<<<<<<< HEAD
 		me.ckafkaConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.ckafkaConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.ckafkaConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.ckafkaConn
 	}
 
@@ -844,7 +1013,18 @@ func (me *TencentCloudClient) UseTCRClient(iacExtInfo ...IacExtInfo) *tcr.Client
 	}
 
 	if me.tcrConn != nil {
+<<<<<<< HEAD
 		me.tcrConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.tcrConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.tcrConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.tcrConn
 	}
 
@@ -930,7 +1110,18 @@ func (me *TencentCloudClient) UseClsClient(iacExtInfo ...IacExtInfo) *cls.Client
 func (me *TencentCloudClient) UseClsClient(specArgs ...IacExtInfo) *cls.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.clsConn != nil {
+<<<<<<< HEAD
 		me.clsConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.clsConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.clsConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.clsConn
 	}
 
@@ -963,7 +1154,18 @@ func (me *TencentCloudClient) UseLighthouseClient(iacExtInfo ...IacExtInfo) *lig
 func (me *TencentCloudClient) UseLighthouseClient(specArgs ...IacExtInfo) *lighthouse.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.lighthouseConn != nil {
+<<<<<<< HEAD
 		me.lighthouseConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.lighthouseConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.lighthouseConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.lighthouseConn
 	}
 
@@ -1008,7 +1210,18 @@ func (me *TencentCloudClient) UsePrivateDnsClient(iacExtInfo ...IacExtInfo) *pri
 func (me *TencentCloudClient) UsePrivateDnsClient(specArgs ...IacExtInfo) *privatedns.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.privateDnsConn != nil {
+<<<<<<< HEAD
 		me.privateDnsConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.privateDnsConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.privateDnsConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.privateDnsConn
 	}
 
@@ -1079,7 +1292,18 @@ func (me *TencentCloudClient) UseTeoClient(iacExtInfo ...IacExtInfo) *teo.Client
 func (me *TencentCloudClient) UseTeoClient(specArgs ...IacExtInfo) *teo.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.teoConn != nil {
+<<<<<<< HEAD
 		me.teoConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.teoConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.teoConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.teoConn
 	}
 
@@ -1190,7 +1414,18 @@ func (me *TencentCloudClient) UseMariadbClient(iacExtInfo ...IacExtInfo) *mariad
 func (me *TencentCloudClient) UseMariadbClient(specArgs ...IacExtInfo) *mariadb.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.mariadbConn != nil {
+<<<<<<< HEAD
 		me.mariadbConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.mariadbConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.mariadbConn
 	}
 
@@ -1262,7 +1497,18 @@ func (me *TencentCloudClient) UseTdcpgClient(iacExtInfo ...IacExtInfo) *tdcpg.Cl
 func (me *TencentCloudClient) UseTdcpgClient(specArgs ...IacExtInfo) *tdcpg.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.tdcpgConn != nil {
+<<<<<<< HEAD
 		me.tdcpgConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.tdcpgConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.tdcpgConn
 	}
 
@@ -1279,7 +1525,11 @@ func (me *TencentCloudClient) UseTdcpgClient(specArgs ...IacExtInfo) *tdcpg.Clie
 	} else {
 		me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
 	}
+<<<<<<< HEAD
 >>>>>>> 4325051ae (feat/iacExtInfo2)
+=======
+
+>>>>>>> 104ebccd8 (add)
 	return me.tdcpgConn
 }
 
@@ -1500,7 +1750,18 @@ func (me *TencentCloudClient) UseTseClient(iacExtInfo ...IacExtInfo) *tse.Client
 	}
 
 	if me.tseConn != nil {
+<<<<<<< HEAD
 		me.tseConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.tseConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.tseConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.tseConn
 	}
 
@@ -1579,7 +1840,18 @@ func (me *TencentCloudClient) UseWafClient(iacExtInfo ...IacExtInfo) *waf.Client
 func (me *TencentCloudClient) UseWafClient(specArgs ...IacExtInfo) *waf.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.wafConn != nil {
+<<<<<<< HEAD
 		me.wafConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.wafConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.wafConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.wafConn
 	}
 
@@ -1612,7 +1884,18 @@ func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client
 func (me *TencentCloudClient) UseCfwClient(specArgs ...IacExtInfo) *cfw.Client {
 >>>>>>> 4325051ae (feat/iacExtInfo2)
 	if me.cfwConn != nil {
+<<<<<<< HEAD
 		me.cfwConn.WithHttpTransport(&logRoundTripper)
+=======
+		if len(specArgs) != 0 {
+			me.cfwConn.WithHttpTransport(&LogRoundTripper{
+				InstanceId: specArgs[0].InstanceId,
+			})
+		} else {
+			me.cfwConn.WithHttpTransport(&LogRoundTripper{})
+		}
+
+>>>>>>> 104ebccd8 (add)
 		return me.cfwConn
 	}
 
