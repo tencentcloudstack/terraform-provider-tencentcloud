@@ -587,6 +587,7 @@ func (me *GaapService) DescribeProxies(
 	logId := tccommon.GetLogId(ctx)
 
 	request := gaap.NewDescribeProxiesRequest()
+	response := gaap.NewDescribeProxiesResponse()
 	if len(ids) > 0 {
 		request.ProxyIds = common.StringPtrs(ids)
 	}
@@ -625,8 +626,15 @@ func (me *GaapService) DescribeProxies(
 
 		if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
+			if len(ids) > 0 {
+				var iacExtInfo connectivity.IacExtInfo
+				tmpIds := strings.Join(ids, tccommon.FILED_SP)
+				iacExtInfo.InstanceId = tmpIds
+				response, err = me.client.UseGaapClient(iacExtInfo).DescribeProxies(request)
+			} else {
+				response, err = me.client.UseGaapClient().DescribeProxies(request)
+			}
 
-			response, err := me.client.UseGaapClient().DescribeProxies(request)
 			if err != nil {
 				count = 0
 

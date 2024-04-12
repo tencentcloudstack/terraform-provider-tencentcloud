@@ -295,14 +295,20 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 }
 
 // UseMysqlClient returns mysql(cdb) client for service
-func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
+func (me *TencentCloudClient) UseMysqlClient(iacExtInfo ...IacExtInfo) *cdb.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.mysqlConn != nil {
+		me.mysqlConn.WithHttpTransport(&logRoundTripper)
 		return me.mysqlConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
-	me.mysqlConn.WithHttpTransport(&LogRoundTripper{})
+	me.mysqlConn.WithHttpTransport(&logRoundTripper)
 
 	return me.mysqlConn
 }
@@ -334,28 +340,40 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 }
 
 // UseVpcClient returns vpc client for service
-func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
+func (me *TencentCloudClient) UseVpcClient(iacExtInfo ...IacExtInfo) *vpc.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.vpcConn != nil {
+		me.vpcConn.WithHttpTransport(&logRoundTripper)
 		return me.vpcConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.vpcConn, _ = vpc.NewClient(me.Credential, me.Region, cpf)
-	me.vpcConn.WithHttpTransport(&LogRoundTripper{})
+	me.vpcConn.WithHttpTransport(&logRoundTripper)
 
 	return me.vpcConn
 }
 
 // UseCbsClient returns cbs client for service
-func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
+func (me *TencentCloudClient) UseCbsClient(iacExtInfo ...IacExtInfo) *cbs.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.cbsConn != nil {
+		me.cbsConn.WithHttpTransport(&logRoundTripper)
 		return me.cbsConn
 	}
 
 	var reqTimeout = getEnvDefault(PROVIDER_CBS_REQUEST_TIMEOUT, 300)
 	cpf := me.NewClientProfile(reqTimeout)
 	me.cbsConn, _ = cbs.NewClient(me.Credential, me.Region, cpf)
-	me.cbsConn.WithHttpTransport(&LogRoundTripper{})
+	me.cbsConn.WithHttpTransport(&logRoundTripper)
 
 	return me.cbsConn
 }
@@ -374,41 +392,59 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 }
 
 // UseMongodbClient returns mongodb client for service
-func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
+func (me *TencentCloudClient) UseMongodbClient(iacExtInfo ...IacExtInfo) *mongodb.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.mongodbConn != nil {
+		me.mongodbConn.WithHttpTransport(&logRoundTripper)
 		return me.mongodbConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.mongodbConn, _ = mongodb.NewClient(me.Credential, me.Region, cpf)
-	me.mongodbConn.WithHttpTransport(&LogRoundTripper{})
+	me.mongodbConn.WithHttpTransport(&logRoundTripper)
 
 	return me.mongodbConn
 }
 
 // UseClbClient returns clb client for service
-func (me *TencentCloudClient) UseClbClient() *clb.Client {
+func (me *TencentCloudClient) UseClbClient(iacExtInfo ...IacExtInfo) *clb.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.clbConn != nil {
+		me.clbConn.WithHttpTransport(&logRoundTripper)
 		return me.clbConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.clbConn, _ = clb.NewClient(me.Credential, me.Region, cpf)
-	me.clbConn.WithHttpTransport(&LogRoundTripper{})
+	me.clbConn.WithHttpTransport(&logRoundTripper)
 
 	return me.clbConn
 }
 
 // UseCvmClient returns cvm client for service
-func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
+func (me *TencentCloudClient) UseCvmClient(iacExtInfo ...IacExtInfo) *cvm.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.cvmConn != nil {
+		me.cvmConn.WithHttpTransport(&logRoundTripper)
 		return me.cvmConn
 	}
 
 	var reqTimeout = getEnvDefault(PROVIDER_CVM_REQUEST_TIMEOUT, 300)
 	cpf := me.NewClientProfile(reqTimeout)
 	me.cvmConn, _ = cvm.NewClient(me.Credential, me.Region, cpf)
-	me.cvmConn.WithHttpTransport(&LogRoundTripper{})
+	me.cvmConn.WithHttpTransport(&logRoundTripper)
 
 	return me.cvmConn
 }
@@ -427,40 +463,58 @@ func (me *TencentCloudClient) UseTagClient() *tag.Client {
 }
 
 // UseTkeClient returns tke client for service
-func (me *TencentCloudClient) UseTkeClient() *tke.Client {
+func (me *TencentCloudClient) UseTkeClient(iacExtInfo ...IacExtInfo) *tke.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.tkeConn != nil {
+		me.tkeConn.WithHttpTransport(&logRoundTripper)
 		return me.tkeConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.tkeConn, _ = tke.NewClient(me.Credential, me.Region, cpf)
-	me.tkeConn.WithHttpTransport(&LogRoundTripper{})
+	me.tkeConn.WithHttpTransport(&logRoundTripper)
 
 	return me.tkeConn
 }
 
 // UseTdmqClient returns Tdmq client for service
-func (me *TencentCloudClient) UseTdmqClient() *tdmq.Client {
+func (me *TencentCloudClient) UseTdmqClient(iacExtInfo ...IacExtInfo) *tdmq.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.tdmqConn != nil {
+		me.tdmqConn.WithHttpTransport(&logRoundTripper)
 		return me.tdmqConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.tdmqConn, _ = tdmq.NewClient(me.Credential, me.Region, cpf)
-	me.tdmqConn.WithHttpTransport(&LogRoundTripper{})
+	me.tdmqConn.WithHttpTransport(&logRoundTripper)
 
 	return me.tdmqConn
 }
 
 // UseGaapClient returns gaap client for service
-func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
+func (me *TencentCloudClient) UseGaapClient(iacExtInfo ...IacExtInfo) *gaap.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.gaapConn != nil {
+		me.gaapConn.WithHttpTransport(&logRoundTripper)
 		return me.gaapConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.gaapConn, _ = gaap.NewClient(me.Credential, me.Region, cpf)
-	me.gaapConn.WithHttpTransport(&LogRoundTripper{})
+	me.gaapConn.WithHttpTransport(&logRoundTripper)
 
 	return me.gaapConn
 }
@@ -521,14 +575,20 @@ func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
 }
 
 // UseScfClient returns scf client for service
-func (me *TencentCloudClient) UseScfClient() *scf.Client {
+func (me *TencentCloudClient) UseScfClient(iacExtInfo ...IacExtInfo) *scf.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.scfConn != nil {
+		me.scfConn.WithHttpTransport(&logRoundTripper)
 		return me.scfConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.scfConn, _ = scf.NewClient(me.Credential, me.Region, cpf)
-	me.scfConn.WithHttpTransport(&LogRoundTripper{})
+	me.scfConn.WithHttpTransport(&logRoundTripper)
 
 	return me.scfConn
 }
@@ -560,14 +620,20 @@ func (me *TencentCloudClient) UseDayuClient() *dayu.Client {
 }
 
 // UseCdnClient returns cdn client for service
-func (me *TencentCloudClient) UseCdnClient() *cdn.Client {
+func (me *TencentCloudClient) UseCdnClient(iacExtInfo ...IacExtInfo) *cdn.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.cdnConn != nil {
+		me.cdnConn.WithHttpTransport(&logRoundTripper)
 		return me.cdnConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.cdnConn, _ = cdn.NewClient(me.Credential, me.Region, cpf)
-	me.cdnConn.WithHttpTransport(&LogRoundTripper{})
+	me.cdnConn.WithHttpTransport(&logRoundTripper)
 
 	return me.cdnConn
 }
@@ -586,54 +652,78 @@ func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 }
 
 // UseEsClient returns es client for service
-func (me *TencentCloudClient) UseEsClient() *es.Client {
+func (me *TencentCloudClient) UseEsClient(iacExtInfo ...IacExtInfo) *es.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.esConn != nil {
+		me.esConn.WithHttpTransport(&logRoundTripper)
 		return me.esConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
 	me.esConn, _ = es.NewClient(me.Credential, me.Region, cpf)
-	me.esConn.WithHttpTransport(&LogRoundTripper{})
+	me.esConn.WithHttpTransport(&logRoundTripper)
 
 	return me.esConn
 }
 
 // UsePostgresqlClient returns postgresql client for service
-func (me *TencentCloudClient) UsePostgresqlClient() *postgre.Client {
+func (me *TencentCloudClient) UsePostgresqlClient(iacExtInfo ...IacExtInfo) *postgre.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.postgreConn != nil {
+		me.postgreConn.WithHttpTransport(&logRoundTripper)
 		return me.postgreConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.postgreConn, _ = postgre.NewClient(me.Credential, me.Region, cpf)
-	me.postgreConn.WithHttpTransport(&LogRoundTripper{})
+	me.postgreConn.WithHttpTransport(&logRoundTripper)
 
 	return me.postgreConn
 }
 
 // UseSqlserverClient returns sqlserver client for service
-func (me *TencentCloudClient) UseSqlserverClient() *sqlserver.Client {
+func (me *TencentCloudClient) UseSqlserverClient(iacExtInfo ...IacExtInfo) *sqlserver.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.sqlserverConn != nil {
+		me.sqlserverConn.WithHttpTransport(&logRoundTripper)
 		return me.sqlserverConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.sqlserverConn, _ = sqlserver.NewClient(me.Credential, me.Region, cpf)
-	me.sqlserverConn.WithHttpTransport(&LogRoundTripper{})
+	me.sqlserverConn.WithHttpTransport(&logRoundTripper)
 
 	return me.sqlserverConn
 }
 
 // UseCkafkaClient returns ckafka client for service
-func (me *TencentCloudClient) UseCkafkaClient() *ckafka.Client {
+func (me *TencentCloudClient) UseCkafkaClient(iacExtInfo ...IacExtInfo) *ckafka.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.ckafkaConn != nil {
+		me.ckafkaConn.WithHttpTransport(&logRoundTripper)
 		return me.ckafkaConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.ckafkaConn, _ = ckafka.NewClient(me.Credential, me.Region, cpf)
-	me.ckafkaConn.WithHttpTransport(&LogRoundTripper{})
+	me.ckafkaConn.WithHttpTransport(&logRoundTripper)
 
 	return me.ckafkaConn
 }
@@ -691,14 +781,20 @@ func (me *TencentCloudClient) UseAPIGatewayClient() *apigateway.Client {
 }
 
 // UseTCRClient returns apigateway client for service
-func (me *TencentCloudClient) UseTCRClient() *tcr.Client {
+func (me *TencentCloudClient) UseTCRClient(iacExtInfo ...IacExtInfo) *tcr.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.tcrConn != nil {
+		me.tcrConn.WithHttpTransport(&logRoundTripper)
 		return me.tcrConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.tcrConn, _ = tcr.NewClient(me.Credential, me.Region, cpf)
-	me.tcrConn.WithHttpTransport(&LogRoundTripper{})
+	me.tcrConn.WithHttpTransport(&logRoundTripper)
 
 	return me.tcrConn
 }
@@ -767,25 +863,39 @@ func (me *TencentCloudClient) UseEmrClient() *emr.Client {
 }
 
 // UseClsClient return CLS client for service
-func (me *TencentCloudClient) UseClsClient() *cls.Client {
+func (me *TencentCloudClient) UseClsClient(iacExtInfo ...IacExtInfo) *cls.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.clsConn != nil {
+		me.clsConn.WithHttpTransport(&logRoundTripper)
 		return me.clsConn
 	}
+
 	cpf := me.NewClientProfile(300)
 	me.clsConn, _ = cls.NewClient(me.Credential, me.Region, cpf)
-	me.clsConn.WithHttpTransport(&LogRoundTripper{})
+	me.clsConn.WithHttpTransport(&logRoundTripper)
 
 	return me.clsConn
 }
 
 // UseLighthouseClient return Lighthouse client for service
-func (me *TencentCloudClient) UseLighthouseClient() *lighthouse.Client {
+func (me *TencentCloudClient) UseLighthouseClient(iacExtInfo ...IacExtInfo) *lighthouse.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.lighthouseConn != nil {
+		me.lighthouseConn.WithHttpTransport(&logRoundTripper)
 		return me.lighthouseConn
 	}
+
 	cpf := me.NewClientProfile(300)
 	me.lighthouseConn, _ = lighthouse.NewClient(me.Credential, me.Region, cpf)
-	me.lighthouseConn.WithHttpTransport(&LogRoundTripper{})
+	me.lighthouseConn.WithHttpTransport(&logRoundTripper)
 
 	return me.lighthouseConn
 }
@@ -803,13 +913,20 @@ func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
 }
 
 // UsePrivateDnsClient return PrivateDns client for service
-func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
+func (me *TencentCloudClient) UsePrivateDnsClient(iacExtInfo ...IacExtInfo) *privatedns.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.privateDnsConn != nil {
+		me.privateDnsConn.WithHttpTransport(&logRoundTripper)
 		return me.privateDnsConn
 	}
+
 	cpf := me.NewClientProfile(300)
 	me.privateDnsConn, _ = privatedns.NewClient(me.Credential, me.Region, cpf)
-	me.privateDnsConn.WithHttpTransport(&LogRoundTripper{})
+	me.privateDnsConn.WithHttpTransport(&logRoundTripper)
 
 	return me.privateDnsConn
 }
@@ -853,14 +970,20 @@ func (me *TencentCloudClient) UseTemClient() *tem.Client {
 }
 
 // UseTeoClient returns teo client for service
-func (me *TencentCloudClient) UseTeoClient() *teo.Client {
+func (me *TencentCloudClient) UseTeoClient(iacExtInfo ...IacExtInfo) *teo.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.teoConn != nil {
+		me.teoConn.WithHttpTransport(&logRoundTripper)
 		return me.teoConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.teoConn, _ = teo.NewClient(me.Credential, me.Region, cpf)
-	me.teoConn.WithHttpTransport(&LogRoundTripper{})
+	me.teoConn.WithHttpTransport(&logRoundTripper)
 
 	return me.teoConn
 }
@@ -944,14 +1067,20 @@ func (me *TencentCloudClient) UseCatClient() *cat.Client {
 }
 
 // UseMariadbClient returns mariadb client for service
-func (me *TencentCloudClient) UseMariadbClient() *mariadb.Client {
+func (me *TencentCloudClient) UseMariadbClient(iacExtInfo ...IacExtInfo) *mariadb.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.mariadbConn != nil {
+		me.mariadbConn.WithHttpTransport(&logRoundTripper)
 		return me.mariadbConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.mariadbConn, _ = mariadb.NewClient(me.Credential, me.Region, cpf)
-	me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
+	me.mariadbConn.WithHttpTransport(&logRoundTripper)
 
 	return me.mariadbConn
 }
@@ -996,14 +1125,20 @@ func (me *TencentCloudClient) UseOrganizationClient() *organization.Client {
 }
 
 // UseTdcpgClient returns tdcpg client for service
-func (me *TencentCloudClient) UseTdcpgClient() *tdcpg.Client {
+func (me *TencentCloudClient) UseTdcpgClient(iacExtInfo ...IacExtInfo) *tdcpg.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.tdcpgConn != nil {
+		me.tdcpgConn.WithHttpTransport(&logRoundTripper)
 		return me.tdcpgConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	me.tdcpgConn, _ = tdcpg.NewClient(me.Credential, me.Region, cpf)
-	me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
+	me.tdcpgConn.WithHttpTransport(&logRoundTripper)
 
 	return me.tdcpgConn
 }
@@ -1218,15 +1353,21 @@ func (me *TencentCloudClient) UseCiamClient() *ciam.Client {
 }
 
 // UseTseClient returns tse client for service
-func (me *TencentCloudClient) UseTseClient() *tse.Client {
+func (me *TencentCloudClient) UseTseClient(iacExtInfo ...IacExtInfo) *tse.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.tseConn != nil {
+		me.tseConn.WithHttpTransport(&logRoundTripper)
 		return me.tseConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
 	me.tseConn, _ = tse.NewClient(me.Credential, me.Region, cpf)
-	me.tseConn.WithHttpTransport(&LogRoundTripper{})
+	me.tseConn.WithHttpTransport(&logRoundTripper)
 
 	return me.tseConn
 }
@@ -1287,28 +1428,40 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	return me.wedataConn
 }
 
-func (me *TencentCloudClient) UseWafClient() *waf.Client {
+func (me *TencentCloudClient) UseWafClient(iacExtInfo ...IacExtInfo) *waf.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.wafConn != nil {
+		me.wafConn.WithHttpTransport(&logRoundTripper)
 		return me.wafConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
 	me.wafConn, _ = waf.NewClient(me.Credential, me.Region, cpf)
-	me.wafConn.WithHttpTransport(&LogRoundTripper{})
+	me.wafConn.WithHttpTransport(&logRoundTripper)
 
 	return me.wafConn
 }
 
-func (me *TencentCloudClient) UseCfwClient() *cfw.Client {
+func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
 	if me.cfwConn != nil {
+		me.cfwConn.WithHttpTransport(&logRoundTripper)
 		return me.cfwConn
 	}
 
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
 	me.cfwConn, _ = cfw.NewClient(me.Credential, me.Region, cpf)
-	me.cfwConn.WithHttpTransport(&LogRoundTripper{})
+	me.cfwConn.WithHttpTransport(&logRoundTripper)
 
 	return me.cfwConn
 }

@@ -69,8 +69,10 @@ func (me *CvmService) DescribeInstanceById(ctx context.Context, instanceId strin
 	request := cvm.NewDescribeInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
 
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	response, err := me.client.UseCvmClient(iacExtInfo).DescribeInstances(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

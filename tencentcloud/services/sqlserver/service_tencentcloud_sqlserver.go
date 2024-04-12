@@ -331,11 +331,14 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 	}
 	var offset, limit int64 = 0, 20
 
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+		response, err := me.client.UseSqlserverClient(iacExtInfo).DescribeDBInstances(request)
 		if err != nil {
 			errRet = err
 			return
@@ -2667,7 +2670,10 @@ func (me *SqlserverService) DescribeSqlserverGeneralCloudInstanceById(ctx contex
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = instanceId
+
+	response, err := me.client.UseSqlserverClient(specArgs).DescribeDBInstances(request)
 	if err != nil {
 		errRet = err
 		return
