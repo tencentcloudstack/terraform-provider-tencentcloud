@@ -2,6 +2,7 @@ package scf
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 
@@ -147,15 +148,21 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	return nil
 }
 
-func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace string) (resp *scf.GetFunctionResponse, err error) {
+func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace string, functionId ...string) (resp *scf.GetFunctionResponse, err error) {
 	request := scf.NewGetFunctionRequest()
+	response := scf.NewGetFunctionResponse()
 	request.FunctionName = &name
 	request.Namespace = &namespace
-	var iacExtInfo connectivity.IacExtInfo
-	iacExtInfo.InstanceId = strings.Join([]string{name, namespace}, tccommon.FILED_SP)
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseScfClient(iacExtInfo).GetFunction(request)
+		if len(functionId) == 1 {
+			var iacExtInfo connectivity.IacExtInfo
+			iacExtInfo.InstanceId = functionId[0]
+			response, err = me.client.UseScfClient(iacExtInfo).GetFunction(request)
+		} else {
+			response, err = me.client.UseScfClient().GetFunction(request)
+		}
+
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {
@@ -166,6 +173,10 @@ func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace stri
 			}
 
 			return tccommon.RetryError(errors.WithStack(err), tccommon.InternalError)
+		}
+
+		if response == nil || *response.Response.FunctionId == "" {
+			return resource.NonRetryableError(fmt.Errorf("functionId is empty"))
 		}
 
 		resp = response
