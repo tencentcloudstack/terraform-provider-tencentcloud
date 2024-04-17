@@ -100,7 +100,7 @@ func ResourceTencentCloudTcrInstance() *schema.Resource {
 						"region_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Copy instance region name.",
+							Description: "Replication region name.",
 						},
 						"syn_tag": {
 							Type:        schema.TypeBool,
