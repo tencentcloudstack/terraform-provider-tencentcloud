@@ -1,3 +1,10 @@
+## 1.81.88 (April 18, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_scf_function: return function_id params ([#2590](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2590))
+* resource/tencentcloud_tcr_instance: Support `region_name` parma ([#2593](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2593))
+
 ## 1.81.87 (April 7, 2024)
 
 FEATURES:
