@@ -543,7 +543,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance_regionName" {
 
 const testAccTCRInstance_basic_update_remark = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "exampleregionname"
+  name        = "testacctcrinstance1"
   instance_type = "basic"
   delete_bucket = true
   open_public_operation = true
