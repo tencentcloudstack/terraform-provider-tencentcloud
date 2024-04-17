@@ -98,6 +98,7 @@ The following arguments are supported:
 The `replications` object supports the following:
 
 * `region_id` - (Optional, Int) Replication region ID, check the example at the top of page to find out id of region.
+* `region_name` - (Optional, String) Replication region name.
 * `syn_tag` - (Optional, Bool) Specify whether to sync TCR cloud tags to COS Bucket. NOTE: You have to specify when adding, modifying will be ignored for now.
 
 The `security_policy` object supports the following:

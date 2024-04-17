@@ -1,11 +1,10 @@
 package tcr
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
-
 	"context"
 	"fmt"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"log"
 	"strings"
 	"time"
@@ -98,6 +97,11 @@ func ResourceTencentCloudTcrInstance() *schema.Resource {
 							Optional:    true,
 							Description: "Replication region ID, check the example at the top of page to find out id of region.",
 						},
+						"region_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Replication region name.",
+						},
 						"syn_tag": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -189,9 +193,15 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 		providerRegionId := RegionIdMap[client.Region]
 		for i := range v {
 			rep := v[i].(map[string]interface{})
-			repRegion := fmt.Sprintf("%d", rep["region_id"].(int))
-			if repRegion == providerRegionId {
-				return fmt.Errorf("replication %s region is same with instance region %s (%s)", repRegion, providerRegionId, client.Region)
+			repRegionId := fmt.Sprintf("%d", rep["region_id"].(int))
+			repRegionName := rep["region_name"].(string)
+
+			if repRegionId != "0" && repRegionId == providerRegionId {
+				return fmt.Errorf("replication region id:%s region is same with instance region %s (%s)", repRegionId, providerRegionId, client.Region)
+			}
+
+			if repRegionName != "" && repRegionName == client.Region {
+				return fmt.Errorf("replication region name:%s region is same with instance region %s", repRegionName, client.Region)
 			}
 		}
 	}
@@ -776,7 +786,12 @@ func resourceTencentCloudTcrReplicationSet(ctx context.Context, d *schema.Resour
 		if !ok {
 			return 0
 		}
-		return item["region_id"].(int)
+		regionId := item["region_id"].(int)
+		regionName := item["region_name"].(string)
+		if regionId == 0 && regionName != "" {
+			regionId = helper.StrToInt(RegionIdMap[regionName])
+		}
+		return regionId
 	}
 
 	oSet := schema.NewSet(setFunc, ov)
@@ -792,7 +807,14 @@ func resourceTencentCloudTcrReplicationSet(ctx context.Context, d *schema.Resour
 			request := tcr.NewCreateReplicationInstanceRequest()
 			replica := list[i].(map[string]interface{})
 			request.RegistryId = helper.String(d.Id())
-			request.ReplicationRegionId = helper.IntUint64(replica["region_id"].(int))
+			regionId := replica["region_id"].(int)
+			regionName := replica["region_name"].(string)
+			if regionId != 0 {
+				request.ReplicationRegionId = helper.IntUint64(regionId)
+			}
+			if regionName != "" {
+				request.ReplicationRegionName = helper.String(regionName)
+			}
 			if synTag, ok := replica["syn_tag"].(bool); ok {
 				request.SyncTag = &synTag
 			}
@@ -832,6 +854,11 @@ func resourceTencentCloudTcrReplicationSet(ctx context.Context, d *schema.Resour
 			replica := list[i].(map[string]interface{})
 			id, ok := replica["id"].(string)
 			regionId := replica["region_id"].(int)
+			regionName := replica["region_name"].(string)
+			if regionId == 0 && regionName != "" {
+				tmpRegionId := helper.StrToInt(RegionIdMap[regionName])
+				regionId = tmpRegionId
+			}
 			if !ok || id == "" {
 				errs = *multierror.Append(fmt.Errorf("replication region %d has no id", regionId))
 				continue
@@ -863,6 +890,13 @@ func ResourceTencentCloudTcrFillReplicas(replicas []interface{}, registries []*t
 	for i := range replicas {
 		item := replicas[i].(map[string]interface{})
 		regionId := item["region_id"].(int)
+		regionName := item["region_name"].(string)
+
+		if regionId == 0 && regionName != "" {
+			tmpRegionId := helper.StrToInt(RegionIdMap[regionName])
+			regionId = tmpRegionId
+		}
+
 		replicaRegionIndexes[regionId] = i
 	}
 
@@ -871,12 +905,14 @@ func ResourceTencentCloudTcrFillReplicas(replicas []interface{}, registries []*t
 		item := registries[i]
 		id := *item.ReplicationRegistryId
 		regionId := *item.ReplicationRegionId
+		regionName := *item.ReplicationRegionName
 		if index, ok := replicaRegionIndexes[int(regionId)]; ok && index >= 0 {
 			replicas[index].(map[string]interface{})["id"] = id
 		} else {
 			newReplicas = append(newReplicas, map[string]interface{}{
-				"id":        id,
-				"region_id": int(regionId),
+				"id":          id,
+				"region_id":   int(regionId),
+				"region_name": regionName,
 			})
 		}
 	}
