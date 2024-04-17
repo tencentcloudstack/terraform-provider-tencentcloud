@@ -265,7 +265,44 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 		},
 	})
 }
-
+func TestAccTencentCloudTcrInstanceResource_replication_regionName(t *testing.T) {
+	// t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckTCRInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTCRInstance_replica_regionName,
+				PreConfig: func() {
+					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+				},
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_regionName", "name", "exampleregionname"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_regionName", "replications.#", "1"),
+				),
+			},
+			{
+				Config: testAccTCRInstance_replica_regionName_update,
+				PreConfig: func() {
+					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+				},
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_regionName", "name", "exampleregionname"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_regionName", "replications.#", "2"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_tcr_instance.mytcr_instance_regionName",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"delete_bucket", "replications"},
+			},
+		},
+	})
+}
 func TestAccTencentCloudTcrInstanceResource_replica_set(t *testing.T) {
 	inputs := []interface{}{
 		map[string]interface{}{
@@ -476,9 +513,37 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   }
 }`
 
+const testAccTCRInstance_replica_regionName = `
+resource "tencentcloud_tcr_instance" "mytcr_instance_regionName" {
+  name        = "exampleregionname"
+  instance_type = "premium"
+  delete_bucket = true
+
+  replications {
+	region_name = "ap-shanghai"
+  }
+}
+`
+
+const testAccTCRInstance_replica_regionName_update = `
+resource "tencentcloud_tcr_instance" "mytcr_instance_regionName" {
+  name        = "exampleregionname"
+  instance_type = "premium"
+  delete_bucket = true
+
+  replications {
+	region_name = "ap-shanghai"
+  }
+
+  replications {
+    region_name = "ap-nanjing" 
+  }
+}
+`
+
 const testAccTCRInstance_basic_update_remark = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance1"
+  name        = "exampleregionname"
   instance_type = "basic"
   delete_bucket = true
   open_public_operation = true
