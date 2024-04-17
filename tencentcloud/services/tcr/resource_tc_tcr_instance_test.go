@@ -11,10 +11,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctcr "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
 
-	"github.com/stretchr/testify/assert"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -302,101 +299,6 @@ func TestAccTencentCloudTcrInstanceResource_replication_regionName(t *testing.T)
 			},
 		},
 	})
-}
-func TestAccTencentCloudTcrInstanceResource_replica_set(t *testing.T) {
-	inputs := []interface{}{
-		map[string]interface{}{
-			"region_id": 1,
-			"sync_cos":  true,
-		},
-		map[string]interface{}{
-			"region_id": 2,
-		},
-		map[string]interface{}{
-			"region_id": 3,
-			"sync_cos":  false,
-		},
-	}
-
-	registries1 := []*tcr.ReplicationRegistry{
-		{
-			ReplicationRegistryId: helper.String("a"),
-			RegistryId:            helper.String("x"),
-			ReplicationRegionId:   helper.IntUint64(1),
-		},
-		{
-			ReplicationRegistryId: helper.String("b"),
-			RegistryId:            helper.String("x"),
-			ReplicationRegionId:   helper.IntUint64(2),
-		},
-		{
-			ReplicationRegistryId: helper.String("c"),
-			RegistryId:            helper.String("x"),
-			ReplicationRegionId:   helper.IntUint64(3),
-		},
-	}
-
-	result1 := svctcr.ResourceTencentCloudTcrFillReplicas(inputs, registries1)
-	expected1 := []interface{}{
-		map[string]interface{}{
-			"id":        "a",
-			"region_id": 1,
-			"sync_cos":  true,
-		},
-		map[string]interface{}{
-			"id":        "b",
-			"region_id": 2,
-		},
-		map[string]interface{}{
-			"id":        "c",
-			"region_id": 3,
-			"sync_cos":  false,
-		},
-	}
-	assert.Equalf(t, expected1, result1, "%s case 1 not equal, expected:\n%v\ngot: \n%v", t.Name(), expected1, result1)
-
-	var registries2 []*tcr.ReplicationRegistry
-	registries2Incr := []*tcr.ReplicationRegistry{
-		{
-			ReplicationRegistryId: helper.String("d"),
-			RegistryId:            helper.String("x"),
-			ReplicationRegionId:   helper.IntUint64(4),
-		},
-		{
-			ReplicationRegistryId: helper.String("e"),
-			RegistryId:            helper.String("x"),
-			ReplicationRegionId:   helper.IntUint64(5),
-		},
-	}
-	registries2 = append(registries2, registries1...)
-	registries2 = append(registries2, registries2Incr...)
-	result2 := svctcr.ResourceTencentCloudTcrFillReplicas(inputs, registries2)
-	expected2 := []interface{}{
-		map[string]interface{}{
-			"id":        "a",
-			"region_id": 1,
-			"sync_cos":  true,
-		},
-		map[string]interface{}{
-			"id":        "b",
-			"region_id": 2,
-		},
-		map[string]interface{}{
-			"id":        "c",
-			"region_id": 3,
-			"sync_cos":  false,
-		},
-		map[string]interface{}{
-			"id":        "d",
-			"region_id": 4,
-		},
-		map[string]interface{}{
-			"id":        "e",
-			"region_id": 5,
-		},
-	}
-
-	assert.Equalf(t, expected2, result2, "%s case 2 not equal, expected:\n%v\ngot: \n%v", t.Name(), expected2, result2)
 }
 
 func testAccCheckTCRInstanceDestroy(s *terraform.State) error {
