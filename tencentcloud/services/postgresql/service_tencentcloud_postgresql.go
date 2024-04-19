@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -1300,7 +1301,7 @@ func (me *PostgresqlService) PostgresqlDBInstanceNetworkAccessStateRefreshFunc(d
 }
 
 func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetInfosById(ctx context.Context, dbInstanceId, roGroupId string) (netInfos []*postgresql.DBInstanceNetInfo, errRet error) {
-	tccommon.LogElapsed("DescribePostgresqlReadonlyGroupNetInfoById called")()
+	tccommon.LogElapsed("DescribePostgresqlReadonlyGroupNetInfosById called")()
 	logId := tccommon.GetLogId(ctx)
 
 	paramMap := map[string]interface{}{
@@ -1855,4 +1856,122 @@ func (me *PostgresqlService) DeletePostgresqlBaseBackupById(ctx context.Context,
 	})
 
 	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupSpecificNetInfoById(ctx context.Context, id string) (dBInstanceNetInfo *postgresql.DBInstanceNetInfo, errRet error) {
+	tccommon.LogElapsed("DescribePostgresqlReadonlyGroupSpecificNetInfoById called")
+	idSplit := strings.Split(id, tccommon.FILED_SP)
+	if len(idSplit) != 5 {
+		return nil, fmt.Errorf("id is broken,%s, location:%s", id, "resource.tencentcloud_postgresql_readonly_group_network_access_attachment.read")
+	}
+
+	dbInstanceId := idSplit[0]
+	roGroupId := idSplit[1]
+	vpcId := idSplit[2]
+	vip := idSplit[3]
+	port := idSplit[4]
+
+	ret, err := me.DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx, dbInstanceId, roGroupId)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret != nil {
+		for _, info := range ret.DBInstanceNetInfo {
+			// vpc, vip and port may empty before creating completed.
+			if (*info.VpcId == vpcId || vpcId == "") && (*info.Ip == vip || vip == "") && (helper.UInt64ToStr(*info.Port) == port || port == "") {
+				dBInstanceNetInfo = info
+				return
+			}
+		}
+	}
+	return nil, nil
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx context.Context, dbInstanceId, roGroupId string) (roGroup *postgresql.ReadOnlyGroup, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	paramMap := map[string]interface{}{
+		"Filters": []*postgresql.Filter{
+			{
+				Name:   helper.String("db-master-instance-id"),
+				Values: []*string{helper.String(dbInstanceId)},
+			},
+			{
+				Name:   helper.String("read-only-group-id"),
+				Values: []*string{helper.String(dbInstanceId)},
+			},
+		},
+	}
+
+	result, err := me.DescribePostgresqlReadonlyGroupsByFilter(ctx, paramMap)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if roGroupId != "" {
+		for _, group := range result {
+			if *group.ReadOnlyGroupId == roGroupId {
+				roGroup = group
+
+				break
+			}
+		}
+	} else {
+		roGroup = result[0]
+	}
+	log.Printf("[DEBUG]%s DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById dbInstanceId:[%s] roGroupId:[%s] success, result is roGroup:[%v], \n", logId, dbInstanceId, roGroupId, roGroup)
+
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx context.Context, readOnlyGroupId, vpcId, subnetId, vip string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDeleteReadOnlyGroupNetworkAccessRequest()
+	request.ReadOnlyGroupId = &readOnlyGroupId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Vip = &vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteReadOnlyGroupNetworkAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(id string, failStates []string) resource.StateRefreshFunc {
+	tccommon.LogElapsed("PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+
+		object, err := me.DescribePostgresqlReadonlyGroupSpecificNetInfoById(ctx, id)
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+		if object == nil {
+			return &postgresql.DBInstanceNetInfo{}, "closed", nil
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
 }
