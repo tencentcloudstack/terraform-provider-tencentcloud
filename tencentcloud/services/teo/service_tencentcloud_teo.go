@@ -828,3 +828,46 @@ func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId,
 
 	return nil
 }
+
+func (me *TeoService) DescribeTeoApplicationProxyRuleById(ctx context.Context, ruleId string) (ret *teo.ApplicationProxyRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeApplicationProxiesRequest()
+
+	if err := resourceTencentCloudTeoApplicationProxyRuleReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeApplicationProxies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	var tmpRet *teo.ApplicationProxy
+	if len(response.Response.ApplicationProxies) < 1 {
+		return
+	}
+
+	tmpRet = response.Response.ApplicationProxies[0]
+	if len(tmpRet.ApplicationProxyRules) < 1 {
+		return
+	}
+
+	for _, info := range tmpRet.ApplicationProxyRules {
+		if info.RuleId != nil && *info.RuleId == ruleId {
+			ret = info
+			break
+		}
+	}
+	return
+}
