@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_group: Support the computed param `ip` of the `net_info_list`
+```

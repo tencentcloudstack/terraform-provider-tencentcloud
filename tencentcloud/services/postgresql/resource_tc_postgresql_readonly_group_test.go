@@ -37,6 +37,10 @@ func TestAccTencentCloudPostgresqlReadonlyGroupResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "max_replay_lag", "100"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "max_replay_latency", "512"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "min_delay_eliminate_reserve", "1"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "min_delay_eliminate_reserve", "1"),
+					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "net_info_list.#"),
+					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "net_info_list.0.ip"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "net_info_list.0.port", "5432"),
 				),
 			},
 			{
@@ -51,15 +55,37 @@ func TestAccTencentCloudPostgresqlReadonlyGroupResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "name", "tf_ro_group_test_updated"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "subnet_id"),
+					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "net_info_list.#"),
+					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "net_info_list.0.ip"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "net_info_list.0.port", "5432"),
 				),
 			},
 		},
 	})
 }
 
-const testAccPostgresqlReadonlyGroupInstance string = tcacctest.CommonPresetPGSQL + tcacctest.DefaultVpcSubnets + `
+const testAccPostgresqlReadonlyGroupInstance string = tcacctest.DefaultVpcSubnets + `
+resource "tencentcloud_postgresql_instance" "test" {
+	name              = "example"
+	availability_zone = var.default_az
+	charge_type       = "POSTPAID_BY_HOUR"
+	vpc_id            = local.vpc_id
+	subnet_id         = local.subnet_id
+	engine_version    = "10.4"
+	root_user         = "root123"
+	root_password     = "Root123$"
+	charset           = "UTF8"
+	project_id        = 0
+	memory            = 2
+	storage           = 10
+  
+	tags = {
+	  test = "tf"
+	}
+  }
+
 resource "tencentcloud_postgresql_readonly_group" "group" {
-	master_db_instance_id = local.pgsql_id
+	master_db_instance_id = tencentcloud_postgresql_instance.test.id
 	name = "tf_ro_group_test"
 	project_id = 0
 	vpc_id  = local.vpc_id
@@ -72,8 +98,27 @@ resource "tencentcloud_postgresql_readonly_group" "group" {
   }
 `
 
-const testAccPostgresqlReadonlyGroupInstance_update string = tcacctest.CommonPresetPGSQL + tcacctest.DefaultVpcSubnets + `
-resource "tencentcloud_vpc" "vpc" {
+const testAccPostgresqlReadonlyGroupInstance_update string = tcacctest.DefaultVpcSubnets + `
+  resource "tencentcloud_postgresql_instance" "test" {
+	name              = "example"
+	availability_zone = var.default_az
+	charge_type       = "POSTPAID_BY_HOUR"
+	vpc_id            = local.vpc_id
+	subnet_id         = local.subnet_id
+	engine_version    = "10.4"
+	root_user         = "root123"
+	root_password     = "Root123$"
+	charset           = "UTF8"
+	project_id        = 0
+	memory            = 2
+	storage           = 10
+  
+	tags = {
+	  test = "tf"
+	}
+  }
+
+  resource "tencentcloud_vpc" "vpc" {
 	cidr_block = "172.18.111.0/24"
 	name       = "test-pg-rogroup-network-vpc"
   }
@@ -91,7 +136,7 @@ resource "tencentcloud_vpc" "vpc" {
   }
 
 resource "tencentcloud_postgresql_readonly_group" "group" {
-	master_db_instance_id = local.pgsql_id
+	master_db_instance_id = tencentcloud_postgresql_instance.test.id
 	name = "tf_ro_group_test_updated"
 	project_id = 0
 	vpc_id  	  		= local.new_vpc_id

@@ -52,7 +52,7 @@ func ResourceTencentCloudPostgresqlReadonlyGroup() *schema.Resource {
 				Required:    true,
 				Description: "VPC subnet ID.",
 			},
-			"net_infos": {
+			"net_info_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "List of db instance net info.",
@@ -64,7 +64,7 @@ func ResourceTencentCloudPostgresqlReadonlyGroup() *schema.Resource {
 							Description: "Ip address of the net info.",
 						},
 						"port": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Port of the net info.",
 						},
@@ -238,14 +238,14 @@ func resourceTencentCloudPostgresqlReadOnlyGroupRead(d *schema.ResourceData, met
 			netInfoMap := map[string]interface{}{}
 
 			if netInfo.Ip != nil {
-				netInfoMap["ip"] = netInfo.Ip
+				netInfoMap["ip"] = *netInfo.Ip
 			}
 			if netInfo.Port != nil {
-				netInfoMap["port"] = netInfo.Port
+				netInfoMap["port"] = helper.UInt64Int64(*netInfo.Port)
 			}
 			netInfoList = append(netInfoList, netInfoMap)
 		}
-		_ = d.Set("net_infos", netInfoList)
+		_ = d.Set("net_info_list", netInfoList)
 	}
 
 	return nil
