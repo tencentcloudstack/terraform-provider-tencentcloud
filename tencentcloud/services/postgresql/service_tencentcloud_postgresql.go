@@ -1309,6 +1309,10 @@ func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetInfosById(ctx con
 				Name:   helper.String("db-master-instance-id"),
 				Values: []*string{helper.String(dbInstanceId)},
 			},
+			{
+				Name:   helper.String("read-only-group-id"),
+				Values: []*string{helper.String(roGroupId)},
+			},
 		},
 	}
 
