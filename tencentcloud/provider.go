@@ -1357,6 +1357,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_modify_account_remark_operation":          postgresql.ResourceTencentCloudPostgresqlModifyAccountRemarkOperation(),
 			"tencentcloud_postgresql_modify_switch_time_period_operation":      postgresql.ResourceTencentCloudPostgresqlModifySwitchTimePeriodOperation(),
 			"tencentcloud_postgresql_instance_ha_config":                       postgresql.ResourceTencentCloudPostgresqlInstanceHAConfig(),
+			"tencentcloud_postgresql_readonly_group_network_access_attachment": postgresql.ResourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachment(),
 			"tencentcloud_sqlserver_instance":                                  sqlserver.ResourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                        sqlserver.ResourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                                   sqlserver.ResourceTencentCloudSqlserverAccount(),

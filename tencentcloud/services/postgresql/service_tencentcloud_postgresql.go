@@ -1899,7 +1899,7 @@ func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetworkAccessAttachm
 			},
 			{
 				Name:   helper.String("read-only-group-id"),
-				Values: []*string{helper.String(dbInstanceId)},
+				Values: []*string{helper.String(roGroupId)},
 			},
 		},
 	}

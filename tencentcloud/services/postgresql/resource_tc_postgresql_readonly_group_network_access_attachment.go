@@ -16,7 +16,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachment() *schema.Resource {
+func ResourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentCreate,
 		Read:   resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentRead,
@@ -32,7 +32,7 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachment() *schem
 				Description: "Master database instance ID.",
 			},
 
-			"read_only_group_id": {
+			"readonly_group_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
@@ -70,6 +70,7 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachment() *schem
 
 			"tags": {
 				Type:        schema.TypeMap,
+				ForceNew:    true,
 				Optional:    true,
 				Description: "Tag description list.",
 			},
