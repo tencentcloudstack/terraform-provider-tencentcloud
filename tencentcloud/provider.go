@@ -1130,6 +1130,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_instance":                                      cdb.ResourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_database":                                      cdb.ResourceTencentCloudMysqlDatabase(),
 			"tencentcloud_mysql_readonly_instance":                             cdb.ResourceTencentCloudMysqlReadonlyInstance(),
+			"tencentcloud_mysql_dr_instance":                                   cdb.ResourceTencentCloudMysqlDrInstance(),
 			"tencentcloud_mysql_time_window":                                   cdb.ResourceTencentCloudMysqlTimeWindow(),
 			"tencentcloud_mysql_param_template":                                cdb.ResourceTencentCloudMysqlParamTemplate(),
 			"tencentcloud_mysql_security_groups_attachment":                    cdb.ResourceTencentCloudMysqlSecurityGroupsAttachment(),

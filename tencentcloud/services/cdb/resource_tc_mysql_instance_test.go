@@ -347,7 +347,7 @@ func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "availability_zone", "ap-guangzhou-4"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "instance_name", "myTestMysql"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "mem_size", "1000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "volume_size", "25"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "volume_size", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "intranet_port", "3306"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "tags.createdBy", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.character_set_server", "utf8"),
@@ -370,7 +370,7 @@ func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "availability_zone", "ap-guangzhou-4"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "instance_name", "myTestMysql"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "mem_size", "1000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "volume_size", "25"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "volume_size", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "intranet_port", "3306"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "tags.createdBy", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.character_set_server", "gbk"),
@@ -640,7 +640,7 @@ resource "tencentcloud_mysql_instance" "mysql8" {
 	project_id        = 0
 	instance_name     = "myTestMysql"
 	mem_size          = 1000
-	volume_size       = 25
+	volume_size       = 100
 	intranet_port     = 3306
 	security_groups   = ["sg-05f7wnhn"]
   
