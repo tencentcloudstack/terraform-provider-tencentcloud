@@ -144,7 +144,7 @@ func ResourceTencentCloudMysqlDrInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 100),
 				Description:  "Private network ID. If `vpc_id` is set, this value is required.",
 			},
-	
+
 			"security_groups": {
 				Type:     schema.TypeSet,
 				Optional: true,

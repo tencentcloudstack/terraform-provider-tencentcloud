@@ -14,13 +14,13 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-// go test -test.run TestAccTencentCloudMysqlDrInstanceResource_basic -v
-func TestAccTencentCloudMysqlDrInstanceResource_basic(t *testing.T) {
+// go test -test.run TestAccTencentNeedFixCloudMysqlDrInstanceResource_basic -v
+func TestAccTencentNeedFixCloudMysqlDrInstanceResource_basic(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { 
+		PreCheck: func() {
 			tcacctest.AccStepSetRegion(t, "ap-shanghai")
-			tcacctest.AccPreCheck(t) 
+			tcacctest.AccPreCheck(t)
 		},
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckMysqlDrInstanceDestroy,
@@ -40,6 +40,17 @@ func TestAccTencentCloudMysqlDrInstanceResource_basic(t *testing.T) {
 				ResourceName:      "tencentcloud_mysql_dr_instance.mysql_dr",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccMysqlDrInstanceUp,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckMysqlDrInstanceExists("tencentcloud_mysql_dr_instance.mysql_dr"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "instance_name", "mysql-dr-test-up"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "mem_size", "8000"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "volume_size", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "intranet_port", "3360"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "tags.test", "test-tf"),
+				),
 			},
 		},
 	})
@@ -105,6 +116,36 @@ resource "tencentcloud_mysql_dr_instance" "mysql_dr" {
   device_type       = "UNIVERSAL"
   first_slave_zone  = "ap-shanghai-4"
   instance_name     = "mysql-dr-test"
+  mem_size          = 8000
+  prepaid_period    = 1
+  project_id        = 0
+  security_groups = [
+    "sg-q4d821qk",
+  ]
+  slave_deploy_mode = 1
+  slave_sync_mode   = 0
+  subnet_id         = "subnet-5vfntba5"
+  volume_size       = 100
+  vpc_id            = "vpc-h6s1s3aa"
+  intranet_port      = 3360
+  tags = {
+    test = "test-tf"
+  }
+}
+
+`
+
+const testAccMysqlDrInstanceUp = `
+resource "tencentcloud_mysql_dr_instance" "mysql_dr" {
+  master_instance_id = "cdb-adjdu3t5"
+  master_region      = "ap-guangzhou"
+  auto_renew_flag   = 0
+  availability_zone = "ap-shanghai-3"
+  charge_type       = "POSTPAID"
+  cpu               = 4
+  device_type       = "UNIVERSAL"
+  first_slave_zone  = "ap-shanghai-4"
+  instance_name     = "mysql-dr-test-up"
   mem_size          = 8000
   prepaid_period    = 1
   project_id        = 0
