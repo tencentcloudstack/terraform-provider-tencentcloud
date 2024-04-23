@@ -1,3 +1,10 @@
+## 1.81.89 (April 23, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_gaap_proxy: fix gaap time layout ([#2597](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2597))
+* resource/tencentcloud_postgresql_readonly_group: Support the computed param `ip` of the `net_info_list` ([#2595](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2595))
+
 ## 1.81.88 (April 18, 2024)
 
 ENHANCEMENTS:
