@@ -6,11 +6,13 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 )
 
@@ -284,4 +286,270 @@ func completeInstanceAdvancedSettings(dMap map[string]interface{}, setting *tke.
 			}
 		}
 	}
+}
+
+func TKEGpuArgsSetting() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"mig_enable": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Whether to enable MIG.",
+		},
+		"driver": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
+			Description:  "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+		},
+		"cuda": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
+			Description:  "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+		},
+		"cudnn": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
+			Description: "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`." +
+				" `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
+		},
+		"custom_driver": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
+		},
+	}
+}
+
+func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"mount_target": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Mount target. Default is not mounting.",
+		},
+		"docker_graph_path": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     "/var/lib/docker",
+			Description: "Docker graph path. Default is `/var/lib/docker`.",
+		},
+		"data_disk": {
+			Type:        schema.TypeList,
+			ForceNew:    true,
+			Optional:    true,
+			MaxItems:    11,
+			Description: "Configurations of data disk.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"disk_type": {
+						Type:         schema.TypeString,
+						ForceNew:     true,
+						Optional:     true,
+						Default:      svcas.SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
+						ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
+						Description:  "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
+					},
+					"disk_size": {
+						Type:        schema.TypeInt,
+						ForceNew:    true,
+						Optional:    true,
+						Default:     0,
+						Description: "Volume of disk in GB. Default is `0`.",
+					},
+					"file_system": {
+						Type:        schema.TypeString,
+						ForceNew:    true,
+						Optional:    true,
+						Default:     "",
+						Description: "File system, e.g. `ext3/ext4/xfs`.",
+					},
+					"auto_format_and_mount": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						ForceNew:    true,
+						Default:     false,
+						Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+					},
+					"mount_target": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						ForceNew:    true,
+						Default:     "",
+						Description: "Mount target.",
+					},
+					"disk_partition": {
+						Type:        schema.TypeString,
+						ForceNew:    true,
+						Optional:    true,
+						Description: "The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.",
+					},
+				},
+			},
+		},
+		"extra_args": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Custom parameter information related to the node. This is a white-list parameter.",
+		},
+		"user_data": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Base64-encoded User Data text, the length limit is 16KB.",
+		},
+		"pre_start_user_script": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
+		},
+		"is_schedule": {
+			Type:        schema.TypeBool,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     true,
+			Description: "Indicate to schedule the adding node or not. Default is true.",
+		},
+		"desired_pod_num": {
+			Type:        schema.TypeInt,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Indicate to set desired pod number in node. valid when the cluster is podCIDR.",
+		},
+		"gpu_args": {
+			Type:     schema.TypeList,
+			Optional: true,
+			ForceNew: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: TKEGpuArgsSetting(),
+			},
+			Description: "GPU driver parameters.",
+		},
+	}
+}
+
+func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (setting tke.InstanceAdvancedSettings) {
+	setting = tke.InstanceAdvancedSettings{}
+	if v, ok := dMap["mount_target"]; ok {
+		setting.MountTarget = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["data_disk"]; ok {
+		dataDisks := v.([]interface{})
+		setting.DataDisks = make([]*tke.DataDisk, len(dataDisks))
+		for i, d := range dataDisks {
+			value := d.(map[string]interface{})
+			var diskType, fileSystem, mountTarget, diskPartition string
+			if v, ok := value["disk_type"].(string); ok {
+				diskType = v
+			}
+			if v, ok := value["file_system"].(string); ok {
+				fileSystem = v
+			}
+			if v, ok := value["mount_target"].(string); ok {
+				mountTarget = v
+			}
+			if v, ok := value["disk_partition"].(string); ok {
+				diskPartition = v
+			}
+
+			diskSize := int64(value["disk_size"].(int))
+			autoFormatAndMount := value["auto_format_and_mount"].(bool)
+			dataDisk := &tke.DataDisk{
+				DiskType:           &diskType,
+				FileSystem:         &fileSystem,
+				AutoFormatAndMount: &autoFormatAndMount,
+				MountTarget:        &mountTarget,
+				DiskPartition:      &diskPartition,
+			}
+			if diskSize > 0 {
+				dataDisk.DiskSize = &diskSize
+			}
+			setting.DataDisks[i] = dataDisk
+		}
+	}
+	if v, ok := dMap["is_schedule"]; ok {
+		setting.Unschedulable = helper.BoolToInt64Ptr(!v.(bool))
+	}
+
+	if v, ok := dMap["user_data"]; ok {
+		setting.UserScript = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["pre_start_user_script"]; ok {
+		setting.PreStartUserScript = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["docker_graph_path"]; ok {
+		setting.DockerGraphPath = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["desired_pod_num"]; ok {
+		setting.DesiredPodNumber = helper.Int64(int64(v.(int)))
+	}
+
+	if temp, ok := dMap["extra_args"]; ok {
+		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
+		clusterExtraArgs := tke.InstanceExtraArgs{}
+		clusterExtraArgs.Kubelet = make([]*string, 0)
+		for i := range extraArgs {
+			clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArgs[i])
+		}
+		setting.ExtraArgs = &clusterExtraArgs
+	}
+
+	// get gpu_args
+	if v, ok := dMap["gpu_args"]; ok && len(v.([]interface{})) > 0 {
+		gpuArgs := v.([]interface{})[0].(map[string]interface{})
+
+		var (
+			migEnable    = gpuArgs["mig_enable"].(bool)
+			driver       = gpuArgs["driver"].(map[string]interface{})
+			cuda         = gpuArgs["cuda"].(map[string]interface{})
+			cudnn        = gpuArgs["cudnn"].(map[string]interface{})
+			customDriver = gpuArgs["custom_driver"].(map[string]interface{})
+		)
+		tkeGpuArgs := tke.GPUArgs{}
+		tkeGpuArgs.MIGEnable = &migEnable
+		if len(driver) > 0 {
+			tkeGpuArgs.Driver = &tke.DriverVersion{
+				Version: helper.String(driver["version"].(string)),
+				Name:    helper.String(driver["name"].(string)),
+			}
+		}
+		if len(cuda) > 0 {
+			tkeGpuArgs.CUDA = &tke.DriverVersion{
+				Version: helper.String(cuda["version"].(string)),
+				Name:    helper.String(cuda["name"].(string)),
+			}
+		}
+		if len(cudnn) > 0 {
+			tkeGpuArgs.CUDNN = &tke.CUDNN{
+				Version: helper.String(cudnn["version"].(string)),
+				Name:    helper.String(cudnn["name"].(string)),
+			}
+			if cudnn["doc_name"] != nil {
+				tkeGpuArgs.CUDNN.DocName = helper.String(cudnn["doc_name"].(string))
+			}
+			if cudnn["dev_name"] != nil {
+				tkeGpuArgs.CUDNN.DevName = helper.String(cudnn["dev_name"].(string))
+			}
+		}
+		if len(customDriver) > 0 {
+			tkeGpuArgs.CustomDriver = &tke.CustomDriver{
+				Address: helper.String(customDriver["address"].(string)),
+			}
+		}
+		setting.GPUArgs = &tkeGpuArgs
+	}
+
+	return setting
 }
