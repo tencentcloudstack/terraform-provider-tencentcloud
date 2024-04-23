@@ -80,10 +80,10 @@ func BuildToken() string {
 }
 
 func FormatUnixTime(n uint64) string {
-	return time.Unix(int64(n), 0).UTC().Format("2006-01-02T03:04:05Z")
+	return time.Unix(int64(n), 0).UTC().Format("2006-01-02T15:04:05Z")
 }
 func ParseTime(s string) (time.Time, error) {
-	return time.ParseInLocation("2006-01-02T03:04:05Z", s, time.UTC)
+	return time.ParseInLocation("2006-01-02T15:04:05Z", s, time.UTC)
 }
 
 // compose all schema.SchemaValidateFunc to a schema.SchemaValidateFunc,
