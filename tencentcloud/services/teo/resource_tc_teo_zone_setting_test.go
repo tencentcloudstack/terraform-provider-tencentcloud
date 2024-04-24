@@ -115,6 +115,10 @@ resource "tencentcloud_teo_zone_setting" "basic" {
   zone_id = tencentcloud_teo_zone.basic.id
 
     cache {
+        cache {
+          switch = "off"
+          ignore_cache_control = "off"
+        }
         follow_origin {
             switch = "on"
         }
@@ -191,6 +195,7 @@ resource "tencentcloud_teo_zone_setting" "basic" {
         backup_origins       = []
         origin_pull_protocol = "follow"
         origins              = []
+        cos_private_access   = "on"
     }
 
     post_max_size {
