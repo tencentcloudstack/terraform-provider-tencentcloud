@@ -1,6 +1,6 @@
 Provide a resource to create security group some lite rules quickly.
 
--> **NOTE:** It can't be used with tencentcloud_security_group_rule, and don't create multiple tencentcloud_security_group_rule resources, otherwise it may cause problems.
+-> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.81.90. Please use 'tencentcloud_security_group_rule_set' instead.
 
 Example Usage
 
