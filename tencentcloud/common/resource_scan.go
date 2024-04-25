@@ -13,6 +13,8 @@ import (
 const (
 	KeepResource    = "keep"
 	NonKeepResource = "non-keep"
+
+	SystemUserName = "system"
 )
 
 // TimeFormats add all possible time formats
@@ -59,6 +61,11 @@ func ProcessResources(client *connectivity.TencentCloudClient, resources []*Reso
 			resourceName = creatorAccountInfo.ResourceName
 			principalId = creatorAccountInfo.PrincipalId
 			userName = creatorAccountInfo.UserName
+		} else {
+			parsedTime, _ := ParsedTime(r.CreatTime)
+			if IsDefaultSearchLogStartTimestampAfter(*parsedTime) {
+				userName = SystemUserName
+			}
 		}
 
 		data[i] = []string{
@@ -139,6 +146,9 @@ func DaysSinceCreation(createTime string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if parsedTime == nil {
+		return "", nil
+	}
 
 	duration := time.Since(*parsedTime)
 	days := duration.Hours() / 24
@@ -173,4 +183,13 @@ func ParsedTime(createTime string) (*time.Time, error) {
 		return nil, fmt.Errorf("unable to parse create time: %v", err.Error())
 	}
 	return &parsedTime, nil
+}
+
+// IsDefaultSearchLogStartTimestampAfter check whether the resource creation time is after the default search log start time
+func IsDefaultSearchLogStartTimestampAfter(parsedTime time.Time) bool {
+	// 将 DefaultSearchLogStartTimestamp 转换为 time.Time 类型
+	startTime := time.Unix(DefaultSearchLogStartTimestamp/1000, 0)
+
+	// 判断 parsedTime 是否在 startTime 之后
+	return parsedTime.After(startTime)
 }

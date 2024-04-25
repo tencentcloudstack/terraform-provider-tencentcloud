@@ -33,6 +33,24 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range configs {
+				if !tccommon.CheckResourcePersist(*v.LaunchConfigurationName, *v.CreatedTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.LaunchConfigurationId,
+						Name: *v.LaunchConfigurationName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:        *v.LaunchConfigurationId,
+					Name:      *v.LaunchConfigurationName,
+					CreatTime: *v.CreatedTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateLaunchConfiguration")
+
 			for _, config := range configs {
 				instanceName := *config.LaunchConfigurationName
 				now := time.Now()
