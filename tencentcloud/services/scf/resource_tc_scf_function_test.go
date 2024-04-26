@@ -55,9 +55,9 @@ func init() {
 						})
 					}
 					resources = append(resources, &tccommon.ResourceInstance{
-						Id:        *v.FunctionId,
-						Name:      *v.FunctionName,
-						CreatTime: *v.AddTime,
+						Id:         *v.FunctionId,
+						Name:       *v.FunctionName,
+						CreateTime: *v.AddTime,
 					})
 				}
 				tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateFunction")

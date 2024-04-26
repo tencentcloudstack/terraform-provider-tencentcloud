@@ -42,9 +42,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        *v.Name,
-					Name:      *v.Name,
-					CreatTime: *v.CreateTime,
+					Id:         *v.Name,
+					Name:       *v.Name,
+					CreateTime: *v.CreateTime,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSuperPlayerConfig")

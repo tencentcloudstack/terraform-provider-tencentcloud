@@ -48,9 +48,9 @@ func testSweepAsScalingGroups(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.AutoScalingGroupId,
-			Name:      *v.AutoScalingGroupName,
-			CreatTime: *v.CreatedTime,
+			Id:         *v.AutoScalingGroupId,
+			Name:       *v.AutoScalingGroupName,
+			CreateTime: *v.CreatedTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateAutoScalingGroup")

@@ -50,9 +50,9 @@ func testSweepClsTopic(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.TopicId,
-			Name:      *v.TopicName,
-			CreatTime: *v.CreateTime,
+			Id:         *v.TopicId,
+			Name:       *v.TopicName,
+			CreateTime: *v.CreateTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateTopic")

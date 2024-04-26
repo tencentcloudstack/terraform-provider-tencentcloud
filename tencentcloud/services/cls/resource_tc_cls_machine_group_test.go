@@ -50,9 +50,9 @@ func testSweepMachineGroup(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.GroupId,
-			Name:      *v.GroupName,
-			CreatTime: *v.CreateTime,
+			Id:         *v.GroupId,
+			Name:       *v.GroupName,
+			CreateTime: *v.CreateTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateMachineGroup")

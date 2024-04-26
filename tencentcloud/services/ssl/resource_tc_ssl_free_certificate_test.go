@@ -44,9 +44,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        *v.CertificateId,
-					Name:      *v.Alias,
-					CreatTime: *v.InsertTime,
+					Id:         *v.CertificateId,
+					Name:       *v.Alias,
+					CreateTime: *v.InsertTime,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "ApplyCertificate")

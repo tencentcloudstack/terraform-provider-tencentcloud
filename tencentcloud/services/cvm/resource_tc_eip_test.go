@@ -52,9 +52,9 @@ func testSweepEipInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.AddressId,
-			Name:      *v.AddressName,
-			CreatTime: *v.CreatedTime,
+			Id:         *v.AddressId,
+			Name:       *v.AddressName,
+			CreateTime: *v.CreatedTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "AllocateAddresses")

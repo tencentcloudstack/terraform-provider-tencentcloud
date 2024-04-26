@@ -27,7 +27,7 @@ var TimeFormats = []string{
 type ResourceInstance struct {
 	Id          string
 	Name        string
-	CreatTime   string
+	CreateTime  string
 	DefaultKeep bool
 }
 
@@ -49,7 +49,7 @@ func ProcessResources(client *connectivity.TencentCloudClient, resources []*Reso
 			isResourceKeep = KeepResource
 		}
 
-		creationDuration, err := DaysSinceCreation(r.CreatTime)
+		creationDuration, err := DaysSinceCreation(r.CreateTime)
 		if err != nil {
 			log.Printf("[CRITAL] compute resource creation duration error: %v", err.Error())
 		}
@@ -62,7 +62,7 @@ func ProcessResources(client *connectivity.TencentCloudClient, resources []*Reso
 			principalId = creatorAccountInfo.PrincipalId
 			userName = creatorAccountInfo.UserName
 		} else {
-			parsedTime, _ := ParsedTime(r.CreatTime)
+			parsedTime, _ := ParsedTime(r.CreateTime)
 			if IsDefaultSearchLogStartTimestampAfter(*parsedTime) {
 				userName = SystemUserName
 			}

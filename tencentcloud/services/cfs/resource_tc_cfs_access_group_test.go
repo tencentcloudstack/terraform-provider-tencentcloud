@@ -43,9 +43,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        *v.PGroupId,
-					Name:      *v.Name,
-					CreatTime: *v.CDate,
+					Id:         *v.PGroupId,
+					Name:       *v.Name,
+					CreateTime: *v.CDate,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCfsPGroup")

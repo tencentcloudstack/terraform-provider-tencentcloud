@@ -48,8 +48,8 @@ func testSweepCosBuckets(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Name:      *v.Name,
-			CreatTime: v.CreationDate.Format("2006-01-02 15:04:05"),
+			Name:       *v.Name,
+			CreateTime: v.CreationDate.Format("2006-01-02 15:04:05"),
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "PutBucket")

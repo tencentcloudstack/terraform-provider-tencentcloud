@@ -70,8 +70,8 @@ func testSweepTCRRepository(r string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Name:      repoName,
-			CreatTime: *v.CreationTime,
+			Name:       repoName,
+			CreateTime: *v.CreationTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateRepository")

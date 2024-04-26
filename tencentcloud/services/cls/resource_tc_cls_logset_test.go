@@ -50,9 +50,9 @@ func testSweepClsLogset(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.LogsetId,
-			Name:      *v.LogsetName,
-			CreatTime: *v.CreateTime,
+			Id:         *v.LogsetId,
+			Name:       *v.LogsetName,
+			CreateTime: *v.CreateTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateLogset")

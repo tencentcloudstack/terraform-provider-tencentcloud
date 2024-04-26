@@ -52,9 +52,9 @@ func testSweepVpnCustomerGateway(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.CustomerGatewayId,
-			Name:      *v.CustomerGatewayName,
-			CreatTime: *v.CustomerGatewayName,
+			Id:         *v.CustomerGatewayId,
+			Name:       *v.CustomerGatewayName,
+			CreateTime: *v.CustomerGatewayName,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCustomerGateway")

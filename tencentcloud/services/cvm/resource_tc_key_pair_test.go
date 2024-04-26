@@ -45,9 +45,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        *v.KeyId,
-					Name:      *v.KeyName,
-					CreatTime: *v.CreatedTime,
+					Id:         *v.KeyId,
+					Name:       *v.KeyName,
+					CreateTime: *v.CreatedTime,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateKeyPair")

@@ -42,9 +42,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        *v.FileSystemId,
-					Name:      *v.FsName,
-					CreatTime: *v.CreationTime,
+					Id:         *v.FileSystemId,
+					Name:       *v.FsName,
+					CreateTime: *v.CreationTime,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCfsFileSystem")
