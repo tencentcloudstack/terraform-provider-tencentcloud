@@ -954,3 +954,59 @@ func (me *OrganizationService) DescribeOrganizationOrgShareAreaByFilter(ctx cont
 	orgShareArea = response.Response.Items
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrgManagePolicyConfigById(ctx context.Context, organizationId string, policyType string) (OrgManagePolicyConfig *organization.DescribePolicyConfigResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribePolicyConfigRequest()
+	request.OrganizationId = helper.StrToUint64Point(organizationId)
+	request.Type = helper.IntUint64(ServiceControlPolicyCode)
+
+	if policyType == TagPolicyType {
+		request.Type = helper.IntUint64(TagPolicyCode)
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribePolicyConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.Status == 1 {
+		OrgManagePolicyConfig = response.Response
+	}
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgManagePolicyConfigById(ctx context.Context, organizationId string, policyType string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDisablePolicyTypeRequest()
+	request.OrganizationId = helper.StrToUint64Point(organizationId)
+	request.PolicyType = &policyType
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DisablePolicyType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
