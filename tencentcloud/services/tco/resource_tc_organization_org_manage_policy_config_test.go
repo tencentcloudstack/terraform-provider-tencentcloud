@@ -1,4 +1,4 @@
-package tco
+package tco_test
 
 import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -17,7 +17,10 @@ func TestAccTencentCloudOrganizationOrgManagePolicyConfigResource_basic(t *testi
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOrganizationOrgManagePolicyConfig,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_manage_policy_config.org_manage_policy_config", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_manage_policy_config.org_manage_policy_config", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_organization_org_manage_policy_config.org_manage_policy_config", "organization_id", "45155"),
+					resource.TestCheckResourceAttr("tencentcloud_organization_org_manage_policy_config.org_manage_policy_config", "policy_type", "SERVICE_CONTROL_POLICY"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_organization_org_manage_policy_config.org_manage_policy_config",
