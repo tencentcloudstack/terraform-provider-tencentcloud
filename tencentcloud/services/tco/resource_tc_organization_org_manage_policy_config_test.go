@@ -11,7 +11,7 @@ func TestAccTencentCloudOrganizationOrgManagePolicyConfigResource_basic(t *testi
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccPreCheck(t)
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_ORGANIZATION)
 		},
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
