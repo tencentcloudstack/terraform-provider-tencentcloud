@@ -14,5 +14,5 @@ Import
 organization org_manage_policy_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_organization_org_manage_policy_config.org_manage_policy_config org_manage_policy_config_id
+terraform import tencentcloud_organization_org_manage_policy_config.org_manage_policy_config organization_id#policy_type
 ```
