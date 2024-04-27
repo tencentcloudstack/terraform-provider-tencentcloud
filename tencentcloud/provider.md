@@ -770,6 +770,7 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_ro_start_replication
     tencentcloud_mysql_ro_stop_replication
     tencentcloud_mysql_isolate_instance
+    tencentcloud_mysql_dr_instance
 
 Cloud Monitor(Monitor)
   Data Source
