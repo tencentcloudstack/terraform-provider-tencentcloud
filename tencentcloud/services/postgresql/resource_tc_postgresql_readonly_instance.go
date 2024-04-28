@@ -175,7 +175,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		zone              string
 		dbVersion         string
 		memory            int
-		cpu               = 0 // cpu only used for query specCode which contains memory info
+		cpu               int // cpu only used for query specCode which contains cpu info
 	)
 
 	if v, ok := d.GetOk("db_version"); ok {

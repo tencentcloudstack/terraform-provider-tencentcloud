@@ -358,7 +358,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		autoRenewFlag   = 0
 		autoVoucher     = 0
 		voucherIds      []*string
-		cpu             = 0 // cpu only used for query specCode which contains memory info
+		cpu             int // cpu only used for query specCode which contains cpu info
 	)
 
 	if v, ok := d.GetOkExists("cpu"); ok {
