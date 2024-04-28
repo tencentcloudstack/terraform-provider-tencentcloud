@@ -6,4 +6,12 @@ const (
 
 	ServiceControlPolicyCode = 0
 	TagPolicyCode            = 1
+
+	PAGE_ITEM = 200
+
+	TargetTypeNode   = "NODE"
+	TargetTypeMember = "MEMBER"
+
+	DescribeTargetTypeNode   = "Node"
+	DescribeTargetTypeMember = "User"
 )

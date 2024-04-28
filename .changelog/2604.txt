@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_organization_org_manage_policy_config
+```
+
+```release-note:new-resource
+tencentcloud_organization_org_manage_policy
+```
+
+```release-note:new-resource
+tencentcloud_organization_org_manage_policy_target
+```

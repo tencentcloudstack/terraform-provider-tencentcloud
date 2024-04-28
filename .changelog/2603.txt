@@ -1,3 +1,0 @@
-```release-note:new-resource
-tencentcloud_organization_org_manage_policy_config
-```
