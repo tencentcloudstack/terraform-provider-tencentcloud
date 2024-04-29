@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_instance: add output `memory`, `os_name`, `cpu`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_instances: add output `os_name`
+```
