@@ -84,6 +84,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
   charset           = "UTF8"
   project_id        = 0
   memory            = 2
+  cpu               = 1
   storage           = 10
 
   db_node_set {

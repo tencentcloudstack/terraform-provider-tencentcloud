@@ -322,6 +322,8 @@ func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
 					// SDK 1.0 cannot provide set test expected "db_node_set.*.role" , "Primary"
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_node_set.#", "2"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "4"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "cpu", "2"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-6"),
 				),
 			},
@@ -342,6 +344,8 @@ func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_node_set.#", "2"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "8"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "cpu", "4"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-6"),
 				),
 			},
@@ -649,16 +653,17 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_postgresql_instance" "test" {
-  name = "tf_postsql_maz_instance"
+  name              = "tf_postsql_maz_instance"
   availability_zone = "ap-guangzhou-6"
-  charge_type = "POSTPAID_BY_HOUR"
+  charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version		= "13.3"
-  root_password                 = "t1qaA2k1wgvfa3?ZZZ"
-  charset = "LATIN1"
-  memory = 4
-  storage = 100
+  engine_version    = "13.3"
+  root_password     = "t1qaA2k1wgvfa3?ZZZ"
+  charset           = "LATIN1"
+  memory            = 4
+  cpu               = 2
+  storage           = 100
   db_node_set {
     role = "Primary"
     zone = "ap-guangzhou-6"
@@ -683,16 +688,17 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_postgresql_instance" "test" {
-  name = "tf_postsql_maz_instance"
+  name              = "tf_postsql_maz_instance"
   availability_zone = "ap-guangzhou-6"
-  charge_type = "POSTPAID_BY_HOUR"
+  charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version		= "13.3"
-  root_password                 = "t1qaA2k1wgvfa3?ZZZ"
-  charset = "LATIN1"
-  memory = 4
-  storage = 250
+  engine_version    = "13.3"
+  root_password     = "t1qaA2k1wgvfa3?ZZZ"
+  charset           = "LATIN1"
+  memory            = 8
+  cpu               = 4
+  storage           = 100
   db_node_set {
     role = "Primary"
     zone = "ap-guangzhou-6"

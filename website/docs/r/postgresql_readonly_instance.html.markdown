@@ -14,35 +14,88 @@ Use this resource to create postgresql readonly instance.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_postgresql_readonly_instance" "foo" {
-  auto_renew_flag       = 0
-  db_version            = "10.4"
-  instance_charge_type  = "POSTPAID_BY_HOUR"
-  master_db_instance_id = "postgres-j4pm65id"
-  memory                = 4
-  name                  = "hello"
-  need_support_ipv6     = 0
-  project_id            = 0
-  security_groups_ids = [
-    "sg-fefj5n6r",
-  ]
-  storage            = 250
-  subnet_id          = "subnet-enm92y0m"
-  vpc_id             = "vpc-86v957zb"
-  read_only_group_id = tencentcloud_postgresql_readonly_group.new_ro_group.id
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
 }
 
-resource "tencentcloud_postgresql_readonly_group" "new_ro_group" {
-  master_db_instance_id       = local.pgsql_id
-  name                        = "tf_ro_group_test_new"
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create postgresql
+resource "tencentcloud_postgresql_instance" "example" {
+  name              = "example"
+  availability_zone = var.availability_zone
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  engine_version    = "10.4"
+  root_user         = "root123"
+  root_password     = "Root123$"
+  charset           = "UTF8"
+  project_id        = 0
+  memory            = 2
+  cpu               = 1
+  storage           = 10
+
+  tags = {
+    test = "tf"
+  }
+}
+
+resource "tencentcloud_postgresql_readonly_group" "example" {
+  master_db_instance_id       = tencentcloud_postgresql_instance.example.id
+  name                        = "tf_ro_group"
   project_id                  = 0
-  vpc_id                      = local.vpc_id
-  subnet_id                   = local.subnet_id
+  vpc_id                      = tencentcloud_vpc.vpc.id
+  subnet_id                   = tencentcloud_subnet.subnet.id
   replay_lag_eliminate        = 1
   replay_latency_eliminate    = 1
   max_replay_lag              = 100
   max_replay_latency          = 512
   min_delay_eliminate_reserve = 1
+}
+
+# create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "sg desc."
+  project_id  = 0
+
+  tags = {
+    "example" = "test"
+  }
+}
+
+resource "tencentcloud_postgresql_readonly_instance" "example" {
+  read_only_group_id    = tencentcloud_postgresql_readonly_group.example.id
+  master_db_instance_id = tencentcloud_postgresql_instance.example.id
+  zone                  = var.availability_zone
+  name                  = "example"
+  auto_renew_flag       = 0
+  db_version            = "10.4"
+  instance_charge_type  = "POSTPAID_BY_HOUR"
+  memory                = 4
+  cpu                   = 2
+  storage               = 250
+  vpc_id                = tencentcloud_vpc.vpc.id
+  subnet_id             = tencentcloud_subnet.subnet.id
+  need_support_ipv6     = 0
+  project_id            = 0
+  security_groups_ids = [
+    tencentcloud_security_group.example.id,
+  ]
 }
 ```
 
@@ -62,6 +115,7 @@ The following arguments are supported:
 * `zone` - (Required, String, ForceNew) Availability zone ID, which can be obtained through the Zone field in the returned value of the DescribeZones API.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
 * `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
+* `cpu` - (Optional, Int) Number of CPU cores. Allowed value must be equal `cpu` that data source `tencentcloud_postgresql_specinfos` provides.
 * `instance_charge_type` - (Optional, String, ForceNew) instance billing mode. Valid values: PREPAID (monthly subscription), POSTPAID_BY_HOUR (pay-as-you-go).
 * `need_support_ipv6` - (Optional, Int, ForceNew) Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).
 * `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
@@ -84,6 +138,6 @@ In addition to all arguments above, the following attributes are exported:
 postgresql readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_postgresql_readonly_instance.foo instance_id
+$ terraform import tencentcloud_postgresql_readonly_instance.example instance_id
 ```
 

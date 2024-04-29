@@ -45,6 +45,12 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				Required:    true,
 				Description: "Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.",
 			},
+			"cpu": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Number of CPU cores. Allowed value must be equal `cpu` that data source `tencentcloud_postgresql_specinfos` provides.",
+			},
 			"master_db_instance_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
@@ -169,7 +175,9 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		zone              string
 		dbVersion         string
 		memory            int
+		cpu               int // cpu only used for query specCode which contains cpu info
 	)
+
 	if v, ok := d.GetOk("db_version"); ok {
 		dbVersion = v.(string)
 		request.DBVersion = helper.String(dbVersion)
@@ -179,6 +187,9 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	}
 	if v, ok := d.GetOk("memory"); ok {
 		memory = v.(int)
+	}
+	if v, ok := d.GetOkExists("cpu"); ok {
+		cpu = v.(int)
 	}
 	if v, ok := d.GetOk("master_db_instance_id"); ok {
 		request.MasterDBInstanceId = helper.String(v.(string))
@@ -237,7 +248,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	//}
 
 	// get specCode with db_version and memory
-	var allowVersion, allowMemory []string
+	var allowVersion, allowSpec []string
 	var specVersion, specCode string
 	err := resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
@@ -248,13 +259,20 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 			if !tccommon.IsContains(allowVersion, *info.Version) {
 				allowVersion = append(allowVersion, *info.Version)
 			}
+
 			if *info.Version == dbVersion {
 				specVersion = *info.Version
-				memoryString := fmt.Sprintf("%d", int(*info.Memory)/1024)
-				if !tccommon.IsContains(allowMemory, memoryString) {
-					allowMemory = append(allowMemory, memoryString)
+				specString := fmt.Sprintf("(%d, %d)", int(*info.Memory)/1024, int(*info.Cpu))
+				if !tccommon.IsContains(allowSpec, specString) {
+					allowSpec = append(allowSpec, specString)
 				}
-				if int(*info.Memory)/1024 == memory {
+
+				if cpu != 0 && int(*info.Cpu) == cpu && int(*info.Memory)/1024 == memory {
+					specCode = *info.SpecCode
+					break
+				}
+
+				if cpu == 0 && int(*info.Memory)/1024 == memory {
 					specCode = *info.SpecCode
 					break
 				}
@@ -269,7 +287,8 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		return fmt.Errorf(`The "db_version" value: "%s" is invalid, Valid values are one of: "%s"`, dbVersion, strings.Join(allowVersion, `", "`))
 	}
 	if specCode == "" {
-		return fmt.Errorf(`The "storage" value: %d is invalid, Valid values are one of: %s`, memory, strings.Join(allowMemory, `, `))
+		return fmt.Errorf(`The "memory" value: %d or the "cpu" value: %d is invalid, Valid combine values are one of: %s .`,
+			memory, cpu, strings.Join(allowSpec, `; `))
 	}
 	request.SpecCode = helper.String(specCode)
 
@@ -336,6 +355,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 	_ = d.Set("db_version", instance.DBVersion)
 	_ = d.Set("storage", instance.DBInstanceStorage)
 	_ = d.Set("memory", instance.DBInstanceMemory)
+	_ = d.Set("cpu", instance.DBInstanceCpu)
 	_ = d.Set("master_db_instance_id", instance.MasterDBInstanceId)
 	_ = d.Set("zone", instance.Zone)
 	_ = d.Set("project_id", instance.ProjectId)
@@ -472,11 +492,15 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 	}
 
 	// upgrade storage and memory size
-	if d.HasChange("memory") || d.HasChange("storage") {
+	if d.HasChange("memory") || d.HasChange("storage") || d.HasChange("cpu") {
 		memory := d.Get("memory").(int)
 		storage := d.Get("storage").(int)
+		var cpu int
+		if v, ok := d.GetOkExists("cpu"); ok {
+			cpu = v.(int)
+		}
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage)
+			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -485,6 +509,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if outErr != nil {
 			return outErr
 		}
+		time.Sleep(time.Second * 5)
 		// check update storage and memory done
 		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
 		if checkErr != nil {

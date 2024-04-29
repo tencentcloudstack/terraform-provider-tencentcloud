@@ -37,6 +37,7 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "zone"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "security_groups_ids.#", "1"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "memory", "4"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "cpu", "2"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "storage", "20"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "private_access_port"),
@@ -60,6 +61,7 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "zone"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "security_groups_ids.#", "1"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "memory", "4"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "cpu", "2"),
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "storage", "20"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "private_access_port"),
@@ -137,6 +139,7 @@ const testAccPostgresqlReadonlyInstanceInstance_basic_without_rogroup string = t
 	instance_charge_type  = "POSTPAID_BY_HOUR"
 	master_db_instance_id = local.pgsql_id
 	memory                = 4
+	cpu					  = 2	
 	name                  = "tf_ro_instance_test"
 	need_support_ipv6     = 0
 	project_id            = 0
@@ -157,6 +160,7 @@ const testAccPostgresqlReadonlyInstanceInstance_basic_update_rogroup string = tc
 	instance_charge_type  = "POSTPAID_BY_HOUR"
 	master_db_instance_id = local.pgsql_id
 	memory                = 4
+	cpu					  = 2	
 	name                  = "tf_ro_instance_test_updated"
 	need_support_ipv6     = 0
 	project_id            = 0
@@ -191,6 +195,7 @@ const testAccPostgresqlReadonlyInstanceInstance_with_rogroup string = tcacctest.
 	instance_charge_type  = "POSTPAID_BY_HOUR"
 	master_db_instance_id = local.pgsql_id
 	memory                = 4
+	cpu                   = 2
 	name                  = "tf_ro_instance_test_rog"
 	need_support_ipv6     = 0
 	project_id            = 0
@@ -212,6 +217,7 @@ const testAccPostgresqlReadonlyInstanceInstance_update_rogroup string = tcacctes
 	instance_charge_type  = "POSTPAID_BY_HOUR"
 	master_db_instance_id = local.pgsql_id
 	memory                = 4
+	cpu                   = 2
 	name                  = "tf_ro_instance_test_rog_updated"
 	need_support_ipv6     = 0
 	project_id            = 0
