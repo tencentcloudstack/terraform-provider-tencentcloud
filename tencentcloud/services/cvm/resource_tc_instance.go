@@ -409,6 +409,21 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Expired time of the instance.",
 			},
+			"cpu": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of CPU cores of the instance.",
+			},
+			"memory": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Instance memory capacity, unit in GB.",
+			},
+			"os_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance os name.",
+			},
 		},
 	}
 }
@@ -829,6 +844,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("expired_time", instance.ExpiredTime)
 	_ = d.Set("cam_role_name", instance.CamRoleName)
 	_ = d.Set("disable_api_termination", instance.DisableApiTermination)
+	_ = d.Set("cpu", instance.CPU)
+	_ = d.Set("memory", instance.Memory)
+	_ = d.Set("os_name", instance.OsName)
 
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)

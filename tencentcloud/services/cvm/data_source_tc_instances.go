@@ -103,6 +103,11 @@ func DataSourceTencentCloudInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Instance memory capacity, unit in GB.",
 						},
+						"os_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance os name.",
+						},
 						"availability_zone": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -306,6 +311,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"instance_type":              instance.InstanceType,
 			"cpu":                        instance.CPU,
 			"memory":                     instance.Memory,
+			"os_name":                    instance.OsName,
 			"availability_zone":          instance.Placement.Zone,
 			"project_id":                 instance.Placement.ProjectId,
 			"image_id":                   instance.ImageId,
