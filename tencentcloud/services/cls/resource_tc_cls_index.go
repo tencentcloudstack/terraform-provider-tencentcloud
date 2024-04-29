@@ -2,6 +2,7 @@ package cls
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -546,6 +547,13 @@ func resourceTencentCloudClsIndexUpdate(d *schema.ResourceData, meta interface{}
 		request = cls.NewModifyIndexRequest()
 		id      = d.Id()
 	)
+
+	immutableArgs := []string{"topic_id"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	request.TopicId = &id
 	if dMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {

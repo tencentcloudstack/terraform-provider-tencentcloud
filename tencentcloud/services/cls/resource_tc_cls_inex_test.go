@@ -33,7 +33,7 @@ func TestAccTencentCloudClsIndex_basic(t *testing.T) {
 				Config: testAccClsIndexUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_index.example", "topic_id"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_index.example", "status", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_index.example", "status", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cls_index.example", "include_internal_fields", "true"),
 				),
 			},
@@ -193,7 +193,7 @@ resource "tencentcloud_cls_index" "example" {
       status = false
     }
   }
-  status                  = false
+  status                  = true
   include_internal_fields = true
   metadata_flag           = 1
 }
