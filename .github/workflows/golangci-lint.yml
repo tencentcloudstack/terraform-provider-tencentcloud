@@ -41,5 +41,5 @@ jobs:
           version: v1.45.2
           #version: v1.54
           working-directory: ./tencentcloud
-          args: --new-from-rev=origin/master --config=.golangci.yml --issues-exit-code=0 -v
+          args: --new-from-rev=origin/master --config=../.golangci.yml --issues-exit-code=0 -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
