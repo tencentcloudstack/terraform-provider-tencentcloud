@@ -1,3 +1,20 @@
+## 1.81.90 (April 29, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mysql_dr_instance` ([#2596](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2596))
+* **New Resource:** `tencentcloud_organization_org_manage_policy` ([#2604](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2604))
+* **New Resource:** `tencentcloud_organization_org_manage_policy_config` ([#2604](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2604))
+* **New Resource:** `tencentcloud_organization_org_manage_policy_target` ([#2604](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2604))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_instances: add output `os_name` ([#2608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2608))
+* resource/tencentcloud_cls_index: add dynamic_index params ([#2606](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2606))
+* resource/tencentcloud_instance: add output `memory`, `os_name`, `cpu` ([#2608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2608))
+* resource/tencentcloud_postgresql_instance: Support field `cpu` ([#2605](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2605))
+* resource/tencentcloud_postgresql_readonly_instance: Support field `cpu` ([#2605](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2605))
+
 ## 1.81.89 (April 23, 2024)
 
 ENHANCEMENTS:
