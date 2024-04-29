@@ -64,12 +64,6 @@ func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 										Computed:    true,
 										Description: "Cache expiration time settings.\nUnit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
-									"ignore_cache_control": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Computed:    true,
-										Description: "Specifies whether to enable force cache.\n- `on`: Enable.\n- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
-									},
 								},
 							},
 						},
@@ -396,12 +390,6 @@ func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 							Computed:    true,
 							Description: "Origin-pull protocol.\n- `http`: Switch HTTPS requests to HTTP.\n- `follow`: Follow the protocol of the request.\n- `https`: Switch HTTP requests to HTTPS. This only supports port 443 on the origin server. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
-						"cos_private_access": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "Whether access private cos bucket is allowed when `OriginType` is cos. Note: This field may return null, indicating that no valid value can be obtained.",
-						},
 					},
 				},
 			},
@@ -565,10 +553,6 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 
 			if respData.CacheConfig.Cache.CacheTime != nil {
 				cacheMap["cache_time"] = respData.CacheConfig.Cache.CacheTime
-			}
-
-			if respData.CacheConfig.Cache.IgnoreCacheControl != nil {
-				cacheMap["ignore_cache_control"] = respData.CacheConfig.Cache.IgnoreCacheControl
 			}
 
 			cacheConfigMap["cache"] = []interface{}{cacheMap}
@@ -770,10 +754,6 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 			originMap["origin_pull_protocol"] = respData.Origin.OriginPullProtocol
 		}
 
-		if respData.Origin.CosPrivateAccess != nil {
-			originMap["cos_private_access"] = respData.Origin.CosPrivateAccess
-		}
-
 		_ = d.Set("origin", []interface{}{originMap})
 	}
 
@@ -875,9 +855,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 				}
 				if v, ok := cacheMap["cache_time"]; ok {
 					cache.CacheTime = helper.IntInt64(v.(int))
-				}
-				if v, ok := cacheMap["ignore_cache_control"]; ok {
-					cache.IgnoreCacheControl = helper.String(v.(string))
 				}
 				cacheConfig.Cache = &cache
 			}
@@ -1050,9 +1027,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 			}
 			if v, ok := originMap["origin_pull_protocol"]; ok {
 				origin.OriginPullProtocol = helper.String(v.(string))
-			}
-			if v, ok := originMap["cos_private_access"]; ok {
-				origin.CosPrivateAccess = helper.String(v.(string))
 			}
 			request.Origin = &origin
 		}

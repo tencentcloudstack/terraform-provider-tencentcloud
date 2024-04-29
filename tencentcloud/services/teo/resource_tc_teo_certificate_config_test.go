@@ -61,7 +61,7 @@ resource "tencentcloud_teo_certificate_config" "certificate" {
     cert_id     = "EEIqXrZt"
     common_name = var.zone_name
     //deploy_time = "2024-04-22T10:34:13Z"
-    expire_time = "2025-04-22T23:59:59Z"
+    //expire_time = "2025-04-22T23:59:59Z"
     sign_algo   = "RSA 2048"
     type        = "managed"
   }

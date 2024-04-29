@@ -2,6 +2,13 @@ package teo
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -91,6 +98,78 @@ func resourceTencentCloudTeoCertificateConfigUpdateOnExit(ctx context.Context) e
 
 	err := service.CheckAccelerationDomainStatus(ctx, zoneId, host, "")
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func resourceTencentCloudTeoCertificateConfigUpdateOnStart(ctx context.Context) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+
+	logId := ctx.Value(tccommon.LogIdKey)
+
+	request := teo.NewModifyHostsCertificateRequest()
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	zoneId := idSplit[0]
+	host := idSplit[1]
+
+	request.ZoneId = &zoneId
+	request.Hosts = []*string{&host}
+
+	if v, ok := d.GetOk("server_cert_info"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			serverCertInfo := teo.ServerCertInfo{}
+			if v, ok := dMap["cert_id"]; ok {
+				serverCertInfo.CertId = helper.String(v.(string))
+			}
+			if v, ok := dMap["alias"]; ok && v.(string) != "" {
+				serverCertInfo.Alias = helper.String(v.(string))
+			}
+			if v, ok := dMap["type"]; ok && v.(string) != "" {
+				serverCertInfo.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["expire_time"]; ok && v.(string) != "" {
+				serverCertInfo.ExpireTime = helper.String(v.(string))
+			} else {
+				serverCertInfo.ExpireTime = nil
+			}
+			if v, ok := dMap["deploy_time"]; ok && v.(string) != "" {
+				serverCertInfo.DeployTime = helper.String(v.(string))
+			} else {
+				serverCertInfo.DeployTime = nil
+			}
+			if v, ok := dMap["sign_algo"]; ok && v.(string) != "" {
+				serverCertInfo.SignAlgo = helper.String(v.(string))
+			}
+			if v, ok := dMap["common_name"]; ok && v.(string) != "" {
+				serverCertInfo.CommonName = helper.String(v.(string))
+			}
+			request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
+		}
+	}
+
+	if v, ok := d.GetOk("mode"); ok {
+		request.Mode = helper.String(v.(string))
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyHostsCertificate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update teo certificate failed, reason:%+v", logId, err)
 		return err
 	}
 
