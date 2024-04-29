@@ -954,3 +954,201 @@ func (me *OrganizationService) DescribeOrganizationOrgShareAreaByFilter(ctx cont
 	orgShareArea = response.Response.Items
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrgManagePolicyConfigById(ctx context.Context, organizationId string, policyType string) (OrgManagePolicyConfig *organization.DescribePolicyConfigResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribePolicyConfigRequest()
+	request.OrganizationId = helper.StrToUint64Point(organizationId)
+	request.Type = helper.IntUint64(ServiceControlPolicyCode)
+
+	if policyType == TagPolicyType {
+		request.Type = helper.IntUint64(TagPolicyCode)
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribePolicyConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.Status == 1 {
+		OrgManagePolicyConfig = response.Response
+	}
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgManagePolicyConfigById(ctx context.Context, organizationId string, policyType string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDisablePolicyTypeRequest()
+	request.OrganizationId = helper.StrToUint64Point(organizationId)
+	request.PolicyType = &policyType
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DisablePolicyType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgManagePolicyById(ctx context.Context, policyId, policyType string) (OrgManagePolicy *organization.DescribePolicyResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListPoliciesRequest()
+	request.PolicyType = helper.String(policyType)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	pageStart := uint64(1)
+	rp := uint64(PAGE_ITEM) //to save in extension
+	result := make([]*organization.ListPolicyNode, 0)
+	for {
+		request.Page = &pageStart
+		request.Rp = &rp
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().ListPolicies(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+		result = append(result, response.Response.List...)
+		if len(response.Response.List) < PAGE_ITEM {
+			break
+		}
+		pageStart += 1
+	}
+
+	for _, item := range result {
+		if helper.UInt64ToStr(*item.PolicyId) == policyId {
+			requestDescribe := organization.NewDescribePolicyRequest()
+			requestDescribe.PolicyId = item.PolicyId
+			requestDescribe.PolicyType = helper.String(policyType)
+			responseDescribe, err := me.client.UseOrganizationClient().DescribePolicy(requestDescribe)
+			if err != nil {
+				errRet = err
+				return
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), responseDescribe.ToJsonString())
+
+			if responseDescribe == nil || responseDescribe.Response == nil {
+				break
+			}
+			OrgManagePolicy = responseDescribe.Response
+		}
+	}
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgManagePolicyById(ctx context.Context, policyId, policyType string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeletePolicyRequest()
+	request.PolicyId = helper.StrToUint64Point(policyId)
+	request.Type = helper.String(policyType)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DeletePolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgManagePolicyTargetById(ctx context.Context, policyType string, policyId string, targetType string, targetId string) (OrgManagePolicyTarget *organization.ListTargetsForPolicyNode, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListTargetsForPolicyRequest()
+	request.PolicyType = &policyType
+	request.PolicyId = helper.StrToUint64Point(policyId)
+	switch targetType {
+	case TargetTypeNode:
+		request.TargetType = helper.String(DescribeTargetTypeNode)
+	case TargetTypeMember:
+		request.TargetType = helper.String(DescribeTargetTypeMember)
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().ListTargetsForPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	for _, item := range response.Response.List {
+		if item.Uin != nil && helper.UInt64ToStr(*item.Uin) == targetId {
+			OrgManagePolicyTarget = item
+		}
+	}
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgManagePolicyTargetById(ctx context.Context, policyType string, policyId string, targetType string, targetId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDetachPolicyRequest()
+	request.Type = &policyType
+	request.PolicyId = helper.StrToUint64Point(policyId)
+	request.TargetType = &targetType
+	request.TargetId = helper.StrToUint64Point(targetId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DetachPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
