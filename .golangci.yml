@@ -11,11 +11,11 @@ linters:
   disable-all: true
   enable:
     - deadcode
-#    - errcheck
-#    - gofmt
-#    - gosimple
+    - errcheck
+    - gofmt
+    - gosimple
 #    - ineffassign
-#    - misspell
+    - misspell
 #    - staticcheck
 #    - structcheck
 #    - unconvert
