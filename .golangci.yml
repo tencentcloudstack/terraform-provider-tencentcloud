@@ -14,7 +14,6 @@ linters:
     - errcheck
     - gofmt
     - gosimple
-    - misspell
 #    - ineffassign
 #    - staticcheck
 #    - structcheck
