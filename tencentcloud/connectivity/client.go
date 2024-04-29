@@ -120,6 +120,7 @@ type TencentCloudClient struct {
 	Region     string
 	Protocol   string
 	Domain     string
+	Proxy      string
 
 	cosConn            *s3.S3
 	tencentCosConn     *cos.Client

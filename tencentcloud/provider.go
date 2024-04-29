@@ -2003,6 +2003,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		region        string
 		protocol      string
 		domain        string
+		proxy         string
 	)
 
 	if v, ok := d.GetOk("secret_id"); ok {
@@ -2038,6 +2039,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		domain = v.(string)
 	}
 
+	if v, ok := d.GetOk("proxy"); ok {
+		proxy = v.(string)
+	}
+
 	// standard client
 	var tcClient TencentCloudClient
 	tcClient.apiV3Conn = &connectivity.TencentCloudClient{
@@ -2049,6 +2054,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Region:   region,
 		Protocol: protocol,
 		Domain:   domain,
+		Proxy:    proxy,
 	}
 
 	var (
