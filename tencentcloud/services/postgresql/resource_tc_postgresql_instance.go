@@ -346,7 +346,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	var instanceId, specVersion, specCode string
 	var outErr, inErr error
-	var allowVersion, allowMemory []string
+	var allowVersion, allowSpec []string
 
 	var (
 		dbMajorVersion  = ""
@@ -416,19 +416,17 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			}
 			if *info.Version == dbVersion {
 				specVersion = *info.Version
-				memoryString := fmt.Sprintf("%d", int(*info.Memory)/1024)
-				if !tccommon.IsContains(allowMemory, memoryString) {
-					allowMemory = append(allowMemory, memoryString)
+				specString := fmt.Sprintf("(%d, %d)", int(*info.Memory)/1024, int(*info.Cpu))
+				if !tccommon.IsContains(allowSpec, specString) {
+					allowSpec = append(allowSpec, specString)
 				}
 
-				if cpu != 0 {
-					if int(*info.Cpu) == cpu && int(*info.Memory)/1024 == memory {
-						specCode = *info.SpecCode
-						break
-					}
+				if cpu != 0 && int(*info.Cpu) == cpu && int(*info.Memory)/1024 == memory {
+					specCode = *info.SpecCode
+					break
 				}
 
-				if int(*info.Memory)/1024 == memory {
+				if cpu == 0 && int(*info.Memory)/1024 == memory {
 					specCode = *info.SpecCode
 					break
 				}
@@ -445,7 +443,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	if specCode == "" {
-		return fmt.Errorf(`The "memory" value: %d is invalid, Valid values are one of: %s`, memory, strings.Join(allowMemory, `, `))
+		return fmt.Errorf(`The "memory" value: %d or the "cpu" value: %d is invalid, Valid combine values are one of: %s .`,
+			memory, cpu, strings.Join(allowSpec, `; `))
 	}
 
 	var dbNodeSet []*postgresql.DBNode

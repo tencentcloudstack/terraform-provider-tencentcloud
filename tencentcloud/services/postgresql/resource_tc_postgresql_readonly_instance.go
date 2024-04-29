@@ -248,7 +248,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	//}
 
 	// get specCode with db_version and memory
-	var allowVersion, allowMemory []string
+	var allowVersion, allowSpec []string
 	var specVersion, specCode string
 	err := resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
@@ -259,21 +259,20 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 			if !tccommon.IsContains(allowVersion, *info.Version) {
 				allowVersion = append(allowVersion, *info.Version)
 			}
+
 			if *info.Version == dbVersion {
 				specVersion = *info.Version
-				memoryString := fmt.Sprintf("%d", int(*info.Memory)/1024)
-				if !tccommon.IsContains(allowMemory, memoryString) {
-					allowMemory = append(allowMemory, memoryString)
+				specString := fmt.Sprintf("(%d, %d)", int(*info.Memory)/1024, int(*info.Cpu))
+				if !tccommon.IsContains(allowSpec, specString) {
+					allowSpec = append(allowSpec, specString)
 				}
 
-				if cpu != 0 {
-					if int(*info.Cpu) == cpu && int(*info.Memory)/1024 == memory {
-						specCode = *info.SpecCode
-						break
-					}
+				if cpu != 0 && int(*info.Cpu) == cpu && int(*info.Memory)/1024 == memory {
+					specCode = *info.SpecCode
+					break
 				}
 
-				if int(*info.Memory)/1024 == memory {
+				if cpu == 0 && int(*info.Memory)/1024 == memory {
 					specCode = *info.SpecCode
 					break
 				}
@@ -288,7 +287,8 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		return fmt.Errorf(`The "db_version" value: "%s" is invalid, Valid values are one of: "%s"`, dbVersion, strings.Join(allowVersion, `", "`))
 	}
 	if specCode == "" {
-		return fmt.Errorf(`The "storage" value: %d is invalid, Valid values are one of: %s`, memory, strings.Join(allowMemory, `, `))
+		return fmt.Errorf(`The "memory" value: %d or the "cpu" value: %d is invalid, Valid combine values are one of: %s .`,
+			memory, cpu, strings.Join(allowSpec, `; `))
 	}
 	request.SpecCode = helper.String(specCode)
 
