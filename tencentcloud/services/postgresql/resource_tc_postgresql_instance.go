@@ -78,17 +78,19 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description: "Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.",
 			},
 			"db_major_vesion": {
-				Type:       schema.TypeString,
-				Optional:   true,
-				Computed:   true,
-				Deprecated: "`db_major_vesion` will be deprecated, use `db_major_version` instead.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				Deprecated:    "`db_major_vesion` will be deprecated, use `db_major_version` instead.",
+				ConflictsWith: []string{"db_major_version"},
 				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13. " +
 					"If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.",
 			},
 			"db_major_version": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"db_major_vesion"},
 				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13. " +
 					"If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.",
 			},
@@ -128,6 +130,12 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Required:    true,
 				Description: "Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.",
+			},
+			"cpu": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Number of CPU cores. Allowed value must be equal `cpu` that data source `tencentcloud_postgresql_specinfos` provides.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -338,7 +346,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	var instanceId, specVersion, specCode string
 	var outErr, inErr error
-	var allowVersion, allowMemory []string
+	var allowVersion, allowSpec []string
 
 	var (
 		dbMajorVersion  = ""
@@ -350,7 +358,12 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		autoRenewFlag   = 0
 		autoVoucher     = 0
 		voucherIds      []*string
+		cpu             int // cpu only used for query specCode which contains cpu info
 	)
+
+	if v, ok := d.GetOkExists("cpu"); ok {
+		cpu = v.(int)
+	}
 
 	if v, ok := d.GetOk("period"); ok {
 		log.Printf("period set")
@@ -403,11 +416,17 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			}
 			if *info.Version == dbVersion {
 				specVersion = *info.Version
-				memoryString := fmt.Sprintf("%d", int(*info.Memory)/1024)
-				if !tccommon.IsContains(allowMemory, memoryString) {
-					allowMemory = append(allowMemory, memoryString)
+				specString := fmt.Sprintf("(%d, %d)", int(*info.Memory)/1024, int(*info.Cpu))
+				if !tccommon.IsContains(allowSpec, specString) {
+					allowSpec = append(allowSpec, specString)
 				}
-				if int(*info.Memory)/1024 == memory {
+
+				if cpu != 0 && int(*info.Cpu) == cpu && int(*info.Memory)/1024 == memory {
+					specCode = *info.SpecCode
+					break
+				}
+
+				if cpu == 0 && int(*info.Memory)/1024 == memory {
 					specCode = *info.SpecCode
 					break
 				}
@@ -424,7 +443,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	if specCode == "" {
-		return fmt.Errorf(`The "memory" value: %d is invalid, Valid values are one of: %s`, memory, strings.Join(allowMemory, `, `))
+		return fmt.Errorf(`The "memory" value: %d or the "cpu" value: %d is invalid, Valid combine values are one of: %s .`,
+			memory, cpu, strings.Join(allowSpec, `; `))
 	}
 
 	var dbNodeSet []*postgresql.DBNode
@@ -837,11 +857,15 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	}
 
 	// upgrade storage and memory size
-	if d.HasChange("memory") || d.HasChange("storage") {
+	if d.HasChange("memory") || d.HasChange("storage") || d.HasChange("cpu") {
 		memory := d.Get("memory").(int)
 		storage := d.Get("storage").(int)
+		var cpu int
+		if v, ok := d.GetOkExists("cpu"); ok {
+			cpu = v.(int)
+		}
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage)
+			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -1263,6 +1287,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("memory", instance.DBInstanceMemory)
 	_ = d.Set("storage", instance.DBInstanceStorage)
+	_ = d.Set("cpu", instance.DBInstanceCpu)
 
 	// kms
 	kmsRequest := postgresql.NewDescribeEncryptionKeysRequest()

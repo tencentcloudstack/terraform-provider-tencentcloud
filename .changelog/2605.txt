@@ -1,0 +1,6 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: Support field `cpu`
+```
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_instance: Support field `cpu`
+```
