@@ -221,6 +221,8 @@ func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfi
 	cpf.HttpProfile.Scheme = me.Protocol
 	// request domain
 	cpf.HttpProfile.RootDomain = me.Domain
+	// request proxy
+	cpf.HttpProfile.Proxy = me.Proxy
 	// default language
 	cpf.Language = "en-US"
 
@@ -239,6 +241,8 @@ func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.Cli
 	cpf.HttpProfile.Scheme = me.Protocol
 	// request domain
 	cpf.HttpProfile.RootDomain = me.Domain
+	// request proxy
+	cpf.HttpProfile.Proxy = me.Proxy
 	// default language
 	cpf.Language = "en-US"
 
