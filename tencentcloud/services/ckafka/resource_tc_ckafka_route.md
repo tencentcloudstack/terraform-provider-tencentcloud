@@ -18,5 +18,5 @@ Import
 ckafka route can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ckafka_route.example 
+terraform import tencentcloud_ckafka_route.example ckafka-8j4rodrr#135912
 ```
