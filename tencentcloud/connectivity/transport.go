@@ -55,11 +55,12 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 		request.Header.Set(ENV_TESTING_ROUTE_HEADER_KEY, routeUserID)
 	}
 
+	var reqClientFormat = ReqClient
 	if me.InstanceId != "" {
-		ReqClient = fmt.Sprintf("%s,id=%s", ReqClient, me.InstanceId)
+		reqClientFormat = fmt.Sprintf("%s,id=%s", ReqClient, me.InstanceId)
 	}
 
-	request.Header.Set("X-TC-RequestClient", ReqClient)
+	request.Header.Set("X-TC-RequestClient", reqClientFormat)
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {
