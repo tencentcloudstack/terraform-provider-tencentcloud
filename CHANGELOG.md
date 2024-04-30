@@ -1,3 +1,9 @@
+## 1.81.91 (April 30, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_route: Updated ckafka route documentation ([#2614](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2614))
+
 ## 1.81.90 (April 29, 2024)
 
 FEATURES:
