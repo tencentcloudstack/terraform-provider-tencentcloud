@@ -60,12 +60,6 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 		reqClientFormat = fmt.Sprintf("%s,id=%s", ReqClient, me.InstanceId)
 	}
 
-	fmt.Println(11111111)
-	fmt.Println(11111111)
-	fmt.Println(reqClientFormat)
-	fmt.Println(11111111)
-	fmt.Println(11111111)
-
 	request.Header.Set("X-TC-RequestClient", reqClientFormat)
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
