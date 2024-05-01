@@ -1,0 +1,3 @@
+```release-note:deprecation
+resource/tencentcloud_security_group_lite_rule: This resource is deprecation
+```
