@@ -19,6 +19,7 @@ func ResourceTencentCloudSecurityGroupLiteRule() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.81.90. Please use 'tencentcloud_security_group_rule_set' instead.",
 
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
