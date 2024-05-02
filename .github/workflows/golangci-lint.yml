@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: GoLangci-Lint
+name: Golangci-Lint
 
 # Controls when the workflow will run
 on:
