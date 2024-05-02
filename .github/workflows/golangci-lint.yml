@@ -41,11 +41,10 @@ jobs:
       - name: golangci-lint
         uses: reviewdog/action-golangci-lint@v2
         with:
-          golangci_lint_flags: '--tests=false --timeout=25m --disable-all -E errcheck'
+          golangci_lint_flags: '--new-from-rev=origin/master --tests=false --timeout=25m --disable-all -E errcheck -v'
           tool_name: errcheck
           level: info
           workdir: ./tencentcloud
-          args: --new-from-rev=origin/master -v
         #uses: golangci/golangci-lint-action@v3
         #with:
           #version: 'v1.55.1'
