@@ -39,12 +39,18 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
-        #uses: golangci/golangci-lint-action@v3
-        uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3.7.0
+        uses: reviewdog/action-golangci-lint@v2
         with:
-          version: 'v1.55.1'
-          #version: v1.45.2
-          #version: v1.54
+          golangci_lint_flags: '--tests=false --timeout=25m --disable-all -E errcheck'
+          tool_name: errcheck
+          level: info
           working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v
-          #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
+          version: 'v1.55.1'
+        #uses: golangci/golangci-lint-action@v3
+        #with:
+          #version: v1.45.2
+          ##version: v1.54
+          #working-directory: ./tencentcloud
+          #args: --new-from-rev=origin/master -v
+          ##args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
