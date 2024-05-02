@@ -44,11 +44,11 @@ jobs:
           golangci_lint_flags: '--tests=false --timeout=25m --disable-all -E errcheck'
           tool_name: errcheck
           level: info
-          working-directory: ./tencentcloud
+          workdir: ./tencentcloud
           args: --new-from-rev=origin/master -v
-          version: 'v1.55.1'
         #uses: golangci/golangci-lint-action@v3
         #with:
+          #version: 'v1.55.1'
           #version: v1.45.2
           ##version: v1.54
           #working-directory: ./tencentcloud
