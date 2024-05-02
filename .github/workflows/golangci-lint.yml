@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: golangci-lint
+name: GoLangci-Lint
 
 # Controls when the workflow will run
 on:
@@ -18,27 +18,32 @@ jobs:
   # This workflow contains a single job called "build"
   golangci-lint:
     # The type of runner that the job will run on
-    runs-on: macos-12
+    # runs-on: macos-12
+    runs-on: [custom, linux, large]
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      #- uses: actions/checkout@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: actions/setup-go@v3
+      # - uses: actions/setup-go@v3
+      - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
           go-version-file: .go-version
           #go-version: '1.21'
-          cache: false 
+          #cache: false 
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        #uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3.7.0
         with:
-          version: v1.45.2
+          version: 'v1.55.1'
+          #version: v1.45.2
           #version: v1.54
           working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v
