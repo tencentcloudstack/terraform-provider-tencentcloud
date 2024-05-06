@@ -78,7 +78,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "10.4"
+  db_major_version  = "10"
   root_user         = "root123"
   root_password     = "Root123$"
   charset           = "UTF8"
