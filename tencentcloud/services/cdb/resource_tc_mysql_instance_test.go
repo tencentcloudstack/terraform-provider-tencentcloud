@@ -666,7 +666,7 @@ resource "tencentcloud_mysql_instance" "mysql" {
   engine_version    = "8.0"
   first_slave_zone  = "ap-guangzhou-7"
   force_delete      = false
-  instance_name     = "keep_preset_mysql"
+  instance_name     = "tf-test"
   internet_service  = 0
   mem_size          = 8000
   root_password     = "Iac@123456"
