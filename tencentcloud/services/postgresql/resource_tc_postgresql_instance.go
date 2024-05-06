@@ -442,7 +442,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return outErr
 	}
 
-	if dbMajorVersion == "" && specVersion == "" {
+	if majorVersion == "" && specVersion == "" {
 		return fmt.Errorf(`The "db_major_version" value: "%s" is invalid, Valid values are one of: "%s", The "engine_version" value: "%s" is invalid, Valid values are one of: "%s"`, dbMajorVersion, strings.Join(allowMajorVersion, `", "`), dbVersion, strings.Join(allowSpecVersion, `", "`))
 	}
 
