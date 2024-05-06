@@ -1,3 +1,11 @@
+## 1.81.92 (May 6, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_listener: Support not checking healthcheck parameters ([#2598](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2598))
+* resource/tencentcloud_monitor_tmp_alert_rule: Fix array order issue ([#2620](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2620))
+* resource/tencentcloud_mysql_privilege: Fix the problem of multiple values ​​in fields database, table, column ([#2619](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2619))
+
 ## 1.81.91 (April 30, 2024)
 
 ENHANCEMENTS:
