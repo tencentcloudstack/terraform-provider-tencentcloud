@@ -34,6 +34,23 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range certs {
+				if !tccommon.CheckResourcePersist(*v.Alias, *v.InsertTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.CertificateId,
+						Name: *v.Alias,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.CertificateId,
+					Name:       *v.Alias,
+					CreateTime: *v.InsertTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "ApplyCertificate")
+
 			for i := range certs {
 				cert := certs[i]
 				name := cert.Alias

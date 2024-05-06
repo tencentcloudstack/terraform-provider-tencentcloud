@@ -50,9 +50,9 @@ func testSweepVpcInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        v.VpcId(),
-			Name:      v.Name(),
-			CreatTime: v.CreateTime(),
+			Id:         v.VpcId(),
+			Name:       v.Name(),
+			CreateTime: v.CreateTime(),
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateVpc")

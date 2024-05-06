@@ -31,15 +31,33 @@ func init() {
 			if err != nil {
 				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 			}
-			client := sharedClient.(tccommon.ProviderMeta)
+			client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			emrService := svcemr.NewEMRService(client.GetAPIV3Conn())
+			emrService := svcemr.NewEMRService(client)
 			filters := make(map[string]interface{})
 			filters["display_strategy"] = svcemr.DisplayStrategyIsclusterList
 			clusters, err := emrService.DescribeInstances(ctx, filters)
 			if err != nil {
 				return nil
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range clusters {
+				if !tccommon.CheckResourcePersist(*v.ClusterId, *v.AddTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.ClusterId,
+						Name: *v.ClusterName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.ClusterId,
+					Name:       *v.ClusterName,
+					CreateTime: *v.AddTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateInstance")
+
 			for _, cluster := range clusters {
 				clusterName := *cluster.ClusterName
 				if strings.HasPrefix(clusterName, tcacctest.KeepResource) || strings.HasPrefix(clusterName, tcacctest.DefaultResource) {
@@ -56,7 +74,7 @@ func init() {
 				instanceId := *cluster.ClusterId
 				request := emr.NewTerminateInstanceRequest()
 				request.InstanceId = &instanceId
-				if _, err = client.GetAPIV3Conn().UseEmrClient().TerminateInstance(request); err != nil {
+				if _, err = client.UseEmrClient().TerminateInstance(request); err != nil {
 					return nil
 				}
 				err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -90,7 +108,7 @@ func init() {
 
 				if metaDB != nil && *metaDB != "" {
 					// remove metadb
-					mysqlService := svccdb.NewMysqlService(client.GetAPIV3Conn())
+					mysqlService := svccdb.NewMysqlService(client)
 
 					err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 						err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)

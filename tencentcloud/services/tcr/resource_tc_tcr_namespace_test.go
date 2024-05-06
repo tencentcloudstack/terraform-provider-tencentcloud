@@ -63,9 +63,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        strconv.FormatInt(*v.NamespaceId, 10),
-					Name:      *v.Name,
-					CreatTime: *v.CreationTime,
+					Id:         strconv.FormatInt(*v.NamespaceId, 10),
+					Name:       *v.Name,
+					CreateTime: *v.CreationTime,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNamespace")

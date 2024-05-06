@@ -51,9 +51,9 @@ func testSweepCcnInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        v.CcnId(),
-			Name:      v.Name(),
-			CreatTime: v.CreateTime(),
+			Id:         v.CcnId(),
+			Name:       v.Name(),
+			CreateTime: v.CreateTime(),
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCcn")

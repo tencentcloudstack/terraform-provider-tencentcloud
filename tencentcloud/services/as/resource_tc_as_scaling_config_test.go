@@ -27,12 +27,30 @@ func init() {
 			if err != nil {
 				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 			}
-			client := sharedClient.(tccommon.ProviderMeta)
-			asService := svcas.NewAsService(client.GetAPIV3Conn())
+			client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
+			asService := svcas.NewAsService(client)
 			configs, err := asService.DescribeLaunchConfigurationByFilter(ctx, "", "")
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range configs {
+				if !tccommon.CheckResourcePersist(*v.LaunchConfigurationName, *v.CreatedTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.LaunchConfigurationId,
+						Name: *v.LaunchConfigurationName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.LaunchConfigurationId,
+					Name:       *v.LaunchConfigurationName,
+					CreateTime: *v.CreatedTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateLaunchConfiguration")
+
 			for _, config := range configs {
 				instanceName := *config.LaunchConfigurationName
 				now := time.Now()

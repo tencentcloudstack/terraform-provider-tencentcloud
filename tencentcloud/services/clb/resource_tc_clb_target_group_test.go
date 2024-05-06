@@ -31,6 +31,23 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range tgs {
+				if !tccommon.CheckResourcePersist(*v.TargetGroupName, *v.CreatedTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.TargetGroupId,
+						Name: *v.TargetGroupName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.TargetGroupId,
+					Name:       *v.TargetGroupName,
+					CreateTime: *v.CreatedTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateTargetGroup")
+
 			for i := range tgs {
 				tg := tgs[i]
 				created := tccommon.ParseTimeFromCommonLayout(tg.CreatedTime)

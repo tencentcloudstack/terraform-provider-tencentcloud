@@ -51,9 +51,9 @@ func testSweepNatInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.NatGatewayId,
-			Name:      *v.NatGatewayName,
-			CreatTime: *v.CreatedTime,
+			Id:         *v.NatGatewayId,
+			Name:       *v.NatGatewayName,
+			CreateTime: *v.CreatedTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNatGateway")

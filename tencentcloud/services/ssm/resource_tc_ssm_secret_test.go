@@ -3,6 +3,7 @@ package ssm_test
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 
@@ -33,6 +34,23 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range secrets {
+				if !tccommon.CheckResourcePersist(*v.SecretName, strconv.FormatUint(*v.CreateTime, 10)) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.SecretName,
+						Name: *v.SecretName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.SecretName,
+					Name:       *v.SecretName,
+					CreateTime: strconv.FormatUint(*v.CreateTime, 10),
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSecret")
 
 			for i := range secrets {
 				ss := secrets[i]

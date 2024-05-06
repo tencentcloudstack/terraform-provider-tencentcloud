@@ -51,9 +51,9 @@ func testSweepSubnet(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        v.SubnetId(),
-			Name:      v.Name(),
-			CreatTime: v.CreateTime(),
+			Id:         v.SubnetId(),
+			Name:       v.Name(),
+			CreateTime: v.CreateTime(),
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSubnet")

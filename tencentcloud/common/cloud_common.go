@@ -58,15 +58,15 @@ func GetResourceCreatorAccountInfo(client *connectivity.TencentCloudClient, reso
 		response, err := client.UseClsClient().SearchLog(request)
 		if err != nil {
 			log.Printf("[CRITAL] search resource[%v] log data error: %v", r.Id, err.Error())
-			return resourceIdToSubAccountInfoMap
+			continue
 		}
 		if response == nil || response.Response == nil {
 			log.Printf("[CRITAL] search resource[%v] log data response is nil", r.Id)
-			return resourceIdToSubAccountInfoMap
+			continue
 		}
 		if len(response.Response.Results) == 0 {
 			log.Printf("[CRITAL] search resource[%v] log data response results is empty", r.Id)
-			return resourceIdToSubAccountInfoMap
+			continue
 		}
 
 		result := response.Response.Results[0]

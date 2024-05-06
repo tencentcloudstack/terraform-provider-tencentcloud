@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -35,6 +36,23 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range users {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   strconv.FormatUint(*v.Uin, 10),
+						Name: *v.Name,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         strconv.FormatUint(*v.Uin, 10),
+					Name:       *v.Name,
+					CreateTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "AddUser")
 
 			for _, v := range users {
 				if tcacctest.PersistResource.MatchString(*v.Name) {
