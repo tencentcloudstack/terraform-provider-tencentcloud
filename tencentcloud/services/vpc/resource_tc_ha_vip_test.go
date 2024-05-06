@@ -53,9 +53,9 @@ func testSweepHaVipInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.HaVipId,
-			Name:      *v.HaVipName,
-			CreatTime: *v.CreatedTime,
+			Id:         *v.HaVipId,
+			Name:       *v.HaVipName,
+			CreateTime: *v.CreatedTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateHaVip")

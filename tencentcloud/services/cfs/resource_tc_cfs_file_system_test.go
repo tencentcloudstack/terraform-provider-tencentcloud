@@ -31,6 +31,24 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range fsList {
+				if !tccommon.CheckResourcePersist(*v.FileSystemId, *v.CreationTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.FileSystemId,
+						Name: *v.FsName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.FileSystemId,
+					Name:       *v.FsName,
+					CreateTime: *v.CreationTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCfsFileSystem")
+
 			for i := range fsList {
 				item := fsList[i]
 				id := *item.FileSystemId

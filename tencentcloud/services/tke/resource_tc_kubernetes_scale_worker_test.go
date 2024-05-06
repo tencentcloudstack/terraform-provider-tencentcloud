@@ -72,9 +72,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        worker.InstanceId,
-					Name:      *instance.InstanceName,
-					CreatTime: worker.CreatedTime,
+					Id:         worker.InstanceId,
+					Name:       *instance.InstanceName,
+					CreateTime: worker.CreatedTime,
 				})
 
 				created, err := time.Parse(tccommon.TENCENTCLOUD_COMMON_TIME_LAYOUT, worker.CreatedTime)
@@ -89,6 +89,9 @@ func init() {
 
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateClusterInstances")
 
+			if len(instanceIds) == 0 {
+				return nil
+			}
 			err = service.DeleteClusterInstances(ctx, clusterId, instanceIds)
 			if err != nil {
 				return err

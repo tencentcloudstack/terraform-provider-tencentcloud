@@ -27,13 +27,31 @@ func init() {
 			if err != nil {
 				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 			}
-			client := sharedClient.(tccommon.ProviderMeta)
+			client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			cvmService := svccvm.NewCvmService(client.GetAPIV3Conn())
+			cvmService := svccvm.NewCvmService(client)
 			keyPairs, err := cvmService.DescribeKeyPairByFilter(ctx, "", "", nil)
 			if err != nil {
 				return fmt.Errorf("get instance list error: %s", err.Error())
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range keyPairs {
+				if !tccommon.CheckResourcePersist(*v.KeyName, *v.CreatedTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.KeyId,
+						Name: *v.KeyName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.KeyId,
+					Name:       *v.KeyName,
+					CreateTime: *v.CreatedTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateKeyPair")
+
 			for _, keyPair := range keyPairs {
 				instanceId := *keyPair.KeyId
 				instanceName := *keyPair.KeyName

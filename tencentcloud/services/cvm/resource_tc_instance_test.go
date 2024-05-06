@@ -50,9 +50,9 @@ func testSweepCvmInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.InstanceId,
-			Name:      *v.InstanceName,
-			CreatTime: *v.CreatedTime,
+			Id:         *v.InstanceId,
+			Name:       *v.InstanceName,
+			CreateTime: *v.CreatedTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "RunInstances")

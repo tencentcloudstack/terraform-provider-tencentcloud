@@ -32,6 +32,23 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range result {
+				if !tccommon.CheckResourcePersist(*v.FlowLogId, *v.CreatedTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.FlowLogId,
+						Name: *v.FlowLogName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.FlowLogId,
+					Name:       *v.FlowLogName,
+					CreateTime: *v.CreatedTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateFlowLog")
+
 			for i := range result {
 				fl := result[i]
 				created, err := time.Parse(tccommon.TENCENTCLOUD_COMMON_TIME_LAYOUT, "*fl.CreatedTime")

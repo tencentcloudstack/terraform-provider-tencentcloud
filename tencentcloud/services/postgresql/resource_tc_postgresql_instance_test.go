@@ -36,6 +36,23 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range instances {
+				if !tccommon.CheckResourcePersist(*v.DBInstanceName, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.DBInstanceId,
+						Name: *v.DBInstanceName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.DBInstanceId,
+					Name:       *v.DBInstanceName,
+					CreateTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateInstances")
+
 			var vpcs []string
 
 			for _, v := range instances {

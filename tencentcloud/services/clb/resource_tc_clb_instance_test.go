@@ -57,9 +57,9 @@ func testSweepClbInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.LoadBalancerId,
-			Name:      *v.LoadBalancerName,
-			CreatTime: *v.CreateTime,
+			Id:         *v.LoadBalancerId,
+			Name:       *v.LoadBalancerName,
+			CreateTime: *v.CreateTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateLoadBalancer")
