@@ -655,3 +655,40 @@ resource "tencentcloud_mysql_instance" "mysql8" {
 	}
 }`, value)
 }
+
+const testAccMysql = `
+resource "tencentcloud_mysql_instance" "mysql" {
+  auto_renew_flag   = 0
+  availability_zone = "ap-guangzhou-6"
+  charge_type       = "POSTPAID"
+  cpu               = 4
+  device_type       = "UNIVERSAL"
+  engine_version    = "8.0"
+  first_slave_zone  = "ap-guangzhou-7"
+  force_delete      = false
+  instance_name     = "tf-test"
+  internet_service  = 0
+  mem_size          = 8000
+  root_password     = "password123"
+  prepaid_period    = 1
+  project_id        = 0
+  security_groups = [
+    "sg-05f7wnhn",
+  ]
+  slave_deploy_mode = 1
+  slave_sync_mode   = 0
+  subnet_id         = "subnet-j10lsueq"
+  tags              = {}
+  volume_size       = 100
+  vpc_id            = "vpc-m0d2dbnn"
+  # wait_switch       = 1
+
+  parameters = {
+    character_set_server   = "utf8"
+    lower_case_table_names = "0"
+    max_connections        = "1000"
+    max_user_connections   = 2
+    long_query_time        = "0.200000"
+  }
+}
+`
