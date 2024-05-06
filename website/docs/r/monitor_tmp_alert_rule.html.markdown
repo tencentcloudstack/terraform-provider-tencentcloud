@@ -81,9 +81,9 @@ The following arguments are supported:
 * `instance_id` - (Required, String) Instance id.
 * `receivers` - (Required, Set: [`String`]) Alarm notification template id list.
 * `rule_name` - (Required, String) Rule name.
-* `annotations` - (Optional, List) Rule alarm duration.
+* `annotations` - (Optional, Set) Rule alarm duration.
 * `duration` - (Optional, String) Rule alarm duration.
-* `labels` - (Optional, List) Rule alarm duration.
+* `labels` - (Optional, Set) Rule alarm duration.
 * `rule_state` - (Optional, Int) Rule state code.
 * `type` - (Optional, String) Alarm Policy Template Classification.
 

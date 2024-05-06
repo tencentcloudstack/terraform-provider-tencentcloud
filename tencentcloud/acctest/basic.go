@@ -240,7 +240,7 @@ const (
 // monitor
 const (
 	DefaultTmpVpcId    = "vpc-axrsmmrv"
-	DefaultTmpSubnetId = "subnet-b23ua6gk"
+	DefaultTmpSubnetId = "subnet-j5vja918"
 )
 
 /*

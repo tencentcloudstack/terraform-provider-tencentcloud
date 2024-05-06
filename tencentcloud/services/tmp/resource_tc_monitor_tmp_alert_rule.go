@@ -59,7 +59,7 @@ func ResourceTencentCloudMonitorTmpAlertRule() *schema.Resource {
 				Description: "Rule alarm duration.",
 			},
 			"labels": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Rule alarm duration.",
 				Elem: &schema.Resource{
@@ -78,7 +78,7 @@ func ResourceTencentCloudMonitorTmpAlertRule() *schema.Resource {
 				},
 			},
 			"annotations": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Rule alarm duration.",
 				Elem: &schema.Resource{
@@ -142,36 +142,37 @@ func resourceTencentCloudMonitorTmpAlertRuleCreate(d *schema.ResourceData, meta 
 	if v, ok := d.GetOk("duration"); ok {
 		request.Duration = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("labels"); ok {
-		labelsList := v.([]interface{})
-		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(labelsList))
-		for _, labels := range labelsList {
-			if labels == nil {
-				return fmt.Errorf("Invalid `labels` parameter, must not be empty")
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			prometheusRuleKV := monitor.PrometheusRuleKV{}
+			if v, ok := dMap["key"]; ok {
+				prometheusRuleKV.Key = helper.String(v.(string))
 			}
-			label := labels.(map[string]interface{})
-			var kv monitor.PrometheusRuleKV
-			kv.Key = helper.String(label["key"].(string))
-			kv.Value = helper.String(label["value"].(string))
-			prometheusRuleKV = append(prometheusRuleKV, &kv)
+
+			if v, ok := dMap["value"]; ok {
+				prometheusRuleKV.Value = helper.String(v.(string))
+			}
+			request.Labels = append(request.Labels, &prometheusRuleKV)
 		}
-		request.Labels = prometheusRuleKV
 	}
+
 	if v, ok := d.GetOk("annotations"); ok {
-		annotationsList := v.([]interface{})
-		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(annotationsList))
-		for _, annotations := range annotationsList {
-			if annotations == nil {
-				return fmt.Errorf("Invalid `annotation` parameter, must not be empty")
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			prometheusRuleKV := monitor.PrometheusRuleKV{}
+			if v, ok := dMap["key"]; ok {
+				prometheusRuleKV.Key = helper.String(v.(string))
 			}
-			annotation := annotations.(map[string]interface{})
-			var kv monitor.PrometheusRuleKV
-			kv.Key = helper.String(annotation["key"].(string))
-			kv.Value = helper.String(annotation["value"].(string))
-			prometheusRuleKV = append(prometheusRuleKV, &kv)
+
+			if v, ok := dMap["value"]; ok {
+				prometheusRuleKV.Value = helper.String(v.(string))
+			}
+			request.Annotations = append(request.Annotations, &prometheusRuleKV)
 		}
-		request.Annotations = prometheusRuleKV
 	}
+
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
 	}
@@ -323,29 +324,33 @@ func resourceTencentCloudMonitorTmpAlertRuleUpdate(d *schema.ResourceData, meta 
 	}
 
 	if v, ok := d.GetOk("labels"); ok {
-		labelsList := v.([]interface{})
-		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(labelsList))
-		for _, labels := range labelsList {
-			label := labels.(map[string]interface{})
-			var kv monitor.PrometheusRuleKV
-			kv.Key = helper.String(label["key"].(string))
-			kv.Value = helper.String(label["value"].(string))
-			prometheusRuleKV = append(prometheusRuleKV, &kv)
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			prometheusRuleKV := monitor.PrometheusRuleKV{}
+			if v, ok := dMap["key"]; ok {
+				prometheusRuleKV.Key = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["value"]; ok {
+				prometheusRuleKV.Value = helper.String(v.(string))
+			}
+			request.Labels = append(request.Labels, &prometheusRuleKV)
 		}
-		request.Labels = prometheusRuleKV
 	}
 
 	if v, ok := d.GetOk("annotations"); ok {
-		annotationsList := v.([]interface{})
-		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(annotationsList))
-		for _, annotations := range annotationsList {
-			annotation := annotations.(map[string]interface{})
-			var kv monitor.PrometheusRuleKV
-			kv.Key = helper.String(annotation["key"].(string))
-			kv.Value = helper.String(annotation["value"].(string))
-			prometheusRuleKV = append(prometheusRuleKV, &kv)
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			prometheusRuleKV := monitor.PrometheusRuleKV{}
+			if v, ok := dMap["key"]; ok {
+				prometheusRuleKV.Key = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["value"]; ok {
+				prometheusRuleKV.Value = helper.String(v.(string))
+			}
+			request.Annotations = append(request.Annotations, &prometheusRuleKV)
 		}
-		request.Annotations = prometheusRuleKV
 	}
 
 	if v, ok := d.GetOk("type"); ok {
