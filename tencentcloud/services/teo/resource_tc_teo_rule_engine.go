@@ -47,7 +47,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Rule status. Values:\n<li>`enable`: Enabled</li>\n<li>`disable`: Disabled</li>",
+				Description: "Rule status. Values:\n  - `enable`: Enabled.\n  - `disable`: Disabled.",
 			},
 
 			"tags": {
@@ -80,17 +80,17 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												"operator": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "Operator. Valid values:\n<li>`equals`: Equals</li>\n<li>`notEquals`: Does not equal</li>\n<li>`exist`: Exists</li>\n<li>`notexist`: Does not exist</li>",
+													Description: "Operator. Valid values:\n  - `equals`: Equals.\n  - `notEquals`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
 												},
 												"target": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "The match type. Values:\n<li>`filename`: File name</li>\n<li>`extension`: File extension</li>\n<li>`host`: Host</li>\n<li>`full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.</li>\n<li>`url`: Partial URL under the current site</li><li>`client_country`: Country/Region of the client</li>\n<li>`query_string`: Query string in the request URL</li>\n<li>`request_header`: HTTP request header</li>",
+													Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.\n  - `url`: Partial URL under the current site.\n  - `client_country`: Country/Region of the client.\n  - `query_string`: Query string in the request URL.\n  - `request_header`: HTTP request header.",
 												},
 												"values": {
 													Type:        schema.TypeSet,
 													Optional:    true,
-													Description: "The parameter value of the match type. It can be an empty string only when `Target=query string/request header` and `Operator=exist/notexist`.\n<li>When `Target=extension`, enter the file extension, such as \"jpg\" and \"txt\".</li>\n<li>When `Target=filename`, enter the file name, such as \"foo\" in \"foo.jpg\".</li>\n<li>When `Target=all`, it indicates any site request.</li>\n<li>When `Target=host`, enter the host under the current site, such as \"www.maxx55.com\".</li>\n<li>When `Target=url`, enter the partial URL path under the current site, such as \"/example\".</li>\n<li>When `Target=full_url`, enter the complete URL under the current site. It must contain the HTTP protocol, host, and path, such as \"https://www.maxx55.cn/example\".</li>\n<li>When `Target=client_country`, enter the ISO-3166 country/region code.</li>\n<li>When `Target=query_string`, enter the value of the query string, such as \"cn\" and \"1\" in \"lang=cn&version=1\".</li>\n<li>When `Target=request_header`, enter the HTTP request header value, such as \"zh-CN,zh;q=0.9\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.</li>",
+													Description: "The parameter value of the match type. It can be an empty string only when `Target=query string/request header` and `Operator=exist/notexist`.\n  - When `Target=extension`, enter the file extension, such as \"jpg\" and \"txt\".\n  - When `Target=filename`, enter the file name, such as \"foo\" in \"foo.jpg\".\n  - When `Target=all`, it indicates any site request.\n  - When `Target=host`, enter the host under the current site, such as \"www.maxx55.com\".\n  - When `Target=url`, enter the partial URL path under the current site, such as \"/example\".\n  - When `Target=full_url`, enter the complete URL under the current site. It must contain the HTTP protocol, host, and path, such as \"https://www.maxx55.cn/example\".\n  - When `Target=client_country`, enter the ISO-3166 country/region code.\n  - When `Target=query_string`, enter the value of the query string, such as \"cn\" and \"1\" in \"lang=cn&version=1\".\n  - When `Target=request_header`, enter the HTTP request header value, such as \"zh-CN,zh;q=0.9\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
@@ -103,7 +103,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												"name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The parameter name of the match type. This field is required only when `Target=query_string/request_header`.\n<li>`query_string`: Name of the query string, such as \"lang\" and \"version\" in \"lang=cn&version=1\".</li>\n<li>`request_header`: Name of the HTTP request header, such as \"Accept-Language\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.</li>",
+													Description: "The parameter name of the match type. This field is required only when `Target=query_string/request_header`.\n  - `query_string`: Name of the query string, such as \"lang\" and \"version\" in \"lang=cn&version=1\".\n  - `request_header`: Name of the HTTP request header, such as \"Accept-Language\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.",
 												},
 											},
 										},
@@ -121,7 +121,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 										Type:        schema.TypeList,
 										Optional:    true,
 										MaxItems:    1,
-										Description: "Common operation. Values:\n<li>`AccessUrlRedirect`: Access URL rewrite</li>\n<li>`UpstreamUrlRedirect`: Origin-pull URL rewrite</li>\n<li>`QUIC`: QUIC</li>\n<li>`WebSocket`: WebSocket</li>\n<li>`VideoSeek`: Video dragging</li>\n<li>`Authentication`: Token authentication</li>\n<li>`CacheKey`: Custom cache key</li>\n<li>`Cache`: Node cache TTL</li>\n<li>`MaxAge`: Browser cache TTL</li>\n<li>`OfflineCache`: Offline cache</li>\n<li>`SmartRouting`: Smart acceleration</li>\n<li>`RangeOriginPull`: Range GETs</li>\n<li>`UpstreamHttp2`: HTTP/2 forwarding</li>\n<li>`HostHeader`: Host header rewrite</li>\n<li>`ForceRedirect`: Force HTTPS</li>\n<li>`OriginPullProtocol`: Origin-pull HTTPS</li>\n<li>`CachePrefresh`: Cache prefresh</li>\n<li>`Compression`: Smart compression</li>\n<li>`Hsts`</li>\n<li>`ClientIpHeader`</li>\n<li>`SslTlsSecureConf`</li>\n<li>`OcspStapling`</li>\n<li>`Http2`: HTTP/2 access</li>\n<li>`UpstreamFollowRedirect`: Follow origin redirect</li>\n<li>`Origin`: Origin</li>\nNote: This field may return `null`, indicating that no valid value can be obtained.",
+										Description: "Common operation. Values:\n  - `AccessUrlRedirect`: Access URL rewrite.\n  - `UpstreamUrlRedirect`: Origin-pull URL rewrite.\n  - `QUIC`: QUIC.\n  - `WebSocket`: WebSocket.\n  - `VideoSeek`: Video dragging.\n  - `Authentication`: Token authentication.\n  - `CacheKey`: Custom cache key.\n  - `Cache`: Node cache TTL.\n  - `MaxAge`: Browser cache TTL.\n  - `OfflineCache`: Offline cache.\n  - `SmartRouting`: Smart acceleration.\n  - `RangeOriginPull`: Range GETs.\n  - `UpstreamHttp2`: HTTP/2 forwarding.\n  - `HostHeader`: Host header rewrite.\n  - `ForceRedirect`: Force HTTPS.\n  - `OriginPullProtocol`: Origin-pull HTTPS.\n  - `CachePrefresh`: Cache prefresh.\n  - `Compression`: Smart compression.\n  - `Hsts`.\n  - `ClientIpHeader`.\n  - `SslTlsSecureConf`.\n  - `OcspStapling`.\n  - `Http2`: HTTP/2 access.\n  - `UpstreamFollowRedirect`: Follow origin redirect.\n  - `Origin`: Origin.\nNote: This field may return `null`, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"action": {
@@ -132,7 +132,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												"parameters": {
 													Type:        schema.TypeList,
 													Required:    true,
-													Description: "Parameter",
+													Description: "Parameter.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
@@ -158,7 +158,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 										Type:        schema.TypeList,
 										Optional:    true,
 										MaxItems:    1,
-										Description: "Feature operation with a request/response header. Features of this type include:\n<li>`RequestHeader`: HTTP request header modification.</li>\n<li>`ResponseHeader`: HTTP response header modification.</li>\nNote: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Feature operation with a request/response header. Features of this type include:\n  - `RequestHeader`: HTTP request header modification.\n  - `ResponseHeader`: HTTP response header modification.\nNote: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"action": {
@@ -169,23 +169,23 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												"parameters": {
 													Type:        schema.TypeList,
 													Required:    true,
-													Description: "Parameter",
+													Description: "Parameter.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"action": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Feature parameter name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the parameter name, which has three values:\n<li>add: Add the HTTP header.</li>\n<li>set: Rewrite the HTTP header.</li>\n<li>del: Delete the HTTP header.</li>",
+																Description: "Feature parameter name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the parameter name, which has three values:\n  - add: Add the HTTP header.\n  - set: Rewrite the HTTP header.\n  - del: Delete the HTTP header.",
 															},
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Parameter name",
+																Description: "Parameter name.",
 															},
 															"values": {
 																Type:        schema.TypeSet,
 																Required:    true,
-																Description: "Parameter value",
+																Description: "Parameter value.",
 																Elem: &schema.Schema{
 																	Type: schema.TypeString,
 																},
@@ -200,7 +200,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 										Type:        schema.TypeList,
 										Optional:    true,
 										MaxItems:    1,
-										Description: "Feature operation with a status code. Features of this type include:\n<li>`ErrorPage`: Custom error page.</li>\n<li>`StatusCodeCache`: Status code cache TTL.</li>\nNote: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Feature operation with a status code. Features of this type include:\n  - `ErrorPage`: Custom error page.\n  - `StatusCodeCache`: Status code cache TTL.\nNote: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"action": {
@@ -258,7 +258,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Required:    true,
-										Description: "Nested rule settings",
+										Description: "Nested rule settings.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"or": {
@@ -276,17 +276,17 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																		"operator": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "Operator. Valid values:\n<li>`equals`: Equals</li>\n<li>`notEquals`: Does not equal</li>\n<li>`exist`: Exists</li>\n<li>`notexist`: Does not exist</li>",
+																			Description: "Operator. Valid values:\n  - `equals`: Equals.\n  - `notEquals`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
 																		},
 																		"target": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The match type. Values:\n<li>`filename`: File name</li>\n<li>`extension`: File extension</li>\n<li>`host`: Host</li>\n<li>`full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.</li>\n<li>`url`: Partial URL under the current site</li><li>`client_country`: Country/Region of the client</li>\n<li>`query_string`: Query string in the request URL</li>\n<li>`request_header`: HTTP request header</li>",
+																			Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.\n  - `url`: Partial URL under the current site.  - `client_country`: Country/Region of the client.\n  - `query_string`: Query string in the request URL.\n  - `request_header`: HTTP request header.",
 																		},
 																		"values": {
 																			Type:        schema.TypeSet,
 																			Optional:    true,
-																			Description: "The parameter value of the match type. It can be an empty string only when `Target=query string/request header` and `Operator=exist/notexist`.\n<li>When `Target=extension`, enter the file extension, such as \"jpg\" and \"txt\".</li>\n<li>When `Target=filename`, enter the file name, such as \"foo\" in \"foo.jpg\".</li>\n<li>When `Target=all`, it indicates any site request.</li>\n<li>When `Target=host`, enter the host under the current site, such as \"www.maxx55.com\".</li>\n<li>When `Target=url`, enter the partial URL path under the current site, such as \"/example\".</li>\n<li>When `Target=full_url`, enter the complete URL under the current site. It must contain the HTTP protocol, host, and path, such as \"https://www.maxx55.cn/example\".</li>\n<li>When `Target=client_country`, enter the ISO-3166 country/region code.</li>\n<li>When `Target=query_string`, enter the value of the query string, such as \"cn\" and \"1\" in \"lang=cn&version=1\".</li>\n<li>When `Target=request_header`, enter the HTTP request header value, such as \"zh-CN,zh;q=0.9\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.</li>",
+																			Description: "The parameter value of the match type. It can be an empty string only when `Target=query string/request header` and `Operator=exist/notexist`.\n  - When `Target=extension`, enter the file extension, such as \"jpg\" and \"txt\".\n  - When `Target=filename`, enter the file name, such as \"foo\" in \"foo.jpg\".\n  - When `Target=all`, it indicates any site request.\n  - When `Target=host`, enter the host under the current site, such as \"www.maxx55.com\".\n  - When `Target=url`, enter the partial URL path under the current site, such as \"/example\".\n  - When `Target=full_url`, enter the complete URL under the current site. It must contain the HTTP protocol, host, and path, such as \"https://www.maxx55.cn/example\".\n  - When `Target=client_country`, enter the ISO-3166 country/region code.\n  - When `Target=query_string`, enter the value of the query string, such as \"cn\" and \"1\" in \"lang=cn&version=1\".\n  - When `Target=request_header`, enter the HTTP request header value, such as \"zh-CN,zh;q=0.9\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.",
 																			Elem: &schema.Schema{
 																				Type: schema.TypeString,
 																			},
@@ -299,7 +299,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																		"name": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The parameter name of the match type. This field is required only when `Target=query_string/request_header`.\n<li>`query_string`: Name of the query string, such as \"lang\" and \"version\" in \"lang=cn&version=1\".</li>\n<li>`request_header`: Name of the HTTP request header, such as \"Accept-Language\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.</li>",
+																			Description: "The parameter name of the match type. This field is required only when `Target=query_string/request_header`.\n  - `query_string`: Name of the query string, such as \"lang\" and \"version\" in \"lang=cn&version=1\".\n  - `request_header`: Name of the HTTP request header, such as \"Accept-Language\" in the \"Accept-Language:zh-CN,zh;q=0.9\" header.",
 																		},
 																	},
 																},
@@ -317,7 +317,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Common operation. Values:\n<li>`AccessUrlRedirect`: Access URL rewrite</li>\n<li>`UpstreamUrlRedirect`: Origin-pull URL rewrite</li>\n<li>`QUIC`: QUIC</li>\n<li>`WebSocket`: WebSocket</li>\n<li>`VideoSeek`: Video dragging</li>\n<li>`Authentication`: Token authentication</li>\n<li>`CacheKey`: Custom cache key</li>\n<li>`Cache`: Node cache TTL</li>\n<li>`MaxAge`: Browser cache TTL</li>\n<li>`OfflineCache`: Offline cache</li>\n<li>`SmartRouting`: Smart acceleration</li>\n<li>`RangeOriginPull`: Range GETs</li>\n<li>`UpstreamHttp2`: HTTP/2 forwarding</li>\n<li>`HostHeader`: Host header rewrite</li>\n<li>`ForceRedirect`: Force HTTPS</li>\n<li>`OriginPullProtocol`: Origin-pull HTTPS</li>\n<li>`CachePrefresh`: Cache prefresh</li>\n<li>`Compression`: Smart compression</li>\n<li>`Hsts`</li>\n<li>`ClientIpHeader`</li>\n<li>`SslTlsSecureConf`</li>\n<li>`OcspStapling`</li>\n<li>`Http2`: HTTP/2 access</li>\n<li>`UpstreamFollowRedirect`: Follow origin redirect</li>\n<li>`Origin`: Origin</li>\nNote: This field may return `null`, indicating that no valid value can be obtained.",
+																Description: "Common operation. Values:\n  - `AccessUrlRedirect`: Access URL rewrite.\n  - `UpstreamUrlRedirect`: Origin-pull URL rewrite.\n  - `QUIC`: QUIC.\n  - `WebSocket`: WebSocket.\n  - `VideoSeek`: Video dragging.\n  - `Authentication`: Token authentication.\n  - `CacheKey`: Custom cache key.\n  - `Cache`: Node cache TTL.\n  - `MaxAge`: Browser cache TTL.\n  - `OfflineCache`: Offline cache.\n  - `SmartRouting`: Smart acceleration.\n  - `RangeOriginPull`: Range GETs.\n  - `UpstreamHttp2`: HTTP/2 forwarding.\n  - `HostHeader`: Host header rewrite.\n  - `ForceRedirect`: Force HTTPS.\n  - `OriginPullProtocol`: Origin-pull HTTPS.\n  - `CachePrefresh`: Cache prefresh.\n  - `Compression`: Smart compression.\n  - `Hsts`.\n  - `ClientIpHeader`.\n  - `SslTlsSecureConf`.\n  - `OcspStapling`.\n  - `Http2`: HTTP/2 access.\n  - `UpstreamFollowRedirect`: Follow origin redirect.\n  - `Origin`: Origin.\nNote: This field may return `null`, indicating that no valid value can be obtained.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"action": {
@@ -328,7 +328,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																		"parameters": {
 																			Type:        schema.TypeList,
 																			Required:    true,
-																			Description: "Parameter",
+																			Description: "Parameter.",
 																			Elem: &schema.Resource{
 																				Schema: map[string]*schema.Schema{
 																					"name": {
@@ -354,7 +354,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Feature operation with a request/response header. Features of this type include:\n<li>`RequestHeader`: HTTP request header modification.</li>\n<li>`ResponseHeader`: HTTP response header modification.</li>\nNote: This field may return null, indicating that no valid values can be obtained.",
+																Description: "Feature operation with a request/response header. Features of this type include:\n  - `RequestHeader`: HTTP request header modification.\n  - `ResponseHeader`: HTTP response header modification.\nNote: This field may return null, indicating that no valid values can be obtained.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"action": {
@@ -365,23 +365,23 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																		"parameters": {
 																			Type:        schema.TypeList,
 																			Required:    true,
-																			Description: "Parameter",
+																			Description: "Parameter.",
 																			Elem: &schema.Resource{
 																				Schema: map[string]*schema.Schema{
 																					"action": {
 																						Type:        schema.TypeString,
 																						Required:    true,
-																						Description: "Feature parameter name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the parameter name, which has three values:\n<li>add: Add the HTTP header.</li>\n<li>set: Rewrite the HTTP header.</li>\n<li>del: Delete the HTTP header.</li>",
+																						Description: "Feature parameter name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the parameter name, which has three values:\n  - add: Add the HTTP header.\n  - set: Rewrite the HTTP header.\n  - del: Delete the HTTP header.",
 																					},
 																					"name": {
 																						Type:        schema.TypeString,
 																						Required:    true,
-																						Description: "Parameter name",
+																						Description: "Parameter name.",
 																					},
 																					"values": {
 																						Type:        schema.TypeSet,
 																						Required:    true,
-																						Description: "Parameter value",
+																						Description: "Parameter value.",
 																						Elem: &schema.Schema{
 																							Type: schema.TypeString,
 																						},
@@ -396,7 +396,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Feature operation with a status code. Features of this type include:\n<li>`ErrorPage`: Custom error page.</li>\n<li>`StatusCodeCache`: Status code cache TTL.</li>\nNote: This field may return null, indicating that no valid values can be obtained.",
+																Description: "Feature operation with a status code. Features of this type include:\n  - `ErrorPage`: Custom error page.\n  - `StatusCodeCache`: Status code cache TTL.\nNote: This field may return null, indicating that no valid values can be obtained.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"action": {

@@ -181,7 +181,7 @@ func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId, orig
 
 	request := teo.NewDeleteOriginGroupRequest()
 	request.ZoneId = &zoneId
-	request.OriginGroupId = &originGroupId
+	request.GroupId = &originGroupId
 
 	defer func() {
 		if errRet != nil {

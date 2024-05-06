@@ -33,7 +33,7 @@ func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 			"area": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Acceleration area of the zone. Valid values: `mainland`, `overseas`",
+				Description: "Acceleration area of the zone. Valid values: `mainland`, `overseas`.",
 			},
 
 			"cache": {
@@ -399,7 +399,7 @@ func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				MaxItems:    1,
-				Description: "Smart acceleration configuration",
+				Description: "Smart acceleration configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"switch": {

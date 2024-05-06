@@ -38,64 +38,52 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 				Description: "OriginGroup ID.",
 			},
 
-			"origin_group_name": {
+			"name": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "OriginGroup Name.",
 			},
 
-			"origin_type": {
+			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Type of the origin site. Valid values:\n- `self`: self-build website.\n- `cos`: tencent cos.\n- `third_party`: third party cos.",
+				Description: "Type of the origin site. Valid values:\n- `GENERAL`: Universal origin site group, only supports adding IP/domain name origin sites, which can be referenced by domain name service, rule engine, four-layer proxy, general load balancing, and HTTP-specific load balancing.\n- `HTTP`: The HTTP-specific origin site group, supports adding IP/domain name and object storage origin site as the origin site, it cannot be referenced by the four-layer proxy, it can only be added to the acceleration domain name, rule engine-modify origin site, and HTTP-specific load balancing reference.",
 			},
 
-			"configuration_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Type of the origin group, this field should be set when `OriginType` is self, otherwise leave it empty. Valid values:\n- `area`: select an origin by using Geo info of the client IP and `Area` field in Records.\n- `weight`: weighted select an origin by using `Weight` field in Records.\n- `proto`: config by HTTP protocol.",
-			},
-
-			"origin_records": {
+			"records": {
 				Type:        schema.TypeList,
 				Required:    true,
 				Description: "Origin site records.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"record_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Record Id.",
-						},
 						"record": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Record value, which could be an IPv4/IPv6 address or a domain.",
+							Description: "Origin site record value, does not include port information, can be: IPv4, IPv6, domain name format.",
 						},
-						"port": {
-							Type:        schema.TypeInt,
-							Required:    true,
-							Description: "Port of the origin site. Valid value range: 1-65535.",
+						"type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Origin site type, the values are:\n  - `IP_DOMAIN`: IPV4, IPV6, domain name type origin site.\n  - `COS`: COS source.\n  - `AWS_S3`: AWS S3 object storage origin site.",
+						},
+						"record_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Origin record ID.",
 						},
 						"weight": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Indicating origin site's weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.",
-						},
-						"area": {
-							Type:        schema.TypeSet,
-							Optional:    true,
-							Description: "Indicating origin site's area when `Type` field is `area`. An empty List indicate the default area. Valid value:\n- Asia, Americas, Europe, Africa or Oceania.\n- 2 characters ISO 3166 area code.",
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
+							Description: "The weight of the origin site, the value is 0-100. If it is not filled in, it means that the weight will not be set and the system will schedule it freely. If it is filled in with 0, it means that the weight is 0 and the traffic will not be scheduled to this origin site.",
 						},
 						"private": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "Whether origin site is using private authentication. Only valid when `OriginType` is `third_party`.",
+							Default:     false,
+							Description: "Whether to use private authentication, it takes effect when the origin site type RecordType=COS/AWS_S3, the values are:\n  - `true`: Use private authentication.\n  - `false`: Do not use private authentication.",
 						},
-						"private_parameter": {
+						"private_parameters": {
 							Type:        schema.TypeList,
 							Optional:    true,
 							Description: "Parameters for private authentication. Only valid when `Private` is `true`.",
@@ -104,12 +92,12 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Parameter Name. Valid values:\n- AccessKeyId：Access Key ID.\n- SecretAccessKey：Secret Access Key.",
+										Description: "Private authentication parameter name, the values are:\n  - `AccessKeyId`: Authentication parameter Access Key ID.\n  - `SecretAccessKey`: Authentication parameter Secret Access Key.\n  - `SignatureVersion`: Authentication version, v2 or v4.\n  - `Region`: Bucket region.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Parameter value.",
+										Description: "Private authentication parameter value.",
 									},
 								},
 							},
@@ -118,10 +106,47 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 				},
 			},
 
+			"host_header": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Back-to-origin Host Header, it only takes effect when type = HTTP is passed in. The rule engine modifies the Host Header configuration priority to be higher than the Host Header of the origin site group.",
+			},
+
+			"references": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of referenced instances of the origin site group.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Reference service type, the values are:\n  - `AccelerationDomain`: Acceleration domain name.\n  - `RuleEngine`: Rule engine.\n  - `Loadbalance`: Load balancing.\n  - `ApplicationProxy`: Four-layer proxy.",
+						},
+						"instance_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The instance ID of the reference type.",
+						},
+						"instance_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance name of the application type.",
+						},
+					},
+				},
+			},
+
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Origin site group creation time.",
+			},
+
 			"update_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Last modification date.",
+				Description: "Origin site group update time.",
 			},
 		},
 	}
@@ -150,42 +175,34 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 
 	request.ZoneId = &zoneId
 
-	if v, ok := d.GetOk("origin_group_name"); ok {
-		request.OriginGroupName = helper.String(v.(string))
+	if v, ok := d.GetOk("name"); ok {
+		request.Name = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("origin_type"); ok {
-		request.OriginType = helper.String(v.(string))
+	if v, ok := d.GetOk("type"); ok {
+		request.Type = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("configuration_type"); ok {
-		request.ConfigurationType = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("origin_records"); ok {
+	if v, ok := d.GetOk("records"); ok {
 		for _, item := range v.([]interface{}) {
-			originRecordsMap := item.(map[string]interface{})
+			recordsMap := item.(map[string]interface{})
 			originRecord := teo.OriginRecord{}
-			if v, ok := originRecordsMap["record"]; ok {
+			if v, ok := recordsMap["record"]; ok {
 				originRecord.Record = helper.String(v.(string))
 			}
-			if v, ok := originRecordsMap["port"]; ok {
-				originRecord.Port = helper.IntUint64(v.(int))
+			if v, ok := recordsMap["type"]; ok {
+				originRecord.Type = helper.String(v.(string))
 			}
-			if v, ok := originRecordsMap["weight"]; ok {
+			if v, ok := recordsMap["record_id"]; ok {
+				originRecord.RecordId = helper.String(v.(string))
+			}
+			if v, ok := recordsMap["weight"]; ok {
 				originRecord.Weight = helper.IntUint64(v.(int))
 			}
-			if v, ok := originRecordsMap["area"]; ok {
-				areaSet := v.(*schema.Set).List()
-				for i := range areaSet {
-					area := areaSet[i].(string)
-					originRecord.Area = append(originRecord.Area, helper.String(area))
-				}
-			}
-			if v, ok := originRecordsMap["private"]; ok {
+			if v, ok := recordsMap["private"]; ok {
 				originRecord.Private = helper.Bool(v.(bool))
 			}
-			if v, ok := originRecordsMap["private_parameter"]; ok {
+			if v, ok := recordsMap["private_parameters"]; ok {
 				for _, item := range v.([]interface{}) {
 					privateParametersMap := item.(map[string]interface{})
 					privateParameter := teo.PrivateParameter{}
@@ -198,7 +215,7 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 					originRecord.PrivateParameters = append(originRecord.PrivateParameters, &privateParameter)
 				}
 			}
-			request.OriginRecords = append(request.OriginRecords, &originRecord)
+			request.Records = append(request.Records, &originRecord)
 		}
 	}
 
@@ -253,55 +270,47 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 		log.Printf("[WARN]%s resource `teo_origin_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if respData.OriginGroupId != nil {
-		_ = d.Set("origin_group_id", respData.OriginGroupId)
-		originGroupId = *respData.OriginGroupId
+	if respData.GroupId != nil {
+		_ = d.Set("origin_group_id", respData.GroupId)
+		originGroupId = *respData.GroupId
 	}
 
-	if respData.OriginGroupName != nil {
-		_ = d.Set("origin_group_name", respData.OriginGroupName)
+	if respData.Name != nil {
+		_ = d.Set("name", respData.Name)
 	}
 
-	if respData.OriginType != nil {
-		_ = d.Set("origin_type", respData.OriginType)
+	if respData.Type != nil {
+		_ = d.Set("type", respData.Type)
 	}
 
-	if respData.ConfigurationType != nil {
-		_ = d.Set("configuration_type", respData.ConfigurationType)
-	}
+	recordsList := make([]map[string]interface{}, 0, len(respData.Records))
+	if respData.Records != nil {
+		for _, records := range respData.Records {
+			recordsMap := map[string]interface{}{}
 
-	originRecordsList := make([]map[string]interface{}, 0, len(respData.OriginRecords))
-	if respData.OriginRecords != nil {
-		for _, originRecords := range respData.OriginRecords {
-			originRecordsMap := map[string]interface{}{}
-
-			if originRecords.RecordId != nil {
-				originRecordsMap["record_id"] = originRecords.RecordId
+			if records.Record != nil {
+				recordsMap["record"] = records.Record
 			}
 
-			if originRecords.Record != nil {
-				originRecordsMap["record"] = originRecords.Record
+			if records.Type != nil {
+				recordsMap["type"] = records.Type
 			}
 
-			if originRecords.Port != nil {
-				originRecordsMap["port"] = originRecords.Port
+			if records.RecordId != nil {
+				recordsMap["record_id"] = records.RecordId
 			}
 
-			if originRecords.Weight != nil {
-				originRecordsMap["weight"] = originRecords.Weight
+			if records.Weight != nil {
+				recordsMap["weight"] = records.Weight
 			}
 
-			if originRecords.Area != nil {
-				originRecordsMap["area"] = originRecords.Area
+			if records.Private != nil {
+				recordsMap["private"] = records.Private
 			}
 
-			if originRecords.Private != nil {
-				originRecordsMap["private"] = originRecords.Private
-			}
-
-			privateParametersList := make([]map[string]interface{}, 0, len(originRecords.PrivateParameters))
-			if originRecords.PrivateParameters != nil {
-				for _, privateParameters := range originRecords.PrivateParameters {
+			privateParametersList := make([]map[string]interface{}, 0, len(records.PrivateParameters))
+			if records.PrivateParameters != nil {
+				for _, privateParameters := range records.PrivateParameters {
 					privateParametersMap := map[string]interface{}{}
 
 					if privateParameters.Name != nil {
@@ -315,16 +324,47 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 					privateParametersList = append(privateParametersList, privateParametersMap)
 				}
 
-				originRecordsMap["private_parameter"] = privateParametersList
+				recordsMap["private_parameters"] = privateParametersList
 			}
-			originRecordsList = append(originRecordsList, originRecordsMap)
+			recordsList = append(recordsList, recordsMap)
 		}
 
-		_ = d.Set("origin_records", originRecordsList)
+		_ = d.Set("records", recordsList)
+	}
+
+	referencesList := make([]map[string]interface{}, 0, len(respData.References))
+	if respData.References != nil {
+		for _, references := range respData.References {
+			referencesMap := map[string]interface{}{}
+
+			if references.InstanceType != nil {
+				referencesMap["instance_type"] = references.InstanceType
+			}
+
+			if references.InstanceId != nil {
+				referencesMap["instance_id"] = references.InstanceId
+			}
+
+			if references.InstanceName != nil {
+				referencesMap["instance_name"] = references.InstanceName
+			}
+
+			referencesList = append(referencesList, referencesMap)
+		}
+
+		_ = d.Set("references", referencesList)
+	}
+
+	if respData.CreateTime != nil {
+		_ = d.Set("create_time", respData.CreateTime)
 	}
 
 	if respData.UpdateTime != nil {
 		_ = d.Set("update_time", respData.UpdateTime)
+	}
+
+	if respData.HostHeader != nil {
+		_ = d.Set("host_header", respData.HostHeader)
 	}
 
 	_ = zoneId
@@ -347,7 +387,7 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	originGroupId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"origin_group_name", "origin_type", "configuration_type", "origin_records"}
+	mutableArgs := []string{"name", "type", "records", "host_header"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -360,44 +400,36 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 
 		request.ZoneId = &zoneId
 
-		request.OriginGroupId = &originGroupId
+		request.GroupId = &originGroupId
 
-		if v, ok := d.GetOk("origin_group_name"); ok {
-			request.OriginGroupName = helper.String(v.(string))
+		if v, ok := d.GetOk("name"); ok {
+			request.Name = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("origin_type"); ok {
-			request.OriginType = helper.String(v.(string))
+		if v, ok := d.GetOk("type"); ok {
+			request.Type = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("configuration_type"); ok {
-			request.ConfigurationType = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("origin_records"); ok {
+		if v, ok := d.GetOk("records"); ok {
 			for _, item := range v.([]interface{}) {
-				originRecordsMap := item.(map[string]interface{})
+				recordsMap := item.(map[string]interface{})
 				originRecord := teo.OriginRecord{}
-				if v, ok := originRecordsMap["record"]; ok {
+				if v, ok := recordsMap["record"]; ok {
 					originRecord.Record = helper.String(v.(string))
 				}
-				if v, ok := originRecordsMap["port"]; ok {
-					originRecord.Port = helper.IntUint64(v.(int))
+				if v, ok := recordsMap["type"]; ok {
+					originRecord.Type = helper.String(v.(string))
 				}
-				if v, ok := originRecordsMap["weight"]; ok {
+				if v, ok := recordsMap["record_id"]; ok {
+					originRecord.RecordId = helper.String(v.(string))
+				}
+				if v, ok := recordsMap["weight"]; ok {
 					originRecord.Weight = helper.IntUint64(v.(int))
 				}
-				if v, ok := originRecordsMap["area"]; ok {
-					areaSet := v.(*schema.Set).List()
-					for i := range areaSet {
-						area := areaSet[i].(string)
-						originRecord.Area = append(originRecord.Area, helper.String(area))
-					}
-				}
-				if v, ok := originRecordsMap["private"]; ok {
+				if v, ok := recordsMap["private"]; ok {
 					originRecord.Private = helper.Bool(v.(bool))
 				}
-				if v, ok := originRecordsMap["private_parameter"]; ok {
+				if v, ok := recordsMap["private_parameters"]; ok {
 					for _, item := range v.([]interface{}) {
 						privateParametersMap := item.(map[string]interface{})
 						privateParameter := teo.PrivateParameter{}
@@ -410,8 +442,12 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 						originRecord.PrivateParameters = append(originRecord.PrivateParameters, &privateParameter)
 					}
 				}
-				request.OriginRecords = append(request.OriginRecords, &originRecord)
+				request.Records = append(request.Records, &originRecord)
 			}
+		}
+
+		if v, ok := d.GetOk("host_header"); ok {
+			request.HostHeader = helper.String(v.(string))
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -457,7 +493,7 @@ func resourceTencentCloudTeoOriginGroupDelete(d *schema.ResourceData, meta inter
 
 	request.ZoneId = &zoneId
 
-	request.OriginGroupId = &originGroupId
+	request.GroupId = &originGroupId
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteOriginGroupWithContext(ctx, request)

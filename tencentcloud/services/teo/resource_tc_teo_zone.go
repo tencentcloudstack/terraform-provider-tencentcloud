@@ -47,7 +47,7 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 			"area": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "When the Type value is partial/full, the acceleration region of the L7 domain name. The following are the values of this parameter, and the default value is overseas if not filled in. When the Type value is noDomainAccess, please leave this value empty:\n<li>global: Global availability zone; </li>\n<li>mainland: Chinese mainland availability zone; </li>\n<li>overseas: Global availability zone (excluding Chinese mainland).</li>",
+				Description: "When the Type value is partial/full, the acceleration region of the L7 domain name. The following are the values of this parameter, and the default value is overseas if not filled in. When the Type value is noDomainAccess, please leave this value empty:\n  - global: Global availability zone.\n  - mainland: Chinese mainland availability zone.\n  - overseas: Global availability zone (excluding Chinese mainland).",
 			},
 
 			"plan_id": {
