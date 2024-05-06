@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_mysql_privilege: Fix the problem of multiple values ​​in fields database, table, column
+```

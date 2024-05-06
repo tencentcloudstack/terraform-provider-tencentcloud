@@ -25,26 +25,6 @@ type ResourceTencentCloudMysqlPrivilegeId struct {
 	AccountHost string `json:"AccountHost,omitempty"`
 }
 
-func resourceTencentCloudMysqlPrivilegeHash(v interface{}) int {
-	vmap := v.(map[string]interface{})
-	hashMap := map[string]interface{}{}
-	hashMap["database_name"] = vmap["database_name"]
-
-	if vmap["table_name"] != nil {
-		hashMap["table_name"] = vmap["table_name"]
-	}
-	if hashMap["column_name"] != nil {
-		hashMap["column_name"] = vmap["column_name"]
-	}
-	slice := []string{}
-	for _, v := range vmap["privileges"].(*schema.Set).List() {
-		slice = append(slice, v.(string))
-	}
-	hashMap["privileges"] = slice
-	b, _ := json.Marshal(hashMap)
-	return helper.HashString(string(b))
-}
-
 func ResourceTencentCloudMysqlPrivilege() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMysqlPrivilegeCreate,
@@ -94,7 +74,6 @@ func ResourceTencentCloudMysqlPrivilege() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Database privileges list.",
-				Set:         resourceTencentCloudMysqlPrivilegeHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database_name": {
@@ -103,12 +82,9 @@ func ResourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Description: "Database name.",
 						},
 						"privileges": {
-							Type:     schema.TypeSet,
-							Required: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Set: func(v interface{}) int {
-								return helper.HashString(v.(string))
-							},
+							Type:        schema.TypeSet,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: `Database privilege.available values for Privileges:` + strings.Join(MYSQL_DATABASE_PRIVILEGE, ",") + ".",
 						},
 					},
@@ -118,7 +94,6 @@ func ResourceTencentCloudMysqlPrivilege() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Table privileges list.",
-				Set:         resourceTencentCloudMysqlPrivilegeHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database_name": {
@@ -132,12 +107,9 @@ func ResourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Description: "Table name.",
 						},
 						"privileges": {
-							Type:     schema.TypeSet,
-							Required: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Set: func(v interface{}) int {
-								return helper.HashString(v.(string))
-							},
+							Type:        schema.TypeSet,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: `Table privilege.available values for Privileges:` + strings.Join(MYSQL_TABLE_PRIVILEGE, ",") + ".",
 						},
 					},
@@ -147,7 +119,6 @@ func ResourceTencentCloudMysqlPrivilege() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Column privileges list.",
-				Set:         resourceTencentCloudMysqlPrivilegeHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database_name": {
@@ -166,12 +137,9 @@ func ResourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Description: "Column name.",
 						},
 						"privileges": {
-							Type:     schema.TypeSet,
-							Required: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Set: func(v interface{}) int {
-								return helper.HashString(v.(string))
-							},
+							Type:        schema.TypeSet,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: `Column privilege.available values for Privileges:` + strings.Join(MYSQL_COLUMN_PRIVILEGE, ",") + ".",
 						},
 					},
@@ -209,93 +177,66 @@ func (me *ResourceTencentCloudMysqlPrivilegeId) update(ctx context.Context, d *s
 			}
 		}
 
-		same := map[string]bool{}
-
-		sliceInterface = d.Get("database").(*schema.Set).List()
-		if len(sliceInterface) > 0 {
-			request.DatabasePrivileges = make([]*cdb.DatabasePrivilege, 0, len(sliceInterface))
-			for _, v := range sliceInterface {
-				vmap := v.(map[string]interface{})
-
-				trace := *sp(vmap["database_name"])
-				if same[trace] {
-					return errors.New("can not assign two permissions to a database and an account," + trace)
-				} else {
-					same[trace] = true
+		if v, ok := d.GetOk("database"); ok {
+			for _, item := range v.(*schema.Set).List() {
+				dMap := item.(map[string]interface{})
+				privilege := cdb.DatabasePrivilege{}
+				if v, ok := dMap["database_name"]; ok {
+					privilege.Database = helper.String(v.(string))
 				}
-
-				p := &cdb.DatabasePrivilege{
-					Database:   sp(vmap["database_name"]),
-					Privileges: []*string{},
-				}
-
-				for _, privilege := range vmap["privileges"].(*schema.Set).List() {
-					ptr := sp(privilege)
-					if !tccommon.IsContains(MYSQL_DATABASE_PRIVILEGE, *ptr) {
-						return errors.New("database privileges not support:" + *ptr)
+				if v, ok := dMap["privileges"]; ok {
+					privilegeList := []*string{}
+					for _, v := range v.(*schema.Set).List() {
+						privilegeList = append(privilegeList, helper.String(v.(string)))
 					}
-					p.Privileges = append(p.Privileges, ptr)
+					privilege.Privileges = privilegeList
 				}
-				request.DatabasePrivileges = append(request.DatabasePrivileges, p)
+				request.DatabasePrivileges = append(request.DatabasePrivileges, &privilege)
 			}
 		}
 
-		sliceInterface = d.Get("table").(*schema.Set).List()
-		if len(sliceInterface) > 0 {
-			request.TablePrivileges = make([]*cdb.TablePrivilege, 0, len(sliceInterface))
-			for _, v := range sliceInterface {
-				vmap := v.(map[string]interface{})
-
-				trace := *sp(vmap["database_name"]) + "." + *sp(vmap["table_name"])
-				if same[trace] {
-					return errors.New("can not assign two permissions to a table and an account," + trace)
-				} else {
-					same[trace] = true
+		if v, ok := d.GetOk("table"); ok {
+			for _, item := range v.(*schema.Set).List() {
+				dMap := item.(map[string]interface{})
+				privilege := cdb.TablePrivilege{}
+				if v, ok := dMap["database_name"]; ok {
+					privilege.Database = helper.String(v.(string))
 				}
-
-				p := &cdb.TablePrivilege{
-					Database:   sp(vmap["database_name"]),
-					Table:      sp(vmap["table_name"]),
-					Privileges: []*string{},
+				if v, ok := dMap["table_name"]; ok {
+					privilege.Table = helper.String(v.(string))
 				}
-				for _, privilege := range vmap["privileges"].(*schema.Set).List() {
-					ptr := sp(privilege)
-					if !tccommon.IsContains(MYSQL_TABLE_PRIVILEGE, *ptr) {
-						return errors.New("table privileges not support:" + *ptr)
+				if v, ok := dMap["privileges"]; ok {
+					privilegeList := []*string{}
+					for _, v := range v.(*schema.Set).List() {
+						privilegeList = append(privilegeList, helper.String(v.(string)))
 					}
-					p.Privileges = append(p.Privileges, ptr)
+					privilege.Privileges = privilegeList
 				}
-				request.TablePrivileges = append(request.TablePrivileges, p)
+				request.TablePrivileges = append(request.TablePrivileges, &privilege)
 			}
 		}
 
-		sliceInterface = d.Get("column").(*schema.Set).List()
-		if len(sliceInterface) > 0 {
-			request.ColumnPrivileges = make([]*cdb.ColumnPrivilege, 0, len(sliceInterface))
-			for _, v := range sliceInterface {
-				vmap := v.(map[string]interface{})
-
-				trace := *sp(vmap["database_name"]) + "." + *sp(vmap["table_name"]) + "." + *sp(vmap["column_name"])
-				if same[trace] {
-					return errors.New("can not assign two permissions to a column and an account," + trace)
-				} else {
-					same[trace] = true
+		if v, ok := d.GetOk("column"); ok {
+			for _, item := range v.(*schema.Set).List() {
+				dMap := item.(map[string]interface{})
+				privilege := cdb.ColumnPrivilege{}
+				if v, ok := dMap["database_name"]; ok {
+					privilege.Database = helper.String(v.(string))
 				}
-
-				p := &cdb.ColumnPrivilege{
-					Database:   sp(vmap["database_name"]),
-					Table:      sp(vmap["table_name"]),
-					Column:     sp(vmap["column_name"]),
-					Privileges: []*string{},
+				if v, ok := dMap["table_name"]; ok {
+					privilege.Table = helper.String(v.(string))
 				}
-				for _, privilege := range vmap["privileges"].(*schema.Set).List() {
-					ptr := sp(privilege)
-					if !tccommon.IsContains(MYSQL_COLUMN_PRIVILEGE, *ptr) {
-						return errors.New("column privileges not support:" + *ptr)
+				if v, ok := dMap["column_name"]; ok {
+					privilege.Column = helper.String(v.(string))
+				}
+				if v, ok := dMap["privileges"]; ok {
+					privilegeList := []*string{}
+					for _, v := range v.(*schema.Set).List() {
+						privilegeList = append(privilegeList, helper.String(v.(string)))
 					}
-					p.Privileges = append(p.Privileges, ptr)
+					privilege.Privileges = privilegeList
 				}
-				request.ColumnPrivileges = append(request.ColumnPrivileges, p)
+				request.ColumnPrivileges = append(request.ColumnPrivileges, &privilege)
 			}
 		}
 	}

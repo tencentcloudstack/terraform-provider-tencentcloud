@@ -28,19 +28,19 @@ func TestAccTencentCloudMysqlPrivilegeResource(t *testing.T) {
 		CheckDestroy: testAccMysqlPrivilegeDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlPrivilege(),
+				Config: testAccMysqlPrivilege,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlPrivilegeExists,
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "mysql_id"),
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "account_name"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global.#", "1"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "table.#", "1"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "1"),
+					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "2"),
 					resource.TestCheckTypeSetElemAttr(testAccTencentCloudMysqlPrivilegeName, "global.*", "TRIGGER"),
 				),
 			},
 			{
-				Config: testAccMysqlPrivilegeUpdate(),
+				Config: testAccMysqlPrivilegeUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlPrivilegeExists,
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "mysql_id"),
@@ -183,11 +183,9 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccMysqlPrivilege() string {
-	return fmt.Sprintf(`
-%s
+const testAccMysqlPrivilege = testAccMysql + `
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = local.mysql_id
+  mysql_id    = tencentcloud_mysql_instance.mysql.id
   name        = "test11priv"
   host        = "119.168.110.%%"
   password    = "test1234"
@@ -195,7 +193,7 @@ resource "tencentcloud_mysql_account" "mysql_account" {
 }
 
 resource "tencentcloud_mysql_privilege" "privilege" {
-  mysql_id     = local.mysql_id
+  mysql_id     = tencentcloud_mysql_instance.mysql.id
   account_name = tencentcloud_mysql_account.mysql_account.name
   account_host = tencentcloud_mysql_account.mysql_account.host
   global       = ["TRIGGER"]
@@ -214,14 +212,18 @@ resource "tencentcloud_mysql_privilege" "privilege" {
     table_name    = "user"
     column_name   = "host"
   }
-}`, tcacctest.CommonPresetMysql)
-}
 
-func testAccMysqlPrivilegeUpdate() string {
-	return fmt.Sprintf(`
-%s
+  column {
+    privileges    = ["SELECT"]
+    database_name = "mysql"
+    table_name    = "user"
+    column_name   = "user"
+  }
+}`
+
+const testAccMysqlPrivilegeUpdate = testAccMysql + `
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = local.mysql_id
+  mysql_id    = tencentcloud_mysql_instance.mysql.id
   name        = "test11priv"
   host        = "119.168.110.%%"
   password    = "test1234"
@@ -229,7 +231,7 @@ resource "tencentcloud_mysql_account" "mysql_account" {
 }
 
 resource "tencentcloud_mysql_privilege" "privilege" {
-  mysql_id     = local.mysql_id
+  mysql_id     = tencentcloud_mysql_instance.mysql.id
   account_name = tencentcloud_mysql_account.mysql_account.name
   account_host = tencentcloud_mysql_account.mysql_account.host
   global       = ["TRIGGER","SELECT"]
@@ -243,5 +245,4 @@ resource "tencentcloud_mysql_privilege" "privilege" {
     database_name = "mysql"
     table_name    = "db"
   }
-}`, tcacctest.CommonPresetMysql)
-}
+}`
