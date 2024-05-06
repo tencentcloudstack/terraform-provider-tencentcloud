@@ -27,8 +27,8 @@ func init() {
 			if err != nil {
 				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 			}
-			client := sharedClient.(tccommon.ProviderMeta)
-			asService := svcas.NewAsService(client.GetAPIV3Conn())
+			client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
+			asService := svcas.NewAsService(client)
 			configs, err := asService.DescribeLaunchConfigurationByFilter(ctx, "", "")
 			if err != nil {
 				return err
