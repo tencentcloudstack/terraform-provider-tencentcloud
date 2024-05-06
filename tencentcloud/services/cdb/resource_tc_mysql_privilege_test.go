@@ -28,7 +28,7 @@ func TestAccTencentCloudMysqlPrivilegeResource(t *testing.T) {
 		CheckDestroy: testAccMysqlPrivilegeDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlPrivilege(),
+				Config: testAccMysqlPrivilege,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlPrivilegeExists,
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "mysql_id"),
@@ -40,7 +40,7 @@ func TestAccTencentCloudMysqlPrivilegeResource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMysqlPrivilegeUpdate(),
+				Config: testAccMysqlPrivilegeUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlPrivilegeExists,
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "mysql_id"),
@@ -183,11 +183,9 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccMysqlPrivilege() string {
-	return fmt.Sprintf(`
-%s
+const testAccMysqlPrivilege = testAccMysql + `
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = local.mysql_id
+  mysql_id    = tencentcloud_mysql_instance.mysql.id
   name        = "test11priv"
   host        = "119.168.110.%%"
   password    = "test1234"
@@ -195,7 +193,7 @@ resource "tencentcloud_mysql_account" "mysql_account" {
 }
 
 resource "tencentcloud_mysql_privilege" "privilege" {
-  mysql_id     = local.mysql_id
+  mysql_id     = tencentcloud_mysql_instance.mysql.id
   account_name = tencentcloud_mysql_account.mysql_account.name
   account_host = tencentcloud_mysql_account.mysql_account.host
   global       = ["TRIGGER"]
@@ -221,14 +219,11 @@ resource "tencentcloud_mysql_privilege" "privilege" {
     table_name    = "user"
     column_name   = "user"
   }
-}`, tcacctest.CommonPresetMysql)
-}
+}`
 
-func testAccMysqlPrivilegeUpdate() string {
-	return fmt.Sprintf(`
-%s
+const testAccMysqlPrivilegeUpdate = testAccMysql + `
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = local.mysql_id
+  mysql_id    = tencentcloud_mysql_instance.mysql.id
   name        = "test11priv"
   host        = "119.168.110.%%"
   password    = "test1234"
@@ -236,7 +231,7 @@ resource "tencentcloud_mysql_account" "mysql_account" {
 }
 
 resource "tencentcloud_mysql_privilege" "privilege" {
-  mysql_id     = local.mysql_id
+  mysql_id     = tencentcloud_mysql_instance.mysql.id
   account_name = tencentcloud_mysql_account.mysql_account.name
   account_host = tencentcloud_mysql_account.mysql_account.host
   global       = ["TRIGGER","SELECT"]
@@ -250,5 +245,4 @@ resource "tencentcloud_mysql_privilege" "privilege" {
     database_name = "mysql"
     table_name    = "db"
   }
-}`, tcacctest.CommonPresetMysql)
-}
+}`
