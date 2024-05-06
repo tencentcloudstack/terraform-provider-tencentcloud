@@ -402,6 +402,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
+	if dbVersion == "" && dbMajorVersion == "" {
+		dbVersion = "10.4"
+	}
+
 	// get specCode with engine_version and memory
 	outErr = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
