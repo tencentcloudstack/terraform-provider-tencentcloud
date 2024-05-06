@@ -669,7 +669,7 @@ resource "tencentcloud_mysql_instance" "mysql" {
   instance_name     = "tf-test"
   internet_service  = 0
   mem_size          = 8000
-  root_password     = "Iac@123456"
+  root_password     = "password123"
   prepaid_period    = 1
   project_id        = 0
   security_groups = [
