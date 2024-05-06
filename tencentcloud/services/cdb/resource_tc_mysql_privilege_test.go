@@ -35,7 +35,7 @@ func TestAccTencentCloudMysqlPrivilegeResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "account_name"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global.#", "1"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "table.#", "1"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "1"),
+					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "2"),
 					resource.TestCheckTypeSetElemAttr(testAccTencentCloudMysqlPrivilegeName, "global.*", "TRIGGER"),
 				),
 			},
@@ -213,6 +213,13 @@ resource "tencentcloud_mysql_privilege" "privilege" {
     database_name = "mysql"
     table_name    = "user"
     column_name   = "host"
+  }
+
+  column {
+    privileges    = ["SELECT"]
+    database_name = "mysql"
+    table_name    = "user"
+    column_name   = "user"
   }
 }`, tcacctest.CommonPresetMysql)
 }
