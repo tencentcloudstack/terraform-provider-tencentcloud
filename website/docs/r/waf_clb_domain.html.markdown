@@ -126,6 +126,8 @@ The following arguments are supported:
 * `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom header.
 * `is_cdn` - (Optional, Int) Whether a proxy has been enabled before WAF, 0 no deployment, 1 deployment and use first IP in X-Forwarded-For as client IP, 2 deployment and use remote_addr as client IP, 3 deployment and use values of custom headers as client IP.
 * `load_balancer_set` - (Optional, List) List of bound LB.
+* `post_ckafka_action` - (Optional, Int) 0-off, 1-on. default is 0.
+* `post_cls_action` - (Optional, Int) 0-off, 1-on. default is 0.
 * `status` - (Optional, Int) Binding status between waf and LB, 0:not bind, 1:binding.
 
 The `load_balancer_set` object supports the following:
