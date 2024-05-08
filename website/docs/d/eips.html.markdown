@@ -13,9 +13,33 @@ Use this data source to query eip instances.
 
 ## Example Usage
 
+### Query all eips
+
 ```hcl
-data "tencentcloud_eips" "foo" {
+data "tencentcloud_eips" "example" {}
+```
+
+
+
+```hcl
+data "tencentcloud_eips" "example" {
   eip_id = "eip-ry9h95hg"
+}
+```
+
+
+
+```hcl
+data "tencentcloud_eips" "example" {
+  eip_name = "tf_example"
+}
+```
+
+
+
+```hcl
+data "tencentcloud_eips" "example" {
+  public_ip = "1.123.31.21"
 }
 ```
 
