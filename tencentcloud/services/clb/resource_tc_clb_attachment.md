@@ -1,4 +1,6 @@
 Provides a resource to create a CLB attachment.
+~> **NOTE:** This resource is designed to manage the entire set of binding relationships associated with a particular CLB (Cloud Load Balancer). As such, it does not allow the simultaneous use of this resource for the same CLB across different contexts or environments.
+
 
 Example Usage
 
