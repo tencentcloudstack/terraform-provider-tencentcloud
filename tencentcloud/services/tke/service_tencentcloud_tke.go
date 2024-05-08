@@ -2927,3 +2927,38 @@ func (me *TkeService) DescribeKubernetesClusterCommonNamesByFilter(ctx context.C
 	ret = response.Response.CommonNames
 	return
 }
+
+func (me *TkeService) DescribeKubernetesClusterAuthenticationOptionsByFilter(ctx context.Context, param map[string]interface{}) (ret *tke.DescribeClusterAuthenticationOptionsResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewDescribeClusterAuthenticationOptionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
