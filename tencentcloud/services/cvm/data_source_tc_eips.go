@@ -18,7 +18,6 @@ import (
 func DataSourceTencentCloudEips() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudEipsRead,
-
 		Schema: map[string]*schema.Schema{
 			"eip_id": {
 				Type:        schema.TypeString,
@@ -40,12 +39,6 @@ func DataSourceTencentCloudEips() *schema.Resource {
 				Optional:    true,
 				Description: "The tags of EIP.",
 			},
-			"result_output_file": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Used to save results.",
-			},
-
 			"eip_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -100,42 +93,53 @@ func DataSourceTencentCloudEips() *schema.Resource {
 					},
 				},
 			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
 		},
 	}
 }
 
 func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_eips.read")()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	vpcService := svcvpc.NewVpcService(client)
-	tagService := svctag.NewTagService(client)
-	region := client.Region
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		vpcService = svcvpc.NewVpcService(client)
+		tagService = svctag.NewTagService(client)
+		region     = client.Region
+		eips       []*vpc.Address
+		errRet     error
+	)
 
 	filter := make(map[string][]string)
 	if v, ok := d.GetOk("eip_id"); ok {
 		filter["address-id"] = []string{v.(string)}
 	}
+
 	if v, ok := d.GetOk("eip_name"); ok {
 		filter["address-name"] = []string{v.(string)}
 	}
+
 	if v, ok := d.GetOk("public_ip"); ok {
 		filter["public-ip"] = []string{v.(string)}
 	}
 
 	tags := helper.GetTags(d, "tags")
 
-	var eips []*vpc.Address
-	var errRet error
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		eips, errRet = vpcService.DescribeEipByFilter(ctx, filter)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -143,7 +147,6 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 	eipList := make([]map[string]interface{}, 0, len(eips))
 	ids := make([]string, 0, len(eips))
 
-EIP_LOOP:
 	for _, eip := range eips {
 		respTags, err := tagService.DescribeResourceTags(ctx, svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, *eip.AddressId)
 		if err != nil {
@@ -151,34 +154,40 @@ EIP_LOOP:
 			return err
 		}
 
+		tagsMatch := true
+
 		for k, v := range tags {
 			if respTags[k] != v {
-				continue EIP_LOOP
+				tagsMatch = false
+				break
 			}
 		}
 
-		mapping := map[string]interface{}{
-			"eip_id":      eip.AddressId,
-			"eip_name":    eip.AddressName,
-			"eip_type":    eip.AddressType,
-			"status":      eip.AddressStatus,
-			"public_ip":   eip.AddressIp,
-			"instance_id": eip.InstanceId,
-			"eni_id":      eip.NetworkInterfaceId,
-			"create_time": eip.CreatedTime,
-			"tags":        respTags,
-		}
+		if tagsMatch {
+			mapping := map[string]interface{}{
+				"eip_id":      eip.AddressId,
+				"eip_name":    eip.AddressName,
+				"eip_type":    eip.AddressType,
+				"status":      eip.AddressStatus,
+				"public_ip":   eip.AddressIp,
+				"instance_id": eip.InstanceId,
+				"eni_id":      eip.NetworkInterfaceId,
+				"create_time": eip.CreatedTime,
+				"tags":        respTags,
+			}
 
-		eipList = append(eipList, mapping)
-		ids = append(ids, *eip.AddressId)
+			eipList = append(eipList, mapping)
+			ids = append(ids, *eip.AddressId)
+		}
 	}
 
-	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("eip_list", eipList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set eip list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
@@ -186,5 +195,6 @@ EIP_LOOP:
 			return err
 		}
 	}
+
 	return nil
 }
