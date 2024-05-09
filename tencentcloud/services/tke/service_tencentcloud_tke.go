@@ -2962,3 +2962,44 @@ func (me *TkeService) DescribeKubernetesClusterAuthenticationOptionsByFilter(ctx
 	ret = response.Response
 	return
 }
+
+func (me *TkeService) DescribeKubernetesChartsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.AppChart, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewGetTkeAppChartListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Kind" {
+			request.Kind = v.(*string)
+		}
+		if k == "Arch" {
+			request.Arch = v.(*string)
+		}
+		if k == "ClusterType" {
+			request.ClusterType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().GetTkeAppChartList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AppCharts) < 1 {
+		return
+	}
+
+	ret = response.Response.AppCharts
+	return
+}
