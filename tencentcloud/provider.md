@@ -669,6 +669,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
     tencentcloud_kubernetes_cluster_endpoint
+    tencentcloud_kubernetes_addon
 
 TDMQ for Pulsar(tpulsar)
   Data Source
