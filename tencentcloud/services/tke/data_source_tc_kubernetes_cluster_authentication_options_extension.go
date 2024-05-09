@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
@@ -17,12 +19,23 @@ func dataSourceTencentCloudKubernetesClusterAuthenticationOptionsReadOutputConte
 
 	if v, ok := d.GetOk("service_accounts"); ok {
 		if vList, isList := v.([]interface{}); isList && len(vList) > 0 {
-			tmpList = append(tmpList, vList[0].(map[string]interface{}))
+			if vList[0] == nil {
+				tmpList = append(tmpList, map[string]interface{}{})
+			} else {
+				tmpList = append(tmpList, vList[0].(map[string]interface{}))
+			}
 		}
 	}
 	if v, ok := d.GetOk("oidc_config"); ok {
 		if vList, isList := v.([]interface{}); isList && len(vList) > 0 {
-			tmpList = append(tmpList, vList[0].(map[string]interface{}))
+			if vList[0] == nil {
+				tmpList = append(tmpList, map[string]interface{}{})
+			} else {
+				vMap := vList[0].(map[string]interface{})
+				autoCreateClientID, _ := vMap["auto_create_client_id"].(*schema.Set)
+				vMap["auto_create_client_id"] = autoCreateClientID.List()
+				tmpList = append(tmpList, vMap)
+			}
 		}
 	}
 
