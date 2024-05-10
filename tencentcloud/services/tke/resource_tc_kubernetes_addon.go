@@ -3,6 +3,7 @@ package tke
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"strings"
@@ -158,7 +159,10 @@ func resourceTencentCloudKubernetesAddonRead(d *schema.ResourceData, meta interf
 	}
 
 	if respData.RawValues != nil {
-		_ = d.Set("raw_values", respData.RawValues)
+		rawValues := respData.RawValues
+		base64DecodeValues, _ := base64.StdEncoding.DecodeString(*rawValues)
+		jsonValues := string(base64DecodeValues)
+		_ = d.Set("raw_values", jsonValues)
 	}
 
 	if respData.Phase != nil {
