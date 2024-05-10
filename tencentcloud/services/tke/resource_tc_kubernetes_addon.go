@@ -4,13 +4,14 @@ package tke
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func ResourceTencentCloudKubernetesAddon() *schema.Resource {
@@ -99,7 +100,6 @@ func resourceTencentCloudKubernetesAddonCreate(d *schema.ResourceData, meta inte
 		request.RawValues = helper.String(v.(string))
 	}
 
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().InstallAddonWithContext(ctx, request)
 		if e != nil {
@@ -116,7 +116,6 @@ func resourceTencentCloudKubernetesAddonCreate(d *schema.ResourceData, meta inte
 	}
 
 	_ = response
-
 
 	d.SetId(strings.Join([]string{clusterId, addonName}, tccommon.FILED_SP))
 
@@ -169,7 +168,6 @@ func resourceTencentCloudKubernetesAddonRead(d *schema.ResourceData, meta interf
 	if respData.Reason != nil {
 		_ = d.Set("reason", respData.Reason)
 	}
-
 
 	_ = addonName
 	return nil
@@ -228,7 +226,6 @@ func resourceTencentCloudKubernetesAddonUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-
 	_ = addonName
 	return resourceTencentCloudKubernetesAddonRead(d, meta)
 }
@@ -255,8 +252,6 @@ func resourceTencentCloudKubernetesAddonDelete(d *schema.ResourceData, meta inte
 	request.ClusterId = &clusterId
 	request.AddonName = &addonName
 
-
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DeleteAddonWithContext(ctx, request)
 		if e != nil {
@@ -272,7 +267,7 @@ func resourceTencentCloudKubernetesAddonDelete(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	_ =    response
+	_ = response
 	_ = addonName
 	return nil
 }
