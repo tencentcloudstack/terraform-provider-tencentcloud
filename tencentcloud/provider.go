@@ -1475,6 +1475,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_instance":                                       tpulsar.ResourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                                      tpulsar.ResourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                          tpulsar.ResourceTencentCloudTdmqTopic(),
+			"tencentcloud_tdmq_topic_with_full_id":                             tpulsar.ResourceTencentCloudTdmqTopicWithFullId(),
 			"tencentcloud_tdmq_role":                                           tpulsar.ResourceTencentCloudTdmqRole(),
 			"tencentcloud_tdmq_namespace_role_attachment":                      tpulsar.ResourceTencentCloudTdmqNamespaceRoleAttachment(),
 			"tencentcloud_tdmq_rabbitmq_user":                                  trabbit.ResourceTencentCloudTdmqRabbitmqUser(),
