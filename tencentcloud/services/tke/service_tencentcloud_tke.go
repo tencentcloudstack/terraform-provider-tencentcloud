@@ -2790,3 +2790,33 @@ func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Con
 	clusterNodePools = response.Response.NodePoolSet
 	return
 }
+
+func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId string, addonName string) (ret *tke.Addon, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeAddonRequest()
+	request.ClusterId = &clusterId
+	request.AddonName = &addonName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeAddon(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Addons) < 1 {
+		return
+	}
+
+	ret = response.Response.Addons[0]
+	return
+}

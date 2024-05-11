@@ -1971,7 +1971,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_csip_risk_center":                                    csip.ResourceTencentCloudCsipRiskCenter(),
 			"tencentcloud_organization_org_share_unit_member":                  tco.ResourceTencentCloudOrganizationOrgShareUnitMember(),
 			"tencentcloud_organization_org_share_unit":                         tco.ResourceTencentCloudOrganizationOrgShareUnit(),
-		},
+			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon()},
 
 		ConfigureFunc: providerConfigure,
 	}
