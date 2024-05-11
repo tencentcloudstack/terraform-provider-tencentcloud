@@ -402,7 +402,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
-	if dbVersion == "" && dbMajorVersion == "" {
+	if dbVersion == "" && dbMajorVersion == "" && dbKernelVersion == "" {
 		dbVersion = "10.4"
 	}
 
