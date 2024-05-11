@@ -1053,3 +1053,37 @@ func (me *TeoService) DescribeTeoCertificateConfigById(ctx context.Context, zone
 	ret = response.Response.AccelerationDomains[0]
 	return
 }
+
+func (me *TeoService) DescribeTeoL4ProxyById(ctx context.Context, zoneId string, proxyId string) (ret *teo.L4Proxy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeL4ProxyRequest()
+	request.ZoneId = &zoneId
+	filter := &teo.Filter{
+		Name:   helper.String("proxy-id"),
+		Values: []*string{&proxyId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeL4Proxy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.L4Proxies) < 1 {
+		return
+	}
+
+	ret = response.Response.L4Proxies[0]
+	return
+}
