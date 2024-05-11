@@ -98,7 +98,9 @@ func resourceTencentCloudKubernetesAddonCreate(d *schema.ResourceData, meta inte
 	}
 
 	if v, ok := d.GetOk("raw_values"); ok {
-		request.RawValues = helper.String(v.(string))
+		jsonValues := helper.String(v.(string))
+		rawValues := base64.StdEncoding.EncodeToString([]byte(*jsonValues))
+		request.RawValues = &rawValues
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -212,7 +214,9 @@ func resourceTencentCloudKubernetesAddonUpdate(d *schema.ResourceData, meta inte
 		}
 
 		if v, ok := d.GetOk("raw_values"); ok {
-			request.RawValues = helper.String(v.(string))
+			jsonValues := helper.String(v.(string))
+			rawValues := base64.StdEncoding.EncodeToString([]byte(*jsonValues))
+			request.RawValues = &rawValues
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
