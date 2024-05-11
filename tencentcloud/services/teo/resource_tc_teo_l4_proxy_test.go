@@ -112,7 +112,7 @@ func testAccCheckL4ProxyExists(r string) resource.TestCheckFunc {
 
 const testAccTeoL4Proxy = `
 
-resource "tencentcloud_teo_l4_proxy" "proxy" {
+resource "tencentcloud_teo_l4_proxy" "teo_l4_proxy" {
   accelerate_mainland = "off"
   area                = "overseas"
   ipv6                = "on"
@@ -124,7 +124,7 @@ resource "tencentcloud_teo_l4_proxy" "proxy" {
 
 const testAccTeoL4ProxyUp = `
 
-resource "tencentcloud_teo_l4_proxy" "proxy" {
+resource "tencentcloud_teo_l4_proxy" "teo_l4_proxy" {
   accelerate_mainland = "off"
   area                = "overseas"
   ipv6                = "off"
