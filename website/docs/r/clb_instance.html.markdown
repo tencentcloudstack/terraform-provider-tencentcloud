@@ -279,7 +279,7 @@ The following arguments are supported:
 * `slave_zone_id` - (Optional, String) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
 * `snat_ips` - (Optional, List) Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.
 * `snat_pro` - (Optional, Bool) Indicates whether Binding IPs of other VPCs feature switch.
-* `subnet_id` - (Optional, String, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.
+* `subnet_id` - (Optional, String, ForceNew) In the case of purchasing a `INTERNAL` clb instance, the subnet id must be specified. The VIP of the `INTERNAL` clb instance will be generated from this subnet.
 * `tags` - (Optional, Map) The available tags within this CLB.
 * `target_region_info_region` - (Optional, String) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional, String) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.

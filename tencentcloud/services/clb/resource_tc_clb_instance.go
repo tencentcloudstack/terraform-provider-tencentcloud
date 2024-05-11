@@ -69,7 +69,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 60),
-				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.",
+				Description:  "In the case of purchasing a `INTERNAL` clb instance, the subnet id must be specified. The VIP of the `INTERNAL` clb instance will be generated from this subnet.",
 			},
 			"address_ip_version": {
 				Type:        schema.TypeString,
