@@ -1776,3 +1776,38 @@ func (me *CvmService) ModifyImageSharePermission(ctx context.Context, imageId, p
 	}
 	return
 }
+
+func (me *CvmService) DescribeCvmInstanceVncUrlByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeInstanceVncUrlResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeInstanceVncUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstanceVncUrl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
