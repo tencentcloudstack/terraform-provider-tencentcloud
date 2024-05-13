@@ -20,10 +20,8 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
 )
-
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 	return &schema.Resource{
@@ -319,16 +317,17 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	//internal version: replace clientCreate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	//internal version: replace clientCreate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	postgresqlService := PostgresqlService{client: client}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	billingService := billing.BillingService{Client: client}
+	region := client.Region
 
 	var (
-		name      = d.Get("name").(string)
-		dbVersion = d.Get("engine_version").(string)
-		payType   = d.Get("charge_type").(string)
-		//internal version: replace var begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace var end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		name           = d.Get("name").(string)
+		dbVersion      = d.Get("engine_version").(string)
+		payType        = d.Get("charge_type").(string)
+		chargeType     = d.Get("charge_type").(string)
 		projectId      = d.Get("project_id").(int)
 		subnetId       = d.Get("subnet_id").(string)
 		vpcId          = d.Get("vpc_id").(string)
@@ -496,8 +495,23 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			voucherIds,
 		)
 		if inErr != nil {
-			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, "CreatePostgresqlInstance", inErr.Error())
+
+			if chargeType == COMMON_PAYTYPE_PREPAID {
+				regx := "\"dealNames\":\\[\"(.*)\"\\]"
+				// query deal by bpass
+				id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
+				if billErr != nil {
+					log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+					return resource.NonRetryableError(billErr)
+				}
+				// yunti prepaid user
+				if id != nil {
+					instanceId = *id
+					return nil
+				}
+			}
+
 			return tccommon.RetryError(inErr)
 		}
 		return nil
@@ -508,8 +522,19 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	d.SetId(instanceId)
 
-	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	// set tag before query the instance
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err := tagService.WaitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), region, tags)
+		if err != nil {
+			return err
+		}
+	}
 
 	// check creation done
 	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -580,17 +605,6 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return checkErr
 	}
 
-	//internal version: replace null begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(tcClient)
-		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-	//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-
 	// set pg params
 	paramEntrys := make(map[string]string)
 	if v, ok := d.GetOkExists("max_standby_archive_delay"); ok {
@@ -652,9 +666,10 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	//internal version: replace clientUpdate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	//internal version: replace clientUpdate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	postgresqlService := PostgresqlService{client: tcClient}
+
 	instanceId := d.Id()
 	d.Partial(true)
 
@@ -1103,17 +1118,17 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		//internal version: replace null begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(tcClient)
-		//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
 		}
-		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		// Wait the tags enabled
+		err = tagService.WaitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), tcClient.Region, replaceTags)
+		if err != nil {
+			return err
+		}
+
 	}
 	paramEntrys := make(map[string]string)
 	if d.HasChange("max_standby_archive_delay") {

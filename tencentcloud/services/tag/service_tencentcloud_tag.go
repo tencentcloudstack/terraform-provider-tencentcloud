@@ -10,13 +10,13 @@ import (
 	"github.com/pkg/errors"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 
+	"fmt"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
 )
-
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func NewTagService(client *connectivity.TencentCloudClient) TagService {
 	return TagService{client: client}
@@ -112,8 +112,38 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 	return
 }
 
-//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+func (me *TagService) WaitTagsEnable(ctx context.Context, serviceType, resType, resId, region string, tags map[string]string) (retErr error) {
+	billingService := billing.BillingService{Client: me.client}
+	if !billingService.IsYunTiAccount() {
+		return nil
+	}
+	retErr = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ret, err := me.DescribeResourceTags(ctx, serviceType, resType, region, resId)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		if ret != nil {
+			if tagEqual(ret, tags) {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("the redis.instance %s is uncomplete, retry ...", resId))
+		}
+		return resource.RetryableError(fmt.Errorf("the redis.instance %s's tags is nil, retry ...", resId))
+	})
+	return retErr
+}
+
+func tagEqual(dst, orig map[string]string) bool {
+	for k := range orig {
+		if dst[k] == "" {
+			return false
+		}
+		if dst[k] != orig[k] {
+			return false
+		}
+	}
+	return true
+}
 
 func DiffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]string, deleteTags []string) {
 	replaceTags = make(map[string]string)

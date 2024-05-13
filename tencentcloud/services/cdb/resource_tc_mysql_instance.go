@@ -15,10 +15,8 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
 )
-
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 var importMysqlFlag = false
 
@@ -544,8 +542,9 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	request := cdb.NewCreateDBInstanceRequest()
 	clientToken := helper.BuildToken()
 	request.ClientToken = &clientToken
-	//internal version: replace var begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace var end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	billingService := billing.BillingService{Client: client}
+	var instanceId string
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -576,8 +575,19 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
-			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			// query deal by bpass
+			regx := "dealNames:\\[\"(.*)\"\\]\\],"
+			id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
+			if billErr != nil {
+				log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
+				return resource.NonRetryableError(billErr)
+			}
+			// yunti prepaid user
+			if id != nil {
+				instanceId = *id
+				return nil
+			}
+
 			return tccommon.RetryError(inErr)
 		}
 
@@ -586,8 +596,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-		//internal version: replace instanceId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace instanceId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		instanceId = *response.Response.InstanceIds[0]
 		return nil
 	})
 
@@ -599,9 +608,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
-	//internal version: replace setId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	d.SetId(*response.Response.InstanceIds[0])
-	//internal version: replace setId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	d.SetId(instanceId)
 	return nil
 }
 
@@ -661,9 +668,9 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	//internal version: replace mysqlServer begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	mysqlService := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	//internal version: replace mysqlServer end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	mysqlService := MysqlService{client: client}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	payType := getPayType(d).(int)
 
@@ -683,16 +690,22 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlID := d.Id()
 
-	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	// set tag before query the instance
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(tcClient)
-		resourceName := tccommon.BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cdb", "instanceId", client.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
+
+		// Wait the tags enabled
+		err := tagService.WaitTagsEnable(ctx, "cdb", "instanceId", d.Id(), client.Region, tags)
+		if err != nil {
+			return err
+		}
+		// wait for describe enable
+		time.Sleep(3 * time.Second)
 	}
-	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 	err := resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
@@ -1273,8 +1286,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		// Wait the tags enabled err = tagService.WaitTagsEnable(ctx, "cdb", "instanceId", d.Id(), region, replaceTags) if err != nil { return err }
 	}
 
 	if d.HasChange("param_template_id") {

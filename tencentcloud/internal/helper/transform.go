@@ -271,8 +271,13 @@ func StrToBool(s string) (i bool) {
 	return
 }
 
-//internal version: replace boolStr begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace boolStr end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+func BoolToStr(b bool) (s string) {
+	s = "false"
+	if b {
+		s = "true"
+	}
+	return
+}
 
 func StrListToStr(strList []*string) string {
 	res := ""

@@ -356,3 +356,7 @@ require (
 	mvdan.cc/unparam v0.0.0-20221223090309-7455f1af531d // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 )
+require (
+github.com/hashicorp/terraform-plugin-sdk v1.7.0
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.856
+)

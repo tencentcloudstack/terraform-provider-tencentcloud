@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
@@ -104,10 +103,9 @@ import (
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
-)
 
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
+)
 
 const (
 	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
@@ -204,8 +202,6 @@ type TencentCloudClient struct {
 	cdwpgConn          *cdwpg.Client
 	csipConn           *csip.Client
 	billingConn        *billing.Client
-	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1561,9 +1557,6 @@ func (me *TencentCloudClient) UseCsipClient() *csip.Client {
 
 	return me.csipConn
 }
-
-//internal version: replace useClient begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace useClient end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func getEnvDefault(key string, defVal int) int {
 	val, ex := os.LookupEnv(key)
