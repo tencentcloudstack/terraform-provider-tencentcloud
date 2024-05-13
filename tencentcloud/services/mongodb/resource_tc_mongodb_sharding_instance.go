@@ -517,6 +517,18 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	}
 
+	if d.HasChange("security_groups") {
+		securityGroups := d.Get("security_groups").(*schema.Set).List()
+		securityGroupIds := make([]*string, 0, len(securityGroups))
+		for _, securityGroup := range securityGroups {
+			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
+		}
+		err := mongodbService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
+		if err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 
 	return resourceMongodbShardingInstanceRead(d, meta)

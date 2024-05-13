@@ -71,8 +71,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudMongodbInstanceResource_PostPaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
@@ -96,6 +95,7 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "charge_type", svcmongodb.MONGODB_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb", "prepaid_period"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "security_groups.0", "sg-if748odn"),
 				),
 			},
 			{
@@ -124,12 +124,17 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.abc", "abc"),
 				),
 			},
+			{
+				Config: testAccMongodbInstance_updateSecurityGroup,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "security_groups.0", "sg-05f7wnhn"),
+				),
+			},
 		},
 	})
 }
 
-func TestAccTencentCloudMongodbInstanceResource_multiZone(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudMongodbInstanceResource_MultiZone(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
@@ -148,7 +153,7 @@ func TestAccTencentCloudMongodbInstanceResource_multiZone(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudMongodbInstanceResourcePrepaid(t *testing.T) {
+func TestAccTencentCloudMongodbInstanceResource_Prepaid(t *testing.T) {
 	// Avoid to set Parallel to make sure EnvVar secure
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },
@@ -239,6 +244,18 @@ func testAccCheckMongodbInstanceExists(n string) resource.TestCheckFunc {
 }
 
 const testAccMongodbInstance = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-test"
   memory         = local.memory
@@ -249,8 +266,8 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   available_zone = "ap-guangzhou-3"
   project_id     = 0
   password       = "test1234"
-  vpc_id         = var.vpc_id
-  subnet_id      = var.subnet_id
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
 
   tags = {
     test = "test"
@@ -259,6 +276,18 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 `
 
 const testAccMongodbInstance_updateConfig = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-update"
   memory         = local.memory * 2
@@ -269,8 +298,8 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   available_zone = "ap-guangzhou-3"
   project_id     = 0
   password       = "test1234update"
-  vpc_id         = var.vpc_id
-  subnet_id      = var.subnet_id
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
   tags = {
     abc = "abc"
   }
@@ -278,6 +307,18 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 `
 
 const testAccMongodbInstance_updateNode = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-update"
   memory         = local.memory * 2
@@ -288,8 +329,49 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   available_zone = "ap-guangzhou-3"
   project_id     = 0
   password       = "test1234update"
-  vpc_id         = var.vpc_id
-  subnet_id      = var.subnet_id
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
+
+  node_num = 5
+  add_node_list {
+    role = "SECONDARY"
+    zone = "ap-guangzhou-3"
+  }
+  add_node_list {
+    role = "SECONDARY"
+    zone = "ap-guangzhou-3"
+  }
+  tags = {
+    abc = "abc"
+  }
+}
+`
+
+const testAccMongodbInstance_updateSecurityGroup = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_mongodb_instance" "mongodb" {
+  instance_name  = "tf-mongodb-update"
+  memory         = local.memory * 2
+  volume         = local.volume * 2
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  security_groups = ["sg-05f7wnhn"]
+  available_zone = "ap-guangzhou-3"
+  project_id     = 0
+  password       = "test1234update"
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
 
   node_num = 5
   add_node_list {
@@ -307,6 +389,18 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 `
 
 const testAccMongodbInstancePrepaid = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-prepaid-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-prepaid-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-test-prepaid"
   memory         = local.memory
@@ -320,8 +414,8 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   charge_type     = "PREPAID"
   prepaid_period  = 1
   auto_renew_flag = 1
-  vpc_id         = var.vpc_id
-  subnet_id      = var.subnet_id
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
 
   tags = {
     test = "test-prepaid"
@@ -330,6 +424,18 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
 `
 
 const testAccMongodbInstancePrepaid_update = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-prepaid-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-prepaid-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-test-prepaid-update"
   memory         = local.memory
@@ -343,8 +449,8 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   charge_type     = "PREPAID"
   prepaid_period  = 1
   auto_renew_flag = 1
-  vpc_id         = var.vpc_id
-  subnet_id      = var.subnet_id
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
 
   tags = {
     prepaid = "prepaid"
@@ -353,6 +459,18 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
 `
 
 const testAccMongodbInstance_multiZone = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-multi-zone-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-multi-zone-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb_mutil_zone" {
   instance_name   = "mongodb-mutil-zone-test"
   memory         = local.memory
@@ -362,8 +480,8 @@ resource "tencentcloud_mongodb_instance" "mongodb_mutil_zone" {
   available_zone = "ap-guangzhou-3"
   project_id     = 0
   password       = "test1234"
-  vpc_id         = var.vpc_id
-  subnet_id      = var.subnet_id
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
   node_num = 5
   availability_zone_list = ["ap-guangzhou-3", "ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-4", "ap-guangzhou-6"]
   hidden_zone = "ap-guangzhou-6"

@@ -142,7 +142,6 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"security_groups": {
 			Type:     schema.TypeSet,
 			Optional: true,
-			ForceNew: true,
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},

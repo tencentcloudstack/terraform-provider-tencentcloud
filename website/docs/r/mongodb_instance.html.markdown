@@ -52,7 +52,7 @@ The following arguments are supported:
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int) ID of the project which the instance belongs.
 * `remove_node_list` - (Optional, List) Add node attribute list.
-* `security_groups` - (Optional, Set: [`String`], ForceNew) ID of the security group.
+* `security_groups` - (Optional, Set: [`String`]) ID of the security group.
 * `subnet_id` - (Optional, String, ForceNew) ID of the subnet within this VPC. The value is required if `vpc_id` is set.
 * `tags` - (Optional, Map) The tags of the Mongodb. Key name `project` is system reserved and can't be used.
 * `vpc_id` - (Optional, String, ForceNew) ID of the VPC.

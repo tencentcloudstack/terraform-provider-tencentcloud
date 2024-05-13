@@ -17,13 +17,12 @@ import (
 func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
-				Config:    testAccMongodbShardingInstance,
+				Config: testAccMongodbShardingInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "instance_name", "tf-mongodb-sharding"),
@@ -48,8 +47,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
-				Config:    testAccMongodbShardingInstanceUpdate,
+				Config: testAccMongodbShardingInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "instance_name", "tf-mongodb-sharding-update"),
@@ -58,10 +56,16 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccMongodbShardingInstanceUpdateSecurityGroup,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "security_groups.0", "sg-05f7wnhn"),
+				),
+			},
+			{
 				ResourceName:            "tencentcloud_mongodb_sharding_instance.mongodb",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password"},
+				ImportStateVerifyIgnore: []string{"password", "security_groups"},
 			},
 		},
 	})
@@ -70,13 +74,12 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccMongodbShardingInstancePrepaid,
+				Config: testAccMongodbShardingInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "instance_name", "tf-mongodb-sharding-prepaid"),
@@ -97,8 +100,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccMongodbShardingInstancePrepaid_update,
+				Config: testAccMongodbShardingInstancePrepaid_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "instance_name", "tf-mongodb-sharding-prepaid-update"),
@@ -133,6 +135,18 @@ func testAccCheckMongodbShardingInstanceDestroy(s *terraform.State) error {
 }
 
 const testAccMongodbShardingInstance = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-sharding-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-sharding-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding"
   shard_quantity  = 2
@@ -151,15 +165,26 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   tags = {
     test = "test"
   }
-  security_groups = [var.sg_id]
-  vpc_id = var.vpc_id
-  subnet_id = var.subnet_id
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
   availability_zone_list = ["ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"]
   hidden_zone = "ap-guangzhou-6"
 }
 `
 
 const testAccMongodbShardingInstanceUpdate = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-sharding-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-sharding-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding-update"
   shard_quantity  = 2
@@ -179,15 +204,65 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   tags = {
     abc = "abc"
   }
-  security_groups = [var.sg_id]
-  vpc_id = var.vpc_id
-  subnet_id = var.subnet_id
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
+  availability_zone_list = ["ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"]
+  hidden_zone = "ap-guangzhou-6"
+}
+`
+
+const testAccMongodbShardingInstanceUpdateSecurityGroup = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-sharding-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-sharding-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
+  instance_name   = "tf-mongodb-sharding-update"
+  shard_quantity  = 2
+  nodes_per_shard = 3
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
+  engine_version  = local.sharding_engine_version
+  machine_type    = local.sharding_machine_type
+  security_groups = ["sg-05f7wnhn"]
+  available_zone  = "ap-guangzhou-3"
+  project_id      = 0
+  password        = "test1234update"
+  mongos_cpu = 1
+  mongos_memory =  2
+  mongos_node_num = 3
+
+  tags = {
+    abc = "abc"
+  }
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
   availability_zone_list = ["ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"]
   hidden_zone = "ap-guangzhou-6"
 }
 `
 
 const testAccMongodbShardingInstancePrepaid = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-sharding-prepaid-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-sharding-prepaid-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid"
   shard_quantity  = 2
@@ -210,14 +285,26 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   tags = {
     test = "test-prepaid"
   }
-  vpc_id = var.vpc_id
-  subnet_id = var.subnet_id
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
   availability_zone_list = ["ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"]
   hidden_zone = "ap-guangzhou-6"
 }
 `
 
 const testAccMongodbShardingInstancePrepaid_update = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-sharding-prepaid-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-sharding-prepaid-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid-update"
   shard_quantity  = 2
@@ -240,8 +327,8 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   tags = {
     prepaid = "prepaid"
   }
-  vpc_id = var.vpc_id
-  subnet_id = var.subnet_id
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
   availability_zone_list = ["ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"]
   hidden_zone = "ap-guangzhou-6"
 }
