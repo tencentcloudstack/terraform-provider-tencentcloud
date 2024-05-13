@@ -1,3 +1,17 @@
+## 1.81.93 (May 13, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_kubernetes_addon` ([#2624](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2624))
+* **New Resource:** `tencentcloud_tdmq_topic_with_full_id` ([#2625](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2625))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_attachment: optimization documentation ([#2622](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2622))
+* resource/tencentcloud_mongodb_instance: support update security group ([#2628](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2628))
+* resource/tencentcloud_mongodb_sharding_instance: support update security group ([#2628](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2628))
+* resource/tencentcloud_mongodb_standby_instance: support update security group ([#2628](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2628))
+
 ## 1.81.92 (May 6, 2024)
 
 ENHANCEMENTS:
