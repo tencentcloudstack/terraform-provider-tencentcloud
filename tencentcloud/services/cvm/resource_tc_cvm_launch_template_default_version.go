@@ -108,7 +108,7 @@ func resourceTencentCloudCvmLaunchTemplateDefaultVersionUpdate(d *schema.Resourc
 	if needChange {
 		request := cvm.NewModifyLaunchTemplateDefaultVersionRequest()
 
-		request.LaunchTemplateId = &launchTemplateId
+		request.LaunchTemplateId = helper.String(launchTemplateId)
 
 		if v, ok := d.GetOkExists("default_version"); ok {
 			request.DefaultVersion = helper.IntInt64(v.(int))

@@ -1914,7 +1914,7 @@ func (me *CvmService) DescribeCvmLaunchTemplateDefaultVersionById(ctx context.Co
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
-	request.LaunchTemplateId = &launchTemplateId
+	request.LaunchTemplateId = helper.String(launchTemplateId)
 
 	defer func() {
 		if errRet != nil {
