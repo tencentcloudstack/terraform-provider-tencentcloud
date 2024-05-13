@@ -71,7 +71,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
+func TestAccTencentCloudMongodbInstanceResource_PostPaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
@@ -134,7 +134,7 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudMongodbInstanceResource_multiZone(t *testing.T) {
+func TestAccTencentCloudMongodbInstanceResource_MultiZone(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
@@ -153,7 +153,7 @@ func TestAccTencentCloudMongodbInstanceResource_multiZone(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudMongodbInstanceResourcePrepaid(t *testing.T) {
+func TestAccTencentCloudMongodbInstanceResource_Prepaid(t *testing.T) {
 	// Avoid to set Parallel to make sure EnvVar secure
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },
