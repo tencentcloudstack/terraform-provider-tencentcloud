@@ -1909,3 +1909,56 @@ func (me *CvmService) DescribeCvmInstancesModificationByFilter(ctx context.Conte
 	ret = response.Response.InstanceTypeConfigStatusSet
 	return
 }
+
+func (me *CvmService) DescribeCvmLaunchTemplateDefaultVersionById(ctx context.Context, launchTemplateId string) (ret *cvm.LaunchTemplateVersionInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
+	request.LaunchTemplateId = &launchTemplateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	var instances []*cvm.LaunchTemplateVersionInfo
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeLaunchTemplateVersions(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.LaunchTemplateVersionSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.LaunchTemplateVersionSet...)
+		if len(response.Response.LaunchTemplateVersionSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	for _, info := range instances {
+		if info.IsDefaultVersion != nil && *info.IsDefaultVersion == true {
+			ret = info
+			break
+		}
+	}
+	return
+}
