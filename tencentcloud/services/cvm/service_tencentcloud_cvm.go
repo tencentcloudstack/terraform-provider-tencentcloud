@@ -1436,11 +1436,11 @@ func (me *CvmService) DeleteCvmLaunchTemplateById(ctx context.Context, launchTem
 	return
 }
 
-func (me *CvmService) DescribeCvmLaunchTemplateVersionById(ctx context.Context, launchTemplateId, launchTemplateVersionNumber string) (launchTemplateVersion *cvm.LaunchTemplateVersionInfo, errRet error) {
+func (me *CvmService) DescribeCvmLaunchTemplateVersionById(ctx context.Context, launchTemplateId string, launchTemplateVersionNumber string) (ret *cvm.LaunchTemplateVersionInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
-	request.LaunchTemplateId = &launchTemplateId
+	request.LaunchTemplateId = helper.String(launchTemplateId)
 	request.LaunchTemplateVersions = []*uint64{helper.StrToUint64Point(launchTemplateVersionNumber)}
 
 	defer func() {
@@ -1462,7 +1462,7 @@ func (me *CvmService) DescribeCvmLaunchTemplateVersionById(ctx context.Context, 
 		return
 	}
 
-	launchTemplateVersion = response.Response.LaunchTemplateVersionSet[0]
+	ret = response.Response.LaunchTemplateVersionSet[0]
 	return
 }
 
