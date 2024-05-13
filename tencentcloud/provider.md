@@ -684,6 +684,7 @@ TDMQ for Pulsar(tpulsar)
     tencentcloud_tdmq_professional_cluster
     tencentcloud_tdmq_namespace
     tencentcloud_tdmq_topic
+    tencentcloud_tdmq_topic_with_full_id
     tencentcloud_tdmq_role
     tencentcloud_tdmq_namespace_role_attachment
     tencentcloud_tdmq_subscription
