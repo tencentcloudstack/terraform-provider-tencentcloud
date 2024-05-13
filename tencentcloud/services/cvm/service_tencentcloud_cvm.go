@@ -1871,3 +1871,41 @@ func (me *CvmService) DescribeEipNetworkAccountTypeByFilter(ctx context.Context,
 	ret = response.Response
 	return
 }
+
+func (me *CvmService) DescribeCvmInstancesModificationByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.InstanceTypeConfigStatus, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeInstancesModificationRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstancesModification(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceTypeConfigStatusSet) < 1 {
+		return
+	}
+
+	ret = response.Response.InstanceTypeConfigStatusSet
+	return
+}
