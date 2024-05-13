@@ -73,7 +73,7 @@ func dataSourceTencentCloudEipAddressQuotaRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	ids := make([]string, 0, len(respData))
+	var ids []string
 	quotaSetList := make([]map[string]interface{}, 0, len(respData))
 	if respData != nil {
 		for _, quotaSet := range respData {
