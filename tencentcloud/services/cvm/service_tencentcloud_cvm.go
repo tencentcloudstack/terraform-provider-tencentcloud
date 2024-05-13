@@ -9,6 +9,8 @@ import (
 	"sync"
 	"time"
 
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -1809,5 +1811,34 @@ func (me *CvmService) DescribeCvmInstanceVncUrlByFilter(ctx context.Context, par
 	}
 
 	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeEipAddressQuotaByFilter(ctx context.Context, param map[string]interface{}) (ret []*vpc.Quota, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeAddressQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeAddressQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.QuotaSet) < 1 {
+		return
+	}
+
+	ret = response.Response.QuotaSet
 	return
 }
