@@ -1842,3 +1842,32 @@ func (me *CvmService) DescribeEipAddressQuotaByFilter(ctx context.Context, param
 	ret = response.Response.QuotaSet
 	return
 }
+
+func (me *CvmService) DescribeEipNetworkAccountTypeByFilter(ctx context.Context, param map[string]interface{}) (ret *vpc.DescribeNetworkAccountTypeResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeNetworkAccountTypeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeNetworkAccountType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
