@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -289,7 +290,7 @@ func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, me
 		}
 	}
 
-	return resourceTencentCloudMongodbInstanceRead(d, meta)
+	return resourceTencentCloudMongodbStandbyInstanceRead(d, meta)
 }
 
 func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta interface{}) error {
@@ -402,25 +403,27 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
-		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, nil)
+		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, nil)
 		if err != nil {
 			return err
 		}
+		if dealId == "" {
+			return fmt.Errorf("deal id is empty")
+		}
 
-		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
 		errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
-			if e != nil {
-				return resource.NonRetryableError(e)
-			}
-			if !has {
-				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb instance failed, instance doesn't exist", logId))
+			dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
+			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
+						return resource.RetryableError(err)
+					}
+				}
+				return resource.NonRetryableError(err)
 			}
 
-			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
-			volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
-			if memory != int(memoryDes) || volume != int(volumeDes) {
-				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+			if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS {
+				return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
 			}
 			return nil
 		})
@@ -471,6 +474,18 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 			return err
 		}
 
+	}
+
+	if d.HasChange("security_groups") {
+		securityGroups := d.Get("security_groups").(*schema.Set).List()
+		securityGroupIds := make([]*string, 0, len(securityGroups))
+		for _, securityGroup := range securityGroups {
+			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
+		}
+		err := mongodbService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
+		if err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)

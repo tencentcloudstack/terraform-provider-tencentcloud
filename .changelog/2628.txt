@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: support update security group
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: support update security group
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_standby_instance: support update security group
+```
