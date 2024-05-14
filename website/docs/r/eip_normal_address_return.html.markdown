@@ -15,7 +15,7 @@ Provides a resource to create a vpc normal_address_return
 
 ```hcl
 resource "tencentcloud_eip_normal_address_return" "normal_address_return" {
-  address_ips =
+  address_ips = ["172.16.17.32"]
 }
 ```
 
