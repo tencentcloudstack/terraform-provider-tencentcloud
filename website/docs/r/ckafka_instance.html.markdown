@@ -151,7 +151,7 @@ The following arguments are supported:
 * `multi_zone_flag` - (Optional, Bool) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
 * `partition` - (Optional, Int) Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `period` - (Optional, Int) Prepaid purchase time, such as 1, is one month.
-* `public_network` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.6. If set public network value, it will cause error. Bandwidth of the public network.
+* `public_network` - (Optional, Int) Bandwidth of the public network.
 * `rebalance_time` - (Optional, Int) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, Int) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
 * `specifications_type` - (Optional, String) Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.
