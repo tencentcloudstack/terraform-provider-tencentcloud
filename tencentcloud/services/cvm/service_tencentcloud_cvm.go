@@ -1242,7 +1242,7 @@ func (me *CvmService) ResizeInstanceDisks(ctx context.Context, request *cvm.Resi
 	return
 }
 
-func (me *CvmService) DescribeCvmHpcClusterById(ctx context.Context, hpcClusterId string) (hpcCluster *cvm.HpcClusterInfo, errRet error) {
+func (me *CvmService) DescribeCvmHpcClusterById(ctx context.Context, hpcClusterId string) (ret *cvm.HpcClusterInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewDescribeHpcClustersRequest()
@@ -1260,7 +1260,7 @@ func (me *CvmService) DescribeCvmHpcClusterById(ctx context.Context, hpcClusterI
 		offset uint64 = 0
 		limit  uint64 = 20
 	)
-	instances := make([]*cvm.HpcClusterInfo, 0)
+	var instances []*cvm.HpcClusterInfo
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
@@ -1285,7 +1285,8 @@ func (me *CvmService) DescribeCvmHpcClusterById(ctx context.Context, hpcClusterI
 	if len(instances) < 1 {
 		return
 	}
-	hpcCluster = instances[0]
+
+	ret = instances[0]
 	return
 }
 
@@ -1513,7 +1514,7 @@ func (me *CvmService) ModifyLaunchTemplateDefaultVersion(ctx context.Context, la
 	return nil
 }
 
-func (me *CvmService) DescribeCvmChcHostsByFilter(ctx context.Context, param map[string]interface{}) (chcHosts []*cvm.ChcHost, errRet error) {
+func (me *CvmService) DescribeCvmChcHostsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.ChcHost, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeChcHostsRequest()
@@ -1526,11 +1527,17 @@ func (me *CvmService) DescribeCvmChcHostsByFilter(ctx context.Context, param map
 	}()
 
 	for k, v := range param {
-		if k == "chc_ids" {
-			request.ChcIds = helper.Strings(v.([]string))
+		if k == "ChcIds" {
+			request.ChcIds = v.([]*string)
 		}
-		if k == "filters" {
+		if k == "Filters" {
 			request.Filters = v.([]*cvm.Filter)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
 		}
 	}
 
@@ -1553,7 +1560,7 @@ func (me *CvmService) DescribeCvmChcHostsByFilter(ctx context.Context, param map
 		if response == nil || len(response.Response.ChcHostSet) < 1 {
 			break
 		}
-		chcHosts = append(chcHosts, response.Response.ChcHostSet...)
+		ret = append(ret, response.Response.ChcHostSet...)
 		if len(response.Response.ChcHostSet) < int(limit) {
 			break
 		}
@@ -1564,7 +1571,7 @@ func (me *CvmService) DescribeCvmChcHostsByFilter(ctx context.Context, param map
 	return
 }
 
-func (me *CvmService) DescribeCvmChcDeniedActionsByFilter(ctx context.Context, param map[string]interface{}) (chcDeniedActions []*cvm.ChcHostDeniedActions, errRet error) {
+func (me *CvmService) DescribeCvmChcDeniedActionsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.ChcHostDeniedActions, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeChcDeniedActionsRequest()
@@ -1577,8 +1584,8 @@ func (me *CvmService) DescribeCvmChcDeniedActionsByFilter(ctx context.Context, p
 	}()
 
 	for k, v := range param {
-		if k == "chc_ids" {
-			request.ChcIds = helper.Strings(v.([]string))
+		if k == "ChcIds" {
+			request.ChcIds = v.([]*string)
 		}
 	}
 
@@ -1591,11 +1598,11 @@ func (me *CvmService) DescribeCvmChcDeniedActionsByFilter(ctx context.Context, p
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || len(response.Response.ChcHostDeniedActionSet) < 1 {
+	if len(response.Response.ChcHostDeniedActionSet) < 1 {
 		return
 	}
-	chcDeniedActions = append(chcDeniedActions, response.Response.ChcHostDeniedActionSet...)
 
+	ret = response.Response.ChcHostDeniedActionSet
 	return
 }
 
@@ -1682,7 +1689,7 @@ func (me *CvmService) CvmSyncImagesStateRefreshFunc(imageId string, failStates [
 	}
 }
 
-func (me *CvmService) DescribeCvmImageQuotaByFilter(ctx context.Context, param map[string]interface{}) (imageQuota int64, errRet error) {
+func (me *CvmService) DescribeCvmImageQuotaByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeImageQuotaResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeImageQuotaRequest()
@@ -1704,15 +1711,14 @@ func (me *CvmService) DescribeCvmImageQuotaByFilter(ctx context.Context, param m
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("Response is null")
 		return
 	}
-	imageQuota = *response.Response.ImageNumQuota
 
+	ret = response.Response
 	return
 }
 
-func (me *CvmService) DescribeCvmImageSharePermissionByFilter(ctx context.Context, param map[string]interface{}) (imageSharePermission []*cvm.SharePermission, errRet error) {
+func (me *CvmService) DescribeCvmImageSharePermissionByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.SharePermission, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeImageSharePermissionRequest()
@@ -1739,11 +1745,11 @@ func (me *CvmService) DescribeCvmImageSharePermissionByFilter(ctx context.Contex
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("Response is null")
+	if len(response.Response.SharePermissionSet) < 1 {
+		return
 	}
-	imageSharePermission = response.Response.SharePermissionSet
 
+	ret = response.Response.SharePermissionSet
 	return
 }
 
@@ -1774,5 +1780,136 @@ func (me *CvmService) ModifyImageSharePermission(ctx context.Context, imageId, p
 		log.Printf("[CRITAL]%s cvm ModifyImageSharePermission failed, reason:%+v", logId, err)
 		return err
 	}
+	return
+}
+
+func (me *CvmService) DescribeCvmDisasterRecoverGroupQuotaByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeDisasterRecoverGroupQuotaResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeDisasterRecoverGroupQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeDisasterRecoverGroupQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeCvmImportImageOsByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeImportImageOsResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeImportImageOsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeImportImageOs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeCvmChcConfigById(ctx context.Context, chcId string) (ret *cvm.ChcHost, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeChcHostsRequest()
+	request.ChcIds = []*string{&chcId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	var instances []*cvm.ChcHost
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeChcHosts(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ChcHostSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.ChcHostSet...)
+		if len(response.Response.ChcHostSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	ret = instances[0]
+	return
+}
+
+func (me *CvmService) DescribeCvmImageSharePermissionById(ctx context.Context, imageId string) (ret *cvm.DescribeImageSharePermissionResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeImageSharePermissionRequest()
+	request.ImageId = &imageId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeImageSharePermission(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }
