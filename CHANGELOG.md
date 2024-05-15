@@ -1,3 +1,11 @@
+## 1.81.94 (May 15, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: remove `public-network` deprecated and validate minimum value is 3 ([#2631](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2631))
+* resource/tencentcloud_instance: Update the limit of period and charge type ([#2630](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2630))
+* resource/tencentcloud_redis_instance: Optimize Availability Zone ([#2634](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2634))
+
 ## 1.81.93 (May 13, 2024)
 
 FEATURES:
