@@ -80,6 +80,7 @@ import (
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	region "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region/v20220627"
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
@@ -204,6 +205,7 @@ type TencentCloudClient struct {
 	cdwpgConn          *cdwpg.Client
 	csipConn           *csip.Client
 	billingConn        *billing.Client
+	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 }
@@ -1560,6 +1562,20 @@ func (me *TencentCloudClient) UseCsipClient() *csip.Client {
 	me.csipConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.csipConn
+}
+
+// UseRegionClient returns region client for service
+func (me *TencentCloudClient) UseRegionClient() *region.Client {
+	if me.regionConn != nil {
+		return me.regionConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.regionConn, _ = region.NewClient(me.Credential, me.Region, cpf)
+	me.regionConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.regionConn
 }
 
 //internal version: replace useClient begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
