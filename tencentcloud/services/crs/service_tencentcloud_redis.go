@@ -11,8 +11,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	region "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region/v20220627"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -56,7 +56,9 @@ func (me *RedisService) fullZoneId() (errRet error) {
 	if len(me.zoneMap) != 0 {
 		return
 	}
-	response, err := me.client.UseCvmClient().DescribeZones(cvm.NewDescribeZonesRequest())
+	request := region.NewDescribeZonesRequest()
+	request.Product = helper.String("redis")
+	response, err := me.client.UseRegionClient().DescribeZones(request)
 	if err != nil {
 		return err
 	}
