@@ -406,11 +406,12 @@ locals {
 
 const DefaultSecurityGroupData = FixedTagVariable + `
 data "tencentcloud_security_groups" "internal" {
-  name = "keep-reject-all"
+  name = "default"
+  tags = var.fixed_tags
 }
 
 data "tencentcloud_security_groups" "exclusive" {
-  name = "keep-reject-all"
+  name = "test_preset_sg"
 }
 
 locals {
