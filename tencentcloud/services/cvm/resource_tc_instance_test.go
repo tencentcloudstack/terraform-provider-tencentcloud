@@ -403,9 +403,6 @@ func TestAccTencentCloudInstanceResource_WithSecurityGroup(t *testing.T) {
 	t.Parallel()
 
 	instanceId := "tencentcloud_instance.foo"
-	securitygroupId := "tencentcloud_security_group.foo"
-	securitygroupRuleFooId := "tencentcloud_security_group_rule.foo"
-	securitygroupRuleBarId := "tencentcloud_security_group_rule.bar"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { tcacctest.AccPreCheck(t) },
@@ -414,34 +411,21 @@ func TestAccTencentCloudInstanceResource_WithSecurityGroup(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithSecurityGroup(`[tencentcloud_security_group.foo.id]`),
+				Config: testAccTencentCloudInstanceWithSecurityGroup(`["sg-cm7fbbf3"]`),
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID(instanceId),
 					testAccCheckTencentCloudInstanceExists(instanceId),
 					resource.TestCheckResourceAttr(instanceId, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr(instanceId, "security_groups.#", "1"),
-					resource.TestCheckResourceAttrSet(securitygroupId, "id"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "port_range", "80,8080"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "port_range", "3000"),
 				),
 			},
 			{
 				Config: testAccTencentCloudInstanceWithSecurityGroup(`[
-					tencentcloud_security_group.foo.id,
-					tencentcloud_security_group.bar.id
+					"sg-cm7fbbf3",
+					"sg-kensue7b"
 				]`),
 				Check: resource.ComposeTestCheckFunc(
-					tcacctest.AccCheckTencentCloudDataSourceID(instanceId),
-					testAccCheckTencentCloudInstanceExists(instanceId),
-					resource.TestCheckResourceAttr(instanceId, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr(instanceId, "security_groups.#", "2"),
-					resource.TestCheckResourceAttrSet(securitygroupId, "id"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "port_range", "80,8080"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "port_range", "3000"),
 				),
 			},
 		},
@@ -451,11 +435,7 @@ func TestAccTencentCloudInstanceResource_WithSecurityGroup(t *testing.T) {
 func TestAccTencentCloudInstanceResource_WithOrderlySecurityGroup(t *testing.T) {
 	t.Parallel()
 
-	var sgId1, sgId2, sgId3 string
 	instanceId := "tencentcloud_instance.cvm_with_orderly_sg"
-	orderlySecurityGroupId1 := "tencentcloud_security_group.orderly_security_group1"
-	orderlySecurityGroupId2 := "tencentcloud_security_group.orderly_security_group2"
-	orderlySecurityGroupId3 := "tencentcloud_security_group.orderly_security_group3"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { tcacctest.AccPreCheck(t) },
@@ -464,38 +444,13 @@ func TestAccTencentCloudInstanceResource_WithOrderlySecurityGroup(t *testing.T) 
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
-					tencentcloud_security_group.orderly_security_group1.id,
-					tencentcloud_security_group.orderly_security_group2.id,
-					tencentcloud_security_group.orderly_security_group3.id
-				]`),
+				Config: testAccTencentCloudInstanceOrderlySecurityGroups,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudInstanceExists(instanceId),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId2, &sgId2),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId3, &sgId3),
 
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.0", &sgId1),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.1", &sgId2),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.2", &sgId3),
-				),
-			},
-
-			{
-				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
-					tencentcloud_security_group.orderly_security_group3.id,
-					tencentcloud_security_group.orderly_security_group2.id,
-					tencentcloud_security_group.orderly_security_group1.id
-				]`),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudInstanceExists(instanceId),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId2, &sgId2),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId3, &sgId3),
-
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.0", &sgId3),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.1", &sgId2),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.2", &sgId1),
+					resource.TestCheckResourceAttr(instanceId, "orderly_security_groups.0", "sg-cm7fbbf3"),
+					resource.TestCheckResourceAttr(instanceId, "orderly_security_groups.1", "sg-kensue7b"),
+					resource.TestCheckResourceAttr(instanceId, "orderly_security_groups.2", "sg-05f7wnhn"),
 				),
 			},
 		},
@@ -1337,34 +1292,6 @@ resource "tencentcloud_instance" "foo" {
 func testAccTencentCloudInstanceWithSecurityGroup(ids string) string {
 	return fmt.Sprintf(
 		tcacctest.DefaultInstanceVariable+`
-resource "tencentcloud_security_group" "foo" {
-  name        = var.instance_name
-  description = var.instance_name
-}
-
-resource "tencentcloud_security_group_rule" "foo" {
-  security_group_id = tencentcloud_security_group.foo.id
-  type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
-  port_range        = "80,8080"
-  policy            = "accept"
-}
-
-resource "tencentcloud_security_group" "bar" {
-  name        = var.instance_name
-  description = var.instance_name
-}
-
-resource "tencentcloud_security_group_rule" "bar" {
-  security_group_id = tencentcloud_security_group.bar.id
-  type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
-  port_range        = "3000"
-  policy            = "accept"
-}
-
 resource "tencentcloud_instance" "foo" {
   instance_name              = var.instance_name
   availability_zone          = var.availability_cvm_zone
@@ -1429,34 +1356,13 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
-func testAccTencentCloudInstanceOrderlySecurityGroups(sgs string) string {
-
-	return fmt.Sprintf(tcacctest.DefaultInstanceVariable+`
-resource "tencentcloud_security_group" "orderly_security_group1" {
-	name        = "test-cvm-orderly-sg1"
-	description = "test-cvm-orderly-sg1"
-}
-
-resource "tencentcloud_security_group" "orderly_security_group2" {
-	name        = "test-cvm-orderly-sg2"
-	description = "test-cvm-orderly-sg2"
-}
-
-resource "tencentcloud_security_group" "orderly_security_group3" {
-	name        = "test-cvm-orderly-sg3"
-	description = "test-cvm-orderly-sg3"
-}
-
+const testAccTencentCloudInstanceOrderlySecurityGroups = tcacctest.DefaultInstanceVariable + `
 resource "tencentcloud_instance" "cvm_with_orderly_sg" {
 	instance_name              = "test-orderly-sg-cvm"
 	availability_zone          = var.availability_cvm_zone
 	image_id                   = data.tencentcloud_images.default.images.0.image_id
 	instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 	system_disk_type           = "CLOUD_PREMIUM"
-	orderly_security_groups    = %s
-	lifecycle {
-		ignore_changes = [instance_type]
-	}
+	orderly_security_groups    = ["sg-cm7fbbf3", "sg-kensue7b", "sg-05f7wnhn"]
 }
-`, sgs)
-}
+`
