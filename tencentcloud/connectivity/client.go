@@ -97,6 +97,7 @@ import (
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tke2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -205,6 +206,7 @@ type TencentCloudClient struct {
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	tke2Conn *tke2.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1574,4 +1576,23 @@ func getEnvDefault(key string, defVal int) int {
 		panic("TENCENTCLOUD_XXX_REQUEST_TIMEOUT must be int.")
 	}
 	return timeOut
+}
+
+// UseTke2Client returns tke client for service
+func (me *TencentCloudClient) UseTke2Client(iacExtInfo ...IacExtInfo) *tke2.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.tke2Conn != nil {
+		me.tke2Conn.WithHttpTransport(&logRoundTripper)
+		return me.tke2Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tke2Conn, _ = tke2.NewClient(me.Credential, me.Region, cpf)
+	me.tke2Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.tke2Conn
 }

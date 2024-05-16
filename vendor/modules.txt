@@ -1309,9 +1309,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.912
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.916
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.921
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308
