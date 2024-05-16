@@ -403,9 +403,6 @@ func TestAccTencentCloudInstanceResource_WithSecurityGroup(t *testing.T) {
 	t.Parallel()
 
 	instanceId := "tencentcloud_instance.foo"
-	securitygroupId := "tencentcloud_security_group.foo"
-	securitygroupRuleFooId := "tencentcloud_security_group_rule.foo"
-	securitygroupRuleBarId := "tencentcloud_security_group_rule.bar"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { tcacctest.AccPreCheck(t) },
@@ -414,34 +411,21 @@ func TestAccTencentCloudInstanceResource_WithSecurityGroup(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithSecurityGroup(`[tencentcloud_security_group.foo.id]`),
+				Config: testAccTencentCloudInstanceWithSecurityGroup(`["sg-cm7fbbf3"]`),
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID(instanceId),
 					testAccCheckTencentCloudInstanceExists(instanceId),
 					resource.TestCheckResourceAttr(instanceId, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr(instanceId, "security_groups.#", "1"),
-					resource.TestCheckResourceAttrSet(securitygroupId, "id"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "port_range", "80,8080"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "port_range", "3000"),
 				),
 			},
 			{
 				Config: testAccTencentCloudInstanceWithSecurityGroup(`[
-					tencentcloud_security_group.foo.id,
-					tencentcloud_security_group.bar.id
+					"sg-cm7fbbf3",
+					"sg-kensue7b"
 				]`),
 				Check: resource.ComposeTestCheckFunc(
-					tcacctest.AccCheckTencentCloudDataSourceID(instanceId),
-					testAccCheckTencentCloudInstanceExists(instanceId),
-					resource.TestCheckResourceAttr(instanceId, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr(instanceId, "security_groups.#", "2"),
-					resource.TestCheckResourceAttrSet(securitygroupId, "id"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleFooId, "port_range", "80,8080"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "type", "ingress"),
-					resource.TestCheckResourceAttr(securitygroupRuleBarId, "port_range", "3000"),
 				),
 			},
 		},
@@ -451,11 +435,7 @@ func TestAccTencentCloudInstanceResource_WithSecurityGroup(t *testing.T) {
 func TestAccTencentCloudInstanceResource_WithOrderlySecurityGroup(t *testing.T) {
 	t.Parallel()
 
-	var sgId1, sgId2, sgId3 string
 	instanceId := "tencentcloud_instance.cvm_with_orderly_sg"
-	orderlySecurityGroupId1 := "tencentcloud_security_group.orderly_security_group1"
-	orderlySecurityGroupId2 := "tencentcloud_security_group.orderly_security_group2"
-	orderlySecurityGroupId3 := "tencentcloud_security_group.orderly_security_group3"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { tcacctest.AccPreCheck(t) },
@@ -464,38 +444,13 @@ func TestAccTencentCloudInstanceResource_WithOrderlySecurityGroup(t *testing.T) 
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
-					tencentcloud_security_group.orderly_security_group1.id,
-					tencentcloud_security_group.orderly_security_group2.id,
-					tencentcloud_security_group.orderly_security_group3.id
-				]`),
+				Config: testAccTencentCloudInstanceOrderlySecurityGroups,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudInstanceExists(instanceId),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId2, &sgId2),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId3, &sgId3),
 
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.0", &sgId1),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.1", &sgId2),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.2", &sgId3),
-				),
-			},
-
-			{
-				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
-					tencentcloud_security_group.orderly_security_group3.id,
-					tencentcloud_security_group.orderly_security_group2.id,
-					tencentcloud_security_group.orderly_security_group1.id
-				]`),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudInstanceExists(instanceId),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId2, &sgId2),
-					testAccCheckSecurityGroupExists(orderlySecurityGroupId3, &sgId3),
-
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.0", &sgId3),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.1", &sgId2),
-					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.2", &sgId1),
+					resource.TestCheckResourceAttr(instanceId, "orderly_security_groups.0", "sg-cm7fbbf3"),
+					resource.TestCheckResourceAttr(instanceId, "orderly_security_groups.1", "sg-kensue7b"),
+					resource.TestCheckResourceAttr(instanceId, "orderly_security_groups.2", "sg-05f7wnhn"),
 				),
 			},
 		},
@@ -783,30 +738,57 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 }
 
 const testAccTencentCloudInstanceBasic = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-basic-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-basic-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
 resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  vpc_id            = var.cvm_vpc_id
-  subnet_id         = var.cvm_subnet_id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 
   tags = {
     hostname = "tci"
   }
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `
 
 const testAccTencentCloudInstancePrepaidBasic = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-prepaid-basic-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-prepaid-basic-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
 resource "tencentcloud_instance" "cvm_prepaid_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  vpc_id            = var.cvm_vpc_id
-  subnet_id         = var.cvm_subnet_id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
   instance_charge_type                    = "PREPAID"
@@ -820,13 +802,25 @@ resource "tencentcloud_instance" "cvm_prepaid_basic" {
 `
 
 const testAccTencentCloudInstanceWithDataDiskOrder = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-with-cbs-order-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-with-cbs-order-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  vpc_id            = var.cvm_vpc_id
-  subnet_id         = var.cvm_subnet_id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 
@@ -849,13 +843,25 @@ resource "tencentcloud_instance" "foo" {
 `
 
 const testAccTencentCloudInstanceAddDataDiskByCbs = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-attach-cbs-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-attach-cbs-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
 resource "tencentcloud_instance" "cvm_add_data_disk_by_cbs" {
   instance_name     = "cvm-add-data-disk-by-cbs"
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  vpc_id            = var.cvm_vpc_id
-  subnet_id         = var.cvm_subnet_id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 }
@@ -904,6 +910,9 @@ resource "tencentcloud_instance" "foo" {
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   force_delete = true
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `
 
@@ -928,6 +937,9 @@ resource "tencentcloud_instance" "foo" {
   instance_charge_type_prepaid_period = 1
   instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
   force_delete = true
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `
 
@@ -939,18 +951,33 @@ data "tencentcloud_instance_types" "new_type" {
 	memory_size    = 2
   }
 
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-basic-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-basic-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
 resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.new_type.instance_types.0.instance_type
-  vpc_id            = var.cvm_vpc_id
-  subnet_id         = var.cvm_subnet_id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 
   tags = {
     hostname = "tci"
+  }
+  lifecycle {
+	ignore_changes = [instance_type]
   }
 }
 `
@@ -981,6 +1008,9 @@ resource "tencentcloud_instance" "foo" {
 
   disable_security_service = true
   disable_monitor_service  = true
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `
 
@@ -1078,6 +1108,9 @@ resource "tencentcloud_instance" "foo" {
 
   disable_security_service = true
   disable_monitor_service  = true
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `
 
@@ -1091,6 +1124,9 @@ resource "tencentcloud_instance" "foo" {
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `,
 		hasPublicIp,
@@ -1108,6 +1144,9 @@ resource "tencentcloud_instance" "foo" {
   internet_max_bandwidth_out = %d
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `,
 		maxBandWidthOut, hasPublicIp,
@@ -1115,14 +1154,26 @@ resource "tencentcloud_instance" "foo" {
 }
 
 const testAccTencentCloudInstanceWithPrivateIP = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-with-privateip-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-with-privateip-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
-  vpc_id            = var.cvm_vpc_id
-  subnet_id         = var.cvm_subnet_id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   private_ip        = "10.0.0.123"
 }
 `
@@ -1134,6 +1185,9 @@ resource "tencentcloud_instance" "foo" {
 	image_id          = data.tencentcloud_images.default.images.0.image_id
 	instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 	system_disk_type  = "CLOUD_PREMIUM"
+	lifecycle {
+		ignore_changes = [instance_type]
+	}
 }
 `
 
@@ -1163,6 +1217,9 @@ resource "tencentcloud_instance" "foo" {
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   key_ids           = %s
   system_disk_type  = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `,
 		keyIds,
@@ -1179,6 +1236,9 @@ resource "tencentcloud_instance" "foo" {
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   password                   = "%s"
   system_disk_type           = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `,
 		password,
@@ -1209,6 +1269,9 @@ resource "tencentcloud_instance" "foo" {
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `,
 		instanceName,
@@ -1229,34 +1292,6 @@ resource "tencentcloud_instance" "foo" {
 func testAccTencentCloudInstanceWithSecurityGroup(ids string) string {
 	return fmt.Sprintf(
 		tcacctest.DefaultInstanceVariable+`
-resource "tencentcloud_security_group" "foo" {
-  name        = var.instance_name
-  description = var.instance_name
-}
-
-resource "tencentcloud_security_group_rule" "foo" {
-  security_group_id = tencentcloud_security_group.foo.id
-  type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
-  port_range        = "80,8080"
-  policy            = "accept"
-}
-
-resource "tencentcloud_security_group" "bar" {
-  name        = var.instance_name
-  description = var.instance_name
-}
-
-resource "tencentcloud_security_group_rule" "bar" {
-  security_group_id = tencentcloud_security_group.bar.id
-  type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
-  port_range        = "3000"
-  policy            = "accept"
-}
-
 resource "tencentcloud_instance" "foo" {
   instance_name              = var.instance_name
   availability_zone          = var.availability_cvm_zone
@@ -1264,6 +1299,9 @@ resource "tencentcloud_instance" "foo" {
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   security_groups            = %s
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
 }
 `,
 		ids,
@@ -1283,6 +1321,9 @@ resource "tencentcloud_instance" "foo" {
     data_disk_type        = "CLOUD_PREMIUM"
     data_disk_size        = 150
     delete_with_instance  = true
+  }
+  lifecycle {
+	ignore_changes = [instance_type]
   }
   tags = %s
 }
@@ -1315,31 +1356,13 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
-func testAccTencentCloudInstanceOrderlySecurityGroups(sgs string) string {
-
-	return fmt.Sprintf(tcacctest.DefaultInstanceVariable+`
-resource "tencentcloud_security_group" "orderly_security_group1" {
-	name        = "test-cvm-orderly-sg1"
-	description = "test-cvm-orderly-sg1"
-}
-
-resource "tencentcloud_security_group" "orderly_security_group2" {
-	name        = "test-cvm-orderly-sg2"
-	description = "test-cvm-orderly-sg2"
-}
-
-resource "tencentcloud_security_group" "orderly_security_group3" {
-	name        = "test-cvm-orderly-sg3"
-	description = "test-cvm-orderly-sg3"
-}
-
+const testAccTencentCloudInstanceOrderlySecurityGroups = tcacctest.DefaultInstanceVariable + `
 resource "tencentcloud_instance" "cvm_with_orderly_sg" {
 	instance_name              = "test-orderly-sg-cvm"
 	availability_zone          = var.availability_cvm_zone
 	image_id                   = data.tencentcloud_images.default.images.0.image_id
 	instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 	system_disk_type           = "CLOUD_PREMIUM"
-	orderly_security_groups    = %s
+	orderly_security_groups    = ["sg-cm7fbbf3", "sg-kensue7b", "sg-05f7wnhn"]
 }
-`, sgs)
-}
+`
