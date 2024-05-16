@@ -99,7 +99,7 @@ const (
 	DefaultGaapRealserverIp2        = "1.1.1.5"
 	DefaultHttpsDomainCertificateId = "cert-crg2aynt"
 
-	DefaultSecurityGroup = "sg-ijato2x1"
+	DefaultSecurityGroup = "sg-05f7wnhn"
 
 	DefaultProjectId = "0"
 
@@ -406,12 +406,11 @@ locals {
 
 const DefaultSecurityGroupData = FixedTagVariable + `
 data "tencentcloud_security_groups" "internal" {
-  name = "default"
-  tags = var.fixed_tags
+  name = "keep-reject-all"
 }
 
 data "tencentcloud_security_groups" "exclusive" {
-  name = "test_preset_sg"
+  name = "keep-reject-all"
 }
 
 locals {
