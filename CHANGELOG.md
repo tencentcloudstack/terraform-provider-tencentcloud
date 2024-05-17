@@ -1,3 +1,10 @@
+## 1.81.95 (May 17, 2024)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kubernetes_cluster_instances: querying cluster node information limit supports 100. ([#2637](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2637))
+* resource/tencentcloud_cynosdb_readonly_instance: improvement id empty situation ([#2636](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2636))
+
 ## 1.81.94 (May 15, 2024)
 
 ENHANCEMENTS:
