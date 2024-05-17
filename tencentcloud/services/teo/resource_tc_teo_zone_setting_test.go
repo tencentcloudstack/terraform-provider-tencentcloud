@@ -26,7 +26,8 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 					testAccCheckZoneSettingExists("tencentcloud_teo_zone_setting.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone_setting.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", " cache.0.cache.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.cache.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.cache.0.cache_time", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.no_cache.#", "1"),
@@ -116,7 +117,8 @@ resource "tencentcloud_teo_zone_setting" "basic" {
 
   cache {
     cache {
-      switch = "off"
+      switch     = "on"
+      cache_time = 10
     }
     follow_origin {
       switch = "off"
@@ -151,7 +153,7 @@ resource "tencentcloud_teo_zone_setting" "basic" {
       "brotli",
       "gzip",
     ]
-    switch     = "on"
+    switch = "on"
   }
 
   force_redirect {

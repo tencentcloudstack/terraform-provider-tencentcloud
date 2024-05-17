@@ -20,6 +20,15 @@ func TestAccTencentCloudTeoCertificateConfigResource_basic(t *testing.T) {
 				Config: testAccTeoCertificateConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate_config.certificate", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate_config.certificate", "zone_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate_config.certificate", "host"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_certificate_config.certificate", "mode", "sslcert"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_certificate_config.certificate", "server_cert_info.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_certificate_config.certificate", "server_cert_info.0.alias", "terraform_test"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_certificate_config.certificate", "server_cert_info.0.cert_id", "EEIqXrZt"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate_config.certificate", "server_cert_info.0.common_name"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_certificate_config.certificate", "server_cert_info.0.sign_algo", "RSA 2048"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_certificate_config.certificate", "server_cert_info.0.type", "managed"),
 				),
 			},
 			{

@@ -42,6 +42,19 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			{
+				Config: testAccTeoOriginGroupUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.0.name", "SecretAccessKey"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.0.value", "test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "update_time"),
+				),
+			},
 		},
 	})
 }
@@ -113,6 +126,28 @@ resource "tencentcloud_teo_origin_group" "basic" {
     type    = "IP_DOMAIN"
     weight  = 100
     private = false
+  }
+}
+
+`
+
+const testAccTeoOriginGroupUpdate = testAccTeoZone + `
+
+resource "tencentcloud_teo_origin_group" "basic" {
+  name    = "keep-group-1"
+  type    = "GENERAL"
+  zone_id = tencentcloud_teo_zone.basic.id
+
+  records {
+    record  = var.zone_name
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = true
+
+    private_parameters {
+      name = "SecretAccessKey"
+      value = "test"
+    }
   }
 }
 
