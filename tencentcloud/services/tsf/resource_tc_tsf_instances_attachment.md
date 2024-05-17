@@ -13,7 +13,7 @@ resource "tencentcloud_tsf_instances_attachment" "instances_attachment" {
   sg_id = "sg-123456"
   instance_import_mode = "R"
   os_customize_type = "my_customize"
-  feature_id_list =
+  feature_id_list = [""]
   instance_advanced_settings {
 	mount_target = "/mnt/data"
 	docker_graph_path = "/var/lib/docker"
