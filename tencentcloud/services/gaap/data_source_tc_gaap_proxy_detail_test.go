@@ -27,6 +27,6 @@ func TestAccTencentCloudGaapProxyDetailDataSource_basic(t *testing.T) {
 
 const testAccGaapProxyDetailDataSource = `
 data "tencentcloud_gaap_proxy_detail" "proxy_detail" {
-	proxy_id = "link-8lpyo88p"
+	proxy_id = "link-m9t4yho9"
 }
 `
