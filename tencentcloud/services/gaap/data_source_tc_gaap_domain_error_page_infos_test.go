@@ -27,6 +27,6 @@ func TestAccTencentCloudGaapDomainErrorPageInfosDataSource_basic(t *testing.T) {
 
 const testAccGaapDomainErrorPageInfosDataSource = `
 data "tencentcloud_gaap_domain_error_page_infos" "domain_error_page_infos" {
-	error_page_ids = ["errorPage-mh4k07v5"]
+	error_page_ids = ["errorPage-ogeq0we1"]
 }
 `

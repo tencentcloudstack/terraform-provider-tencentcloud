@@ -28,6 +28,6 @@ func TestAccTencentCloudGaapRuleRealServersDataSource_basic(t *testing.T) {
 
 const testAccGaapRuleRealServersDataSource = `
 data "tencentcloud_gaap_rule_real_servers" "rule_real_servers" {
-	rule_id = "rule-9sdhv655"
+	rule_id = "rule-hddrxgpd"
 }
 `
