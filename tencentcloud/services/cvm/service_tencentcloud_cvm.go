@@ -745,26 +745,32 @@ func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, p
 	return
 }
 
-func (me *CvmService) DescribePlacementGroupById(ctx context.Context, placementId string) (placementGroup *cvm.DisasterRecoverGroup, errRet error) {
+func (me *CvmService) DescribePlacementGroupById(ctx context.Context, disasterRecoverGroupId string) (ret *cvm.DisasterRecoverGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
+
 	request := cvm.NewDescribeDisasterRecoverGroupsRequest()
-	request.DisasterRecoverGroupIds = []*string{&placementId}
+	request.DisasterRecoverGroupIds = []*string{helper.String(disasterRecoverGroupId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
 
 	ratelimit.Check(request.GetAction())
+
 	response, err := me.client.UseCvmClient().DescribeDisasterRecoverGroups(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.DisasterRecoverGroupSet) < 1 {
 		return
 	}
-	placementGroup = response.Response.DisasterRecoverGroupSet[0]
+
+	ret = response.Response.DisasterRecoverGroupSet[0]
 	return
 }
 
@@ -1314,11 +1320,11 @@ func (me *CvmService) DeleteCvmHpcClusterById(ctx context.Context, hpcClusterId 
 	return
 }
 
-func (me *CvmService) DescribeCvmLaunchTemplateById(ctx context.Context, launchTemplateId string) (launchTemplate *cvm.LaunchTemplateInfo, errRet error) {
+func (me *CvmService) DescribeCvmLaunchTemplateById(ctx context.Context, launchTemplateId string) (ret *cvm.LaunchTemplateInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewDescribeLaunchTemplatesRequest()
-	request.LaunchTemplateIds = []*string{&launchTemplateId}
+	request.LaunchTemplateIds = []*string{helper.String(launchTemplateId)}
 
 	defer func() {
 		if errRet != nil {
@@ -1339,7 +1345,7 @@ func (me *CvmService) DescribeCvmLaunchTemplateById(ctx context.Context, launchT
 		return
 	}
 
-	launchTemplate = response.Response.LaunchTemplateSet[0]
+	ret = response.Response.LaunchTemplateSet[0]
 	return
 }
 
@@ -1911,5 +1917,86 @@ func (me *CvmService) DescribeCvmImageSharePermissionById(ctx context.Context, i
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeCvmLaunchTemplateById1(ctx context.Context, launchTemplateId string) (ret *cvm.LaunchTemplateVersionInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
+	request.LaunchTemplateId = helper.String(launchTemplateId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeLaunchTemplateVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LaunchTemplateVersionSet) < 1 {
+		return
+	}
+
+	ret = response.Response.LaunchTemplateVersionSet[0]
+	return
+}
+
+func (me *CvmService) DescribeReservedInstanceById(ctx context.Context, reservedInstanceId string) (ret *cvm.ReservedInstances, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeReservedInstancesRequest()
+	filter := &cvm.Filter{
+		Name:   helper.String("reserved-instances-id"),
+		Values: []*string{helper.String(reservedInstanceId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	var instances []*cvm.ReservedInstances
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeReservedInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ReservedInstancesSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.ReservedInstancesSet...)
+		if len(response.Response.ReservedInstancesSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	ret = instances[0]
 	return
 }
