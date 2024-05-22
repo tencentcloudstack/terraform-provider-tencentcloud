@@ -28,20 +28,32 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "configuration_type", "weight"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_group_name", "keep-group-1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_type", "self"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.port", "8080"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.private", "false"),
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "origin_records.0.record"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.weight", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "name", "keep-group-1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "type", "GENERAL"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.0.record"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.type", "IP_DOMAIN"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.weight", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private", "false"),
 				),
 			},
 			{
 				ResourceName:      "tencentcloud_teo_origin_group.basic",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccTeoOriginGroupUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.0.name", "SecretAccessKey"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.0.value", "test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "update_time"),
+				),
 			},
 		},
 	})
@@ -105,17 +117,37 @@ func testAccCheckOriginGroupExists(r string) resource.TestCheckFunc {
 const testAccTeoOriginGroup = testAccTeoZone + `
 
 resource "tencentcloud_teo_origin_group" "basic" {
-  configuration_type = "weight"
-  origin_group_name  = "keep-group-1"
-  origin_type        = "self"
-  zone_id            = tencentcloud_teo_zone.basic.id
+  name    = "keep-group-1"
+  type    = "GENERAL"
+  zone_id = tencentcloud_teo_zone.basic.id
 
-  origin_records {
-    area      = []
-    port      = 8080
-    private   = false
-    record    = var.zone_name
-    weight    = 100
+  records {
+    record  = var.zone_name
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = false
+  }
+}
+
+`
+
+const testAccTeoOriginGroupUpdate = testAccTeoZone + `
+
+resource "tencentcloud_teo_origin_group" "basic" {
+  name    = "keep-group-1"
+  type    = "GENERAL"
+  zone_id = tencentcloud_teo_zone.basic.id
+
+  records {
+    record  = var.zone_name
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = true
+
+    private_parameters {
+      name = "SecretAccessKey"
+      value = "test"
+    }
   }
 }
 

@@ -10,7 +10,7 @@ import (
 
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	cos "github.com/tencentyun/cos-go-sdk-v5"
 
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
 

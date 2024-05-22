@@ -26,10 +26,11 @@ func TestAccTencentCloudTeoAccelerationDomainResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTeoAccelerationDomainExists("tencentcloud_teo_acceleration_domain.acceleration_domain"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_acceleration_domain.acceleration_domain", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_acceleration_domain.acceleration_domain", "domain_name", "aaa.tf-teo.xyz"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_acceleration_domain.acceleration_domain", "domain_name", "test.tf-teo.xyz"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_acceleration_domain.acceleration_domain", "origin_info.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_acceleration_domain.acceleration_domain", "origin_info.0.origin", "150.109.8.1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_acceleration_domain.acceleration_domain", "origin_info.0.origin_type", "IP_DOMAIN"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_acceleration_domain.acceleration_domain", "cname"),
 				),
 			},
 			{
@@ -100,14 +101,22 @@ func testAccCheckTeoAccelerationDomainExists(r string) resource.TestCheckFunc {
 
 const testAccTeoAccelerationDomain = testAccTeoZone + `
 
+resource "tencentcloud_teo_ownership_verify" "ownership_verify" {
+  domain = var.zone_name
+
+  depends_on = [tencentcloud_teo_zone.basic]
+}
+
 resource "tencentcloud_teo_acceleration_domain" "acceleration_domain" {
-    zone_id     = "zone-2o0i41pv2h8c"
-    domain_name = "aaa.makn.cn"
+    zone_id     = tencentcloud_teo_zone.basic.id
+    domain_name = "test.tf-teo.xyz"
 
     origin_info {
         origin      = "150.109.8.1"
         origin_type = "IP_DOMAIN"
     }
+
+	depends_on = [tencentcloud_teo_ownership_verify.ownership_verify]
 }
 
 `

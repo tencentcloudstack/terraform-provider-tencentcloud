@@ -77,6 +77,7 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.0.name", "ServerName"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.0.values.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "tags.#", "2"),
 				),
 			},
 		},
@@ -202,6 +203,8 @@ resource "tencentcloud_teo_rule_engine" "basic" {
 	rule_name = "rule-up"
 	status    = "enable"
 	zone_id   = tencentcloud_teo_zone.basic.id
+
+	tags = ["keep-test-np1", "keep-test-np2"]
   
 	rules {
 	  actions {
