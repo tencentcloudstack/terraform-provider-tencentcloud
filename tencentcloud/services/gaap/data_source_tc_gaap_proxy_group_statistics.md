@@ -4,7 +4,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_gaap_proxy_group_statistics" "proxy_group_statistics" {
-	group_id = "link-8lpyo88p"
+	group_id = "link-m9t4yho9"
 	start_time = "2023-10-09 00:00:00"
 	end_time = "2023-10-09 23:59:59"
 	metric_names = ["InBandwidth", "OutBandwidth", "InFlow", "OutFlow"]
