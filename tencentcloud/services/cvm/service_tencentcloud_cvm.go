@@ -1969,7 +1969,7 @@ func (me *CvmService) DescribeReservedInstanceById(ctx context.Context, reserved
 
 	var (
 		offset int64 = 0
-		limit  int64 = 100
+		limit  int64 = 20
 	)
 	var instances []*cvm.ReservedInstances
 	for {
@@ -1998,5 +1998,97 @@ func (me *CvmService) DescribeReservedInstanceById(ctx context.Context, reserved
 	}
 
 	ret = instances[0]
+	return
+}
+
+func (me *CvmService) DescribeReservedInstanceConfigsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.ReservedInstancesOffering, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeReservedInstancesOfferingsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		if err := dataSourceTencentCloudReservedInstanceConfigsReadPreRequest0(ctx, request); err != nil {
+			return nil, err
+		}
+
+		response, err := me.client.UseCvmClient().DescribeReservedInstancesOfferings(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ReservedInstancesOfferingsSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.ReservedInstancesOfferingsSet...)
+		if len(response.Response.ReservedInstancesOfferingsSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeReservedInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.ReservedInstances, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeReservedInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		if err := dataSourceTencentCloudReservedInstancesReadPreRequest0(ctx, request); err != nil {
+			return nil, err
+		}
+
+		response, err := me.client.UseCvmClient().DescribeReservedInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ReservedInstancesSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.ReservedInstancesSet...)
+		if len(response.Response.ReservedInstancesSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
 	return
 }
