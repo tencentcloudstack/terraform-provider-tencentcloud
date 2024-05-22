@@ -1,3 +1,15 @@
+## 1.81.96 (May 22, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_teo_l4_proxy` ([#2617](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2617))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_teo_origin_group: Incompatible changes ([#2617](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2617))
+* tencentcloud_cam_role: `session_duration` increases computed familiarity ([#2641](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2641))
+* tencentcloud_mysql_dr_instance: modify doc ([#2647](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2647))
+
 ## 1.81.95 (May 17, 2024)
 
 ENHANCEMENTS:
