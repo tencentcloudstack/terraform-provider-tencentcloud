@@ -69,6 +69,7 @@ func ResourceTencentCloudCamRole() *schema.Resource {
 			"session_duration": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "The maximum validity period of the temporary key for creating a role.",
 			},
 			"create_time": {
