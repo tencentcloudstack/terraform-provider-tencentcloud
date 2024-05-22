@@ -18,7 +18,7 @@ func TestAccTencentCloudGaapProxyGroupsDataSource_basic(t *testing.T) {
 				Config: testAccGaapProxyGroupsDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_gaap_proxy_groups.proxy_groups"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxy_groups.proxy_groups", "proxy_group_list.0.group_id", "lg-5anbbou5"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxy_groups.proxy_groups", "proxy_group_list.0.group_id", "lg-8h33uhwd"),
 				),
 			},
 		},
@@ -30,7 +30,7 @@ data "tencentcloud_gaap_proxy_groups" "proxy_groups" {
 	project_id = 0
 	filters {
 		  name = "GroupId"
-		  values = ["lg-5anbbou5"]
+		  values = ["lg-8h33uhwd"]
 	}
 }
 `

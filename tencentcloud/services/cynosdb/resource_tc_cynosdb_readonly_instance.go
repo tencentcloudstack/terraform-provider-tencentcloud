@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -110,11 +111,39 @@ func resourceTencentCloudCynosdbReadonlyInstanceCreate(d *schema.ResourceData, m
 	if err != nil {
 		return err
 	}
-	if response != nil && response.Response != nil && len(response.Response.ResourceIds) != 1 {
+
+	if response != nil && response.Response != nil && len(response.Response.DealNames) < 1 {
+		return fmt.Errorf("cynosdb cluster id count isn't 1")
+	}
+
+	dealName := response.Response.DealNames[0]
+	dealReq := cynosdb.NewDescribeResourcesByDealNameRequest()
+	dealRes := cynosdb.NewDescribeResourcesByDealNameResponse()
+	dealReq.DealName = dealName
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		dealRes, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().DescribeResourcesByDealName(dealReq)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue.DealNameNotFound" {
+					return resource.RetryableError(fmt.Errorf("DealName[%s] Not Found, retry... reason: %s", *dealName, err.Error()))
+				}
+			}
+			return tccommon.RetryError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if dealRes != nil && dealRes.Response != nil && len(dealRes.Response.BillingResourceInfos) != 1 && len(dealRes.Response.BillingResourceInfos[0].InstanceIds) != 1 {
 		return fmt.Errorf("cynosdb readonly instance id count isn't 1")
 	}
-	d.SetId(*response.Response.ResourceIds[0])
-	id := d.Id()
+
+	id := *dealRes.Response.BillingResourceInfos[0].InstanceIds[0]
+	d.SetId(id)
 
 	// set maintenance info
 	var weekdays []interface{}
@@ -268,6 +297,20 @@ func resourceTencentCloudCynosdbReadonlyInstanceDelete(d *schema.ResourceData, m
 	}
 
 	if forceDelete {
+		errUpdate := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, _, has, e := cynosdbService.DescribeInstanceById(ctx, instanceId)
+			if e != nil {
+				return resource.NonRetryableError(e)
+			}
+			if has {
+				return resource.RetryableError(fmt.Errorf("[CRITAL]%s actual example during removal, heavy new essay", logId))
+			}
+
+			return nil
+		})
+		if errUpdate != nil {
+			return errUpdate
+		}
 		if err = cynosdbService.OfflineInstance(ctx, clusterId, instanceId); err != nil {
 			return err
 		}

@@ -2719,7 +2719,7 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 	}
 
 	var offset int64 = 0
-	var limit int64 = 20
+	var limit int64 = 100
 	var total int64 = -1
 
 	for {

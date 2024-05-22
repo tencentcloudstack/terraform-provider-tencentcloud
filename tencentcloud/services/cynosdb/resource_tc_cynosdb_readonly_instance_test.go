@@ -34,9 +34,15 @@ func TestAccTencentCloudCynosdbReadonlyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_readonly_instance.foo", "instance_memory_size"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_readonly_instance.foo", "instance_status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_readonly_instance.foo", "instance_storage_size"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "vpc_id", "vpc-4owdpnwr"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "subnet_id", "subnet-m4qpx38w"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "vpc_id", "vpc-m0d2dbnn"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "subnet_id", "subnet-j10lsueq"),
 				),
+			},
+			{
+				ResourceName:            "tencentcloud_cynosdb_readonly_instance.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force_delete"},
 			},
 			{
 				Config: testAccCynosdbReadonlyInstance_update,
@@ -47,12 +53,6 @@ func TestAccTencentCloudCynosdbReadonlyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "instance_cpu_core", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "instance_memory_size", "4"),
 				),
-			},
-			{
-				ResourceName:            "tencentcloud_cynosdb_readonly_instance.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_delete"},
 			},
 		},
 	})
@@ -105,12 +105,24 @@ func testAccCheckCynosdbReadonlyInstanceExists(n string) resource.TestCheckFunc 
 }
 
 const readonlyInstanceVar = `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "my_vpc" {
+  default = "vpc-m0d2dbnn"
+}
+
+variable "my_subnet" {
+  default = "subnet-j10lsueq"
+}
+
 variable "readonly_subnet" {
-  default = "subnet-m4qpx38w"
+  default = "subnet-j10lsueq"
 }
 `
 
-const testAccCynosdbReadonlyInstance = testAccCynosdbBasic + readonlyInstanceVar + `
+const testAccCynosdbReadonlyInstance = readonlyInstanceVar + `
 resource "tencentcloud_cynosdb_cluster" "foo" {
   available_zone               = var.availability_zone
   vpc_id                       = var.my_vpc
@@ -139,9 +151,9 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     current_value = "utf8"
   }
 
-#  tags = {
-#    test = "test"
-#  }
+  tags = {
+    test = "test"
+  }
 
   force_delete = true
 
@@ -173,7 +185,7 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 }
 `
 
-const testAccCynosdbReadonlyInstance_update = testAccCynosdbBasic + `
+const testAccCynosdbReadonlyInstance_update = readonlyInstanceVar + `
 resource "tencentcloud_cynosdb_cluster" "foo" {
   available_zone               = var.availability_zone
   vpc_id                       = var.my_vpc
@@ -202,9 +214,9 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     current_value = "utf8"
   }
 
-#  tags = {
-#    test = "test"
-#  }
+  tags = {
+    test = "test"
+  }
 
   force_delete = true
 

@@ -28,8 +28,8 @@ func TestAccTencentCloudGaapProxyGroupStatisticsDataSource_basic(t *testing.T) {
 const testAccGaapProxyGroupStatisticsDataSource = `
 data "tencentcloud_gaap_proxy_group_statistics" "proxy_group_statistics" {
 	group_id = "link-8lpyo88p"
-	start_time = "2023-10-09 00:00:00"
-	end_time = "2023-10-09 23:59:59"
+	start_time = "2024-05-20 00:00:00"
+	end_time = "2024-05-20 23:59:59"
 	metric_names = ["InBandwidth", "OutBandwidth", "InFlow", "OutFlow"]
 	granularity = 300
 }
