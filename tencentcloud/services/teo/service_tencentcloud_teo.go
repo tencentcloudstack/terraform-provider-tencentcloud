@@ -687,18 +687,16 @@ func (me *TeoService) CheckZoneComplete(ctx context.Context, zoneId string) erro
 	return nil
 }
 
-func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zoneId string, domainName string) (accelerationDomain *teo.AccelerationDomain, errRet error) {
+func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zoneId string, domainName string) (ret *teo.AccelerationDomain, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeAccelerationDomainsRequest()
 	request.ZoneId = &zoneId
-	request.Filters = append(
-		request.Filters,
-		&teo.AdvancedFilter{
-			Name:   helper.String("domain-name"),
-			Values: []*string{&domainName},
-		},
-	)
+	advancedFilter := &teo.AdvancedFilter{
+		Name:   helper.String("domain-name"),
+		Values: []*string{&domainName},
+	}
+	request.Filters = append(request.Filters, advancedFilter)
 
 	defer func() {
 		if errRet != nil {
@@ -712,7 +710,7 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 		offset int64 = 0
 		limit  int64 = 20
 	)
-	instances := make([]*teo.AccelerationDomain, 0)
+	var instances []*teo.AccelerationDomain
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
@@ -737,32 +735,7 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 	if len(instances) < 1 {
 		return
 	}
-	accelerationDomain = instances[0]
-	return
-}
-
-func (me *TeoService) DeleteTeoAccelerationDomainById(ctx context.Context, zoneId string, domainName string) (errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := teo.NewDeleteAccelerationDomainsRequest()
-	request.ZoneId = &zoneId
-	request.DomainNames = []*string{&domainName}
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseTeoClient().DeleteAccelerationDomains(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
+	ret = instances[0]
 	return
 }
 
@@ -854,4 +827,47 @@ func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId,
 	}
 
 	return nil
+}
+
+func (me *TeoService) DescribeTeoApplicationProxyRuleById(ctx context.Context, ruleId string) (ret *teo.ApplicationProxyRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeApplicationProxiesRequest()
+
+	if err := resourceTencentCloudTeoApplicationProxyRuleReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeApplicationProxies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	var tmpRet *teo.ApplicationProxy
+	if len(response.Response.ApplicationProxies) < 1 {
+		return
+	}
+
+	tmpRet = response.Response.ApplicationProxies[0]
+	if len(tmpRet.ApplicationProxyRules) < 1 {
+		return
+	}
+
+	for _, info := range tmpRet.ApplicationProxyRules {
+		if info.RuleId != nil && *info.RuleId == ruleId {
+			ret = info
+			break
+		}
+	}
+	return
 }

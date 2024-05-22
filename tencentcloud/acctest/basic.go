@@ -99,7 +99,7 @@ const (
 	DefaultGaapRealserverIp2        = "1.1.1.5"
 	DefaultHttpsDomainCertificateId = "cert-7su3evtr"
 
-	DefaultSecurityGroup = "sg-ijato2x1"
+	DefaultSecurityGroup = "sg-05f7wnhn"
 
 	DefaultProjectId = "0"
 

@@ -13,7 +13,7 @@ resource "tencentcloud_tcm_tracing_config" "tracing_config" {
 	region = "ap-guangzhou"
 	instance_id = "apm-xxx"
   }
-  sampling =
+  sampling = 1.0
   zipkin {
 	address = "10.10.10.10:9411"
   }
