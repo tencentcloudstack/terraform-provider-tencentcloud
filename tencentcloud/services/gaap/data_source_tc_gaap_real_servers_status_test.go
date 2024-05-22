@@ -27,6 +27,6 @@ func TestAccTencentCloudGaapRealServersStatusDataSource_basic(t *testing.T) {
 
 const testAccGaapRealServersStatusDataSource = `
 data "tencentcloud_gaap_real_servers_status" "real_servers_status" {
-	real_server_ids = ["rs-qcygnwpd"]
+	real_server_ids = ["rs-3mlpbuut"]
 }
 `

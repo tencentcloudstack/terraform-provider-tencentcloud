@@ -18,8 +18,8 @@ func TestAccTencentCloudGaapGlobalDomainDnsResource_basic(t *testing.T) {
 				Config: testAccGaapGlobalDomainDns,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_global_domain_dns.global_domain_dns", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "domain_id", "dm-du60lmhj"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "proxy_id_list.0", "link-m9p9fae3"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "domain_id", "dm-br5seuhh"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "proxy_id_list.0", "link-m9t4yho9"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "nation_country_inner_codes.0", "101001"),
 				),
 			},
@@ -27,7 +27,7 @@ func TestAccTencentCloudGaapGlobalDomainDnsResource_basic(t *testing.T) {
 				Config: testAccGaapGlobalDomainDnsUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_global_domain_dns.global_domain_dns", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "domain_id", "dm-du60lmhj"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "domain_id", "dm-br5seuhh"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "proxy_id_list.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_global_domain_dns.global_domain_dns", "nation_country_inner_codes.0", "101002"),
 				),
@@ -43,16 +43,16 @@ func TestAccTencentCloudGaapGlobalDomainDnsResource_basic(t *testing.T) {
 
 const testAccGaapGlobalDomainDns = `
 resource "tencentcloud_gaap_global_domain_dns" "global_domain_dns" {
-	domain_id = "dm-du60lmhj"
-	proxy_id_list = ["link-m9p9fae3"]
+	domain_id = "dm-br5seuhh"
+	proxy_id_list = ["link-m9t4yho9"]
 	nation_country_inner_codes = ["101001"]
 }
 `
 
 const testAccGaapGlobalDomainDnsUpdate = `
 resource "tencentcloud_gaap_global_domain_dns" "global_domain_dns" {
-	domain_id = "dm-du60lmhj"
-	proxy_id_list = ["link-m9p9fae3", "link-8lpyo88p"]
+	domain_id = "dm-br5seuhh"
+	proxy_id_list = ["link-m9t4yho9", "link-2rk61jn5"]
 	nation_country_inner_codes = ["101002"]
 }
 `
