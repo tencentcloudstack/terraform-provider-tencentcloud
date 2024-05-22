@@ -4,6 +4,6 @@ Example Usage
 
 ```hcl
 data "tencentcloud_gaap_real_servers_status" "real_servers_status" {
-  real_server_ids = ["rs-qcygnwpd"]
+  real_server_ids = ["rs-3mlpbuut"]
 }
 ```
