@@ -1079,52 +1079,32 @@ func (me *CvmService) DeleteImage(ctx context.Context, imageId string) error {
 	return nil
 }
 
-func (me *CvmService) DescribeImageById(ctx context.Context, keyId string, isDelete bool) (image *cvm.Image, has bool, errRet error) {
+func (me *CvmService) DescribeImageById(ctx context.Context, imageId string) (ret *cvm.Image, errRet error) {
 	logId := tccommon.GetLogId(ctx)
+
 	request := cvm.NewDescribeImagesRequest()
-	request.ImageIds = []*string{&keyId}
+	request.ImageIds = []*string{helper.String(imageId)}
 
-	var imgRsp *cvm.DescribeImagesResponse
-	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseCvmClient().DescribeImages(request)
-		if err != nil {
-			return resource.RetryableError(err)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
-		if response != nil && response.Response != nil {
-			if len(response.Response.ImageSet) == 0 && !isDelete {
-				return resource.RetryableError(fmt.Errorf("iamge instance status is processing"))
-			}
-			if len(response.Response.ImageSet) > 0 {
-				if *response.Response.ImageSet[0].ImageState == "CREATEFAILED" {
-					return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s Create Image is failed", logId))
-				}
-				if *response.Response.ImageSet[0].ImageState != "NORMAL" {
-					return resource.RetryableError(fmt.Errorf("iamge instance status is processing"))
-				}
-			}
+	}()
 
-			imgRsp = response
-			return nil
-		}
-		return resource.NonRetryableError(fmt.Errorf("response is null"))
-	})
+	ratelimit.Check(request.GetAction())
 
+	response, err := me.client.UseCvmClient().DescribeImages(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if imgRsp == nil {
+	if len(response.Response.ImageSet) < 1 {
 		return
 	}
 
-	if len(imgRsp.Response.ImageSet) > 0 && len(imgRsp.Response.ImageSet[0].SnapshotSet) != 0 {
-		has = true
-		image = imgRsp.Response.ImageSet[0]
-	}
+	ret = response.Response.ImageSet[0]
 	return
 }
 
