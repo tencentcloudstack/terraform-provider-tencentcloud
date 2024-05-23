@@ -236,10 +236,6 @@ variable "default_az" {
   default = "ap-guangzhou-3"
 }
 
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
 variable "vpc_cidr" {
   default = "172.16.0.0/16"
 }
@@ -256,7 +252,7 @@ resource "tencentcloud_vpc" "vpc" {
 resource "tencentcloud_subnet" "subnet" {
   name              = "tf_tke_subnet_test"
   vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
+  availability_zone = var.default_az
   cidr_block        = var.subnet_cidr
   is_multicast      = false
 }
