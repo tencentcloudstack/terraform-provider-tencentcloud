@@ -232,6 +232,10 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 }
 
 const testAccTkeScaleWorkerInstanceBasic = tcacctest.TkeDataSource + `
+variable "default_az" {
+  default = "ap-guangzhou-3"
+}
+
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
