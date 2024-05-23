@@ -119,6 +119,7 @@ func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "unschedulable"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "user_script", "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="),
 				),
 			},
 			{
@@ -230,7 +231,43 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTkeScaleWorkerInstanceBasic = tcacctest.TkeExclusiveNetwork + tcacctest.TkeDataSource + tcacctest.DefaultSecurityGroupData
+const testAccTkeScaleWorkerInstanceBasic = tcacctest.TkeDataSource + `
+variable "default_az" {
+  default = "ap-guangzhou-3"
+}
+
+data "tencentcloud_vpc_instances" "vpc" {
+  name = "keep-tke-vpc"
+}
+
+data "tencentcloud_vpc_subnets" "subnet" {
+  vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
+}
+
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "zone"
+    values = [var.default_az]
+  }
+  filter {
+    name   = "instance-charge-type"
+    values = ["POSTPAID_BY_HOUR"]
+  }
+  cpu_core_count   = 2
+  exclude_sold_out = true
+}
+
+data "tencentcloud_security_groups" "internal" {
+  name = "keep-tke"
+}
+
+locals {
+  vpc_id              = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
+  subnet_id           = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+  scale_instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  sg_id               = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+`
 
 const testAccTkeScaleWorkerInstance string = testAccTkeScaleWorkerInstanceBasic + `
 
@@ -246,6 +283,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     "test2" = "test2",
   }
   unschedulable = 0
+  user_script   = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
 
   worker_config {
     count                      				= 1
@@ -284,6 +322,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     "test2" = "test2",
   }
   unschedulable = 0
+  user_script   = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
 
   worker_config {
     count                      				= 1
