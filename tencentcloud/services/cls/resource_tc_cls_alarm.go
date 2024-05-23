@@ -98,6 +98,13 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 				Description: "triggering conditions.",
 			},
 
+			"alarm_level": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.",
+			},
+
 			"trigger_count": {
 				Required:    true,
 				Type:        schema.TypeInt,
@@ -121,6 +128,7 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 
 			"status": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "whether to enable the alarm policy.",
 			},
@@ -133,6 +141,7 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 
 			"call_back": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "user define callback.",
@@ -262,6 +271,11 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("condition"); ok {
 		request.Condition = helper.String(v.(string))
+		request.AlarmLevel = helper.IntUint64(0)
+	}
+
+	if v, ok := d.GetOkExists("alarm_level"); ok {
+		request.AlarmLevel = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOkExists("trigger_count"); ok {
@@ -445,6 +459,10 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("condition", alarm.Condition)
 	}
 
+	if alarm.AlarmLevel != nil {
+		_ = d.Set("alarm_level", alarm.AlarmLevel)
+	}
+
 	if alarm.TriggerCount != nil {
 		_ = d.Set("trigger_count", alarm.TriggerCount)
 	}
@@ -547,7 +565,7 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 	request.AlarmId = &alarmId
 
 	mutableArgs := []string{
-		"name", "alarm_targets", "monitor_time", "condition",
+		"name", "alarm_targets", "monitor_time", "condition", "alarm_level",
 		"trigger_count", "alarm_period", "alarm_notice_ids",
 		"status", "message_template", "call_back", "analysis",
 	}
@@ -604,6 +622,11 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 
 		if v, ok := d.GetOk("condition"); ok {
 			request.Condition = helper.String(v.(string))
+			request.AlarmLevel = helper.IntUint64(0)
+		}
+
+		if v, ok := d.GetOkExists("alarm_level"); ok {
+			request.AlarmLevel = helper.IntUint64(v.(int))
 		}
 
 		if v, ok := d.GetOkExists("trigger_count"); ok {
