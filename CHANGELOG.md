@@ -1,3 +1,9 @@
+## 1.81.97 (May 23, 2024)
+
+ENHANCEMENTS:
+
+* tencentcloud_postgresql_instance: support change pg password regardless user ([#2652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2652))
+
 ## 1.81.96 (May 22, 2024)
 
 FEATURES:
