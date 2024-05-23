@@ -121,6 +121,7 @@ const (
 	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
 	PROVIDER_PROTOCOL       = "TENCENTCLOUD_PROTOCOL"
 	PROVIDER_DOMAIN         = "TENCENTCLOUD_DOMAIN"
+	PROVIDER_PROXY          = "TENCENTCLOUD_PROXY"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
@@ -191,6 +192,12 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
+			},
+			"proxy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROXY, nil),
+				Description: "The proxy of the API request.",
 			},
 			//internal version: replace enableBpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			//internal version: replace enableBpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -2009,6 +2016,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		region        string
 		protocol      string
 		domain        string
+		proxy         string
 	)
 
 	if v, ok := d.GetOk("secret_id"); ok {
@@ -2044,6 +2052,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		domain = v.(string)
 	}
 
+	if v, ok := d.GetOk("proxy"); ok {
+		proxy = v.(string)
+	}
+
 	// standard client
 	var tcClient TencentCloudClient
 	tcClient.apiV3Conn = &connectivity.TencentCloudClient{
@@ -2055,6 +2067,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Region:   region,
 		Protocol: protocol,
 		Domain:   domain,
+		Proxy:    proxy,
 	}
 
 	var (
