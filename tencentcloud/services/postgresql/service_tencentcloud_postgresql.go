@@ -623,7 +623,7 @@ func (me *PostgresqlService) DeletePostgresqlInstance(ctx context.Context, insta
 	return err
 }
 
-func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Context, instanceId string, password string) (errRet error) {
+func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Context, instanceId string, user string, password string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewResetAccountPasswordRequest()
 	defer func() {
@@ -632,7 +632,7 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 		}
 	}()
 	request.DBInstanceId = &instanceId
-	request.UserName = helper.String("root")
+	request.UserName = &user
 	request.Password = &password
 
 	ratelimit.Check(request.GetAction())
