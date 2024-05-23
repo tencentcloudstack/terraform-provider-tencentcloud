@@ -32,7 +32,7 @@ In addition to all arguments above, the following attributes are exported:
   * `action` - Action name.
   * `properties` - Action properties.
     * `choice_properties` - Associative properties of this property, they are all required. Note: This field may return null, indicating that no valid value can be obtained.
-      * `choices_value` - The choices which can bse used. This list may be empty.
+      * `choices_value` - The choices which can be used. This list may be empty.
       * `extra_parameter` - Special parameter. Note: This field may return null, indicating that no valid value can be obtained.
         * `choices` - A list of choices which can be used when `Type` is `CHOICE`.
         * `id` - Parameter name. Valid values:- `Action`: this extra parameter is required when modify HTTP header, this action should be a `RewriteAction`.- `StatusCode`: this extra parameter is required when modify HTTP status code, this action should be a `CodeAction`.- `NULL`: this action should be a `NormalAction`.
@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
       * `max` - Max integer value can bse used when property type is `CUSTOM_NUM`. When `Min` and `Max` both are 0, this field is meaningless.
       * `min` - Min integer value can bse used when property type is `CUSTOM_NUM`. When `Min` and `Max` both are 0, this field is meaningless.
       * `name` - Property name.
-      * `type` - Property value type. Valid values:- `CHOICE`: enum type, must select one of the value in `ChoicesValue`.- `TOGGLE`: switch type, must select one of the value in `ChoicesValue`.- `CUSTOM_NUM`: integer type.- `CUSTOM_STRING`: string type.
+      * `type` - Property value type. Valid values:- `CHOICE`: enum type, must select one of the value in `ChoicesValue`.- `TOGGLE`: switch type, must select one of the value in `ChoicesValue`.- `OBJECT`: object type, the `ChoiceProperties` list all properties of the object.- `CUSTOM_NUM`: integer type.- `CUSTOM_STRING`: string type.
     * `choices_value` - The choices which can be used. This list may be empty.
     * `extra_parameter` - Special parameter. Note: This field may return null, indicating that no valid value can be obtained.
       * `choices` - A list of choices which can be used when `Type` is `CHOICE`.

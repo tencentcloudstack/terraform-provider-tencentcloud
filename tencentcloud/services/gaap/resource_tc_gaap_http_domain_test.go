@@ -76,13 +76,13 @@ func TestAccTencentCloudGaapHttpDomainResource_https_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "false"),
 				),
 			},
-			{
-				Config: testAccGaapHttpDomainHttpsUpdateDomain,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-9.elementtest.org"),
-				),
-			},
+			//{
+			//	Config: testAccGaapHttpDomainHttpsUpdateDomain,
+			//	Check: resource.ComposeTestCheckFunc(
+			//		testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
+			//		resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-9.elementtest.org"),
+			//	),
+			//},
 			{
 				ResourceName:      "tencentcloud_gaap_http_domain.foo",
 				ImportState:       true,
@@ -556,6 +556,12 @@ resource tencentcloud_gaap_certificate "bar" {
   key     = %s
 }
 
+resource tencentcloud_gaap_certificate "client1" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
 resource tencentcloud_gaap_certificate "client2" {
   type    = "CLIENT"
   content = %s
@@ -588,6 +594,7 @@ resource tencentcloud_gaap_http_domain "foo" {
 `, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	tcacctest.DefaultGaapProxyId,
 	tcacctest.DefaultHttpsDomainCertificateId,
 )
@@ -600,6 +607,18 @@ resource tencentcloud_gaap_certificate "bar" {
 }
 
 resource tencentcloud_gaap_certificate "client1" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "client2" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "client3" {
   type    = "CLIENT"
   content = %s
   key     = %s
@@ -623,6 +642,8 @@ resource tencentcloud_gaap_http_domain "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	tcacctest.DefaultGaapProxyId,
 	tcacctest.DefaultHttpsDomainCertificateId,

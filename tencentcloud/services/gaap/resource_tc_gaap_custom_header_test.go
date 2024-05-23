@@ -18,7 +18,7 @@ func TestAccTencentCloudGaapCustomHeaderResource_basic(t *testing.T) {
 				Config: testAccGaapCustomHeader,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_custom_header.custom_header", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_custom_header.custom_header", "rule_id", "rule-pgnqsaf3"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_custom_header.custom_header", "rule_id", "rule-hddrxgpd"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_custom_header.custom_header", "headers.#", "2"),
 				),
 			},
@@ -26,7 +26,7 @@ func TestAccTencentCloudGaapCustomHeaderResource_basic(t *testing.T) {
 				Config: testAccGaapCustomHeaderUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_custom_header.custom_header", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_custom_header.custom_header", "rule_id", "rule-pgnqsaf3"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_custom_header.custom_header", "rule_id", "rule-hddrxgpd"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_custom_header.custom_header", "headers.#", "1"),
 				),
 			},
@@ -41,7 +41,7 @@ func TestAccTencentCloudGaapCustomHeaderResource_basic(t *testing.T) {
 
 const testAccGaapCustomHeader = `
 resource "tencentcloud_gaap_custom_header" "custom_header" {
-  rule_id = "rule-pgnqsaf3"
+  rule_id = "rule-hddrxgpd"
   headers {
     header_name  = "HeaderName1"
     header_value = "HeaderValue1"
@@ -55,7 +55,7 @@ resource "tencentcloud_gaap_custom_header" "custom_header" {
 
 const testAccGaapCustomHeaderUpdate = `
 resource "tencentcloud_gaap_custom_header" "custom_header" {
-  rule_id = "rule-pgnqsaf3"
+  rule_id = "rule-hddrxgpd"
   headers {
     header_name  = "HeaderName1"
     header_value = "HeaderValue1"

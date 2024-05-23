@@ -32,7 +32,12 @@ In addition to all arguments above, the following attributes are exported:
   * `area` - Acceleration area of the plan. Valid value: `mainland`, `overseas`.
   * `currency` - Settlement Currency Type. Valid values: `CNY`, `USD`.
   * `flux` - The number of fluxes included in the zone plan. Unit: Byte.
-  * `frequency` - Billing cycle. Valid values:- `y`: Billed by the year.- `m`: Billed by the month.- `h`: Billed by the hour.- `M`: Billed by the minute.- `s`: Billed by the second.
+  * `frequency` - Billing cycle. Valid values:
+- `y`: Billed by the year.
+- `m`: Billed by the month.
+- `h`: Billed by the hour.
+- `M`: Billed by the minute.
+- `s`: Billed by the second.
   * `plan_type` - Plan type.
   * `price` - Price of the plan. Unit: cent.
   * `request` - The number of requests included in the zone plan.

@@ -70,6 +70,7 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_type", "TXT"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_value"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.subdomain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "status"),
 				),
 			},
 			{

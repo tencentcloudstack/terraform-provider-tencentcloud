@@ -1,41 +1,27 @@
 Provides a resource to create a teo origin_group
 
+~> **NOTE:** Please note that `tencentcloud_teo_origin_group` had to undergo incompatible changes in version v1.81.96.
+
 Example Usage
 
 Self origin group
 
 ```hcl
-resource "tencentcloud_teo_origin_group" "origin_group" {
-  zone_id            = "zone-297z8rf93cfw"
-  configuration_type = "weight"
-  origin_group_name  = "test-group"
-  origin_type        = "self"
-  origin_records {
-    area    = []
-    port    = 8080
-    private = false
-    record  = "150.109.8.1"
+resource "tencentcloud_teo_origin_group" "basic" {
+  name    = "keep-group-1"
+  type    = "GENERAL"
+  zone_id = "zone-197z8rf93cfw"
+
+  records {
+    record  = "tf-teo.xyz"
+    type    = "IP_DOMAIN"
     weight  = 100
-  }
-}
-
-```
-
-Cos origin group
-
-```hcl
-resource "tencentcloud_teo_origin_group" "origin_group" {
-  configuration_type = "weight"
-  origin_group_name  = "test"
-  origin_type        = "cos"
-  zone_id            = "zone-2o3h21ed8bpu"
-
-  origin_records {
-    area    = []
-    port    = 0
     private = true
-    record  = "test-ruichaolin-1310708577.cos.ap-nanjing.myqcloud.com"
-    weight  = 100
+
+    private_parameters {
+      name = "SecretAccessKey"
+      value = "test"
+    }
   }
 }
 ```

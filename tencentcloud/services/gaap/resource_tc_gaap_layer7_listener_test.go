@@ -545,6 +545,12 @@ resource tencentcloud_gaap_certificate "foo" {
   key     = %s
 }
 
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
 resource tencentcloud_gaap_certificate "client1" {
   type    = "CLIENT"
   content = %s
@@ -569,6 +575,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	tcacctest.DefaultGaapProxyId)
