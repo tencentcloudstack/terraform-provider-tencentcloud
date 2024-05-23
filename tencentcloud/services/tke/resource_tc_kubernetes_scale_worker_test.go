@@ -236,44 +236,25 @@ variable "default_az" {
   default = "ap-guangzhou-3"
 }
 
-variable "vpc_cidr" {
-  default = "172.16.0.0/16"
+data "tencentcloud_vpc_instances" "vpc" {
+  name = "keep-tke-vpc"
 }
 
-variable "subnet_cidr" {
-  default = "172.16.0.0/20"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "tf_tke_vpc_test"
-  cidr_block = var.vpc_cidr
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  name              = "tf_tke_subnet_test"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.default_az
-  cidr_block        = var.subnet_cidr
-  is_multicast      = false
+data "tencentcloud_vpc_subnets" "subnet" {
+  vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
 }
 
 data "tencentcloud_instance_types" "default" {
-	filter {
-	  name   = "zone"
-	  values = [var.default_az]
-	}
+  filter {
+    name   = "zone"
+    values = [var.default_az]
+  }
   filter {
     name   = "instance-charge-type"
     values = ["POSTPAID_BY_HOUR"]
   }
-	cpu_core_count = 2
-	exclude_sold_out = true
-}
-
-locals {
-  vpc_id     = tencentcloud_vpc.vpc.id
-  subnet_id = tencentcloud_subnet.subnet.id
-  scale_instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  cpu_core_count   = 2
+  exclude_sold_out = true
 }
 
 data "tencentcloud_security_groups" "internal" {
@@ -281,7 +262,10 @@ data "tencentcloud_security_groups" "internal" {
 }
 
 locals {
-  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+  vpc_id              = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
+  subnet_id           = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+  scale_instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  sg_id               = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
 }
 `
 
