@@ -21,7 +21,7 @@ const (
 func TestAccTencentCloudImageResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckImageDestroy,
 		Steps: []resource.TestStep{
@@ -57,7 +57,7 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageExists(ImageInstance),
 					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-keep"),
-					resource.TestCheckResourceAttr(ImageInstance, "instance_id", tcacctest.DefaultCvmId),
+					resource.TestCheckResourceAttrSet(ImageInstance, "instance_id"),
 					resource.TestCheckResourceAttr(ImageInstance, "data_disk_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageInstance, "image_description", "create image with instance"),
 				),
@@ -66,8 +66,6 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Config: testAccImageWithInstanceUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-update-keep"),
-					resource.TestCheckResourceAttr(ImageInstance, "instance_id", tcacctest.DefaultCvmId),
-					resource.TestCheckResourceAttr(ImageInstance, "data_disk_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageInstance, "image_description", "update image with instance"),
 				),
 			},
@@ -151,18 +149,117 @@ const (
 		}`
 
 	testAccImageWithInstance = tcacctest.DefaultCvmImageVariable + `
+
+		data "tencentcloud_availability_zones" "default" {
+		}
+		data "tencentcloud_images" "default" {
+			image_type = ["PUBLIC_IMAGE"]
+			image_name_regex = "Final"
+		}
+		data "tencentcloud_images" "testing" {
+			image_type = ["PUBLIC_IMAGE"]
+		}
+		data "tencentcloud_instance_types" "default" {
+			
+			filter {
+				name = "instance-family"
+				values = ["S4","SA2"]
+			}
+			filter {
+				values = ["ap-guangzhou-7"]
+				name = "zone"
+			}
+			cpu_core_count = 2
+			memory_size = 2
+			exclude_sold_out = true
+		}
+		resource "tencentcloud_vpc" "vpc" {
+			name = "image-vpc"
+			cidr_block = "10.0.0.0/16"
+		}
+		resource "tencentcloud_subnet" "subnet" {
+			vpc_id = tencentcloud_vpc.vpc.id
+			name = "image-subnet"
+			cidr_block = "10.0.0.0/16"
+			availability_zone = "ap-guangzhou-7"
+		}
+		resource "tencentcloud_instance" "cvm_image" {
+			subnet_id = tencentcloud_subnet.subnet.id
+			system_disk_type = "CLOUD_PREMIUM"
+			project_id = 0
+			instance_name = "cvm-image"
+			availability_zone = "ap-guangzhou-7"
+			image_id = data.tencentcloud_images.default.images.0.image_id
+			instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+			vpc_id = tencentcloud_vpc.vpc.id
+			data_disks {
+				delete_with_instance = true
+				data_disk_type = "CLOUD_PREMIUM"
+				data_disk_size = 100
+			}
+		}
+
 		resource "tencentcloud_image" "image_instance" {
   			image_name   		= "image-instance-keep"
-  			instance_id  		= var.cvm_id
-  			data_disk_ids 		= [var.disk_id]
+  			instance_id  		= tencentcloud_instance.cvm_image.id
+  			data_disk_ids 		= [tencentcloud_instance.cvm_image.data_disks.0.data_disk_id]
   			image_description 	= "create image with instance"
 		}`
 
 	testAccImageWithInstanceUpdate = tcacctest.DefaultCvmImageVariable + `
+		data "tencentcloud_availability_zones" "default" {
+		}
+		data "tencentcloud_images" "default" {
+			image_type = ["PUBLIC_IMAGE"]
+			image_name_regex = "Final"
+		}
+		data "tencentcloud_images" "testing" {
+			image_type = ["PUBLIC_IMAGE"]
+		}
+		data "tencentcloud_instance_types" "default" {
+			
+			filter {
+				name = "instance-family"
+				values = ["S4","SA2"]
+			}
+			filter {
+				values = ["ap-guangzhou-7"]
+				name = "zone"
+			}
+			cpu_core_count = 2
+			memory_size = 2
+			exclude_sold_out = true
+		}
+		resource "tencentcloud_vpc" "vpc" {
+			name = "image-vpc"
+			cidr_block = "10.0.0.0/16"
+		}
+		resource "tencentcloud_subnet" "subnet" {
+			vpc_id = tencentcloud_vpc.vpc.id
+			name = "image-subnet"
+			cidr_block = "10.0.0.0/16"
+			availability_zone = "ap-guangzhou-7"
+		}
+		resource "tencentcloud_instance" "cvm_image" {
+			subnet_id = tencentcloud_subnet.subnet.id
+			system_disk_type = "CLOUD_PREMIUM"
+			project_id = 0
+			instance_name = "cvm-image"
+			availability_zone = "ap-guangzhou-7"
+			image_id = data.tencentcloud_images.default.images.0.image_id
+			instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+			vpc_id = tencentcloud_vpc.vpc.id
+			data_disks {
+				delete_with_instance = true
+				data_disk_type = "CLOUD_PREMIUM"
+				data_disk_size = 100
+			}
+		}
+
 		resource "tencentcloud_image" "image_instance" {
   			image_name   		= "image-instance-update-keep"
-  			instance_id  		= var.cvm_id
-  			data_disk_ids 		= [var.disk_id]
+  			instance_id  		= tencentcloud_instance.cvm_image.id
+  			data_disk_ids 		= [tencentcloud_instance.cvm_image.data_disks.0.data_disk_id]
   			image_description 	= "update image with instance"
 		}`
 )
