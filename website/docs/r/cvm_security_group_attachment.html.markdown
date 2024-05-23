@@ -75,8 +75,8 @@ resource "tencentcloud_cvm_security_group_attachment" "example" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, String, ForceNew) Instance id.
-* `security_group_id` - (Required, String, ForceNew) Security group id.
+* `instance_id` - (Required, String, ForceNew) Instance ID. To obtain the instance IDs, you can call DescribeInstances and look for InstanceId in the response.
+* `security_group_id` - (Required, String, ForceNew) ID of the security group to be associated, such as sg-efil73jd. Only one security group can be associated.
 
 ## Attributes Reference
 
