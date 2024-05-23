@@ -88,7 +88,7 @@ const (
 
 	DefaultGaapProxyId              = "link-m9t4yho9"
 	DefaultGaapProxyId2             = "link-2rk61jn5"
-	DefaultGaapSecurityPolicyId     = "sp-b0kh9zml"
+	DefaultGaapSecurityPolicyId     = "sp-6djzh5hz"
 	DefaultGaapRealserverDomainId1  = "rs-620u0ahd"
 	DefaultGaapRealserverDomain1    = "github.com"
 	DefaultGaapRealserverDomainId2  = "rs-9vkyi1av"
@@ -97,7 +97,7 @@ const (
 	DefaultGaapRealserverIp1        = "119.29.29.35"
 	DefaultGaapRealserverIpId2      = "rs-3mlpbuut"
 	DefaultGaapRealserverIp2        = "1.1.1.5"
-	DefaultHttpsDomainCertificateId = "cert-7su3evtr"
+	DefaultHttpsDomainCertificateId = "cert-6sub5wbf"
 
 	DefaultSecurityGroup = "sg-05f7wnhn"
 
