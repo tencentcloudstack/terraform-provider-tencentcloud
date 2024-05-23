@@ -676,6 +676,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
   engine_version    = "13.3"
+  root_username     = "tf-user"
   root_password     = "t1qaA2k1wgvfa3?ZZZ"
   charset           = "LATIN1"
   memory            = 4
@@ -711,7 +712,8 @@ resource "tencentcloud_postgresql_instance" "test" {
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
   engine_version    = "13.3"
-  root_password     = "t1qaA2k1wgvfa3?ZZZ"
+  root_username     = "tf-user"
+  root_password     = "t1qaA2k1wgvfa3?ZZZ3daw"
   charset           = "LATIN1"
   memory            = 8
   cpu               = 4
