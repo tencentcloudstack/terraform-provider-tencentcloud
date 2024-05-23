@@ -15,7 +15,7 @@ Use this data source to query detailed information of gaap real servers status
 
 ```hcl
 data "tencentcloud_gaap_real_servers_status" "real_servers_status" {
-  real_server_ids = ["rs-qcygnwpd"]
+  real_server_ids = ["rs-3mlpbuut"]
 }
 ```
 
