@@ -83,7 +83,7 @@ func ResourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
+				Description: "Set whether the added node participates in scheduling. The default value is 0, which means participating in scheduling; non-0 means not participating in scheduling. After the node initialization is completed, you can execute kubectl uncordon nodename to join the node in scheduling.",
 			},
 			"desired_pod_num": {
 				Type:        schema.TypeInt,
@@ -150,6 +150,18 @@ func ResourceTencentCloudTkeScaleWorker() *schema.Resource {
 					},
 				},
 			},
+			"pre_start_user_script": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
+			},
+			"user_script": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Base64 encoded user script, this script will be executed after the k8s component is run. The user needs to ensure that the script is reentrant and retry logic. The script and its generated log files can be viewed in the /data/ccs_userscript/ path of the node, if required. The node needs to be initialized before it can be added to the schedule. It can be used with the unschedulable parameter. After the final initialization of userScript is completed, add the kubectl uncordon nodename --kubeconfig=/root/.kube/config command to add the node to the schedule.",
+			},
 			// Computed values
 			"worker_instances_list": {
 				Type:     schema.TypeList,
@@ -211,6 +223,14 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	iAdvanced.Labels = GetTkeLabels(d, "labels")
 	if temp, ok := d.GetOk("unschedulable"); ok {
 		iAdvanced.Unschedulable = helper.Int64(int64(temp.(int)))
+	}
+
+	if v, ok := d.GetOk("pre_start_user_script"); ok {
+		iAdvanced.PreStartUserScript = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("user_script"); ok {
+		iAdvanced.UserScript = helper.String(v.(string))
 	}
 
 	if workers, ok := d.GetOk("worker_config"); ok {
@@ -366,6 +386,8 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 			}
 
 			_ = d.Set("unschedulable", helper.PInt64(cvm.InstanceAdvancedSettings.Unschedulable))
+			_ = d.Set("pre_start_user_script", helper.PString(cvm.InstanceAdvancedSettings.PreStartUserScript))
+			_ = d.Set("user_script", helper.PString(cvm.InstanceAdvancedSettings.UserScript))
 
 			if importFlag {
 				_ = d.Set("docker_graph_path", helper.PString(cvm.InstanceAdvancedSettings.DockerGraphPath))

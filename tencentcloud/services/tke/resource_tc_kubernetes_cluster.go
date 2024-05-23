@@ -307,7 +307,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			ForceNew:    true,
 			Optional:    true,
-			Description: "ase64-encoded User Data text, the length limit is 16KB.",
+			Description: "User data provided to instances, needs to be encoded in base64, and the maximum supported data size is 16KB.",
 		},
 		"cam_role_name": {
 			Type:        schema.TypeString,
