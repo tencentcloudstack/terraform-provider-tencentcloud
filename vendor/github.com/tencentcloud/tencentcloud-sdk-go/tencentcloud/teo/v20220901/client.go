@@ -45,6 +45,118 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewBindSecurityTemplateToEntityRequest() (request *BindSecurityTemplateToEntityRequest) {
+    request = &BindSecurityTemplateToEntityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "BindSecurityTemplateToEntity")
+    
+    
+    return
+}
+
+func NewBindSecurityTemplateToEntityResponse() (response *BindSecurityTemplateToEntityResponse) {
+    response = &BindSecurityTemplateToEntityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// BindSecurityTemplateToEntity
+// 操作安全策略模板，支持将域名绑定或换绑到指定的策略模板，或者从指定的策略模板解绑。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) BindSecurityTemplateToEntity(request *BindSecurityTemplateToEntityRequest) (response *BindSecurityTemplateToEntityResponse, err error) {
+    return c.BindSecurityTemplateToEntityWithContext(context.Background(), request)
+}
+
+// BindSecurityTemplateToEntity
+// 操作安全策略模板，支持将域名绑定或换绑到指定的策略模板，或者从指定的策略模板解绑。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) BindSecurityTemplateToEntityWithContext(ctx context.Context, request *BindSecurityTemplateToEntityRequest) (response *BindSecurityTemplateToEntityResponse, err error) {
+    if request == nil {
+        request = NewBindSecurityTemplateToEntityRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BindSecurityTemplateToEntity require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBindSecurityTemplateToEntityResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewBindSharedCNAMERequest() (request *BindSharedCNAMERequest) {
+    request = &BindSharedCNAMERequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "BindSharedCNAME")
+    
+    
+    return
+}
+
+func NewBindSharedCNAMEResponse() (response *BindSharedCNAMEResponse) {
+    response = &BindSharedCNAMEResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// BindSharedCNAME
+// 用于加速域名绑定或解绑共享 CNAME，该功能白名单内测中。
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) BindSharedCNAME(request *BindSharedCNAMERequest) (response *BindSharedCNAMEResponse, err error) {
+    return c.BindSharedCNAMEWithContext(context.Background(), request)
+}
+
+// BindSharedCNAME
+// 用于加速域名绑定或解绑共享 CNAME，该功能白名单内测中。
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) BindSharedCNAMEWithContext(ctx context.Context, request *BindSharedCNAMERequest) (response *BindSharedCNAMEResponse, err error) {
+    if request == nil {
+        request = NewBindSharedCNAMERequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BindSharedCNAME require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBindSharedCNAMEResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewBindZoneToPlanRequest() (request *BindZoneToPlanRequest) {
     request = &BindZoneToPlanRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -59,8 +171,9 @@ func NewBindZoneToPlanRequest() (request *BindZoneToPlanRequest) {
 func NewBindZoneToPlanResponse() (response *BindZoneToPlanResponse) {
     response = &BindZoneToPlanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindZoneToPlan
@@ -121,8 +234,9 @@ func NewCheckCnameStatusRequest() (request *CheckCnameStatusRequest) {
 func NewCheckCnameStatusResponse() (response *CheckCnameStatusResponse) {
     response = &CheckCnameStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckCnameStatus
@@ -175,8 +289,9 @@ func NewCreateAccelerationDomainRequest() (request *CreateAccelerationDomainRequ
 func NewCreateAccelerationDomainResponse() (response *CreateAccelerationDomainResponse) {
     response = &CreateAccelerationDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAccelerationDomain
@@ -190,14 +305,19 @@ func NewCreateAccelerationDomainResponse() (response *CreateAccelerationDomainRe
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INVALIDPARAMETER_CONFLICTHOSTORIGIN = "InvalidParameter.ConflictHostOrigin"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_INVALIDACCELERATETYPE = "InvalidParameter.InvalidAccelerateType"
 //  INVALIDPARAMETER_INVALIDAWSPRIVATEACCESS = "InvalidParameter.InvalidAwsPrivateAccess"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDCLIENTIPORIGIN = "InvalidParameter.InvalidClientIpOrigin"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_INVALIDPRIVATEACCESSPARAMS = "InvalidParameter.InvalidPrivateAccessParams"
+//  INVALIDPARAMETER_INVALIDPRIVATEACCESSSWITCH = "InvalidParameter.InvalidPrivateAccessSwitch"
 //  INVALIDPARAMETER_INVALIDQUICBILLING = "InvalidParameter.InvalidQuicBilling"
+//  INVALIDPARAMETER_INVALIDSERVERNAME = "InvalidParameter.InvalidServerName"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
 //  INVALIDPARAMETER_SPACENOTBINDORIGIN = "InvalidParameter.SpaceNotBindOrigin"
@@ -219,7 +339,10 @@ func NewCreateAccelerationDomainResponse() (response *CreateAccelerationDomainRe
 //  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_INVALIDADVANCEDDEFENSEZONEAREA = "OperationDenied.InvalidAdvancedDefenseZoneArea"
+//  OPERATIONDENIED_LOADBALANCESTATUSNOTINONLINE = "OperationDenied.LoadBalanceStatusNotInOnline"
+//  OPERATIONDENIED_RECORDISFORBIDDEN = "OperationDenied.RecordIsForbidden"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_DNSRECORD = "ResourceInUse.DnsRecord"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -243,14 +366,19 @@ func (c *Client) CreateAccelerationDomain(request *CreateAccelerationDomainReque
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INVALIDPARAMETER_CONFLICTHOSTORIGIN = "InvalidParameter.ConflictHostOrigin"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_INVALIDACCELERATETYPE = "InvalidParameter.InvalidAccelerateType"
 //  INVALIDPARAMETER_INVALIDAWSPRIVATEACCESS = "InvalidParameter.InvalidAwsPrivateAccess"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDCLIENTIPORIGIN = "InvalidParameter.InvalidClientIpOrigin"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_INVALIDPRIVATEACCESSPARAMS = "InvalidParameter.InvalidPrivateAccessParams"
+//  INVALIDPARAMETER_INVALIDPRIVATEACCESSSWITCH = "InvalidParameter.InvalidPrivateAccessSwitch"
 //  INVALIDPARAMETER_INVALIDQUICBILLING = "InvalidParameter.InvalidQuicBilling"
+//  INVALIDPARAMETER_INVALIDSERVERNAME = "InvalidParameter.InvalidServerName"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
 //  INVALIDPARAMETER_SPACENOTBINDORIGIN = "InvalidParameter.SpaceNotBindOrigin"
@@ -272,7 +400,10 @@ func (c *Client) CreateAccelerationDomain(request *CreateAccelerationDomainReque
 //  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_INVALIDADVANCEDDEFENSEZONEAREA = "OperationDenied.InvalidAdvancedDefenseZoneArea"
+//  OPERATIONDENIED_LOADBALANCESTATUSNOTINONLINE = "OperationDenied.LoadBalanceStatusNotInOnline"
+//  OPERATIONDENIED_RECORDISFORBIDDEN = "OperationDenied.RecordIsForbidden"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_DNSRECORD = "ResourceInUse.DnsRecord"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -311,8 +442,9 @@ func NewCreateAliasDomainRequest() (request *CreateAliasDomainRequest) {
 func NewCreateAliasDomainResponse() (response *CreateAliasDomainResponse) {
     response = &CreateAliasDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAliasDomain
@@ -329,16 +461,21 @@ func NewCreateAliasDomainResponse() (response *CreateAliasDomainResponse) {
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDALIASDOMAINNAME = "InvalidParameterValue.InvalidAliasDomainName"
+//  INVALIDPARAMETERVALUE_INVALIDALIASNAMESUFFIX = "InvalidParameterValue.InvalidAliasNameSuffix"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_DOMAINISBLOCKED = "OperationDenied.DomainIsBlocked"
 //  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
 //  RESOURCEINUSE_ALIASNAME = "ResourceInUse.AliasName"
 //  RESOURCEINUSE_DUPLICATENAME = "ResourceInUse.DuplicateName"
 //  RESOURCEINUSE_ZONE = "ResourceInUse.Zone"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_DOMAINALREADYEXISTS = "ResourceUnavailable.DomainAlreadyExists"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNSUPPORTEDOPERATION_TARGETNAMEORIGINTYPECOS = "UnsupportedOperation.TargetNameOriginTypeCos"
 func (c *Client) CreateAliasDomain(request *CreateAliasDomainRequest) (response *CreateAliasDomainResponse, err error) {
     return c.CreateAliasDomainWithContext(context.Background(), request)
@@ -358,16 +495,21 @@ func (c *Client) CreateAliasDomain(request *CreateAliasDomainRequest) (response 
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDALIASDOMAINNAME = "InvalidParameterValue.InvalidAliasDomainName"
+//  INVALIDPARAMETERVALUE_INVALIDALIASNAMESUFFIX = "InvalidParameterValue.InvalidAliasNameSuffix"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_DOMAINISBLOCKED = "OperationDenied.DomainIsBlocked"
 //  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
 //  RESOURCEINUSE_ALIASNAME = "ResourceInUse.AliasName"
 //  RESOURCEINUSE_DUPLICATENAME = "ResourceInUse.DuplicateName"
 //  RESOURCEINUSE_ZONE = "ResourceInUse.Zone"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_DOMAINALREADYEXISTS = "ResourceUnavailable.DomainAlreadyExists"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNSUPPORTEDOPERATION_TARGETNAMEORIGINTYPECOS = "UnsupportedOperation.TargetNameOriginTypeCos"
 func (c *Client) CreateAliasDomainWithContext(ctx context.Context, request *CreateAliasDomainRequest) (response *CreateAliasDomainResponse, err error) {
     if request == nil {
@@ -399,20 +541,26 @@ func NewCreateApplicationProxyRequest() (request *CreateApplicationProxyRequest)
 func NewCreateApplicationProxyResponse() (response *CreateApplicationProxyResponse) {
     response = &CreateApplicationProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateApplicationProxy
-// 创建应用代理
+// 本接口为旧版，如需调用请尽快迁移至新版 [创建四层代理实例](https://cloud.tencent.com/document/product/1552/103417) 。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_PROXYNAMEDUPLICATING = "InvalidParameter.ProxyNameDuplicating"
+//  INVALIDPARAMETER_PROXYNAMENOTMATCHED = "InvalidParameter.ProxyNameNotMatched"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_USERQUOTALIMITED = "LimitExceeded.UserQuotaLimited"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_PLATTYPEIPACCELERATEMAINLANDNOTSUPPORT = "OperationDenied.PlatTypeIPAccelerateMainlandNotSupport"
+//  OPERATIONDENIED_ZONENOTACTIVE = "OperationDenied.ZoneNotActive"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateApplicationProxy(request *CreateApplicationProxyRequest) (response *CreateApplicationProxyResponse, err error) {
@@ -420,15 +568,20 @@ func (c *Client) CreateApplicationProxy(request *CreateApplicationProxyRequest) 
 }
 
 // CreateApplicationProxy
-// 创建应用代理
+// 本接口为旧版，如需调用请尽快迁移至新版 [创建四层代理实例](https://cloud.tencent.com/document/product/1552/103417) 。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_PROXYNAMEDUPLICATING = "InvalidParameter.ProxyNameDuplicating"
+//  INVALIDPARAMETER_PROXYNAMENOTMATCHED = "InvalidParameter.ProxyNameNotMatched"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_USERQUOTALIMITED = "LimitExceeded.UserQuotaLimited"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_PLATTYPEIPACCELERATEMAINLANDNOTSUPPORT = "OperationDenied.PlatTypeIPAccelerateMainlandNotSupport"
+//  OPERATIONDENIED_ZONENOTACTIVE = "OperationDenied.ZoneNotActive"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateApplicationProxyWithContext(ctx context.Context, request *CreateApplicationProxyRequest) (response *CreateApplicationProxyResponse, err error) {
@@ -461,18 +614,29 @@ func NewCreateApplicationProxyRuleRequest() (request *CreateApplicationProxyRule
 func NewCreateApplicationProxyRuleResponse() (response *CreateApplicationProxyRuleResponse) {
     response = &CreateApplicationProxyRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateApplicationProxyRule
-// 创建应用代理规则
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [创建四层代理转发规则
+//
+// ](https://cloud.tencent.com/document/product/1552/103416) 。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDRULEPROTO = "InvalidParameter.InvalidRuleProto"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_RULEORIGINFORMATERROR = "InvalidParameter.RuleOriginFormatError"
+//  INVALIDPARAMETER_RULEORIGINMULTIDOMAIN = "InvalidParameter.RuleOriginMultiDomain"
+//  INVALIDPARAMETER_RULEORIGINPORTINTEGER = "InvalidParameter.RuleOriginPortInteger"
+//  INVALIDPARAMETER_RULEORIGINVALUEERROR = "InvalidParameter.RuleOriginValueError"
+//  INVALIDPARAMETER_RULEPORTDUPLICATING = "InvalidParameter.RulePortDuplicating"
+//  INVALIDPARAMETER_RULEPORTGROUP = "InvalidParameter.RulePortGroup"
+//  INVALIDPARAMETER_RULEPORTINTEGER = "InvalidParameter.RulePortInteger"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -481,13 +645,23 @@ func (c *Client) CreateApplicationProxyRule(request *CreateApplicationProxyRuleR
 }
 
 // CreateApplicationProxyRule
-// 创建应用代理规则
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [创建四层代理转发规则
+//
+// ](https://cloud.tencent.com/document/product/1552/103416) 。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDRULEPROTO = "InvalidParameter.InvalidRuleProto"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_RULEORIGINFORMATERROR = "InvalidParameter.RuleOriginFormatError"
+//  INVALIDPARAMETER_RULEORIGINMULTIDOMAIN = "InvalidParameter.RuleOriginMultiDomain"
+//  INVALIDPARAMETER_RULEORIGINPORTINTEGER = "InvalidParameter.RuleOriginPortInteger"
+//  INVALIDPARAMETER_RULEORIGINVALUEERROR = "InvalidParameter.RuleOriginValueError"
+//  INVALIDPARAMETER_RULEPORTDUPLICATING = "InvalidParameter.RulePortDuplicating"
+//  INVALIDPARAMETER_RULEPORTGROUP = "InvalidParameter.RulePortGroup"
+//  INVALIDPARAMETER_RULEPORTINTEGER = "InvalidParameter.RulePortInteger"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -507,6 +681,298 @@ func (c *Client) CreateApplicationProxyRuleWithContext(ctx context.Context, requ
     return
 }
 
+func NewCreateCLSIndexRequest() (request *CreateCLSIndexRequest) {
+    request = &CreateCLSIndexRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateCLSIndex")
+    
+    
+    return
+}
+
+func NewCreateCLSIndexResponse() (response *CreateCLSIndexResponse) {
+    response = &CreateCLSIndexResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCLSIndex
+// 针对指定实时日志投递任务（task-id），在对应的腾讯云 CLS 日志主题中创建投递日志字段对应的键值索引。如果您在腾讯云 CLS 已经创建索引，本接口将采用合并的方式追加索引。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGSETFAILED = "FailedOperation.CreateClsLogSetFailed"
+func (c *Client) CreateCLSIndex(request *CreateCLSIndexRequest) (response *CreateCLSIndexResponse, err error) {
+    return c.CreateCLSIndexWithContext(context.Background(), request)
+}
+
+// CreateCLSIndex
+// 针对指定实时日志投递任务（task-id），在对应的腾讯云 CLS 日志主题中创建投递日志字段对应的键值索引。如果您在腾讯云 CLS 已经创建索引，本接口将采用合并的方式追加索引。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGSETFAILED = "FailedOperation.CreateClsLogSetFailed"
+func (c *Client) CreateCLSIndexWithContext(ctx context.Context, request *CreateCLSIndexRequest) (response *CreateCLSIndexResponse, err error) {
+    if request == nil {
+        request = NewCreateCLSIndexRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCLSIndex require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCLSIndexResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateConfigGroupVersionRequest() (request *CreateConfigGroupVersionRequest) {
+    request = &CreateConfigGroupVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateConfigGroupVersion")
+    
+    
+    return
+}
+
+func NewCreateConfigGroupVersionResponse() (response *CreateConfigGroupVersionResponse) {
+    response = &CreateConfigGroupVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConfigGroupVersion
+// 在版本管理模式下，用于创建指定配置组的新版本。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CONFIGCONDITIONSYNTAXERROR = "FailedOperation.ConfigConditionSyntaxError"
+//  FAILEDOPERATION_CONFIGCONDITIONUNKNOWNTARGET = "FailedOperation.ConfigConditionUnknownTarget"
+//  FAILEDOPERATION_CONFIGCONDITIONVALUEEMPTYERROR = "FailedOperation.ConfigConditionValueEmptyError"
+//  FAILEDOPERATION_CONFIGFIELDTYPEERROR = "FailedOperation.ConfigFieldTypeError"
+//  FAILEDOPERATION_CONFIGFORMATERROR = "FailedOperation.ConfigFormatError"
+//  FAILEDOPERATION_CONFIGMALFORMEDCONTENT = "FailedOperation.ConfigMalformedContent"
+//  FAILEDOPERATION_CONFIGPARAMVALIDATEERRORS = "FailedOperation.ConfigParamValidateErrors"
+//  FAILEDOPERATION_CONFIGUNKNOWNFIELD = "FailedOperation.ConfigUnknownField"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDFORMATVERSION = "FailedOperation.ConfigUnsupportedFormatVersion"
+//  FAILEDOPERATION_MISSINGCONFIGCHUNK = "FailedOperation.MissingConfigChunk"
+//  FAILEDOPERATION_UNKNOWNCONFIGGROUPTYPE = "FailedOperation.UnknownConfigGroupType"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DUPLICATERULE = "InvalidParameter.DuplicateRule"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGACTION = "InvalidParameter.InvalidCacheKeyQueryStringAction"
+//  INVALIDPARAMETER_INVALIDCONDITIONS = "InvalidParameter.InvalidConditions"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGEFOLLOWORIGIN = "InvalidParameter.InvalidMaxAgeFollowOrigin"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUG = "InvalidParameter.InvalidStandardDebug"
+//  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_STATUSCODECACHEINVALIDSTATUSCODE = "InvalidParameter.StatusCodeCacheInvalidStatusCode"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_RULELIMITEXCEEDED = "LimitExceeded.RuleLimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTINVERSIONCONTROLWHITELIST = "OperationDenied.NotInVersionControlWhiteList"
+//  OPERATIONDENIED_OWNERSHIPVERIFICATIONNOTPASSED = "OperationDenied.OwnershipVerificationNotPassed"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
+//  OPERATIONDENIED_WORKMODENOTINVERSIONCONTROL = "OperationDenied.WorkModeNotInVersionControl"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_FUNCTIONNOTFOUND = "ResourceUnavailable.FunctionNotFound"
+func (c *Client) CreateConfigGroupVersion(request *CreateConfigGroupVersionRequest) (response *CreateConfigGroupVersionResponse, err error) {
+    return c.CreateConfigGroupVersionWithContext(context.Background(), request)
+}
+
+// CreateConfigGroupVersion
+// 在版本管理模式下，用于创建指定配置组的新版本。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CONFIGCONDITIONSYNTAXERROR = "FailedOperation.ConfigConditionSyntaxError"
+//  FAILEDOPERATION_CONFIGCONDITIONUNKNOWNTARGET = "FailedOperation.ConfigConditionUnknownTarget"
+//  FAILEDOPERATION_CONFIGCONDITIONVALUEEMPTYERROR = "FailedOperation.ConfigConditionValueEmptyError"
+//  FAILEDOPERATION_CONFIGFIELDTYPEERROR = "FailedOperation.ConfigFieldTypeError"
+//  FAILEDOPERATION_CONFIGFORMATERROR = "FailedOperation.ConfigFormatError"
+//  FAILEDOPERATION_CONFIGMALFORMEDCONTENT = "FailedOperation.ConfigMalformedContent"
+//  FAILEDOPERATION_CONFIGPARAMVALIDATEERRORS = "FailedOperation.ConfigParamValidateErrors"
+//  FAILEDOPERATION_CONFIGUNKNOWNFIELD = "FailedOperation.ConfigUnknownField"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDFORMATVERSION = "FailedOperation.ConfigUnsupportedFormatVersion"
+//  FAILEDOPERATION_MISSINGCONFIGCHUNK = "FailedOperation.MissingConfigChunk"
+//  FAILEDOPERATION_UNKNOWNCONFIGGROUPTYPE = "FailedOperation.UnknownConfigGroupType"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DUPLICATERULE = "InvalidParameter.DuplicateRule"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGACTION = "InvalidParameter.InvalidCacheKeyQueryStringAction"
+//  INVALIDPARAMETER_INVALIDCONDITIONS = "InvalidParameter.InvalidConditions"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGEFOLLOWORIGIN = "InvalidParameter.InvalidMaxAgeFollowOrigin"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUG = "InvalidParameter.InvalidStandardDebug"
+//  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_STATUSCODECACHEINVALIDSTATUSCODE = "InvalidParameter.StatusCodeCacheInvalidStatusCode"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_RULELIMITEXCEEDED = "LimitExceeded.RuleLimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTINVERSIONCONTROLWHITELIST = "OperationDenied.NotInVersionControlWhiteList"
+//  OPERATIONDENIED_OWNERSHIPVERIFICATIONNOTPASSED = "OperationDenied.OwnershipVerificationNotPassed"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
+//  OPERATIONDENIED_WORKMODENOTINVERSIONCONTROL = "OperationDenied.WorkModeNotInVersionControl"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_FUNCTIONNOTFOUND = "ResourceUnavailable.FunctionNotFound"
+func (c *Client) CreateConfigGroupVersionWithContext(ctx context.Context, request *CreateConfigGroupVersionRequest) (response *CreateConfigGroupVersionResponse, err error) {
+    if request == nil {
+        request = NewCreateConfigGroupVersionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConfigGroupVersion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConfigGroupVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateL4ProxyRequest() (request *CreateL4ProxyRequest) {
+    request = &CreateL4ProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateL4Proxy")
+    
+    
+    return
+}
+
+func NewCreateL4ProxyResponse() (response *CreateL4ProxyResponse) {
+    response = &CreateL4ProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateL4Proxy
+// 用于创建四层代理实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PROXYNAMEDUPLICATING = "InvalidParameter.ProxyNameDuplicating"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) CreateL4Proxy(request *CreateL4ProxyRequest) (response *CreateL4ProxyResponse, err error) {
+    return c.CreateL4ProxyWithContext(context.Background(), request)
+}
+
+// CreateL4Proxy
+// 用于创建四层代理实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PROXYNAMEDUPLICATING = "InvalidParameter.ProxyNameDuplicating"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) CreateL4ProxyWithContext(ctx context.Context, request *CreateL4ProxyRequest) (response *CreateL4ProxyResponse, err error) {
+    if request == nil {
+        request = NewCreateL4ProxyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateL4Proxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateL4ProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateL4ProxyRulesRequest() (request *CreateL4ProxyRulesRequest) {
+    request = &CreateL4ProxyRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateL4ProxyRules")
+    
+    
+    return
+}
+
+func NewCreateL4ProxyRulesResponse() (response *CreateL4ProxyRulesResponse) {
+    response = &CreateL4ProxyRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateL4ProxyRules
+// 用于创建四层代理实例规则，支持单条或者批量创建。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDORIGINVALUE = "InvalidParameter.InvalidOriginValue"
+//  INVALIDPARAMETER_RULEPORTDUPLICATING = "InvalidParameter.RulePortDuplicating"
+//  LIMITEXCEEDED_PROXYRULESLIMITEXCEEDED = "LimitExceeded.ProxyRulesLimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PORTLACKOFRESOURCES = "OperationDenied.L4PortLackOfResources"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateL4ProxyRules(request *CreateL4ProxyRulesRequest) (response *CreateL4ProxyRulesResponse, err error) {
+    return c.CreateL4ProxyRulesWithContext(context.Background(), request)
+}
+
+// CreateL4ProxyRules
+// 用于创建四层代理实例规则，支持单条或者批量创建。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDORIGINVALUE = "InvalidParameter.InvalidOriginValue"
+//  INVALIDPARAMETER_RULEPORTDUPLICATING = "InvalidParameter.RulePortDuplicating"
+//  LIMITEXCEEDED_PROXYRULESLIMITEXCEEDED = "LimitExceeded.ProxyRulesLimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PORTLACKOFRESOURCES = "OperationDenied.L4PortLackOfResources"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateL4ProxyRulesWithContext(ctx context.Context, request *CreateL4ProxyRulesRequest) (response *CreateL4ProxyRulesResponse, err error) {
+    if request == nil {
+        request = NewCreateL4ProxyRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateL4ProxyRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateL4ProxyRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateOriginGroupRequest() (request *CreateOriginGroupRequest) {
     request = &CreateOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -521,18 +987,29 @@ func NewCreateOriginGroupRequest() (request *CreateOriginGroupRequest) {
 func NewCreateOriginGroupResponse() (response *CreateOriginGroupResponse) {
     response = &CreateOriginGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOriginGroup
-// 创建源站组
+// 创建源站组，以源站组的方式管理业务源站。此处配置的源站组可于**添加加速域名**和**四层代理**等功能中引用。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INVALIDPARAMETER_HOSTHEADERINVALID = "InvalidParameter.HostHeaderInvalid"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
+//  INVALIDPARAMETER_INVALIDORIGINGROUPTYPE = "InvalidParameter.InvalidOriginGroupType"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_ORIGINNAMEEXISTS = "InvalidParameter.OriginNameExists"
+//  INVALIDPARAMETER_ORIGINRECORDFORMATERROR = "InvalidParameter.OriginRecordFormatError"
+//  INVALIDPARAMETER_ORIGINRECORDWEIGHTVALUE = "InvalidParameter.OriginRecordWeightValue"
+//  INVALIDPARAMETER_ORIGINTHIRDPARTYPARAMFORMATERROR = "InvalidParameter.OriginThirdPartyParamFormatError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_LOADBALANCINGZONEISNOTACTIVE = "OperationDenied.LoadBalancingZoneIsNotActive"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) CreateOriginGroup(request *CreateOriginGroupRequest) (response *CreateOriginGroupResponse, err error) {
@@ -540,13 +1017,23 @@ func (c *Client) CreateOriginGroup(request *CreateOriginGroupRequest) (response 
 }
 
 // CreateOriginGroup
-// 创建源站组
+// 创建源站组，以源站组的方式管理业务源站。此处配置的源站组可于**添加加速域名**和**四层代理**等功能中引用。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INVALIDPARAMETER_HOSTHEADERINVALID = "InvalidParameter.HostHeaderInvalid"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
+//  INVALIDPARAMETER_INVALIDORIGINGROUPTYPE = "InvalidParameter.InvalidOriginGroupType"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_ORIGINNAMEEXISTS = "InvalidParameter.OriginNameExists"
+//  INVALIDPARAMETER_ORIGINRECORDFORMATERROR = "InvalidParameter.OriginRecordFormatError"
+//  INVALIDPARAMETER_ORIGINRECORDWEIGHTVALUE = "InvalidParameter.OriginRecordWeightValue"
+//  INVALIDPARAMETER_ORIGINTHIRDPARTYPARAMFORMATERROR = "InvalidParameter.OriginThirdPartyParamFormatError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_LOADBALANCINGZONEISNOTACTIVE = "OperationDenied.LoadBalancingZoneIsNotActive"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) CreateOriginGroupWithContext(ctx context.Context, request *CreateOriginGroupRequest) (response *CreateOriginGroupResponse, err error) {
@@ -565,6 +1052,69 @@ func (c *Client) CreateOriginGroupWithContext(ctx context.Context, request *Crea
     return
 }
 
+func NewCreatePlanRequest() (request *CreatePlanRequest) {
+    request = &CreatePlanRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreatePlan")
+    
+    
+    return
+}
+
+func NewCreatePlanResponse() (response *CreatePlanResponse) {
+    response = &CreatePlanResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreatePlan
+// 若您需要使用 Edgeone 产品，您需要通过此接口创建计费套餐。
+//
+// > 创建套餐后，您需要通过 [CreateZone](https://cloud.tencent.com/document/product/1552/80719) 完成创建站点，绑定套餐的流程，Edgeone 才能正常提供服务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDAUTOUSEVOUCHER = "InvalidParameter.InvalidAutoUseVoucher"
+//  INVALIDPARAMETER_INVALIDPERIOD = "InvalidParameter.InvalidPeriod"
+//  INVALIDPARAMETER_INVALIDPLANTYPE = "InvalidParameter.InvalidPlanType"
+//  INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
+//  OPERATIONDENIED_PLEASECONTACTBUSINESSPERSONNEL = "OperationDenied.PleaseContactBusinessPersonnel"
+func (c *Client) CreatePlan(request *CreatePlanRequest) (response *CreatePlanResponse, err error) {
+    return c.CreatePlanWithContext(context.Background(), request)
+}
+
+// CreatePlan
+// 若您需要使用 Edgeone 产品，您需要通过此接口创建计费套餐。
+//
+// > 创建套餐后，您需要通过 [CreateZone](https://cloud.tencent.com/document/product/1552/80719) 完成创建站点，绑定套餐的流程，Edgeone 才能正常提供服务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDAUTOUSEVOUCHER = "InvalidParameter.InvalidAutoUseVoucher"
+//  INVALIDPARAMETER_INVALIDPERIOD = "InvalidParameter.InvalidPeriod"
+//  INVALIDPARAMETER_INVALIDPLANTYPE = "InvalidParameter.InvalidPlanType"
+//  INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
+//  OPERATIONDENIED_PLEASECONTACTBUSINESSPERSONNEL = "OperationDenied.PleaseContactBusinessPersonnel"
+func (c *Client) CreatePlanWithContext(ctx context.Context, request *CreatePlanRequest) (response *CreatePlanResponse, err error) {
+    if request == nil {
+        request = NewCreatePlanRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePlan require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreatePlanResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreatePlanForZoneRequest() (request *CreatePlanForZoneRequest) {
     request = &CreatePlanForZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -579,8 +1129,9 @@ func NewCreatePlanForZoneRequest() (request *CreatePlanForZoneRequest) {
 func NewCreatePlanForZoneResponse() (response *CreatePlanForZoneResponse) {
     response = &CreatePlanForZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePlanForZone
@@ -637,8 +1188,9 @@ func NewCreatePrefetchTaskRequest() (request *CreatePrefetchTaskRequest) {
 func NewCreatePrefetchTaskResponse() (response *CreatePrefetchTaskResponse) {
     response = &CreatePrefetchTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrefetchTask
@@ -657,6 +1209,7 @@ func NewCreatePrefetchTaskResponse() (response *CreatePrefetchTaskResponse) {
 //  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) CreatePrefetchTask(request *CreatePrefetchTaskRequest) (response *CreatePrefetchTaskResponse, err error) {
     return c.CreatePrefetchTaskWithContext(context.Background(), request)
@@ -678,6 +1231,7 @@ func (c *Client) CreatePrefetchTask(request *CreatePrefetchTaskRequest) (respons
 //  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) CreatePrefetchTaskWithContext(ctx context.Context, request *CreatePrefetchTaskRequest) (response *CreatePrefetchTaskResponse, err error) {
     if request == nil {
@@ -709,8 +1263,9 @@ func NewCreatePurgeTaskRequest() (request *CreatePurgeTaskRequest) {
 func NewCreatePurgeTaskResponse() (response *CreatePurgeTaskResponse) {
     response = &CreatePurgeTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePurgeTask
@@ -734,6 +1289,7 @@ func NewCreatePurgeTaskResponse() (response *CreatePurgeTaskResponse) {
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
 //  LIMITEXCEEDED_PACKNOTALLOW = "LimitExceeded.PackNotAllow"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) CreatePurgeTask(request *CreatePurgeTaskRequest) (response *CreatePurgeTaskResponse, err error) {
     return c.CreatePurgeTaskWithContext(context.Background(), request)
@@ -760,6 +1316,7 @@ func (c *Client) CreatePurgeTask(request *CreatePurgeTaskRequest) (response *Cre
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
 //  LIMITEXCEEDED_PACKNOTALLOW = "LimitExceeded.PackNotAllow"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) CreatePurgeTaskWithContext(ctx context.Context, request *CreatePurgeTaskRequest) (response *CreatePurgeTaskResponse, err error) {
     if request == nil {
@@ -773,6 +1330,99 @@ func (c *Client) CreatePurgeTaskWithContext(ctx context.Context, request *Create
     request.SetContext(ctx)
     
     response = NewCreatePurgeTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRealtimeLogDeliveryTaskRequest() (request *CreateRealtimeLogDeliveryTaskRequest) {
+    request = &CreateRealtimeLogDeliveryTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateRealtimeLogDeliveryTask")
+    
+    
+    return
+}
+
+func NewCreateRealtimeLogDeliveryTaskResponse() (response *CreateRealtimeLogDeliveryTaskResponse) {
+    response = &CreateRealtimeLogDeliveryTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRealtimeLogDeliveryTask
+// 通过本接口创建实时日志投递任务。本接口有如下限制：
+//
+// 同一个实体（七层域名或者四层代理实例）在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到一个实时日志投递任务中。建议先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110)  接口根据实体查询实时日志投递任务列表，检查实体是否已经被添加到另一实时日志投递任务中。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGSETFAILED = "FailedOperation.CreateClsLogSetFailed"
+//  FAILEDOPERATION_CREATECLSLOGTOPICTASKFAILED = "FailedOperation.CreateClsLogTopicTaskFailed"
+//  FAILEDOPERATION_CREATELOGTOPICTASKAUTHFAILURE = "FailedOperation.CreateLogTopicTaskAuthFailure"
+//  FAILEDOPERATION_REALTIMELOGAUTHFAILURE = "FailedOperation.RealtimeLogAuthFailure"
+//  FAILEDOPERATION_REALTIMELOGNOTFOUND = "FailedOperation.RealtimeLogNotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFIELDDELIMITER = "InvalidParameter.InvalidLogFormatFieldDelimiter"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFORMATTYPE = "InvalidParameter.InvalidLogFormatFormatType"
+//  INVALIDPARAMETER_INVALIDLOGFORMATRECORDDELIMITER = "InvalidParameter.InvalidLogFormatRecordDelimiter"
+//  INVALIDPARAMETER_REALTIMELOGENTITYALREADYCREATED = "InvalidParameter.RealtimeLogEntityAlreadyCreated"
+//  INVALIDPARAMETER_REALTIMELOGINVALIDDELIVERYAREA = "InvalidParameter.RealtimeLogInvalidDeliveryArea"
+//  INVALIDPARAMETER_REALTIMELOGINVALIDLOGTYPE = "InvalidParameter.RealtimeLogInvalidLogType"
+//  INVALIDPARAMETER_REALTIMELOGINVALIDTASKTYPE = "InvalidParameter.RealtimeLogInvalidTaskType"
+//  INVALIDPARAMETER_REALTIMELOGNUMSEXCEEDLIMIT = "InvalidParameter.RealtimeLogNumsExceedLimit"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) CreateRealtimeLogDeliveryTask(request *CreateRealtimeLogDeliveryTaskRequest) (response *CreateRealtimeLogDeliveryTaskResponse, err error) {
+    return c.CreateRealtimeLogDeliveryTaskWithContext(context.Background(), request)
+}
+
+// CreateRealtimeLogDeliveryTask
+// 通过本接口创建实时日志投递任务。本接口有如下限制：
+//
+// 同一个实体（七层域名或者四层代理实例）在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到一个实时日志投递任务中。建议先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110)  接口根据实体查询实时日志投递任务列表，检查实体是否已经被添加到另一实时日志投递任务中。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGSETFAILED = "FailedOperation.CreateClsLogSetFailed"
+//  FAILEDOPERATION_CREATECLSLOGTOPICTASKFAILED = "FailedOperation.CreateClsLogTopicTaskFailed"
+//  FAILEDOPERATION_CREATELOGTOPICTASKAUTHFAILURE = "FailedOperation.CreateLogTopicTaskAuthFailure"
+//  FAILEDOPERATION_REALTIMELOGAUTHFAILURE = "FailedOperation.RealtimeLogAuthFailure"
+//  FAILEDOPERATION_REALTIMELOGNOTFOUND = "FailedOperation.RealtimeLogNotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFIELDDELIMITER = "InvalidParameter.InvalidLogFormatFieldDelimiter"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFORMATTYPE = "InvalidParameter.InvalidLogFormatFormatType"
+//  INVALIDPARAMETER_INVALIDLOGFORMATRECORDDELIMITER = "InvalidParameter.InvalidLogFormatRecordDelimiter"
+//  INVALIDPARAMETER_REALTIMELOGENTITYALREADYCREATED = "InvalidParameter.RealtimeLogEntityAlreadyCreated"
+//  INVALIDPARAMETER_REALTIMELOGINVALIDDELIVERYAREA = "InvalidParameter.RealtimeLogInvalidDeliveryArea"
+//  INVALIDPARAMETER_REALTIMELOGINVALIDLOGTYPE = "InvalidParameter.RealtimeLogInvalidLogType"
+//  INVALIDPARAMETER_REALTIMELOGINVALIDTASKTYPE = "InvalidParameter.RealtimeLogInvalidTaskType"
+//  INVALIDPARAMETER_REALTIMELOGNUMSEXCEEDLIMIT = "InvalidParameter.RealtimeLogNumsExceedLimit"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) CreateRealtimeLogDeliveryTaskWithContext(ctx context.Context, request *CreateRealtimeLogDeliveryTaskRequest) (response *CreateRealtimeLogDeliveryTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateRealtimeLogDeliveryTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRealtimeLogDeliveryTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRealtimeLogDeliveryTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -791,8 +1441,9 @@ func NewCreateRuleRequest() (request *CreateRuleRequest) {
 func NewCreateRuleResponse() (response *CreateRuleResponse) {
     response = &CreateRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRule
@@ -803,17 +1454,21 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ACCESSREDIRECTREGEXERROR = "InvalidParameter.AccessRedirectRegexError"
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
 //  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
 //  INVALIDPARAMETER_ERRACTIONUNSUPPORTTARGET = "InvalidParameter.ErrActionUnsupportTarget"
 //  INVALIDPARAMETER_ERRINVALIDACTION = "InvalidParameter.ErrInvalidAction"
+//  INVALIDPARAMETER_ERRINVALIDACTIONORIGINPRIVATEADDRESS = "InvalidParameter.ErrInvalidActionOriginPrivateAddress"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMACTION = "InvalidParameter.ErrInvalidActionParamAction"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMBADVALUETYPE = "InvalidParameter.ErrInvalidActionParamBadValueType"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAMDUPLICATENAME = "InvalidParameter.ErrInvalidActionParamDuplicateName"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMNAME = "InvalidParameter.ErrInvalidActionParamName"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMVALUE = "InvalidParameter.ErrInvalidActionParamValue"
 //  INVALIDPARAMETER_ERRINVALIDACTIONTYPE = "InvalidParameter.ErrInvalidActionType"
 //  INVALIDPARAMETER_ERRINVALIDCONDITION = "InvalidParameter.ErrInvalidCondition"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONCANNOTONLYCONTAINHOSTWHENMODIFYORIGINACTIONCONFIGURED = "InvalidParameter.ErrInvalidConditionCannotOnlyContainHostWhenModifyOriginActionConfigured"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONIGNORECASE = "InvalidParameter.ErrInvalidConditionIgnoreCase"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMEBADNAME = "InvalidParameter.ErrInvalidConditionNameBadName"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMETARGETNOTSUPPORTNAME = "InvalidParameter.ErrInvalidConditionNameTargetNotSupportName"
@@ -826,9 +1481,13 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYVALUES = "InvalidParameter.ErrInvalidConditionValueTooManyValues"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYWILDCARD = "InvalidParameter.ErrInvalidConditionValueTooManyWildcard"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEZEROLENGTH = "InvalidParameter.ErrInvalidConditionValueZeroLength"
+//  INVALIDPARAMETER_ERRNILCONDITION = "InvalidParameter.ErrNilCondition"
+//  INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
 //  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATION = "InvalidParameter.InvalidAuthentication"
+//  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPEEXPIRETIME = "InvalidParameter.InvalidAuthenticationTypeExpireTime"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDBACKUPSERVERNAME = "InvalidParameter.InvalidBackupServerName"
 //  INVALIDPARAMETER_INVALIDCACHECONFIGCACHE = "InvalidParameter.InvalidCacheConfigCache"
 //  INVALIDPARAMETER_INVALIDCACHEKEY = "InvalidParameter.InvalidCacheKey"
@@ -841,6 +1500,7 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
 //  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
@@ -861,12 +1521,15 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 //  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
 //  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
+//  INVALIDPARAMETER_KEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.KeyRulesInvalidQueryStringValue"
+//  INVALIDPARAMETER_LOADBALANCEINSTANCEIDISREQUIRED = "InvalidParameter.LoadBalanceInstanceIdIsRequired"
 //  INVALIDPARAMETER_NOTSUPPORTTHISPRESET = "InvalidParameter.NotSupportThisPreset"
 //  INVALIDPARAMETER_ORIGINORIGINGROUPIDISREQUIRED = "InvalidParameter.OriginOriginGroupIdIsRequired"
 //  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
 //  INVALIDPARAMETER_TASKSYSTEMERROR = "InvalidParameter.TaskSystemError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDMULTIPLYLAYERCONFLICT = "OperationDenied.AccelerateMainlandMultiplyLayerConflict"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_INVALIDADVANCEDDEFENSESECURITYTYPE = "OperationDenied.InvalidAdvancedDefenseSecurityType"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -883,17 +1546,21 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ACCESSREDIRECTREGEXERROR = "InvalidParameter.AccessRedirectRegexError"
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
 //  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
 //  INVALIDPARAMETER_ERRACTIONUNSUPPORTTARGET = "InvalidParameter.ErrActionUnsupportTarget"
 //  INVALIDPARAMETER_ERRINVALIDACTION = "InvalidParameter.ErrInvalidAction"
+//  INVALIDPARAMETER_ERRINVALIDACTIONORIGINPRIVATEADDRESS = "InvalidParameter.ErrInvalidActionOriginPrivateAddress"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMACTION = "InvalidParameter.ErrInvalidActionParamAction"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMBADVALUETYPE = "InvalidParameter.ErrInvalidActionParamBadValueType"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAMDUPLICATENAME = "InvalidParameter.ErrInvalidActionParamDuplicateName"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMNAME = "InvalidParameter.ErrInvalidActionParamName"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMVALUE = "InvalidParameter.ErrInvalidActionParamValue"
 //  INVALIDPARAMETER_ERRINVALIDACTIONTYPE = "InvalidParameter.ErrInvalidActionType"
 //  INVALIDPARAMETER_ERRINVALIDCONDITION = "InvalidParameter.ErrInvalidCondition"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONCANNOTONLYCONTAINHOSTWHENMODIFYORIGINACTIONCONFIGURED = "InvalidParameter.ErrInvalidConditionCannotOnlyContainHostWhenModifyOriginActionConfigured"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONIGNORECASE = "InvalidParameter.ErrInvalidConditionIgnoreCase"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMEBADNAME = "InvalidParameter.ErrInvalidConditionNameBadName"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMETARGETNOTSUPPORTNAME = "InvalidParameter.ErrInvalidConditionNameTargetNotSupportName"
@@ -906,9 +1573,13 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYVALUES = "InvalidParameter.ErrInvalidConditionValueTooManyValues"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYWILDCARD = "InvalidParameter.ErrInvalidConditionValueTooManyWildcard"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEZEROLENGTH = "InvalidParameter.ErrInvalidConditionValueZeroLength"
+//  INVALIDPARAMETER_ERRNILCONDITION = "InvalidParameter.ErrNilCondition"
+//  INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
 //  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATION = "InvalidParameter.InvalidAuthentication"
+//  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPEEXPIRETIME = "InvalidParameter.InvalidAuthenticationTypeExpireTime"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDBACKUPSERVERNAME = "InvalidParameter.InvalidBackupServerName"
 //  INVALIDPARAMETER_INVALIDCACHECONFIGCACHE = "InvalidParameter.InvalidCacheConfigCache"
 //  INVALIDPARAMETER_INVALIDCACHEKEY = "InvalidParameter.InvalidCacheKey"
@@ -921,6 +1592,7 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
 //  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
@@ -941,12 +1613,15 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 //  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
 //  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
+//  INVALIDPARAMETER_KEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.KeyRulesInvalidQueryStringValue"
+//  INVALIDPARAMETER_LOADBALANCEINSTANCEIDISREQUIRED = "InvalidParameter.LoadBalanceInstanceIdIsRequired"
 //  INVALIDPARAMETER_NOTSUPPORTTHISPRESET = "InvalidParameter.NotSupportThisPreset"
 //  INVALIDPARAMETER_ORIGINORIGINGROUPIDISREQUIRED = "InvalidParameter.OriginOriginGroupIdIsRequired"
 //  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
 //  INVALIDPARAMETER_TASKSYSTEMERROR = "InvalidParameter.TaskSystemError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDMULTIPLYLAYERCONFLICT = "OperationDenied.AccelerateMainlandMultiplyLayerConflict"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_INVALIDADVANCEDDEFENSESECURITYTYPE = "OperationDenied.InvalidAdvancedDefenseSecurityType"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -981,8 +1656,9 @@ func NewCreateSecurityIPGroupRequest() (request *CreateSecurityIPGroupRequest) {
 func NewCreateSecurityIPGroupResponse() (response *CreateSecurityIPGroupResponse) {
     response = &CreateSecurityIPGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSecurityIPGroup
@@ -990,6 +1666,7 @@ func NewCreateSecurityIPGroupResponse() (response *CreateSecurityIPGroupResponse
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateSecurityIPGroup(request *CreateSecurityIPGroupRequest) (response *CreateSecurityIPGroupResponse, err error) {
     return c.CreateSecurityIPGroupWithContext(context.Background(), request)
@@ -1000,6 +1677,7 @@ func (c *Client) CreateSecurityIPGroup(request *CreateSecurityIPGroupRequest) (r
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateSecurityIPGroupWithContext(ctx context.Context, request *CreateSecurityIPGroupRequest) (response *CreateSecurityIPGroupResponse, err error) {
     if request == nil {
@@ -1031,12 +1709,13 @@ func NewCreateSharedCNAMERequest() (request *CreateSharedCNAMERequest) {
 func NewCreateSharedCNAMEResponse() (response *CreateSharedCNAMEResponse) {
     response = &CreateSharedCNAMEResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSharedCNAME
-// 创建共享 CNAME
+// 用于创建共享 CNAME，该功能白名单内测中。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_NOTALLOWEDWILDCARDSHAREDCNAME = "InvalidParameterValue.NotAllowedWildcardSharedCNAME"
@@ -1049,7 +1728,7 @@ func (c *Client) CreateSharedCNAME(request *CreateSharedCNAMERequest) (response 
 }
 
 // CreateSharedCNAME
-// 创建共享 CNAME
+// 用于创建共享 CNAME，该功能白名单内测中。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_NOTALLOWEDWILDCARDSHAREDCNAME = "InvalidParameterValue.NotAllowedWildcardSharedCNAME"
@@ -1087,8 +1766,9 @@ func NewCreateZoneRequest() (request *CreateZoneRequest) {
 func NewCreateZoneResponse() (response *CreateZoneResponse) {
     response = &CreateZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateZone
@@ -1103,7 +1783,14 @@ func NewCreateZoneResponse() (response *CreateZoneResponse) {
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_LENGTHEXCEEDSLIMIT = "InvalidParameter.LengthExceedsLimit"
 //  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  INVALIDPARAMETER_ZONEHASBEENBOUND = "InvalidParameter.ZoneHasBeenBound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACCESSBLACKLIST = "InvalidParameterValue.AccessBlacklist"
+//  INVALIDPARAMETERVALUE_INVALIDTAGVALUE = "InvalidParameterValue.InvalidTagValue"
+//  INVALIDPARAMETERVALUE_TOPLEVELDOMAINNOTSUPPORT = "InvalidParameterValue.TopLevelDomainNotSupport"
+//  INVALIDPARAMETERVALUE_ZONENAMEINVALID = "InvalidParameterValue.ZoneNameInvalid"
+//  INVALIDPARAMETERVALUE_ZONENAMENOTSUPPORTPUNYCODE = "InvalidParameterValue.ZoneNameNotSupportPunyCode"
+//  INVALIDPARAMETERVALUE_ZONENAMENOTSUPPORTSUBDOMAIN = "InvalidParameterValue.ZoneNameNotSupportSubDomain"
 //  INVALIDPARAMETERVALUE_ZONESAMEASNAME = "InvalidParameterValue.ZoneSameAsName"
 //  LIMITEXCEEDED_ZONEBINDPLAN = "LimitExceeded.ZoneBindPlan"
 //  OPERATIONDENIED = "OperationDenied"
@@ -1122,6 +1809,7 @@ func NewCreateZoneResponse() (response *CreateZoneResponse) {
 //  RESOURCEINUSE_OTHERSHOST = "ResourceInUse.OthersHost"
 //  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
 //  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
@@ -1141,7 +1829,14 @@ func (c *Client) CreateZone(request *CreateZoneRequest) (response *CreateZoneRes
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_LENGTHEXCEEDSLIMIT = "InvalidParameter.LengthExceedsLimit"
 //  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  INVALIDPARAMETER_ZONEHASBEENBOUND = "InvalidParameter.ZoneHasBeenBound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACCESSBLACKLIST = "InvalidParameterValue.AccessBlacklist"
+//  INVALIDPARAMETERVALUE_INVALIDTAGVALUE = "InvalidParameterValue.InvalidTagValue"
+//  INVALIDPARAMETERVALUE_TOPLEVELDOMAINNOTSUPPORT = "InvalidParameterValue.TopLevelDomainNotSupport"
+//  INVALIDPARAMETERVALUE_ZONENAMEINVALID = "InvalidParameterValue.ZoneNameInvalid"
+//  INVALIDPARAMETERVALUE_ZONENAMENOTSUPPORTPUNYCODE = "InvalidParameterValue.ZoneNameNotSupportPunyCode"
+//  INVALIDPARAMETERVALUE_ZONENAMENOTSUPPORTSUBDOMAIN = "InvalidParameterValue.ZoneNameNotSupportSubDomain"
 //  INVALIDPARAMETERVALUE_ZONESAMEASNAME = "InvalidParameterValue.ZoneSameAsName"
 //  LIMITEXCEEDED_ZONEBINDPLAN = "LimitExceeded.ZoneBindPlan"
 //  OPERATIONDENIED = "OperationDenied"
@@ -1160,6 +1855,7 @@ func (c *Client) CreateZone(request *CreateZoneRequest) (response *CreateZoneRes
 //  RESOURCEINUSE_OTHERSHOST = "ResourceInUse.OthersHost"
 //  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
 //  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
@@ -1193,8 +1889,9 @@ func NewDeleteAccelerationDomainsRequest() (request *DeleteAccelerationDomainsRe
 func NewDeleteAccelerationDomainsResponse() (response *DeleteAccelerationDomainsResponse) {
     response = &DeleteAccelerationDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAccelerationDomains
@@ -1202,9 +1899,11 @@ func NewDeleteAccelerationDomainsResponse() (response *DeleteAccelerationDomains
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1217,9 +1916,11 @@ func (c *Client) DeleteAccelerationDomains(request *DeleteAccelerationDomainsReq
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1253,8 +1954,9 @@ func NewDeleteAliasDomainRequest() (request *DeleteAliasDomainRequest) {
 func NewDeleteAliasDomainResponse() (response *DeleteAliasDomainResponse) {
     response = &DeleteAliasDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAliasDomain
@@ -1307,12 +2009,15 @@ func NewDeleteApplicationProxyRequest() (request *DeleteApplicationProxyRequest)
 func NewDeleteApplicationProxyResponse() (response *DeleteApplicationProxyResponse) {
     response = &DeleteApplicationProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteApplicationProxy
-// 删除应用代理
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [删除四层代理实例
+//
+// ](https://cloud.tencent.com/document/product/1552/103415) 。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1323,7 +2028,9 @@ func (c *Client) DeleteApplicationProxy(request *DeleteApplicationProxyRequest) 
 }
 
 // DeleteApplicationProxy
-// 删除应用代理
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [删除四层代理实例
+//
+// ](https://cloud.tencent.com/document/product/1552/103415) 。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1359,12 +2066,13 @@ func NewDeleteApplicationProxyRuleRequest() (request *DeleteApplicationProxyRule
 func NewDeleteApplicationProxyRuleResponse() (response *DeleteApplicationProxyRuleResponse) {
     response = &DeleteApplicationProxyRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteApplicationProxyRule
-// 删除应用代理规则
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [删除四层代理转发规则](https://cloud.tencent.com/document/product/1552/103414) 。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -1375,7 +2083,7 @@ func (c *Client) DeleteApplicationProxyRule(request *DeleteApplicationProxyRuleR
 }
 
 // DeleteApplicationProxyRule
-// 删除应用代理规则
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [删除四层代理转发规则](https://cloud.tencent.com/document/product/1552/103414) 。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -1397,6 +2105,112 @@ func (c *Client) DeleteApplicationProxyRuleWithContext(ctx context.Context, requ
     return
 }
 
+func NewDeleteL4ProxyRequest() (request *DeleteL4ProxyRequest) {
+    request = &DeleteL4ProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DeleteL4Proxy")
+    
+    
+    return
+}
+
+func NewDeleteL4ProxyResponse() (response *DeleteL4ProxyResponse) {
+    response = &DeleteL4ProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteL4Proxy
+// 用于删除四层代理实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DeleteL4Proxy(request *DeleteL4ProxyRequest) (response *DeleteL4ProxyResponse, err error) {
+    return c.DeleteL4ProxyWithContext(context.Background(), request)
+}
+
+// DeleteL4Proxy
+// 用于删除四层代理实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DeleteL4ProxyWithContext(ctx context.Context, request *DeleteL4ProxyRequest) (response *DeleteL4ProxyResponse, err error) {
+    if request == nil {
+        request = NewDeleteL4ProxyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteL4Proxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteL4ProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteL4ProxyRulesRequest() (request *DeleteL4ProxyRulesRequest) {
+    request = &DeleteL4ProxyRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DeleteL4ProxyRules")
+    
+    
+    return
+}
+
+func NewDeleteL4ProxyRulesResponse() (response *DeleteL4ProxyRulesResponse) {
+    response = &DeleteL4ProxyRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteL4ProxyRules
+// 用于删除四层代理转发规则，支持单条或者批量操作。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteL4ProxyRules(request *DeleteL4ProxyRulesRequest) (response *DeleteL4ProxyRulesResponse, err error) {
+    return c.DeleteL4ProxyRulesWithContext(context.Background(), request)
+}
+
+// DeleteL4ProxyRules
+// 用于删除四层代理转发规则，支持单条或者批量操作。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteL4ProxyRulesWithContext(ctx context.Context, request *DeleteL4ProxyRulesRequest) (response *DeleteL4ProxyRulesResponse, err error) {
+    if request == nil {
+        request = NewDeleteL4ProxyRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteL4ProxyRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteL4ProxyRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteOriginGroupRequest() (request *DeleteOriginGroupRequest) {
     request = &DeleteOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1411,16 +2225,21 @@ func NewDeleteOriginGroupRequest() (request *DeleteOriginGroupRequest) {
 func NewDeleteOriginGroupResponse() (response *DeleteOriginGroupResponse) {
     response = &DeleteOriginGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOriginGroup
-// 删除源站组
+// 删除源站组，若源站组仍然被服务（例如：四层代理，域名服务，负载均衡，规则引起）引用，将不允许删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ORIGINGROUPACCELERATIONDOMAINUSED = "OperationDenied.OriginGroupAccelerationDomainUsed"
+//  OPERATIONDENIED_ORIGINGROUPL4USED = "OperationDenied.OriginGroupL4Used"
+//  OPERATIONDENIED_ORIGINGROUPLBUSED = "OperationDenied.OriginGroupLBUsed"
+//  OPERATIONDENIED_ORIGINGROUPRULEENGINEUSED = "OperationDenied.OriginGroupRuleEngineUsed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteOriginGroup(request *DeleteOriginGroupRequest) (response *DeleteOriginGroupResponse, err error) {
@@ -1428,11 +2247,15 @@ func (c *Client) DeleteOriginGroup(request *DeleteOriginGroupRequest) (response 
 }
 
 // DeleteOriginGroup
-// 删除源站组
+// 删除源站组，若源站组仍然被服务（例如：四层代理，域名服务，负载均衡，规则引起）引用，将不允许删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ORIGINGROUPACCELERATIONDOMAINUSED = "OperationDenied.OriginGroupAccelerationDomainUsed"
+//  OPERATIONDENIED_ORIGINGROUPL4USED = "OperationDenied.OriginGroupL4Used"
+//  OPERATIONDENIED_ORIGINGROUPLBUSED = "OperationDenied.OriginGroupLBUsed"
+//  OPERATIONDENIED_ORIGINGROUPRULEENGINEUSED = "OperationDenied.OriginGroupRuleEngineUsed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteOriginGroupWithContext(ctx context.Context, request *DeleteOriginGroupRequest) (response *DeleteOriginGroupResponse, err error) {
@@ -1451,6 +2274,55 @@ func (c *Client) DeleteOriginGroupWithContext(ctx context.Context, request *Dele
     return
 }
 
+func NewDeleteRealtimeLogDeliveryTaskRequest() (request *DeleteRealtimeLogDeliveryTaskRequest) {
+    request = &DeleteRealtimeLogDeliveryTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DeleteRealtimeLogDeliveryTask")
+    
+    
+    return
+}
+
+func NewDeleteRealtimeLogDeliveryTaskResponse() (response *DeleteRealtimeLogDeliveryTaskResponse) {
+    response = &DeleteRealtimeLogDeliveryTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRealtimeLogDeliveryTask
+// 通过本接口删除实时日志投递任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteRealtimeLogDeliveryTask(request *DeleteRealtimeLogDeliveryTaskRequest) (response *DeleteRealtimeLogDeliveryTaskResponse, err error) {
+    return c.DeleteRealtimeLogDeliveryTaskWithContext(context.Background(), request)
+}
+
+// DeleteRealtimeLogDeliveryTask
+// 通过本接口删除实时日志投递任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteRealtimeLogDeliveryTaskWithContext(ctx context.Context, request *DeleteRealtimeLogDeliveryTaskRequest) (response *DeleteRealtimeLogDeliveryTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteRealtimeLogDeliveryTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRealtimeLogDeliveryTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRealtimeLogDeliveryTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteRulesRequest() (request *DeleteRulesRequest) {
     request = &DeleteRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1465,8 +2337,9 @@ func NewDeleteRulesRequest() (request *DeleteRulesRequest) {
 func NewDeleteRulesResponse() (response *DeleteRulesResponse) {
     response = &DeleteRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRules
@@ -1478,12 +2351,16 @@ func NewDeleteRulesResponse() (response *DeleteRulesResponse) {
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMVALUE = "InvalidParameter.ErrInvalidActionParamValue"
 //  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
 //  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
 //  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+//  INVALIDPARAMETER_NOTSUPPORTTHISPRESET = "InvalidParameter.NotSupportThisPreset"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  RESOURCEINUSE = "ResourceInUse"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1500,12 +2377,16 @@ func (c *Client) DeleteRules(request *DeleteRulesRequest) (response *DeleteRules
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMVALUE = "InvalidParameter.ErrInvalidActionParamValue"
 //  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
 //  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
 //  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+//  INVALIDPARAMETER_NOTSUPPORTTHISPRESET = "InvalidParameter.NotSupportThisPreset"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  RESOURCEINUSE = "ResourceInUse"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1539,8 +2420,9 @@ func NewDeleteSecurityIPGroupRequest() (request *DeleteSecurityIPGroupRequest) {
 func NewDeleteSecurityIPGroupResponse() (response *DeleteSecurityIPGroupResponse) {
     response = &DeleteSecurityIPGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSecurityIPGroup
@@ -1548,6 +2430,8 @@ func NewDeleteSecurityIPGroupResponse() (response *DeleteSecurityIPGroupResponse
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteSecurityIPGroup(request *DeleteSecurityIPGroupRequest) (response *DeleteSecurityIPGroupResponse, err error) {
     return c.DeleteSecurityIPGroupWithContext(context.Background(), request)
@@ -1558,6 +2442,8 @@ func (c *Client) DeleteSecurityIPGroup(request *DeleteSecurityIPGroupRequest) (r
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteSecurityIPGroupWithContext(ctx context.Context, request *DeleteSecurityIPGroupRequest) (response *DeleteSecurityIPGroupResponse, err error) {
     if request == nil {
@@ -1571,6 +2457,55 @@ func (c *Client) DeleteSecurityIPGroupWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDeleteSecurityIPGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteSharedCNAMERequest() (request *DeleteSharedCNAMERequest) {
+    request = &DeleteSharedCNAMERequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DeleteSharedCNAME")
+    
+    
+    return
+}
+
+func NewDeleteSharedCNAMEResponse() (response *DeleteSharedCNAMEResponse) {
+    response = &DeleteSharedCNAMEResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteSharedCNAME
+// 用于删除共享 CNAME，该功能白名单内测中。
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE_SHAREDCNAME = "ResourceInUse.SharedCNAME"
+func (c *Client) DeleteSharedCNAME(request *DeleteSharedCNAMERequest) (response *DeleteSharedCNAMEResponse, err error) {
+    return c.DeleteSharedCNAMEWithContext(context.Background(), request)
+}
+
+// DeleteSharedCNAME
+// 用于删除共享 CNAME，该功能白名单内测中。
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE_SHAREDCNAME = "ResourceInUse.SharedCNAME"
+func (c *Client) DeleteSharedCNAMEWithContext(ctx context.Context, request *DeleteSharedCNAMERequest) (response *DeleteSharedCNAMEResponse, err error) {
+    if request == nil {
+        request = NewDeleteSharedCNAMERequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteSharedCNAME require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteSharedCNAMEResponse()
     err = c.Send(request, response)
     return
 }
@@ -1589,17 +2524,21 @@ func NewDeleteZoneRequest() (request *DeleteZoneRequest) {
 func NewDeleteZoneResponse() (response *DeleteZoneResponse) {
     response = &DeleteZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteZone
 // 删除站点。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DELETEZONEPRECHECKFAILED = "OperationDenied.DeleteZonePreCheckFailed"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ZONEISBINDINGSHAREDCNAME = "OperationDenied.ZoneIsBindingSharedCNAME"
+//  OPERATIONDENIED_ZONEISREFERENCECUSTOMERRORPAGE = "OperationDenied.ZoneIsReferenceCustomErrorPage"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneResponse, err error) {
@@ -1610,9 +2549,12 @@ func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneRes
 // 删除站点。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DELETEZONEPRECHECKFAILED = "OperationDenied.DeleteZonePreCheckFailed"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ZONEISBINDINGSHAREDCNAME = "OperationDenied.ZoneIsBindingSharedCNAME"
+//  OPERATIONDENIED_ZONEISREFERENCECUSTOMERRORPAGE = "OperationDenied.ZoneIsReferenceCustomErrorPage"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteZoneWithContext(ctx context.Context, request *DeleteZoneRequest) (response *DeleteZoneResponse, err error) {
@@ -1631,6 +2573,89 @@ func (c *Client) DeleteZoneWithContext(ctx context.Context, request *DeleteZoneR
     return
 }
 
+func NewDeployConfigGroupVersionRequest() (request *DeployConfigGroupVersionRequest) {
+    request = &DeployConfigGroupVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DeployConfigGroupVersion")
+    
+    
+    return
+}
+
+func NewDeployConfigGroupVersionResponse() (response *DeployConfigGroupVersionResponse) {
+    response = &DeployConfigGroupVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeployConfigGroupVersion
+// 在版本管理模式下，用于版本发布，可通过 EnvId 将版本发布至测试环境或生产环境。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CONFIGCONDITIONSYNTAXERROR = "FailedOperation.ConfigConditionSyntaxError"
+//  FAILEDOPERATION_CONFIGCONDITIONUNKNOWNTARGET = "FailedOperation.ConfigConditionUnknownTarget"
+//  FAILEDOPERATION_CONFIGCONDITIONVALUEEMPTYERROR = "FailedOperation.ConfigConditionValueEmptyError"
+//  FAILEDOPERATION_CONFIGFIELDTYPEERROR = "FailedOperation.ConfigFieldTypeError"
+//  FAILEDOPERATION_CONFIGFORMATERROR = "FailedOperation.ConfigFormatError"
+//  FAILEDOPERATION_CONFIGMALFORMEDCONTENT = "FailedOperation.ConfigMalformedContent"
+//  FAILEDOPERATION_CONFIGPARAMVALIDATEERRORS = "FailedOperation.ConfigParamValidateErrors"
+//  FAILEDOPERATION_CONFIGUNKNOWNFIELD = "FailedOperation.ConfigUnknownField"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDFORMATVERSION = "FailedOperation.ConfigUnsupportedFormatVersion"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DOMAINSTATUSUNSTABLE = "OperationDenied.DomainStatusUnstable"
+//  OPERATIONDENIED_ENVNOTREADY = "OperationDenied.EnvNotReady"
+//  OPERATIONDENIED_NOTINVERSIONCONTROLWHITELIST = "OperationDenied.NotInVersionControlWhiteList"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
+//  OPERATIONDENIED_WORKMODENOTINVERSIONCONTROL = "OperationDenied.WorkModeNotInVersionControl"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_VERSIONNOTFOUND = "ResourceNotFound.VersionNotFound"
+func (c *Client) DeployConfigGroupVersion(request *DeployConfigGroupVersionRequest) (response *DeployConfigGroupVersionResponse, err error) {
+    return c.DeployConfigGroupVersionWithContext(context.Background(), request)
+}
+
+// DeployConfigGroupVersion
+// 在版本管理模式下，用于版本发布，可通过 EnvId 将版本发布至测试环境或生产环境。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CONFIGCONDITIONSYNTAXERROR = "FailedOperation.ConfigConditionSyntaxError"
+//  FAILEDOPERATION_CONFIGCONDITIONUNKNOWNTARGET = "FailedOperation.ConfigConditionUnknownTarget"
+//  FAILEDOPERATION_CONFIGCONDITIONVALUEEMPTYERROR = "FailedOperation.ConfigConditionValueEmptyError"
+//  FAILEDOPERATION_CONFIGFIELDTYPEERROR = "FailedOperation.ConfigFieldTypeError"
+//  FAILEDOPERATION_CONFIGFORMATERROR = "FailedOperation.ConfigFormatError"
+//  FAILEDOPERATION_CONFIGMALFORMEDCONTENT = "FailedOperation.ConfigMalformedContent"
+//  FAILEDOPERATION_CONFIGPARAMVALIDATEERRORS = "FailedOperation.ConfigParamValidateErrors"
+//  FAILEDOPERATION_CONFIGUNKNOWNFIELD = "FailedOperation.ConfigUnknownField"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDFORMATVERSION = "FailedOperation.ConfigUnsupportedFormatVersion"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DOMAINSTATUSUNSTABLE = "OperationDenied.DomainStatusUnstable"
+//  OPERATIONDENIED_ENVNOTREADY = "OperationDenied.EnvNotReady"
+//  OPERATIONDENIED_NOTINVERSIONCONTROLWHITELIST = "OperationDenied.NotInVersionControlWhiteList"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
+//  OPERATIONDENIED_WORKMODENOTINVERSIONCONTROL = "OperationDenied.WorkModeNotInVersionControl"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_VERSIONNOTFOUND = "ResourceNotFound.VersionNotFound"
+func (c *Client) DeployConfigGroupVersionWithContext(ctx context.Context, request *DeployConfigGroupVersionRequest) (response *DeployConfigGroupVersionResponse, err error) {
+    if request == nil {
+        request = NewDeployConfigGroupVersionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeployConfigGroupVersion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeployConfigGroupVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAccelerationDomainsRequest() (request *DescribeAccelerationDomainsRequest) {
     request = &DescribeAccelerationDomainsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1645,8 +2670,9 @@ func NewDescribeAccelerationDomainsRequest() (request *DescribeAccelerationDomai
 func NewDescribeAccelerationDomainsResponse() (response *DescribeAccelerationDomainsResponse) {
     response = &DescribeAccelerationDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccelerationDomains
@@ -1654,8 +2680,11 @@ func NewDescribeAccelerationDomainsResponse() (response *DescribeAccelerationDom
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_DOMAINONTRAFFICSCHEDULING = "InvalidParameter.DomainOnTrafficScheduling"
+//  INVALIDPARAMETER_TOOMANYFILTERVALUES = "InvalidParameter.TooManyFilterValues"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
@@ -1668,8 +2697,11 @@ func (c *Client) DescribeAccelerationDomains(request *DescribeAccelerationDomain
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_DOMAINONTRAFFICSCHEDULING = "InvalidParameter.DomainOnTrafficScheduling"
+//  INVALIDPARAMETER_TOOMANYFILTERVALUES = "InvalidParameter.TooManyFilterValues"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
@@ -1703,8 +2735,9 @@ func NewDescribeAliasDomainsRequest() (request *DescribeAliasDomainsRequest) {
 func NewDescribeAliasDomainsResponse() (response *DescribeAliasDomainsResponse) {
     response = &DescribeAliasDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAliasDomains
@@ -1759,12 +2792,13 @@ func NewDescribeApplicationProxiesRequest() (request *DescribeApplicationProxies
 func NewDescribeApplicationProxiesResponse() (response *DescribeApplicationProxiesResponse) {
     response = &DescribeApplicationProxiesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeApplicationProxies
-// 查询应用代理列表。
+// 本接口为旧版，如需调用请尽快迁移至新版，新版接口中将四层代理实例列表的查询和四层转发规则的查询拆分成两个接口，详情请参考 [查询四层代理实例列表](https://cloud.tencent.com/document/product/1552/103413) 和 [查询四层代理转发规则列表](https://cloud.tencent.com/document/product/1552/103412)。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
@@ -1777,7 +2811,7 @@ func (c *Client) DescribeApplicationProxies(request *DescribeApplicationProxiesR
 }
 
 // DescribeApplicationProxies
-// 查询应用代理列表。
+// 本接口为旧版，如需调用请尽快迁移至新版，新版接口中将四层代理实例列表的查询和四层转发规则的查询拆分成两个接口，详情请参考 [查询四层代理实例列表](https://cloud.tencent.com/document/product/1552/103413) 和 [查询四层代理转发规则列表](https://cloud.tencent.com/document/product/1552/103412)。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
@@ -1815,8 +2849,9 @@ func NewDescribeAvailablePlansRequest() (request *DescribeAvailablePlansRequest)
 func NewDescribeAvailablePlansResponse() (response *DescribeAvailablePlansResponse) {
     response = &DescribeAvailablePlansResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAvailablePlans
@@ -1849,6 +2884,159 @@ func (c *Client) DescribeAvailablePlansWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeBillingDataRequest() (request *DescribeBillingDataRequest) {
+    request = &DescribeBillingDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeBillingData")
+    
+    
+    return
+}
+
+func NewDescribeBillingDataResponse() (response *DescribeBillingDataResponse) {
+    response = &DescribeBillingDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBillingData
+// 通过本接口查询计费数据。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_INVALIDINTERVAL = "InvalidParameter.InvalidInterval"
+//  INVALIDPARAMETER_INVALIDMETRIC = "InvalidParameter.InvalidMetric"
+//  INVALIDPARAMETER_ZONEHASNOTBEENBOUNDTOPLAN = "InvalidParameter.ZoneHasNotBeenBoundToPlan"
+func (c *Client) DescribeBillingData(request *DescribeBillingDataRequest) (response *DescribeBillingDataResponse, err error) {
+    return c.DescribeBillingDataWithContext(context.Background(), request)
+}
+
+// DescribeBillingData
+// 通过本接口查询计费数据。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_INVALIDINTERVAL = "InvalidParameter.InvalidInterval"
+//  INVALIDPARAMETER_INVALIDMETRIC = "InvalidParameter.InvalidMetric"
+//  INVALIDPARAMETER_ZONEHASNOTBEENBOUNDTOPLAN = "InvalidParameter.ZoneHasNotBeenBoundToPlan"
+func (c *Client) DescribeBillingDataWithContext(ctx context.Context, request *DescribeBillingDataRequest) (response *DescribeBillingDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeBillingDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBillingData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBillingDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigGroupVersionDetailRequest() (request *DescribeConfigGroupVersionDetailRequest) {
+    request = &DescribeConfigGroupVersionDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeConfigGroupVersionDetail")
+    
+    
+    return
+}
+
+func NewDescribeConfigGroupVersionDetailResponse() (response *DescribeConfigGroupVersionDetailResponse) {
+    response = &DescribeConfigGroupVersionDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigGroupVersionDetail
+// 在版本管理模式下，用于获取版本的详细信息，包括版本 ID、描述、状态、创建时间、所属配置组信息以及版本配置文件的内容。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigGroupVersionDetail(request *DescribeConfigGroupVersionDetailRequest) (response *DescribeConfigGroupVersionDetailResponse, err error) {
+    return c.DescribeConfigGroupVersionDetailWithContext(context.Background(), request)
+}
+
+// DescribeConfigGroupVersionDetail
+// 在版本管理模式下，用于获取版本的详细信息，包括版本 ID、描述、状态、创建时间、所属配置组信息以及版本配置文件的内容。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigGroupVersionDetailWithContext(ctx context.Context, request *DescribeConfigGroupVersionDetailRequest) (response *DescribeConfigGroupVersionDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigGroupVersionDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigGroupVersionDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigGroupVersionDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigGroupVersionsRequest() (request *DescribeConfigGroupVersionsRequest) {
+    request = &DescribeConfigGroupVersionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeConfigGroupVersions")
+    
+    
+    return
+}
+
+func NewDescribeConfigGroupVersionsResponse() (response *DescribeConfigGroupVersionsResponse) {
+    response = &DescribeConfigGroupVersionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigGroupVersions
+// 在版本管理模式下，用于查询指定配置组的版本列表。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigGroupVersions(request *DescribeConfigGroupVersionsRequest) (response *DescribeConfigGroupVersionsResponse, err error) {
+    return c.DescribeConfigGroupVersionsWithContext(context.Background(), request)
+}
+
+// DescribeConfigGroupVersions
+// 在版本管理模式下，用于查询指定配置组的版本列表。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigGroupVersionsWithContext(ctx context.Context, request *DescribeConfigGroupVersionsRequest) (response *DescribeConfigGroupVersionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigGroupVersionsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigGroupVersions require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigGroupVersionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeContentQuotaRequest() (request *DescribeContentQuotaRequest) {
     request = &DescribeContentQuotaRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1863,8 +3051,9 @@ func NewDescribeContentQuotaRequest() (request *DescribeContentQuotaRequest) {
 func NewDescribeContentQuotaResponse() (response *DescribeContentQuotaResponse) {
     response = &DescribeContentQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeContentQuota
@@ -1915,8 +3104,9 @@ func NewDescribeDDoSAttackDataRequest() (request *DescribeDDoSAttackDataRequest)
 func NewDescribeDDoSAttackDataResponse() (response *DescribeDDoSAttackDataResponse) {
     response = &DescribeDDoSAttackDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDDoSAttackData
@@ -1929,6 +3119,7 @@ func NewDescribeDDoSAttackDataResponse() (response *DescribeDDoSAttackDataRespon
 //  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDDoSAttackData(request *DescribeDDoSAttackDataRequest) (response *DescribeDDoSAttackDataResponse, err error) {
     return c.DescribeDDoSAttackDataWithContext(context.Background(), request)
 }
@@ -1943,6 +3134,7 @@ func (c *Client) DescribeDDoSAttackData(request *DescribeDDoSAttackDataRequest) 
 //  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDDoSAttackDataWithContext(ctx context.Context, request *DescribeDDoSAttackDataRequest) (response *DescribeDDoSAttackDataResponse, err error) {
     if request == nil {
         request = NewDescribeDDoSAttackDataRequest()
@@ -1973,8 +3165,9 @@ func NewDescribeDDoSAttackEventRequest() (request *DescribeDDoSAttackEventReques
 func NewDescribeDDoSAttackEventResponse() (response *DescribeDDoSAttackEventResponse) {
     response = &DescribeDDoSAttackEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDDoSAttackEvent
@@ -2033,8 +3226,9 @@ func NewDescribeDDoSAttackTopDataRequest() (request *DescribeDDoSAttackTopDataRe
 func NewDescribeDDoSAttackTopDataResponse() (response *DescribeDDoSAttackTopDataResponse) {
     response = &DescribeDDoSAttackTopDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDDoSAttackTopData
@@ -2089,8 +3283,9 @@ func NewDescribeDefaultCertificatesRequest() (request *DescribeDefaultCertificat
 func NewDescribeDefaultCertificatesResponse() (response *DescribeDefaultCertificatesResponse) {
     response = &DescribeDefaultCertificatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDefaultCertificates
@@ -2139,6 +3334,104 @@ func (c *Client) DescribeDefaultCertificatesWithContext(ctx context.Context, req
     return
 }
 
+func NewDescribeDeployHistoryRequest() (request *DescribeDeployHistoryRequest) {
+    request = &DescribeDeployHistoryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDeployHistory")
+    
+    
+    return
+}
+
+func NewDescribeDeployHistoryResponse() (response *DescribeDeployHistoryResponse) {
+    response = &DescribeDeployHistoryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDeployHistory
+// 在版本管理模式下，用于查询生产/测试环境的版本发布历史。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeDeployHistory(request *DescribeDeployHistoryRequest) (response *DescribeDeployHistoryResponse, err error) {
+    return c.DescribeDeployHistoryWithContext(context.Background(), request)
+}
+
+// DescribeDeployHistory
+// 在版本管理模式下，用于查询生产/测试环境的版本发布历史。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeDeployHistoryWithContext(ctx context.Context, request *DescribeDeployHistoryRequest) (response *DescribeDeployHistoryResponse, err error) {
+    if request == nil {
+        request = NewDescribeDeployHistoryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDeployHistory require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDeployHistoryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeEnvironmentsRequest() (request *DescribeEnvironmentsRequest) {
+    request = &DescribeEnvironmentsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeEnvironments")
+    
+    
+    return
+}
+
+func NewDescribeEnvironmentsResponse() (response *DescribeEnvironmentsResponse) {
+    response = &DescribeEnvironmentsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeEnvironments
+// 在版本管理模式下，用于查询环境信息，可获取环境 ID、类型、当前生效版本等。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeEnvironments(request *DescribeEnvironmentsRequest) (response *DescribeEnvironmentsResponse, err error) {
+    return c.DescribeEnvironmentsWithContext(context.Background(), request)
+}
+
+// DescribeEnvironments
+// 在版本管理模式下，用于查询环境信息，可获取环境 ID、类型、当前生效版本等。版本管理功能内测中，当前仅白名单开放。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeEnvironmentsWithContext(ctx context.Context, request *DescribeEnvironmentsRequest) (response *DescribeEnvironmentsResponse, err error) {
+    if request == nil {
+        request = NewDescribeEnvironmentsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeEnvironments require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeEnvironmentsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeHostsSettingRequest() (request *DescribeHostsSettingRequest) {
     request = &DescribeHostsSettingRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2153,8 +3446,9 @@ func NewDescribeHostsSettingRequest() (request *DescribeHostsSettingRequest) {
 func NewDescribeHostsSettingResponse() (response *DescribeHostsSettingResponse) {
     response = &DescribeHostsSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostsSetting
@@ -2199,6 +3493,55 @@ func (c *Client) DescribeHostsSettingWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeIPRegionRequest() (request *DescribeIPRegionRequest) {
+    request = &DescribeIPRegionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeIPRegion")
+    
+    
+    return
+}
+
+func NewDescribeIPRegionResponse() (response *DescribeIPRegionResponse) {
+    response = &DescribeIPRegionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIPRegion
+// 该接口可用于查询 IP 是否为 EdgeOne IP。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+func (c *Client) DescribeIPRegion(request *DescribeIPRegionRequest) (response *DescribeIPRegionResponse, err error) {
+    return c.DescribeIPRegionWithContext(context.Background(), request)
+}
+
+// DescribeIPRegion
+// 该接口可用于查询 IP 是否为 EdgeOne IP。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+func (c *Client) DescribeIPRegionWithContext(ctx context.Context, request *DescribeIPRegionRequest) (response *DescribeIPRegionResponse, err error) {
+    if request == nil {
+        request = NewDescribeIPRegionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIPRegion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIPRegionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeIdentificationsRequest() (request *DescribeIdentificationsRequest) {
     request = &DescribeIdentificationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2213,8 +3556,9 @@ func NewDescribeIdentificationsRequest() (request *DescribeIdentificationsReques
 func NewDescribeIdentificationsResponse() (response *DescribeIdentificationsResponse) {
     response = &DescribeIdentificationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIdentifications
@@ -2255,6 +3599,116 @@ func (c *Client) DescribeIdentificationsWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribeL4ProxyRequest() (request *DescribeL4ProxyRequest) {
+    request = &DescribeL4ProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeL4Proxy")
+    
+    
+    return
+}
+
+func NewDescribeL4ProxyResponse() (response *DescribeL4ProxyResponse) {
+    response = &DescribeL4ProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeL4Proxy
+// 用于查询四层代理实例列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeL4Proxy(request *DescribeL4ProxyRequest) (response *DescribeL4ProxyResponse, err error) {
+    return c.DescribeL4ProxyWithContext(context.Background(), request)
+}
+
+// DescribeL4Proxy
+// 用于查询四层代理实例列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeL4ProxyWithContext(ctx context.Context, request *DescribeL4ProxyRequest) (response *DescribeL4ProxyResponse, err error) {
+    if request == nil {
+        request = NewDescribeL4ProxyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeL4Proxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeL4ProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeL4ProxyRulesRequest() (request *DescribeL4ProxyRulesRequest) {
+    request = &DescribeL4ProxyRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeL4ProxyRules")
+    
+    
+    return
+}
+
+func NewDescribeL4ProxyRulesResponse() (response *DescribeL4ProxyRulesResponse) {
+    response = &DescribeL4ProxyRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeL4ProxyRules
+// 查询四层代理实例下的转发规则列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeL4ProxyRules(request *DescribeL4ProxyRulesRequest) (response *DescribeL4ProxyRulesResponse, err error) {
+    return c.DescribeL4ProxyRulesWithContext(context.Background(), request)
+}
+
+// DescribeL4ProxyRules
+// 查询四层代理实例下的转发规则列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeL4ProxyRulesWithContext(ctx context.Context, request *DescribeL4ProxyRulesRequest) (response *DescribeL4ProxyRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeL4ProxyRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeL4ProxyRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeL4ProxyRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeOriginGroupRequest() (request *DescribeOriginGroupRequest) {
     request = &DescribeOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2269,8 +3723,9 @@ func NewDescribeOriginGroupRequest() (request *DescribeOriginGroupRequest) {
 func NewDescribeOriginGroupResponse() (response *DescribeOriginGroupResponse) {
     response = &DescribeOriginGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOriginGroup
@@ -2321,8 +3776,9 @@ func NewDescribeOriginProtectionRequest() (request *DescribeOriginProtectionRequ
 func NewDescribeOriginProtectionResponse() (response *DescribeOriginProtectionResponse) {
     response = &DescribeOriginProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOriginProtection
@@ -2377,12 +3833,13 @@ func NewDescribeOverviewL7DataRequest() (request *DescribeOverviewL7DataRequest)
 func NewDescribeOverviewL7DataResponse() (response *DescribeOverviewL7DataResponse) {
     response = &DescribeOverviewL7DataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOverviewL7Data
-// 本接口（DescribeOverviewL7Data）用于查询七层监控类时序流量数据。
+// 本接口（DescribeOverviewL7Data）用于查询七层监控类时序流量数据。此接口待废弃，请使用 <a href="https://cloud.tencent.com/document/product/1552/80648">DescribeTimingL7AnalysisData</a> 接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2398,7 +3855,7 @@ func (c *Client) DescribeOverviewL7Data(request *DescribeOverviewL7DataRequest) 
 }
 
 // DescribeOverviewL7Data
-// 本接口（DescribeOverviewL7Data）用于查询七层监控类时序流量数据。
+// 本接口（DescribeOverviewL7Data）用于查询七层监控类时序流量数据。此接口待废弃，请使用 <a href="https://cloud.tencent.com/document/product/1552/80648">DescribeTimingL7AnalysisData</a> 接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2439,12 +3896,13 @@ func NewDescribePrefetchTasksRequest() (request *DescribePrefetchTasksRequest) {
 func NewDescribePrefetchTasksResponse() (response *DescribePrefetchTasksResponse) {
     response = &DescribePrefetchTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrefetchTasks
-// 查询预热任务状态
+// DescribePrefetchTasks 用于查询预热任务提交历史记录及执行进度，通过 CreatePrefetchTasks 接口提交的任务可通过此接口进行查询。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -2456,7 +3914,7 @@ func (c *Client) DescribePrefetchTasks(request *DescribePrefetchTasksRequest) (r
 }
 
 // DescribePrefetchTasks
-// 查询预热任务状态
+// DescribePrefetchTasks 用于查询预热任务提交历史记录及执行进度，通过 CreatePrefetchTasks 接口提交的任务可通过此接口进行查询。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -2493,12 +3951,13 @@ func NewDescribePurgeTasksRequest() (request *DescribePurgeTasksRequest) {
 func NewDescribePurgeTasksResponse() (response *DescribePurgeTasksResponse) {
     response = &DescribePurgeTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePurgeTasks
-// 查询清除缓存历史记录
+// DescribePurgeTasks 用于查询提交的 URL 刷新、目录刷新记录及执行进度，通过 CreatePurgeTasks 接口提交的任务均可通过此接口进行查询。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -2509,7 +3968,7 @@ func (c *Client) DescribePurgeTasks(request *DescribePurgeTasksRequest) (respons
 }
 
 // DescribePurgeTasks
-// 查询清除缓存历史记录
+// DescribePurgeTasks 用于查询提交的 URL 刷新、目录刷新记录及执行进度，通过 CreatePurgeTasks 接口提交的任务均可通过此接口进行查询。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -2531,6 +3990,55 @@ func (c *Client) DescribePurgeTasksWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeRealtimeLogDeliveryTasksRequest() (request *DescribeRealtimeLogDeliveryTasksRequest) {
+    request = &DescribeRealtimeLogDeliveryTasksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeRealtimeLogDeliveryTasks")
+    
+    
+    return
+}
+
+func NewDescribeRealtimeLogDeliveryTasksResponse() (response *DescribeRealtimeLogDeliveryTasksResponse) {
+    response = &DescribeRealtimeLogDeliveryTasksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRealtimeLogDeliveryTasks
+// 通过本接口查询实时日志投递任务列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeRealtimeLogDeliveryTasks(request *DescribeRealtimeLogDeliveryTasksRequest) (response *DescribeRealtimeLogDeliveryTasksResponse, err error) {
+    return c.DescribeRealtimeLogDeliveryTasksWithContext(context.Background(), request)
+}
+
+// DescribeRealtimeLogDeliveryTasks
+// 通过本接口查询实时日志投递任务列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeRealtimeLogDeliveryTasksWithContext(ctx context.Context, request *DescribeRealtimeLogDeliveryTasksRequest) (response *DescribeRealtimeLogDeliveryTasksResponse, err error) {
+    if request == nil {
+        request = NewDescribeRealtimeLogDeliveryTasksRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRealtimeLogDeliveryTasks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRealtimeLogDeliveryTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRulesRequest() (request *DescribeRulesRequest) {
     request = &DescribeRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2545,8 +4053,9 @@ func NewDescribeRulesRequest() (request *DescribeRulesRequest) {
 func NewDescribeRulesResponse() (response *DescribeRulesResponse) {
     response = &DescribeRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRules
@@ -2597,8 +4106,9 @@ func NewDescribeRulesSettingRequest() (request *DescribeRulesSettingRequest) {
 func NewDescribeRulesSettingResponse() (response *DescribeRulesSettingResponse) {
     response = &DescribeRulesSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRulesSetting
@@ -2635,6 +4145,114 @@ func (c *Client) DescribeRulesSettingWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeSecurityIPGroupInfoRequest() (request *DescribeSecurityIPGroupInfoRequest) {
+    request = &DescribeSecurityIPGroupInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityIPGroupInfo")
+    
+    
+    return
+}
+
+func NewDescribeSecurityIPGroupInfoResponse() (response *DescribeSecurityIPGroupInfoResponse) {
+    response = &DescribeSecurityIPGroupInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSecurityIPGroupInfo
+// 查询 IP 组的配置信息，包括 IP 组名称、 IP 组内容、 IP 组归属站点。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeSecurityIPGroupInfo(request *DescribeSecurityIPGroupInfoRequest) (response *DescribeSecurityIPGroupInfoResponse, err error) {
+    return c.DescribeSecurityIPGroupInfoWithContext(context.Background(), request)
+}
+
+// DescribeSecurityIPGroupInfo
+// 查询 IP 组的配置信息，包括 IP 组名称、 IP 组内容、 IP 组归属站点。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeSecurityIPGroupInfoWithContext(ctx context.Context, request *DescribeSecurityIPGroupInfoRequest) (response *DescribeSecurityIPGroupInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecurityIPGroupInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecurityIPGroupInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecurityIPGroupInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSecurityTemplateBindingsRequest() (request *DescribeSecurityTemplateBindingsRequest) {
+    request = &DescribeSecurityTemplateBindingsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityTemplateBindings")
+    
+    
+    return
+}
+
+func NewDescribeSecurityTemplateBindingsResponse() (response *DescribeSecurityTemplateBindingsResponse) {
+    response = &DescribeSecurityTemplateBindingsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSecurityTemplateBindings
+// 查询指定策略模板的绑定关系列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeSecurityTemplateBindings(request *DescribeSecurityTemplateBindingsRequest) (response *DescribeSecurityTemplateBindingsResponse, err error) {
+    return c.DescribeSecurityTemplateBindingsWithContext(context.Background(), request)
+}
+
+// DescribeSecurityTemplateBindings
+// 查询指定策略模板的绑定关系列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeSecurityTemplateBindingsWithContext(ctx context.Context, request *DescribeSecurityTemplateBindingsRequest) (response *DescribeSecurityTemplateBindingsResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecurityTemplateBindingsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecurityTemplateBindings require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecurityTemplateBindingsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTimingL4DataRequest() (request *DescribeTimingL4DataRequest) {
     request = &DescribeTimingL4DataRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2649,8 +4267,9 @@ func NewDescribeTimingL4DataRequest() (request *DescribeTimingL4DataRequest) {
 func NewDescribeTimingL4DataResponse() (response *DescribeTimingL4DataResponse) {
     response = &DescribeTimingL4DataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTimingL4Data
@@ -2709,8 +4328,9 @@ func NewDescribeTimingL7AnalysisDataRequest() (request *DescribeTimingL7Analysis
 func NewDescribeTimingL7AnalysisDataResponse() (response *DescribeTimingL7AnalysisDataResponse) {
     response = &DescribeTimingL7AnalysisDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTimingL7AnalysisData
@@ -2775,8 +4395,9 @@ func NewDescribeTimingL7CacheDataRequest() (request *DescribeTimingL7CacheDataRe
 func NewDescribeTimingL7CacheDataResponse() (response *DescribeTimingL7CacheDataResponse) {
     response = &DescribeTimingL7CacheDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTimingL7CacheData
@@ -2829,8 +4450,9 @@ func NewDescribeTopL7AnalysisDataRequest() (request *DescribeTopL7AnalysisDataRe
 func NewDescribeTopL7AnalysisDataResponse() (response *DescribeTopL7AnalysisDataResponse) {
     response = &DescribeTopL7AnalysisDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopL7AnalysisData
@@ -2847,6 +4469,7 @@ func NewDescribeTopL7AnalysisDataResponse() (response *DescribeTopL7AnalysisData
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeTopL7AnalysisData(request *DescribeTopL7AnalysisDataRequest) (response *DescribeTopL7AnalysisDataResponse, err error) {
     return c.DescribeTopL7AnalysisDataWithContext(context.Background(), request)
 }
@@ -2865,6 +4488,7 @@ func (c *Client) DescribeTopL7AnalysisData(request *DescribeTopL7AnalysisDataReq
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeTopL7AnalysisDataWithContext(ctx context.Context, request *DescribeTopL7AnalysisDataRequest) (response *DescribeTopL7AnalysisDataResponse, err error) {
     if request == nil {
         request = NewDescribeTopL7AnalysisDataRequest()
@@ -2895,8 +4519,9 @@ func NewDescribeTopL7CacheDataRequest() (request *DescribeTopL7CacheDataRequest)
 func NewDescribeTopL7CacheDataResponse() (response *DescribeTopL7CacheDataResponse) {
     response = &DescribeTopL7CacheDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopL7CacheData
@@ -2904,6 +4529,7 @@ func NewDescribeTopL7CacheDataResponse() (response *DescribeTopL7CacheDataRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeTopL7CacheData(request *DescribeTopL7CacheDataRequest) (response *DescribeTopL7CacheDataResponse, err error) {
@@ -2915,6 +4541,7 @@ func (c *Client) DescribeTopL7CacheData(request *DescribeTopL7CacheDataRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeTopL7CacheDataWithContext(ctx context.Context, request *DescribeTopL7CacheDataRequest) (response *DescribeTopL7CacheDataResponse, err error) {
@@ -2947,8 +4574,9 @@ func NewDescribeZoneSettingRequest() (request *DescribeZoneSettingRequest) {
 func NewDescribeZoneSettingResponse() (response *DescribeZoneSettingResponse) {
     response = &DescribeZoneSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeZoneSetting
@@ -3009,8 +4637,9 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
 func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
     response = &DescribeZonesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeZones
@@ -3051,6 +4680,85 @@ func (c *Client) DescribeZonesWithContext(ctx context.Context, request *Describe
     return
 }
 
+func NewDestroyPlanRequest() (request *DestroyPlanRequest) {
+    request = &DestroyPlanRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DestroyPlan")
+    
+    
+    return
+}
+
+func NewDestroyPlanResponse() (response *DestroyPlanResponse) {
+    response = &DestroyPlanResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DestroyPlan
+// 当您需要停止 Edgeone 套餐的计费，可以通过该接口销毁计费套餐。
+//
+// > 销毁计费套餐需要满足以下条件：
+//
+//     1.套餐已过期（企业版套餐除外）；
+//
+//     2.套餐下所有站点均已关闭或删除。
+//
+// 
+//
+// > 站点状态可以通过 [查询站点列表](https://cloud.tencent.com/document/product/1552/80713) 接口进行查询
+//
+// 停用站点可以通过 [切换站点状态](https://cloud.tencent.com/document/product/1552/80707) 接口将站点切换至关闭状态
+//
+// 删除站点可以通过 [删除站点](https://cloud.tencent.com/document/product/1552/80717) 接口将站点删除
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
+func (c *Client) DestroyPlan(request *DestroyPlanRequest) (response *DestroyPlanResponse, err error) {
+    return c.DestroyPlanWithContext(context.Background(), request)
+}
+
+// DestroyPlan
+// 当您需要停止 Edgeone 套餐的计费，可以通过该接口销毁计费套餐。
+//
+// > 销毁计费套餐需要满足以下条件：
+//
+//     1.套餐已过期（企业版套餐除外）；
+//
+//     2.套餐下所有站点均已关闭或删除。
+//
+// 
+//
+// > 站点状态可以通过 [查询站点列表](https://cloud.tencent.com/document/product/1552/80713) 接口进行查询
+//
+// 停用站点可以通过 [切换站点状态](https://cloud.tencent.com/document/product/1552/80707) 接口将站点切换至关闭状态
+//
+// 删除站点可以通过 [删除站点](https://cloud.tencent.com/document/product/1552/80717) 接口将站点删除
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
+func (c *Client) DestroyPlanWithContext(ctx context.Context, request *DestroyPlanRequest) (response *DestroyPlanResponse, err error) {
+    if request == nil {
+        request = NewDestroyPlanRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DestroyPlan require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDestroyPlanResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDownloadL4LogsRequest() (request *DownloadL4LogsRequest) {
     request = &DownloadL4LogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3065,8 +4773,9 @@ func NewDownloadL4LogsRequest() (request *DownloadL4LogsRequest) {
 func NewDownloadL4LogsResponse() (response *DownloadL4LogsResponse) {
     response = &DownloadL4LogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DownloadL4Logs
@@ -3113,8 +4822,9 @@ func NewDownloadL7LogsRequest() (request *DownloadL7LogsRequest) {
 func NewDownloadL7LogsResponse() (response *DownloadL7LogsResponse) {
     response = &DownloadL7LogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DownloadL7Logs
@@ -3165,8 +4875,9 @@ func NewIdentifyZoneRequest() (request *IdentifyZoneRequest) {
 func NewIdentifyZoneResponse() (response *IdentifyZoneResponse) {
     response = &IdentifyZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IdentifyZone
@@ -3203,6 +4914,69 @@ func (c *Client) IdentifyZoneWithContext(ctx context.Context, request *IdentifyZ
     return
 }
 
+func NewIncreasePlanQuotaRequest() (request *IncreasePlanQuotaRequest) {
+    request = &IncreasePlanQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "IncreasePlanQuota")
+    
+    
+    return
+}
+
+func NewIncreasePlanQuotaResponse() (response *IncreasePlanQuotaResponse) {
+    response = &IncreasePlanQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// IncreasePlanQuota
+// 当您的套餐绑定的站点数，或配置的 Web 防护 - 自定义规则 - 精准匹配策略的规则数，或 Web 防护 - 速率限制 - 精准速率限制模块的规则数达到套餐允许的配额上限，可以通过该接口增购对应配额。
+//
+// > 该接口该仅支持企业版套餐。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDQUOTANUMBER = "InvalidParameter.InvalidQuotaNumber"
+//  INVALIDPARAMETER_INVALIDQUOTATYPE = "InvalidParameter.InvalidQuotaType"
+//  OPERATIONDENIED_PLANHASBEENISOLATED = "OperationDenied.PlanHasBeenIsolated"
+//  OPERATIONDENIED_PLANINCREASEPLANQUOTAUNSUPPORTED = "OperationDenied.PlanIncreasePlanQuotaUnsupported"
+//  OPERATIONDENIED_RESOURCEHASBEENLOCKED = "OperationDenied.ResourceHasBeenLocked"
+func (c *Client) IncreasePlanQuota(request *IncreasePlanQuotaRequest) (response *IncreasePlanQuotaResponse, err error) {
+    return c.IncreasePlanQuotaWithContext(context.Background(), request)
+}
+
+// IncreasePlanQuota
+// 当您的套餐绑定的站点数，或配置的 Web 防护 - 自定义规则 - 精准匹配策略的规则数，或 Web 防护 - 速率限制 - 精准速率限制模块的规则数达到套餐允许的配额上限，可以通过该接口增购对应配额。
+//
+// > 该接口该仅支持企业版套餐。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDQUOTANUMBER = "InvalidParameter.InvalidQuotaNumber"
+//  INVALIDPARAMETER_INVALIDQUOTATYPE = "InvalidParameter.InvalidQuotaType"
+//  OPERATIONDENIED_PLANHASBEENISOLATED = "OperationDenied.PlanHasBeenIsolated"
+//  OPERATIONDENIED_PLANINCREASEPLANQUOTAUNSUPPORTED = "OperationDenied.PlanIncreasePlanQuotaUnsupported"
+//  OPERATIONDENIED_RESOURCEHASBEENLOCKED = "OperationDenied.ResourceHasBeenLocked"
+func (c *Client) IncreasePlanQuotaWithContext(ctx context.Context, request *IncreasePlanQuotaRequest) (response *IncreasePlanQuotaResponse, err error) {
+    if request == nil {
+        request = NewIncreasePlanQuotaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("IncreasePlanQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewIncreasePlanQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAccelerationDomainRequest() (request *ModifyAccelerationDomainRequest) {
     request = &ModifyAccelerationDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3217,8 +4991,9 @@ func NewModifyAccelerationDomainRequest() (request *ModifyAccelerationDomainRequ
 func NewModifyAccelerationDomainResponse() (response *ModifyAccelerationDomainResponse) {
     response = &ModifyAccelerationDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccelerationDomain
@@ -3229,19 +5004,25 @@ func NewModifyAccelerationDomainResponse() (response *ModifyAccelerationDomainRe
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CONFLICTHOSTORIGIN = "InvalidParameter.ConflictHostOrigin"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
+//  INVALIDPARAMETER_INVALIDAWSSECRETKEY = "InvalidParameter.InvalidAwsSecretKey"
 //  INVALIDPARAMETER_INVALIDCLIENTIPORIGIN = "InvalidParameter.InvalidClientIpOrigin"
 //  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDPRIVATEACCESSPARAMS = "InvalidParameter.InvalidPrivateAccessParams"
 //  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_ORIGINISINNERIP = "InvalidParameter.OriginIsInnerIp"
 //  INVALIDPARAMETER_SPACENOTBINDORIGIN = "InvalidParameter.SpaceNotBindOrigin"
+//  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  INVALIDPARAMETERVALUE_CONFLICTRECORD = "InvalidParameterValue.ConflictRecord"
 //  INVALIDPARAMETERVALUE_DOMAINNOTMATCHZONE = "InvalidParameterValue.DomainNotMatchZone"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
 //  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_DNSRECORD = "ResourceInUse.DnsRecord"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
@@ -3259,19 +5040,25 @@ func (c *Client) ModifyAccelerationDomain(request *ModifyAccelerationDomainReque
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CONFLICTHOSTORIGIN = "InvalidParameter.ConflictHostOrigin"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
+//  INVALIDPARAMETER_INVALIDAWSSECRETKEY = "InvalidParameter.InvalidAwsSecretKey"
 //  INVALIDPARAMETER_INVALIDCLIENTIPORIGIN = "InvalidParameter.InvalidClientIpOrigin"
 //  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDPRIVATEACCESSPARAMS = "InvalidParameter.InvalidPrivateAccessParams"
 //  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_ORIGINISINNERIP = "InvalidParameter.OriginIsInnerIp"
 //  INVALIDPARAMETER_SPACENOTBINDORIGIN = "InvalidParameter.SpaceNotBindOrigin"
+//  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  INVALIDPARAMETERVALUE_CONFLICTRECORD = "InvalidParameterValue.ConflictRecord"
 //  INVALIDPARAMETERVALUE_DOMAINNOTMATCHZONE = "InvalidParameterValue.DomainNotMatchZone"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
 //  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_DNSRECORD = "ResourceInUse.DnsRecord"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
@@ -3307,8 +5094,9 @@ func NewModifyAccelerationDomainStatusesRequest() (request *ModifyAccelerationDo
 func NewModifyAccelerationDomainStatusesResponse() (response *ModifyAccelerationDomainStatusesResponse) {
     response = &ModifyAccelerationDomainStatusesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccelerationDomainStatuses
@@ -3326,6 +5114,8 @@ func NewModifyAccelerationDomainStatusesResponse() (response *ModifyAcceleration
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -3349,6 +5139,8 @@ func (c *Client) ModifyAccelerationDomainStatuses(request *ModifyAccelerationDom
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -3383,8 +5175,9 @@ func NewModifyAliasDomainRequest() (request *ModifyAliasDomainRequest) {
 func NewModifyAliasDomainResponse() (response *ModifyAliasDomainResponse) {
     response = &ModifyAliasDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAliasDomain
@@ -3437,8 +5230,9 @@ func NewModifyAliasDomainStatusRequest() (request *ModifyAliasDomainStatusReques
 func NewModifyAliasDomainStatusResponse() (response *ModifyAliasDomainStatusResponse) {
     response = &ModifyAliasDomainStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAliasDomainStatus
@@ -3489,16 +5283,21 @@ func NewModifyApplicationProxyRequest() (request *ModifyApplicationProxyRequest)
 func NewModifyApplicationProxyResponse() (response *ModifyApplicationProxyResponse) {
     response = &ModifyApplicationProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApplicationProxy
-// 修改应用代理
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理实例
+//
+// ](https://cloud.tencent.com/document/product/1552/103411) 。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxy(request *ModifyApplicationProxyRequest) (response *ModifyApplicationProxyResponse, err error) {
@@ -3506,11 +5305,15 @@ func (c *Client) ModifyApplicationProxy(request *ModifyApplicationProxyRequest) 
 }
 
 // ModifyApplicationProxy
-// 修改应用代理
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理实例
+//
+// ](https://cloud.tencent.com/document/product/1552/103411) 。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyWithContext(ctx context.Context, request *ModifyApplicationProxyRequest) (response *ModifyApplicationProxyResponse, err error) {
@@ -3543,14 +5346,18 @@ func NewModifyApplicationProxyRuleRequest() (request *ModifyApplicationProxyRule
 func NewModifyApplicationProxyRuleResponse() (response *ModifyApplicationProxyRuleResponse) {
     response = &ModifyApplicationProxyRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApplicationProxyRule
-// 修改应用代理规则
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理转发规则
+//
+// ](https://cloud.tencent.com/document/product/1552/103410) 。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3561,9 +5368,12 @@ func (c *Client) ModifyApplicationProxyRule(request *ModifyApplicationProxyRuleR
 }
 
 // ModifyApplicationProxyRule
-// 修改应用代理规则
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理转发规则
+//
+// ](https://cloud.tencent.com/document/product/1552/103410) 。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3599,12 +5409,15 @@ func NewModifyApplicationProxyRuleStatusRequest() (request *ModifyApplicationPro
 func NewModifyApplicationProxyRuleStatusResponse() (response *ModifyApplicationProxyRuleStatusResponse) {
     response = &ModifyApplicationProxyRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApplicationProxyRuleStatus
-// 修改应用代理规则的状态
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理转发规则状态
+//
+// ](https://cloud.tencent.com/document/product/1552/103409) 。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3616,7 +5429,9 @@ func (c *Client) ModifyApplicationProxyRuleStatus(request *ModifyApplicationProx
 }
 
 // ModifyApplicationProxyRuleStatus
-// 修改应用代理规则的状态
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理转发规则状态
+//
+// ](https://cloud.tencent.com/document/product/1552/103409) 。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3653,17 +5468,19 @@ func NewModifyApplicationProxyStatusRequest() (request *ModifyApplicationProxySt
 func NewModifyApplicationProxyStatusResponse() (response *ModifyApplicationProxyStatusResponse) {
     response = &ModifyApplicationProxyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApplicationProxyStatus
-// 修改应用代理的状态
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理实例状态](https://cloud.tencent.com/document/product/1552/103408) 。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -3672,12 +5489,13 @@ func (c *Client) ModifyApplicationProxyStatus(request *ModifyApplicationProxySta
 }
 
 // ModifyApplicationProxyStatus
-// 修改应用代理的状态
+// 本接口为旧版，如需调用请尽快迁移至新版，详情请参考 [修改四层代理实例状态](https://cloud.tencent.com/document/product/1552/103408) 。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -3711,8 +5529,9 @@ func NewModifyHostsCertificateRequest() (request *ModifyHostsCertificateRequest)
 func NewModifyHostsCertificateResponse() (response *ModifyHostsCertificateResponse) {
     response = &ModifyHostsCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyHostsCertificate
@@ -3743,9 +5562,13 @@ func NewModifyHostsCertificateResponse() (response *ModifyHostsCertificateRespon
 //  INVALIDPARAMETER_INVALIDCERTINFO = "InvalidParameter.InvalidCertInfo"
 //  INVALIDPARAMETER_INVALIDHTTPSCERTINFO = "InvalidParameter.InvalidHttpsCertInfo"
 //  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
+//  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
 //  RESOURCEUNAVAILABLE_HOSTNOTFOUND = "ResourceUnavailable.HostNotFound"
@@ -3782,9 +5605,13 @@ func (c *Client) ModifyHostsCertificate(request *ModifyHostsCertificateRequest) 
 //  INVALIDPARAMETER_INVALIDCERTINFO = "InvalidParameter.InvalidCertInfo"
 //  INVALIDPARAMETER_INVALIDHTTPSCERTINFO = "InvalidParameter.InvalidHttpsCertInfo"
 //  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
+//  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
 //  RESOURCEUNAVAILABLE_HOSTNOTFOUND = "ResourceUnavailable.HostNotFound"
@@ -3805,6 +5632,240 @@ func (c *Client) ModifyHostsCertificateWithContext(ctx context.Context, request 
     return
 }
 
+func NewModifyL4ProxyRequest() (request *ModifyL4ProxyRequest) {
+    request = &ModifyL4ProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyL4Proxy")
+    
+    
+    return
+}
+
+func NewModifyL4ProxyResponse() (response *ModifyL4ProxyResponse) {
+    response = &ModifyL4ProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyL4Proxy
+// 用于修改四层代理实例的配置。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
+//  OPERATIONDENIED_L4PROXYINOFFLINESTATUS = "OperationDenied.L4ProxyInOfflineStatus"
+//  OPERATIONDENIED_L4PROXYINPROCESSSTATUS = "OperationDenied.L4ProxyInProcessStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) ModifyL4Proxy(request *ModifyL4ProxyRequest) (response *ModifyL4ProxyResponse, err error) {
+    return c.ModifyL4ProxyWithContext(context.Background(), request)
+}
+
+// ModifyL4Proxy
+// 用于修改四层代理实例的配置。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
+//  OPERATIONDENIED_L4PROXYINOFFLINESTATUS = "OperationDenied.L4ProxyInOfflineStatus"
+//  OPERATIONDENIED_L4PROXYINPROCESSSTATUS = "OperationDenied.L4ProxyInProcessStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) ModifyL4ProxyWithContext(ctx context.Context, request *ModifyL4ProxyRequest) (response *ModifyL4ProxyResponse, err error) {
+    if request == nil {
+        request = NewModifyL4ProxyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyL4Proxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyL4ProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyL4ProxyRulesRequest() (request *ModifyL4ProxyRulesRequest) {
+    request = &ModifyL4ProxyRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyL4ProxyRules")
+    
+    
+    return
+}
+
+func NewModifyL4ProxyRulesResponse() (response *ModifyL4ProxyRulesResponse) {
+    response = &ModifyL4ProxyRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyL4ProxyRules
+// 用于修改四层代理转发规则，支持单条或者批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyL4ProxyRules(request *ModifyL4ProxyRulesRequest) (response *ModifyL4ProxyRulesResponse, err error) {
+    return c.ModifyL4ProxyRulesWithContext(context.Background(), request)
+}
+
+// ModifyL4ProxyRules
+// 用于修改四层代理转发规则，支持单条或者批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyL4ProxyRulesWithContext(ctx context.Context, request *ModifyL4ProxyRulesRequest) (response *ModifyL4ProxyRulesResponse, err error) {
+    if request == nil {
+        request = NewModifyL4ProxyRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyL4ProxyRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyL4ProxyRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyL4ProxyRulesStatusRequest() (request *ModifyL4ProxyRulesStatusRequest) {
+    request = &ModifyL4ProxyRulesStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyL4ProxyRulesStatus")
+    
+    
+    return
+}
+
+func NewModifyL4ProxyRulesStatusResponse() (response *ModifyL4ProxyRulesStatusResponse) {
+    response = &ModifyL4ProxyRulesStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyL4ProxyRulesStatus
+// 用于启用/停用四层代理转发规则状态，支持单条或者批量操作。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyL4ProxyRulesStatus(request *ModifyL4ProxyRulesStatusRequest) (response *ModifyL4ProxyRulesStatusResponse, err error) {
+    return c.ModifyL4ProxyRulesStatusWithContext(context.Background(), request)
+}
+
+// ModifyL4ProxyRulesStatus
+// 用于启用/停用四层代理转发规则状态，支持单条或者批量操作。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyL4ProxyRulesStatusWithContext(ctx context.Context, request *ModifyL4ProxyRulesStatusRequest) (response *ModifyL4ProxyRulesStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyL4ProxyRulesStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyL4ProxyRulesStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyL4ProxyRulesStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyL4ProxyStatusRequest() (request *ModifyL4ProxyStatusRequest) {
+    request = &ModifyL4ProxyStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyL4ProxyStatus")
+    
+    
+    return
+}
+
+func NewModifyL4ProxyStatusResponse() (response *ModifyL4ProxyStatusResponse) {
+    response = &ModifyL4ProxyStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyL4ProxyStatus
+// 用于启用/停用四层代理实例。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyL4ProxyStatus(request *ModifyL4ProxyStatusRequest) (response *ModifyL4ProxyStatusResponse, err error) {
+    return c.ModifyL4ProxyStatusWithContext(context.Background(), request)
+}
+
+// ModifyL4ProxyStatus
+// 用于启用/停用四层代理实例。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyL4ProxyStatusWithContext(ctx context.Context, request *ModifyL4ProxyStatusRequest) (response *ModifyL4ProxyStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyL4ProxyStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyL4ProxyStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyL4ProxyStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyOriginGroupRequest() (request *ModifyOriginGroupRequest) {
     request = &ModifyOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3819,18 +5880,27 @@ func NewModifyOriginGroupRequest() (request *ModifyOriginGroupRequest) {
 func NewModifyOriginGroupResponse() (response *ModifyOriginGroupResponse) {
     response = &ModifyOriginGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyOriginGroup
-// 修改源站组
+// 修改源站组配置，新提交的源站记录将会覆盖原有源站组中的源站记录。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_HOSTHEADERINVALID = "InvalidParameter.HostHeaderInvalid"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_ORIGINL4RECORDIPV4MIXDOMAIN = "InvalidParameter.OriginL4RecordIPV4MixDomain"
+//  INVALIDPARAMETER_ORIGINL4RECORDMULTIDOMAIN = "InvalidParameter.OriginL4RecordMultiDomain"
+//  INVALIDPARAMETER_ORIGINNAMEEXISTS = "InvalidParameter.OriginNameExists"
+//  INVALIDPARAMETER_ORIGINRECORDFORMATERROR = "InvalidParameter.OriginRecordFormatError"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATIONDOMAINSTATUSNOTINONLINE = "OperationDenied.AccelerationDomainStatusNotInOnline"
 //  OPERATIONDENIED_L4STATUSNOTINONLINE = "OperationDenied.L4StatusNotInOnline"
+//  OPERATIONDENIED_LOADBALANCESTATUSNOTINONLINE = "OperationDenied.LoadBalanceStatusNotInOnline"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
@@ -3839,13 +5909,21 @@ func (c *Client) ModifyOriginGroup(request *ModifyOriginGroupRequest) (response 
 }
 
 // ModifyOriginGroup
-// 修改源站组
+// 修改源站组配置，新提交的源站记录将会覆盖原有源站组中的源站记录。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_HOSTHEADERINVALID = "InvalidParameter.HostHeaderInvalid"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_ORIGINL4RECORDIPV4MIXDOMAIN = "InvalidParameter.OriginL4RecordIPV4MixDomain"
+//  INVALIDPARAMETER_ORIGINL4RECORDMULTIDOMAIN = "InvalidParameter.OriginL4RecordMultiDomain"
+//  INVALIDPARAMETER_ORIGINNAMEEXISTS = "InvalidParameter.OriginNameExists"
+//  INVALIDPARAMETER_ORIGINRECORDFORMATERROR = "InvalidParameter.OriginRecordFormatError"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATIONDOMAINSTATUSNOTINONLINE = "OperationDenied.AccelerationDomainStatusNotInOnline"
 //  OPERATIONDENIED_L4STATUSNOTINONLINE = "OperationDenied.L4StatusNotInOnline"
+//  OPERATIONDENIED_LOADBALANCESTATUSNOTINONLINE = "OperationDenied.LoadBalanceStatusNotInOnline"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
@@ -3865,6 +5943,116 @@ func (c *Client) ModifyOriginGroupWithContext(ctx context.Context, request *Modi
     return
 }
 
+func NewModifyPlanRequest() (request *ModifyPlanRequest) {
+    request = &ModifyPlanRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyPlan")
+    
+    
+    return
+}
+
+func NewModifyPlanResponse() (response *ModifyPlanResponse) {
+    response = &ModifyPlanResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyPlan
+// 修改套餐配置。目前仅支持修改预付费套餐的自动续费开关。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_ENTERPRISEPLANAUTORENEWUNSUPPORTED = "OperationDenied.EnterprisePlanAutoRenewUnsupported"
+//  OPERATIONDENIED_PLANHASBEENISOLATED = "OperationDenied.PlanHasBeenIsolated"
+func (c *Client) ModifyPlan(request *ModifyPlanRequest) (response *ModifyPlanResponse, err error) {
+    return c.ModifyPlanWithContext(context.Background(), request)
+}
+
+// ModifyPlan
+// 修改套餐配置。目前仅支持修改预付费套餐的自动续费开关。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_ENTERPRISEPLANAUTORENEWUNSUPPORTED = "OperationDenied.EnterprisePlanAutoRenewUnsupported"
+//  OPERATIONDENIED_PLANHASBEENISOLATED = "OperationDenied.PlanHasBeenIsolated"
+func (c *Client) ModifyPlanWithContext(ctx context.Context, request *ModifyPlanRequest) (response *ModifyPlanResponse, err error) {
+    if request == nil {
+        request = NewModifyPlanRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyPlan require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyPlanResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRealtimeLogDeliveryTaskRequest() (request *ModifyRealtimeLogDeliveryTaskRequest) {
+    request = &ModifyRealtimeLogDeliveryTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyRealtimeLogDeliveryTask")
+    
+    
+    return
+}
+
+func NewModifyRealtimeLogDeliveryTaskResponse() (response *ModifyRealtimeLogDeliveryTaskResponse) {
+    response = &ModifyRealtimeLogDeliveryTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRealtimeLogDeliveryTask
+// 通过本接口修改实时日志投递任务配置。本接口有如下限制：<li>不支持修改实时日志投递任务目的地类型（TaskType）；</li><li>不支持修改数据投递类型（LogType）</li><li>不支持修改数据投递区域（Area）</li><li>当原实时日志投递任务的目的地为腾讯云 CLS 时，不支持修改目的地详细配置，如日志集、日志主题。</li>
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATELOGTOPICTASKAUTHFAILURE = "FailedOperation.CreateLogTopicTaskAuthFailure"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFIELDDELIMITER = "InvalidParameter.InvalidLogFormatFieldDelimiter"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFORMATTYPE = "InvalidParameter.InvalidLogFormatFormatType"
+//  INVALIDPARAMETER_INVALIDLOGFORMATRECORDDELIMITER = "InvalidParameter.InvalidLogFormatRecordDelimiter"
+func (c *Client) ModifyRealtimeLogDeliveryTask(request *ModifyRealtimeLogDeliveryTaskRequest) (response *ModifyRealtimeLogDeliveryTaskResponse, err error) {
+    return c.ModifyRealtimeLogDeliveryTaskWithContext(context.Background(), request)
+}
+
+// ModifyRealtimeLogDeliveryTask
+// 通过本接口修改实时日志投递任务配置。本接口有如下限制：<li>不支持修改实时日志投递任务目的地类型（TaskType）；</li><li>不支持修改数据投递类型（LogType）</li><li>不支持修改数据投递区域（Area）</li><li>当原实时日志投递任务的目的地为腾讯云 CLS 时，不支持修改目的地详细配置，如日志集、日志主题。</li>
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATELOGTOPICTASKAUTHFAILURE = "FailedOperation.CreateLogTopicTaskAuthFailure"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFIELDDELIMITER = "InvalidParameter.InvalidLogFormatFieldDelimiter"
+//  INVALIDPARAMETER_INVALIDLOGFORMATFORMATTYPE = "InvalidParameter.InvalidLogFormatFormatType"
+//  INVALIDPARAMETER_INVALIDLOGFORMATRECORDDELIMITER = "InvalidParameter.InvalidLogFormatRecordDelimiter"
+func (c *Client) ModifyRealtimeLogDeliveryTaskWithContext(ctx context.Context, request *ModifyRealtimeLogDeliveryTaskRequest) (response *ModifyRealtimeLogDeliveryTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyRealtimeLogDeliveryTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRealtimeLogDeliveryTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRealtimeLogDeliveryTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyRuleRequest() (request *ModifyRuleRequest) {
     request = &ModifyRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3879,8 +6067,9 @@ func NewModifyRuleRequest() (request *ModifyRuleRequest) {
 func NewModifyRuleResponse() (response *ModifyRuleResponse) {
     response = &ModifyRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRule
@@ -3891,13 +6080,18 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CACHEKEYQUERYSTRINGTOOMANYVALUE = "InvalidParameter.CacheKeyQueryStringTooManyValue"
 //  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
+//  INVALIDPARAMETER_COMPRESSIONINVALIDALGORITHMS = "InvalidParameter.CompressionInvalidAlgorithms"
 //  INVALIDPARAMETER_ERRACTIONUNSUPPORTTARGET = "InvalidParameter.ErrActionUnsupportTarget"
 //  INVALIDPARAMETER_ERRINVALIDACTION = "InvalidParameter.ErrInvalidAction"
+//  INVALIDPARAMETER_ERRINVALIDACTIONDUPLICATEACTION = "InvalidParameter.ErrInvalidActionDuplicateAction"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMACTION = "InvalidParameter.ErrInvalidActionParamAction"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMDUPLICATENAME = "InvalidParameter.ErrInvalidActionParamDuplicateName"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAMNAME = "InvalidParameter.ErrInvalidActionParamName"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMTOOMANYVALUES = "InvalidParameter.ErrInvalidActionParamTooManyValues"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMVALUE = "InvalidParameter.ErrInvalidActionParamValue"
+//  INVALIDPARAMETER_ERRINVALIDACTIONTYPE = "InvalidParameter.ErrInvalidActionType"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONHOSTTOOMANYWHENMODIFYORIGINACTIONCONFIGURED = "InvalidParameter.ErrInvalidConditionHostTooManyWhenModifyOriginActionConfigured"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONIGNORECASE = "InvalidParameter.ErrInvalidConditionIgnoreCase"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMEBADNAME = "InvalidParameter.ErrInvalidConditionNameBadName"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMETARGETNOTSUPPORTNAME = "InvalidParameter.ErrInvalidConditionNameTargetNotSupportName"
@@ -3907,12 +6101,16 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUECONTAINFILENAMEEXTENSION = "InvalidParameter.ErrInvalidConditionValueBadValueContainFileNameExtension"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOLONGVALUE = "InvalidParameter.ErrInvalidConditionValueTooLongValue"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYVALUES = "InvalidParameter.ErrInvalidConditionValueTooManyValues"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYWILDCARD = "InvalidParameter.ErrInvalidConditionValueTooManyWildcard"
 //  INVALIDPARAMETER_ERRINVALIDELSEWHENMODIFYORIGINACTIONCONFIGURED = "InvalidParameter.ErrInvalidElseWhenModifyOriginActionConfigured"
+//  INVALIDPARAMETER_ERRNILCONDITION = "InvalidParameter.ErrNilCondition"
+//  INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
 //  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESECRETKEY = "InvalidParameter.InvalidAuthenticationTypeSecretKey"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPETIMEFORMAT = "InvalidParameter.InvalidAuthenticationTypeTimeFormat"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPETIMEPARAM = "InvalidParameter.InvalidAuthenticationTypeTimeParam"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDBACKUPSERVERNAME = "InvalidParameter.InvalidBackupServerName"
 //  INVALIDPARAMETER_INVALIDCACHEKEY = "InvalidParameter.InvalidCacheKey"
 //  INVALIDPARAMETER_INVALIDCACHEKEYCOOKIE = "InvalidParameter.InvalidCacheKeyCookie"
@@ -3920,10 +6118,13 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 //  INVALIDPARAMETER_INVALIDCACHEKEYSCHEME = "InvalidParameter.InvalidCacheKeyScheme"
 //  INVALIDPARAMETER_INVALIDCACHETIME = "InvalidParameter.InvalidCacheTime"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDCOSDOMAIN = "InvalidParameter.InvalidCosDomain"
 //  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
+//  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
 //  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
+//  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
@@ -3941,11 +6142,18 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 //  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
 //  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 //  INVALIDPARAMETER_KEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.KeyRulesInvalidQueryStringValue"
+//  INVALIDPARAMETER_LOADBALANCEINSTANCEIDISREQUIRED = "InvalidParameter.LoadBalanceInstanceIdIsRequired"
 //  INVALIDPARAMETER_NOTSUPPORTTHISPRESET = "InvalidParameter.NotSupportThisPreset"
+//  INVALIDPARAMETER_ORIGINORIGINGROUPIDISREQUIRED = "InvalidParameter.OriginOriginGroupIdIsRequired"
+//  INVALIDPARAMETER_ORIGINPULLPROTOCOLISREQUIRED = "InvalidParameter.OriginPullProtocolIsRequired"
 //  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_RESPONSEHEADERCACHECONTROLNOTALLOWDELETE = "InvalidParameter.ResponseHeaderCacheControlNotAllowDelete"
+//  INVALIDPARAMETER_STATUSCODECACHEINVALIDSTATUSCODE = "InvalidParameter.StatusCodeCacheInvalidStatusCode"
+//  INVALIDPARAMETER_TLSVERSIONNOTINSEQUENCE = "InvalidParameter.TlsVersionNotInSequence"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_INVALIDADVANCEDDEFENSESECURITYTYPE = "OperationDenied.InvalidAdvancedDefenseSecurityType"
 //  RESOURCEINUSE = "ResourceInUse"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -3962,13 +6170,18 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CACHEKEYQUERYSTRINGTOOMANYVALUE = "InvalidParameter.CacheKeyQueryStringTooManyValue"
 //  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
+//  INVALIDPARAMETER_COMPRESSIONINVALIDALGORITHMS = "InvalidParameter.CompressionInvalidAlgorithms"
 //  INVALIDPARAMETER_ERRACTIONUNSUPPORTTARGET = "InvalidParameter.ErrActionUnsupportTarget"
 //  INVALIDPARAMETER_ERRINVALIDACTION = "InvalidParameter.ErrInvalidAction"
+//  INVALIDPARAMETER_ERRINVALIDACTIONDUPLICATEACTION = "InvalidParameter.ErrInvalidActionDuplicateAction"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMACTION = "InvalidParameter.ErrInvalidActionParamAction"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMDUPLICATENAME = "InvalidParameter.ErrInvalidActionParamDuplicateName"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAMNAME = "InvalidParameter.ErrInvalidActionParamName"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMTOOMANYVALUES = "InvalidParameter.ErrInvalidActionParamTooManyValues"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAMVALUE = "InvalidParameter.ErrInvalidActionParamValue"
+//  INVALIDPARAMETER_ERRINVALIDACTIONTYPE = "InvalidParameter.ErrInvalidActionType"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONHOSTTOOMANYWHENMODIFYORIGINACTIONCONFIGURED = "InvalidParameter.ErrInvalidConditionHostTooManyWhenModifyOriginActionConfigured"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONIGNORECASE = "InvalidParameter.ErrInvalidConditionIgnoreCase"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMEBADNAME = "InvalidParameter.ErrInvalidConditionNameBadName"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMETARGETNOTSUPPORTNAME = "InvalidParameter.ErrInvalidConditionNameTargetNotSupportName"
@@ -3978,12 +6191,16 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUECONTAINFILENAMEEXTENSION = "InvalidParameter.ErrInvalidConditionValueBadValueContainFileNameExtension"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOLONGVALUE = "InvalidParameter.ErrInvalidConditionValueTooLongValue"
 //  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYVALUES = "InvalidParameter.ErrInvalidConditionValueTooManyValues"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOMANYWILDCARD = "InvalidParameter.ErrInvalidConditionValueTooManyWildcard"
 //  INVALIDPARAMETER_ERRINVALIDELSEWHENMODIFYORIGINACTIONCONFIGURED = "InvalidParameter.ErrInvalidElseWhenModifyOriginActionConfigured"
+//  INVALIDPARAMETER_ERRNILCONDITION = "InvalidParameter.ErrNilCondition"
+//  INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
 //  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESECRETKEY = "InvalidParameter.InvalidAuthenticationTypeSecretKey"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPETIMEFORMAT = "InvalidParameter.InvalidAuthenticationTypeTimeFormat"
 //  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPETIMEPARAM = "InvalidParameter.InvalidAuthenticationTypeTimeParam"
+//  INVALIDPARAMETER_INVALIDAWSREGION = "InvalidParameter.InvalidAwsRegion"
 //  INVALIDPARAMETER_INVALIDBACKUPSERVERNAME = "InvalidParameter.InvalidBackupServerName"
 //  INVALIDPARAMETER_INVALIDCACHEKEY = "InvalidParameter.InvalidCacheKey"
 //  INVALIDPARAMETER_INVALIDCACHEKEYCOOKIE = "InvalidParameter.InvalidCacheKeyCookie"
@@ -3991,10 +6208,13 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 //  INVALIDPARAMETER_INVALIDCACHEKEYSCHEME = "InvalidParameter.InvalidCacheKeyScheme"
 //  INVALIDPARAMETER_INVALIDCACHETIME = "InvalidParameter.InvalidCacheTime"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDCOSDOMAIN = "InvalidParameter.InvalidCosDomain"
 //  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
+//  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
 //  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
+//  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
@@ -4012,11 +6232,18 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 //  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
 //  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 //  INVALIDPARAMETER_KEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.KeyRulesInvalidQueryStringValue"
+//  INVALIDPARAMETER_LOADBALANCEINSTANCEIDISREQUIRED = "InvalidParameter.LoadBalanceInstanceIdIsRequired"
 //  INVALIDPARAMETER_NOTSUPPORTTHISPRESET = "InvalidParameter.NotSupportThisPreset"
+//  INVALIDPARAMETER_ORIGINORIGINGROUPIDISREQUIRED = "InvalidParameter.OriginOriginGroupIdIsRequired"
+//  INVALIDPARAMETER_ORIGINPULLPROTOCOLISREQUIRED = "InvalidParameter.OriginPullProtocolIsRequired"
 //  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_RESPONSEHEADERCACHECONTROLNOTALLOWDELETE = "InvalidParameter.ResponseHeaderCacheControlNotAllowDelete"
+//  INVALIDPARAMETER_STATUSCODECACHEINVALIDSTATUSCODE = "InvalidParameter.StatusCodeCacheInvalidStatusCode"
+//  INVALIDPARAMETER_TLSVERSIONNOTINSEQUENCE = "InvalidParameter.TlsVersionNotInSequence"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_INVALIDADVANCEDDEFENSESECURITYTYPE = "OperationDenied.InvalidAdvancedDefenseSecurityType"
 //  RESOURCEINUSE = "ResourceInUse"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -4051,8 +6278,9 @@ func NewModifySecurityIPGroupRequest() (request *ModifySecurityIPGroupRequest) {
 func NewModifySecurityIPGroupResponse() (response *ModifySecurityIPGroupResponse) {
     response = &ModifySecurityIPGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySecurityIPGroup
@@ -4061,6 +6289,7 @@ func NewModifySecurityIPGroupResponse() (response *ModifySecurityIPGroupResponse
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) ModifySecurityIPGroup(request *ModifySecurityIPGroupRequest) (response *ModifySecurityIPGroupResponse, err error) {
@@ -4073,6 +6302,7 @@ func (c *Client) ModifySecurityIPGroup(request *ModifySecurityIPGroupRequest) (r
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) ModifySecurityIPGroupWithContext(ctx context.Context, request *ModifySecurityIPGroupRequest) (response *ModifySecurityIPGroupResponse, err error) {
@@ -4105,8 +6335,9 @@ func NewModifySecurityPolicyRequest() (request *ModifySecurityPolicyRequest) {
 func NewModifySecurityPolicyResponse() (response *ModifySecurityPolicyResponse) {
     response = &ModifySecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySecurityPolicy
@@ -4117,8 +6348,11 @@ func NewModifySecurityPolicyResponse() (response *ModifySecurityPolicyResponse) 
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  LIMITEXCEEDED_SECURITY = "LimitExceeded.Security"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEINUSE = "ResourceInUse"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifySecurityPolicy(request *ModifySecurityPolicyRequest) (response *ModifySecurityPolicyResponse, err error) {
@@ -4133,8 +6367,11 @@ func (c *Client) ModifySecurityPolicy(request *ModifySecurityPolicyRequest) (res
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  LIMITEXCEEDED_SECURITY = "LimitExceeded.Security"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEINUSE = "ResourceInUse"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifySecurityPolicyWithContext(ctx context.Context, request *ModifySecurityPolicyRequest) (response *ModifySecurityPolicyResponse, err error) {
@@ -4167,8 +6404,9 @@ func NewModifyZoneRequest() (request *ModifyZoneRequest) {
 func NewModifyZoneResponse() (response *ModifyZoneResponse) {
     response = &ModifyZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyZone
@@ -4179,7 +6417,9 @@ func NewModifyZoneResponse() (response *ModifyZoneResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_LENGTHEXCEEDSLIMIT = "InvalidParameter.LengthExceedsLimit"
+//  INVALIDPARAMETER_ZONENAMEISREQUIRED = "InvalidParameter.ZoneNameIsRequired"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_ZONESAMEASNAME = "InvalidParameterValue.ZoneSameAsName"
 //  OPERATIONDENIED = "OperationDenied"
@@ -4189,14 +6429,19 @@ func NewModifyZoneResponse() (response *ModifyZoneResponse) {
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_MULTIPLECNAMEZONE = "OperationDenied.MultipleCnameZone"
 //  OPERATIONDENIED_NSNOTALLOWTRAFFICSTRATEGY = "OperationDenied.NSNotAllowTrafficStrategy"
+//  OPERATIONDENIED_NODOMAINACCESSZONEONLYALLOWMODIFIEDTOCNAME = "OperationDenied.NoDomainAccessZoneOnlyAllowModifiedToCNAME"
+//  OPERATIONDENIED_NODOMAINACCESSZONEONLYSUPPORTMODIFYTYPE = "OperationDenied.NoDomainAccessZoneOnlySupportModifyType"
 //  OPERATIONDENIED_PLANNOTSUPPORTMODIFYZONEAREA = "OperationDenied.PlanNotSupportModifyZoneArea"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
 //  RESOURCEINUSE_CNAME = "ResourceInUse.Cname"
+//  RESOURCEINUSE_DNS = "ResourceInUse.Dns"
+//  RESOURCEINUSE_GENERICHOST = "ResourceInUse.GenericHost"
 //  RESOURCEINUSE_NS = "ResourceInUse.NS"
 //  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
 //  RESOURCEINUSE_OTHERSALIASDOMAIN = "ResourceInUse.OthersAliasDomain"
 //  RESOURCEINUSE_OTHERSCNAME = "ResourceInUse.OthersCname"
 //  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+//  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -4213,7 +6458,9 @@ func (c *Client) ModifyZone(request *ModifyZoneRequest) (response *ModifyZoneRes
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
 //  INVALIDPARAMETER_INVALIDORIGINIP = "InvalidParameter.InvalidOriginIp"
+//  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_LENGTHEXCEEDSLIMIT = "InvalidParameter.LengthExceedsLimit"
+//  INVALIDPARAMETER_ZONENAMEISREQUIRED = "InvalidParameter.ZoneNameIsRequired"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_ZONESAMEASNAME = "InvalidParameterValue.ZoneSameAsName"
 //  OPERATIONDENIED = "OperationDenied"
@@ -4223,14 +6470,19 @@ func (c *Client) ModifyZone(request *ModifyZoneRequest) (response *ModifyZoneRes
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_MULTIPLECNAMEZONE = "OperationDenied.MultipleCnameZone"
 //  OPERATIONDENIED_NSNOTALLOWTRAFFICSTRATEGY = "OperationDenied.NSNotAllowTrafficStrategy"
+//  OPERATIONDENIED_NODOMAINACCESSZONEONLYALLOWMODIFIEDTOCNAME = "OperationDenied.NoDomainAccessZoneOnlyAllowModifiedToCNAME"
+//  OPERATIONDENIED_NODOMAINACCESSZONEONLYSUPPORTMODIFYTYPE = "OperationDenied.NoDomainAccessZoneOnlySupportModifyType"
 //  OPERATIONDENIED_PLANNOTSUPPORTMODIFYZONEAREA = "OperationDenied.PlanNotSupportModifyZoneArea"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
 //  RESOURCEINUSE_CNAME = "ResourceInUse.Cname"
+//  RESOURCEINUSE_DNS = "ResourceInUse.Dns"
+//  RESOURCEINUSE_GENERICHOST = "ResourceInUse.GenericHost"
 //  RESOURCEINUSE_NS = "ResourceInUse.NS"
 //  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
 //  RESOURCEINUSE_OTHERSALIASDOMAIN = "ResourceInUse.OthersAliasDomain"
 //  RESOURCEINUSE_OTHERSCNAME = "ResourceInUse.OthersCname"
 //  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+//  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -4265,8 +6517,9 @@ func NewModifyZoneSettingRequest() (request *ModifyZoneSettingRequest) {
 func NewModifyZoneSettingResponse() (response *ModifyZoneSettingResponse) {
     response = &ModifyZoneSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyZoneSetting
@@ -4280,6 +6533,7 @@ func NewModifyZoneSettingResponse() (response *ModifyZoneSettingResponse) {
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWERROR = "InternalError.UnknowError"
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_CACHEKEYQUERYSTRINGREQUIRESFULLURLCACHEOFF = "InvalidParameter.CacheKeyQueryStringRequiresFullUrlCacheOff"
 //  INVALIDPARAMETER_CACHEKEYQUERYSTRINGTOOMANYVALUE = "InvalidParameter.CacheKeyQueryStringTooManyValue"
 //  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
 //  INVALIDPARAMETER_CLIENTIPCOUNTRYCONFLICTSWITHIPV6 = "InvalidParameter.ClientIpCountryConflictsWithIpv6"
@@ -4289,15 +6543,20 @@ func NewModifyZoneSettingResponse() (response *ModifyZoneSettingResponse) {
 //  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGVALUE = "InvalidParameter.InvalidCacheKeyQueryStringValue"
 //  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
 //  INVALIDPARAMETER_INVALIDCACHETIME = "InvalidParameter.InvalidCacheTime"
+//  INVALIDPARAMETER_INVALIDCLIENTIPCOUNTRYHEADERNAME = "InvalidParameter.InvalidClientIpCountryHeaderName"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
 //  INVALIDPARAMETER_INVALIDDYNAMICROUTINEBILLING = "InvalidParameter.InvalidDynamicRoutineBilling"
+//  INVALIDPARAMETER_INVALIDFORCEREDIRECTTYPE = "InvalidParameter.InvalidForceRedirectType"
 //  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
 //  INVALIDPARAMETER_INVALIDHTTPSCERTINFO = "InvalidParameter.InvalidHttpsCertInfo"
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
 //  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
 //  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
+//  INVALIDPARAMETER_INVALIDORIGINTYPE = "InvalidParameter.InvalidOriginType"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
 //  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
@@ -4305,6 +6564,7 @@ func NewModifyZoneSettingResponse() (response *ModifyZoneSettingResponse) {
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
 //  INVALIDPARAMETER_INVALIDRESOURCEIDBILLING = "InvalidParameter.InvalidResourceIdBilling"
 //  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEMPTYLIST = "InvalidParameter.InvalidStandardDebugEmptyList"
 //  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEXPIRETIMELIMIT = "InvalidParameter.InvalidStandardDebugExpireTimeLimit"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_MULTIPLYLAYERNOTSUPPORTSMARTROUTING = "InvalidParameter.MultiplyLayerNotSupportSmartRouting"
@@ -4316,7 +6576,9 @@ func NewModifyZoneSettingResponse() (response *ModifyZoneSettingResponse) {
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
 //  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_ACCELERATEMAINLANDMULTIPLYLAYERCONFLICT = "OperationDenied.AccelerateMainlandMultiplyLayerConflict"
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDACCELERATEMAINLAND = "OperationDenied.SharedCNAMEUnsupportedAccelerateMainland"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDIPV6 = "OperationDenied.SharedCNAMEUnsupportedIPv6"
@@ -4341,6 +6603,7 @@ func (c *Client) ModifyZoneSetting(request *ModifyZoneSettingRequest) (response 
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWERROR = "InternalError.UnknowError"
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_CACHEKEYQUERYSTRINGREQUIRESFULLURLCACHEOFF = "InvalidParameter.CacheKeyQueryStringRequiresFullUrlCacheOff"
 //  INVALIDPARAMETER_CACHEKEYQUERYSTRINGTOOMANYVALUE = "InvalidParameter.CacheKeyQueryStringTooManyValue"
 //  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
 //  INVALIDPARAMETER_CLIENTIPCOUNTRYCONFLICTSWITHIPV6 = "InvalidParameter.ClientIpCountryConflictsWithIpv6"
@@ -4350,15 +6613,20 @@ func (c *Client) ModifyZoneSetting(request *ModifyZoneSettingRequest) (response 
 //  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGVALUE = "InvalidParameter.InvalidCacheKeyQueryStringValue"
 //  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
 //  INVALIDPARAMETER_INVALIDCACHETIME = "InvalidParameter.InvalidCacheTime"
+//  INVALIDPARAMETER_INVALIDCLIENTIPCOUNTRYHEADERNAME = "InvalidParameter.InvalidClientIpCountryHeaderName"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
 //  INVALIDPARAMETER_INVALIDDYNAMICROUTINEBILLING = "InvalidParameter.InvalidDynamicRoutineBilling"
+//  INVALIDPARAMETER_INVALIDFORCEREDIRECTTYPE = "InvalidParameter.InvalidForceRedirectType"
 //  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
 //  INVALIDPARAMETER_INVALIDHTTPSCERTINFO = "InvalidParameter.InvalidHttpsCertInfo"
 //  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
 //  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
 //  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
 //  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
+//  INVALIDPARAMETER_INVALIDORIGINTYPE = "InvalidParameter.InvalidOriginType"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
 //  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
@@ -4366,6 +6634,7 @@ func (c *Client) ModifyZoneSetting(request *ModifyZoneSettingRequest) (response 
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
 //  INVALIDPARAMETER_INVALIDRESOURCEIDBILLING = "InvalidParameter.InvalidResourceIdBilling"
 //  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEMPTYLIST = "InvalidParameter.InvalidStandardDebugEmptyList"
 //  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEXPIRETIMELIMIT = "InvalidParameter.InvalidStandardDebugExpireTimeLimit"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
 //  INVALIDPARAMETER_MULTIPLYLAYERNOTSUPPORTSMARTROUTING = "InvalidParameter.MultiplyLayerNotSupportSmartRouting"
@@ -4377,7 +6646,9 @@ func (c *Client) ModifyZoneSetting(request *ModifyZoneSettingRequest) (response 
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
 //  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_ACCELERATEMAINLANDMULTIPLYLAYERCONFLICT = "OperationDenied.AccelerateMainlandMultiplyLayerConflict"
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDACCELERATEMAINLAND = "OperationDenied.SharedCNAMEUnsupportedAccelerateMainland"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDIPV6 = "OperationDenied.SharedCNAMEUnsupportedIPv6"
@@ -4417,8 +6688,9 @@ func NewModifyZoneStatusRequest() (request *ModifyZoneStatusRequest) {
 func NewModifyZoneStatusResponse() (response *ModifyZoneStatusResponse) {
     response = &ModifyZoneStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyZoneStatus
@@ -4426,11 +6698,13 @@ func NewModifyZoneStatusResponse() (response *ModifyZoneStatusResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_L4PROXYINPROGRESSSTATUS = "OperationDenied.L4ProxyInProgressStatus"
 //  OPERATIONDENIED_L4PROXYINSTOPPINGSTATUS = "OperationDenied.L4ProxyInStoppingStatus"
 //  OPERATIONDENIED_L7HOSTINPROCESSSTATUS = "OperationDenied.L7HostInProcessStatus"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -4444,11 +6718,13 @@ func (c *Client) ModifyZoneStatus(request *ModifyZoneStatusRequest) (response *M
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_L4PROXYINPROGRESSSTATUS = "OperationDenied.L4ProxyInProgressStatus"
 //  OPERATIONDENIED_L4PROXYINSTOPPINGSTATUS = "OperationDenied.L4ProxyInStoppingStatus"
 //  OPERATIONDENIED_L7HOSTINPROCESSSTATUS = "OperationDenied.L7HostInProcessStatus"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -4469,6 +6745,146 @@ func (c *Client) ModifyZoneStatusWithContext(ctx context.Context, request *Modif
     return
 }
 
+func NewRenewPlanRequest() (request *RenewPlanRequest) {
+    request = &RenewPlanRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "RenewPlan")
+    
+    
+    return
+}
+
+func NewRenewPlanResponse() (response *RenewPlanResponse) {
+    response = &RenewPlanResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RenewPlan
+// 当您的套餐需要延长有效期，可以通过该接口进行续费。套餐续费仅支持个人版，基础版，标准版套餐。
+//
+// > 费用详情可参考 [套餐费用](https://cloud.tencent.com/document/product/1552/94158)
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDAUTOUSEVOUCHER = "InvalidParameter.InvalidAutoUseVoucher"
+//  INVALIDPARAMETER_INVALIDPERIOD = "InvalidParameter.InvalidPeriod"
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_ENTERPRISEPLANRENEWUNSUPPORTED = "OperationDenied.EnterprisePlanRenewUnsupported"
+//  OPERATIONDENIED_RESOURCEHASBEENLOCKED = "OperationDenied.ResourceHasBeenLocked"
+func (c *Client) RenewPlan(request *RenewPlanRequest) (response *RenewPlanResponse, err error) {
+    return c.RenewPlanWithContext(context.Background(), request)
+}
+
+// RenewPlan
+// 当您的套餐需要延长有效期，可以通过该接口进行续费。套餐续费仅支持个人版，基础版，标准版套餐。
+//
+// > 费用详情可参考 [套餐费用](https://cloud.tencent.com/document/product/1552/94158)
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDAUTOUSEVOUCHER = "InvalidParameter.InvalidAutoUseVoucher"
+//  INVALIDPARAMETER_INVALIDPERIOD = "InvalidParameter.InvalidPeriod"
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_ENTERPRISEPLANRENEWUNSUPPORTED = "OperationDenied.EnterprisePlanRenewUnsupported"
+//  OPERATIONDENIED_RESOURCEHASBEENLOCKED = "OperationDenied.ResourceHasBeenLocked"
+func (c *Client) RenewPlanWithContext(ctx context.Context, request *RenewPlanRequest) (response *RenewPlanResponse, err error) {
+    if request == nil {
+        request = NewRenewPlanRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewPlan require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenewPlanResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradePlanRequest() (request *UpgradePlanRequest) {
+    request = &UpgradePlanRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "UpgradePlan")
+    
+    
+    return
+}
+
+func NewUpgradePlanResponse() (response *UpgradePlanResponse) {
+    response = &UpgradePlanResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpgradePlan
+// 当您需要使用高等级套餐才拥有的功能，可以通过本接口升级套餐，仅支持个人版，基础版套餐进行升级。
+//
+// > 不同类型 Edgeone 计费套餐区别参考 [Edgeone计费套餐选型对比](https://cloud.tencent.com/document/product/1552/94165)
+//
+// 计费套餐升级规则以及资费详情参考 [Edgeone计费套餐升配说明](https://cloud.tencent.com/document/product/1552/95291)
+//
+// 如果需要将套餐升级至企业版，请 [联系我们](https://cloud.tencent.com/online-service)
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDAUTOUSEVOUCHER = "InvalidParameter.InvalidAutoUseVoucher"
+//  INVALIDPARAMETER_INVALIDPLANTYPE = "InvalidParameter.InvalidPlanType"
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_ENTERPRISEPLANUPGRADEUNSUPPORTED = "OperationDenied.EnterprisePlanUpgradeUnsupported"
+//  OPERATIONDENIED_PLANDOWNGRADENOTALLOWED = "OperationDenied.PlanDowngradeNotAllowed"
+//  OPERATIONDENIED_PLANHASBEENEXPIRED = "OperationDenied.PlanHasBeenExpired"
+//  OPERATIONDENIED_PLANHASBEENISOLATED = "OperationDenied.PlanHasBeenIsolated"
+//  OPERATIONDENIED_RESOURCEHASBEENLOCKED = "OperationDenied.ResourceHasBeenLocked"
+func (c *Client) UpgradePlan(request *UpgradePlanRequest) (response *UpgradePlanResponse, err error) {
+    return c.UpgradePlanWithContext(context.Background(), request)
+}
+
+// UpgradePlan
+// 当您需要使用高等级套餐才拥有的功能，可以通过本接口升级套餐，仅支持个人版，基础版套餐进行升级。
+//
+// > 不同类型 Edgeone 计费套餐区别参考 [Edgeone计费套餐选型对比](https://cloud.tencent.com/document/product/1552/94165)
+//
+// 计费套餐升级规则以及资费详情参考 [Edgeone计费套餐升配说明](https://cloud.tencent.com/document/product/1552/95291)
+//
+// 如果需要将套餐升级至企业版，请 [联系我们](https://cloud.tencent.com/online-service)
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INVALIDPARAMETER_INVALIDAUTOUSEVOUCHER = "InvalidParameter.InvalidAutoUseVoucher"
+//  INVALIDPARAMETER_INVALIDPLANTYPE = "InvalidParameter.InvalidPlanType"
+//  INVALIDPARAMETER_PLANNOTFOUND = "InvalidParameter.PlanNotFound"
+//  OPERATIONDENIED_ENTERPRISEPLANUPGRADEUNSUPPORTED = "OperationDenied.EnterprisePlanUpgradeUnsupported"
+//  OPERATIONDENIED_PLANDOWNGRADENOTALLOWED = "OperationDenied.PlanDowngradeNotAllowed"
+//  OPERATIONDENIED_PLANHASBEENEXPIRED = "OperationDenied.PlanHasBeenExpired"
+//  OPERATIONDENIED_PLANHASBEENISOLATED = "OperationDenied.PlanHasBeenIsolated"
+//  OPERATIONDENIED_RESOURCEHASBEENLOCKED = "OperationDenied.ResourceHasBeenLocked"
+func (c *Client) UpgradePlanWithContext(ctx context.Context, request *UpgradePlanRequest) (response *UpgradePlanResponse, err error) {
+    if request == nil {
+        request = NewUpgradePlanRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradePlan require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradePlanResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewVerifyOwnershipRequest() (request *VerifyOwnershipRequest) {
     request = &VerifyOwnershipRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4483,8 +6899,9 @@ func NewVerifyOwnershipRequest() (request *VerifyOwnershipRequest) {
 func NewVerifyOwnershipResponse() (response *VerifyOwnershipResponse) {
     response = &VerifyOwnershipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // VerifyOwnership
@@ -4495,16 +6912,9 @@ func NewVerifyOwnershipResponse() (response *VerifyOwnershipResponse) {
 // 在 NS 接入模式下，您也可以通过本接口来查询 NS 服务器是否切换成功，详情参考 [修改 DNS 服务器](https://cloud.tencent.com/document/product/1552/90452)。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
-//  OPERATIONDENIED_L4PROXYINPROGRESSSTATUS = "OperationDenied.L4ProxyInProgressStatus"
-//  OPERATIONDENIED_L4PROXYINSTOPPINGSTATUS = "OperationDenied.L4ProxyInStoppingStatus"
-//  OPERATIONDENIED_L7HOSTINPROCESSSTATUS = "OperationDenied.L7HostInProcessStatus"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
-//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) VerifyOwnership(request *VerifyOwnershipRequest) (response *VerifyOwnershipResponse, err error) {
     return c.VerifyOwnershipWithContext(context.Background(), request)
 }
@@ -4517,16 +6927,9 @@ func (c *Client) VerifyOwnership(request *VerifyOwnershipRequest) (response *Ver
 // 在 NS 接入模式下，您也可以通过本接口来查询 NS 服务器是否切换成功，详情参考 [修改 DNS 服务器](https://cloud.tencent.com/document/product/1552/90452)。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
-//  OPERATIONDENIED_L4PROXYINPROGRESSSTATUS = "OperationDenied.L4ProxyInProgressStatus"
-//  OPERATIONDENIED_L4PROXYINSTOPPINGSTATUS = "OperationDenied.L4ProxyInStoppingStatus"
-//  OPERATIONDENIED_L7HOSTINPROCESSSTATUS = "OperationDenied.L7HostInProcessStatus"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
-//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) VerifyOwnershipWithContext(ctx context.Context, request *VerifyOwnershipRequest) (response *VerifyOwnershipResponse, err error) {
     if request == nil {
         request = NewVerifyOwnershipRequest()

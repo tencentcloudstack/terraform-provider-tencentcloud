@@ -28,7 +28,8 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version-file: .go-version
+          go-version: 1.18.1
+          cache: false 
 
       - name: install tfproviderlint
         run: cd .ci/tools && go install github.com/bflad/tfproviderlint/cmd/tfproviderlint

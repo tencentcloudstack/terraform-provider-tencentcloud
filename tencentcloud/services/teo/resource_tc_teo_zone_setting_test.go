@@ -26,9 +26,10 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 					testAccCheckZoneSettingExists("tencentcloud_teo_zone_setting.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone_setting.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", " cache.0.cache.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.cache.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.cache.0.cache_time", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.no_cache.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.no_cache.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_key.#", "1"),
@@ -39,7 +40,7 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_key.0.query_string.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_prefresh.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_prefresh.0.percent", "90"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_prefresh.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_prefresh.0.switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "client_ip_header.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "client_ip_header.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "compression.#", "1"),
@@ -114,105 +115,109 @@ const testAccTeoZoneSetting = testAccTeoZone + `
 resource "tencentcloud_teo_zone_setting" "basic" {
   zone_id = tencentcloud_teo_zone.basic.id
 
+  cache {
     cache {
-        follow_origin {
-            switch = "on"
-        }
-        no_cache {
-            switch = "off"
-        }
+      switch     = "on"
+      cache_time = 10
     }
-
-    cache_key {
-        full_url_cache = "on"
-        ignore_case    = "off"
-
-        query_string {
-            action = "includeCustom"
-            switch = "off"
-            value  = []
-        }
+    follow_origin {
+      switch = "off"
     }
-
-    cache_prefresh {
-        percent = 90
-        switch  = "off"
+    no_cache {
+      switch = "off"
     }
+  }
 
-    client_ip_header {
-        switch = "off"
+  cache_key {
+    full_url_cache = "on"
+    ignore_case    = "off"
+
+    query_string {
+      action = "includeCustom"
+      switch = "off"
+      value  = []
     }
+  }
 
-    compression {
-        algorithms = [
-            "brotli",
-            "gzip",
-        ]
-        switch     = "on"
+  cache_prefresh {
+    percent = 90
+    switch  = "on"
+  }
+
+  client_ip_header {
+    switch = "off"
+  }
+
+  compression {
+    algorithms = [
+      "brotli",
+      "gzip",
+    ]
+    switch = "on"
+  }
+
+  force_redirect {
+    redirect_status_code = 302
+    switch               = "off"
+  }
+
+  https {
+    http2         = "on"
+    ocsp_stapling = "off"
+    tls_version   = [
+      "TLSv1",
+      "TLSv1.1",
+      "TLSv1.2",
+      "TLSv1.3",
+    ]
+
+    hsts {
+      include_sub_domains = "off"
+      max_age             = 0
+      preload             = "off"
+      switch              = "off"
     }
+  }
 
-    force_redirect {
-        redirect_status_code = 302
-        switch               = "off"
-    }
+  ipv6 {
+    switch = "off"
+  }
 
-    https {
-        http2         = "on"
-        ocsp_stapling = "off"
-        tls_version   = [
-            "TLSv1",
-            "TLSv1.1",
-            "TLSv1.2",
-            "TLSv1.3",
-        ]
+  max_age {
+    follow_origin = "on"
+    max_age_time  = 600
+  }
 
-        hsts {
-            include_sub_domains = "off"
-            max_age             = 0
-            preload             = "off"
-            switch              = "off"
-        }
-    }
+  offline_cache {
+    switch = "on"
+  }
 
-    ipv6 {
-        switch = "off"
-    }
+  origin {
+    backup_origins       = []
+    origin_pull_protocol = "follow"
+    origins              = []
+  }
 
-    max_age {
-        follow_origin = "on"
-        max_age_time  = 600
-    }
+  post_max_size {
+    max_size = 838860800
+    switch   = "on"
+  }
 
-    offline_cache {
-        switch = "on"
-    }
+  quic {
+    switch = "off"
+  }
 
-    origin {
-        backup_origins       = []
-        origin_pull_protocol = "follow"
-        origins              = []
-    }
+  smart_routing {
+    switch = "off"
+  }
 
-    post_max_size {
-        max_size = 838860800
-        switch   = "on"
-    }
+  upstream_http2 {
+    switch = "off"
+  }
 
-    quic {
-        switch = "off"
-    }
-
-    smart_routing {
-        switch = "off"
-    }
-
-    upstream_http2 {
-        switch = "off"
-    }
-
-    web_socket {
-        switch  = "off"
-        timeout = 30
-    }
+  web_socket {
+    switch  = "off"
+    timeout = 30
+  }
 }
 `

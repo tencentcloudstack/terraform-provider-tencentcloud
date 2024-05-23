@@ -139,83 +139,170 @@ The following arguments are supported:
 
 * `rule_name` - (Required, String) The rule name (1 to 255 characters).
 * `rules` - (Required, List) Rule items list.
-* `status` - (Required, String) Rule status. Values: `enable`: Enabled; `disable`: Disabled.
+* `status` - (Required, String) Rule status. Values:
+  - `enable`: Enabled.
+  - `disable`: Disabled.
 * `zone_id` - (Required, String, ForceNew) ID of the site.
 * `tags` - (Optional, Set: [`String`]) rule tag list.
 
 The `actions` object of `rules` supports the following:
 
-* `code_action` - (Optional, List) Define a code action.
-* `normal_action` - (Optional, List) Define a normal action.
-* `rewrite_action` - (Optional, List) Define a rewrite action.
+* `code_action` - (Optional, List) Feature operation with a status code. Features of this type include:
+  - `ErrorPage`: Custom error page.
+  - `StatusCodeCache`: Status code cache TTL.
+Note: This field may return null, indicating that no valid values can be obtained.
+* `normal_action` - (Optional, List) Common operation. Values:
+  - `AccessUrlRedirect`: Access URL rewrite.
+  - `UpstreamUrlRedirect`: Origin-pull URL rewrite.
+  - `QUIC`: QUIC.
+  - `WebSocket`: WebSocket.
+  - `VideoSeek`: Video dragging.
+  - `Authentication`: Token authentication.
+  - `CacheKey`: Custom cache key.
+  - `Cache`: Node cache TTL.
+  - `MaxAge`: Browser cache TTL.
+  - `OfflineCache`: Offline cache.
+  - `SmartRouting`: Smart acceleration.
+  - `RangeOriginPull`: Range GETs.
+  - `UpstreamHttp2`: HTTP/2 forwarding.
+  - `HostHeader`: Host header rewrite.
+  - `ForceRedirect`: Force HTTPS.
+  - `OriginPullProtocol`: Origin-pull HTTPS.
+  - `CachePrefresh`: Cache prefresh.
+  - `Compression`: Smart compression.
+  - `Hsts`.
+  - `ClientIpHeader`.
+  - `SslTlsSecureConf`.
+  - `OcspStapling`.
+  - `Http2`: HTTP/2 access.
+  - `UpstreamFollowRedirect`: Follow origin redirect.
+  - `Origin`: Origin.
+Note: This field may return `null`, indicating that no valid value can be obtained.
+* `rewrite_action` - (Optional, List) Feature operation with a request/response header. Features of this type include:
+  - `RequestHeader`: HTTP request header modification.
+  - `ResponseHeader`: HTTP response header modification.
+Note: This field may return null, indicating that no valid values can be obtained.
 
 The `and` object of `or` supports the following:
 
-* `operator` - (Required, String) Condition operator. Valid values are `equal`, `notequal`.
-* `target` - (Required, String) Condition target. Valid values:- `host`: Host of the URL.- `filename`: filename of the URL.- `extension`: file extension of the URL.- `full_url`: full url.- `url`: path of the URL.
-* `values` - (Required, Set) Condition Value.
-* `ignore_case` - (Optional, Bool) Whether to ignore the case of the parameter value, the default value is false.
-* `name` - (Optional, String) The parameter name corresponding to the matching type is valid when the Target value is the following, and the valid value cannot be empty: `query_string` (query string): The parameter name of the query string in the URL request under the current site, such as lang and version in lang=cn&version=1; `request_header` (HTTP request header): HTTP request header field name, such as Accept-Language in Accept-Language:zh-CN,zh;q=0.9.
+* `operator` - (Required, String) Operator. Valid values:
+  - `equals`: Equals.
+  - `notEquals`: Does not equal.
+  - `exist`: Exists.
+  - `notexist`: Does not exist.
+* `target` - (Required, String) The match type. Values:
+  - `filename`: File name.
+  - `extension`: File extension.
+  - `host`: Host.
+  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.
+  - `url`: Partial URL under the current site.
+  - `client_country`: Country/Region of the client.
+  - `query_string`: Query string in the request URL.
+  - `request_header`: HTTP request header.
+* `ignore_case` - (Optional, Bool) Whether the parameter value is case insensitive. Default value: false.
+* `name` - (Optional, String) The parameter name of the match type. This field is required only when `Target=query_string/request_header`.
+  - `query_string`: Name of the query string, such as "lang" and "version" in "lang=cn&version=1".
+  - `request_header`: Name of the HTTP request header, such as "Accept-Language" in the "Accept-Language:zh-CN,zh;q=0.9" header.
+* `values` - (Optional, Set) The parameter value of the match type. It can be an empty string only when `Target=query string/request header` and `Operator=exist/notexist`.
+  - When `Target=extension`, enter the file extension, such as "jpg" and "txt".
+  - When `Target=filename`, enter the file name, such as "foo" in "foo.jpg".
+  - When `Target=all`, it indicates any site request.
+  - When `Target=host`, enter the host under the current site, such as "www.maxx55.com".
+  - When `Target=url`, enter the partial URL path under the current site, such as "/example".
+  - When `Target=full_url`, enter the complete URL under the current site. It must contain the HTTP protocol, host, and path, such as "https://www.maxx55.cn/example".
+  - When `Target=client_country`, enter the ISO-3166 country/region code.
+  - When `Target=query_string`, enter the value of the query string, such as "cn" and "1" in "lang=cn&version=1".
+  - When `Target=request_header`, enter the HTTP request header value, such as "zh-CN,zh;q=0.9" in the "Accept-Language:zh-CN,zh;q=0.9" header.
 
 The `and` object of `or` supports the following:
 
-* `operator` - (Required, String) Condition operator. Valid values are `equal`, `notequal`.
-* `target` - (Required, String) Condition target. Valid values:- `host`: Host of the URL.- `filename`: filename of the URL.- `extension`: file extension of the URL.- `full_url`: full url.- `url`: path of the URL.
-* `values` - (Required, Set) Condition Value.
-* `ignore_case` - (Optional, Bool) Whether to ignore the case of the parameter value, the default value is false.
-* `name` - (Optional, String) The parameter name corresponding to the matching type is valid when the Target value is the following, and the valid value cannot be empty:- `query_string` (query string): The parameter name of the query string in the URL request under the current site, such as lang and version in lang=cn&version=1; `request_header` (HTTP request header): HTTP request header field name, such as Accept-Language in Accept-Language:zh-CN,zh;q=0.9.
+* `operator` - (Required, String) Operator. Valid values:
+  - `equals`: Equals.
+  - `notEquals`: Does not equal.
+  - `exist`: Exists.
+  - `notexist`: Does not exist.
+* `target` - (Required, String) The match type. Values:
+  - `filename`: File name.
+  - `extension`: File extension.
+  - `host`: Host.
+  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.
+  - `url`: Partial URL under the current site.  - `client_country`: Country/Region of the client.
+  - `query_string`: Query string in the request URL.
+  - `request_header`: HTTP request header.
+* `ignore_case` - (Optional, Bool) Whether the parameter value is case insensitive. Default value: false.
+* `name` - (Optional, String) The parameter name of the match type. This field is required only when `Target=query_string/request_header`.
+  - `query_string`: Name of the query string, such as "lang" and "version" in "lang=cn&version=1".
+  - `request_header`: Name of the HTTP request header, such as "Accept-Language" in the "Accept-Language:zh-CN,zh;q=0.9" header.
+* `values` - (Optional, Set) The parameter value of the match type. It can be an empty string only when `Target=query string/request header` and `Operator=exist/notexist`.
+  - When `Target=extension`, enter the file extension, such as "jpg" and "txt".
+  - When `Target=filename`, enter the file name, such as "foo" in "foo.jpg".
+  - When `Target=all`, it indicates any site request.
+  - When `Target=host`, enter the host under the current site, such as "www.maxx55.com".
+  - When `Target=url`, enter the partial URL path under the current site, such as "/example".
+  - When `Target=full_url`, enter the complete URL under the current site. It must contain the HTTP protocol, host, and path, such as "https://www.maxx55.cn/example".
+  - When `Target=client_country`, enter the ISO-3166 country/region code.
+  - When `Target=query_string`, enter the value of the query string, such as "cn" and "1" in "lang=cn&version=1".
+  - When `Target=request_header`, enter the HTTP request header value, such as "zh-CN,zh;q=0.9" in the "Accept-Language:zh-CN,zh;q=0.9" header.
 
 The `code_action` object of `actions` supports the following:
 
-* `action` - (Required, String) Action name.
-* `parameters` - (Required, List) Action parameters.
+* `action` - (Required, String) Feature name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the feature name.
+* `parameters` - (Required, List) Operation parameter.
 
 The `normal_action` object of `actions` supports the following:
 
-* `action` - (Required, String) Action name.
-* `parameters` - (Required, List) Action parameters.
+* `action` - (Required, String) Feature name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the feature name.
+* `parameters` - (Required, List) Parameter.
 
 The `or` object of `rules` supports the following:
 
 * `and` - (Required, List) AND Conditions list of the rule. Rule would be triggered if all conditions are true.
 
+The `or` object of `rules` supports the following:
+
+* `and` - (Required, List) Rule engine condition. This condition will be considered met if all items in the array are met.
+
 The `parameters` object of `code_action` supports the following:
 
-* `name` - (Required, String) Parameter Name.
-* `status_code` - (Required, Int) HTTP status code to use.
-* `values` - (Required, Set) Parameter Values.
+* `name` - (Required, String) The parameter name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the parameter name.
+* `status_code` - (Required, Int) The status code.
+* `values` - (Required, Set) The parameter value.
 
 The `parameters` object of `normal_action` supports the following:
 
-* `name` - (Required, String) Parameter Name.
-* `values` - (Required, Set) Parameter Values.
+* `name` - (Required, String) Parameter name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the parameter name.
+* `values` - (Required, Set) The parameter value.
 
 The `parameters` object of `rewrite_action` supports the following:
 
-* `action` - (Required, String) Action to take on the HEADER. Valid values: `add`, `del`, `set`.
-* `name` - (Required, String) Target HEADER name.
-* `values` - (Required, Set) Parameter Value.
+* `action` - (Required, String) Feature parameter name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the parameter name, which has three values:
+  - add: Add the HTTP header.
+  - set: Rewrite the HTTP header.
+  - del: Delete the HTTP header.
+* `name` - (Required, String) Parameter name.
+* `values` - (Required, Set) Parameter value.
 
 The `rewrite_action` object of `actions` supports the following:
 
-* `action` - (Required, String) Action name.
-* `parameters` - (Required, List) Action parameters.
+* `action` - (Required, String) Feature name. You can call the [DescribeRulesSetting](https://tcloud4api.woa.com/document/product/1657/79433?!preview&!document=1) API to view the requirements for entering the feature name.
+* `parameters` - (Required, List) Parameter.
 
 The `rules` object of `sub_rules` supports the following:
 
-* `actions` - (Required, List) Actions list of the rule. See details in data source `rule_engine_setting`.
-* `or` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
+* `actions` - (Required, List) The feature to be executed.
+* `or` - (Required, List) The condition that determines if a feature should run.
+Note: If any condition in the array is met, the feature will run.
 
 The `rules` object supports the following:
 
-* `actions` - (Required, List) Actions list of the rule. See details in data source `rule_engine_setting`.
+* `actions` - (Required, List) Feature to be executed.
 * `or` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
-* `sub_rules` - (Optional, List) Actions list of the rule. See details in data source `rule_engine_setting`.
+* `sub_rules` - (Optional, List) The nested rule.
 
 The `sub_rules` object of `rules` supports the following:
 
-* `rules` - (Required, List) Rule items list.
-* `tags` - (Optional, Set) rule tag list.
+* `rules` - (Required, List) Nested rule settings.
+* `tags` - (Optional, Set) Tag of the rule.
 
 ## Attributes Reference
 
