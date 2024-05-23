@@ -944,7 +944,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	if d.HasChange("root_password") {
 		// to avoid other updating process conflicts with updating password, set the password updating with the last step, there is no way to figure out whether changing password is done
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = postgresqlService.SetPostgresqlInstanceRootPassword(ctx, instanceId, d.Get("root_password").(string))
+			inErr = postgresqlService.SetPostgresqlInstanceRootPassword(ctx, instanceId, d.Get("root_user").(string), d.Get("root_password").(string))
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
