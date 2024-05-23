@@ -327,13 +327,13 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
   worker_config {
     count                      				= 1
     availability_zone          				= var.default_az
-    instance_type              				= local.scale_instance_type
+    instance_type              				= "GN6S.LARGE20"
     subnet_id                  				= local.subnet_id
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
     internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
     security_group_ids                      = [local.sg_id]
-	//img_id 								    = "img-eb30mz89"
+	img_id 								    = "img-eb30mz89"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
