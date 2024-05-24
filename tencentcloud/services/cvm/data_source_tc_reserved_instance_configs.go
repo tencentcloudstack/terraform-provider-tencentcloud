@@ -121,6 +121,60 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
+	var filtersList []*cvm.Filter
+	filtersMap := map[string]*cvm.Filter{}
+	filter := cvm.Filter{}
+	name := "zone"
+	filter.Name = &name
+	if v, ok := d.GetOk("availability_zone"); ok {
+		filter.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp0"] = &filter
+	if v, ok := filtersMap["Temp0"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	filter2 := cvm.Filter{}
+	name2 := "duration"
+	filter2.Name = &name2
+	if v, ok := d.GetOk("duration"); ok {
+		filter2.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp1"] = &filter2
+	if v, ok := filtersMap["Temp1"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	filter3 := cvm.Filter{}
+	name3 := "instance-type"
+	filter3.Name = &name3
+	if v, ok := d.GetOk("instance_type"); ok {
+		filter3.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp2"] = &filter3
+	if v, ok := filtersMap["Temp2"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	filter4 := cvm.Filter{}
+	name4 := "offering-type"
+	filter4.Name = &name4
+	if v, ok := d.GetOk("offering_type"); ok {
+		filter4.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp3"] = &filter4
+	if v, ok := filtersMap["Temp3"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	filter5 := cvm.Filter{}
+	name5 := "product-description"
+	filter5.Name = &name5
+	if v, ok := d.GetOk("product_description"); ok {
+		filter5.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp4"] = &filter5
+	if v, ok := filtersMap["Temp4"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	paramMap["Filters"] = filtersList
+
 	var respData []*cvm.ReservedInstancesOffering
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeReservedInstanceConfigsByFilter(ctx, paramMap)

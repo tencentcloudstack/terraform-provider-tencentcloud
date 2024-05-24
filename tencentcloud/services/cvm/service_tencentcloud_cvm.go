@@ -64,28 +64,32 @@ func (me *CvmService) DescribeInstanceSetByIds(ctx context.Context, instanceSetI
 	return
 }
 
-func (me *CvmService) DescribeInstanceById(ctx context.Context, instanceId string) (instance *cvm.Instance, errRet error) {
+func (me *CvmService) DescribeInstanceById(ctx context.Context, instanceId string) (ret *cvm.Instance, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	request := cvm.NewDescribeInstancesRequest()
-	request.InstanceIds = []*string{&instanceId}
 
-	var iacExtInfo connectivity.IacExtInfo
-	iacExtInfo.InstanceId = instanceId
+	request := cvm.NewDescribeInstancesRequest()
+	request.InstanceIds = []*string{helper.String(instanceId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCvmClient(iacExtInfo).DescribeInstances(request)
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.InstanceSet) < 1 {
 		return
 	}
-	instance = response.Response.InstanceSet[0]
+
+	ret = response.Response.InstanceSet[0]
 	return
 }
 
@@ -572,25 +576,32 @@ func (me *CvmService) DescribeInstancesSellTypeByFilter(ctx context.Context, fil
 	return
 }
 
-func (me *CvmService) DescribeKeyPairById(ctx context.Context, keyId string) (keyPair *cvm.KeyPair, errRet error) {
+func (me *CvmService) DescribeKeyPairById(ctx context.Context, keyId string) (ret *cvm.KeyPair, errRet error) {
 	logId := tccommon.GetLogId(ctx)
+
 	request := cvm.NewDescribeKeyPairsRequest()
-	request.KeyIds = []*string{&keyId}
+	request.KeyIds = []*string{helper.String(keyId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
 
 	ratelimit.Check(request.GetAction())
+
 	response, err := me.client.UseCvmClient().DescribeKeyPairs(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.KeyPairSet) > 0 {
-		keyPair = response.Response.KeyPairSet[0]
+	if len(response.Response.KeyPairSet) < 1 {
+		return
 	}
+
+	ret = response.Response.KeyPairSet[0]
 	return
 }
 
@@ -1993,6 +2004,12 @@ func (me *CvmService) DescribeReservedInstanceConfigsByFilter(ctx context.Contex
 		}
 	}()
 
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
 	ratelimit.Check(request.GetAction())
 
 	var (
@@ -2002,10 +2019,6 @@ func (me *CvmService) DescribeReservedInstanceConfigsByFilter(ctx context.Contex
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		if err := dataSourceTencentCloudReservedInstanceConfigsReadPreRequest0(ctx, request); err != nil {
-			return nil, err
-		}
-
 		response, err := me.client.UseCvmClient().DescribeReservedInstancesOfferings(request)
 		if err != nil {
 			errRet = err
@@ -2039,6 +2052,12 @@ func (me *CvmService) DescribeReservedInstancesByFilter(ctx context.Context, par
 		}
 	}()
 
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
 	ratelimit.Check(request.GetAction())
 
 	var (
@@ -2048,10 +2067,6 @@ func (me *CvmService) DescribeReservedInstancesByFilter(ctx context.Context, par
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		if err := dataSourceTencentCloudReservedInstancesReadPreRequest0(ctx, request); err != nil {
-			return nil, err
-		}
-
 		response, err := me.client.UseCvmClient().DescribeReservedInstances(request)
 		if err != nil {
 			errRet = err

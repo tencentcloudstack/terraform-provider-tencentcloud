@@ -98,6 +98,40 @@ func dataSourceTencentCloudReservedInstancesRead(d *schema.ResourceData, meta in
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
+	var filtersList []*cvm.Filter
+	filtersMap := map[string]*cvm.Filter{}
+	filter := cvm.Filter{}
+	name := "reserved-instances-id"
+	filter.Name = &name
+	if v, ok := d.GetOk("reserved_instance_id"); ok {
+		filter.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp0"] = &filter
+	if v, ok := filtersMap["Temp0"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	filter2 := cvm.Filter{}
+	name2 := "zone"
+	filter2.Name = &name2
+	if v, ok := d.GetOk("availability_zone"); ok {
+		filter2.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp1"] = &filter2
+	if v, ok := filtersMap["Temp1"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	filter3 := cvm.Filter{}
+	name3 := "instance-type"
+	filter3.Name = &name3
+	if v, ok := d.GetOk("instance_type"); ok {
+		filter3.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp2"] = &filter3
+	if v, ok := filtersMap["Temp2"]; ok {
+		filtersList = append(filtersList, v)
+	}
+	paramMap["Filters"] = filtersList
+
 	var respData []*cvm.ReservedInstances
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeReservedInstancesByFilter(ctx, paramMap)
