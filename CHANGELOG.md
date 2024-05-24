@@ -1,3 +1,10 @@
+## 1.81.98 (May 24, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_alarm: Support `alarm_level` params and fix import issues. ([#2653](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2653))
+* resource/tencentcloud_kubernetes_scale_worker: Add `pre_start_user_script` and `user_script` fields ([#2651](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2651))
+
 ## 1.81.97 (May 23, 2024)
 
 ENHANCEMENTS:
