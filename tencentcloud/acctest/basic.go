@@ -137,7 +137,7 @@ variable "sg_id" {
 const (
 	DefaultCvmId  = "ins-8oqqya08"
 	DefaultDiskId = "disk-5jjrs2lm"
-	DefaultSnapId = "snap-8f2updnb"
+	DefaultSnapId = "snap-gem0ivcj"
 )
 
 const DefaultCvmImageVariable = `
