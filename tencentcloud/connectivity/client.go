@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 	cos "github.com/tencentyun/cos-go-sdk-v5"
 
@@ -203,7 +202,6 @@ type TencentCloudClient struct {
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
 	csipConn           *csip.Client
-	billingConn        *billing.Client
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -1533,20 +1531,6 @@ func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
 	me.cdwpgConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cdwpgConn
-}
-
-// UseBillingClient returns billing client for service
-func (me *TencentCloudClient) UseBillingClient() *billing.Client {
-	if me.billingConn != nil {
-		return me.billingConn
-	}
-
-	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
-	me.billingConn, _ = billing.NewClient(me.Credential, me.Region, cpf)
-	me.billingConn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.billingConn
 }
 
 // UseCsipClient returns csip client for service
