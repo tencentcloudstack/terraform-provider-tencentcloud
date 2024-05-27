@@ -1,3 +1,11 @@
+## 1.81.99 (May 27, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_organization_org_manage_policy: Supplementary documentation ([#2656](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2656))
+* resource/tencentcloud_organization_org_manage_policy_config: Supplementary documentation ([#2656](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2656))
+* resource/tencentcloud_organization_org_manage_policy_target: Supplementary documentation ([#2656](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2656))
+
 ## 1.81.98 (May 24, 2024)
 
 ENHANCEMENTS:
