@@ -1,79 +1,207 @@
 package cvm_test
 
 import (
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
-
 	"context"
 	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 )
 
-const (
-	ImageSnap     = "tencentcloud_image.image_snap"
-	ImageInstance = "tencentcloud_image.image_instance"
-)
-
-func TestAccTencentCloudImageResource(t *testing.T) {
+func TestAccTencentCloudCvmImageResource_UseSnapshotId(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheck(t) },
-		Providers:    tcacctest.AccProviders,
-		CheckDestroy: testAccCheckImageDestroy,
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmImageDestroy,
 		Steps: []resource.TestStep{
-			// use snapshot id
 			{
-				Config: testAccImageWithSnapShot,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImageExists(ImageSnap),
-					resource.TestCheckResourceAttr(ImageSnap, "image_name", "image-snapshot-keep"),
-					resource.TestCheckResourceAttr(ImageSnap, "snapshot_ids.#", "1"),
-					resource.TestCheckResourceAttr(ImageSnap, "force_poweroff", "true"),
-					resource.TestCheckResourceAttr(ImageSnap, "image_description", "create image with snapshot"),
-				),
+				Config: testAccCvmImageResource_UseSnapshotIdCreate,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckCvmImageExists("tencentcloud_image.image_snap"), resource.TestCheckResourceAttr("tencentcloud_image.image_snap", "image_name", "image-snapshot-keep"), resource.TestCheckResourceAttr("tencentcloud_image.image_snap", "snapshot_ids.#", "1"), resource.TestCheckResourceAttr("tencentcloud_image.image_snap", "force_poweroff", "true"), resource.TestCheckResourceAttr("tencentcloud_image.image_snap", "image_description", "create image with instance")),
 			},
 			{
-				Config: testAccImageWithSnapShotUpdate,
-				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(ImageSnap, "image_name", "image-snapshot-update-keep"),
-					resource.TestCheckResourceAttr(ImageSnap, "snapshot_ids.#", "1"),
-					resource.TestCheckResourceAttr(ImageSnap, "force_poweroff", "false"),
-					resource.TestCheckResourceAttr(ImageSnap, "image_description", "update image with snapshot"),
-				),
+				Config: testAccCvmImageResource_UseSnapshotIdChange1,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckCvmImageExists("tencentcloud_image.image_snap"), resource.TestCheckResourceAttr("tencentcloud_image.image_snap", "image_description", "update image with instance"), resource.TestCheckResourceAttr("tencentcloud_image.image_snap", "image_name", "image-snapshot-update-keep"), resource.TestCheckResourceAttr("tencentcloud_image.image_snap", "force_poweroff", "false")),
 			},
 			{
-				ResourceName:            ImageSnap,
+				ResourceName:            "tencentcloud_image.image_snap",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"force_poweroff"},
-			},
-			// use instance id
-			{
-				Config: testAccImageWithInstance,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImageExists(ImageInstance),
-					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-keep"),
-					resource.TestCheckResourceAttrSet(ImageInstance, "instance_id"),
-					resource.TestCheckResourceAttr(ImageInstance, "data_disk_ids.#", "1"),
-					resource.TestCheckResourceAttr(ImageInstance, "image_description", "create image with instance"),
-				),
-			},
-			{
-				Config: testAccImageWithInstanceUpdate,
-				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-update-keep"),
-					resource.TestCheckResourceAttr(ImageInstance, "image_description", "update image with instance"),
-				),
 			},
 		},
 	})
 }
 
-func testAccCheckImageDestroy(s *terraform.State) error {
+const testAccCvmImageResource_UseSnapshotIdCreate = `
+
+resource "tencentcloud_image" "image_snap" {
+    image_name = "image-snapshot-keep"
+    snapshot_ids = ["snap-gem0ivcj"]
+    force_poweroff = true
+    image_description = "create image with instance"
+}
+
+`
+const testAccCvmImageResource_UseSnapshotIdChange1 = `
+
+resource "tencentcloud_image" "image_snap" {
+    image_name = "image-snapshot-update-keep"
+    snapshot_ids = ["snap-gem0ivcj"]
+    force_poweroff = false
+    image_description = "update image with instance"
+}
+
+`
+
+func TestAccTencentCloudCvmImageResource_UseInstanceId(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmImageDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmImageResource_UseInstanceIdCreate,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckCvmImageExists("tencentcloud_image.image_instance"), resource.TestCheckResourceAttr("tencentcloud_image.image_instance", "image_name", "image-instance-keep"), resource.TestCheckResourceAttrSet("tencentcloud_image.image_instance", "instance_id"), resource.TestCheckResourceAttr("tencentcloud_image.image_instance", "data_disk_ids.#", "1"), resource.TestCheckResourceAttr("tencentcloud_image.image_instance", "image_description", "create image with instance")),
+			},
+			{
+				Config: testAccCvmImageResource_UseInstanceIdChange1,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckCvmImageExists("tencentcloud_image.image_instance"), resource.TestCheckResourceAttr("tencentcloud_image.image_instance", "image_name", "image-instance-update-keep"), resource.TestCheckResourceAttr("tencentcloud_image.image_instance", "image_description", "update image with instance")),
+			},
+		},
+	})
+}
+
+const testAccCvmImageResource_UseInstanceIdCreate = `
+
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_type = ["PUBLIC_IMAGE"]
+    image_name_regex = "Final"
+}
+data "tencentcloud_images" "testing" {
+    image_type = ["PUBLIC_IMAGE"]
+}
+data "tencentcloud_instance_types" "default" {
+    
+    filter {
+        values = ["ap-guangzhou-7"]
+        name = "zone"
+    }
+    filter {
+        name = "instance-family"
+        values = ["S4","SA2"]
+    }
+    cpu_core_count = 2
+    memory_size = 2
+    exclude_sold_out = true
+}
+resource "tencentcloud_vpc" "vpc" {
+    name = "image-vpc"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+    vpc_id = tencentcloud_vpc.vpc.id
+    name = "image-subnet"
+    cidr_block = "10.0.0.0/16"
+    availability_zone = "ap-guangzhou-7"
+}
+resource "tencentcloud_instance" "cvm_image" {
+    availability_zone = "ap-guangzhou-7"
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+    
+    data_disks {
+        delete_with_instance = true
+        data_disk_type = "CLOUD_PREMIUM"
+        data_disk_size = 100
+    }
+    subnet_id = tencentcloud_subnet.subnet.id
+    system_disk_type = "CLOUD_PREMIUM"
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    vpc_id = tencentcloud_vpc.vpc.id
+    project_id = 0
+    instance_name = "cvm-image"
+}
+resource "tencentcloud_image" "image_instance" {
+    instance_id = tencentcloud_instance.cvm_image.id
+    data_disk_ids = [tencentcloud_instance.cvm_image.data_disks.0.data_disk_id]
+    image_description = "create image with instance"
+    image_name = "image-instance-keep"
+}
+
+`
+const testAccCvmImageResource_UseInstanceIdChange1 = `
+
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_type = ["PUBLIC_IMAGE"]
+    image_name_regex = "Final"
+}
+data "tencentcloud_images" "testing" {
+    image_type = ["PUBLIC_IMAGE"]
+}
+data "tencentcloud_instance_types" "default" {
+    
+    filter {
+        values = ["ap-guangzhou-7"]
+        name = "zone"
+    }
+    filter {
+        values = ["S4","SA2"]
+        name = "instance-family"
+    }
+    cpu_core_count = 2
+    memory_size = 2
+    exclude_sold_out = true
+}
+resource "tencentcloud_vpc" "vpc" {
+    name = "image-vpc"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+    vpc_id = tencentcloud_vpc.vpc.id
+    name = "image-subnet"
+    cidr_block = "10.0.0.0/16"
+    availability_zone = "ap-guangzhou-7"
+}
+resource "tencentcloud_instance" "cvm_image" {
+    availability_zone = "ap-guangzhou-7"
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+    
+    data_disks {
+        delete_with_instance = true
+        data_disk_type = "CLOUD_PREMIUM"
+        data_disk_size = 100
+    }
+    subnet_id = tencentcloud_subnet.subnet.id
+    system_disk_type = "CLOUD_PREMIUM"
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    vpc_id = tencentcloud_vpc.vpc.id
+    project_id = 0
+    instance_name = "cvm-image"
+}
+resource "tencentcloud_image" "image_instance" {
+    instance_id = tencentcloud_instance.cvm_image.id
+    data_disk_ids = [tencentcloud_instance.cvm_image.data_disks.0.data_disk_id]
+    image_description = "update image with instance"
+    image_name = "image-instance-update-keep"
+}
+
+`
+
+func testAccCheckCvmImageDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
@@ -107,7 +235,7 @@ func testAccCheckImageDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckImageExists(n string) resource.TestCheckFunc {
+func testAccCheckCvmImageExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := tccommon.GetLogId(tccommon.ContextNil)
 		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -130,136 +258,3 @@ func testAccCheckImageExists(n string) resource.TestCheckFunc {
 		return nil
 	}
 }
-
-const (
-	testAccImageWithSnapShot = tcacctest.DefaultCvmImageVariable + `
-		resource "tencentcloud_image" "image_snap" {
-  			image_name   		= "image-snapshot-keep"
-  			snapshot_ids 		= [var.snap_id]
-			force_poweroff 		= true
-			image_description 	= "create image with snapshot"
-		}`
-
-	testAccImageWithSnapShotUpdate = tcacctest.DefaultCvmImageVariable + `
-		resource "tencentcloud_image" "image_snap" {
-  			image_name   		= "image-snapshot-update-keep"
-  			snapshot_ids 		= [var.snap_id]
-  			force_poweroff   	= false
-  			image_description 	= "update image with snapshot"
-		}`
-
-	testAccImageWithInstance = tcacctest.DefaultCvmImageVariable + `
-
-		data "tencentcloud_availability_zones" "default" {
-		}
-		data "tencentcloud_images" "default" {
-			image_type = ["PUBLIC_IMAGE"]
-			image_name_regex = "Final"
-		}
-		data "tencentcloud_images" "testing" {
-			image_type = ["PUBLIC_IMAGE"]
-		}
-		data "tencentcloud_instance_types" "default" {
-			
-			filter {
-				name = "instance-family"
-				values = ["S4","SA2"]
-			}
-			filter {
-				values = ["ap-guangzhou-7"]
-				name = "zone"
-			}
-			cpu_core_count = 2
-			memory_size = 2
-			exclude_sold_out = true
-		}
-		resource "tencentcloud_vpc" "vpc" {
-			name = "image-vpc"
-			cidr_block = "10.0.0.0/16"
-		}
-		resource "tencentcloud_subnet" "subnet" {
-			vpc_id = tencentcloud_vpc.vpc.id
-			name = "image-subnet"
-			cidr_block = "10.0.0.0/16"
-			availability_zone = "ap-guangzhou-7"
-		}
-		resource "tencentcloud_instance" "cvm_image" {
-			subnet_id = tencentcloud_subnet.subnet.id
-			system_disk_type = "CLOUD_PREMIUM"
-			project_id = 0
-			instance_name = "cvm-image"
-			availability_zone = "ap-guangzhou-7"
-			image_id = data.tencentcloud_images.default.images.0.image_id
-			instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-			vpc_id = tencentcloud_vpc.vpc.id
-			data_disks {
-				delete_with_instance = true
-				data_disk_type = "CLOUD_PREMIUM"
-				data_disk_size = 100
-			}
-		}
-
-		resource "tencentcloud_image" "image_instance" {
-  			image_name   		= "image-instance-keep"
-  			instance_id  		= tencentcloud_instance.cvm_image.id
-  			data_disk_ids 		= [tencentcloud_instance.cvm_image.data_disks.0.data_disk_id]
-  			image_description 	= "create image with instance"
-		}`
-
-	testAccImageWithInstanceUpdate = tcacctest.DefaultCvmImageVariable + `
-		data "tencentcloud_availability_zones" "default" {
-		}
-		data "tencentcloud_images" "default" {
-			image_type = ["PUBLIC_IMAGE"]
-			image_name_regex = "Final"
-		}
-		data "tencentcloud_images" "testing" {
-			image_type = ["PUBLIC_IMAGE"]
-		}
-		data "tencentcloud_instance_types" "default" {
-			
-			filter {
-				name = "instance-family"
-				values = ["S4","SA2"]
-			}
-			filter {
-				values = ["ap-guangzhou-7"]
-				name = "zone"
-			}
-			cpu_core_count = 2
-			memory_size = 2
-			exclude_sold_out = true
-		}
-		resource "tencentcloud_vpc" "vpc" {
-			name = "image-vpc"
-			cidr_block = "10.0.0.0/16"
-		}
-		resource "tencentcloud_subnet" "subnet" {
-			vpc_id = tencentcloud_vpc.vpc.id
-			name = "image-subnet"
-			cidr_block = "10.0.0.0/16"
-			availability_zone = "ap-guangzhou-7"
-		}
-		resource "tencentcloud_instance" "cvm_image" {
-			subnet_id = tencentcloud_subnet.subnet.id
-			system_disk_type = "CLOUD_PREMIUM"
-			project_id = 0
-			instance_name = "cvm-image"
-			availability_zone = "ap-guangzhou-7"
-			image_id = data.tencentcloud_images.default.images.0.image_id
-			instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-			vpc_id = tencentcloud_vpc.vpc.id
-			data_disks {
-				delete_with_instance = true
-				data_disk_type = "CLOUD_PREMIUM"
-				data_disk_size = 100
-			}
-		}
-
-		resource "tencentcloud_image" "image_instance" {
-  			image_name   		= "image-instance-update-keep"
-  			instance_id  		= tencentcloud_instance.cvm_image.id
-  			data_disk_ids 		= [tencentcloud_instance.cvm_image.data_disks.0.data_disk_id]
-  			image_description 	= "update image with instance"
-		}`
-)
