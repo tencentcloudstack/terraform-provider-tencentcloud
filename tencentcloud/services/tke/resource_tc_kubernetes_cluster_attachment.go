@@ -428,7 +428,7 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 		request.ClusterId = helper.String(v.(string))
 	}
 
-	request.InstanceIds = []*string{&instanceId}
+	request.InstanceIds = []*string{helper.String(instanceId)}
 
 	loginSettings := tke.LoginSettings{}
 	if v, ok := d.GetOk("password"); ok {
@@ -540,11 +540,11 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 				instanceAdvancedSettings.DesiredPodNumber = helper.IntInt64(v.(int))
 			}
 			if gPUArgsMap, ok := helper.ConvertInterfacesHeadToMap(instanceAdvancedSettingsOverridesMap["gpu_args"]); ok {
-				gPUArgs := tke.GPUArgs{}
+				gPUArgs2 := tke.GPUArgs{}
 				if v, ok := gPUArgsMap["mig_enable"]; ok {
-					gPUArgs.MIGEnable = helper.Bool(v.(bool))
+					gPUArgs2.MIGEnable = helper.Bool(v.(bool))
 				}
-				instanceAdvancedSettings.GPUArgs = &gPUArgs
+				instanceAdvancedSettings.GPUArgs = &gPUArgs2
 			}
 			if v, ok := d.GetOkExists("unschedulable"); ok {
 				instanceAdvancedSettings.Unschedulable = helper.IntInt64(v.(int))
@@ -637,7 +637,7 @@ func resourceTencentCloudKubernetesClusterAttachmentRead(d *schema.ResourceData,
 	}
 
 	var respData2 *tke.Instance
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	reqErr2 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterAttachmentById2(ctx, instanceId, clusterId)
 		if e != nil {
 			return resourceTencentCloudKubernetesClusterAttachmentReadRequestOnError2(ctx, result, e)
@@ -648,9 +648,9 @@ func resourceTencentCloudKubernetesClusterAttachmentRead(d *schema.ResourceData,
 		respData2 = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read kubernetes cluster attachment failed, reason:%+v", logId, err)
-		return err
+	if reqErr2 != nil {
+		log.Printf("[CRITAL]%s read kubernetes cluster attachment failed, reason:%+v", logId, reqErr2)
+		return reqErr2
 	}
 
 	if respData2 == nil {
@@ -691,16 +691,9 @@ func resourceTencentCloudKubernetesClusterAttachmentDelete(d *schema.ResourceDat
 		response = tke.NewDeleteClusterInstancesResponse()
 	)
 
-	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-	}
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
+	request.ClusterId = helper.String(clusterId)
 
-	request.ClusterId = &clusterId
-
-	request.InstanceIds = []*string{&instanceId}
+	request.InstanceIds = []*string{helper.String(instanceId)}
 
 	instanceDeleteMode := "retain"
 	request.InstanceDeleteMode = &instanceDeleteMode
@@ -716,7 +709,7 @@ func resourceTencentCloudKubernetesClusterAttachmentDelete(d *schema.ResourceDat
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes cluster attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes cluster attachment failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -163,11 +163,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionDelete(d *schema.Resource
 		response = tke.NewDisableEncryptionProtectionResponse()
 	)
 
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
-
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DisableEncryptionProtectionWithContext(ctx, request)
@@ -180,7 +176,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionDelete(d *schema.Resource
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes encryption protection failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes encryption protection failed, reason:%+v", logId, err)
 		return err
 	}
 

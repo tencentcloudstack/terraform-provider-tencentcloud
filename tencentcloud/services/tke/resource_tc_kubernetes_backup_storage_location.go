@@ -192,11 +192,7 @@ func resourceTencentCloudKubernetesBackupStorageLocationDelete(d *schema.Resourc
 		response = tke.NewDeleteBackupStorageLocationResponse()
 	)
 
-	if v, ok := d.GetOk("name"); ok {
-		name = v.(string)
-	}
-
-	request.Name = &name
+	request.Name = helper.String(name)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DeleteBackupStorageLocationWithContext(ctx, request)
@@ -209,7 +205,7 @@ func resourceTencentCloudKubernetesBackupStorageLocationDelete(d *schema.Resourc
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes backup storage location failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes backup storage location failed, reason:%+v", logId, err)
 		return err
 	}
 
