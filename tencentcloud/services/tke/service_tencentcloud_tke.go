@@ -2691,7 +2691,7 @@ func (me *TkeService) TkeEncryptionProtectionStateRefreshFunc(clusterId string, 
 	}
 }
 
-func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Context, param map[string]interface{}) (clusterInstances []*tke.Instance, errRet error) {
+func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.Instance, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = tke.NewDescribeClusterInstancesRequest()
@@ -2718,18 +2718,15 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 		}
 	}
 
-	var offset int64 = 0
-	var limit int64 = 100
-	var total int64 = -1
+	ratelimit.Check(request.GetAction())
 
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
 	for {
-		if total >= 0 && offset >= total {
-			break
-		}
 		request.Offset = &offset
 		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-
 		response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
 		if err != nil {
 			errRet = err
@@ -2737,19 +2734,17 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if total < 0 {
-			total = int64(*response.Response.TotalCount)
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
 		}
-
-		if len(response.Response.InstanceSet) == 0 {
-			// get empty set, we're done
+		ret = append(ret, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
 			break
 		}
 
 		offset += limit
-
-		clusterInstances = append(clusterInstances, response.Response.InstanceSet...)
 	}
+
 	return
 }
 
