@@ -1975,7 +1975,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_share_unit_member":                  tco.ResourceTencentCloudOrganizationOrgShareUnitMember(),
 			"tencentcloud_organization_org_share_unit":                         tco.ResourceTencentCloudOrganizationOrgShareUnit(),
 			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon(),
-			"tencentcloud_native_node_pool":                                    tke.ResourceTencentCloudNativeNodePool()},
+			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool()},
 
 		ConfigureFunc: providerConfigure,
 	}

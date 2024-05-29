@@ -213,79 +213,79 @@ func DataSourceTencentCloudKubernetesClusterNativeNodePools() *schema.Resource {
 											Type: schema.TypeString,
 										},
 									},
-									"upgrade_settings": {
-										Type:        schema.TypeList,
-										Computed:    true,
-										Description: "Automatically upgrade configuration.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"auto_upgrade": {
-													Type:        schema.TypeBool,
-													Computed:    true,
-													Description: "Whether to enable automatic upgrade.",
-												},
-												"upgrade_options": {
-													Type:        schema.TypeList,
-													Computed:    true,
-													Description: "Operation and maintenance window.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"auto_upgrade_start_time": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Automatic upgrade start time.",
-															},
-															"duration": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Automatic upgrade duration.",
-															},
-															"weekly_period": {
-																Type:        schema.TypeList,
-																Computed:    true,
-																Description: "Operation and maintenance date.",
-																Elem: &schema.Schema{
-																	Type: schema.TypeString,
-																},
-															},
-														},
-													},
-												},
-												"components": {
-													Type:        schema.TypeList,
-													Computed:    true,
-													Description: "Upgrade items.",
-													Elem: &schema.Schema{
-														Type: schema.TypeString,
-													},
-												},
-												"max_unavailable": {
-													Type:        schema.TypeList,
-													Computed:    true,
-													Description: "When upgrading, the maximum number of nodes that cannot be upgraded.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"type": {
-																Type:        schema.TypeInt,
-																Computed:    true,
-																Description: "Numeric type, 0 is int, 1 is string.",
-															},
-															"int_val": {
-																Type:        schema.TypeInt,
-																Computed:    true,
-																Description: "Integer.",
-															},
-															"str_val": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "String.",
-															},
-														},
-													},
-												},
-											},
-										},
-									},
+									//"upgrade_settings": {
+									//	Type:        schema.TypeList,
+									//	Computed:    true,
+									//	Description: "Automatically upgrade configuration.",
+									//	Elem: &schema.Resource{
+									//		Schema: map[string]*schema.Schema{
+									//			"auto_upgrade": {
+									//				Type:        schema.TypeBool,
+									//				Computed:    true,
+									//				Description: "Whether to enable automatic upgrade.",
+									//			},
+									//			"upgrade_options": {
+									//				Type:        schema.TypeList,
+									//				Computed:    true,
+									//				Description: "Operation and maintenance window.",
+									//				Elem: &schema.Resource{
+									//					Schema: map[string]*schema.Schema{
+									//						"auto_upgrade_start_time": {
+									//							Type:        schema.TypeString,
+									//							Computed:    true,
+									//							Description: "Automatic upgrade start time.",
+									//						},
+									//						"duration": {
+									//							Type:        schema.TypeString,
+									//							Computed:    true,
+									//							Description: "Automatic upgrade duration.",
+									//						},
+									//						"weekly_period": {
+									//							Type:        schema.TypeList,
+									//							Computed:    true,
+									//							Description: "Operation and maintenance date.",
+									//							Elem: &schema.Schema{
+									//								Type: schema.TypeString,
+									//							},
+									//						},
+									//					},
+									//				},
+									//			},
+									//			"components": {
+									//				Type:        schema.TypeList,
+									//				Computed:    true,
+									//				Description: "Upgrade items.",
+									//				Elem: &schema.Schema{
+									//					Type: schema.TypeString,
+									//				},
+									//			},
+									//			"max_unavailable": {
+									//				Type:        schema.TypeList,
+									//				Computed:    true,
+									//				Description: "When upgrading, the maximum number of nodes that cannot be upgraded.",
+									//				Elem: &schema.Resource{
+									//					Schema: map[string]*schema.Schema{
+									//						"type": {
+									//							Type:        schema.TypeInt,
+									//							Computed:    true,
+									//							Description: "Numeric type, 0 is int, 1 is string.",
+									//						},
+									//						"int_val": {
+									//							Type:        schema.TypeInt,
+									//							Computed:    true,
+									//							Description: "Integer.",
+									//						},
+									//						"str_val": {
+									//							Type:        schema.TypeString,
+									//							Computed:    true,
+									//							Description: "String.",
+									//						},
+									//					},
+									//				},
+									//			},
+									//		},
+									//	},
+									//},
 									"auto_repair": {
 										Type:        schema.TypeBool,
 										Computed:    true,
@@ -331,21 +331,21 @@ func DataSourceTencentCloudKubernetesClusterNativeNodePools() *schema.Resource {
 													Computed:    true,
 													Description: "Cloud disk size (G).",
 												},
-												"auto_format_and_mount": {
-													Type:        schema.TypeBool,
-													Computed:    true,
-													Description: "Whether to automatically format the disk and mount it.",
-												},
-												"file_system": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "File system.",
-												},
-												"mount_target": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Mount directory.",
-												},
+												//"auto_format_and_mount": {
+												//	Type:        schema.TypeBool,
+												//	Computed:    true,
+												//	Description: "Whether to automatically format the disk and mount it.",
+												//},
+												//"file_system": {
+												//	Type:        schema.TypeString,
+												//	Computed:    true,
+												//	Description: "File system.",
+												//},
+												//"mount_target": {
+												//	Type:        schema.TypeString,
+												//	Computed:    true,
+												//	Description: "Mount directory.",
+												//},
 											},
 										},
 									},
@@ -459,17 +459,17 @@ func DataSourceTencentCloudKubernetesClusterNativeNodePools() *schema.Resource {
 												"max_bandwidth_out": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "Maximum bandwidth output.",
+													Description: "Maximum bandwidth output. Note: When chargeType is `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_POSTPAID_BY_HOUR`, the valid range is 1~100. When chargeType is `BANDWIDTH_PACKAG`, the valid range is 1~2000.",
 												},
 												"charge_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Network billing method.",
+													Description: "Network billing method. Optional value is `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 												},
 												"bandwidth_package_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Bandwidth package ID.",
+													Description: "Bandwidth package ID. Note: When ChargeType is BANDWIDTH_PACKAG, the value cannot be empty; otherwise, the value must be empty.",
 												},
 											},
 										},
@@ -483,7 +483,7 @@ func DataSourceTencentCloudKubernetesClusterNativeNodePools() *schema.Resource {
 												"disk_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Cloud disk type.",
+													Description: "Cloud disk type. Valid values: `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: cloud SSD disk, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD, `LOCAL_NVME`: local NVME disk.",
 												},
 												"file_system": {
 													Type:        schema.TypeString,
@@ -537,7 +537,7 @@ func DataSourceTencentCloudKubernetesClusterNativeNodePools() *schema.Resource {
 							},
 						},
 						"annotations": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "Node Annotation List.",
 							Elem: &schema.Resource{
@@ -757,55 +757,55 @@ func dataSourceTencentCloudKubernetesClusterNativeNodePoolsRead(d *schema.Resour
 					nativeMap["security_group_ids"] = nodePools.Native.SecurityGroupIds
 				}
 
-				upgradeSettingsMap := map[string]interface{}{}
-
-				if nodePools.Native.UpgradeSettings != nil {
-					if nodePools.Native.UpgradeSettings.AutoUpgrade != nil {
-						upgradeSettingsMap["auto_upgrade"] = nodePools.Native.UpgradeSettings.AutoUpgrade
-					}
-
-					upgradeOptionsMap := map[string]interface{}{}
-
-					if nodePools.Native.UpgradeSettings.UpgradeOptions != nil {
-						if nodePools.Native.UpgradeSettings.UpgradeOptions.AutoUpgradeStartTime != nil {
-							upgradeOptionsMap["auto_upgrade_start_time"] = nodePools.Native.UpgradeSettings.UpgradeOptions.AutoUpgradeStartTime
-						}
-
-						if nodePools.Native.UpgradeSettings.UpgradeOptions.Duration != nil {
-							upgradeOptionsMap["duration"] = nodePools.Native.UpgradeSettings.UpgradeOptions.Duration
-						}
-
-						if nodePools.Native.UpgradeSettings.UpgradeOptions.WeeklyPeriod != nil {
-							upgradeOptionsMap["weekly_period"] = nodePools.Native.UpgradeSettings.UpgradeOptions.WeeklyPeriod
-						}
-
-						upgradeSettingsMap["upgrade_options"] = []interface{}{upgradeOptionsMap}
-					}
-
-					if nodePools.Native.UpgradeSettings.Components != nil {
-						upgradeSettingsMap["components"] = nodePools.Native.UpgradeSettings.Components
-					}
-
-					maxUnavailableMap := map[string]interface{}{}
-
-					if nodePools.Native.UpgradeSettings.MaxUnavailable != nil {
-						if nodePools.Native.UpgradeSettings.MaxUnavailable.Type != nil {
-							maxUnavailableMap["type"] = nodePools.Native.UpgradeSettings.MaxUnavailable.Type
-						}
-
-						if nodePools.Native.UpgradeSettings.MaxUnavailable.IntVal != nil {
-							maxUnavailableMap["int_val"] = nodePools.Native.UpgradeSettings.MaxUnavailable.IntVal
-						}
-
-						if nodePools.Native.UpgradeSettings.MaxUnavailable.StrVal != nil {
-							maxUnavailableMap["str_val"] = nodePools.Native.UpgradeSettings.MaxUnavailable.StrVal
-						}
-
-						upgradeSettingsMap["max_unavailable"] = []interface{}{maxUnavailableMap}
-					}
-
-					nativeMap["upgrade_settings"] = []interface{}{upgradeSettingsMap}
-				}
+				//upgradeSettingsMap := map[string]interface{}{}
+				//
+				//if nodePools.Native.UpgradeSettings != nil {
+				//	if nodePools.Native.UpgradeSettings.AutoUpgrade != nil {
+				//		upgradeSettingsMap["auto_upgrade"] = nodePools.Native.UpgradeSettings.AutoUpgrade
+				//	}
+				//
+				//	upgradeOptionsMap := map[string]interface{}{}
+				//
+				//	if nodePools.Native.UpgradeSettings.UpgradeOptions != nil {
+				//		if nodePools.Native.UpgradeSettings.UpgradeOptions.AutoUpgradeStartTime != nil {
+				//			upgradeOptionsMap["auto_upgrade_start_time"] = nodePools.Native.UpgradeSettings.UpgradeOptions.AutoUpgradeStartTime
+				//		}
+				//
+				//		if nodePools.Native.UpgradeSettings.UpgradeOptions.Duration != nil {
+				//			upgradeOptionsMap["duration"] = nodePools.Native.UpgradeSettings.UpgradeOptions.Duration
+				//		}
+				//
+				//		if nodePools.Native.UpgradeSettings.UpgradeOptions.WeeklyPeriod != nil {
+				//			upgradeOptionsMap["weekly_period"] = nodePools.Native.UpgradeSettings.UpgradeOptions.WeeklyPeriod
+				//		}
+				//
+				//		upgradeSettingsMap["upgrade_options"] = []interface{}{upgradeOptionsMap}
+				//	}
+				//
+				//	if nodePools.Native.UpgradeSettings.Components != nil {
+				//		upgradeSettingsMap["components"] = nodePools.Native.UpgradeSettings.Components
+				//	}
+				//
+				//	maxUnavailableMap := map[string]interface{}{}
+				//
+				//	if nodePools.Native.UpgradeSettings.MaxUnavailable != nil {
+				//		if nodePools.Native.UpgradeSettings.MaxUnavailable.Type != nil {
+				//			maxUnavailableMap["type"] = nodePools.Native.UpgradeSettings.MaxUnavailable.Type
+				//		}
+				//
+				//		if nodePools.Native.UpgradeSettings.MaxUnavailable.IntVal != nil {
+				//			maxUnavailableMap["int_val"] = nodePools.Native.UpgradeSettings.MaxUnavailable.IntVal
+				//		}
+				//
+				//		if nodePools.Native.UpgradeSettings.MaxUnavailable.StrVal != nil {
+				//			maxUnavailableMap["str_val"] = nodePools.Native.UpgradeSettings.MaxUnavailable.StrVal
+				//		}
+				//
+				//		upgradeSettingsMap["max_unavailable"] = []interface{}{maxUnavailableMap}
+				//	}
+				//
+				//	nativeMap["upgrade_settings"] = []interface{}{upgradeSettingsMap}
+				//}
 
 				if nodePools.Native.AutoRepair != nil {
 					nativeMap["auto_repair"] = nodePools.Native.AutoRepair
@@ -840,17 +840,17 @@ func dataSourceTencentCloudKubernetesClusterNativeNodePoolsRead(d *schema.Resour
 						systemDiskMap["disk_size"] = nodePools.Native.SystemDisk.DiskSize
 					}
 
-					if nodePools.Native.SystemDisk.AutoFormatAndMount != nil {
-						systemDiskMap["auto_format_and_mount"] = nodePools.Native.SystemDisk.AutoFormatAndMount
-					}
-
-					if nodePools.Native.SystemDisk.FileSystem != nil {
-						systemDiskMap["file_system"] = nodePools.Native.SystemDisk.FileSystem
-					}
-
-					if nodePools.Native.SystemDisk.MountTarget != nil {
-						systemDiskMap["mount_target"] = nodePools.Native.SystemDisk.MountTarget
-					}
+					//if nodePools.Native.SystemDisk.AutoFormatAndMount != nil {
+					//	systemDiskMap["auto_format_and_mount"] = nodePools.Native.SystemDisk.AutoFormatAndMount
+					//}
+					//
+					//if nodePools.Native.SystemDisk.FileSystem != nil {
+					//	systemDiskMap["file_system"] = nodePools.Native.SystemDisk.FileSystem
+					//}
+					//
+					//if nodePools.Native.SystemDisk.MountTarget != nil {
+					//	systemDiskMap["mount_target"] = nodePools.Native.SystemDisk.MountTarget
+					//}
 
 					nativeMap["system_disk"] = []interface{}{systemDiskMap}
 				}

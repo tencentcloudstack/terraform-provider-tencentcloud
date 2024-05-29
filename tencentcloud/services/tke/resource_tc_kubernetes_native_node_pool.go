@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"strings"
 
@@ -16,12 +17,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudNativeNodePool() *schema.Resource {
+func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudNativeNodePoolCreate,
-		Read:   resourceTencentCloudNativeNodePoolRead,
-		Update: resourceTencentCloudNativeNodePoolUpdate,
-		Delete: resourceTencentCloudNativeNodePoolDelete,
+		Create: resourceTencentCloudKubernetesNativeNodePoolCreate,
+		Read:   resourceTencentCloudKubernetesNativeNodePoolRead,
+		Update: resourceTencentCloudKubernetesNativeNodePoolUpdate,
+		Delete: resourceTencentCloudKubernetesNativeNodePoolDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -457,7 +458,7 @@ func ResourceTencentCloudNativeNodePool() *schema.Resource {
 									"charge_type": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Network billing method. Optional value is `TRAFFIC_POSTPAID_BY_HOUR`、`BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+										Description: "Network billing method. Optional value is `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 									},
 									"bandwidth_package_id": {
 										Type:        schema.TypeString,
@@ -574,7 +575,7 @@ func ResourceTencentCloudNativeNodePool() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudNativeNodePoolCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_native_node_pool.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -929,14 +930,31 @@ func resourceTencentCloudNativeNodePoolCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
+	// wait for status ok
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		nodePool, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
+		if errRet != nil {
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+		if nodePool != nil && *nodePool.LifeState == "Running" {
+			return nil
+		}
+		log.Printf("[DEBUG]%s api[%s] native node pool status is %s, retry...", logId, request.GetAction(), *nodePool.LifeState)
+		return resource.RetryableError(fmt.Errorf("native node pool status is %s, retry...", *nodePool.LifeState))
+	})
+	if err != nil {
+		return err
+	}
+
 	nodePoolId = *response.Response.NodePoolId
 
 	d.SetId(strings.Join([]string{clusterId, nodePoolId}, tccommon.FILED_SP))
 
-	return resourceTencentCloudNativeNodePoolRead(d, meta)
+	return resourceTencentCloudKubernetesNativeNodePoolRead(d, meta)
 }
 
-func resourceTencentCloudNativeNodePoolRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_native_node_pool.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -964,15 +982,6 @@ func resourceTencentCloudNativeNodePoolRead(d *schema.ResourceData, meta interfa
 		d.SetId("")
 		log.Printf("[WARN]%s resource `kubernetes_native_node_pool` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
-	}
-	if respData.ClusterId != nil {
-		_ = d.Set("cluster_id", respData.ClusterId)
-		clusterId = *respData.ClusterId
-	}
-
-	if respData.NodePoolId != nil {
-		_ = d.Set("node_pool_id", respData.NodePoolId)
-		nodePoolId = *respData.NodePoolId
 	}
 
 	tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
@@ -1360,7 +1369,7 @@ func resourceTencentCloudNativeNodePoolRead(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func resourceTencentCloudNativeNodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_native_node_pool.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -1709,10 +1718,10 @@ func resourceTencentCloudNativeNodePoolUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	return resourceTencentCloudNativeNodePoolRead(d, meta)
+	return resourceTencentCloudKubernetesNativeNodePoolRead(d, meta)
 }
 
-func resourceTencentCloudNativeNodePoolDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_native_node_pool.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -1749,6 +1758,24 @@ func resourceTencentCloudNativeNodePoolDelete(d *schema.ResourceData, meta inter
 		log.Printf("[CRITAL]%s delete kubernetes native node pool failed, reason:%+v", logId, err)
 		return err
 	}
+
+	// wait for delete ok
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		respData, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
+		if errRet != nil {
+			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
+			if strings.Contains(errCode, "InternalError") {
+				return nil
+			}
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+		if respData != nil && *respData.LifeState == "Deleting" {
+			log.Printf("[DEBUG]%s api[%s] native node pool %s still alive and status is %s", logId, request.GetAction(), nodePoolId, *respData.LifeState)
+			return resource.RetryableError(fmt.Errorf("native node pool %s still alive and status is %s", nodePoolId, *respData.LifeState))
+		}
+		return nil
+	})
 
 	_ = response
 	return nil
