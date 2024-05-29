@@ -3,6 +3,7 @@ package cvm
 import (
 	"context"
 	"fmt"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"log"
 	"sort"
 	"strings"
@@ -507,34 +508,38 @@ func (me *CvmService) DescribeInstanceTypes(ctx context.Context, zone string) (i
 	return
 }
 
-func (me *CvmService) DescribeInstanceTypesByFilter(ctx context.Context, filters map[string][]string) (instanceTypes []*cvm.InstanceTypeConfig, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-	request := cvm.NewDescribeInstanceTypeConfigsRequest()
-	request.Filters = make([]*cvm.Filter, 0, len(filters))
-	for k, v := range filters {
-		values := make([]*string, 0, len(v))
-		for _, value := range v {
-			values = append(values, helper.String(value))
+func (me *CvmService) DescribeInstanceTypesByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeZoneInstanceConfigInfosResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeZoneInstanceConfigInfosRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
-		filter := &cvm.Filter{
-			Name:   helper.String(k),
-			Values: values,
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
 		}
-		request.Filters = append(request.Filters, filter)
 	}
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCvmClient().DescribeInstanceTypeConfigs(request)
+
+	response, err := me.client.UseCvmClient().DescribeZoneInstanceConfigInfos(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	instanceTypes = response.Response.InstanceTypeConfigSet
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }
 
@@ -1122,53 +1127,53 @@ func (me *CvmService) DescribeImageById(ctx context.Context, keyId string, isDel
 	return
 }
 
-func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[string][]string, instanceType string) (images []*cvm.Image, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := cvm.NewDescribeImagesRequest()
-	request.Filters = make([]*cvm.Filter, 0, len(filters))
-	for k, v := range filters {
-		filter := cvm.Filter{
-			Name:   helper.String(k),
-			Values: []*string{},
-		}
-		for _, vv := range v {
-			filter.Values = append(filter.Values, helper.String(vv))
-		}
-		request.Filters = append(request.Filters, &filter)
-	}
-	if instanceType != "" {
-		request.InstanceType = helper.String(instanceType)
-	}
-	var offset uint64 = 0
-	var pageSize uint64 = 100
-	images = make([]*cvm.Image, 0)
-	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseCvmClient().DescribeImages(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.ImageSet) < 1 {
-			break
-		}
-		images = append(images, response.Response.ImageSet...)
-		if len(response.Response.ImageSet) < int(pageSize) {
-			break
-		}
-		offset += pageSize
-	}
-
-	return
-}
+//func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[string][]string, instanceType string) (images []*cvm.Image, errRet error) {
+//	logId := tccommon.GetLogId(ctx)
+//
+//	request := cvm.NewDescribeImagesRequest()
+//	request.Filters = make([]*cvm.Filter, 0, len(filters))
+//	for k, v := range filters {
+//		filter := cvm.Filter{
+//			Name:   helper.String(k),
+//			Values: []*string{},
+//		}
+//		for _, vv := range v {
+//			filter.Values = append(filter.Values, helper.String(vv))
+//		}
+//		request.Filters = append(request.Filters, &filter)
+//	}
+//	if instanceType != "" {
+//		request.InstanceType = helper.String(instanceType)
+//	}
+//	var offset uint64 = 0
+//	var pageSize uint64 = 100
+//	images = make([]*cvm.Image, 0)
+//	for {
+//		request.Offset = &offset
+//		request.Limit = &pageSize
+//		ratelimit.Check(request.GetAction())
+//		response, err := me.client.UseCvmClient().DescribeImages(request)
+//		if err != nil {
+//			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+//				logId, request.GetAction(), request.ToJsonString(), err.Error())
+//			errRet = err
+//			return
+//		}
+//		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+//			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+//
+//		if response == nil || len(response.Response.ImageSet) < 1 {
+//			break
+//		}
+//		images = append(images, response.Response.ImageSet...)
+//		if len(response.Response.ImageSet) < int(pageSize) {
+//			break
+//		}
+//		offset += pageSize
+//	}
+//
+//	return
+//}
 
 func (me *CvmService) ModifyRenewParam(ctx context.Context, instanceId string, renewFlag string) error {
 	logId := tccommon.GetLogId(ctx)
@@ -1774,5 +1779,247 @@ func (me *CvmService) ModifyImageSharePermission(ctx context.Context, imageId, p
 		log.Printf("[CRITAL]%s cvm ModifyImageSharePermission failed, reason:%+v", logId, err)
 		return err
 	}
+	return
+}
+
+func NewVpcService(client *connectivity.TencentCloudClient) VpcService {
+	return VpcService{client: client}
+}
+
+type VpcService struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (ret *vpc.Address, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeAddressesRequest()
+	request.AddressIds = []*string{helper.String(eipId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeAddresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AddressSet) < 1 {
+		return
+	}
+
+	ret = response.Response.AddressSet[0]
+	return
+}
+
+func (me *VpcService) DescribeEipsByFilter(ctx context.Context, param map[string]interface{}) (ret *vpc.DescribeAddressesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeAddressesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*vpc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeAddresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeImageByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeImagesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeImagesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeImages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeImagesByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeImagesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeImagesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeImages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeInstancesSetByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeInstancesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeKeyPairsByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeKeyPairsResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeKeyPairsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	if err := dataSourceTencentCloudKeyPairsReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	response, err := me.client.UseCvmClient().DescribeKeyPairs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribePlacementGroupsByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeDisasterRecoverGroupsResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeDisasterRecoverGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DisasterRecoverGroupIds" {
+			request.DisasterRecoverGroupIds = v.([]*string)
+		}
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeDisasterRecoverGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }

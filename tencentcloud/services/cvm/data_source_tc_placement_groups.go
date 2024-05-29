@@ -2,36 +2,29 @@ package cvm
 
 import (
 	"context"
-	"log"
-
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func DataSourceTencentCloudPlacementGroups() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudPlacementGroupsRead,
-
 		Schema: map[string]*schema.Schema{
-			"placement_group_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "ID of the placement group to be queried.",
-			},
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Name of the placement group to be queried.",
 			},
-			"result_output_file": {
+
+			"placement_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "ID of the placement group to be queried.",
 			},
 
 			"placement_group_list": {
@@ -40,44 +33,52 @@ func DataSourceTencentCloudPlacementGroups() *schema.Resource {
 				Description: "An information list of placement group. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"placement_group_id": {
+						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the placement group.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Name of the placement group.",
-						},
-						"type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Type of the placement group.",
-						},
-						"cvm_quota_total": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Maximum number of hosts in the placement group.",
+							Description: "Creation time of the placement group.",
 						},
 						"current_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Number of hosts in the placement group.",
 						},
+						"cvm_quota_total": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Maximum number of hosts in the placement group.",
+						},
 						"instance_ids": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Host IDs in the placement group.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
-						"create_time": {
+						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Creation time of the placement group.",
+							Description: "Name of the placement group.",
+						},
+						"placement_group_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the placement group.",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of the placement group.",
 						},
 					},
 				},
+			},
+
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 		},
 	}
@@ -85,62 +86,45 @@ func DataSourceTencentCloudPlacementGroups() *schema.Resource {
 
 func dataSourceTencentCloudPlacementGroupsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_placement_groups.read")()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	cvmService := CvmService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	var placementGroupId string
-	var name string
+	logId := tccommon.GetLogId(nil)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("placement_group_id"); ok {
-		placementGroupId = v.(string)
-	}
-	if v, ok := d.GetOk("name"); ok {
-		name = v.(string)
+		paramMap["DisasterRecoverGroupIds"] = []*string{helper.String(v.(string))}
 	}
 
-	var placementGroups []*cvm.DisasterRecoverGroup
-	var errRet error
+	if v, ok := d.GetOk("name"); ok {
+		paramMap["Name"] = helper.String(v.(string))
+	}
+
+	var respData *cvm.DescribeDisasterRecoverGroupsResponseParams
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		placementGroups, errRet = cvmService.DescribePlacementGroupByFilter(ctx, placementGroupId, name)
-		if errRet != nil {
-			return tccommon.RetryError(errRet, tccommon.InternalError)
+		result, e := service.DescribePlacementGroupsByFilter(ctx, paramMap)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
+		respData = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	placementGroupList := make([]map[string]interface{}, 0, len(placementGroups))
-	ids := make([]string, 0, len(placementGroups))
-	for _, placement := range placementGroups {
-		mapping := map[string]interface{}{
-			"placement_group_id": placement.DisasterRecoverGroupId,
-			"name":               placement.Name,
-			"type":               placement.Type,
-			"cvm_quota_total":    placement.CvmQuotaTotal,
-			"current_num":        placement.CurrentNum,
-			"instance_ids":       helper.StringsInterfaces(placement.InstanceIds),
-			"create_time":        placement.CreateTime,
-		}
-		placementGroupList = append(placementGroupList, mapping)
-		ids = append(ids, *placement.DisasterRecoverGroupId)
-	}
-
-	d.SetId(helper.DataResourceIdsHash(ids))
-	err = d.Set("placement_group_list", placementGroupList)
-	if err != nil {
-		log.Printf("[CRITAL]%s provider set placement group list fail, reason:%s\n ", logId, err.Error())
+	if err := dataSourceTencentCloudPlacementGroupsReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
 		return err
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := tccommon.WriteToFile(output.(string), placementGroupList); err != nil {
-			return err
+		if e := tccommon.WriteToFile(output.(string), dataSourceTencentCloudPlacementGroupsReadOutputContent(ctx)); e != nil {
+			return e
 		}
 	}
+
 	return nil
 }
