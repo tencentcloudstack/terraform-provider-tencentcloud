@@ -8,7 +8,7 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudKubernetesClusterNativeNodePoolsDataSource_basic(t *testing.T) {
+func TestAccTencentCloudTkeClusterNativeNodePoolsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

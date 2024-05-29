@@ -2,6 +2,6 @@
 tencentcloud_kubernetes_native_node_pool
 ```
 
-```release-note:new-datasource
+````release-note:new-data-source
 tencentcloud_kubernetes_cluster_native_node_pools
 ```
