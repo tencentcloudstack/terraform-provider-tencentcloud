@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_kubernetes_native_node_pool
+```
+
+```release-note:new-datasource
+tencentcloud_kubernetes_cluster_native_node_pools
+```
