@@ -79,11 +79,6 @@ func resourceTencentCloudEipUpdatePostFillRequest1(ctx context.Context, req *vpc
 	return nil
 }
 
-func resourceTencentCloudEipUpdatePostFillRequest3(ctx context.Context, req *vpc.RenewAddressesRequest) error {
-	// TODO: implement me
-	panic("TODO: implement me")
-}
-
 func resourceTencentCloudEipDeletePostFillRequest0(ctx context.Context, req *vpc.ReleaseAddressesRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
@@ -157,5 +152,22 @@ func resourceTencentCloudEipDeletePostHandleResponse0(ctx context.Context, resp 
 		return err
 	}
 
+	return nil
+}
+
+func resourceTencentCloudEipUpdateOnStart(ctx context.Context) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	vpcService := svcvpc.NewVpcService(client)
+	eipId := d.Id()
+	if d.HasChange("prepaid_period") || d.HasChange("auto_renew_flag") {
+		period := d.Get("prepaid_period").(int)
+		renewFlag := d.Get("auto_renew_flag").(int)
+		err := vpcService.RenewAddress(ctx, eipId, period, renewFlag)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
