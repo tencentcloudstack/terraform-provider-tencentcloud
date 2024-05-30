@@ -32,7 +32,7 @@ func ResourceTencentCloudTdmqRocketmqVipInstance() *schema.Resource {
 			"spec": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Instance specification: Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.",
+				Description: "Instance specification: Universal type, rocket-vip-basic-0, Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.",
 			},
 			"node_count": {
 				Required:     true,
@@ -76,6 +76,30 @@ func ResourceTencentCloudTdmqRocketmqVipInstance() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeInt,
 				Description: "Purchase period, in months.",
+			},
+			"ip_rules": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Public IP access control rules.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip_rule": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "IP address block information.",
+						},
+						"allow": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Whether to allow or deny.",
+						},
+						"remark": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Remark.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -131,6 +155,26 @@ func resourceTencentCloudTdmqRocketmqVipInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOkExists("time_span"); ok {
 		request.TimeSpan = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("ip_rules"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			ipRule := tdmq.PublicAccessRule{}
+			if v, ok := dMap["ip_rule"]; ok {
+				ipRule.IpRule = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["allow"]; ok {
+				ipRule.Allow = helper.Bool(v.(bool))
+			}
+
+			if v, ok := dMap["remark"]; ok {
+				ipRule.Remark = helper.String(v.(string))
+			}
+
+			request.IpRules = append(request.IpRules, &ipRule)
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -246,6 +290,10 @@ func resourceTencentCloudTdmqRocketmqVipInstanceRead(d *schema.ResourceData, met
 	if rocketmqVipInstances.MaxStorage != nil && rocketmqVipInstanceDetail.InstanceConfig.NodeCount != nil {
 		storageSize := *rocketmqVipInstances.MaxStorage / *rocketmqVipInstanceDetail.InstanceConfig.NodeCount
 		_ = d.Set("storage_size", storageSize)
+	}
+
+	if rocketmqVipInstances != nil {
+		_ = d.Set("spec", rocketmqVipInstances.SpecName)
 	}
 
 	return nil

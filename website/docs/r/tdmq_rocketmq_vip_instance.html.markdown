@@ -57,11 +57,18 @@ The following arguments are supported:
 
 * `name` - (Required, String) Instance name.
 * `node_count` - (Required, Int) Number of nodes, minimum 2, maximum 20.
-* `spec` - (Required, String) Instance specification: Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.
+* `spec` - (Required, String) Instance specification: Universal type, rocket-vip-basic-0, Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.
 * `storage_size` - (Required, Int) Single node storage space, in GB, minimum 200GB.
 * `time_span` - (Required, Int) Purchase period, in months.
 * `vpc_info` - (Required, List) VPC information.
 * `zone_ids` - (Required, Set: [`String`]) The Zone ID list for node deployment, such as Guangzhou Zone 1, is 100001. For details, please refer to the official website of Tencent Cloud.
+* `ip_rules` - (Optional, List) Public IP access control rules.
+
+The `ip_rules` object supports the following:
+
+* `allow` - (Required, Bool) Whether to allow or deny.
+* `ip_rule` - (Required, String) IP address block information.
+* `remark` - (Required, String) Remark.
 
 The `vpc_info` object supports the following:
 

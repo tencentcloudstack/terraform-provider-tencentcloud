@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.860
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.920
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.932
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -88,7 +88,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.547
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.696
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.825
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.932
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.912
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.916
@@ -111,6 +111,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.798
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920
 	github.com/wI2L/jsondiff v0.3.0
 	k8s.io/apimachinery v0.22.4
 )
@@ -304,7 +305,6 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920 // indirect
 	github.com/tetafro/godot v1.4.11 // indirect
 	github.com/tidwall/gjson v1.17.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
