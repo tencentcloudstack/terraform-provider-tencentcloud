@@ -3,29 +3,31 @@ package cvm_test
 import (
 	"testing"
 
+	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudReservedInstancesDataSource(t *testing.T) {
+func TestAccTencentCloudReservedInstancesDataSource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_INTERNATIONAL) },
-		Providers: tcacctest.AccProviders,
+		PreCheck: func() {
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_INTERNATIONAL)
+		},
+		Providers: acctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccReservedInstancesDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.tencentcloud_reserved_instances.instances", "reserved_instance_list.#"),
-				),
+				Config: testAccReservedInstancesDataSource_BasicCreate,
+				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_reserved_instances.instances"), resource.TestCheckResourceAttrSet("data.tencentcloud_reserved_instances.instances", "reserved_instance_list.#")),
 			},
 		},
 	})
 }
 
-const testAccReservedInstancesDataSource = `
+const testAccReservedInstancesDataSource_BasicCreate = `
+
 data "tencentcloud_reserved_instances" "instances" {
-  availability_zone = "ap-guangzhou-3"
+    availability_zone = "ap-guangzhou-3"
 }
+
 `
