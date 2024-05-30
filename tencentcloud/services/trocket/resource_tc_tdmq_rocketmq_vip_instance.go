@@ -313,7 +313,7 @@ func resourceTencentCloudTdmqRocketmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	request.InstanceId = &clusterId
 
-	immutableArgs := []string{"zone_ids", "vpc_info", "time_span"}
+	immutableArgs := []string{"zone_ids", "vpc_info", "time_span", "ip_rules"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
