@@ -293,10 +293,6 @@ func resourceTencentCloudTdmqRocketmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("storage_size", storageSize)
 	}
 
-	if rocketmqVipInstances != nil {
-		_ = d.Set("spec", rocketmqVipInstances.SpecName)
-	}
-
 	return nil
 }
 
