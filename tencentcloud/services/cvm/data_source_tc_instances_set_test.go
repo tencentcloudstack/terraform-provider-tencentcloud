@@ -7,7 +7,7 @@ import (
 	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudCvmInstanceSetDataSource_Basic(t *testing.T) {
+func TestAccTencentCloudInstanceSetDataSource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,14 +16,14 @@ func TestAccTencentCloudCvmInstanceSetDataSource_Basic(t *testing.T) {
 		Providers: acctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCvmInstanceSetDataSource_BasicCreate,
+				Config: testAccInstanceSetDataSource_BasicCreate,
 				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_instances_set.foo"), resource.TestCheckResourceAttr("data.tencentcloud_instances_set.foo", "instance_list.#", "1")),
 			},
 		},
 	})
 }
 
-const testAccCvmInstanceSetDataSource_BasicCreate = `
+const testAccInstanceSetDataSource_BasicCreate = `
 
 data "tencentcloud_availability_zones" "default" {
 }
