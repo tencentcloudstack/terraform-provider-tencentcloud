@@ -7,7 +7,7 @@ import (
 	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudInstanceSetDataSource_Basic(t *testing.T) {
+func TestAccTencentCloudCvmInstanceSetDataSource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
