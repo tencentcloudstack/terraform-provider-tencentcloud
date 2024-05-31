@@ -29,6 +29,10 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqVipInstanceExists("tencentcloud_tdmq_rocketmq_vip_instance.example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
 				),
 			},
 			{
@@ -36,6 +40,10 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqVipInstanceExists("tencentcloud_tdmq_rocketmq_vip_instance.example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
 				),
 			},
 		},
@@ -106,11 +114,16 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   ]
 
   vpc_info {
-      vpc_id    = local.vpc_id
-      subnet_id = local.subnet_id
+    vpc_id    = local.vpc_id
+    subnet_id = local.subnet_id
   }
 
   time_span = 1
+  ip_rules {
+    ip_rule = "0.0.0.0/0"
+    allow   = true
+    remark  = "remark."
+  }
 }
 `
 
@@ -133,5 +146,10 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   }
 
   time_span = 1
+  ip_rules {
+    ip_rule = "0.0.0.0/0"
+    allow   = true
+    remark  = "remark."
+  }
 }
 `
