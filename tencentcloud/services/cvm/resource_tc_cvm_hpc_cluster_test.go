@@ -18,11 +18,20 @@ func TestAccTencentCloudCvmHpcClusterResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:    testAccCvmHpcCluster,
-				PreConfig: func() { tcacctest.AccStepSetRegion(t, "ap-beijing") },
+				PreConfig: func() { tcacctest.AccStepSetRegion(t, "ap-guangzhou") },
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "remark"),
+					resource.TestCheckResourceAttr("tencentcloud_cvm_hpc_cluster.hpc_cluster", "name", "terraform-test"),
+					resource.TestCheckResourceAttr("tencentcloud_cvm_hpc_cluster.hpc_cluster", "remark", "create for test"),
+				),
+			},
+			{
+				Config:    testAccCvmHpcClusterUpdate,
+				PreConfig: func() { tcacctest.AccStepSetRegion(t, "ap-guangzhou") },
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cvm_hpc_cluster.hpc_cluster", "name", "terraform-test1"),
+					resource.TestCheckResourceAttr("tencentcloud_cvm_hpc_cluster.hpc_cluster", "remark", "create for e2e test"),
 				),
 			},
 			{
@@ -34,12 +43,24 @@ func TestAccTencentCloudCvmHpcClusterResource_basic(t *testing.T) {
 	})
 }
 
-const testAccCvmHpcCluster = `
+const testAccCvmHpcClusterBasis = `
+variable "availability_zone" {
+  default = "ap-guangzhou-7"
+}
+`
 
+const testAccCvmHpcCluster = testAccCvmHpcClusterBasis + `
 resource "tencentcloud_cvm_hpc_cluster" "hpc_cluster" {
-  zone = "ap-beijing-6"
-  name = "terraform-test"
+  zone   = var.availability_zone
+  name   = "terraform-test"
   remark = "create for test"
 }
+`
 
+const testAccCvmHpcClusterUpdate = testAccCvmHpcClusterBasis + `
+resource "tencentcloud_cvm_hpc_cluster" "hpc_cluster" {
+  zone   = var.availability_zone
+  name   = "terraform-test1"
+  remark = "create for e2e test"
+}
 `
