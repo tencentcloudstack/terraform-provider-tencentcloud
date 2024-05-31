@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -14,8 +15,8 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTdmqRocketmqVipInstanceResource_basic -v
-func TestAccTencentCloudNeedFixTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic -v -timeout=0
+func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -33,6 +34,7 @@ func TestAccTencentCloudNeedFixTdmqRocketmqVipInstanceResource_basic(t *testing.
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
+					sleepBetweenSteps(1*time.Minute),
 				),
 			},
 			{
@@ -44,10 +46,18 @@ func TestAccTencentCloudNeedFixTdmqRocketmqVipInstanceResource_basic(t *testing.
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
+					sleepBetweenSteps(1*time.Minute),
 				),
 			},
 		},
 	})
+}
+
+func sleepBetweenSteps(d time.Duration) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		time.Sleep(d)
+		return nil
+	}
 }
 
 func testAccCheckTdmqRocketmqVipInstanceDestroy(s *terraform.State) error {
