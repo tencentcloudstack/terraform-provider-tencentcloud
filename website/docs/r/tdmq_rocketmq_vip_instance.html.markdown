@@ -48,6 +48,11 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   }
 
   time_span = 1
+  ip_rules {
+    ip_rule = "0.0.0.0/0"
+    allow   = true
+    remark  = "remark."
+  }
 }
 ```
 
