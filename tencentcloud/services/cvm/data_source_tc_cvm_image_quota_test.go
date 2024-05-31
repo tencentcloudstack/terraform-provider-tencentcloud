@@ -3,32 +3,29 @@ package cvm_test
 import (
 	"testing"
 
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudCvmImageQuotaDataSource_basic(t *testing.T) {
+func TestAccTencentCloudCvmImageQuotaDataSource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccPreCheck(t)
+			acctest.AccPreCheck(t)
 		},
-		Providers: tcacctest.AccProviders,
+		Providers: acctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCvmImageQuotaDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_cvm_image_quota.image_quota"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cvm_image_quota.image_quota", "image_num_quota", "500"),
-				),
+				Config: testAccCvmImageQuotaDataSource_BasicCreate,
+				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_cvm_image_quota.image_quota"), resource.TestCheckResourceAttr("data.tencentcloud_cvm_image_quota.image_quota", "image_num_quota", "500")),
 			},
 		},
 	})
 }
 
-const testAccCvmImageQuotaDataSource = `
+const testAccCvmImageQuotaDataSource_BasicCreate = `
 
 data "tencentcloud_cvm_image_quota" "image_quota" {
 }
+
 `
