@@ -16,7 +16,11 @@ func TestAccTencentCloudCvmModifyImageSharePermissionResource_basic(t *testing.T
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCvmModifyImageSharePermission,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cvm_image_share_permission.image_share_permission", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_image_share_permission.image_share_permission", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_image_share_permission.image_share_permission", "image_id"),
+					resource.TestCheckResourceAttr("tencentcloud_cvm_image_share_permission.image_share_permission", "account_ids.#", "1"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_cvm_image_share_permission.image_share_permission",
@@ -29,7 +33,7 @@ func TestAccTencentCloudCvmModifyImageSharePermissionResource_basic(t *testing.T
 
 const testAccCvmModifyImageSharePermission = `
 resource "tencentcloud_cvm_image_share_permission" "image_share_permission" {
-	image_id = "img-b0x811s0"
-	account_ids = ["100022975249"]
+  image_id    = "img-l7uxaine"
+  account_ids = ["100022975249"]
 }
 `
