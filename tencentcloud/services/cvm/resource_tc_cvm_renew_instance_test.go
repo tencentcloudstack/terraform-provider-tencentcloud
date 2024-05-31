@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCvmRenewInstanceResource_basic -v
-func TestAccTencentCloudCvmRenewInstanceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixCvmRenewInstanceResource_basic -v
+func TestAccTencentCloudNeedFixCvmRenewInstanceResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
