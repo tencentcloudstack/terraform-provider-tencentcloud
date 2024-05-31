@@ -31,6 +31,22 @@ func TestAccTencentCloudPlacementGroup(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "create_time"),
 				),
 			},
+			{
+				Config: testAccPlacementGroupUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPlacementGroupExists("tencentcloud_placement_group.placement"),
+					resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "name", "tf-test-placement1"),
+					resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "type", "HOST"),
+					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "cvm_quota_total"),
+					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "current_num"),
+					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "create_time"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_placement_group.placement",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -101,6 +117,13 @@ func testAccCheckPlacementGroupDestroy(s *terraform.State) error {
 const testAccPlacementGroup = `
 resource "tencentcloud_placement_group" "placement" {
 	name = "tf-test-placement"
+	type = "HOST"
+}
+`
+
+const testAccPlacementGroupUpdate = `
+resource "tencentcloud_placement_group" "placement" {
+	name = "tf-test-placement1"
 	type = "HOST"
 }
 `

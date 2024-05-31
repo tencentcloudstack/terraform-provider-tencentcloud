@@ -18,7 +18,13 @@ func TestAccTencentCloudCvmChcDeniedActionsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCvmChcDeniedActionsDataSource,
-				Check:  resource.ComposeTestCheckFunc(tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_cvm_chc_denied_actions.chc_denied_actions")),
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_cvm_chc_denied_actions.chc_denied_actions"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cvm_chc_denied_actions.chc_denied_actions", "chc_host_denied_action_set.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cvm_chc_denied_actions.chc_denied_actions", "chc_host_denied_action_set.0.chc_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cvm_chc_denied_actions.chc_denied_actions", "chc_host_denied_action_set.0.state"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cvm_chc_denied_actions.chc_denied_actions", "chc_host_denied_action_set.0.deny_actions.#"),
+				),
 			},
 		},
 	})
@@ -27,6 +33,6 @@ func TestAccTencentCloudCvmChcDeniedActionsDataSource_basic(t *testing.T) {
 const testAccCvmChcDeniedActionsDataSource = `
 
 data "tencentcloud_cvm_chc_denied_actions" "chc_denied_actions" {
-  chc_ids = ["chc-0brmw3wl"]
+  chc_ids = ["chc-mn3l1qf5"]
 }
 `
