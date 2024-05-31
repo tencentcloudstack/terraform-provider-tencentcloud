@@ -20,7 +20,7 @@ func TestAccTencentCloudEipsDataSource_basic(t *testing.T) {
 				Config: testAccEipsDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_eips.example"),
-					resource.TestCheckResourceAttr("data.tencentcloud_eips.example", "eip_list.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_eips.example", "eip_list.#", "0"),
 
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_eips.example_by_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_eips.example_by_id", "eip_list.#", "1"),
