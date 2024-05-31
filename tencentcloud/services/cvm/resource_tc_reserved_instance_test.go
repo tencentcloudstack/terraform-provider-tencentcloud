@@ -14,7 +14,7 @@ func TestAccTencentCloudReservedInstance(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPlacementGroup,
+				Config: testAccReservedInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPlacementGroupExists("tencentcloud_reserved_instance.reserved_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "config_id", "469043dd-28b9-4d89-b557-74f6a8326259"),
