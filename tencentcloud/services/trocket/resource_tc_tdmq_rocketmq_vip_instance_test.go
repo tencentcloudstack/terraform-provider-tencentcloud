@@ -19,7 +19,7 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheck(t)
 		},
 		CheckDestroy: testAccCheckTdmqRocketmqVipInstanceDestroy,
 		Providers:    tcacctest.AccProviders,
@@ -120,7 +120,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   name         = "tx-example"
-  spec         = "rocket-vip-basic-1"
+  spec         = "rocket-vip-basic-0"
   node_count   = 2
   storage_size = 200
   zone_ids     = [
@@ -162,7 +162,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   name         = "tx-example-update"
-  spec         = "rocket-vip-basic-2"
+  spec         = "rocket-vip-basic-1"
   node_count   = 3
   storage_size = 600
   zone_ids     = [

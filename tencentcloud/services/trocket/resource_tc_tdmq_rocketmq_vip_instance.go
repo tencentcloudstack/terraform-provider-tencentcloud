@@ -1,6 +1,7 @@
 package trocket
 
 import (
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctdmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmq"
 
@@ -414,7 +415,71 @@ func resourceTencentCloudTdmqRocketmqVipInstanceDelete(d *schema.ResourceData, m
 		clusterId = d.Id()
 	)
 
+	// delete
 	if err := service.DeleteTdmqRocketmqVipInstanceById(ctx, clusterId); err != nil {
+		return err
+	}
+
+	// wait status is 2
+	deleteFlag := false
+	request := tdmq.NewDescribeRocketMQVipInstanceDetailRequest()
+	request.ClusterId = &clusterId
+	err := resource.Retry(tccommon.WriteRetryTimeout*6, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().DescribeRocketMQVipInstanceDetail(request)
+		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "ResourceNotFound.Instance" {
+					deleteFlag = true
+					return nil
+				}
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if *result.Response.ClusterInfo.Status == 2 {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("delete tdmq rocketmqVipInstance status is %d", *result.Response.ClusterInfo.Status))
+		}
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete cluster failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if deleteFlag {
+		return nil
+	}
+
+	// delete again
+	if err = service.DeleteTdmqRocketmqVipInstanceById(ctx, clusterId); err != nil {
+		return err
+	}
+
+	// wait done
+	err = resource.Retry(tccommon.WriteRetryTimeout*6, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().DescribeRocketMQVipInstanceDetail(request)
+		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "ResourceNotFound.Instance" {
+					return nil
+				}
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return tccommon.RetryError(fmt.Errorf("tdmq rocketmqVipInstance deleteing"))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete cluster failed, reason:%+v", logId, err)
 		return err
 	}
 
