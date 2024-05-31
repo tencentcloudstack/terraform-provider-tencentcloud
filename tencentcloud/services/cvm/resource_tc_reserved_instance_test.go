@@ -17,7 +17,7 @@ func TestAccTencentCloudReservedInstance(t *testing.T) {
 				Config: testAccReservedInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPlacementGroupExists("tencentcloud_reserved_instance.reserved_instance"),
-					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "config_id", "469043dd-28b9-4d89-b557-74f6a8326259"),
+					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "config_id", "ca8d39c3-4605-4e8d-9a21-05188cc9d1d4"),
 					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "instance_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "reserved_instance_name", "test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_reserved_instance.reserved_instance", "start_time"),
@@ -36,7 +36,7 @@ func TestAccTencentCloudReservedInstance(t *testing.T) {
 
 const testAccReservedInstance = `
 resource "tencentcloud_reserved_instance" "reserved_instance" {
-  config_id              = "469043dd-28b9-4d89-b557-74f6a8326259"
+  config_id              = "ca8d39c3-4605-4e8d-9a21-05188cc9d1d4"
   instance_count         = 2
   reserved_instance_name = "test"
 }
