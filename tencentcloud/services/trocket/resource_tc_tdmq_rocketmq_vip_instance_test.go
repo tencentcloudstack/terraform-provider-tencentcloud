@@ -14,8 +14,8 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic -v
-func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixTdmqRocketmqVipInstanceResource_basic -v
+func TestAccTencentCloudNeedFixTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -120,7 +120,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   name         = "tx-example"
-  spec         = "rocket-vip-basic-0"
+  spec         = "rocket-vip-basic-1"
   node_count   = 2
   storage_size = 200
   zone_ids     = [
@@ -162,9 +162,9 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   name         = "tx-example-update"
-  spec         = "rocket-vip-basic-1"
-  node_count   = 3
-  storage_size = 600
+  spec         = "rocket-vip-basic-2"
+  node_count   = 2
+  storage_size = 200
   zone_ids     = [
     data.tencentcloud_availability_zones.zones.zones.0.id,
     data.tencentcloud_availability_zones.zones.zones.1.id

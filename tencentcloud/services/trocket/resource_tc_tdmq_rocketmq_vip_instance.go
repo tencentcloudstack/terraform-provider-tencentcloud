@@ -439,11 +439,11 @@ func resourceTencentCloudTdmqRocketmqVipInstanceDelete(d *schema.ResourceData, m
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if *result.Response.ClusterInfo.Status == 2 {
+		if result.Response.ClusterInfo.Status != nil && *result.Response.ClusterInfo.Status == 2 {
 			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("delete tdmq rocketmqVipInstance status is %d", *result.Response.ClusterInfo.Status))
 		}
+
+		return resource.RetryableError(fmt.Errorf("tdmq rocketmqVipInstance deleteing"))
 	})
 
 	if err != nil {
