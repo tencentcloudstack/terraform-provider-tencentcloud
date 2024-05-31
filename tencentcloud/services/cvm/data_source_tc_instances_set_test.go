@@ -3,73 +3,87 @@ package cvm_test
 import (
 	"testing"
 
-	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudInstanceSetDataSource_Basic -v
 func TestAccTencentCloudInstanceSetDataSource_Basic(t *testing.T) {
 	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			acctest.AccPreCheck(t)
-		},
-		Providers: acctest.AccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceSetDataSource_BasicCreate,
-				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_instances_set.foo"), resource.TestCheckResourceAttr("data.tencentcloud_instances_set.foo", "instance_list.#", "1")),
+				Config: testAccTencentCloudInstancesSetBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.example"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instances_set.example", "instance_list.0.instance_id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instances_set.example", "instance_list.0.instance_name", "tf_example"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instances_set.example", "instance_list.0.instance_type"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instances_set.example", "instance_list.0.cpu"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instances_set.example", "instance_list.0.memory"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instances_set.example", "instance_list.0.availability_zone"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instances_set.example", "instance_list.0.project_id", "0"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instances_set.example", "instance_list.0.system_disk_type"),
+				),
 			},
 		},
 	})
 }
 
-const testAccInstanceSetDataSource_BasicCreate = `
-
-data "tencentcloud_availability_zones" "default" {
-}
-data "tencentcloud_images" "testing" {
-    image_type = ["PUBLIC_IMAGE"]
-}
-data "tencentcloud_images" "default" {
-    image_type = ["PUBLIC_IMAGE"]
-    image_name_regex = "Final"
-}
-data "tencentcloud_instance_types" "default" {
-    memory_size = 2
-    exclude_sold_out = true
-    
-    filter {
-        values = ["ap-guangzhou-7"]
-        name = "zone"
-    }
-    filter {
-        values = ["S1","S2","S3","S4","S5"]
-        name = "instance-family"
-    }
-    cpu_core_count = 2
-}
-data "tencentcloud_instances_set" "foo" {
-    instance_id = tencentcloud_instance.instances_set.id
-}
+const testAccTencentCloudInstancesSetBasic = `
+# create vpc
 resource "tencentcloud_vpc" "vpc" {
-    name = "cvm-basic-vpc"
-    cidr_block = "10.0.0.0/16"
-}
-resource "tencentcloud_subnet" "subnet" {
-    name = "cvm-basic-subnet"
-    cidr_block = "10.0.0.0/16"
-    availability_zone = "ap-guangzhou-7"
-    vpc_id = tencentcloud_vpc.vpc.id
-}
-resource "tencentcloud_instance" "instances_set" {
-    availability_zone = "ap-guangzhou-7"
-    image_id = data.tencentcloud_images.default.images.0.image_id
-    vpc_id = tencentcloud_vpc.vpc.id
-    subnet_id = tencentcloud_subnet.subnet.id
-    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-    system_disk_type = "CLOUD_PREMIUM"
-    project_id = 0
-    instance_name = "tf-ci-test"
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
 }
 
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create cvm
+resource "tencentcloud_instance" "example" {
+  instance_name     = "tf_example"
+  availability_zone = "ap-guangzhou-6"
+  image_id          = "img-9qrfy1xt"
+  instance_type     = "SA3.MEDIUM4"
+  system_disk_type  = "CLOUD_HSSD"
+  system_disk_size  = 100
+  hostname          = "example"
+  project_id        = 0
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 50
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+
+data "tencentcloud_instances_set" "example" {
+  instance_id       = tencentcloud_instance.example.id
+  instance_name     = tencentcloud_instance.example.instance_name
+  availability_zone = tencentcloud_instance.example.availability_zone
+  project_id        = tencentcloud_instance.example.project_id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
 `

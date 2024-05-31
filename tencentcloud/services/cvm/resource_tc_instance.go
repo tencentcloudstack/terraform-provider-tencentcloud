@@ -1442,6 +1442,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	instanceId := d.Id()
 	//check is force delete or not
 	forceDelete := d.Get("force_delete").(bool)
+	//instanceChargeType := d.Get("instance_charge_type").(string)
 
 	cvmService := CvmService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
@@ -1462,6 +1463,20 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
+
+	// prepaid need delete again
+	//if instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
+	//	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	//		errRet := cvmService.DeleteInstance(ctx, instanceId)
+	//		if errRet != nil {
+	//			return tccommon.RetryError(errRet)
+	//		}
+	//		return nil
+	//	})
+	//	if err != nil {
+	//		return err
+	//	}
+	//}
 
 	//check recycling
 	notExist := false

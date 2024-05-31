@@ -9,7 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudDataSourceImageBase(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudDataSourceImageBase_basic -v
+func TestAccTencentCloudDataSourceImageBase_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },
@@ -52,8 +53,7 @@ func TestAccTencentCloudDataSourceImageBase(t *testing.T) {
 }
 
 const testAccTencentCloudDataSourceImageBase = `
-data "tencentcloud_image" "public_image" {
-}
+data "tencentcloud_image" "public_image" {}
 `
 
 const testAccTencentCloudDataSourceImageBaseWithFilter = `

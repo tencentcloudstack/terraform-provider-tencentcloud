@@ -3,34 +3,41 @@ package cvm_test
 import (
 	"testing"
 
-	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudPlacementGroupsDataSource_Basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudPlacementGroupsDataSource -v
+func TestAccTencentCloudPlacementGroupsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			acctest.AccPreCheck(t)
-		},
-		Providers: acctest.AccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckPlacementGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPlacementGroupsDataSource_BasicCreate,
-				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_placement_groups.data_placement"), resource.TestCheckResourceAttrSet("data.tencentcloud_placement_groups.data_placement", "placement_group_list.0.placement_group_id"), resource.TestCheckResourceAttr("data.tencentcloud_placement_groups.data_placement", "placement_group_list.0.type", "HOST"), resource.TestCheckResourceAttr("data.tencentcloud_placement_groups.data_placement", "placement_group_list.0.name", "tf-test-placement"), resource.TestCheckResourceAttr("data.tencentcloud_placement_groups.data_placement", "placement_group_list.#", "1")),
+				Config: testAccPlacementGroupDataSource,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPlacementGroupExists("tencentcloud_placement_group.example"),
+					resource.TestCheckResourceAttr("data.tencentcloud_placement_groups.placement_group", "placement_group_list.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_placement_groups.placement_group", "placement_group_list.0.placement_group_id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_placement_groups.placement_group", "placement_group_list.0.name", "tf_example"),
+					resource.TestCheckResourceAttr("data.tencentcloud_placement_groups.placement_group", "placement_group_list.0.type", "HOST"),
+				),
 			},
 		},
 	})
 }
 
-const testAccPlacementGroupsDataSource_BasicCreate = `
-
-data "tencentcloud_placement_groups" "data_placement" {
-    placement_group_id = tencentcloud_placement_group.placement.id
-}
-resource "tencentcloud_placement_group" "placement" {
-    name = "tf-test-placement"
-    type = "HOST"
+const testAccPlacementGroupDataSource = `
+resource "tencentcloud_placement_group" "example" {
+  name = "tf_example"
+  type = "HOST"
 }
 
+data "tencentcloud_placement_groups" "placement_group" {
+  name               = tencentcloud_placement_group.example.name
+  placement_group_id = tencentcloud_placement_group.example.id
+}
 `

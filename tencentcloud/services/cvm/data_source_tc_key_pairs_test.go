@@ -3,37 +3,49 @@ package cvm_test
 import (
 	"testing"
 
-	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudKeyPairsDataSource_Basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudKeyPairsDataSource -v
+func TestAccTencentCloudKeyPairsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			acctest.AccPreCheck(t)
-		},
-		Providers: acctest.AccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckKeyPairDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccKeyPairsDataSource_BasicCreate,
-				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_key_pairs.data_key"), resource.TestCheckResourceAttrSet("data.tencentcloud_key_pairs.data_key", "key_pair_list.0.public_key"), resource.TestCheckResourceAttrSet("data.tencentcloud_key_pairs.data_key", "key_pair_list.0.create_time"), resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.data_key", "key_pair_list.#", "1"), resource.TestCheckResourceAttrSet("data.tencentcloud_key_pairs.data_key", "key_pair_list.0.key_id"), resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.data_key", "key_pair_list.0.key_name", "tf_test_key"), resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.data_key", "key_pair_list.0.project_id", "0")),
+				Config: testAccKeyPairDataSource,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKeyPairExists("tencentcloud_key_pair.example"),
+					resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.key_id", "key_pair_list.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_key_pairs.key_id", "key_pair_list.0.key_id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.key_id", "key_pair_list.0.key_name", "tf_example"),
+					resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.key_id", "key_pair_list.0.project_id", "0"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_key_pairs.key_id", "key_pair_list.0.public_key"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_key_pairs.key_id", "key_pair_list.0.create_time"),
+					resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.key_name", "key_pair_list.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_key_pairs.key_name", "key_pair_list.0.key_id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_key_pairs.key_name", "key_pair_list.0.key_name", "tf_example"),
+				),
 			},
 		},
 	})
 }
 
-const testAccKeyPairsDataSource_BasicCreate = `
-
-data "tencentcloud_key_pairs" "data_key" {
-    key_id = tencentcloud_key_pair.key.id
+const testAccKeyPairDataSource = `
+resource "tencentcloud_key_pair" "example" {
+  key_name   = "tf_example"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
+
+data "tencentcloud_key_pairs" "key_id" {
+  key_id = tencentcloud_key_pair.example.id
+}
+
 data "tencentcloud_key_pairs" "key_name" {
-    key_name = "^${tencentcloud_key_pair.key.key_name}$"
+  key_name = "^${tencentcloud_key_pair.example.key_name}$"
 }
-resource "tencentcloud_key_pair" "key" {
-    key_name = "tf_test_key"
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
-}
-
 `
