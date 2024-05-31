@@ -33,7 +33,6 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   vpc_info {
     vpc_id    = tencentcloud_vpc.vpc.id
     subnet_id = tencentcloud_subnet.subnet.id
-
   }
 
   time_span = 1
