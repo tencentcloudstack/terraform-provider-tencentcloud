@@ -57,8 +57,8 @@ func init() {
 	})
 }
 
-// go test -i; go test -test.run TestAccTencentCloudCvmSyncImageResource_basic -v
-func TestAccTencentCloudCvmSyncImageResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixCvmSyncImageResource_basic -v
+func TestAccTencentCloudNeedFixCvmSyncImageResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },
@@ -78,11 +78,11 @@ func TestAccTencentCloudCvmSyncImageResource_basic(t *testing.T) {
 
 const testAccCvmSyncImage = `
 data "tencentcloud_images" "example" {
-  image_type = ["PUBLIC_IMAGE"]
+  image_type = ["PRIVATE_IMAGE"]
 }
 
 resource "tencentcloud_cvm_sync_image" "example" {
   image_id            = data.tencentcloud_images.example.images.0.image_id
-  destination_regions = ["ap-guangzhou", "ap-shanghai"]
+  destination_regions = ["ap-shanghai"]
 }
 `

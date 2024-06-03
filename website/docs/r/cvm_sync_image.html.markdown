@@ -15,8 +15,8 @@ Provides a resource to create a cvm sync_image
 
 ```hcl
 data "tencentcloud_images" "example" {
-  image_type       = ["PUBLIC_IMAGE"]
-  image_name_regex = "Final"
+  image_type       = ["PRIVATE_IMAGE"]
+  image_name_regex = "MyImage"
 }
 
 resource "tencentcloud_cvm_sync_image" "example" {
