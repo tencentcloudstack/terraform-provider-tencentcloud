@@ -97,6 +97,10 @@ func dataSourceTencentCloudCvmDisasterRecoverGroupQuotaRead(d *schema.ResourceDa
 		_ = d.Set("cvm_in_rack_group_quota", respData.CvmInRackGroupQuota)
 	}
 
+	if err := dataSourceTencentCloudCvmDisasterRecoverGroupQuotaReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+		return err
+	}
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), dataSourceTencentCloudCvmDisasterRecoverGroupQuotaReadOutputContent(ctx)); e != nil {

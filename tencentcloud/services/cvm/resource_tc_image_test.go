@@ -211,14 +211,14 @@ func testAccCheckCvmImageDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, has, err := cvmService.DescribeImageById(ctx, rs.Primary.ID, true)
-		if err != nil || has {
+		image, err := cvmService.DescribeImageById(ctx, rs.Primary.ID)
+		if err != nil || image != nil {
 			err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				_, has, err = cvmService.DescribeImageById(ctx, rs.Primary.ID, true)
+				image, err = cvmService.DescribeImageById(ctx, rs.Primary.ID)
 				if nil != err {
 					return tccommon.RetryError(err)
 				}
-				if has {
+				if image != nil {
 					return resource.RetryableError(fmt.Errorf("image still exists: %s", rs.Primary.ID))
 				}
 				return nil
@@ -227,7 +227,7 @@ func testAccCheckCvmImageDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		if has {
+		if image != nil {
 			return fmt.Errorf("image still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -248,11 +248,11 @@ func testAccCheckCvmImageExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("image id is not set")
 		}
 		cvmService := svccvm.NewCvmService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
-		_, has, err := cvmService.DescribeImageById(ctx, rs.Primary.ID, false)
+		image, err := cvmService.DescribeImageById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if image == nil {
 			return fmt.Errorf("image doesn't exist: %s", rs.Primary.ID)
 		}
 		return nil

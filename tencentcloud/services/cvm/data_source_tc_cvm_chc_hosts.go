@@ -317,14 +317,6 @@ func dataSourceTencentCloudCvmChcHostsRead(d *schema.ResourceData, meta interfac
 		paramMap["Filters"] = tmpSet
 	}
 
-	if v, ok := d.GetOkExists("offset"); ok {
-		paramMap["Offset"] = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOkExists("limit"); ok {
-		paramMap["Limit"] = helper.IntInt64(v.(int))
-	}
-
 	var respData []*cvm.ChcHost
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCvmChcHostsByFilter(ctx, paramMap)
@@ -338,7 +330,7 @@ func dataSourceTencentCloudCvmChcHostsRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	chcIds := make([]string, 0, len(respData))
+	var chcIds []string
 	chcHostSetList := make([]map[string]interface{}, 0, len(respData))
 	if respData != nil {
 		for _, chcHostSet := range respData {
