@@ -1,6 +1,7 @@
 package trocket
 
 import (
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctdmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmq"
 
@@ -32,7 +33,7 @@ func ResourceTencentCloudTdmqRocketmqVipInstance() *schema.Resource {
 			"spec": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Instance specification: Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.",
+				Description: "Instance specification: Universal type, rocket-vip-basic-0, Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.",
 			},
 			"node_count": {
 				Required:     true,
@@ -76,6 +77,30 @@ func ResourceTencentCloudTdmqRocketmqVipInstance() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeInt,
 				Description: "Purchase period, in months.",
+			},
+			"ip_rules": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Public IP access control rules.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip_rule": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "IP address block information.",
+						},
+						"allow": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Whether to allow or deny.",
+						},
+						"remark": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Remark.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -131,6 +156,26 @@ func resourceTencentCloudTdmqRocketmqVipInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOkExists("time_span"); ok {
 		request.TimeSpan = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("ip_rules"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			ipRule := tdmq.PublicAccessRule{}
+			if v, ok := dMap["ip_rule"]; ok {
+				ipRule.IpRule = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["allow"]; ok {
+				ipRule.Allow = helper.Bool(v.(bool))
+			}
+
+			if v, ok := dMap["remark"]; ok {
+				ipRule.Remark = helper.String(v.(string))
+			}
+
+			request.IpRules = append(request.IpRules, &ipRule)
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -265,7 +310,7 @@ func resourceTencentCloudTdmqRocketmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	request.InstanceId = &clusterId
 
-	immutableArgs := []string{"zone_ids", "vpc_info", "time_span"}
+	immutableArgs := []string{"zone_ids", "vpc_info", "time_span", "ip_rules"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -370,7 +415,71 @@ func resourceTencentCloudTdmqRocketmqVipInstanceDelete(d *schema.ResourceData, m
 		clusterId = d.Id()
 	)
 
+	// delete
 	if err := service.DeleteTdmqRocketmqVipInstanceById(ctx, clusterId); err != nil {
+		return err
+	}
+
+	// wait status is 2
+	deleteFlag := false
+	request := tdmq.NewDescribeRocketMQVipInstanceDetailRequest()
+	request.ClusterId = &clusterId
+	err := resource.Retry(tccommon.WriteRetryTimeout*6, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().DescribeRocketMQVipInstanceDetail(request)
+		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "ResourceNotFound.Instance" {
+					deleteFlag = true
+					return nil
+				}
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result.Response.ClusterInfo.InstanceStatus != nil && *result.Response.ClusterInfo.InstanceStatus == 2 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("tdmq rocketmqVipInstance first deleting"))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete cluster failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if deleteFlag {
+		return nil
+	}
+
+	// delete again
+	if err = service.DeleteTdmqRocketmqVipInstanceById(ctx, clusterId); err != nil {
+		return err
+	}
+
+	// wait done
+	err = resource.Retry(tccommon.WriteRetryTimeout*6, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().DescribeRocketMQVipInstanceDetail(request)
+		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "ResourceNotFound.Instance" {
+					return nil
+				}
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return resource.RetryableError(fmt.Errorf("tdmq rocketmqVipInstance second deleting"))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete cluster failed, reason:%+v", logId, err)
 		return err
 	}
 
