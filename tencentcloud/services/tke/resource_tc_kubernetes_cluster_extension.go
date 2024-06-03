@@ -2135,46 +2135,46 @@ func tkeCvmState() map[string]*schema.Schema {
 	}
 }
 
-func tkeSecurityInfo() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"user_name": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "User name of account.",
-		},
-		"password": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Password of account.",
-		},
-		"certification_authority": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "The certificate used for access.",
-		},
-		"cluster_external_endpoint": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "External network address to access.",
-		},
-		"domain": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Domain name for access.",
-		},
-		"pgw_endpoint": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "The Intranet address used for access.",
-		},
-		"security_policy": {
-			Type:        schema.TypeList,
-			Computed:    true,
-			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "Access policy.",
-		},
-	}
-}
+//func tkeSecurityInfo() map[string]*schema.Schema {
+//	return map[string]*schema.Schema{
+//		"user_name": {
+//			Type:        schema.TypeString,
+//			Computed:    true,
+//			Description: "User name of account.",
+//		},
+//		"password": {
+//			Type:        schema.TypeString,
+//			Computed:    true,
+//			Description: "Password of account.",
+//		},
+//		"certification_authority": {
+//			Type:        schema.TypeString,
+//			Computed:    true,
+//			Description: "The certificate used for access.",
+//		},
+//		"cluster_external_endpoint": {
+//			Type:        schema.TypeString,
+//			Computed:    true,
+//			Description: "External network address to access.",
+//		},
+//		"domain": {
+//			Type:        schema.TypeString,
+//			Computed:    true,
+//			Description: "Domain name for access.",
+//		},
+//		"pgw_endpoint": {
+//			Type:        schema.TypeString,
+//			Computed:    true,
+//			Description: "The Intranet address used for access.",
+//		},
+//		"security_policy": {
+//			Type:        schema.TypeList,
+//			Computed:    true,
+//			Elem:        &schema.Schema{Type: schema.TypeString},
+//			Description: "Access policy.",
+//		},
+//	}
+//}
 
 func TkeCvmCreateInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
