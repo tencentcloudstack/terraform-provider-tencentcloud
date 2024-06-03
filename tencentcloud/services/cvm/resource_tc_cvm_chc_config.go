@@ -193,236 +193,13 @@ func resourceTencentCloudCvmChcConfigCreate(d *schema.ResourceData, meta interfa
 	var (
 		chcId string
 	)
-	var (
-		request  = cvm.NewModifyChcAttributeRequest()
-		response = cvm.NewModifyChcAttributeResponse()
-	)
-
-	if v, ok := d.GetOk("chc_id"); ok {
-		chcId = v.(string)
-	}
-
-	request.ChcIds = []*string{&chcId}
-
-	if v, ok := d.GetOk("instance_name"); ok {
-		request.InstanceName = helper.String(v.(string))
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyChcAttributeWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create cvm chc config failed, reason:%+v", logId, err)
-		return err
-	}
-
-	_ = response
-
-	var (
-		request1  = cvm.NewModifyChcAttributeRequest()
-		response1 = cvm.NewModifyChcAttributeResponse()
-	)
-
-	if v, ok := d.GetOk("chc_id"); ok {
-		chcId = v.(string)
-	}
-
-	request1.ChcIds = []*string{&chcId}
-
-	if v, ok := d.GetOk("device_type"); ok {
-		request1.DeviceType = helper.String(v.(string))
-	}
-
-	err1 := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyChcAttributeWithContext(ctx, request1)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request1.GetAction(), request1.ToJsonString(), result.ToJsonString())
-		}
-		response1 = result
-		return nil
-	})
-	if err1 != nil {
-		log.Printf("[CRITAL]%s create cvm chc config failed, reason:%+v", logId, err1)
-		return err1
-	}
-
-	_ = response1
-
-	var (
-		request2  = cvm.NewModifyChcAttributeRequest()
-		response2 = cvm.NewModifyChcAttributeResponse()
-	)
-
-	if v, ok := d.GetOk("chc_id"); ok {
-		chcId = v.(string)
-	}
-
-	request2.ChcIds = []*string{&chcId}
-
-	if v, ok := d.GetOk("bmc_user"); ok {
-		request2.BmcUser = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("password"); ok {
-		request2.Password = helper.String(v.(string))
-	}
-
-	err2 := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyChcAttributeWithContext(ctx, request2)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request2.GetAction(), request2.ToJsonString(), result.ToJsonString())
-		}
-		response2 = result
-		return nil
-	})
-	if err2 != nil {
-		log.Printf("[CRITAL]%s create cvm chc config failed, reason:%+v", logId, err2)
-		return err2
-	}
-
-	_ = response2
-
-	var (
-		request3  = cvm.NewConfigureChcAssistVpcRequest()
-		response3 = cvm.NewConfigureChcAssistVpcResponse()
-	)
-
-	if v, ok := d.GetOk("chc_id"); ok {
-		chcId = v.(string)
-	}
-
-	request3.ChcIds = []*string{&chcId}
-
-	if bmcVirtualPrivateCloudMap, ok := helper.InterfacesHeadMap(d, "bmc_virtual_private_cloud"); ok {
-		virtualPrivateCloud := cvm.VirtualPrivateCloud{}
-		if v, ok := bmcVirtualPrivateCloudMap["vpc_id"]; ok {
-			virtualPrivateCloud.VpcId = helper.String(v.(string))
-		}
-		if v, ok := bmcVirtualPrivateCloudMap["subnet_id"]; ok {
-			virtualPrivateCloud.SubnetId = helper.String(v.(string))
-		}
-		if v, ok := bmcVirtualPrivateCloudMap["as_vpc_gateway"]; ok {
-			virtualPrivateCloud.AsVpcGateway = helper.Bool(v.(bool))
-		}
-		if v, ok := bmcVirtualPrivateCloudMap["private_ip_addresses"]; ok {
-			privateIpAddressesSet := v.(*schema.Set).List()
-			for i := range privateIpAddressesSet {
-				privateIpAddresses := privateIpAddressesSet[i].(string)
-				virtualPrivateCloud.PrivateIpAddresses = append(virtualPrivateCloud.PrivateIpAddresses, helper.String(privateIpAddresses))
-			}
-		}
-		if v, ok := bmcVirtualPrivateCloudMap["ipv6_address_count"]; ok {
-			virtualPrivateCloud.Ipv6AddressCount = helper.IntUint64(v.(int))
-		}
-		request3.BmcVirtualPrivateCloud = &virtualPrivateCloud
-	}
-
-	if v, ok := d.GetOk("bmc_security_group_ids"); ok {
-		bmcSecurityGroupIdsSet := v.(*schema.Set).List()
-		for i := range bmcSecurityGroupIdsSet {
-			bmcSecurityGroupIds := bmcSecurityGroupIdsSet[i].(string)
-			request3.BmcSecurityGroupIds = append(request3.BmcSecurityGroupIds, helper.String(bmcSecurityGroupIds))
-		}
-	}
-
-	err3 := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ConfigureChcAssistVpcWithContext(ctx, request3)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request3.GetAction(), request3.ToJsonString(), result.ToJsonString())
-		}
-		response3 = result
-		return nil
-	})
-	if err3 != nil {
-		log.Printf("[CRITAL]%s create cvm chc config failed, reason:%+v", logId, err3)
-		return err3
-	}
-
-	_ = response3
-
-	if err := resourceTencentCloudCvmChcConfigCreatePostHandleResponse3(ctx, response3); err != nil {
-		return err
-	}
-
-	var (
-		request4  = cvm.NewConfigureChcAssistVpcRequest()
-		response4 = cvm.NewConfigureChcAssistVpcResponse()
-	)
-
-	if v, ok := d.GetOk("chc_id"); ok {
-		chcId = v.(string)
-	}
-
-	request4.ChcIds = []*string{&chcId}
-
-	if deployVirtualPrivateCloudMap, ok := helper.InterfacesHeadMap(d, "deploy_virtual_private_cloud"); ok {
-		virtualPrivateCloud := cvm.VirtualPrivateCloud{}
-		if v, ok := deployVirtualPrivateCloudMap["vpc_id"]; ok {
-			virtualPrivateCloud.VpcId = helper.String(v.(string))
-		}
-		if v, ok := deployVirtualPrivateCloudMap["subnet_id"]; ok {
-			virtualPrivateCloud.SubnetId = helper.String(v.(string))
-		}
-		if v, ok := deployVirtualPrivateCloudMap["as_vpc_gateway"]; ok {
-			virtualPrivateCloud.AsVpcGateway = helper.Bool(v.(bool))
-		}
-		if v, ok := deployVirtualPrivateCloudMap["private_ip_addresses"]; ok {
-			privateIpAddressesSet := v.(*schema.Set).List()
-			for i := range privateIpAddressesSet {
-				privateIpAddresses := privateIpAddressesSet[i].(string)
-				virtualPrivateCloud.PrivateIpAddresses = append(virtualPrivateCloud.PrivateIpAddresses, helper.String(privateIpAddresses))
-			}
-		}
-		if v, ok := deployVirtualPrivateCloudMap["ipv6_address_count"]; ok {
-			virtualPrivateCloud.Ipv6AddressCount = helper.IntUint64(v.(int))
-		}
-		request4.DeployVirtualPrivateCloud = &virtualPrivateCloud
-	}
-
-	if v, ok := d.GetOk("deploy_security_group_ids"); ok {
-		deploySecurityGroupIdsSet := v.(*schema.Set).List()
-		for i := range deploySecurityGroupIdsSet {
-			deploySecurityGroupIds := deploySecurityGroupIdsSet[i].(string)
-			request4.DeploySecurityGroupIds = append(request4.DeploySecurityGroupIds, helper.String(deploySecurityGroupIds))
-		}
-	}
-
-	err4 := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ConfigureChcAssistVpcWithContext(ctx, request4)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request4.GetAction(), request4.ToJsonString(), result.ToJsonString())
-		}
-		response4 = result
-		return nil
-	})
-	if err4 != nil {
-		log.Printf("[CRITAL]%s create cvm chc config failed, reason:%+v", logId, err4)
-		return err4
-	}
-
-	_ = response4
-
-	if err := resourceTencentCloudCvmChcConfigCreatePostHandleResponse4(ctx, response4); err != nil {
-		return err
-	}
-
 	d.SetId(chcId)
 
+	if err := resourceTencentCloudCvmChcConfigCreateOnExit(ctx); err != nil {
+		return err
+	}
+
+	_ = ctx
 	return resourceTencentCloudCvmChcConfigRead(d, meta)
 }
 
@@ -548,7 +325,7 @@ func resourceTencentCloudCvmChcConfigUpdate(d *schema.ResourceData, meta interfa
 	if needChange {
 		request := cvm.NewModifyChcAttributeRequest()
 
-		request.ChcIds = []*string{&chcId}
+		request.ChcIds = []*string{helper.String(chcId)}
 
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
@@ -581,7 +358,7 @@ func resourceTencentCloudCvmChcConfigUpdate(d *schema.ResourceData, meta interfa
 	if needChange1 {
 		request1 := cvm.NewModifyChcAttributeRequest()
 
-		request1.ChcIds = []*string{&chcId}
+		request1.ChcIds = []*string{helper.String(chcId)}
 
 		if v, ok := d.GetOk("device_type"); ok {
 			request1.DeviceType = helper.String(v.(string))
@@ -614,7 +391,7 @@ func resourceTencentCloudCvmChcConfigUpdate(d *schema.ResourceData, meta interfa
 	if needChange2 {
 		request2 := cvm.NewModifyChcAttributeRequest()
 
-		request2.ChcIds = []*string{&chcId}
+		request2.ChcIds = []*string{helper.String(chcId)}
 
 		if v, ok := d.GetOk("bmc_user"); ok {
 			request2.BmcUser = helper.String(v.(string))
@@ -656,7 +433,7 @@ func resourceTencentCloudCvmChcConfigDelete(d *schema.ResourceData, meta interfa
 		response = cvm.NewRemoveChcDeployVpcResponse()
 	)
 
-	request.ChcIds = []*string{&chcId}
+	request.ChcIds = []*string{helper.String(chcId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().RemoveChcDeployVpcWithContext(ctx, request)
@@ -669,7 +446,7 @@ func resourceTencentCloudCvmChcConfigDelete(d *schema.ResourceData, meta interfa
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cvm chc config failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete cvm chc config failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -683,7 +460,7 @@ func resourceTencentCloudCvmChcConfigDelete(d *schema.ResourceData, meta interfa
 		response1 = cvm.NewRemoveChcAssistVpcResponse()
 	)
 
-	request1.ChcIds = []*string{&chcId}
+	request1.ChcIds = []*string{helper.String(chcId)}
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().RemoveChcAssistVpcWithContext(ctx, request1)
@@ -696,7 +473,7 @@ func resourceTencentCloudCvmChcConfigDelete(d *schema.ResourceData, meta interfa
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cvm chc config failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete cvm chc config failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -130,7 +130,7 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 		filter.Values = []*string{helper.String(v.(string))}
 	}
 	filtersMap["Temp0"] = &filter
-	if v, ok := filtersMap["Temp0"]; ok {
+	if v, ok := filtersMap["Temp0"]; ok && len(v.Values) > 0 {
 		filtersList = append(filtersList, v)
 	}
 	filter2 := cvm.Filter{}
@@ -140,7 +140,7 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 		filter2.Values = []*string{helper.String(v.(string))}
 	}
 	filtersMap["Temp1"] = &filter2
-	if v, ok := filtersMap["Temp1"]; ok {
+	if v, ok := filtersMap["Temp1"]; ok && len(v.Values) > 0 {
 		filtersList = append(filtersList, v)
 	}
 	filter3 := cvm.Filter{}
@@ -150,7 +150,7 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 		filter3.Values = []*string{helper.String(v.(string))}
 	}
 	filtersMap["Temp2"] = &filter3
-	if v, ok := filtersMap["Temp2"]; ok {
+	if v, ok := filtersMap["Temp2"]; ok && len(v.Values) > 0 {
 		filtersList = append(filtersList, v)
 	}
 	filter4 := cvm.Filter{}
@@ -160,7 +160,7 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 		filter4.Values = []*string{helper.String(v.(string))}
 	}
 	filtersMap["Temp3"] = &filter4
-	if v, ok := filtersMap["Temp3"]; ok {
+	if v, ok := filtersMap["Temp3"]; ok && len(v.Values) > 0 {
 		filtersList = append(filtersList, v)
 	}
 	filter5 := cvm.Filter{}
@@ -170,7 +170,7 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 		filter5.Values = []*string{helper.String(v.(string))}
 	}
 	filtersMap["Temp4"] = &filter5
-	if v, ok := filtersMap["Temp4"]; ok {
+	if v, ok := filtersMap["Temp4"]; ok && len(v.Values) > 0 {
 		filtersList = append(filtersList, v)
 	}
 	paramMap["Filters"] = filtersList

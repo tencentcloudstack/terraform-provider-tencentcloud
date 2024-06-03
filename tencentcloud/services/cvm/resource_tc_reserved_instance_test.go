@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudReservedInstance(t *testing.T) {
+func TestAccTencentCloudNeedFixReservedInstance(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },

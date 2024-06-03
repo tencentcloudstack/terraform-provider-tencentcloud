@@ -1530,19 +1530,13 @@ func (me *CvmService) DescribeCvmChcHostsByFilter(ctx context.Context, param map
 		if k == "Filters" {
 			request.Filters = v.([]*cvm.Filter)
 		}
-		if k == "Offset" {
-			request.Offset = v.(*int64)
-		}
-		if k == "Limit" {
-			request.Limit = v.(*int64)
-		}
 	}
 
 	ratelimit.Check(request.GetAction())
 
 	var (
 		offset int64 = 0
-		limit  int64 = 20
+		limit  int64 = 100
 	)
 	for {
 		request.Offset = &offset
@@ -1842,7 +1836,7 @@ func (me *CvmService) DescribeCvmChcConfigById(ctx context.Context, chcId string
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewDescribeChcHostsRequest()
-	request.ChcIds = []*string{&chcId}
+	request.ChcIds = []*string{helper.String(chcId)}
 
 	defer func() {
 		if errRet != nil {

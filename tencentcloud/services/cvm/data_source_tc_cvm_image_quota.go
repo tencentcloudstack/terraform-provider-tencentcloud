@@ -57,6 +57,10 @@ func dataSourceTencentCloudCvmImageQuotaRead(d *schema.ResourceData, meta interf
 		_ = d.Set("image_num_quota", respData.ImageNumQuota)
 	}
 
+	if err := dataSourceTencentCloudCvmImageQuotaReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+		return err
+	}
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), dataSourceTencentCloudCvmImageQuotaReadOutputContent(ctx)); e != nil {
