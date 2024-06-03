@@ -948,7 +948,7 @@ The `master_config` object supports the following:
 * `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, Int, ForceNew) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
-* `user_data` - (Optional, String, ForceNew) User data provided to instances, needs to be encoded in base64, and the maximum supported data size is 16KB.
+* `user_data` - (Optional, String, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 
 The `node_pool_global_config` object supports the following:
 
@@ -990,7 +990,7 @@ The `worker_config` object supports the following:
 * `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, Int, ForceNew) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
-* `user_data` - (Optional, String, ForceNew) User data provided to instances, needs to be encoded in base64, and the maximum supported data size is 16KB.
+* `user_data` - (Optional, String, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference
 

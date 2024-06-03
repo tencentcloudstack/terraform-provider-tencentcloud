@@ -87,6 +87,8 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 		basic.ClusterOs = cluster_os
 	}
 
+	advanced.NetworkType = d.Get("network_type").(string)
+
 	if advanced.NetworkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
 		if v, ok := d.GetOk("vpc_cni_type"); ok {
 			advanced.VpcCniType = v.(string)
@@ -96,6 +98,7 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 	}
 
 	cidrSet.ClusterCidr = d.Get("cluster_cidr").(string)
+	cidrSet.ServiceCIDR = d.Get("service_cidr").(string)
 
 	if ClaimExpiredSeconds, ok := d.GetOk("claim_expired_seconds"); ok {
 		cidrSet.ClaimExpiredSeconds = int64(ClaimExpiredSeconds.(int))
@@ -464,6 +467,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 	//Modify node pool global config
 	if _, ok := d.GetOk("node_pool_global_config"); ok {
 		request := tkeGetNodePoolGlobalConfig(d)
+		request.ClusterId = &id
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr := service.ModifyClusterNodePoolGlobalConfig(ctx, request)
 			if inErr != nil {
