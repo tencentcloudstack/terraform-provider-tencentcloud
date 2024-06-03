@@ -57,23 +57,32 @@ func init() {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudCvmSyncImageResource_basic -v
 func TestAccTencentCloudCvmSyncImageResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCvmSyncImage,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cvm_sync_image.sync_image", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_sync_image.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_sync_image.example", "image_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_sync_image.example", "destination_regions.#"),
+				),
 			},
 		},
 	})
 }
 
 const testAccCvmSyncImage = `
-resource "tencentcloud_cvm_sync_image" "sync_image" {
-	image_id = "img-k4h0m5la" 
-	destination_regions = ["ap-shanghai"]
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+}
+
+resource "tencentcloud_cvm_sync_image" "example" {
+  image_id            = data.tencentcloud_images.example.images.0.image_id
+  destination_regions = ["ap-guangzhou", "ap-shanghai"]
 }
 `
