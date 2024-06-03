@@ -443,7 +443,7 @@ func resourceTencentCloudTdmqRocketmqVipInstanceDelete(d *schema.ResourceData, m
 			return nil
 		}
 
-		return resource.RetryableError(fmt.Errorf("tdmq rocketmqVipInstance first deleteing"))
+		return resource.RetryableError(fmt.Errorf("tdmq rocketmqVipInstance first deleting"))
 	})
 
 	if err != nil {
@@ -475,7 +475,7 @@ func resourceTencentCloudTdmqRocketmqVipInstanceDelete(d *schema.ResourceData, m
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		return resource.RetryableError(fmt.Errorf("tdmq rocketmqVipInstance second deleteing"))
+		return resource.RetryableError(fmt.Errorf("tdmq rocketmqVipInstance second deleting"))
 	})
 
 	if err != nil {
