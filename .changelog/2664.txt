@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_clb_instance: `security_groups` add `Computed` attribute.
+```
+
+```release-note:enhancement
+resource/tencentcloud_clb_security_group_attachment: Code optimization.
+```
