@@ -1242,7 +1242,7 @@ func (me *CvmService) DescribeCvmHpcClusterById(ctx context.Context, hpcClusterI
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewDescribeHpcClustersRequest()
-	request.HpcClusterIds = []*string{&hpcClusterId}
+	request.HpcClusterIds = []*string{helper.String(hpcClusterId)}
 
 	defer func() {
 		if errRet != nil {

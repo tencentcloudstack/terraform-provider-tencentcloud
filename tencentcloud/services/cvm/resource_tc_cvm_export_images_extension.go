@@ -5,11 +5,9 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
-func resourceTencentCloudCvmExportImagesCreatePostHandleResponse0(ctx context.Context, resp *cvm.ExportImagesResponse) error {
+func resourceTencentCloudCvmExportImagesCreateOnExit(ctx context.Context) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
