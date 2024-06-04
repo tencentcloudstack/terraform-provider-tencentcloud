@@ -1,6 +1,7 @@
 package cvm_test
 
 import (
+	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
@@ -13,34 +14,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudPlacementGroup(t *testing.T) {
+func TestAccTencentCloudPlacementGroupResource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheck(t) },
-		Providers:    tcacctest.AccProviders,
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
 		CheckDestroy: testAccCheckPlacementGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPlacementGroup,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckPlacementGroupExists("tencentcloud_placement_group.placement"),
-					resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "name", "tf-test-placement"),
-					resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "type", "HOST"),
-					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "cvm_quota_total"),
-					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "current_num"),
-					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "create_time"),
-				),
+				Config: testAccPlacementGroupResource_BasicCreate,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckPlacementGroupExists("tencentcloud_placement_group.placement"), resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "name", "tf-test-placement"), resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "type", "HOST"), resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "cvm_quota_total"), resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "current_num"), resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "create_time")),
 			},
 			{
-				Config: testAccPlacementGroupUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckPlacementGroupExists("tencentcloud_placement_group.placement"),
-					resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "name", "tf-test-placement1"),
-					resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "type", "HOST"),
-					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "cvm_quota_total"),
-					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "current_num"),
-					resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "create_time"),
-				),
+				Config: testAccPlacementGroupResource_BasicChange1,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckPlacementGroupExists("tencentcloud_placement_group.placement"), resource.TestCheckResourceAttr("tencentcloud_placement_group.placement", "name", "tf-test-placement1"), resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "cvm_quota_total"), resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "current_num"), resource.TestCheckResourceAttrSet("tencentcloud_placement_group.placement", "create_time")),
 			},
 			{
 				ResourceName:      "tencentcloud_placement_group.placement",
@@ -50,6 +39,23 @@ func TestAccTencentCloudPlacementGroup(t *testing.T) {
 		},
 	})
 }
+
+const testAccPlacementGroupResource_BasicCreate = `
+
+resource "tencentcloud_placement_group" "placement" {
+    type = "HOST"
+    name = "tf-test-placement"
+}
+
+`
+const testAccPlacementGroupResource_BasicChange1 = `
+
+resource "tencentcloud_placement_group" "placement" {
+    type = "HOST"
+    name = "tf-test-placement1"
+}
+
+`
 
 func testAccCheckPlacementGroupExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
@@ -113,17 +119,3 @@ func testAccCheckPlacementGroupDestroy(s *terraform.State) error {
 	}
 	return nil
 }
-
-const testAccPlacementGroup = `
-resource "tencentcloud_placement_group" "placement" {
-	name = "tf-test-placement"
-	type = "HOST"
-}
-`
-
-const testAccPlacementGroupUpdate = `
-resource "tencentcloud_placement_group" "placement" {
-	name = "tf-test-placement1"
-	type = "HOST"
-}
-`
