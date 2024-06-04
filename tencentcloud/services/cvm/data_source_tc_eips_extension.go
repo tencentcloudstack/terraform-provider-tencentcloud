@@ -2,7 +2,6 @@ package cvm
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -13,7 +12,7 @@ import (
 )
 
 func dataSourceTencentCloudEipsReadOutputContent(ctx context.Context) interface{} {
-	eipList := ctx.Value("eipList").(*schema.Set).List()
+	eipList := ctx.Value("eipList")
 	return eipList
 }
 

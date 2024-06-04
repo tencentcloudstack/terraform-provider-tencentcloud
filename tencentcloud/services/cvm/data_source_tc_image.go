@@ -102,7 +102,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 		paramMap["Filters"] = tmpSet
 	}
 
-	var respData *cvm.DescribeImagesResponseParams
+	var respData []*cvm.Image
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeImageByFilter(ctx, paramMap)
 		if e != nil {
@@ -115,7 +115,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
-	if err := dataSourceTencentCloudImageReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+	if err := dataSourceTencentCloudImageReadPostHandleResponse0(ctx, paramMap, &respData); err != nil {
 		return err
 	}
 

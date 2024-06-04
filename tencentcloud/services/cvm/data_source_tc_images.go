@@ -187,17 +187,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		filter.Values = []*string{helper.String(v.(string))}
 	}
 	filtersMap["Temp0"] = &filter
-	if v, ok := filtersMap["Temp0"]; ok {
-		filtersList = append(filtersList, v)
-	}
-	filter2 := cvm.Filter{}
-	name2 := "image_type"
-	filter2.Name = &name2
-	if v, ok := d.GetOk("image_type"); ok {
-		filter2.Values = []*string{helper.String(v.(string))}
-	}
-	filtersMap["Temp1"] = &filter2
-	if v, ok := filtersMap["Temp1"]; ok {
+	if v, ok := filtersMap["Temp0"]; ok && len(v.Values) > 0 {
 		filtersList = append(filtersList, v)
 	}
 	paramMap["Filters"] = filtersList
@@ -206,7 +196,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	var respData *cvm.DescribeImagesResponseParams
+	var respData []*cvm.Image
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeImagesByFilter(ctx, paramMap)
 		if e != nil {
@@ -219,7 +209,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	if err := dataSourceTencentCloudImagesReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+	if err := dataSourceTencentCloudImagesReadPostHandleResponse0(ctx, paramMap, &respData); err != nil {
 		return err
 	}
 

@@ -8,6 +8,7 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func DataSourceTencentCloudInstancesSet() *schema.Resource {
@@ -247,11 +248,75 @@ func dataSourceTencentCloudInstancesSetRead(d *schema.ResourceData, meta interfa
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
+	var filtersList []*cvm.Filter
+	filtersMap := map[string]*cvm.Filter{}
+	filter := cvm.Filter{}
+	name := "instance-id"
+	filter.Name = &name
+	if v, ok := d.GetOk("instance_id"); ok {
+		filter.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp0"] = &filter
+	if v, ok := filtersMap["Temp0"]; ok && len(v.Values) > 0 {
+		filtersList = append(filtersList, v)
+	}
+	filter2 := cvm.Filter{}
+	name2 := "instance-name"
+	filter2.Name = &name2
+	if v, ok := d.GetOk("instance_name"); ok {
+		filter2.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp1"] = &filter2
+	if v, ok := filtersMap["Temp1"]; ok && len(v.Values) > 0 {
+		filtersList = append(filtersList, v)
+	}
+	filter3 := cvm.Filter{}
+	name3 := "zone"
+	filter3.Name = &name3
+	if v, ok := d.GetOk("availability_zone"); ok {
+		filter3.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp2"] = &filter3
+	if v, ok := filtersMap["Temp2"]; ok && len(v.Values) > 0 {
+		filtersList = append(filtersList, v)
+	}
+	filter4 := cvm.Filter{}
+	name4 := "project-id"
+	filter4.Name = &name4
+	if v, ok := d.GetOk("project_id"); ok {
+		filter4.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp3"] = &filter4
+	if v, ok := filtersMap["Temp3"]; ok && len(v.Values) > 0 {
+		filtersList = append(filtersList, v)
+	}
+	filter5 := cvm.Filter{}
+	name5 := "vpc-id"
+	filter5.Name = &name5
+	if v, ok := d.GetOk("vpc_id"); ok {
+		filter5.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp4"] = &filter5
+	if v, ok := filtersMap["Temp4"]; ok && len(v.Values) > 0 {
+		filtersList = append(filtersList, v)
+	}
+	filter6 := cvm.Filter{}
+	name6 := "subnet-id"
+	filter6.Name = &name6
+	if v, ok := d.GetOk("subnet_id"); ok {
+		filter6.Values = []*string{helper.String(v.(string))}
+	}
+	filtersMap["Temp5"] = &filter6
+	if v, ok := filtersMap["Temp5"]; ok && len(v.Values) > 0 {
+		filtersList = append(filtersList, v)
+	}
+	paramMap["Filters"] = filtersList
+
 	if err := dataSourceTencentCloudInstancesSetReadPostFillRequest0(ctx, paramMap); err != nil {
 		return err
 	}
 
-	var respData *cvm.DescribeInstancesResponseParams
+	var respData []*cvm.Instance
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeInstancesSetByFilter(ctx, paramMap)
 		if e != nil {
@@ -264,7 +329,7 @@ func dataSourceTencentCloudInstancesSetRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	if err := dataSourceTencentCloudInstancesSetReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+	if err := dataSourceTencentCloudInstancesSetReadPostHandleResponse0(ctx, paramMap, &respData); err != nil {
 		return err
 	}
 
