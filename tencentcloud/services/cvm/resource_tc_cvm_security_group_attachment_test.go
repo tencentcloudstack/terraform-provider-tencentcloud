@@ -3,27 +3,21 @@ package cvm_test
 import (
 	"testing"
 
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCvmSecurityGroupAttachmentResource_basic -v
-func TestAccTencentCloudCvmSecurityGroupAttachmentResource_basic(t *testing.T) {
+func TestAccTencentCloudCvmSecurityGroupAttachmentResource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccPreCheck(t)
+			acctest.AccPreCheck(t)
 		},
-		Providers: tcacctest.AccProviders,
+		Providers: acctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCvmSecurityGroupAttachment,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_cvm_security_group_attachment.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cvm_security_group_attachment.example", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cvm_security_group_attachment.example", "security_group_id"),
-				),
+				Config: testAccCvmSecurityGroupAttachmentResource_BasicCreate,
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cvm_security_group_attachment.example", "id"), resource.TestCheckResourceAttrSet("tencentcloud_cvm_security_group_attachment.example", "instance_id"), resource.TestCheckResourceAttrSet("tencentcloud_cvm_security_group_attachment.example", "security_group_id")),
 			},
 			{
 				ResourceName:      "tencentcloud_cvm_security_group_attachment.example",
@@ -34,49 +28,58 @@ func TestAccTencentCloudCvmSecurityGroupAttachmentResource_basic(t *testing.T) {
 	})
 }
 
-const testAccCvmSecurityGroupAttachment = `
-# create vpc
+const testAccCvmSecurityGroupAttachmentResource_BasicCreate = `
+
+data "tencentcloud_instance_types" "default" {
+    
+    filter {
+        name = "instance-family"
+        values = ["S1","S2","S3","S4","S5"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-7"]
+    }
+    cpu_core_count = 2
+    memory_size = 2
+    exclude_sold_out = true
+}
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc"
-  cidr_block = "10.0.0.0/16"
+    name = "vpc"
+    cidr_block = "10.0.0.0/16"
 }
-
-# create vpc subnet
 resource "tencentcloud_subnet" "subnet" {
-  name              = "subnet"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = "ap-guangzhou-6"
-  cidr_block        = "10.0.20.0/28"
-  is_multicast      = false
+    name = "subnet"
+    vpc_id = tencentcloud_vpc.vpc.id
+    availability_zone = "ap-guangzhou-6"
+    cidr_block = "10.0.20.0/28"
+    is_multicast = false
 }
-
-# create cvm
 resource "tencentcloud_instance" "example" {
-  instance_name     = "tf_example"
-  availability_zone = "ap-guangzhou-6"
-  image_id          = "img-9qrfy1xt"
-  instance_type     = "SA3.MEDIUM4"
-  system_disk_type  = "CLOUD_HSSD"
-  system_disk_size  = 100
-  hostname          = "example"
-  project_id        = 0
-  vpc_id            = tencentcloud_vpc.vpc.id
-  subnet_id         = tencentcloud_subnet.subnet.id
-
-  data_disks {
-    data_disk_type = "CLOUD_HSSD"
-    data_disk_size = 50
-    encrypt        = false
-  }
-
-  tags = {
-    tagKey = "tagValue"
-  }
+    availability_zone = "ap-guangzhou-6"
+    hostname = "example"
+    project_id = 0
+    vpc_id = tencentcloud_vpc.vpc.id
+    subnet_id = tencentcloud_subnet.subnet.id
+    
+    data_disks {
+        encrypt = true
+        data_disk_type = "CLOUD_HSSD"
+        data_disk_size = 50
+    }
+    
+    tags = {
+        tagKey = "tagValue"
+    }
+    instance_name = "tf_example"
+    image_id = "img-9qrfy1xt"
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+    system_disk_type = "CLOUD_HSSD"
+    system_disk_size = 100
 }
-
-# attachment security group
 resource "tencentcloud_cvm_security_group_attachment" "example" {
-  instance_id       = tencentcloud_instance.example.id
-  security_group_id = "sg-5275dorp"
+    instance_id = tencentcloud_instance.example.id
+    security_group_id = "sg-5275dorp"
 }
+
 `
