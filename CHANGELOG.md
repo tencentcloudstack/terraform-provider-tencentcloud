@@ -1,3 +1,10 @@
+## 1.81.100 (June 4, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_index: optimize example ([#2667](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2667))
+* resource/tencentcloud_tdmq_rocketmq_vip_instance: support `ip_rules` params ([#2659](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2659))
+
 ## 1.81.99 (May 28, 2024)
 
 ENHANCEMENTS:
