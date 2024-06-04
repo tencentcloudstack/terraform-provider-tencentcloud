@@ -3,7 +3,6 @@ package cvm
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
@@ -13,14 +12,14 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
-func dataSourceTencentCloudKeyPairsReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *cvm.DescribeKeyPairsResponseParams) error {
+func dataSourceTencentCloudKeyPairsReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *[]*cvm.KeyPair) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	var err error
-	keyPairs := resp.KeyPairSet
+	keyPairs := *resp
 	keyPairList := make([]map[string]interface{}, 0, len(keyPairs))
 	ids := make([]string, 0, len(keyPairs))
-	keyName := ctx.Value("key_name").(string)
+	keyName := d.Get("key_name").(string)
 	namePattern, _ := regexp.Compile(keyName)
 	for _, keyPair := range keyPairs {
 		if match := namePattern.MatchString(*keyPair.KeyName); !match {
@@ -54,7 +53,7 @@ func dataSourceTencentCloudKeyPairsReadPostHandleResponse0(ctx context.Context, 
 }
 
 func dataSourceTencentCloudKeyPairsReadOutputContent(ctx context.Context) interface{} {
-	eipList := ctx.Value("keyPairList").(*schema.Set).List()
+	eipList := ctx.Value("keyPairList")
 	return eipList
 }
 
@@ -87,6 +86,7 @@ func dataSourceTencentCloudKeyPairsReadPreRequest0(ctx context.Context, req *cvm
 	if keyId != "" {
 		req.KeyIds = []*string{&keyId}
 	}
+
 	req.Filters = make([]*cvm.Filter, 0)
 	if name != "" {
 		filter := &cvm.Filter{
@@ -95,6 +95,7 @@ func dataSourceTencentCloudKeyPairsReadPreRequest0(ctx context.Context, req *cvm
 		}
 		req.Filters = append(req.Filters, filter)
 	}
+
 	if projectId != nil {
 		filter := &cvm.Filter{
 			Name:   helper.String("project-id"),
@@ -103,6 +104,5 @@ func dataSourceTencentCloudKeyPairsReadPreRequest0(ctx context.Context, req *cvm
 		req.Filters = append(req.Filters, filter)
 	}
 
-	context.WithValue(ctx, "keyName", keyName)
 	return nil
 }

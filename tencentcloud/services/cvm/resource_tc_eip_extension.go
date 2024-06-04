@@ -14,7 +14,21 @@ import (
 
 func resourceTencentCloudEipCreatePostFillRequest0(ctx context.Context, req *vpc.AllocateAddressesRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
-	internetChargeType := *req.InternetChargeType
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			req.Tags = append(req.Tags, &tag)
+		}
+	}
+
+	var internetChargeType string
+	if v, ok := d.GetOk("internet_charge_type"); ok {
+		internetChargeType = v.(string)
+	}
+
 	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
 		addressChargePrepaid := vpc.AddressChargePrepaid{}
 		period := d.Get("prepaid_period")
@@ -35,7 +49,7 @@ func resourceTencentCloudEipCreatePostHandleResponse0(ctx context.Context, resp 
 	vpcService := svcvpc.NewVpcService(client)
 	tagService := svctag.NewTagService(client)
 	region := client.Region
-	eipId := d.Id()
+	eipId := *resp.Response.AddressSet[0]
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := tccommon.BuildTagResourceName(svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, eipId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {

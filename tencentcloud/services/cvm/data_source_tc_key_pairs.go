@@ -89,7 +89,7 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
-	var respData *cvm.DescribeKeyPairsResponseParams
+	var respData []*cvm.KeyPair
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKeyPairsByFilter(ctx, paramMap)
 		if e != nil {
@@ -102,7 +102,7 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	if err := dataSourceTencentCloudKeyPairsReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+	if err := dataSourceTencentCloudKeyPairsReadPostHandleResponse0(ctx, paramMap, &respData); err != nil {
 		return err
 	}
 

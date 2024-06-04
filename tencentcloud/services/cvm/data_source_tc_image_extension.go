@@ -12,9 +12,9 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
-func dataSourceTencentCloudImageReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *cvm.DescribeImagesResponseParams) error {
+func dataSourceTencentCloudImageReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *[]*cvm.Image) error {
 	d := tccommon.ResourceDataFromContext(ctx)
-	images := resp.ImageSet
+	images := *resp
 	var err error
 	if len(images) == 0 {
 		return errors.New("No image found")
@@ -75,6 +75,6 @@ func dataSourceTencentCloudImageReadPostHandleResponse0(ctx context.Context, req
 }
 
 func dataSourceTencentCloudImageReadOutputContent(ctx context.Context) interface{} {
-	resultImageId := ctx.Value("resultImageId").(string)
+	resultImageId := ctx.Value("resultImageId")
 	return resultImageId
 }
