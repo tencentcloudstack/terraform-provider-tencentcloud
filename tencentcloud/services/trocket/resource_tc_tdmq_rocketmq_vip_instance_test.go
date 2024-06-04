@@ -34,7 +34,7 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
-					sleepBetweenSteps(1*time.Minute),
+					tccommon.E2eTimeSleepBetweenSteps(1*time.Minute),
 				),
 			},
 			{
@@ -46,18 +46,11 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
-					sleepBetweenSteps(1*time.Minute),
+					tccommon.E2eTimeSleepBetweenSteps(1*time.Minute),
 				),
 			},
 		},
 	})
-}
-
-func sleepBetweenSteps(d time.Duration) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		time.Sleep(d)
-		return nil
-	}
 }
 
 func testAccCheckTdmqRocketmqVipInstanceDestroy(s *terraform.State) error {
