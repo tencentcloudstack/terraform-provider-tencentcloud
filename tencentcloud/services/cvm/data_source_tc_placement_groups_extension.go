@@ -2,7 +2,6 @@ package cvm
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
@@ -10,10 +9,10 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
-func dataSourceTencentCloudPlacementGroupsReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *cvm.DescribeDisasterRecoverGroupsResponseParams) error {
+func dataSourceTencentCloudPlacementGroupsReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *[]*cvm.DisasterRecoverGroup) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-	placementGroups := resp.DisasterRecoverGroupSet
+	placementGroups := *resp
 	var err error
 	placementGroupList := make([]map[string]interface{}, 0, len(placementGroups))
 	ids := make([]string, 0, len(placementGroups))
@@ -43,6 +42,6 @@ func dataSourceTencentCloudPlacementGroupsReadPostHandleResponse0(ctx context.Co
 }
 
 func dataSourceTencentCloudPlacementGroupsReadOutputContent(ctx context.Context) interface{} {
-	eipList := ctx.Value("placementGroupList").(*schema.Set).List()
+	eipList := ctx.Value("placementGroupList")
 	return eipList
 }

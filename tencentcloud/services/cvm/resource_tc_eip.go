@@ -163,20 +163,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		request.AnycastZone = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
-			tagsMap := item.(map[string]interface{})
-			tag := vpc.Tag{}
-			if v, ok := tagsMap["key"]; ok {
-				tag.Key = helper.String(v.(string))
-			}
-			if v, ok := tagsMap["value"]; ok {
-				tag.Value = helper.String(v.(string))
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
-	}
-
 	if v, ok := d.GetOk("bandwidth_package_id"); ok {
 		request.BandwidthPackageId = helper.String(v.(string))
 	}
@@ -249,11 +235,6 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		log.Printf("[WARN]%s resource `eip` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if respData.AddressId != nil {
-		_ = d.Set("address_id", respData.AddressId)
-		eipId = *respData.AddressId
-	}
-
 	if respData.AddressName != nil {
 		_ = d.Set("name", respData.AddressName)
 	}
@@ -268,10 +249,6 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 
 	if respData.AddressType != nil {
 		_ = d.Set("type", respData.AddressType)
-	}
-
-	if respData.InternetServiceProvider != nil {
-		_ = d.Set("internet_service_provider", respData.InternetServiceProvider)
 	}
 
 	if respData.Bandwidth != nil {
@@ -424,7 +401,6 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
-	_ = eipId
 	return resourceTencentCloudEipRead(d, meta)
 }
 
@@ -468,6 +444,5 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	_ = eipId
 	return nil
 }

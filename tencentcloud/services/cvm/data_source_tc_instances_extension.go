@@ -9,7 +9,7 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
-func dataSourceTencentCloudInstancesSetReadPostFillRequest0(ctx context.Context, req map[string]interface{}) error {
+func dataSourceTencentCloudInstancesReadPostFillRequest0(ctx context.Context, req map[string]interface{}) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	if v, ok := d.GetOk("tags"); ok {
 		for key, value := range v.(map[string]interface{}) {
@@ -20,9 +20,19 @@ func dataSourceTencentCloudInstancesSetReadPostFillRequest0(ctx context.Context,
 	return nil
 }
 
-func dataSourceTencentCloudInstancesSetReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *[]*cvm.Instance) error {
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+func dataSourceTencentCloudInstancesReadPreRequest0(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
+	if v, ok := d.GetOk("instance_set_ids"); ok {
+		req.InstanceIds = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+
+	return nil
+}
+
+func dataSourceTencentCloudInstancesReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *[]*cvm.Instance) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var err error
 	instances := *resp
 	instanceList := make([]map[string]interface{}, 0, len(instances))
 	ids := make([]string, 0, len(instances))
@@ -33,6 +43,7 @@ func dataSourceTencentCloudInstancesSetReadPostHandleResponse0(ctx context.Conte
 			"instance_type":              instance.InstanceType,
 			"cpu":                        instance.CPU,
 			"memory":                     instance.Memory,
+			"os_name":                    instance.OsName,
 			"availability_zone":          instance.Placement.Zone,
 			"project_id":                 instance.Placement.ProjectId,
 			"image_id":                   instance.ImageId,
@@ -73,18 +84,19 @@ func dataSourceTencentCloudInstancesSetReadPostHandleResponse0(ctx context.Conte
 		instanceList = append(instanceList, mapping)
 		ids = append(ids, *instance.InstanceId)
 	}
-	log.Printf("[DEBUG]%s set instance attribute finished", logId)
+
 	d.SetId(helper.DataResourceIdsHash(ids))
-	err := d.Set("instance_list", instanceList)
+	err = d.Set("instance_list", instanceList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set instance list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
+
 	context.WithValue(ctx, "instanceList", instanceList)
 	return nil
 }
 
-func dataSourceTencentCloudInstancesSetReadOutputContent(ctx context.Context) interface{} {
+func dataSourceTencentCloudInstancesReadOutputContent(ctx context.Context) interface{} {
 	instanceList := ctx.Value("instanceList")
 	return instanceList
 }

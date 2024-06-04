@@ -14,18 +14,44 @@ import (
 )
 
 func dataSourceTencentCloudImagesReadOutputContent(ctx context.Context) interface{} {
-	imageList := ctx.Value("imageList").([]interface{})
+	imageList := ctx.Value("imageList")
 	return imageList
 }
 
-func dataSourceTencentCloudImagesReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *cvm.DescribeImagesResponseParams) error {
+func dataSourceTencentCloudImagesReadPreRequest0(ctx context.Context, req *cvm.DescribeImagesRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
-	images := resp.ImageSet
-	osName := ctx.Value("osName").(string)
-	imageName := ctx.Value("imageName").(string)
-	imageNameRegex := ctx.Value("imageNameRegex").(*regexp.Regexp)
+	if v, ok := d.GetOk("instance_type"); ok {
+		req.InstanceType = helper.String(v.(string))
+	}
+
+	return nil
+}
+
+func dataSourceTencentCloudImagesReadPostHandleResponse0(ctx context.Context, req map[string]interface{}, resp *[]*cvm.Image) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	images := *resp
+	var (
+		imageName      string
+		osName         string
+		imageNameRegex *regexp.Regexp
+		err            error
+	)
+
+	if v, ok := d.GetOk("os_name"); ok {
+		osName = v.(string)
+	}
+
+	if v, ok := d.GetOk("image_name_regex"); ok {
+		imageName = v.(string)
+		if imageName != "" {
+			imageNameRegex, err = regexp.Compile(imageName)
+			if err != nil {
+				return fmt.Errorf("image_name_regex format error,%s", err.Error())
+			}
+		}
+	}
+
 	var results []*cvm.Image
-	var err error
 	images = sortImages(images)
 	if osName == "" && imageName == "" {
 		results = images
@@ -92,33 +118,32 @@ func dataSourceTencentCloudImagesReadPostHandleResponse0(ctx context.Context, re
 func dataSourceTencentCloudImagesReadPostFillRequest0(ctx context.Context, req map[string]interface{}) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	var (
-		imageName      string
-		osName         string
-		instanceType   string
-		imageNameRegex *regexp.Regexp
-		err            error
+		imageName string
+		imageType []string
+		err       error
 	)
+
 	if v, ok := d.GetOk("image_name_regex"); ok {
 		imageName = v.(string)
 		if imageName != "" {
-			imageNameRegex, err = regexp.Compile(imageName)
+			_, err = regexp.Compile(imageName)
 			if err != nil {
 				return fmt.Errorf("image_name_regex format error,%s", err.Error())
 			}
 		}
 	}
 
-	if v, ok := d.GetOk("os_name"); ok {
-		osName = v.(string)
+	if v, ok := d.GetOk("image_type"); ok {
+		for _, vv := range v.([]interface{}) {
+			if vv.(string) != "" {
+				imageType = append(imageType, vv.(string))
+			}
+		}
+		if len(imageType) > 0 {
+			req["image-type"] = imageType
+		}
 	}
 
-	if v, ok := d.GetOk("instance_type"); ok {
-		instanceType = v.(string)
-	}
-
-	context.WithValue(ctx, "imageNameRegex", imageNameRegex)
-	context.WithValue(ctx, "osName", osName)
-	context.WithValue(ctx, "instanceType", instanceType)
 	return nil
 }
 

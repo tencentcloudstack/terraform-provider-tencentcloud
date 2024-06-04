@@ -2231,7 +2231,7 @@ type VpcService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *CvmService) DescribeImageByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeImagesResponseParams, errRet error) {
+func (me *CvmService) DescribeImageByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.Image, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeImagesRequest()
@@ -2265,10 +2265,10 @@ func (me *CvmService) DescribeImageByFilter(ctx context.Context, param map[strin
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil {
+		if response == nil || len(response.Response.ImageSet) < 1 {
 			break
 		}
-		ret = response.Response
+		ret = append(ret, response.Response.ImageSet...)
 		if len(response.Response.ImageSet) < int(limit) {
 			break
 		}
@@ -2534,5 +2534,57 @@ func (me *VpcService) DescribeEipsByFilter(ctx context.Context, param map[string
 	}
 
 	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.Instance, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		if err := dataSourceTencentCloudInstancesReadPreRequest0(ctx, request); err != nil {
+			return nil, err
+		}
+
+		response, err := me.client.UseCvmClient().DescribeInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
 	return
 }

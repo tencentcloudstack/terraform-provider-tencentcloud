@@ -102,7 +102,7 @@ func dataSourceTencentCloudPlacementGroupsRead(d *schema.ResourceData, meta inte
 		paramMap["Name"] = helper.String(v.(string))
 	}
 
-	var respData *cvm.DescribeDisasterRecoverGroupsResponseParams
+	var respData []*cvm.DisasterRecoverGroup
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribePlacementGroupsByFilter(ctx, paramMap)
 		if e != nil {
@@ -115,7 +115,7 @@ func dataSourceTencentCloudPlacementGroupsRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	if err := dataSourceTencentCloudPlacementGroupsReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+	if err := dataSourceTencentCloudPlacementGroupsReadPostHandleResponse0(ctx, paramMap, &respData); err != nil {
 		return err
 	}
 
