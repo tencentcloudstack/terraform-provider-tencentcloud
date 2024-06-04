@@ -19,9 +19,7 @@ func ResourceTencentCloudEipAddressTransform() *schema.Resource {
 		Create: resourceTencentCloudEipAddressTransformCreate,
 		Read:   resourceTencentCloudEipAddressTransformRead,
 		Delete: resourceTencentCloudEipAddressTransformDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
