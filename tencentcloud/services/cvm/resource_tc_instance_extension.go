@@ -941,6 +941,7 @@ func resourceTencentCloudInstanceDeletePostFillRequest0(ctx context.Context, req
 func resourceTencentCloudInstanceDeletePreHandleResponse0(ctx context.Context, resp *cvm.TerminateInstancesResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
+	logId := ctx.Value(tccommon.LogIdKey)
 	cvmService := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
@@ -986,34 +987,29 @@ func resourceTencentCloudInstanceDeletePreHandleResponse0(ctx context.Context, r
 		return nil
 	}
 
-	return nil
-}
-
-func resourceTencentCloudInstanceDeleteRequestOnError1(ctx context.Context, e error) *resource.RetryError {
-	//check InvalidInstanceState.Terminating
-	ee, ok := e.(*sdkErrors.TencentCloudSDKError)
-	if !ok {
-		return tccommon.RetryError(e)
-	}
-	if ee.Code == "InvalidInstanceState.Terminating" {
+	// exist in recycle, delete again
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		//when state is terminating, do not delete but check exist
+		if errRet != nil {
+			//check InvalidInstanceState.Terminating
+			ee, ok := errRet.(*sdkErrors.TencentCloudSDKError)
+			if !ok {
+				return tccommon.RetryError(errRet)
+			}
+			if ee.Code == "InvalidInstanceState.Terminating" {
+				return nil
+			}
+			return tccommon.RetryError(errRet, "OperationDenied.InstanceOperationInProgress")
+		}
 		return nil
+	})
+	if err != nil {
+		return err
 	}
-	return tccommon.RetryError(e, "OperationDenied.InstanceOperationInProgress")
-}
 
-func resourceTencentCloudInstanceDeletePreHandleResponse1(ctx context.Context, resp *cvm.TerminateInstancesResponse) error {
-	d := tccommon.ResourceDataFromContext(ctx)
-	meta := tccommon.ProviderMetaFromContext(ctx)
-	logId := ctx.Value(tccommon.LogIdKey)
-
-	cvmService := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	vpcService := vpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
-	instanceId := d.Id()
-
-	var instance *cvm.Instance
 	//describe and check not exist
-	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
@@ -1026,7 +1022,6 @@ func resourceTencentCloudInstanceDeletePreHandleResponse1(ctx context.Context, r
 	if err != nil {
 		return err
 	}
-
 	if v, ok := d.GetOk("data_disks"); ok {
 		dataDisks := v.([]interface{})
 		for _, d := range dataDisks {
@@ -1107,12 +1102,13 @@ func resourceTencentCloudInstanceDeletePreHandleResponse1(ctx context.Context, r
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func waitIpRelease(ctx context.Context, vpcService vpc.VpcService, instance *cvm.Instance) error {
 	// wait ip release
-	if len(instance.PrivateIpAddresses) > 0 {
+	if instance != nil && len(instance.PrivateIpAddresses) > 0 {
 		params := make(map[string]interface{})
 		params["VpcId"] = instance.VirtualPrivateCloud.VpcId
 		params["SubnetId"] = instance.VirtualPrivateCloud.SubnetId
