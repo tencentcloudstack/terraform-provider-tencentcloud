@@ -121,11 +121,6 @@ func resourceTencentCloudCvmHpcClusterRead(d *schema.ResourceData, meta interfac
 		log.Printf("[WARN]%s resource `cvm_hpc_cluster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if respData.HpcClusterId != nil {
-		_ = d.Set("hpc_cluster_id", respData.HpcClusterId)
-		hpcClusterId = *respData.HpcClusterId
-	}
-
 	if respData.Zone != nil {
 		_ = d.Set("zone", respData.Zone)
 	}
@@ -169,7 +164,7 @@ func resourceTencentCloudCvmHpcClusterUpdate(d *schema.ResourceData, meta interf
 	if needChange {
 		request := cvm.NewModifyHpcClusterAttributeRequest()
 
-		request.HpcClusterId = &hpcClusterId
+		request.HpcClusterId = helper.String(hpcClusterId)
 
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
@@ -211,7 +206,7 @@ func resourceTencentCloudCvmHpcClusterDelete(d *schema.ResourceData, meta interf
 		response = cvm.NewDeleteHpcClustersResponse()
 	)
 
-	request.HpcClusterIds = []*string{&hpcClusterId}
+	request.HpcClusterIds = []*string{helper.String(hpcClusterId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().DeleteHpcClustersWithContext(ctx, request)
@@ -224,7 +219,7 @@ func resourceTencentCloudCvmHpcClusterDelete(d *schema.ResourceData, meta interf
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cvm hpc cluster failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete cvm hpc cluster failed, reason:%+v", logId, err)
 		return err
 	}
 

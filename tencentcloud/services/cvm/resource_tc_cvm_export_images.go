@@ -98,18 +98,14 @@ func resourceTencentCloudCvmExportImagesCreate(d *schema.ResourceData, meta inte
 		request.BucketName = helper.String(v.(string))
 	}
 
-	request.ImageIds = []*string{&imageId}
+	request.ImageIds = []*string{helper.String(imageId)}
 
 	if v, ok := d.GetOk("export_format"); ok {
 		request.ExportFormat = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("file_name_prefix"); ok {
-		fileNamePrefixListSet := v.(*schema.Set).List()
-		for i := range fileNamePrefixListSet {
-			fileNamePrefixList := fileNamePrefixListSet[i].(string)
-			request.FileNamePrefixList = append(request.FileNamePrefixList, helper.String(fileNamePrefixList))
-		}
+	if v, ok := d.GetOk("file_name_prefix_list"); ok {
+		request.FileNamePrefixList = []*string{helper.String(v.(string))}
 	}
 
 	if v, ok := d.GetOkExists("only_export_root_disk"); ok {
@@ -141,11 +137,11 @@ func resourceTencentCloudCvmExportImagesCreate(d *schema.ResourceData, meta inte
 
 	_ = response
 
-	if err := resourceTencentCloudCvmExportImagesCreatePostHandleResponse0(ctx, response); err != nil {
+	d.SetId(imageId)
+
+	if err := resourceTencentCloudCvmExportImagesCreateOnExit(ctx); err != nil {
 		return err
 	}
-
-	d.SetId(imageId)
 
 	return resourceTencentCloudCvmExportImagesRead(d, meta)
 }

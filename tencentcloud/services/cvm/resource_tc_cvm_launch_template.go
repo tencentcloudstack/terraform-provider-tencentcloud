@@ -1363,10 +1363,6 @@ func resourceTencentCloudCvmLaunchTemplateRead(d *schema.ResourceData, meta inte
 
 			_ = d.Set("tag_specification", tagSpecificationList)
 		}
-		if respData1.LaunchTemplateVersionData.DisableApiTermination != nil {
-			_ = d.Set("disable_api_termination", respData1.LaunchTemplateVersionData.DisableApiTermination)
-		}
-
 	}
 
 	if respData1.LaunchTemplateVersionDescription != nil {

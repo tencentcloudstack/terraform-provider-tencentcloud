@@ -56,13 +56,12 @@ func resourceTencentCloudImageCreatePostFillRequest0(ctx context.Context, req *c
 }
 
 func resourceTencentCloudImageCreatePostHandleResponse0(ctx context.Context, resp *cvm.CreateImageResponse) error {
-	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
 	logId := ctx.Value(tccommon.LogIdKey)
 
 	cvmService := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	imageId := d.Id()
+	imageId := *resp.Response.ImageId
 
 	// wait for status
 	image, errRet := cvmService.DescribeImageById(ctx, imageId)
