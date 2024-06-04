@@ -62,6 +62,36 @@ func resourceTencentCloudEipCreatePostHandleResponse0(ctx context.Context, resp 
 	return nil
 }
 
+func resourceTencentCloudEipReadPostHandleResponse0(ctx context.Context, resp *vpc.Address) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	vpcService := svcvpc.NewVpcService(client)
+	tagService := svctag.NewTagService(client)
+	region := client.Region
+	eipId := d.Id()
+
+	tags, err := tagService.DescribeResourceTags(ctx, svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, eipId)
+	if err != nil {
+		log.Printf("[CRITAL]%s describe eip tags failed: %+v", logId, err)
+		return err
+	}
+
+	bgp, err := vpcService.DescribeVpcBandwidthPackageByEip(ctx, eipId)
+	if err != nil {
+		log.Printf("[CRITAL]%s describe eip tags failed: %+v", logId, err)
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+	if bgp != nil {
+		_ = d.Set("bandwidth_package_id", bgp.BandwidthPackageId)
+	}
+
+	return nil
+}
+
 func resourceTencentCloudEipUpdatePostFillRequest1(ctx context.Context, req *vpc.ModifyAddressInternetChargeTypeRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	period := d.Get("prepaid_period").(int)

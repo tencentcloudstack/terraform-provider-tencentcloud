@@ -274,10 +274,6 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("internet_service_provider", respData.InternetServiceProvider)
 	}
 
-	if respData.LocalBgp != nil {
-		_ = d.Set("local_bgp", respData.LocalBgp)
-	}
-
 	if respData.Bandwidth != nil {
 		_ = d.Set("internet_max_bandwidth_out", respData.Bandwidth)
 	}
@@ -294,8 +290,8 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("anti_ddos_package_id", respData.AntiDDoSPackageId)
 	}
 
-	if respData.BandwidthPackageId != nil {
-		_ = d.Set("bandwidth_package_id", respData.BandwidthPackageId)
+	if err := resourceTencentCloudEipReadPostHandleResponse0(ctx, respData); err != nil {
+		return err
 	}
 
 	return nil
