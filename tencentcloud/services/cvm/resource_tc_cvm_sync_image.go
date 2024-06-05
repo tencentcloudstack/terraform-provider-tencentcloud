@@ -17,7 +17,6 @@ func ResourceTencentCloudCvmSyncImage() *schema.Resource {
 		Create: resourceTencentCloudCvmSyncImageCreate,
 		Read:   resourceTencentCloudCvmSyncImageRead,
 		Delete: resourceTencentCloudCvmSyncImageDelete,
-
 		Schema: map[string]*schema.Schema{
 			"destination_regions": {
 				Type:        schema.TypeSet,

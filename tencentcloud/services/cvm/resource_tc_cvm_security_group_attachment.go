@@ -94,38 +94,38 @@ func resourceTencentCloudCvmSecurityGroupAttachmentRead(d *schema.ResourceData, 
 	defer tccommon.LogElapsed("resource.tencentcloud_cvm_security_group_attachment.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	//logId := tccommon.GetLogId(tccommon.ContextNil)
-	//
-	//ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-	//
-	//service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	//
-	//idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	//if len(idSplit) != 2 {
-	//	return fmt.Errorf("id is broken,%s", d.Id())
-	//}
-	//instanceId := idSplit[0]
-	//securityGroupId := idSplit[1]
-	//
-	//_ = d.Set("instance_id", instanceId)
-	//
-	//_ = d.Set("security_group_id", securityGroupId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	//respData, err := service.DescribeCvmSecurityGroupAttachmentById(ctx, instanceId)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if respData == nil {
-	//	d.SetId("")
-	//	log.Printf("[WARN]%s resource `cvm_security_group_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-	//	return nil
-	//}
-	//if err := resourceTencentCloudCvmSecurityGroupAttachmentReadPostHandleResponse0(ctx, respData); err != nil {
-	//	return err
-	//}
-	//
-	//_ = securityGroupId
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	instanceId := idSplit[0]
+	securityGroupId := idSplit[1]
+
+	_ = d.Set("instance_id", instanceId)
+
+	_ = d.Set("security_group_id", securityGroupId)
+
+	respData, err := service.DescribeCvmSecurityGroupAttachmentById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if respData == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `cvm_security_group_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+	if err := resourceTencentCloudCvmSecurityGroupAttachmentReadPostHandleResponse0(ctx, respData); err != nil {
+		return err
+	}
+
+	_ = securityGroupId
 	return nil
 }
 
@@ -163,10 +163,11 @@ func resourceTencentCloudCvmSecurityGroupAttachmentDelete(d *schema.ResourceData
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cvm security group attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete cvm security group attachment failed, reason:%+v", logId, err)
 		return err
 	}
 
 	_ = response
+	_ = securityGroupId
 	return nil
 }

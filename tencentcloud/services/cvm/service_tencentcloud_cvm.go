@@ -2150,3 +2150,61 @@ func (me *CvmService) DescribeInstancesByFilter(ctx context.Context, param map[s
 
 	return
 }
+
+func (me *CvmService) DescribeCvmSecurityGroupAttachmentById(ctx context.Context, instanceId string) (ret *cvm.DescribeInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeInstancesRequest()
+	request.InstanceIds = []*string{helper.String(instanceId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *VpcService) DescribeEipAssociationById(ctx context.Context, eipId string) (ret *vpc.Address, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeAddressesRequest()
+	request.AddressIds = []*string{helper.String(eipId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	if err := resourceTencentCloudEipAssociationReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	response, err := me.client.UseVpcClient().DescribeAddresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AddressSet) < 1 {
+		return
+	}
+
+	ret = response.Response.AddressSet[0]
+	return
+}
