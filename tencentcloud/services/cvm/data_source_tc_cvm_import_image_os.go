@@ -141,6 +141,10 @@ func dataSourceTencentCloudCvmImportImageOsRead(d *schema.ResourceData, meta int
 		_ = d.Set("import_image_os_version_set", importImageOsVersionSetList)
 	}
 
+	if err := dataSourceTencentCloudCvmImportImageOsReadPostHandleResponse0(ctx, paramMap, respData); err != nil {
+		return err
+	}
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), dataSourceTencentCloudCvmImportImageOsReadOutputContent(ctx)); e != nil {

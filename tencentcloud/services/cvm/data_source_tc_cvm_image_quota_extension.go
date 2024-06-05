@@ -11,7 +11,7 @@ import (
 
 func dataSourceTencentCloudCvmImageQuotaReadOutputContent(ctx context.Context) interface{} {
 	d := tccommon.ResourceDataFromContext(ctx)
-	
+
 	return map[string]interface{}{
 		"image_num_quota": d.Get("image_num_quota"),
 	}
