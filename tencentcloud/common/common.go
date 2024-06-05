@@ -18,7 +18,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -610,11 +609,4 @@ func ShortRegionNameParse(shortRegion string) string {
 		"ca":      "na-toronto",
 	}
 	return regionMap[shortRegion]
-}
-
-func E2eTimeSleepBetweenSteps(d time.Duration) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		time.Sleep(d)
-		return nil
-	}
 }

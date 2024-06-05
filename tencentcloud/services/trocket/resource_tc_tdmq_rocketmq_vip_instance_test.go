@@ -34,7 +34,7 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
-					tccommon.E2eTimeSleepBetweenSteps(1*time.Minute),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
 				),
 			},
 			{
@@ -46,7 +46,7 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "spec"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "node_count"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_vip_instance.example", "storage_size"),
-					tccommon.E2eTimeSleepBetweenSteps(1*time.Minute),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
 				),
 			},
 		},
