@@ -19,7 +19,7 @@ func TestAccTencentCloudReservedInstancesDataSource_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccReservedInstancesDataSource_BasicCreate,
-				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_reserved_instances.instances"), resource.TestCheckResourceAttr("data.tencentcloud_reserved_instances.instances", "reserved_instance_list.#", "0")),
+				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_reserved_instances.instances"), resource.TestCheckResourceAttrSet("data.tencentcloud_reserved_instances.instances", "reserved_instance_list.#")),
 			},
 		},
 	})

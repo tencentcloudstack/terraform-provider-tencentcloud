@@ -1730,7 +1730,7 @@ data "tencentcloud_instance_types" "default" {
     
     filter {
         name = "instance-family"
-        values = ["S1"]
+        values = ["S5"]
     }
     cpu_core_count = 2
     memory_size = 2
@@ -1758,7 +1758,7 @@ data "tencentcloud_instance_types" "default" {
     
     filter {
         name = "instance-family"
-        values = ["S1"]
+        values = ["S5"]
     }
     cpu_core_count = 2
     memory_size = 2
@@ -2028,7 +2028,7 @@ const testAccTencentCloudInstancePostPaid = `
 data "tencentcloud_instance_types" "default" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S5"]
   }
 
   cpu_core_count = 2
@@ -2052,7 +2052,7 @@ const testAccTencentCloudInstanceBasicToPrepaid = `
 data "tencentcloud_instance_types" "default" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S5"]
   }
 
   cpu_core_count = 2

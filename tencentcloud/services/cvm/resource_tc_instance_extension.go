@@ -93,8 +93,59 @@ func resourceTencentCloudInstanceCreatePostFillRequest0(ctx context.Context, req
 		req.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
 	}
 
+	if v, ok := d.GetOk("orderly_security_groups"); ok {
+		securityGroups := v.([]interface{})
+		req.SecurityGroupIds = make([]*string, 0, len(securityGroups))
+		for _, securityGroup := range securityGroups {
+			req.SecurityGroupIds = append(req.SecurityGroupIds, helper.String(securityGroup.(string)))
+		}
+	}
+
+	// storage
+	if v, ok := d.GetOk("data_disks"); ok {
+		dataDisks := v.([]interface{})
+		req.DataDisks = make([]*cvm.DataDisk, 0, len(dataDisks))
+		for _, d := range dataDisks {
+			value := d.(map[string]interface{})
+			diskType := value["data_disk_type"].(string)
+			diskSize := int64(value["data_disk_size"].(int))
+			throughputPerformance := int64(value["throughput_performance"].(int))
+			dataDisk := cvm.DataDisk{
+				DiskType:              &diskType,
+				DiskSize:              &diskSize,
+				ThroughputPerformance: &throughputPerformance,
+			}
+			if v, ok := value["data_disk_snapshot_id"]; ok && v != nil {
+				snapshotId := v.(string)
+				if snapshotId != "" {
+					dataDisk.SnapshotId = helper.String(snapshotId)
+				}
+			}
+			if value["data_disk_id"] != "" {
+				dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
+			}
+			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
+				deleteWithInstanceBool := deleteWithInstance.(bool)
+				dataDisk.DeleteWithInstance = &deleteWithInstanceBool
+			}
+
+			if encrypt, ok := value["encrypt"]; ok {
+				encryptBool := encrypt.(bool)
+				dataDisk.Encrypt = &encryptBool
+			}
+			req.DataDisks = append(req.DataDisks, &dataDisk)
+		}
+	}
+
 	// vpc
 	if v, ok := d.GetOk("vpc_id"); ok {
+		req.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{}
+		req.VirtualPrivateCloud.VpcId = helper.String(v.(string))
+
+		if v, ok = d.GetOk("subnet_id"); ok {
+			req.VirtualPrivateCloud.SubnetId = helper.String(v.(string))
+		}
+
 		if v, ok = d.GetOk("private_ip"); ok {
 			req.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
 		}
