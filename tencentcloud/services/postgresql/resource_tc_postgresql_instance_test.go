@@ -448,14 +448,6 @@ data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
 
-data "tencentcloud_security_groups" "internal" {
-  name = "keep-default-gz"
-}
-
-locals {
-  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-}
-
 resource "tencentcloud_postgresql_instance" "test" {
   name 				= "tf_postsql_postpaid"
   availability_zone = var.default_az
@@ -477,14 +469,6 @@ data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
 
-data "tencentcloud_security_groups" "internal" {
-  name = "keep-default-gz"
-}
-
-locals {
-  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-}
-
 resource "tencentcloud_postgresql_instance" "test" {
   name 				= "tf_postsql_postpaid_updated_to_prepaid"
   availability_zone = var.default_az
@@ -504,14 +488,6 @@ resource "tencentcloud_postgresql_instance" "test" {
 const testAccPostgresqlInstancePrepaid = tcacctest.DefaultVpcSubnets + `
 data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
-}
-
-data "tencentcloud_security_groups" "internal" {
-  name = "keep-default-gz"
-}
-
-locals {
-  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
 }
 
 resource "tencentcloud_postgresql_instance" "test" {
