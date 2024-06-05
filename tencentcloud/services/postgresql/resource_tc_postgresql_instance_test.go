@@ -425,7 +425,7 @@ func testAccCheckPostgresqlInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccPostgresqlInstanceBasic = tcacctest.DefaultSecurityGroupData + `
+const testAccPostgresqlInstanceBasic = `
 data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
@@ -440,7 +440,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id 		= local.subnet_id
   engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
-  security_groups   = [local.sg_id]
+  security_groups   = ["sg-5275dorp"]
   charset			= "LATIN1"
   project_id 		= 0
   memory 			= 4
@@ -465,14 +465,6 @@ data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
 
-data "tencentcloud_security_groups" "internal" {
-  name = "default"
-}
-
-locals {
-  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-}
-
 resource "tencentcloud_postgresql_instance" "test" {
   name 				= "tf_postsql_postpaid"
   availability_zone = var.default_az
@@ -482,7 +474,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id 		= local.subnet_id
   engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
-  security_groups   = [local.sg_id]
+  security_groups   = ["sg-5275dorp"]
   charset			= "LATIN1"
   project_id 		= 0
   memory 			= 2
@@ -494,14 +486,6 @@ data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
 
-data "tencentcloud_security_groups" "internal" {
-  name = "default"
-}
-
-locals {
-  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-}
-
 resource "tencentcloud_postgresql_instance" "test" {
   name 				= "tf_postsql_postpaid_updated_to_prepaid"
   availability_zone = var.default_az
@@ -511,7 +495,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id 		= local.subnet_id
   engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
-  security_groups   = [local.sg_id]
+  security_groups   = ["sg-5275dorp"]
   charset			= "LATIN1"
   project_id 		= 0
   memory 			= 2
@@ -523,14 +507,6 @@ data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
 
-data "tencentcloud_security_groups" "internal" {
-  name = "default"
-}
-
-locals {
-  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-}
-
 resource "tencentcloud_postgresql_instance" "test" {
   name 				= "tf_postsql_pre"
   availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
@@ -539,7 +515,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id 		= local.subnet_id
   engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
-  security_groups   = [local.sg_id]
+  security_groups   = ["sg-5275dorp"]
   charset			= "LATIN1"
   project_id 		= 0
   memory 			= 2
@@ -558,7 +534,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = true
-  security_groups   = [local.sg_id]
+  security_groups   = ["sg-5275dorp"]
   memory 			= 4
   storage 			= 250
   backup_plan {
@@ -608,7 +584,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = false
-  security_groups   = [local.sg_id]
+  security_groups   = ["sg-5275dorp"]
   memory 			= 4
   storage 			= 250
   backup_plan {
@@ -638,7 +614,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = false
-  security_groups   = [local.sg_id]
+  security_groups   = ["sg-5275dorp"]
   memory 			= 4
   storage 			= 250
   backup_plan {

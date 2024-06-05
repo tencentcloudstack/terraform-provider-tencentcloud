@@ -72,10 +72,9 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			},
 			"engine_version": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
-				Default:     "10.4",
-				Description: "Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.",
+				Computed:    true,
+				Description: "Version of the postgresql database engine. Valid values: `10.4`, `10.17`, `10.23`, `11.8`, `11.12`, `11.22`, `12.4`, `12.7`, `12.18`, `13.3`, `14.2`, `14.11`, `15.1`, `16.0`.",
 			},
 			"db_major_vesion": {
 				Type:          schema.TypeString,
@@ -83,7 +82,7 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Computed:      true,
 				Deprecated:    "`db_major_vesion` will be deprecated, use `db_major_version` instead.",
 				ConflictsWith: []string{"db_major_version"},
-				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13. " +
+				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13, 14, 15, 16. " +
 					"If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.",
 			},
 			"db_major_version": {
@@ -91,7 +90,7 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"db_major_vesion"},
-				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13. " +
+				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13, 14, 15, 16. " +
 					"If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.",
 			},
 			"db_kernel_version": {
@@ -101,7 +100,6 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description: "PostgreSQL kernel version number. " +
 					"If it is specified, an instance running kernel DBKernelVersion will be created. It supports updating the minor kernel version immediately.",
 			},
-
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -344,9 +342,9 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	// the sdk asks to set value with 1 when paytype is postpaid
 
-	var instanceId, specVersion, specCode string
+	var instanceId, majorVersion, specVersion, specCode string
 	var outErr, inErr error
-	var allowVersion, allowSpec []string
+	var allowMajorVersion, allowSpecVersion, allowSpec []string
 
 	var (
 		dbMajorVersion  = ""
@@ -404,6 +402,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
+	if dbVersion == "" && dbMajorVersion == "" && dbKernelVersion == "" {
+		dbVersion = "10.4"
+	}
+
 	// get specCode with engine_version and memory
 	outErr = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
@@ -411,10 +413,16 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			return tccommon.RetryError(inErr)
 		}
 		for _, info := range speccodes {
-			if !tccommon.IsContains(allowVersion, *info.Version) {
-				allowVersion = append(allowVersion, *info.Version)
+			if !tccommon.IsContains(allowSpecVersion, *info.Version) {
+				allowSpecVersion = append(allowSpecVersion, *info.Version)
 			}
-			if *info.Version == dbVersion {
+
+			if !tccommon.IsContains(allowMajorVersion, *info.MajorVersion) {
+				allowMajorVersion = append(allowMajorVersion, *info.MajorVersion)
+			}
+
+			if *info.MajorVersion == dbMajorVersion || *info.Version == dbVersion {
+				majorVersion = *info.MajorVersion
 				specVersion = *info.Version
 				specString := fmt.Sprintf("(%d, %d)", int(*info.Memory)/1024, int(*info.Cpu))
 				if !tccommon.IsContains(allowSpec, specString) {
@@ -438,8 +446,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return outErr
 	}
 
-	if specVersion == "" {
-		return fmt.Errorf(`The "engine_version" value: "%s" is invalid, Valid values are one of: "%s"`, dbVersion, strings.Join(allowVersion, `", "`))
+	if majorVersion == "" && specVersion == "" {
+		return fmt.Errorf(`The "db_major_version" value: "%s" is invalid, Valid values are one of: "%s", The "engine_version" value: "%s" is invalid, Valid values are one of: "%s"`, dbMajorVersion, strings.Join(allowMajorVersion, `", "`), dbVersion, strings.Join(allowSpecVersion, `", "`))
 	}
 
 	if specCode == "" {
@@ -1126,13 +1134,19 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
 		}
 	}
+
 	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") {
 		return fmt.Errorf("Not support change db major version.")
+	}
+
+	if d.HasChange("engine_version") {
+		return fmt.Errorf("Not support change engine_version.")
 	}
 
 	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") {
 		return fmt.Errorf("Not support change params contact with data transparent encryption.")
 	}
+
 	if len(paramEntrys) != 0 {
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr := postgresqlService.ModifyPgParams(ctx, instanceId, paramEntrys)
