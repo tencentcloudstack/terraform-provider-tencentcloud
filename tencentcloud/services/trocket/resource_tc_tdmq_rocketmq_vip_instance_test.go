@@ -103,7 +103,7 @@ func testAccCheckTdmqRocketmqVipInstanceExists(r string) resource.TestCheckFunc 
 	}
 }
 
-const testAccTdmqRocketmqVipInstance = tcacctest.DefaultVpcSubnets + `
+const testAccTdmqRocketmqVipInstance = `
 data "tencentcloud_availability_zones" "zones" {}
 
 # create vpc
