@@ -1,3 +1,13 @@
+## 1.81.101 (June 5, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_postgresql_instance: support params db_major_version create resource ([#2618](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2618))
+
+BUG FIXES:
+
+* resource/tencentcloud_cfs_file_system: fix null fs_id ([#2669](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2669))
+
 ## 1.81.100 (June 4, 2024)
 
 ENHANCEMENTS:
