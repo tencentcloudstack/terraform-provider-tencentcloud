@@ -408,7 +408,7 @@ func testAccCheckPostgresqlInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccPostgresqlInstanceBasic = tcacctest.DefaultSecurityGroupData + `
+const testAccPostgresqlInstanceBasic = `
 data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
