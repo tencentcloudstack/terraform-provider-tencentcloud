@@ -3,6 +3,7 @@ package cam
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"log"
 	"math/rand"
 	"strconv"
@@ -67,9 +68,18 @@ func datasourceTencentCloudUserInfoRead(d *schema.ResourceData, meta interface{}
 
 	logId = tccommon.GetLogId(ctx)
 	request := cam.NewGetUserAppIdRequest()
+	response := cam.NewGetUserAppIdResponse()
 
 	ratelimit.Check(request.GetAction())
-	response, err := client.UseCamClient().GetUserAppId(request)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := client.UseCamClient().GetUserAppId(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -80,25 +90,30 @@ func datasourceTencentCloudUserInfoRead(d *schema.ResourceData, meta interface{}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if err != nil {
-		return err
-	}
-
-	result := response.Response
-
-	if result == nil {
+	if response == nil || response.Response == nil {
 		return fmt.Errorf("get user appid error: empty response")
 	}
 
-	appId := strconv.FormatUint(*result.AppId, 10)
-	uin := *result.Uin
-	ownerUin := *result.OwnerUin
+	appId := strconv.FormatUint(*response.Response.AppId, 10)
+	uin := *response.Response.Uin
+	ownerUin := *response.Response.OwnerUin
 	accountInfoRequest := cam.NewDescribeSubAccountsRequest()
+	accountInfoResponse := cam.NewDescribeSubAccountsResponse()
 	accountInfoRequest.FilterSubAccountUin = []*uint64{helper.Uint64(helper.StrToUInt64(uin))}
-	accountInfoResponse, err := client.UseCamClient().DescribeSubAccounts(accountInfoRequest)
+
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		accountInfoResult, e := client.UseCamClient().DescribeSubAccounts(accountInfoRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		accountInfoResponse = accountInfoResult
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read CAM users failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
 	subAccounts := accountInfoResponse.Response.SubAccounts
 	var name string
 	if len(subAccounts) > 0 {
