@@ -93,12 +93,19 @@ func datasourceTencentCloudUserInfoRead(d *schema.ResourceData, meta interface{}
 	if response == nil || response.Response == nil {
 		return fmt.Errorf("get user appid error: empty response")
 	}
-
-	appId := strconv.FormatUint(*response.Response.AppId, 10)
-	uin := *response.Response.Uin
-	ownerUin := *response.Response.OwnerUin
+	var appId, uin, ownerUin string
 	accountInfoRequest := cam.NewDescribeSubAccountsRequest()
 	accountInfoResponse := cam.NewDescribeSubAccountsResponse()
+
+	if response.Response.AppId != nil {
+		appId = strconv.FormatUint(*response.Response.AppId, 10)
+	}
+	if response.Response.Uin != nil {
+		uin = *response.Response.Uin
+	}
+	if response.Response.OwnerUin != nil {
+		ownerUin = *response.Response.Uin
+	}
 	accountInfoRequest.FilterSubAccountUin = []*uint64{helper.Uint64(helper.StrToUInt64(uin))}
 
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
