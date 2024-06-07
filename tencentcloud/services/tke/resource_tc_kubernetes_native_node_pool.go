@@ -332,17 +332,20 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							MaxItems:    1,
+							ForceNew:    true,
 							Description: "Billing configuration for yearly and monthly models.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"period": {
 										Type:        schema.TypeInt,
 										Required:    true,
+										ForceNew:    true,
 										Description: "Postpaid billing cycle, unit (month): 1, 2, 3, 4, 5,, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.",
 									},
 									"renew_flag": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										ForceNew:    true,
 										Description: "Prepaid renewal method:\n  - `NOTIFY_AND_AUTO_RENEW`: Notify users of expiration and automatically renew (default).\n  - `NOTIFY_AND_MANUAL_RENEW`: Notify users of expiration, but do not automatically renew.\n  - `DISABLE_NOTIFY_AND_MANUAL_RENEW`: Do not notify users of expiration and do not automatically renew.",
 									},
 								},
@@ -445,6 +448,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							Computed:    true,
+							ForceNew:    true,
 							MaxItems:    1,
 							Description: "Public network bandwidth settings.",
 							Elem: &schema.Resource{
@@ -452,17 +456,20 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 									"max_bandwidth_out": {
 										Type:         schema.TypeInt,
 										Required:     true,
+										ForceNew:     true,
 										Description:  "Maximum bandwidth output. Note: When chargeType is `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_POSTPAID_BY_HOUR`, the valid range is 1~100. When chargeType is `BANDWIDTH_PACKAG`, the valid range is 1~2000.",
 										ValidateFunc: tccommon.ValidateIntegerMin(1),
 									},
 									"charge_type": {
 										Type:        schema.TypeString,
 										Required:    true,
+										ForceNew:    true,
 										Description: "Network billing method. Optional value is `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 									},
 									"bandwidth_package_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										ForceNew:    true,
 										Description: "Bandwidth package ID. Note: When ChargeType is BANDWIDTH_PACKAG, the value cannot be empty; otherwise, the value must be empty.",
 									},
 								},
@@ -1377,7 +1384,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"type", "internet_accessible", "instance_charge_prepaid"}
+	immutableArgs := []string{"type"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

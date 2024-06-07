@@ -138,17 +138,17 @@ The `data_disks` object of `native` supports the following:
 
 The `instance_charge_prepaid` object of `native` supports the following:
 
-* `period` - (Required, Int) Postpaid billing cycle, unit (month): 1, 2, 3, 4, 5,, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.
-* `renew_flag` - (Optional, String) Prepaid renewal method:
+* `period` - (Required, Int, ForceNew) Postpaid billing cycle, unit (month): 1, 2, 3, 4, 5,, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.
+* `renew_flag` - (Optional, String, ForceNew) Prepaid renewal method:
   - `NOTIFY_AND_AUTO_RENEW`: Notify users of expiration and automatically renew (default).
   - `NOTIFY_AND_MANUAL_RENEW`: Notify users of expiration, but do not automatically renew.
   - `DISABLE_NOTIFY_AND_MANUAL_RENEW`: Do not notify users of expiration and do not automatically renew.
 
 The `internet_accessible` object of `native` supports the following:
 
-* `charge_type` - (Required, String) Network billing method. Optional value is `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
-* `max_bandwidth_out` - (Required, Int) Maximum bandwidth output. Note: When chargeType is `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_POSTPAID_BY_HOUR`, the valid range is 1~100. When chargeType is `BANDWIDTH_PACKAG`, the valid range is 1~2000.
-* `bandwidth_package_id` - (Optional, String) Bandwidth package ID. Note: When ChargeType is BANDWIDTH_PACKAG, the value cannot be empty; otherwise, the value must be empty.
+* `charge_type` - (Required, String, ForceNew) Network billing method. Optional value is `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `max_bandwidth_out` - (Required, Int, ForceNew) Maximum bandwidth output. Note: When chargeType is `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_POSTPAID_BY_HOUR`, the valid range is 1~100. When chargeType is `BANDWIDTH_PACKAG`, the valid range is 1~2000.
+* `bandwidth_package_id` - (Optional, String, ForceNew) Bandwidth package ID. Note: When ChargeType is BANDWIDTH_PACKAG, the value cannot be empty; otherwise, the value must be empty.
 
 The `labels` object supports the following:
 
@@ -178,8 +178,8 @@ The `native` object supports the following:
 * `enable_autoscaling` - (Optional, Bool) Whether to enable elastic scaling.
 * `health_check_policy_name` - (Optional, String) Fault self-healing rule name.
 * `host_name_pattern` - (Optional, String) Native node pool hostName pattern string.
-* `instance_charge_prepaid` - (Optional, List) Billing configuration for yearly and monthly models.
-* `internet_accessible` - (Optional, List) Public network bandwidth settings.
+* `instance_charge_prepaid` - (Optional, List, ForceNew) Billing configuration for yearly and monthly models.
+* `internet_accessible` - (Optional, List, ForceNew) Public network bandwidth settings.
 * `key_ids` - (Optional, List) Node pool ssh public key id array.
 * `kubelet_args` - (Optional, List) Kubelet custom parameters.
 * `lifecycle` - (Optional, List) Predefined scripts.
