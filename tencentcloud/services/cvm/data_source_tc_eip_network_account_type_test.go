@@ -1,6 +1,7 @@
 package cvm_test
 
 import (
+	"fmt"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -18,7 +19,17 @@ func TestAccTencentCloudEipNetworkAccountTypeDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEipNetworkAccountTypeDataSource,
-				Check:  resource.ComposeTestCheckFunc(tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_eip_network_account_type.network_account_type")),
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_eip_network_account_type.network_account_type"),
+					resource.TestCheckResourceAttrWith("data.tencentcloud_eip_network_account_type.network_account_type", "network_account_type", func(value string) error {
+						switch value {
+						case "STANDARD", "LEGACY":
+						default:
+							return fmt.Errorf("invalid network type: %q", value)
+						}
+						return nil
+					}),
+				),
 			},
 		},
 	})
