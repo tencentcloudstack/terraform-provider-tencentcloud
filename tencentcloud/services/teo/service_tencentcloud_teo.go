@@ -954,10 +954,10 @@ func (me *TeoService) DescribeTeoRuleEngineById(ctx context.Context, zoneId stri
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeRulesRequest()
-	request.ZoneId = &zoneId
+	request.ZoneId = helper.String(zoneId)
 	filter := &teo.Filter{
 		Name:   helper.String("rule-id"),
-		Values: []*string{&ruleId},
+		Values: []*string{helper.String(ruleId)},
 	}
 	request.Filters = append(request.Filters, filter)
 

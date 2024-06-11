@@ -113,7 +113,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 						},
 						"actions": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Optional:    true,
 							Description: "Feature to be executed.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -309,7 +309,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												},
 												"actions": {
 													Type:        schema.TypeList,
-													Required:    true,
+													Optional:    true,
 													Description: "The feature to be executed.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -471,7 +471,7 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 		zoneId = v.(string)
 	}
 
-	request.ZoneId = &zoneId
+	request.ZoneId = helper.String(zoneId)
 
 	if v, ok := d.GetOk("rule_name"); ok {
 		request.RuleName = helper.String(v.(string))
@@ -657,9 +657,9 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 									actionsMap := item.(map[string]interface{})
 									action := teo.Action{}
 									if normalActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["normal_action"]); ok {
-										normalAction := teo.NormalAction{}
+										normalAction2 := teo.NormalAction{}
 										if v, ok := normalActionMap["action"]; ok {
-											normalAction.Action = helper.String(v.(string))
+											normalAction2.Action = helper.String(v.(string))
 										}
 										if v, ok := normalActionMap["parameters"]; ok {
 											for _, item := range v.([]interface{}) {
@@ -675,15 +675,15 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 														ruleNormalActionParams.Values = append(ruleNormalActionParams.Values, helper.String(values))
 													}
 												}
-												normalAction.Parameters = append(normalAction.Parameters, &ruleNormalActionParams)
+												normalAction2.Parameters = append(normalAction2.Parameters, &ruleNormalActionParams)
 											}
 										}
-										action.NormalAction = &normalAction
+										action.NormalAction = &normalAction2
 									}
 									if rewriteActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["rewrite_action"]); ok {
-										rewriteAction := teo.RewriteAction{}
+										rewriteAction2 := teo.RewriteAction{}
 										if v, ok := rewriteActionMap["action"]; ok {
-											rewriteAction.Action = helper.String(v.(string))
+											rewriteAction2.Action = helper.String(v.(string))
 										}
 										if v, ok := rewriteActionMap["parameters"]; ok {
 											for _, item := range v.([]interface{}) {
@@ -702,15 +702,15 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 														ruleRewriteActionParams.Values = append(ruleRewriteActionParams.Values, helper.String(values))
 													}
 												}
-												rewriteAction.Parameters = append(rewriteAction.Parameters, &ruleRewriteActionParams)
+												rewriteAction2.Parameters = append(rewriteAction2.Parameters, &ruleRewriteActionParams)
 											}
 										}
-										action.RewriteAction = &rewriteAction
+										action.RewriteAction = &rewriteAction2
 									}
 									if codeActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["code_action"]); ok {
-										codeAction := teo.CodeAction{}
+										codeAction2 := teo.CodeAction{}
 										if v, ok := codeActionMap["action"]; ok {
-											codeAction.Action = helper.String(v.(string))
+											codeAction2.Action = helper.String(v.(string))
 										}
 										if v, ok := codeActionMap["parameters"]; ok {
 											for _, item := range v.([]interface{}) {
@@ -729,10 +729,10 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 														ruleCodeActionParams.Values = append(ruleCodeActionParams.Values, helper.String(values))
 													}
 												}
-												codeAction.Parameters = append(codeAction.Parameters, &ruleCodeActionParams)
+												codeAction2.Parameters = append(codeAction2.Parameters, &ruleCodeActionParams)
 											}
 										}
-										action.CodeAction = &codeAction
+										action.CodeAction = &codeAction2
 									}
 									subRule.Actions = append(subRule.Actions, &action)
 								}
@@ -1171,9 +1171,9 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 	if needChange {
 		request := teo.NewModifyRuleRequest()
 
-		request.ZoneId = &zoneId
+		request.ZoneId = helper.String(zoneId)
 
-		request.RuleId = &ruleId
+		request.RuleId = helper.String(ruleId)
 
 		if v, ok := d.GetOk("rule_name"); ok {
 			request.RuleName = helper.String(v.(string))
@@ -1359,9 +1359,9 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 										actionsMap := item.(map[string]interface{})
 										action := teo.Action{}
 										if normalActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["normal_action"]); ok {
-											normalAction := teo.NormalAction{}
+											normalAction2 := teo.NormalAction{}
 											if v, ok := normalActionMap["action"]; ok {
-												normalAction.Action = helper.String(v.(string))
+												normalAction2.Action = helper.String(v.(string))
 											}
 											if v, ok := normalActionMap["parameters"]; ok {
 												for _, item := range v.([]interface{}) {
@@ -1377,15 +1377,15 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 															ruleNormalActionParams.Values = append(ruleNormalActionParams.Values, helper.String(values))
 														}
 													}
-													normalAction.Parameters = append(normalAction.Parameters, &ruleNormalActionParams)
+													normalAction2.Parameters = append(normalAction2.Parameters, &ruleNormalActionParams)
 												}
 											}
-											action.NormalAction = &normalAction
+											action.NormalAction = &normalAction2
 										}
 										if rewriteActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["rewrite_action"]); ok {
-											rewriteAction := teo.RewriteAction{}
+											rewriteAction2 := teo.RewriteAction{}
 											if v, ok := rewriteActionMap["action"]; ok {
-												rewriteAction.Action = helper.String(v.(string))
+												rewriteAction2.Action = helper.String(v.(string))
 											}
 											if v, ok := rewriteActionMap["parameters"]; ok {
 												for _, item := range v.([]interface{}) {
@@ -1404,15 +1404,15 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 															ruleRewriteActionParams.Values = append(ruleRewriteActionParams.Values, helper.String(values))
 														}
 													}
-													rewriteAction.Parameters = append(rewriteAction.Parameters, &ruleRewriteActionParams)
+													rewriteAction2.Parameters = append(rewriteAction2.Parameters, &ruleRewriteActionParams)
 												}
 											}
-											action.RewriteAction = &rewriteAction
+											action.RewriteAction = &rewriteAction2
 										}
 										if codeActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["code_action"]); ok {
-											codeAction := teo.CodeAction{}
+											codeAction2 := teo.CodeAction{}
 											if v, ok := codeActionMap["action"]; ok {
-												codeAction.Action = helper.String(v.(string))
+												codeAction2.Action = helper.String(v.(string))
 											}
 											if v, ok := codeActionMap["parameters"]; ok {
 												for _, item := range v.([]interface{}) {
@@ -1431,10 +1431,10 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 															ruleCodeActionParams.Values = append(ruleCodeActionParams.Values, helper.String(values))
 														}
 													}
-													codeAction.Parameters = append(codeAction.Parameters, &ruleCodeActionParams)
+													codeAction2.Parameters = append(codeAction2.Parameters, &ruleCodeActionParams)
 												}
 											}
-											action.CodeAction = &codeAction
+											action.CodeAction = &codeAction2
 										}
 										subRule.Actions = append(subRule.Actions, &action)
 									}
@@ -1493,13 +1493,9 @@ func resourceTencentCloudTeoRuleEngineDelete(d *schema.ResourceData, meta interf
 		response = teo.NewDeleteRulesResponse()
 	)
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		zoneId = v.(string)
-	}
+	request.ZoneId = helper.String(zoneId)
 
-	request.ZoneId = &zoneId
-
-	request.RuleIds = []*string{&ruleId}
+	request.RuleIds = []*string{helper.String(ruleId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteRulesWithContext(ctx, request)
@@ -1512,7 +1508,7 @@ func resourceTencentCloudTeoRuleEngineDelete(d *schema.ResourceData, meta interf
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create teo rule engine failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete teo rule engine failed, reason:%+v", logId, err)
 		return err
 	}
 

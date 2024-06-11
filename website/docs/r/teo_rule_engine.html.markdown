@@ -289,14 +289,14 @@ The `rewrite_action` object of `actions` supports the following:
 
 The `rules` object of `sub_rules` supports the following:
 
-* `actions` - (Required, List) The feature to be executed.
 * `or` - (Required, List) The condition that determines if a feature should run.
 Note: If any condition in the array is met, the feature will run.
+* `actions` - (Optional, List) The feature to be executed.
 
 The `rules` object supports the following:
 
-* `actions` - (Required, List) Feature to be executed.
 * `or` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
+* `actions` - (Optional, List) Feature to be executed.
 * `sub_rules` - (Optional, List) The nested rule.
 
 The `sub_rules` object of `rules` supports the following:
