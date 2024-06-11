@@ -216,6 +216,16 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Domain name of the CLB instance.",
 			},
+			"ipv6_mode": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "This field is meaningful when the IP address version is ipv6, `IPv6Nat64` | `IPv6FullChain`.",
+			},
+			"address_ipv6": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The IPv6 address of the load balancing instance.",
+			},
 		},
 	}
 }
@@ -575,6 +585,8 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
 	_ = d.Set("domain", instance.LoadBalancerDomain)
+	_ = d.Set("ipv6_mode", instance.IPv6Mode)
+	_ = d.Set("address_ipv6", instance.AddressIPv6)
 
 	if instance.SlaType != nil {
 		_ = d.Set("sla_type", instance.SlaType)
