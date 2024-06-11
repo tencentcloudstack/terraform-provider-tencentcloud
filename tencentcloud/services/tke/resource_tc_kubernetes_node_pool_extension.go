@@ -75,19 +75,8 @@ func resourceTencentCloudKubernetesNodePoolCreatePostFillRequest0(ctx context.Co
 
 	//compose InstanceAdvancedSettings
 	if workConfig, ok := helper.InterfacesHeadMap(d, "node_config"); ok {
-		if temp, ok := workConfig["extra_args"]; ok {
-			extraArgs := helper.InterfacesStrings(temp.([]interface{}))
-			clusterExtraArgs := tke.InstanceExtraArgs{}
-			clusterExtraArgs.Kubelet = make([]*string, 0)
-			for i := range extraArgs {
-				clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArgs[i])
-			}
-			req.InstanceAdvancedSettings.ExtraArgs = &clusterExtraArgs
-		}
-
-		if v, ok := workConfig["is_schedule"]; ok {
-			req.InstanceAdvancedSettings.Unschedulable = helper.BoolToInt64Ptr(!v.(bool))
-		}
+		iAdvanced = tkeGetInstanceAdvancedPara(workConfig, meta)
+		req.InstanceAdvancedSettings = &iAdvanced
 	}
 
 	if temp, ok := d.GetOk("extra_args"); ok {
