@@ -44,6 +44,22 @@ resource "tencentcloud_clb_instance" "open_clb" {
   project_id                = 0
   vpc_id                    = "vpc-da7ffa61"
   security_groups           = ["sg-o0ek7r93"]
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
+SUPPORT CORS
+
+```hcl
+resource "tencentcloud_clb_instance" "open_clb" {
+  network_type              = "OPEN"
+  clb_name                  = "myclb"
+  project_id                = 0
+  vpc_id                    = "vpc-da7ffa61"
+  security_groups           = ["sg-o0ek7r93"]
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = "vpc-da7ffa61"
 
