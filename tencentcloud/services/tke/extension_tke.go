@@ -132,6 +132,7 @@ var TKE_ADDON_DEFAULT_VALUES_KEY = []string{
 	"global.cluster.kubeminor",
 	"global.cluster.region",
 	"global.cluster.longregion",
+	"global.testenv",
 }
 
 const (
