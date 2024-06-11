@@ -113,7 +113,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 						},
 						"actions": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Optional:    true,
 							Description: "Feature to be executed.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -309,7 +309,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												},
 												"actions": {
 													Type:        schema.TypeList,
-													Required:    true,
+													Optional:    true,
 													Description: "The feature to be executed.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
