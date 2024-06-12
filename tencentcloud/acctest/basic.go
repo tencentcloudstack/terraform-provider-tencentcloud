@@ -214,7 +214,7 @@ variable "international_subnet_id" {
 // Tke Exclusive Network Environment
 const (
 	TkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
-	DefaultTkeClusterId   = "cls-ely08ic4"
+	DefaultTkeClusterId   = "cls-r8gqwjw6"
 	DefaultTkeClusterName = "keep-tke-cluster"
 	DefaultTkeClusterType = "tke"
 	DefaultPrometheusId   = "prom-1lspn8sw"

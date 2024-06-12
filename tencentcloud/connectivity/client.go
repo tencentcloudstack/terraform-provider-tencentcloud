@@ -472,8 +472,8 @@ func (me *TencentCloudClient) UseTkeClient(iacExtInfo ...IacExtInfo) *tke.Client
 		me.tkeConn.WithHttpTransport(&logRoundTripper)
 		return me.tkeConn
 	}
-
 	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
 	me.tkeConn, _ = tke.NewClient(me.Credential, me.Region, cpf)
 	me.tkeConn.WithHttpTransport(&logRoundTripper)
 
