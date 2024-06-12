@@ -180,6 +180,32 @@ func resourceTencentCloudEipAssociationReadPreRequest0(ctx context.Context, req 
 	return nil
 }
 
+func resourceTencentCloudEipAssociationDeleteOnExit(ctx context.Context) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	id := d.Id()
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	vpcService := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	association, err := ParseEipAssociationId(id)
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		e := vpcService.UnattachEip(ctx, association.EipId)
+		if e != nil {
+			return tccommon.RetryError(e, "DesOperation.MutexTaskRunning")
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func ParseEipAssociationId(associationId string) (association EipAssociationId, errRet error) {
 	ids := strings.Split(associationId, "::")
 	if len(ids) < 2 || len(ids) > 3 {
