@@ -424,10 +424,6 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 `
 
 const testAccClbInstance_open = `
-resource "tencentcloud_security_group" "foo" {
-  name = "keep-ci-temp-test-sg"
-}
-
 resource "tencentcloud_vpc" "foo" {
   name       = "clb-instance-open-vpc"
   cidr_block = "10.0.0.0/16"
@@ -440,7 +436,7 @@ resource "tencentcloud_clb_instance" "clb_open" {
   vpc_id                    = tencentcloud_vpc.foo.id
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = tencentcloud_vpc.foo.id
-  security_groups           = [tencentcloud_security_group.foo.id]
+  security_groups           = ["sg-if748odn"]
 
   tags = {
     test = "tf"
@@ -509,9 +505,6 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 }
 `
 const testAccClbInstance_update_open = `
-resource "tencentcloud_security_group" "foo" {
-  name = "clb-instance-sg"
-}
 
 resource "tencentcloud_vpc" "foo" {
   name       = "clb-instance-open-vpc"
@@ -525,7 +518,7 @@ resource "tencentcloud_clb_instance" "clb_open" {
   project_id                = 0
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = tencentcloud_vpc.foo.id
-  security_groups           = [tencentcloud_security_group.foo.id]
+  security_groups           = ["sg-if748odn"]
 
   tags = {
     test = "test"
@@ -546,12 +539,6 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
-resource "tencentcloud_security_group" "sglab" {
-  name        = "clb-instance-enable-sg"
-  description = "favourite sg"
-  project_id  = 0
-}
-
 resource "tencentcloud_vpc" "foo" {
   name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
@@ -568,7 +555,7 @@ resource "tencentcloud_clb_instance" "default_enable" {
   vpc_id                       = tencentcloud_vpc.foo.id
   load_balancer_pass_to_target = true
 
-  security_groups              = [tencentcloud_security_group.sglab.id]
+  security_groups              = ["sg-if748odn"]
   target_region_info_region    = "ap-guangzhou"
   target_region_info_vpc_id    = tencentcloud_vpc.foo.id
 
@@ -591,12 +578,6 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
-resource "tencentcloud_security_group" "sglab" {
-  name        = "clb-instance-enable-sg"
-  description = "favourite sg"
-  project_id  = 0
-}
-
 resource "tencentcloud_vpc" "foo" {
   name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
@@ -613,7 +594,7 @@ resource "tencentcloud_clb_instance" "default_enable" {
   vpc_id                       = tencentcloud_vpc.foo.id
   load_balancer_pass_to_target = true
 
-  security_groups              = [tencentcloud_security_group.sglab.id]
+  security_groups              = ["sg-if748odn"]
   target_region_info_region    = "ap-guangzhou"
   target_region_info_vpc_id    = tencentcloud_vpc.foo.id
 

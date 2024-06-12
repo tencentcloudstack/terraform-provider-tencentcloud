@@ -314,8 +314,10 @@ The `snat_ips` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `address_ipv6` - The IPv6 address of the load balancing instance.
 * `clb_vips` - The virtual service address table of the CLB.
 * `domain` - Domain name of the CLB instance.
+* `ipv6_mode` - This field is meaningful when the IP address version is ipv6, `IPv6Nat64` | `IPv6FullChain`.
 
 
 ## Import
