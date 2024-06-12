@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
@@ -111,6 +112,10 @@ func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta inter
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	eipId := d.Id()
+
+	if err := resourceTencentCloudEipAssociationDeleteOnExit(ctx); err != nil {
+		return err
+	}
 
 	_ = eipId
 	_ = ctx
