@@ -3,11 +3,12 @@ package cvm
 import (
 	"context"
 	"fmt"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 	"regexp"
 	"strings"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )

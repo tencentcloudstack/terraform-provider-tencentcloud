@@ -3,10 +3,11 @@ package cvm
 import (
 	"context"
 	"fmt"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"log"
 	"strings"
+
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
 func resourceTencentCloudCvmSecurityGroupAttachmentReadPostHandleResponse0(ctx context.Context, resp *cvm.DescribeInstancesResponseParams) error {
