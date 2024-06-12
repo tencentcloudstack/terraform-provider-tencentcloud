@@ -67,11 +67,7 @@ func resourceTencentCloudCvmRebootInstanceCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceIdsSet := v.(*schema.Set).List()
-		for i := range instanceIdsSet {
-			instanceIds := instanceIdsSet[i].(string)
-			request.InstanceIds = append(request.InstanceIds, helper.String(instanceIds))
-		}
+		request.InstanceIds = []*string{helper.String(v.(string))}
 	}
 
 	if v, ok := d.GetOkExists("force_reboot"); ok {

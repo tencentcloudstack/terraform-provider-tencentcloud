@@ -80,7 +80,7 @@ func resourceTencentCloudCvmLaunchTemplateDefaultVersionRead(d *schema.ResourceD
 		return nil
 	}
 	if respData.LaunchTemplateVersion != nil {
-		_ = d.Set("launch_template_version", respData.LaunchTemplateVersion)
+		_ = d.Set("default_version", respData.LaunchTemplateVersion)
 	}
 
 	return nil
