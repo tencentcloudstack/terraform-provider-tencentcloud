@@ -17,23 +17,52 @@ func TestAccTencentCloudCvmLaunchTemplateDefaultVersionResource_basic(t *testing
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCvmLaunchTemplateDefaultVersion,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cvm_launch_template_default_version.launch_template_default_version", "id")),
+				Config: testAccCvmLaunchTemplateDefaultVersionBase + testAccCvmLaunchTemplateDefaultVersion1,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cvm_launch_template_default_version.test_launch_tpl_default", "default_version", "2"),
+				),
 			},
 			{
-				ResourceName:      "tencentcloud_cvm_launch_template_default_version.launch_template_default_version",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: testAccCvmLaunchTemplateDefaultVersionBase + testAccCvmLaunchTemplateDefaultVersion2,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cvm_launch_template_default_version.test_launch_tpl_default", "default_version", "1"),
+				),
 			},
 		},
 	})
 }
 
-const testAccCvmLaunchTemplateDefaultVersion = `
-
-resource "tencentcloud_cvm_launch_template_default_version" "launch_template_default_version" {
-  launch_template_id = "lt-9e1znnsa"
-  default_version = 4
+const testAccCvmLaunchTemplateDefaultVersionBase = `
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
 }
+resource "tencentcloud_cvm_launch_template" "test_launch_tpl" {
+  launch_template_name = "test"
+  image_id             = data.tencentcloud_images.default.images.0.image_id
+  placement {
+    zone = "ap-guangzhou-7"
+  }
+  instance_name = "v1"
+}
+resource "tencentcloud_cvm_launch_template_version" "test_launch_tpl_v2" {
+  launch_template_id = tencentcloud_cvm_launch_template.test_launch_tpl.id
+  placement {
+    zone = "ap-guangzhou-7"
+  }
+  instance_name = "v2"
+}`
 
+const testAccCvmLaunchTemplateDefaultVersion1 = `
+resource "tencentcloud_cvm_launch_template_default_version" "test_launch_tpl_default" {
+  launch_template_id = tencentcloud_cvm_launch_template.test_launch_tpl.id
+  default_version = tencentcloud_cvm_launch_template_version.test_launch_tpl_v2.launch_template_version
+}
+`
+
+const testAccCvmLaunchTemplateDefaultVersion2 = `
+resource "tencentcloud_cvm_launch_template_default_version" "test_launch_tpl_default" {
+  launch_template_id = tencentcloud_cvm_launch_template.test_launch_tpl.id
+  default_version = 1
+}
 `
