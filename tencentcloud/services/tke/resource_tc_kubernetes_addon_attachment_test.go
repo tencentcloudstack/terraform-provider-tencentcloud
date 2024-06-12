@@ -63,24 +63,59 @@ func TestAccTencentCloudKubernetesAddonAttachmentResource(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeAddonAttachment(),
+				Config: testAccTkeAddonAttachmentBasic(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "version"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "request_body"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "version", "1.0.2"),
+				),
+			},
+			{
+				Config: testAccTkeAddonAttachmentUpdate(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "version", "1.0.3"),
 				),
 			},
 		},
 	})
 }
-
-func testAccTkeAddonAttachment() string {
+func testAccTkeAddonAttachmentBasic() string {
 	return fmt.Sprintf(`
 %s
 
 resource "tencentcloud_kubernetes_addon_attachment" "cos" {
   cluster_id = local.cluster_id
   name = "%s"
+  request_body = jsonencode({
+	kind = "App"
+	spec = {
+	  chart = {
+		chartName    = "cos"
+		chartVersion = "1.0.2"
+	  }
+	  values = {
+		values        = []
+		rawValues     = "e30="
+		rawValuesType = "json"
+	  }
+	}
+  })
+}
+`, tcacctest.TkeDataSource, DefaultAddonName)
+}
+
+func testAccTkeAddonAttachmentUpdate() string {
+	return fmt.Sprintf(`
+%s
+
+resource "tencentcloud_kubernetes_addon_attachment" "cos" {
+  cluster_id = local.cluster_id
+  name = "%s"
+  version = "1.0.3"
 }
 `, tcacctest.TkeDataSource, DefaultAddonName)
 }

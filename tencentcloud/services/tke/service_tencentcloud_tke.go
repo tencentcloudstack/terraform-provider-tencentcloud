@@ -3323,3 +3323,58 @@ func (me *TkeService) DescribeKubernetesServerlessNodePoolById(ctx context.Conte
 	}
 	return
 }
+
+func (me *TkeService) DescribeKubernetesAuthAttachmentById(ctx context.Context, clusterId string) (ret *tke.DescribeClusterAuthenticationOptionsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterAuthenticationOptionsRequest()
+	request.ClusterId = &clusterId
+	if err := resourceTencentCloudKubernetesAuthAttachmentReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DeleteKubernetesAuthAttachmentById(ctx context.Context, clusterId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewModifyClusterAuthenticationOptionsRequest()
+	request.ClusterId = &clusterId
+	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
+		Issuer:  helper.String("https://kubernetes.default.svc.cluster.local"),
+		JWKSURI: helper.String(""),
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().ModifyClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
