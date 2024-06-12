@@ -3,12 +3,13 @@ package cvm
 import (
 	"context"
 	"fmt"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"log"
 	"sort"
 	"strings"
 	"sync"
 	"time"
+
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
