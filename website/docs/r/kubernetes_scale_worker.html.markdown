@@ -125,7 +125,9 @@ The following arguments are supported:
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `labels` - (Optional, Map, ForceNew) Labels of kubernetes scale worker created nodes.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
-* `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
+* `unschedulable` - (Optional, Int, ForceNew) Set whether the added node participates in scheduling. The default value is 0, which means participating in scheduling; non-0 means not participating in scheduling. After the node initialization is completed, you can execute kubectl uncordon nodename to join the node in scheduling.
+* `user_script` - (Optional, String, ForceNew) Base64 encoded user script, this script will be executed after the k8s component is run. The user needs to ensure that the script is reentrant and retry logic. The script and its generated log files can be viewed in the /data/ccs_userscript/ path of the node, if required. The node needs to be initialized before it can be added to the schedule. It can be used with the unschedulable parameter. After the final initialization of userScript is completed, add the kubectl uncordon nodename --kubeconfig=/root/.kube/config command to add the node to the schedule.
 
 The `data_disk` object of `worker_config` supports the following:
 
@@ -183,7 +185,7 @@ The `worker_config` object supports the following:
 * `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, Int, ForceNew) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
-* `user_data` - (Optional, String, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
+* `user_data` - (Optional, String, ForceNew) User data provided to instances, needs to be encoded in base64, and the maximum supported data size is 16KB.
 
 ## Attributes Reference
 

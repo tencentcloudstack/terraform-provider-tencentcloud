@@ -7,9 +7,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -35,31 +39,6 @@ func customScaleWorkerResourceImporter(ctx context.Context, d *schema.ResourceDa
 	}
 
 	return []*schema.ResourceData{d}, nil
-}
-
-func resourceTencentCloudKubernetesScaleWorkerCreatePostRequest1(ctx context.Context, req *tke.CreateClusterInstancesRequest, resp *tke.CreateClusterInstancesResponse) (instanceIdSet []string, err error) {
-	d := tccommon.ResourceDataFromContext(ctx)
-
-	instanceIdSet = make([]string, 0)
-	workerInstancesList := make([]map[string]interface{}, 0, len(resp.Response.InstanceIdSet))
-	for _, v := range resp.Response.InstanceIdSet {
-		if *v == "" {
-			return nil, fmt.Errorf("CreateClusterInstances return one instanceId is empty")
-		}
-		infoMap := make(map[string]interface{})
-		infoMap["instance_id"] = v
-		infoMap["instance_role"] = TKE_ROLE_WORKER
-		workerInstancesList = append(workerInstancesList, infoMap)
-		instanceIdSet = append(instanceIdSet, *v)
-	}
-
-	if err := d.Set("worker_instances_list", workerInstancesList); err != nil {
-		return nil, err
-	}
-
-	//wait for LANIP
-	time.Sleep(tccommon.ReadRetryTimeout)
-	return instanceIdSet, nil
 }
 
 func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Context, req *tke.DescribeClusterInstancesRequest, resp *tke.DescribeClusterInstancesResponse) error {
@@ -301,139 +280,10 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Conte
 	return nil
 }
 
-func resourceTencentCloudKubernetesScaleWorkerDeletePostRequest0(ctx context.Context, req *tke.DescribeClustersRequest, resp *tke.DescribeClustersResponse) error {
+func resourceTencentCloudKubernetesScaleWorkerDeletePostRequest0(ctx context.Context, req *tke.DescribeClustersRequest, resp *tke.DescribeClustersResponse) *resource.RetryError {
 	if len(resp.Response.Clusters) == 0 {
-		return fmt.Errorf("The cluster has been deleted")
+		return resource.NonRetryableError(fmt.Errorf("The cluster has been deleted"))
 	}
-
-	return nil
-}
-
-func resourceTencentCloudKubernetesScaleWorkerDeletePostRequest1(ctx context.Context, req *tke.DescribeClusterInstancesRequest, resp *tke.DescribeClusterInstancesResponse) (workers []InstanceInfo, err error) {
-	var has = map[string]bool{}
-	workers = make([]InstanceInfo, 0, 100)
-	for _, item := range resp.Response.InstanceSet {
-		if has[*item.InstanceId] {
-			return nil, fmt.Errorf("get repeated instance_id[%s] when doing DescribeClusterInstances", *item.InstanceId)
-		}
-
-		has[*item.InstanceId] = true
-		instanceInfo := InstanceInfo{
-			InstanceId:               *item.InstanceId,
-			InstanceRole:             *item.InstanceRole,
-			InstanceState:            *item.InstanceState,
-			FailedReason:             *item.FailedReason,
-			InstanceAdvancedSettings: item.InstanceAdvancedSettings,
-		}
-
-		if item.CreatedTime != nil {
-			instanceInfo.CreatedTime = *item.CreatedTime
-		}
-
-		if item.NodePoolId != nil {
-			instanceInfo.NodePoolId = *item.NodePoolId
-		}
-
-		if item.LanIP != nil {
-			instanceInfo.LanIp = *item.LanIP
-		}
-
-		if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
-			workers = append(workers, instanceInfo)
-		}
-	}
-
-	return workers, nil
-}
-
-func resourceTencentCloudKubernetesScaleWorkerCreatePostFillRequest1(ctx context.Context, req *tke.CreateClusterInstancesRequest) error {
-	d := tccommon.ResourceDataFromContext(ctx)
-	meta := tccommon.ProviderMetaFromContext(ctx)
-
-	var cvms RunInstancesForNode
-	var iAdvanced tke.InstanceAdvancedSettings
-
-	dMap := make(map[string]interface{}, 5)
-	//mount_target, docker_graph_path, data_disk, extra_args, desired_pod_num
-	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num", "gpu_args"}
-	for _, k := range iAdvancedParas {
-		if v, ok := d.GetOk(k); ok {
-			dMap[k] = v
-		}
-	}
-
-	iAdvanced = tkeGetInstanceAdvancedPara(dMap, meta)
-
-	iAdvanced.Labels = GetTkeLabels(d, "labels")
-	if temp, ok := d.GetOk("unschedulable"); ok {
-		iAdvanced.Unschedulable = helper.Int64(int64(temp.(int)))
-	}
-
-	if workers, ok := d.GetOk("worker_config"); ok {
-		workerList := workers.([]interface{})
-		for index := range workerList {
-			worker := workerList[index].(map[string]interface{})
-			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, CreateClusterInstancesVpcId, CreateClusterInstancesProjectId)
-			if err != nil {
-				return err
-			}
-			cvms.Work = append(cvms.Work, paraJson)
-		}
-	}
-	if len(cvms.Work) != 1 {
-		return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
-			"so len(cvms.Work) should be 1")
-	}
-
-	req.RunInstancePara = &cvms.Work[0]
-	req.InstanceAdvancedSettings = &iAdvanced
-
-	return nil
-}
-
-func resourceTencentCloudKubernetesScaleWorkerDeletePostFillRequest2(ctx context.Context, req *tke.DeleteClusterInstancesRequest, workers []InstanceInfo) error {
-	d := tccommon.ResourceDataFromContext(ctx)
-
-	workerInstancesList := d.Get("worker_instances_list").([]interface{})
-	instanceMap := make(map[string]bool)
-	for _, v := range workerInstancesList {
-		infoMap, ok := v.(map[string]interface{})
-		if !ok || infoMap["instance_id"] == nil {
-			return fmt.Errorf("worker_instances_list is broken.")
-		}
-
-		instanceId, ok := infoMap["instance_id"].(string)
-		if !ok || instanceId == "" {
-			return fmt.Errorf("worker_instances_list.instance_id is broken.")
-		}
-
-		if instanceMap[instanceId] {
-			log.Printf("[WARN]The same instance id exists in the list")
-		}
-
-		instanceMap[instanceId] = true
-	}
-
-	needDeletes := []string{}
-	for _, cvmInfo := range workers {
-		if _, ok := instanceMap[cvmInfo.InstanceId]; ok {
-			needDeletes = append(needDeletes, cvmInfo.InstanceId)
-		}
-	}
-
-	// The machines I generated was deleted by others.
-	if len(needDeletes) == 0 {
-		return fmt.Errorf("The machines I generated was deleted by others.")
-	}
-
-	req.InstanceIds = make([]*string, 0, len(needDeletes))
-
-	for index := range needDeletes {
-		req.InstanceIds = append(req.InstanceIds, &needDeletes[index])
-	}
-
-	req.InstanceDeleteMode = helper.String("terminate")
-
 	return nil
 }
 
@@ -483,23 +333,200 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest0(ctx context.Conte
 	if len(resp.Response.Clusters) == 0 {
 		return fmt.Errorf("The cluster has been deleted")
 	}
-
-	return nil
-}
-
-func resourceTencentCloudKubernetesScaleWorkerCreatePostRequest0(ctx context.Context, req *tke.DescribeClustersRequest, resp *tke.DescribeClustersResponse) error {
-	if len(resp.Response.Clusters) == 0 {
-		return fmt.Errorf("The cluster has been deleted")
-	}
-
-	CreateClusterInstancesVpcId = *resp.Response.Clusters[0].ClusterNetworkSettings.VpcId
-	projectIdUint64 := *resp.Response.Clusters[0].ProjectId
-	CreateClusterInstancesProjectId = int64(projectIdUint64)
-
 	return nil
 }
 
 func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest2(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
 	req.InstanceIds = WorkersInstanceIds
+	return nil
+}
+
+func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+
+	var cvms RunInstancesForNode
+	var iAdvanced tke.InstanceAdvancedSettings
+	cvms.Work = []string{}
+
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	clusterId := d.Get("cluster_id").(string)
+	if clusterId == "" {
+		return fmt.Errorf("`cluster_id` is empty.")
+	}
+
+	info, has, err := service.DescribeCluster(ctx, clusterId)
+	if err != nil {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			info, has, err = service.DescribeCluster(ctx, clusterId)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+			return nil
+		})
+	}
+
+	if err != nil {
+		return nil
+	}
+
+	if !has {
+		return fmt.Errorf("cluster [%s] is not exist.", clusterId)
+	}
+
+	dMap := make(map[string]interface{}, 5)
+	//mount_target, docker_graph_path, data_disk, extra_args, desired_pod_num
+	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num", "gpu_args"}
+	for _, k := range iAdvancedParas {
+		if v, ok := d.GetOk(k); ok {
+			dMap[k] = v
+		}
+	}
+	iAdvanced = tkeGetInstanceAdvancedPara(dMap, meta)
+
+	iAdvanced.Labels = GetTkeLabels(d, "labels")
+	if temp, ok := d.GetOk("unschedulable"); ok {
+		iAdvanced.Unschedulable = helper.Int64(int64(temp.(int)))
+	}
+
+	if v, ok := d.GetOk("pre_start_user_script"); ok {
+		iAdvanced.PreStartUserScript = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("user_script"); ok {
+		iAdvanced.UserScript = helper.String(v.(string))
+	}
+
+	if workers, ok := d.GetOk("worker_config"); ok {
+		workerList := workers.([]interface{})
+		for index := range workerList {
+			worker := workerList[index].(map[string]interface{})
+			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, info.VpcId, info.ProjectId)
+			if err != nil {
+				return err
+			}
+			cvms.Work = append(cvms.Work, paraJson)
+		}
+	}
+	if len(cvms.Work) != 1 {
+		return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
+			"so len(cvms.Work) should be 1")
+	}
+
+	instanceIds, err := service.CreateClusterInstances(ctx, clusterId, cvms.Work[0], iAdvanced)
+	if err != nil {
+		return err
+	}
+
+	workerInstancesList := make([]map[string]interface{}, 0, len(instanceIds))
+	for _, v := range instanceIds {
+		if v == "" {
+			return fmt.Errorf("CreateClusterInstances return one instanceId is empty")
+		}
+		infoMap := make(map[string]interface{})
+		infoMap["instance_id"] = v
+		infoMap["instance_role"] = TKE_ROLE_WORKER
+		workerInstancesList = append(workerInstancesList, infoMap)
+	}
+
+	if err = d.Set("worker_instances_list", workerInstancesList); err != nil {
+		return err
+	}
+
+	//修改id设置,不符合id规则
+	id := clusterId + tccommon.FILED_SP + strings.Join(instanceIds, tccommon.FILED_SP)
+	d.SetId(id)
+
+	//wait for LANIP
+	time.Sleep(tccommon.ReadRetryTimeout)
+	return nil
+}
+
+func resourceTencentCloudKubernetesScaleWorkerDeleteOnExit(ctx context.Context) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	clusterId := idSplit[0]
+	workerInstancesList := d.Get("worker_instances_list").([]interface{})
+
+	instanceMap := make(map[string]bool)
+	for _, v := range workerInstancesList {
+
+		infoMap, ok := v.(map[string]interface{})
+
+		if !ok || infoMap["instance_id"] == nil {
+			return fmt.Errorf("worker_instances_list is broken.")
+		}
+		instanceId, ok := infoMap["instance_id"].(string)
+		if !ok || instanceId == "" {
+			return fmt.Errorf("worker_instances_list.instance_id is broken.")
+		}
+
+		if instanceMap[instanceId] {
+			log.Printf("[WARN]The same instance id exists in the list")
+		}
+
+		instanceMap[instanceId] = true
+
+	}
+
+	_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
+	if err != nil {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
+
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+
+			if err != nil {
+				return resource.RetryableError(err)
+			}
+			return nil
+		})
+	}
+
+	if err != nil {
+		return err
+	}
+
+	needDeletes := []string{}
+	for _, cvm := range workers {
+		if _, ok := instanceMap[cvm.InstanceId]; ok {
+			needDeletes = append(needDeletes, cvm.InstanceId)
+		}
+	}
+	// The machines I generated was deleted by others.
+	if len(needDeletes) == 0 {
+		return nil
+	}
+
+	err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
+	if err != nil {
+		err = resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
+
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+
+				if e.GetCode() == "InternalError.Param" &&
+					strings.Contains(e.GetMessage(), `PARAM_ERROR[some instances []is not in right state`) {
+					return nil
+				}
+			}
+
+			if err != nil {
+				return tccommon.RetryError(err, tccommon.InternalError)
+			}
+			return nil
+		})
+	}
 	return nil
 }

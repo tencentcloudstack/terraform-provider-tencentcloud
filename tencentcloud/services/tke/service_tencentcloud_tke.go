@@ -3389,7 +3389,7 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById(ctx context.Context, clu
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeClustersRequest()
-	request.ClusterIds = []*string{&clusterId}
+	request.ClusterIds = []*string{helper.String(clusterId)}
 
 	if err := resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest0(ctx, request); err != nil {
 		return nil, err
@@ -3410,7 +3410,7 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById(ctx context.Context, clu
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if err = resourceTencentCloudKubernetesScaleWorkerReadPostRequest0(ctx, request, response); err != nil {
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest0(ctx, request, response); err != nil {
 		return nil, err
 	}
 
@@ -3422,7 +3422,7 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context, cl
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeClusterInstancesRequest()
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	defer func() {
 		if errRet != nil {
@@ -3439,7 +3439,7 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context, cl
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if err = resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx, request, response); err != nil {
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx, request, response); err != nil {
 		return nil, err
 	}
 
