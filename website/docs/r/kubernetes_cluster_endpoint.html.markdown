@@ -36,7 +36,7 @@ depends_on = [
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) Specify cluster ID.
+* `cluster_id` - (Required, String, ForceNew) Specify cluster ID.
 * `cluster_internet_domain` - (Optional, String) Domain name for cluster Kube-apiserver internet access.  Be careful if you modify value of this parameter, the cluster_external_endpoint value may be changed automatically too.
 * `cluster_internet_security_group` - (Optional, String) Specify security group, NOTE: This argument must not be empty if cluster internet enabled.
 * `cluster_internet` - (Optional, Bool) Open internet access or not.
