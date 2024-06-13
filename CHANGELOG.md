@@ -1,3 +1,18 @@
+## 1.81.103 (June 13, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: Support ipv6 return value `ipv6_mode` and `address_ipv6` ([#2675](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2675))
+* resource/tencentcloud_kubernetes_cluster_endpoint: Support ForceNew for `cluster_id` ([#2681](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2681))
+
+## 1.81.102 (June 11, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: modify tag. ([#2674](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2674))
+* resource/tencentcloud_teo_rule_engine: Change action to Optional ([#2672](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2672))
+* resource/tencentcloud_user_info: Support retry ([#2671](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2671))
+
 ## 1.81.101 (June 5, 2024)
 
 ENHANCEMENTS:
