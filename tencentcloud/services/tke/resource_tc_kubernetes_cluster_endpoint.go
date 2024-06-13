@@ -28,6 +28,7 @@ func ResourceTencentCloudTkeClusterEndpoint() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Specify cluster ID.",
 			},
 			"cluster_internet": {
