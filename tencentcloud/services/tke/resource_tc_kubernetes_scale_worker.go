@@ -1,144 +1,68 @@
 package tke
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
-	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
-
 	"context"
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
-func ResourceTencentCloudTkeScaleWorker() *schema.Resource {
+func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTkeScaleWorkerCreate,
-		Read:   resourceTencentCloudTkeScaleWorkerRead,
-		Delete: resourceTencentCloudTkeScaleWorkerDelete,
+		Create: resourceTencentCloudKubernetesScaleWorkerCreate,
+		Read:   resourceTencentCloudKubernetesScaleWorkerRead,
+		Delete: resourceTencentCloudKubernetesScaleWorkerDelete,
 		Importer: &schema.ResourceImporter{
-			StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-				importFlag = true
-				err := resourceTencentCloudTkeScaleWorkerRead(d, m)
-				if err != nil {
-					return nil, fmt.Errorf("failed to import resource")
-				}
-
-				return []*schema.ResourceData{d}, nil
-			},
+			StateContext: customScaleWorkerResourceImporter,
 		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
+				ForceNew:    true,
 				Description: "ID of the cluster.",
 			},
-			"worker_config": {
-				Type:     schema.TypeList,
-				ForceNew: true,
-				MaxItems: 1,
-				MinItems: 1,
-				Required: true,
-				Elem: &schema.Resource{
-					Schema: TkeCvmCreateInfo(),
-				},
-				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.",
-			},
-			//advanced instance settings
-			"labels": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Labels of kubernetes scale worker created nodes.",
-			},
-			"extra_args": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				ForceNew:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Custom parameter information related to the node.",
-			},
-			"gpu_args": {
-				Type:     schema.TypeList,
-				Optional: true,
-				ForceNew: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: TKEGpuArgsSetting(),
-				},
-				Description: "GPU driver parameters.",
-			},
-			"unschedulable": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				ForceNew:    true,
-				Default:     0,
-				Description: "Set whether the added node participates in scheduling. The default value is 0, which means participating in scheduling; non-0 means not participating in scheduling. After the node initialization is completed, you can execute kubectl uncordon nodename to join the node in scheduling.",
-			},
-			"desired_pod_num": {
-				Type:        schema.TypeInt,
-				ForceNew:    true,
-				Optional:    true,
-				Description: "Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.",
-			},
-			"docker_graph_path": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Docker graph path. Default is `/var/lib/docker`.",
-			},
-			"mount_target": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Mount target. Default is not mounting.",
-			},
+
 			"data_disk": {
 				Type:        schema.TypeList,
-				ForceNew:    true,
 				Optional:    true,
+				ForceNew:    true,
 				MaxItems:    11,
 				Description: "Configurations of data disk.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"disk_type": {
-							Type:         schema.TypeString,
-							ForceNew:     true,
-							Optional:     true,
-							Default:      svcas.SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
-							ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
-							Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.",
-						},
-						"disk_size": {
-							Type:        schema.TypeInt,
-							ForceNew:    true,
-							Optional:    true,
-							Default:     0,
-							Description: "Volume of disk in GB. Default is `0`.",
-						},
-						"file_system": {
-							Type:        schema.TypeString,
-							ForceNew:    true,
-							Optional:    true,
-							Default:     "",
-							Description: "File system, e.g. `ext3/ext4/xfs`.",
-						},
 						"auto_format_and_mount": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							ForceNew:    true,
 							Default:     false,
 							Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+						},
+						"disk_size": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     0,
+							Description: "Volume of disk in GB. Default is `0`.",
+						},
+						"disk_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "CLOUD_PREMIUM",
+							Description: "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.",
+						},
+						"file_system": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "",
+							Description: "File system, e.g. `ext3/ext4/xfs`.",
 						},
 						"mount_target": {
 							Type:        schema.TypeString,
@@ -150,525 +74,639 @@ func ResourceTencentCloudTkeScaleWorker() *schema.Resource {
 					},
 				},
 			},
-			"pre_start_user_script": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
+
+			"desired_pod_num": {
+				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
-			},
-			"user_script": {
-				Type:        schema.TypeString,
 				ForceNew:    true,
-				Optional:    true,
-				Description: "Base64 encoded user script, this script will be executed after the k8s component is run. The user needs to ensure that the script is reentrant and retry logic. The script and its generated log files can be viewed in the /data/ccs_userscript/ path of the node, if required. The node needs to be initialized before it can be added to the schedule. It can be used with the unschedulable parameter. After the final initialization of userScript is completed, add the kubectl uncordon nodename --kubeconfig=/root/.kube/config command to add the node to the schedule.",
+				Description: "Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.",
 			},
-			// Computed values
-			"worker_instances_list": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: tkeCvmState(),
+
+			"docker_graph_path": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Docker graph path. Default is `/var/lib/docker`.",
+			},
+
+			"extra_args": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Custom parameter information related to the node.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
+			},
+
+			"gpu_args": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "GPU driver parameters.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cuda": {
+							Type:        schema.TypeMap,
+							Optional:    true,
+							Description: "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+						},
+						"cudnn": {
+							Type:        schema.TypeMap,
+							Optional:    true,
+							Description: "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
+						},
+						"custom_driver": {
+							Type:        schema.TypeMap,
+							Optional:    true,
+							Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
+						},
+						"driver": {
+							Type:        schema.TypeMap,
+							Optional:    true,
+							Description: "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+						},
+						"mig_enable": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Whether to enable MIG.",
+						},
+					},
+				},
+			},
+
+			"labels": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Labels of kubernetes scale worker created nodes.",
+			},
+
+			"mount_target": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Mount target. Default is not mounting.",
+			},
+
+			"unschedulable": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     0,
+				Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
+			},
+
+			"worker_config": {
+				Type:        schema.TypeList,
+				Required:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				MinItems:    1,
+				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"availability_zone": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Indicates which availability zone will be used.",
+						},
+						"bandwidth_package_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.",
+						},
+						"cam_role_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "CAM role name authorized to access.",
+						},
+						"count": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     1,
+							Description: "Number of cvm.",
+						},
+						"data_disk": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							MaxItems:    11,
+							Description: "Configurations of data disk.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"auto_format_and_mount": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										ForceNew:    true,
+										Default:     false,
+										Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+									},
+									"disk_partition": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "The name of the device or partition to mount.",
+									},
+									"disk_size": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										ForceNew:    true,
+										Default:     0,
+										Description: "Volume of disk in GB. Default is `0`.",
+									},
+									"disk_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Default:     "CLOUD_PREMIUM",
+										Description: "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.",
+									},
+									"encrypt": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether to encrypt data disk, default `false`.",
+									},
+									"file_system": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "File system, e.g. `ext3/ext4/xfs`.",
+									},
+									"kms_key_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.",
+									},
+									"mount_target": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "Mount target.",
+									},
+									"snapshot_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "Data disk snapshot ID.",
+									},
+								},
+							},
+						},
+						"desired_pod_num": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     0,
+							Description: "Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.",
+						},
+						"disaster_recover_group_ids": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							MaxItems:    1,
+							Description: "Disaster recover groups to which a CVM instance belongs. Only support maximum 1.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"enhanced_monitor_service": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     true,
+							Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
+						},
+						"enhanced_security_service": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     true,
+							Description: "To specify whether to enable cloud security service. Default is TRUE.",
+						},
+						"hostname": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "The host name of the attached instance. Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).",
+						},
+						"hpc_cluster_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Id of cvm hpc cluster.",
+						},
+						"img_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The valid image id, format of img-xxx.",
+						},
+						"instance_charge_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "POSTPAID_BY_HOUR",
+							Description: "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.",
+						},
+						"instance_charge_type_prepaid_period": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     1,
+							Description: "The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+						},
+						"instance_charge_type_prepaid_renew_flag": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+						},
+						"instance_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "sub machine of tke",
+							Description: "Name of the CVMs.",
+						},
+						"instance_type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Specified types of CVM instance.",
+						},
+						"internet_charge_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "TRAFFIC_POSTPAID_BY_HOUR",
+							Description: "Charge types for network traffic. Available values include `TRAFFIC_POSTPAID_BY_HOUR`.",
+						},
+						"internet_max_bandwidth_out": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+							Description: "Max bandwidth of Internet access in Mbps. Default is 0.",
+						},
+						"key_ids": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							MaxItems:    1,
+							Description: "ID list of keys, should be set if `password` not set.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"password": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Sensitive:   true,
+							Description: "Password to access, should be set if `key_ids` not set.",
+						},
+						"public_ip_assigned": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Specify whether to assign an Internet IP address.",
+						},
+						"security_group_ids": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Security groups to which a CVM instance belongs.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"subnet_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Private network ID.",
+						},
+						"system_disk_size": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     50,
+							Description: "Volume of system disk in GB. Default is `50`.",
+						},
+						"system_disk_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "CLOUD_PREMIUM",
+							Description: "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
+						},
+						"user_data": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "ase64-encoded User Data text, the length limit is 16KB.",
+						},
+					},
+				},
+			},
+
+			"worker_instances_list": {
+				Type:        schema.TypeList,
+				Computed:    true,
 				Description: "An information list of kubernetes cluster 'WORKER'. Each element contains the following attributes:",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"failed_reason": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Information of the cvm when it is failed.",
+						},
+						"instance_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the cvm.",
+						},
+						"instance_role": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Role of the cvm.",
+						},
+						"instance_state": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "State of the cvm.",
+						},
+						"lan_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "LAN IP of the cvm.",
+						},
+					},
+				},
 			},
 		},
 	}
 }
 
-func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesScaleWorkerCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_scale_worker.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	var cvms RunInstancesForNode
-	var iAdvanced tke.InstanceAdvancedSettings
-	cvms.Work = []string{}
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		clusterId     string
+		instanceIdSet []string
+	)
+	var (
+		request  = tke.NewDescribeClustersRequest()
+		response = tke.NewDescribeClustersResponse()
+	)
 
-	clusterId := d.Get("cluster_id").(string)
-	if clusterId == "" {
-		return fmt.Errorf("`cluster_id` is empty.")
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
 	}
 
-	info, has, err := service.DescribeCluster(ctx, clusterId)
-	if err != nil {
-		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			info, has, err = service.DescribeCluster(ctx, clusterId)
-			if err != nil {
-				return tccommon.RetryError(err)
-			}
-			return nil
-		})
-	}
+	request.ClusterIds = []*string{&clusterId}
 
-	if err != nil {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClustersWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		if err := resourceTencentCloudKubernetesScaleWorkerCreatePostRequest0(ctx, request, result); err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		response = result
 		return nil
-	}
-
-	if !has {
-		return fmt.Errorf("cluster [%s] is not exist.", clusterId)
-	}
-
-	dMap := make(map[string]interface{}, 5)
-	//mount_target, docker_graph_path, data_disk, extra_args, desired_pod_num
-	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num", "gpu_args"}
-	for _, k := range iAdvancedParas {
-		if v, ok := d.GetOk(k); ok {
-			dMap[k] = v
-		}
-	}
-	iAdvanced = tkeGetInstanceAdvancedPara(dMap, meta)
-
-	iAdvanced.Labels = GetTkeLabels(d, "labels")
-	if temp, ok := d.GetOk("unschedulable"); ok {
-		iAdvanced.Unschedulable = helper.Int64(int64(temp.(int)))
-	}
-
-	if v, ok := d.GetOk("pre_start_user_script"); ok {
-		iAdvanced.PreStartUserScript = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("user_script"); ok {
-		iAdvanced.UserScript = helper.String(v.(string))
-	}
-
-	if workers, ok := d.GetOk("worker_config"); ok {
-		workerList := workers.([]interface{})
-		for index := range workerList {
-			worker := workerList[index].(map[string]interface{})
-			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, info.VpcId, info.ProjectId)
-			if err != nil {
-				return err
-			}
-			cvms.Work = append(cvms.Work, paraJson)
-		}
-	}
-	if len(cvms.Work) != 1 {
-		return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
-			"so len(cvms.Work) should be 1")
-	}
-
-	instanceIds, err := service.CreateClusterInstances(ctx, clusterId, cvms.Work[0], iAdvanced)
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s create kubernetes scale worker failed, reason:%+v", logId, err)
 		return err
 	}
 
-	workerInstancesList := make([]map[string]interface{}, 0, len(instanceIds))
-	for _, v := range instanceIds {
-		if v == "" {
-			return fmt.Errorf("CreateClusterInstances return one instanceId is empty")
+	_ = response
+
+	var (
+		request1  = tke.NewCreateClusterInstancesRequest()
+		response1 = tke.NewCreateClusterInstancesResponse()
+	)
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
+	}
+
+	request1.ClusterId = &clusterId
+
+	if err = resourceTencentCloudKubernetesScaleWorkerCreatePostFillRequest1(ctx, request1); err != nil {
+		return err
+	}
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().CreateClusterInstancesWithContext(ctx, request1)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request1.GetAction(), request1.ToJsonString(), result.ToJsonString())
 		}
-		infoMap := make(map[string]interface{})
-		infoMap["instance_id"] = v
-		infoMap["instance_role"] = TKE_ROLE_WORKER
-		workerInstancesList = append(workerInstancesList, infoMap)
-	}
 
-	if err = d.Set("worker_instances_list", workerInstancesList); err != nil {
+		if instanceIdSet, err = resourceTencentCloudKubernetesScaleWorkerCreatePostRequest1(ctx, request1, result); err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		response1 = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create kubernetes scale worker failed, reason:%+v", logId, err)
 		return err
 	}
 
-	//修改id设置,不符合id规则
-	id := clusterId + tccommon.FILED_SP + strings.Join(instanceIds, tccommon.FILED_SP)
+	_ = response1
+
+	id := clusterId + tccommon.FILED_SP + strings.Join(instanceIdSet, tccommon.FILED_SP)
 	d.SetId(id)
 
-	//wait for LANIP
-	time.Sleep(tccommon.ReadRetryTimeout)
-	return resourceTencentCloudTkeScaleWorkerRead(d, meta)
+	return resourceTencentCloudKubernetesScaleWorkerRead(d, meta)
 }
 
-func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interface{}) error {
-
+func resourceTencentCloudKubernetesScaleWorkerRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_scale_worker.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, tccommon.GetLogId(tccommon.ContextNil))
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	cvmService := svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	var (
-		items                  = strings.Split(d.Id(), tccommon.FILED_SP)
-		oldWorkerInstancesList = d.Get("worker_instances_list").([]interface{})
-		instanceMap            = make(map[string]bool)
-		clusterId              = ""
-	)
-
-	if importFlag {
-		clusterId = items[0]
-		if len(items[1:]) >= 2 {
-			return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
-				"so should be 1")
-		}
-		infoMap := map[string]interface{}{
-			"instance_id": items[1],
-		}
-		oldWorkerInstancesList = append(oldWorkerInstancesList, infoMap)
-	} else {
-		clusterId = d.Get("cluster_id").(string)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
-	if clusterId == "" {
-		return fmt.Errorf("tke.`cluster_id` is empty.")
-	}
-
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		_, has, err := service.DescribeCluster(ctx, clusterId)
-		if err != nil {
-			return tccommon.RetryError(err)
-		}
-
-		if !has {
-			d.SetId("")
-			return nil
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	for _, v := range oldWorkerInstancesList {
-		infoMap, ok := v.(map[string]interface{})
-		if !ok || infoMap["instance_id"] == nil {
-			return fmt.Errorf("worker_instances_list is broken.")
-		}
-		instanceId, ok := infoMap["instance_id"].(string)
-		if !ok || instanceId == "" {
-			return fmt.Errorf("worker_instances_list.instance_id is broken.")
-		}
-		if instanceMap[instanceId] {
-			continue
-		}
-		instanceMap[instanceId] = true
-	}
-
-	_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
-	if err != nil {
-		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
-				if e.GetCode() == "InternalError.ClusterNotFound" {
-					return nil
-				}
-			}
-			if err != nil {
-				return resource.RetryableError(err)
-			}
-			return nil
-		})
-	}
-	if err != nil {
-		return err
-	}
-
-	newWorkerInstancesList := make([]map[string]interface{}, 0, len(workers))
-	labelsMap := make(map[string]string)
-	instanceIds := make([]*string, 0)
-	for sub, cvm := range workers {
-		if _, ok := instanceMap[cvm.InstanceId]; !ok {
-			continue
-		}
-		instanceIds = append(instanceIds, &workers[sub].InstanceId)
-		tempMap := make(map[string]interface{})
-		tempMap["instance_id"] = cvm.InstanceId
-		tempMap["instance_role"] = cvm.InstanceRole
-		tempMap["instance_state"] = cvm.InstanceState
-		tempMap["failed_reason"] = cvm.FailedReason
-		tempMap["lan_ip"] = cvm.LanIp
-
-		newWorkerInstancesList = append(newWorkerInstancesList, tempMap)
-		if cvm.InstanceAdvancedSettings != nil {
-			if cvm.InstanceAdvancedSettings.Labels != nil {
-				for _, v := range cvm.InstanceAdvancedSettings.Labels {
-					labelsMap[helper.PString(v.Name)] = helper.PString(v.Value)
-				}
-			}
-
-			_ = d.Set("unschedulable", helper.PInt64(cvm.InstanceAdvancedSettings.Unschedulable))
-			_ = d.Set("pre_start_user_script", helper.PString(cvm.InstanceAdvancedSettings.PreStartUserScript))
-			_ = d.Set("user_script", helper.PString(cvm.InstanceAdvancedSettings.UserScript))
-
-			if importFlag {
-				_ = d.Set("docker_graph_path", helper.PString(cvm.InstanceAdvancedSettings.DockerGraphPath))
-				_ = d.Set("desired_pod_num", helper.PInt64(cvm.InstanceAdvancedSettings.DesiredPodNumber))
-				_ = d.Set("mount_target", helper.PString(cvm.InstanceAdvancedSettings.MountTarget))
-			}
-
-			if cvm.InstanceAdvancedSettings.DataDisks != nil && len(cvm.InstanceAdvancedSettings.DataDisks) > 0 {
-				dataDisks := make([]interface{}, 0, len(cvm.InstanceAdvancedSettings.DataDisks))
-				for i := range cvm.InstanceAdvancedSettings.DataDisks {
-					item := cvm.InstanceAdvancedSettings.DataDisks[i]
-					disk := make(map[string]interface{})
-					disk["disk_type"] = helper.PString(item.DiskType)
-					disk["disk_size"] = helper.PInt64(item.DiskSize)
-					disk["file_system"] = helper.PString(item.FileSystem)
-					disk["auto_format_and_mount"] = helper.PBool(item.AutoFormatAndMount)
-					disk["mount_target"] = helper.PString(item.MountTarget)
-					disk["disk_partition"] = helper.PString(item.MountTarget)
-					dataDisks = append(dataDisks, disk)
-				}
-				if importFlag {
-					_ = d.Set("data_disk", dataDisks)
-				}
-			}
-
-			if cvm.InstanceAdvancedSettings.GPUArgs != nil {
-				setting := cvm.InstanceAdvancedSettings.GPUArgs
-
-				var driverEmptyFlag, cudaEmptyFlag, cudnnEmptyFlag, customDriverEmptyFlag bool
-				gpuArgs := map[string]interface{}{
-					"mig_enable": helper.PBool(setting.MIGEnable),
-				}
-
-				if !isDriverEmpty(setting.Driver) {
-					driverEmptyFlag = true
-					driver := map[string]interface{}{
-						"version": helper.PString(setting.Driver.Version),
-						"name":    helper.PString(setting.Driver.Name),
-					}
-					gpuArgs["driver"] = driver
-				}
-
-				if !isCUDAEmpty(setting.CUDA) {
-					cudaEmptyFlag = true
-					cuda := map[string]interface{}{
-						"version": helper.PString(setting.CUDA.Version),
-						"name":    helper.PString(setting.CUDA.Name),
-					}
-					gpuArgs["cuda"] = cuda
-				}
-
-				if !isCUDNNEmpty(setting.CUDNN) {
-					cudnnEmptyFlag = true
-					cudnn := map[string]interface{}{
-						"version":  helper.PString(setting.CUDNN.Version),
-						"name":     helper.PString(setting.CUDNN.Name),
-						"doc_name": helper.PString(setting.CUDNN.DocName),
-						"dev_name": helper.PString(setting.CUDNN.DevName),
-					}
-					gpuArgs["cudnn"] = cudnn
-				}
-
-				if !isCustomDriverEmpty(setting.CustomDriver) {
-					customDriverEmptyFlag = true
-					customDriver := map[string]interface{}{
-						"address": helper.PString(setting.CustomDriver.Address),
-					}
-					gpuArgs["custom_driver"] = customDriver
-				}
-
-				if importFlag {
-					if driverEmptyFlag || cudaEmptyFlag || cudnnEmptyFlag || customDriverEmptyFlag {
-						_ = d.Set("gpu_args", []interface{}{gpuArgs})
-					}
-
-				}
-			}
-		}
-	}
-
-	//worker_config
-	var instances []*cvm.Instance
-	var errRet error
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		instances, errRet = cvmService.DescribeInstanceByFilter(ctx, instanceIds, nil)
-		if errRet != nil {
-			return tccommon.RetryError(errRet, tccommon.InternalError)
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	instanceList := make([]interface{}, 0, len(instances))
-	for _, instance := range instances {
-		mapping := map[string]interface{}{
-			"count":                               1,
-			"instance_charge_type_prepaid_period": 1,
-			"instance_type":                       helper.PString(instance.InstanceType),
-			"subnet_id":                           helper.PString(instance.VirtualPrivateCloud.SubnetId),
-			"availability_zone":                   helper.PString(instance.Placement.Zone),
-			"instance_name":                       helper.PString(instance.InstanceName),
-			"instance_charge_type":                helper.PString(instance.InstanceChargeType),
-			"system_disk_type":                    helper.PString(instance.SystemDisk.DiskType),
-			"system_disk_size":                    helper.PInt64(instance.SystemDisk.DiskSize),
-			"internet_charge_type":                helper.PString(instance.InternetAccessible.InternetChargeType),
-			"bandwidth_package_id":                helper.PString(instance.InternetAccessible.BandwidthPackageId),
-			"internet_max_bandwidth_out":          helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut),
-			"security_group_ids":                  helper.StringsInterfaces(instance.SecurityGroupIds),
-			"img_id":                              helper.PString(instance.ImageId),
-		}
-
-		if instance.RenewFlag != nil && helper.PString(instance.InstanceChargeType) == "PREPAID" {
-			mapping["instance_charge_type_prepaid_renew_flag"] = helper.PString(instance.RenewFlag)
-		} else {
-			mapping["instance_charge_type_prepaid_renew_flag"] = ""
-		}
-		if helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut) > 0 {
-			mapping["public_ip_assigned"] = true
-		}
-
-		if instance.CamRoleName != nil {
-			mapping["cam_role_name"] = instance.CamRoleName
-		}
-		if instance.LoginSettings != nil {
-			if instance.LoginSettings.KeyIds != nil && len(instance.LoginSettings.KeyIds) > 0 {
-				mapping["key_ids"] = helper.StringsInterfaces(instance.LoginSettings.KeyIds)
-			}
-			if instance.LoginSettings.Password != nil {
-				mapping["password"] = helper.PString(instance.LoginSettings.Password)
-			}
-		}
-		if instance.DisasterRecoverGroupId != nil && helper.PString(instance.DisasterRecoverGroupId) != "" {
-			mapping["disaster_recover_group_ids"] = []string{helper.PString(instance.DisasterRecoverGroupId)}
-		}
-		if instance.HpcClusterId != nil {
-			mapping["hpc_cluster_id"] = helper.PString(instance.HpcClusterId)
-		}
-
-		dataDisks := make([]interface{}, 0, len(instance.DataDisks))
-		for _, v := range instance.DataDisks {
-			dataDisk := map[string]interface{}{
-				"disk_type":   helper.PString(v.DiskType),
-				"disk_size":   helper.PInt64(v.DiskSize),
-				"snapshot_id": helper.PString(v.DiskId),
-				"encrypt":     helper.PBool(v.Encrypt),
-				"kms_key_id":  helper.PString(v.KmsKeyId),
-			}
-			dataDisks = append(dataDisks, dataDisk)
-		}
-
-		mapping["data_disk"] = dataDisks
-		instanceList = append(instanceList, mapping)
-	}
-	if importFlag {
-		_ = d.Set("worker_config", instanceList)
-	}
-
-	// The machines I generated was deleted by others.
-	if len(newWorkerInstancesList) == 0 {
-		d.SetId("")
-		return nil
-	}
+	clusterId := idSplit[0]
+	instanceIdSet := idSplit[1]
 
 	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("labels", labelsMap)
-	_ = d.Set("worker_instances_list", newWorkerInstancesList)
 
-	return nil
-}
-func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta interface{}) error {
-
-	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_scale_worker.delete")()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	clusterId := d.Get("cluster_id").(string)
-
-	if clusterId == "" {
-		return fmt.Errorf("`cluster_id` is empty.")
-	}
-
-	_, has, err := service.DescribeCluster(ctx, clusterId)
-	if err != nil {
-		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			_, has, err = service.DescribeCluster(ctx, clusterId)
-			if err != nil {
-				return tccommon.RetryError(err)
-			}
-			return nil
-		})
-	}
-
-	if err != nil {
-		return nil
-	}
-	// The cluster has been deleted
-	if !has {
-		return nil
-	}
-	workerInstancesList := d.Get("worker_instances_list").([]interface{})
-
-	instanceMap := make(map[string]bool)
-
-	for _, v := range workerInstancesList {
-
-		infoMap, ok := v.(map[string]interface{})
-
-		if !ok || infoMap["instance_id"] == nil {
-			return fmt.Errorf("worker_instances_list is broken.")
-		}
-		instanceId, ok := infoMap["instance_id"].(string)
-		if !ok || instanceId == "" {
-			return fmt.Errorf("worker_instances_list.instance_id is broken.")
-		}
-
-		if instanceMap[instanceId] {
-			log.Printf("[WARN]The same instance id exists in the list")
-		}
-
-		instanceMap[instanceId] = true
-
-	}
-
-	_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
-	if err != nil {
-		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
-
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
-				if e.GetCode() == "InternalError.ClusterNotFound" {
-					return nil
-				}
-			}
-
-			if err != nil {
-				return resource.RetryableError(err)
-			}
-			return nil
-		})
-	}
-
+	respData, err := service.DescribeKubernetesScaleWorkerById(ctx, clusterId)
 	if err != nil {
 		return err
 	}
 
-	needDeletes := []string{}
-	for _, cvm := range workers {
-		if _, ok := instanceMap[cvm.InstanceId]; ok {
-			needDeletes = append(needDeletes, cvm.InstanceId)
-		}
+	if respData == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
-	// The machines I generated was deleted by others.
-	if len(needDeletes) == 0 {
+	respData1, err := service.DescribeKubernetesScaleWorkerById1(ctx, clusterId)
+	if err != nil {
+		return err
+	}
+
+	if respData1 == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
+	respData2, err := service.DescribeKubernetesScaleWorkerById2(ctx)
 	if err != nil {
-		err = resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
-
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
-				if e.GetCode() == "InternalError.ClusterNotFound" {
-					return nil
-				}
-
-				if e.GetCode() == "InternalError.Param" &&
-					strings.Contains(e.GetMessage(), `PARAM_ERROR[some instances []is not in right state`) {
-					return nil
-				}
-			}
-
-			if err != nil {
-				return tccommon.RetryError(err, tccommon.InternalError)
-			}
-			return nil
-		})
+		return err
 	}
-	return err
+
+	if respData2 == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+	_ = instanceIdSet
+	return nil
+}
+
+func resourceTencentCloudKubernetesScaleWorkerDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_scale_worker.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	clusterId := idSplit[0]
+	instanceIdSet := idSplit[1]
+
+	var (
+		request  = tke.NewDescribeClustersRequest()
+		response = tke.NewDescribeClustersResponse()
+	)
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClustersWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if err := resourceTencentCloudKubernetesScaleWorkerDeletePostRequest0(ctx, request, result); err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create kubernetes scale worker failed, reason:%+v", logId, err)
+		return err
+	}
+
+	_ = response
+
+	var (
+		request1  = tke.NewDescribeClusterInstancesRequest()
+		response1 = tke.NewDescribeClusterInstancesResponse()
+		workers   []InstanceInfo
+	)
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
+	}
+
+	request1.ClusterId = &clusterId
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClusterInstancesWithContext(ctx, request1)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request1.GetAction(), request1.ToJsonString(), result.ToJsonString())
+		}
+
+		if workers, err = resourceTencentCloudKubernetesScaleWorkerDeletePostRequest1(ctx, request1, result); err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		response1 = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create kubernetes scale worker failed, reason:%+v", logId, err)
+		return err
+	}
+
+	_ = response1
+
+	var (
+		request2  = tke.NewDeleteClusterInstancesRequest()
+		response2 = tke.NewDeleteClusterInstancesResponse()
+	)
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
+	}
+
+	request2.ClusterId = &clusterId
+
+	if err = resourceTencentCloudKubernetesScaleWorkerDeletePostFillRequest2(ctx, request2, workers); err != nil {
+		return err
+	}
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DeleteClusterInstancesWithContext(ctx, request2)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request2.GetAction(), request2.ToJsonString(), result.ToJsonString())
+		}
+		response2 = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create kubernetes scale worker failed, reason:%+v", logId, err)
+		return err
+	}
+
+	_ = response2
+	_ = instanceIdSet
+	return nil
 }

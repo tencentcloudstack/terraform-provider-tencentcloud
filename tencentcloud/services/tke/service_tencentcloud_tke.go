@@ -1319,7 +1319,7 @@ func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clust
 	return
 }
 
-func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx context.Context, param map[string]interface{}) (availableClusterVersions *tke.DescribeAvailableClusterVersionResponseParams, errRet error) {
+func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx context.Context, param map[string]interface{}) (ret *tke.DescribeAvailableClusterVersionResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = tke.NewDescribeAvailableClusterVersionRequest()
@@ -1332,10 +1332,10 @@ func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx con
 	}()
 
 	for k, v := range param {
-		if k == "cluster_id" {
+		if k == "ClusterId" {
 			request.ClusterId = v.(*string)
 		}
-		if k == "cluster_ids" {
+		if k == "ClusterIds" {
 			request.ClusterIds = v.([]*string)
 		}
 	}
@@ -1349,9 +1349,15 @@ func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx con
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response != nil {
-		availableClusterVersions = response.Response
+	if err := dataSourceTencentCloudKubernetesAvailableClusterVersionsReadPostRequest0(ctx, request, response); err != nil {
+		return nil, err
 	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }
 
@@ -3376,5 +3382,99 @@ func (me *TkeService) DeleteKubernetesAuthAttachmentById(ctx context.Context, cl
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *TkeService) DescribeKubernetesScaleWorkerById(ctx context.Context, clusterId string) (ret *tke.DescribeClustersResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClustersRequest()
+	request.ClusterIds = []*string{&clusterId}
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err = resourceTencentCloudKubernetesScaleWorkerReadPostRequest0(ctx, request, response); err != nil {
+		return nil, err
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context, clusterId string) (ret *tke.DescribeClusterInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterInstancesRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err = resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx, request, response); err != nil {
+		return nil, err
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesScaleWorkerById2(ctx context.Context) (ret *cvm.DescribeInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeInstancesRequest()
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest2(ctx, request); err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx, request, response); err != nil {
+		return nil, err
+	}
+
+	ret = response.Response
 	return
 }

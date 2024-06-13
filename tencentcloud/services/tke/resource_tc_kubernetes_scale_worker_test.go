@@ -231,52 +231,12 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTkeScaleWorkerInstanceBasic = tcacctest.TkeDataSource + `
-variable "default_az" {
-  default = "ap-guangzhou-3"
-}
-
-data "tencentcloud_vpc_instances" "vpc" {
-  name = "keep-tke-vpc"
-}
-
-data "tencentcloud_vpc_subnets" "subnet" {
-  vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
-}
-
-data "tencentcloud_instance_types" "default" {
-  filter {
-    name   = "zone"
-    values = [var.default_az]
-  }
-  filter {
-    name   = "instance-charge-type"
-    values = ["POSTPAID_BY_HOUR"]
-  }
-  cpu_core_count   = 2
-  exclude_sold_out = true
-}
-
-data "tencentcloud_security_groups" "internal" {
-  name = "keep-tke"
-}
-
-locals {
-  vpc_id              = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
-  subnet_id           = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
-  scale_instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  sg_id               = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-}
-`
-
-const testAccTkeScaleWorkerInstance string = testAccTkeScaleWorkerInstanceBasic + `
-
-resource tencentcloud_kubernetes_scale_worker test_scale {
-  cluster_id = local.cluster_id
-  
+const testAccTkeScaleWorkerInstance = `
+resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
+  cluster_id = "cls-r8gqwjw6"
   extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]	
+    "root-dir=/var/lib/kubelet"
+  ]
 
   labels = {
     "test1" = "test1",
@@ -287,13 +247,13 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 
   worker_config {
     count                      				= 1
-    availability_zone          				= var.default_az
-    instance_type              				= local.scale_instance_type
-    subnet_id                  				= local.subnet_id
+    availability_zone          				= "ap-guangzhou-3"
+    instance_type              				= "S2.LARGE16"
+    subnet_id                  				= "subnet-gaazc9di"
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
     internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
-    security_group_ids                      = [local.sg_id]
+    security_group_ids                      = ["sg-cm7fbbf3"]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -308,14 +268,13 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 }
 `
 
-const testAccTkeScaleWorkerInstanceGpuInsTypeUpdate string = testAccTkeScaleWorkerInstanceBasic + `
+const testAccTkeScaleWorkerInstanceGpuInsTypeUpdate = `
+resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
+  cluster_id = "cls-r8gqwjw6"
 
-resource tencentcloud_kubernetes_scale_worker test_scale {
-  cluster_id = local.cluster_id
-  
   extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]	
+    "root-dir=/var/lib/kubelet"
+  ]
 
   labels = {
     "test1" = "test1",
@@ -325,39 +284,39 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
   user_script   = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
 
   worker_config {
-    count                      				= 1
-    availability_zone          				= var.default_az
-    instance_type              				= "GN6S.LARGE20"
-    subnet_id                  				= local.subnet_id
-    system_disk_type           				= "CLOUD_SSD"
-    system_disk_size           				= 50
-    internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
-    security_group_ids                      = [local.sg_id]
-	img_id 								    = "img-eb30mz89"
+    count                = 1
+    availability_zone    = "ap-guangzhou-3"
+    instance_type        = "GN6S.LARGE20"
+    subnet_id            = "subnet-gaazc9di"
+    system_disk_type     = "CLOUD_SSD"
+    system_disk_size     = 50
+    internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+    security_group_ids   = ["sg-cm7fbbf3"]
+    img_id               = "img-oyd1zdra"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
     }
 
-    enhanced_security_service 				= false
-    enhanced_monitor_service  				= false
-    user_data                 				= "dGVzdA=="
-    password                  				= "AABBccdd1122"
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "AABBccdd1122"
   }
 
   gpu_args {
     mig_enable = false
-    driver = {
-      name = "NVIDIA-Linux-x86_64-470.182.03.run"
+    driver     = {
+      name    = "NVIDIA-Linux-x86_64-470.182.03.run"
       version = "470.182.03"
     }
     cuda = {
-      name = "cuda_11.4.3_470.82.01_linux.run"
+      name    = "cuda_11.4.3_470.82.01_linux.run"
       version = "11.4.3"
     }
     cudnn = {
-      name = "cudnn-11.4-linux-x64-v8.2.4.15.tgz"
+      name    = "cudnn-11.4-linux-x64-v8.2.4.15.tgz"
       version = "8.2.4"
     }
   }

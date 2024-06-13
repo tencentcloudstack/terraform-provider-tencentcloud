@@ -508,14 +508,13 @@ variable "default_img_id" {
 }
 
 //DefaultSecurityGroupData
-resource "tencentcloud_security_group" "example" {
-  name        = "tf_tke_sg_test"
-  description = "sg test"
+data "tencentcloud_security_groups" "example" {
+  name = "keep-tke"
 }
 
 locals {
-  sg_id  = tencentcloud_security_group.example.id
-  sg_id2 = tencentcloud_security_group.example.id
+  sg_id  = data.tencentcloud_security_groups.example.security_groups.0.security_group_id
+  sg_id2 = data.tencentcloud_security_groups.example.security_groups.0.security_group_id
 }
 `
 
