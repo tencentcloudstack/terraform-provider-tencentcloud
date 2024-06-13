@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_teo_origin_group: Incompatible changes
+```
+
+```release-note:new-resource
+tencentcloud_teo_l4_proxy
+```

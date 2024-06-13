@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_postgresql_instance: support change pg password regardless user
+```

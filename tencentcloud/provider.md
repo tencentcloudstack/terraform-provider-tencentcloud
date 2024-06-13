@@ -669,6 +669,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
     tencentcloud_kubernetes_cluster_endpoint
+    tencentcloud_kubernetes_addon
 
 TDMQ for Pulsar(tpulsar)
   Data Source
@@ -683,6 +684,7 @@ TDMQ for Pulsar(tpulsar)
     tencentcloud_tdmq_professional_cluster
     tencentcloud_tdmq_namespace
     tencentcloud_tdmq_topic
+    tencentcloud_tdmq_topic_with_full_id
     tencentcloud_tdmq_role
     tencentcloud_tdmq_namespace_role_attachment
     tencentcloud_tdmq_subscription
@@ -770,6 +772,7 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_ro_start_replication
     tencentcloud_mysql_ro_stop_replication
     tencentcloud_mysql_isolate_instance
+    tencentcloud_mysql_dr_instance
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1401,6 +1404,7 @@ TencentCloud EdgeOne(TEO)
     tencentcloud_teo_ownership_verify
     tencentcloud_teo_certificate_config
     tencentcloud_teo_acceleration_domain
+    tencentcloud_teo_l4_proxy
 
 TencentCloud ServiceMesh(TCM)
   Data Source
@@ -1645,6 +1649,9 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_member_email
     tencentcloud_organization_org_member_auth_identity_attachment
     tencentcloud_organization_org_member_policy_attachment
+    tencentcloud_organization_org_manage_policy
+    tencentcloud_organization_org_manage_policy_config
+    tencentcloud_organization_org_manage_policy_target
     tencentcloud_organization_policy_sub_account_attachment
     tencentcloud_organization_quit_organization_operation
     tencentcloud_organization_org_share_unit

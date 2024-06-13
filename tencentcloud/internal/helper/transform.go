@@ -153,6 +153,28 @@ func InterfacesIntInt64Point(configured []interface{}) []*int64 {
 	return vs
 }
 
+func Int64Slice2Int64PointerSlice(in []int64) []*int64 {
+	if in == nil {
+		return nil
+	}
+	ret := make([]*int64, len(in))
+	for i, v := range in {
+		ret[i] = Int64(v)
+	}
+	return ret
+}
+
+func UInt64Slice2UInt64PointerSlice(in []uint64) []*uint64 {
+	if in == nil {
+		return nil
+	}
+	ret := make([]*uint64, len(in))
+	for i, v := range in {
+		ret[i] = Uint64(v)
+	}
+	return ret
+}
+
 func InterfacesUint64Point(configured []interface{}) []*uint64 {
 	vs := make([]*uint64, 0, len(configured))
 	for _, v := range configured {
@@ -167,6 +189,28 @@ func InterfacesIntUInt64Point(configured []interface{}) []*uint64 {
 		vs = append(vs, Uint64(uint64(v.(int))))
 	}
 	return vs
+}
+
+func Float64Slice2Float64PointerSlice(in []float64) []*float64 {
+	if in == nil {
+		return nil
+	}
+	ret := make([]*float64, len(in))
+	for i, v := range in {
+		ret[i] = Float64(v)
+	}
+	return ret
+}
+
+func BoolSlice2BoolPointerSlice(in []bool) []*bool {
+	if in == nil {
+		return nil
+	}
+	ret := make([]*bool, len(in))
+	for i, v := range in {
+		ret[i] = Bool(v)
+	}
+	return ret
 }
 
 // StringsInterfaces Flatten to an array of raw strings and returns a []interface{}

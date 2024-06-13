@@ -2,6 +2,7 @@ package cls
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -17,8 +18,8 @@ func ResourceTencentCloudClsIndex() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClsIndexCreate,
 		Read:   resourceTencentCloudClsIndexRead,
-		Delete: resourceTencentCloudClsIndexDelete,
 		Update: resourceTencentCloudClsIndexUpdate,
+		Delete: resourceTencentCloudClsIndexDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -181,6 +182,21 @@ func ResourceTencentCloudClsIndex() *schema.Resource {
 								},
 							},
 						},
+						"dynamic_index": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "The key value index is automatically configured. If it is empty, it means that the function is not enabled.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"status": {
+										Type:        schema.TypeBool,
+										Required:    true,
+										Description: "index automatic configuration switch.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -208,16 +224,15 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_index.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = cls.NewCreateIndexRequest()
 		indexId string
 	)
 
 	if v, ok := d.GetOk("topic_id"); ok {
-		indexId = v.(string)
 		request.TopicId = helper.String(v.(string))
+		indexId = v.(string)
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
@@ -227,12 +242,15 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 			if v, ok := fullTextMap["case_sensitive"]; ok {
 				fullTextInfo.CaseSensitive = helper.Bool(v.(bool))
 			}
+
 			if v, ok := fullTextMap["tokenizer"]; ok {
 				fullTextInfo.Tokenizer = helper.String(v.(string))
 			}
+
 			if v, ok := fullTextMap["contain_z_h"]; ok {
 				fullTextInfo.ContainZH = helper.Bool(v.(bool))
 			}
+
 			ruleInfo.FullText = &fullTextInfo
 		}
 
@@ -241,6 +259,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 			if v, ok := ruleKeyValueMap["case_sensitive"]; ok {
 				ruleKeyValueInfo.CaseSensitive = helper.Bool(v.(bool))
 			}
+
 			if v, ok := ruleKeyValueMap["key_values"]; ok {
 				for _, keyValue := range v.([]interface{}) {
 					keyValueInfo := cls.KeyValueInfo{}
@@ -248,25 +267,32 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 					if v, ok := keyValueMap["key"]; ok {
 						keyValueInfo.Key = helper.String(v.(string))
 					}
+
 					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
 						valueInfo := cls.ValueInfo{}
 						if v, ok := valueMap["type"]; ok {
 							valueInfo.Type = helper.String(v.(string))
 						}
+
 						if v, ok := valueMap["tokenizer"]; ok {
 							valueInfo.Tokenizer = helper.String(v.(string))
 						}
+
 						if v, ok := valueMap["sql_flag"]; ok {
 							valueInfo.SqlFlag = helper.Bool(v.(bool))
 						}
+
 						if v, ok := valueMap["contain_z_h"]; ok {
 							valueInfo.ContainZH = helper.Bool(v.(bool))
 						}
+
 						keyValueInfo.Value = &valueInfo
 					}
+
 					ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
 				}
 			}
+
 			ruleInfo.KeyValue = &ruleKeyValueInfo
 		}
 
@@ -275,6 +301,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 			if v, ok := tagMap["case_sensitive"]; ok {
 				ruleTagInfo.CaseSensitive = helper.Bool(v.(bool))
 			}
+
 			if v, ok := tagMap["key_values"]; ok {
 				for _, keyValue := range v.([]interface{}) {
 					keyValueInfo := cls.KeyValueInfo{}
@@ -282,27 +309,44 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 					if v, ok := keyValueMap["key"]; ok {
 						keyValueInfo.Key = helper.String(v.(string))
 					}
+
 					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
 						valueInfo := cls.ValueInfo{}
 						if v, ok := valueMap["type"]; ok {
 							valueInfo.Type = helper.String(v.(string))
 						}
+
 						if v, ok := valueMap["tokenizer"]; ok {
 							valueInfo.Tokenizer = helper.String(v.(string))
 						}
+
 						if v, ok := valueMap["sql_flag"]; ok {
 							valueInfo.SqlFlag = helper.Bool(v.(bool))
 						}
+
 						if v, ok := valueMap["contain_z_h"]; ok {
 							valueInfo.ContainZH = helper.Bool(v.(bool))
 						}
+
 						keyValueInfo.Value = &valueInfo
 					}
+
 					ruleTagInfo.KeyValues = append(ruleTagInfo.KeyValues, &keyValueInfo)
 				}
 			}
+
 			ruleInfo.Tag = &ruleTagInfo
 		}
+
+		if dynamicIndexMap, ok := helper.InterfaceToMap(dMap, "dynamic_index"); ok {
+			dynamicIndexInfo := cls.DynamicIndex{}
+			if v, ok := dynamicIndexMap["status"]; ok {
+				dynamicIndexInfo.Status = helper.Bool(v.(bool))
+			}
+
+			ruleInfo.DynamicIndex = &dynamicIndexInfo
+		}
+
 		request.Rule = &ruleInfo
 	}
 
@@ -326,6 +370,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
 
@@ -343,31 +388,30 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_index.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = cls.NewDescribeIndexRequest()
 		result  *cls.DescribeIndexResponse
+		id      = d.Id()
 	)
-	id := d.Id()
 
 	request.TopicId = &id
-
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().DescribeIndex(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		result = response
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read cls index failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
 	res := result.Response
-
 	if res.TopicId != nil {
 		_ = d.Set("topic_id", res.TopicId)
 	}
@@ -380,9 +424,11 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 			if res.Rule.FullText.CaseSensitive != nil {
 				FullTextMap["case_sensitive"] = res.Rule.FullText.CaseSensitive
 			}
+
 			if res.Rule.FullText.Tokenizer != nil {
 				FullTextMap["tokenizer"] = res.Rule.FullText.Tokenizer
 			}
+
 			if res.Rule.FullText.ContainZH != nil {
 				FullTextMap["contain_z_h"] = res.Rule.FullText.ContainZH
 			}
@@ -403,26 +449,34 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 					if keyValueInfo.Key != nil {
 						keyValueInfoMap["key"] = keyValueInfo.Key
 					}
+
 					if keyValueInfo.Value != nil {
 						valueInfoMap := map[string]interface{}{}
 						if keyValueInfo.Value.Type != nil {
 							valueInfoMap["type"] = keyValueInfo.Value.Type
 						}
+
 						if keyValueInfo.Value.Tokenizer != nil {
 							valueInfoMap["tokenizer"] = keyValueInfo.Value.Tokenizer
 						}
+
 						if keyValueInfo.Value.SqlFlag != nil {
 							valueInfoMap["sql_flag"] = keyValueInfo.Value.SqlFlag
 						}
+
 						if keyValueInfo.Value.ContainZH != nil {
 							valueInfoMap["contain_z_h"] = keyValueInfo.Value.ContainZH
 						}
+
 						keyValueInfoMap["value"] = []interface{}{valueInfoMap}
 					}
+
 					keyValuesList = append(keyValuesList, keyValueInfoMap)
 				}
+
 				RuleKeyValueMap["key_values"] = keyValuesList
 			}
+
 			ruleMap["key_value"] = []interface{}{RuleKeyValueMap}
 		}
 
@@ -436,6 +490,7 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 					keyValueInfoMap := map[string]interface{}{
 						"key": keyValueInfo.Key,
 					}
+
 					if keyValueInfo.Value != nil {
 						valueInfoMap := map[string]interface{}{
 							"type":        keyValueInfo.Value.Type,
@@ -443,13 +498,26 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 							"sql_flag":    keyValueInfo.Value.SqlFlag,
 							"contain_z_h": keyValueInfo.Value.ContainZH,
 						}
+
 						keyValueInfoMap["value"] = []interface{}{valueInfoMap}
 					}
+
 					keyValuesList = append(keyValuesList, keyValueInfoMap)
 				}
+
 				ruleTagMap["key_values"] = keyValuesList
 			}
+
 			ruleMap["tag"] = []interface{}{ruleTagMap}
+		}
+
+		if res.Rule.DynamicIndex != nil {
+			dynamicIndexMap := map[string]interface{}{}
+			if res.Rule.DynamicIndex.Status != nil {
+				dynamicIndexMap["status"] = res.Rule.DynamicIndex.Status
+			}
+
+			ruleMap["dynamic_index"] = []interface{}{dynamicIndexMap}
 		}
 
 		_ = d.Set("rule", []interface{}{ruleMap})
@@ -474,121 +542,149 @@ func resourceTencentCloudClsIndexUpdate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_index.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = cls.NewModifyIndexRequest()
+		id      = d.Id()
 	)
-	id := d.Id()
+
+	immutableArgs := []string{"topic_id"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	request.TopicId = &id
-
-	if d.HasChange("rule") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
-			ruleInfo := cls.RuleInfo{}
-			if fullTextMap, ok := helper.InterfaceToMap(dMap, "full_text"); ok {
-				fullTextInfo := cls.FullTextInfo{}
-				if v, ok := fullTextMap["case_sensitive"]; ok {
-					fullTextInfo.CaseSensitive = helper.Bool(v.(bool))
-				}
-				if v, ok := fullTextMap["tokenizer"]; ok {
-					fullTextInfo.Tokenizer = helper.String(v.(string))
-				}
-				if v, ok := fullTextMap["contain_z_h"]; ok {
-					fullTextInfo.ContainZH = helper.Bool(v.(bool))
-				}
-				ruleInfo.FullText = &fullTextInfo
+	if dMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
+		ruleInfo := cls.RuleInfo{}
+		if fullTextMap, ok := helper.InterfaceToMap(dMap, "full_text"); ok {
+			fullTextInfo := cls.FullTextInfo{}
+			if v, ok := fullTextMap["case_sensitive"]; ok {
+				fullTextInfo.CaseSensitive = helper.Bool(v.(bool))
 			}
 
-			if ruleKeyValueMap, ok := helper.InterfaceToMap(dMap, "key_value"); ok {
-				ruleKeyValueInfo := cls.RuleKeyValueInfo{}
-				if v, ok := ruleKeyValueMap["case_sensitive"]; ok {
-					ruleKeyValueInfo.CaseSensitive = helper.Bool(v.(bool))
-				}
-				if v, ok := ruleKeyValueMap["key_values"]; ok {
-					for _, keyValue := range v.([]interface{}) {
-						keyValueInfo := cls.KeyValueInfo{}
-						keyValueMap := keyValue.(map[string]interface{})
-						if v, ok := keyValueMap["key"]; ok {
-							keyValueInfo.Key = helper.String(v.(string))
-						}
-						if v, ok := keyValueMap["value"]; ok {
-							valueMap := v.([]interface{})[0].(map[string]interface{})
-							valueInfo := cls.ValueInfo{}
-							if v, ok := valueMap["type"]; ok {
-								valueInfo.Type = helper.String(v.(string))
-							}
-							if v, ok := valueMap["tokenizer"]; ok {
-								valueInfo.Tokenizer = helper.String(v.(string))
-							}
-							if v, ok := valueMap["sql_flag"]; ok {
-								valueInfo.SqlFlag = helper.Bool(v.(bool))
-							}
-							if v, ok := valueMap["contain_z_h"]; ok {
-								valueInfo.ContainZH = helper.Bool(v.(bool))
-							}
-							keyValueInfo.Value = &valueInfo
-						}
-						ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
+			if v, ok := fullTextMap["tokenizer"]; ok {
+				fullTextInfo.Tokenizer = helper.String(v.(string))
+			}
+
+			if v, ok := fullTextMap["contain_z_h"]; ok {
+				fullTextInfo.ContainZH = helper.Bool(v.(bool))
+			}
+
+			ruleInfo.FullText = &fullTextInfo
+		}
+
+		if ruleKeyValueMap, ok := helper.InterfaceToMap(dMap, "key_value"); ok {
+			ruleKeyValueInfo := cls.RuleKeyValueInfo{}
+			if v, ok := ruleKeyValueMap["case_sensitive"]; ok {
+				ruleKeyValueInfo.CaseSensitive = helper.Bool(v.(bool))
+			}
+
+			if v, ok := ruleKeyValueMap["key_values"]; ok {
+				for _, keyValue := range v.([]interface{}) {
+					keyValueInfo := cls.KeyValueInfo{}
+					keyValueMap := keyValue.(map[string]interface{})
+					if v, ok := keyValueMap["key"]; ok {
+						keyValueInfo.Key = helper.String(v.(string))
 					}
-				}
 
-				ruleInfo.KeyValue = &ruleKeyValueInfo
-			}
+					if v, ok := keyValueMap["value"]; ok {
+						valueMap := v.([]interface{})[0].(map[string]interface{})
+						valueInfo := cls.ValueInfo{}
+						if v, ok := valueMap["type"]; ok {
+							valueInfo.Type = helper.String(v.(string))
+						}
 
-			if tagMap, ok := helper.InterfaceToMap(dMap, "tag"); ok {
-				ruleTagInfo := cls.RuleTagInfo{}
-				if v, ok := tagMap["case_sensitive"]; ok {
-					ruleTagInfo.CaseSensitive = helper.Bool(v.(bool))
-				}
-				if v, ok := tagMap["key_values"]; ok {
-					for _, keyValue := range v.([]interface{}) {
-						keyValueInfo := cls.KeyValueInfo{}
-						keyValueMap := keyValue.(map[string]interface{})
-						if v, ok := keyValueMap["key"]; ok {
-							keyValueInfo.Key = helper.String(v.(string))
+						if v, ok := valueMap["tokenizer"]; ok {
+							valueInfo.Tokenizer = helper.String(v.(string))
 						}
-						if v, ok := keyValueMap["value"]; ok {
-							valueMap := v.([]interface{})[0].(map[string]interface{})
-							valueInfo := cls.ValueInfo{}
-							if v, ok := valueMap["type"]; ok {
-								valueInfo.Type = helper.String(v.(string))
-							}
-							if v, ok := valueMap["tokenizer"]; ok {
-								valueInfo.Tokenizer = helper.String(v.(string))
-							}
-							if v, ok := valueMap["sql_flag"]; ok {
-								valueInfo.SqlFlag = helper.Bool(v.(bool))
-							}
-							if v, ok := valueMap["contain_z_h"]; ok {
-								valueInfo.ContainZH = helper.Bool(v.(bool))
-							}
-							keyValueInfo.Value = &valueInfo
+
+						if v, ok := valueMap["sql_flag"]; ok {
+							valueInfo.SqlFlag = helper.Bool(v.(bool))
 						}
-						ruleTagInfo.KeyValues = append(ruleTagInfo.KeyValues, &keyValueInfo)
+
+						if v, ok := valueMap["contain_z_h"]; ok {
+							valueInfo.ContainZH = helper.Bool(v.(bool))
+						}
+
+						keyValueInfo.Value = &valueInfo
 					}
+
+					ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
 				}
-				ruleInfo.Tag = &ruleTagInfo
 			}
-			request.Rule = &ruleInfo
+
+			ruleInfo.KeyValue = &ruleKeyValueInfo
 		}
+
+		if tagMap, ok := helper.InterfaceToMap(dMap, "tag"); ok {
+			ruleTagInfo := cls.RuleTagInfo{}
+			if v, ok := tagMap["case_sensitive"]; ok {
+				ruleTagInfo.CaseSensitive = helper.Bool(v.(bool))
+			}
+
+			if v, ok := tagMap["key_values"]; ok {
+				for _, keyValue := range v.([]interface{}) {
+					keyValueInfo := cls.KeyValueInfo{}
+					keyValueMap := keyValue.(map[string]interface{})
+					if v, ok := keyValueMap["key"]; ok {
+						keyValueInfo.Key = helper.String(v.(string))
+					}
+
+					if v, ok := keyValueMap["value"]; ok {
+						valueMap := v.([]interface{})[0].(map[string]interface{})
+						valueInfo := cls.ValueInfo{}
+						if v, ok := valueMap["type"]; ok {
+							valueInfo.Type = helper.String(v.(string))
+						}
+
+						if v, ok := valueMap["tokenizer"]; ok {
+							valueInfo.Tokenizer = helper.String(v.(string))
+						}
+
+						if v, ok := valueMap["sql_flag"]; ok {
+							valueInfo.SqlFlag = helper.Bool(v.(bool))
+						}
+
+						if v, ok := valueMap["contain_z_h"]; ok {
+							valueInfo.ContainZH = helper.Bool(v.(bool))
+						}
+
+						keyValueInfo.Value = &valueInfo
+					}
+
+					ruleTagInfo.KeyValues = append(ruleTagInfo.KeyValues, &keyValueInfo)
+				}
+			}
+
+			ruleInfo.Tag = &ruleTagInfo
+		}
+
+		if dynamicIndexMap, ok := helper.InterfaceToMap(dMap, "dynamic_index"); ok {
+			dynamicIndexInfo := cls.DynamicIndex{}
+			if v, ok := dynamicIndexMap["status"]; ok {
+				dynamicIndexInfo.Status = helper.Bool(v.(bool))
+			}
+
+			ruleInfo.DynamicIndex = &dynamicIndexInfo
+		}
+
+		request.Rule = &ruleInfo
 	}
 
-	if d.HasChange("status") {
-		if v, ok := d.GetOk("status"); ok {
-			request.Status = helper.Bool(v.(bool))
-		}
+	if v, ok := d.GetOk("status"); ok {
+		request.Status = helper.Bool(v.(bool))
 	}
-	if d.HasChange("include_internal_fields") {
-		if v, ok := d.GetOk("include_internal_fields"); ok {
-			request.IncludeInternalFields = helper.Bool(v.(bool))
-		}
+
+	if v, ok := d.GetOk("include_internal_fields"); ok {
+		request.IncludeInternalFields = helper.Bool(v.(bool))
 	}
-	if d.HasChange("metadata_flag") {
-		if v, ok := d.GetOk("metadata_flag"); ok {
-			request.MetadataFlag = helper.IntUint64(v.(int))
-		}
+
+	if v, ok := d.GetOk("metadata_flag"); ok {
+		request.MetadataFlag = helper.IntUint64(v.(int))
 	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyIndex(request)
 		if e != nil {
@@ -597,6 +693,7 @@ func resourceTencentCloudClsIndexUpdate(d *schema.ResourceData, meta interface{}
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
 
@@ -611,13 +708,16 @@ func resourceTencentCloudClsIndexDelete(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_cos_shipper.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	id := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		id      = d.Id()
+	)
 
 	if err := service.DeleteClsIndex(ctx, id); err != nil {
 		return err
 	}
+
 	return nil
 }

@@ -212,7 +212,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 
 	// set tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := tccommon.BuildTagResourceName("cynosdb", "cluster", region, id)
+		resourceName := tccommon.BuildTagResourceName("cynosdb", "instance", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -352,7 +352,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 
 	//tag
 	tagService := svctag.NewTagService(client)
-	tags, err := tagService.DescribeResourceTags(ctx, "cynosdb", "cluster", client.Region, id)
+	tags, err := tagService.DescribeResourceTags(ctx, "cynosdb", "instance", client.Region, id)
 	if err != nil {
 		return err
 	}
@@ -652,7 +652,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		resourceName := tccommon.BuildTagResourceName("cynosdb", "cluster", region, clusterId)
+		resourceName := tccommon.BuildTagResourceName("cynosdb", "instance", region, clusterId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

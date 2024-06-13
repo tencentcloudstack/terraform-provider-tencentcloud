@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_organization_org_manage_policy: Supplementary documentation
+```
+
+```release-note:enhancement
+resource/tencentcloud_organization_org_manage_policy_config: Supplementary documentation
+```
+
+```release-note:enhancement
+resource/tencentcloud_organization_org_manage_policy_target: Supplementary documentation
+```

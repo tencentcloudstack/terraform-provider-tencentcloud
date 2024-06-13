@@ -440,7 +440,9 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 	request.DBInstanceId = &instanceId
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	response, err := me.client.UsePostgresqlClient(iacExtInfo).DescribeDBInstanceAttribute(request)
 	if err != nil {
 		errRet = err
 		return
@@ -531,7 +533,7 @@ func (me *PostgresqlService) ModifyPostgresqlInstanceName(ctx context.Context, i
 	return err
 }
 
-func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int) (errRet error) {
+func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int, cpu int) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewModifyDBInstanceSpecRequest()
 	defer func() {
@@ -542,6 +544,9 @@ func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, inst
 	request.DBInstanceId = &instanceId
 	request.Storage = helper.IntUint64(storage)
 	request.Memory = helper.IntUint64(memory)
+	if cpu != 0 {
+		request.Cpu = helper.IntUint64(cpu)
+	}
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ModifyDBInstanceSpec(request)
@@ -618,7 +623,7 @@ func (me *PostgresqlService) DeletePostgresqlInstance(ctx context.Context, insta
 	return err
 }
 
-func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Context, instanceId string, password string) (errRet error) {
+func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Context, instanceId string, user string, password string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewResetAccountPasswordRequest()
 	defer func() {
@@ -627,7 +632,7 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 		}
 	}()
 	request.DBInstanceId = &instanceId
-	request.UserName = helper.String("root")
+	request.UserName = &user
 	request.Password = &password
 
 	ratelimit.Check(request.GetAction())
@@ -1306,6 +1311,10 @@ func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetInfosById(ctx con
 			{
 				Name:   helper.String("db-master-instance-id"),
 				Values: []*string{helper.String(dbInstanceId)},
+			},
+			{
+				Name:   helper.String("read-only-group-id"),
+				Values: []*string{helper.String(roGroupId)},
 			},
 		},
 	}

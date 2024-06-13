@@ -14,8 +14,7 @@ func TestAccTencentCloudDataSourceUserInfoBasic(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
-				Config:    testAccDataUserInfoBasic,
+				Config: testAccDataUserInfoBasic,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_user_info.info", "app_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_user_info.info", "uin"),
@@ -33,8 +32,7 @@ func TestAccTencentCloudDataSourceUserInfoSubAccount(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// Need use subaccount aksk
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_SUB_ACCOUNT) },
-				Config:    testAccDataUserInfoSubAccount,
+				Config: testAccDataUserInfoSubAccount,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_user_info.info_sub_account", "app_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_user_info.info_sub_account", "uin"),

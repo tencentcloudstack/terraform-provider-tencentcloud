@@ -69,7 +69,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 60),
-				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.",
+				Description:  "In the case of purchasing a `INTERNAL` clb instance, the subnet id must be specified. The VIP of the `INTERNAL` clb instance will be generated from this subnet.",
 			},
 			"address_ip_version": {
 				Type:        schema.TypeString,
@@ -215,6 +215,16 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Domain name of the CLB instance.",
+			},
+			"ipv6_mode": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "This field is meaningful when the IP address version is ipv6, `IPv6Nat64` | `IPv6FullChain`.",
+			},
+			"address_ipv6": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The IPv6 address of the load balancing instance.",
 			},
 		},
 	}
@@ -575,6 +585,8 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
 	_ = d.Set("domain", instance.LoadBalancerDomain)
+	_ = d.Set("ipv6_mode", instance.IPv6Mode)
+	_ = d.Set("address_ipv6", instance.AddressIPv6)
 
 	if instance.SlaType != nil {
 		_ = d.Set("sla_type", instance.SlaType)

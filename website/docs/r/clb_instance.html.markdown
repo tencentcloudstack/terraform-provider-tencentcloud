@@ -50,6 +50,22 @@ resource "tencentcloud_clb_instance" "internal_clb" {
 
 ```hcl
 resource "tencentcloud_clb_instance" "open_clb" {
+  network_type    = "OPEN"
+  clb_name        = "myclb"
+  project_id      = 0
+  vpc_id          = "vpc-da7ffa61"
+  security_groups = ["sg-o0ek7r93"]
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
+### SUPPORT CORS
+
+```hcl
+resource "tencentcloud_clb_instance" "open_clb" {
   network_type              = "OPEN"
   clb_name                  = "myclb"
   project_id                = 0
@@ -279,7 +295,7 @@ The following arguments are supported:
 * `slave_zone_id` - (Optional, String) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
 * `snat_ips` - (Optional, List) Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.
 * `snat_pro` - (Optional, Bool) Indicates whether Binding IPs of other VPCs feature switch.
-* `subnet_id` - (Optional, String, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.
+* `subnet_id` - (Optional, String, ForceNew) In the case of purchasing a `INTERNAL` clb instance, the subnet id must be specified. The VIP of the `INTERNAL` clb instance will be generated from this subnet.
 * `tags` - (Optional, Map) The available tags within this CLB.
 * `target_region_info_region` - (Optional, String) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional, String) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
@@ -298,8 +314,10 @@ The `snat_ips` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `address_ipv6` - The IPv6 address of the load balancing instance.
 * `clb_vips` - The virtual service address table of the CLB.
 * `domain` - Domain name of the CLB instance.
+* `ipv6_mode` - This field is meaningful when the IP address version is ipv6, `IPv6Nat64` | `IPv6FullChain`.
 
 
 ## Import

@@ -4,7 +4,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_lighthouse_renew_instance" "renew_instance" {
-  instance_id =
+  instance_id = "lhins-xxxxxxx"
   instance_charge_prepaid {
 		period = 1
 		renew_flag = "NOTIFY_AND_MANUAL_RENEW"

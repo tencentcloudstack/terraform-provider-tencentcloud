@@ -51,5 +51,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the postgresql instance.
+* `net_info_list` - List of db instance net info.
+  * `ip` - Ip address of the net info.
+  * `port` - Port of the net info.
 
 

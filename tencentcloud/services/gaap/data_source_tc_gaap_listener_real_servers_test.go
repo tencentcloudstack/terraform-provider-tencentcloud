@@ -28,6 +28,6 @@ func TestAccTencentCloudGaapListenerRealServersDataSource_basic(t *testing.T) {
 
 const testAccGaapListenerRealServersDataSource = `
 data "tencentcloud_gaap_listener_real_servers" "listener_real_servers" {
-	listener_id = "listener-4yrzte61"
+	listener_id = "listener-2zfpeb8f"
 }
 `

@@ -33,6 +33,23 @@ func init() {
 				return err
 			}
 
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range groups {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CDate) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.PGroupId,
+						Name: *v.Name,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.PGroupId,
+					Name:       *v.Name,
+					CreateTime: *v.CDate,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateCfsPGroup")
+
 			for i := range groups {
 				id := *groups[i].PGroupId
 				name := *groups[i].Name

@@ -86,20 +86,20 @@ const (
 	DefaultDayuBgpIp  = "bgpip-00000294"
 	DefaultDayuNet    = "net-0000007e"
 
-	DefaultGaapProxyId              = "link-ljb08m2l"
-	DefaultGaapProxyId2             = "link-8lpyo88p"
-	DefaultGaapSecurityPolicyId     = "sp-5lqp4l77"
-	DefaultGaapRealserverDomainId1  = "rs-qs0h6wxp"
+	DefaultGaapProxyId              = "link-m9t4yho9"
+	DefaultGaapProxyId2             = "link-2rk61jn5"
+	DefaultGaapSecurityPolicyId     = "sp-6djzh5hz"
+	DefaultGaapRealserverDomainId1  = "rs-620u0ahd"
 	DefaultGaapRealserverDomain1    = "github.com"
-	DefaultGaapRealserverDomainId2  = "rs-qcygnwpd"
+	DefaultGaapRealserverDomainId2  = "rs-9vkyi1av"
 	DefaultGaapRealserverDomain2    = "www.github.com"
-	DefaultGaapRealserverIpId1      = "rs-24e1ol23"
+	DefaultGaapRealserverIpId1      = "rs-4j6rtzqv"
 	DefaultGaapRealserverIp1        = "119.29.29.35"
-	DefaultGaapRealserverIpId2      = "rs-70qzt26p"
+	DefaultGaapRealserverIpId2      = "rs-3mlpbuut"
 	DefaultGaapRealserverIp2        = "1.1.1.5"
-	DefaultHttpsDomainCertificateId = "cert-crg2aynt"
+	DefaultHttpsDomainCertificateId = "cert-6sub5wbf"
 
-	DefaultSecurityGroup = "sg-ijato2x1"
+	DefaultSecurityGroup = "sg-05f7wnhn"
 
 	DefaultProjectId = "0"
 
@@ -137,7 +137,7 @@ variable "sg_id" {
 const (
 	DefaultCvmId  = "ins-8oqqya08"
 	DefaultDiskId = "disk-5jjrs2lm"
-	DefaultSnapId = "snap-8f2updnb"
+	DefaultSnapId = "snap-gem0ivcj"
 )
 
 const DefaultCvmImageVariable = `
@@ -214,7 +214,7 @@ variable "international_subnet_id" {
 // Tke Exclusive Network Environment
 const (
 	TkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
-	DefaultTkeClusterId   = "cls-ely08ic4"
+	DefaultTkeClusterId   = "cls-r8gqwjw6"
 	DefaultTkeClusterName = "keep-tke-cluster"
 	DefaultTkeClusterType = "tke"
 	DefaultPrometheusId   = "prom-1lspn8sw"
@@ -240,7 +240,7 @@ const (
 // monitor
 const (
 	DefaultTmpVpcId    = "vpc-axrsmmrv"
-	DefaultTmpSubnetId = "subnet-b23ua6gk"
+	DefaultTmpSubnetId = "subnet-j5vja918"
 )
 
 /*
@@ -824,11 +824,6 @@ locals {
 // End of TKE Service
 
 // MongoDB
-const (
-	DefaultMongoDBVPCId    = "vpc-axrsmmrv"
-	DefaultMongoDBSubnetId = "subnet-9hcctbue"
-)
-const DefaultMongoDBSecurityGroupId = "sg-if748odn"
 const DefaultMongoDBSpec = `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
   available_zone = "ap-guangzhou-3"
@@ -845,15 +840,6 @@ variable "engine_versions" {
     "4.2": "MONGO_42_WT"
     "4.4": "MONGO_44_WT"
   }
-}
-variable "sg_id" {
-  default = "` + DefaultMongoDBSecurityGroupId + `"
-}
-variable "vpc_id" {
-  default = "` + DefaultMongoDBVPCId + `"
-}
-variable "subnet_id" {
-  default = "` + DefaultMongoDBSubnetId + `"
 }
 
 locals {

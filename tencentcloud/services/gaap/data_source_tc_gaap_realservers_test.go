@@ -23,7 +23,7 @@ func TestAccDataSourceTencentCloudGaapRealservers_basic(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.0.ip", "1.1.1.10"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.0.ip", "1.1.11.19"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.project_id"),
 				),
 			},
@@ -45,7 +45,7 @@ func TestAccDataSourceTencentCloudGaapRealservers_domain(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.0.domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.0.domain", "www.qq343.com"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.project_id"),
 				),
 			},
@@ -76,7 +76,7 @@ func TestAccDataSourceTencentCloudGaapRealservers_name(t *testing.T) {
 
 const TestAccDataSourceTencentCloudGaapRealserversBasic = `
 resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.10"
+  ip   = "1.1.11.19"
   name = "ci-test-gaap-realserver"
 }
 
@@ -87,7 +87,7 @@ data tencentcloud_gaap_realservers "foo" {
 
 const TestAccDataSourceTencentCloudGaapRealserversDomain = `
 resource tencentcloud_gaap_realserver "foo" {
-  domain = "www.qq.com"
+  domain = "www.qq343.com"
   name   = "ci-test-gaap-realserver"
 }
 
@@ -98,7 +98,7 @@ data tencentcloud_gaap_realservers "foo" {
 
 const TestAccDataSourceTencentCloudGaapRealserversName = `
 resource tencentcloud_gaap_realserver "foo" {
-  domain = "www.tencent.com"
+  domain = "www.tencent343.com"
   name   = "ci-test-gaap-realserver"
 }
 

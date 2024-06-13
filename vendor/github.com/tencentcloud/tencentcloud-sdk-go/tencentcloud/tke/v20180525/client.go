@@ -146,7 +146,7 @@ func NewAddClusterCIDRResponse() (response *AddClusterCIDRResponse) {
 }
 
 // AddClusterCIDR
-// 给GR集群增加可用的ClusterCIDR
+// 给GR集群增加可用的ClusterCIDR（开白才能使用此功能，如需要请联系我们）
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
@@ -167,7 +167,7 @@ func (c *Client) AddClusterCIDR(request *AddClusterCIDRRequest) (response *AddCl
 }
 
 // AddClusterCIDR
-// 给GR集群增加可用的ClusterCIDR
+// 给GR集群增加可用的ClusterCIDR（开白才能使用此功能，如需要请联系我们）
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
@@ -702,6 +702,117 @@ func (c *Client) CreateBackupStorageLocationWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewCreateBackupStorageLocationResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCLSLogConfigRequest() (request *CreateCLSLogConfigRequest) {
+    request = &CreateCLSLogConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "CreateCLSLogConfig")
+    
+    
+    return
+}
+
+func NewCreateCLSLogConfigResponse() (response *CreateCLSLogConfigResponse) {
+    response = &CreateCLSLogConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCLSLogConfig
+// 创建日志采集配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_CREATECLSCLIENT = "FailedOperation.CreateClsClient"
+//  FAILEDOPERATION_CREATECLSCONFIG = "FailedOperation.CreateClsConfig"
+//  FAILEDOPERATION_CREATECLSINDEX = "FailedOperation.CreateClsIndex"
+//  FAILEDOPERATION_CREATECLSLOGSET = "FailedOperation.CreateClsLogSet"
+//  FAILEDOPERATION_CREATECLSMACHINEGROUP = "FailedOperation.CreateClsMachineGroup"
+//  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
+//  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSCONFIGMACHINEGROUPS = "FailedOperation.GetClsConfigMachineGroups"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
+//  FAILEDOPERATION_GETCLSLOGSET = "FailedOperation.GetClsLogSet"
+//  FAILEDOPERATION_GETCLSMACHINEGROUP = "FailedOperation.GetClsMachineGroup"
+//  FAILEDOPERATION_GETCLSMACHINEGROUPCONFIGS = "FailedOperation.GetClsMachineGroupConfigs"
+//  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
+//  FAILEDOPERATION_K8SCLIENTBUILDERROR = "FailedOperation.K8sClientBuildError"
+//  FAILEDOPERATION_KUBECLIENTCONNECTION = "FailedOperation.KubeClientConnection"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESINTERNAL = "FailedOperation.KubernetesInternal"
+//  FAILEDOPERATION_MODIFYCLSCONFIG = "FailedOperation.ModifyClsConfig"
+//  FAILEDOPERATION_MODIFYCLSINDEX = "FailedOperation.ModifyClsIndex"
+//  FAILEDOPERATION_MODIFYCLSTOPIC = "FailedOperation.ModifyClsTopic"
+//  INTERNALERROR_COMPONENTCLIENTHTTP = "InternalError.ComponentClientHttp"
+//  INTERNALERROR_COMPONENTCLINETHTTP = "InternalError.ComponentClinetHttp"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) CreateCLSLogConfig(request *CreateCLSLogConfigRequest) (response *CreateCLSLogConfigResponse, err error) {
+    return c.CreateCLSLogConfigWithContext(context.Background(), request)
+}
+
+// CreateCLSLogConfig
+// 创建日志采集配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_CREATECLSCLIENT = "FailedOperation.CreateClsClient"
+//  FAILEDOPERATION_CREATECLSCONFIG = "FailedOperation.CreateClsConfig"
+//  FAILEDOPERATION_CREATECLSINDEX = "FailedOperation.CreateClsIndex"
+//  FAILEDOPERATION_CREATECLSLOGSET = "FailedOperation.CreateClsLogSet"
+//  FAILEDOPERATION_CREATECLSMACHINEGROUP = "FailedOperation.CreateClsMachineGroup"
+//  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
+//  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSCONFIGMACHINEGROUPS = "FailedOperation.GetClsConfigMachineGroups"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
+//  FAILEDOPERATION_GETCLSLOGSET = "FailedOperation.GetClsLogSet"
+//  FAILEDOPERATION_GETCLSMACHINEGROUP = "FailedOperation.GetClsMachineGroup"
+//  FAILEDOPERATION_GETCLSMACHINEGROUPCONFIGS = "FailedOperation.GetClsMachineGroupConfigs"
+//  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
+//  FAILEDOPERATION_K8SCLIENTBUILDERROR = "FailedOperation.K8sClientBuildError"
+//  FAILEDOPERATION_KUBECLIENTCONNECTION = "FailedOperation.KubeClientConnection"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESINTERNAL = "FailedOperation.KubernetesInternal"
+//  FAILEDOPERATION_MODIFYCLSCONFIG = "FailedOperation.ModifyClsConfig"
+//  FAILEDOPERATION_MODIFYCLSINDEX = "FailedOperation.ModifyClsIndex"
+//  FAILEDOPERATION_MODIFYCLSTOPIC = "FailedOperation.ModifyClsTopic"
+//  INTERNALERROR_COMPONENTCLIENTHTTP = "InternalError.ComponentClientHttp"
+//  INTERNALERROR_COMPONENTCLINETHTTP = "InternalError.ComponentClinetHttp"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) CreateCLSLogConfigWithContext(ctx context.Context, request *CreateCLSLogConfigRequest) (response *CreateCLSLogConfigResponse, err error) {
+    if request == nil {
+        request = NewCreateCLSLogConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCLSLogConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCLSLogConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -1933,6 +2044,79 @@ func (c *Client) CreateEdgeLogConfigWithContext(ctx context.Context, request *Cr
     request.SetContext(ctx)
     
     response = NewCreateEdgeLogConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateEksLogConfigRequest() (request *CreateEksLogConfigRequest) {
+    request = &CreateEksLogConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "CreateEksLogConfig")
+    
+    
+    return
+}
+
+func NewCreateEksLogConfigResponse() (response *CreateEksLogConfigResponse) {
+    response = &CreateEksLogConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateEksLogConfig
+// 为弹性集群创建日志采集配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
+//  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateEksLogConfig(request *CreateEksLogConfigRequest) (response *CreateEksLogConfigResponse, err error) {
+    return c.CreateEksLogConfigWithContext(context.Background(), request)
+}
+
+// CreateEksLogConfig
+// 为弹性集群创建日志采集配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
+//  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateEksLogConfigWithContext(ctx context.Context, request *CreateEksLogConfigRequest) (response *CreateEksLogConfigResponse, err error) {
+    if request == nil {
+        request = NewCreateEksLogConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateEksLogConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateEksLogConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -8681,6 +8865,7 @@ func NewDescribePrometheusAlertRuleResponse() (response *DescribePrometheusAlert
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
@@ -8700,6 +8885,7 @@ func (c *Client) DescribePrometheusAlertRule(request *DescribePrometheusAlertRul
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
@@ -9939,6 +10125,71 @@ func (c *Client) DescribeRouteTableConflictsWithContext(ctx context.Context, req
     return
 }
 
+func NewDescribeSupportedRuntimeRequest() (request *DescribeSupportedRuntimeRequest) {
+    request = &DescribeSupportedRuntimeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeSupportedRuntime")
+    
+    
+    return
+}
+
+func NewDescribeSupportedRuntimeResponse() (response *DescribeSupportedRuntimeResponse) {
+    response = &DescribeSupportedRuntimeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSupportedRuntime
+// 根据K8S版本获取可选运行时版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_POLICYSERVERCOMMONERROR = "FailedOperation.PolicyServerCommonError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeSupportedRuntime(request *DescribeSupportedRuntimeRequest) (response *DescribeSupportedRuntimeResponse, err error) {
+    return c.DescribeSupportedRuntimeWithContext(context.Background(), request)
+}
+
+// DescribeSupportedRuntime
+// 根据K8S版本获取可选运行时版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_POLICYSERVERCOMMONERROR = "FailedOperation.PolicyServerCommonError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeSupportedRuntimeWithContext(ctx context.Context, request *DescribeSupportedRuntimeRequest) (response *DescribeSupportedRuntimeResponse, err error) {
+    if request == nil {
+        request = NewDescribeSupportedRuntimeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSupportedRuntime require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSupportedRuntimeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTKEEdgeClusterCredentialRequest() (request *DescribeTKEEdgeClusterCredentialRequest) {
     request = &DescribeTKEEdgeClusterCredentialRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10948,7 +11199,7 @@ func NewEnableEncryptionProtectionResponse() (response *EnableEncryptionProtecti
 }
 
 // EnableEncryptionProtection
-// 开启加密数据保护
+// 开启加密数据保护，需要先开启KMS能力，完成KMS授权
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -10960,7 +11211,7 @@ func (c *Client) EnableEncryptionProtection(request *EnableEncryptionProtectionR
 }
 
 // EnableEncryptionProtection
-// 开启加密数据保护
+// 开启加密数据保护，需要先开启KMS能力，完成KMS授权
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -11462,7 +11713,7 @@ func NewGetUpgradeInstanceProgressResponse() (response *GetUpgradeInstanceProgre
 }
 
 // GetUpgradeInstanceProgress
-// 获得节点升级当前的进度
+// 获得节点升级当前的进度，若集群未处于节点升级状态，则接口会报错：任务未找到。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
@@ -11473,7 +11724,7 @@ func (c *Client) GetUpgradeInstanceProgress(request *GetUpgradeInstanceProgressR
 }
 
 // GetUpgradeInstanceProgress
-// 获得节点升级当前的进度
+// 获得节点升级当前的进度，若集群未处于节点升级状态，则接口会报错：任务未找到。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
@@ -12242,6 +12493,71 @@ func (c *Client) ModifyClusterNodePoolWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyClusterNodePoolResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyClusterRuntimeConfigRequest() (request *ModifyClusterRuntimeConfigRequest) {
+    request = &ModifyClusterRuntimeConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "ModifyClusterRuntimeConfig")
+    
+    
+    return
+}
+
+func NewModifyClusterRuntimeConfigResponse() (response *ModifyClusterRuntimeConfigResponse) {
+    response = &ModifyClusterRuntimeConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyClusterRuntimeConfig
+// 修改集群及节点池纬度运行时配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) ModifyClusterRuntimeConfig(request *ModifyClusterRuntimeConfigRequest) (response *ModifyClusterRuntimeConfigResponse, err error) {
+    return c.ModifyClusterRuntimeConfigWithContext(context.Background(), request)
+}
+
+// ModifyClusterRuntimeConfig
+// 修改集群及节点池纬度运行时配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) ModifyClusterRuntimeConfigWithContext(ctx context.Context, request *ModifyClusterRuntimeConfigRequest) (response *ModifyClusterRuntimeConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterRuntimeConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterRuntimeConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyClusterRuntimeConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -13319,7 +13635,7 @@ func NewScaleInClusterMasterResponse() (response *ScaleInClusterMasterResponse) 
 }
 
 // ScaleInClusterMaster
-// 缩容独立集群master节点
+// 缩容独立集群master节点，本功能为内测能力，使用之前请先提单联系我们。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -13329,7 +13645,7 @@ func (c *Client) ScaleInClusterMaster(request *ScaleInClusterMasterRequest) (res
 }
 
 // ScaleInClusterMaster
-// 缩容独立集群master节点
+// 缩容独立集群master节点，本功能为内测能力，使用之前请先提单联系我们。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -13377,6 +13693,7 @@ func NewScaleOutClusterMasterResponse() (response *ScaleOutClusterMasterResponse
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 func (c *Client) ScaleOutClusterMaster(request *ScaleOutClusterMasterRequest) (response *ScaleOutClusterMasterResponse, err error) {
     return c.ScaleOutClusterMasterWithContext(context.Background(), request)
@@ -13390,6 +13707,7 @@ func (c *Client) ScaleOutClusterMaster(request *ScaleOutClusterMasterRequest) (r
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 func (c *Client) ScaleOutClusterMasterWithContext(ctx context.Context, request *ScaleOutClusterMasterRequest) (response *ScaleOutClusterMasterResponse, err error) {
     if request == nil {

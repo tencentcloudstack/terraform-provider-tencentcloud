@@ -14,23 +14,29 @@ Use this data source to query instances type.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_instance_types" "foo" {
-  availability_zone = "ap-guangzhou-2"
-  cpu_core_count    = 2
-  memory_size       = 4
+data "tencentcloud_instance_types" "example" {
+  availability_zone = "ap-guangzhou-6"
+  cpu_core_count    = 4
+  memory_size       = 8
 }
+```
 
-data tencentcloud_instance_types "t1c1g" {
-  cpu_core_count   = 1
-  memory_size      = 1
+### Complete Example
+
+```hcl
+data "tencentcloud_instance_types" "example" {
+  cpu_core_count   = 4
+  memory_size      = 8
   exclude_sold_out = true
+
   filter {
-    name   = "instance-charge-type"
-    values = ["POSTPAID_BY_HOUR"]
+    name   = "instance-family"
+    values = ["SA2"]
   }
+
   filter {
     name   = "zone"
-    values = ["ap-shanghai-2"]
+    values = ["ap-guangzhou-6"]
   }
 }
 ```

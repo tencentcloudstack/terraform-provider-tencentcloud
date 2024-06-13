@@ -51,9 +51,9 @@ func testSweepEniInstance(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.NetworkInterfaceId,
-			Name:      *v.NetworkInterfaceName,
-			CreatTime: *v.CreatedTime,
+			Id:         *v.NetworkInterfaceId,
+			Name:       *v.NetworkInterfaceName,
+			CreateTime: *v.CreatedTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateNetworkInterface")

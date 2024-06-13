@@ -18,9 +18,7 @@ func ResourceTencentCloudCvmSyncImage() *schema.Resource {
 		Create: resourceTencentCloudCvmSyncImageCreate,
 		Read:   resourceTencentCloudCvmSyncImageRead,
 		Delete: resourceTencentCloudCvmSyncImageDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"image_id": {
 				Required:    true,

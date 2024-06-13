@@ -174,6 +174,7 @@ In addition to all arguments above, the following attributes are exported:
 * `eip_fixed` - Whether EIP is a fixed IP.
 * `eips` - SCF function EIP list.
 * `err_no` - SCF function code error code.
+* `function_id` - function ID.
 * `host` - SCF function domain name.
 * `install_dependency` - Whether to automatically install dependencies.
 * `modify_time` - SCF function last modified time.

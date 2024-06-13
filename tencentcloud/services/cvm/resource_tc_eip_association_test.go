@@ -17,24 +17,24 @@ import (
 // go test -i; go test -test.run TestAccTencentCloudEipAssociationWithInstance -v
 func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 	t.Parallel()
-	id := "tencentcloud_eip_association.foo"
+	id := "tencentcloud_eip_association.example"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckEipAssociationDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
-				Config:    testAccTencentCloudEipAssociationWithInstance,
+				//PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+				Config: testAccTencentCloudEipAssociationWithInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEipAssociationExists(id),
 					resource.TestCheckResourceAttrSet(id, "eip_id"),
 					resource.TestCheckResourceAttrSet(id, "instance_id"),
 					resource.TestCheckNoResourceAttr(id, "network_interface_id"),
 					resource.TestCheckNoResourceAttr(id, "private_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eip.foo", "public_ip"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "name", tcacctest.DefaultInsName),
-					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "status", "UNBIND"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eip.example", "public_ip"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.example", "name", "tf-example"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.example", "status", "UNBIND"),
 				),
 			},
 			{
@@ -49,24 +49,24 @@ func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 // go test -i; go test -test.run TestAccTencentCloudEipAssociationWithNetworkInterface -v
 func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
 	t.Parallel()
-	id := "tencentcloud_eip_association.foo"
+	id := "tencentcloud_eip_association.example"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckEipAssociationDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
-				Config:    testAccTencentCloudEipAssociationWithNetworkInterface,
+				//PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+				Config: testAccTencentCloudEipAssociationWithNetworkInterface,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEipAssociationExists(id),
 					resource.TestCheckResourceAttrSet(id, "eip_id"),
 					resource.TestCheckResourceAttrSet(id, "network_interface_id"),
 					resource.TestCheckResourceAttrSet(id, "private_ip"),
 					resource.TestCheckNoResourceAttr(id, "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eip.foo", "public_ip"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "name", tcacctest.DefaultInsName),
-					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "status", "UNBIND"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eip.example", "public_ip"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.example", "name", "tf-example"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.example", "status", "UNBIND"),
 				),
 			},
 		},
@@ -149,41 +149,114 @@ func testAccCheckEipAssociationExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTencentCloudEipAssociationWithInstance = tcacctest.DefaultInstanceVariable + `
-resource "tencentcloud_eip" "foo" {
-  name = var.instance_name
+const testAccTencentCloudEipAssociationWithInstance = `
+# create eip
+resource "tencentcloud_eip" "example" {
+  name = "tf-example"
 }
 
-resource "tencentcloud_instance" "foo" {
-  instance_name      = var.instance_name
-  availability_zone  = var.availability_cvm_zone
-  image_id           = data.tencentcloud_images.default.images.0.image_id
-  instance_type      = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  system_disk_type   = "CLOUD_PREMIUM"
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
 }
 
-resource "tencentcloud_eip_association" "foo" {
-  eip_id      = tencentcloud_eip.foo.id
-  instance_id = tencentcloud_instance.foo.id
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create cvm
+resource "tencentcloud_instance" "example" {
+  instance_name     = "tf_example"
+  availability_zone = "ap-guangzhou-6"
+  image_id          = "img-9qrfy1xt"
+  instance_type     = "SA3.MEDIUM4"
+  system_disk_type  = "CLOUD_HSSD"
+  system_disk_size  = 100
+  hostname          = "example"
+  project_id        = 0
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 50
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+
+resource "tencentcloud_eip_association" "example" {
+  eip_id      = tencentcloud_eip.example.id
+  instance_id = tencentcloud_instance.example.id
 }
 `
 
-const testAccTencentCloudEipAssociationWithNetworkInterface = tcacctest.DefaultVpcVariable + `
-resource "tencentcloud_eip" "foo" {
-  name = var.instance_name
+const testAccTencentCloudEipAssociationWithNetworkInterface = `
+# create eip
+resource "tencentcloud_eip" "example" {
+  name = "tf-example"
 }
 
-resource "tencentcloud_eni" "foo" {
-  name        = var.instance_name
-  vpc_id      = var.vpc_id
-  subnet_id   = var.subnet_id
-  description = var.instance_name
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create eni
+resource "tencentcloud_eni" "example" {
+  name        = "tf-example"
+  vpc_id      = tencentcloud_vpc.vpc.id
+  subnet_id   = tencentcloud_subnet.subnet.id
+  description = "remark."
   ipv4_count  = 1
 }
 
-resource "tencentcloud_eip_association" "foo" {
-  eip_id               = tencentcloud_eip.foo.id
-  network_interface_id = tencentcloud_eni.foo.id
-  private_ip           = tencentcloud_eni.foo.ipv4_info.0.ip
+# create cvm
+resource "tencentcloud_instance" "example" {
+  instance_name     = "tf_example"
+  availability_zone = "ap-guangzhou-6"
+  image_id          = "img-9qrfy1xt"
+  instance_type     = "SA3.MEDIUM4"
+  system_disk_type  = "CLOUD_HSSD"
+  system_disk_size  = 100
+  hostname          = "example"
+  project_id        = 0
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 50
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+
+resource "tencentcloud_eip_association" "example" {
+  eip_id               = tencentcloud_eip.example.id
+  network_interface_id = tencentcloud_eni.example.id
+  private_ip           = tencentcloud_eni.example.ipv4_info[0].ip
 }
 `

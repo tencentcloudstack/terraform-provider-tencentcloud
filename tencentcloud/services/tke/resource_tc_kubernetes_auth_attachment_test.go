@@ -15,45 +15,59 @@ func TestAccTencentCloudKubernetesAuthAttachResource(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeAuthAttach(),
+				Config: testAccTkeAuthAttachDefault,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "cluster_id"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_discovery_anonymous_auth", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "use_tke_default", "true"),
+				),
+			},
+			{
+				Config: testAccTkeAuthAttachNonDefault,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "cluster_id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_discovery_anonymous_auth", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "jwks_uri", "https://ap-guangzhou-oidc.tke.tencentcs.com/id/7cbe7ca92eba3abc76a17de1/openid/v1/jwks"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "issuer", "https://ap-guangzhou-oidc.tke.tencentcs.com/id/7cbe7ca92eba3abc76a17de1"),
+				),
+			},
+			{
+				Config: testAccTkeAuthAttachOidcUpdateOidc,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "cluster_id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_discovery_anonymous_auth", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "use_tke_default", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_oidc_config", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_client_id.#"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_install_pod_identity_webhook_addon", "true"),
 				),
 			},
 		},
 	})
 }
 
-func testAccTkeAuthAttach() string {
-	return tcacctest.TkeCIDRs + `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-data "tencentcloud_vpc_subnets" "vpc" {
-  is_default        = true
-  availability_zone = var.availability_zone
-}
-
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = var.tke_cidr_a.1
-  cluster_max_pod_num     = 32
-  cluster_name            = "for-auth-attachment"
-  cluster_desc            = "test cluster desc"
-  cluster_version         = "1.20.6"
-  cluster_max_service_num = 32
-  cluster_os			  = "tlinux2.2(tkernel3)x86_64"
-
-  cluster_deploy_type = "MANAGED_CLUSTER"
-}
+const testAccTkeAuthAttachDefault = tcacctest.TkeDataSource + `
 
 resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
-  cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
-  issuer                               = ""
+  cluster_id                           = local.cluster_id
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
-}
-`
-}
+}`
+
+const testAccTkeAuthAttachNonDefault = tcacctest.TkeDataSource + `
+resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
+  cluster_id                           = local.cluster_id
+  auto_create_discovery_anonymous_auth = true
+  jwks_uri = "https://ap-guangzhou-oidc.tke.tencentcs.com/id/7cbe7ca92eba3abc76a17de1/openid/v1/jwks"
+  issuer = "https://ap-guangzhou-oidc.tke.tencentcs.com/id/7cbe7ca92eba3abc76a17de1"
+}`
+
+const testAccTkeAuthAttachOidcUpdateOidc = tcacctest.TkeDataSource + `
+resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
+  cluster_id                           = local.cluster_id
+  auto_create_discovery_anonymous_auth = true
+  use_tke_default                      = true
+  auto_create_oidc_config = true
+  auto_create_client_id = ["xxx"]
+  auto_install_pod_identity_webhook_addon=true
+}`

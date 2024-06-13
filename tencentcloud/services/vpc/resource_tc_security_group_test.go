@@ -49,9 +49,9 @@ func testSweepSecurityGroups(region string) error {
 			})
 		}
 		resources = append(resources, &tccommon.ResourceInstance{
-			Id:        *v.SecurityGroupId,
-			Name:      *v.SecurityGroupName,
-			CreatTime: *v.CreatedTime,
+			Id:         *v.SecurityGroupId,
+			Name:       *v.SecurityGroupName,
+			CreateTime: *v.CreatedTime,
 		})
 	}
 	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSecurityGroup")

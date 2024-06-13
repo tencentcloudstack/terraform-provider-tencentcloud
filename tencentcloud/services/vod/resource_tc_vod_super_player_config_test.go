@@ -24,13 +24,31 @@ func init() {
 			if err != nil {
 				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 			}
-			client := sharedClient.(tccommon.ProviderMeta)
-			vodService := svcvod.NewVodService(client.GetAPIV3Conn())
+			client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
+			vodService := svcvod.NewVodService(client)
 			filter := make(map[string]interface{})
 			configs, e := vodService.DescribeSuperPlayerConfigsByFilter(ctx, filter)
 			if e != nil {
 				return nil
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range configs {
+				if !tccommon.CheckResourcePersist(*v.Name, *v.CreateTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.Name,
+						Name: *v.Name,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.Name,
+					Name:       *v.Name,
+					CreateTime: *v.CreateTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateSuperPlayerConfig")
+
 			for _, config := range configs {
 				ee := vodService.DeleteSuperPlayerConfig(ctx, *config.Name, uint64(0))
 				if ee != nil {

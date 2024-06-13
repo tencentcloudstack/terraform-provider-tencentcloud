@@ -18,7 +18,7 @@ import (
 func TestAccTencentCloudMonitorAlertRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckAlertRuleDestroy,
 		Steps: []resource.TestStep{
@@ -123,14 +123,9 @@ func testAccCheckAlertRuleExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAlertRuleVar = `
-variable "prometheus_id" {
-  default = "` + tcacctest.DefaultPrometheusId + `"
-}
-`
-const testAlertRule_basic = testAlertRuleVar + `
+const testAlertRule_basic = testInstance_basic + `
 resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
-  instance_id	= var.prometheus_id
+  instance_id	= tencentcloud_monitor_tmp_instance.basic.id
   rule_name		= "test-rule_name"
   receivers 	= ["notice-tj75hgqj"]
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 0"
@@ -146,9 +141,9 @@ resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
   }
 }`
 
-const testAlertRule_update = testAlertRuleVar + `
+const testAlertRule_update = testInstance_basic + `
 resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
-  instance_id	= var.prometheus_id
+  instance_id	= tencentcloud_monitor_tmp_instance.basic.id
   rule_name		= "test-rule_name_update"
   receivers 	= ["notice-tj75hgqj"]
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 1"

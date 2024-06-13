@@ -523,6 +523,11 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 					},
 				},
 			},
+			"function_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "function ID.",
+			},
 		},
 	}
 }
@@ -535,7 +540,10 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	client := m.(tccommon.ProviderMeta).GetAPIV3Conn()
 	scfService := ScfService{client: client}
 
-	var functionInfo scfFunctionInfo
+	var (
+		functionInfo scfFunctionInfo
+		functionId   string
+	)
 
 	functionInfo.name = d.Get("name").(string)
 	functionInfo.desc = helper.String(d.Get("description").(string))
@@ -841,11 +849,14 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	_, err = scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace)
+	funcResp, err := scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace)
 	if err != nil {
 		log.Printf("[CRITAL]%s get function id failed: %+v", logId, err)
 		return err
 	}
+
+	functionId = *funcResp.Response.FunctionId
+	_ = d.Set("function_id", functionId)
 
 	return resourceTencentCloudScfFunctionRead(d, m)
 }
@@ -868,7 +879,8 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	}
 	namespace, name := split[0], split[1]
 
-	response, err := service.DescribeFunction(ctx, name, namespace)
+	functionId := d.Get("function_id").(string)
+	response, err := service.DescribeFunction(ctx, name, namespace, functionId)
 	if err != nil {
 		log.Printf("[CRITAL]%s read function failed: %+v", logId, err)
 	}
@@ -901,6 +913,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	_ = d.Set("cls_topic_id", resp.ClsTopicId)
 	_ = d.Set("func_type", resp.Type)
 	_ = d.Set("l5_enable", *resp.L5Enable == "TRUE")
+	_ = d.Set("function_id", resp.FunctionId)
 
 	tags := make(map[string]string, len(resp.Tags))
 	for _, tag := range resp.Tags {

@@ -255,11 +255,11 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				Description: "Modification of the rebalancing time after upgrade.",
 			},
 			"public_network": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Deprecated:  "It has been deprecated from version 1.81.6. If set public network value, it will cause error.",
-				Description: "Bandwidth of the public network.",
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateIntegerMin(3),
+				Description:  "Bandwidth of the public network.",
 			},
 			"max_message_byte": {
 				Type:         schema.TypeInt,

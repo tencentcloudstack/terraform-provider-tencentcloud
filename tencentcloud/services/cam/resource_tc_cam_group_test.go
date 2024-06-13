@@ -45,9 +45,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        strconv.FormatUint(*v.GroupId, 10),
-					Name:      *v.GroupName,
-					CreatTime: *v.CreateTime,
+					Id:         strconv.FormatUint(*v.GroupId, 10),
+					Name:       *v.GroupName,
+					CreateTime: *v.CreateTime,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateGroup")

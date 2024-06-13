@@ -146,20 +146,26 @@ The following arguments are supported:
 
 The `cache_key` object supports the following:
 
-* `full_url_cache` - (Optional, String) Specifies whether to enable full-path cache.- `on`: Enable full-path cache (i.e., disable Ignore Query String).- `off`: Disable full-path cache (i.e., enable Ignore Query String). Note: This field may return null, indicating that no valid value can be obtained.
+* `full_url_cache` - (Optional, String) Specifies whether to enable full-path cache.
+- `on`: Enable full-path cache (i.e., disable Ignore Query String).
+- `off`: Disable full-path cache (i.e., enable Ignore Query String). Note: This field may return null, indicating that no valid value can be obtained.
 * `ignore_case` - (Optional, String) Specifies whether the cache key is case-sensitive. Note: This field may return null, indicating that no valid value can be obtained.
 * `query_string` - (Optional, List) Request parameter contained in CacheKey. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `cache_prefresh` object supports the following:
 
-* `switch` - (Required, String) Specifies whether to enable cache prefresh.- `on`: Enable.- `off`: Disable.
+* `switch` - (Required, String) Specifies whether to enable cache prefresh.
+- `on`: Enable.
+- `off`: Disable.
 * `percent` - (Optional, Int) Percentage of cache time before try to prefresh. Valid value range: 1-99.
 
 The `cache` object of `cache` supports the following:
 
-* `cache_time` - (Optional, Int) Cache expiration time settings, Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.
-* `ignore_cache_control` - (Optional, String) Specifies whether to enable force cache. Valid values: `on`: Enable; `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
-* `switch` - (Optional, String) Cache configuration switch. Valid values: `on`: Enable; `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `cache_time` - (Optional, Int) Cache expiration time settings.
+Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Optional, String) Cache configuration switch.
+- `on`: Enable.
+- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `cache` object supports the following:
 
@@ -169,26 +175,37 @@ The `cache` object supports the following:
 
 The `client_ip_header` object supports the following:
 
-* `switch` - (Required, String) Specifies whether to enable client IP header.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Required, String) Specifies whether to enable client IP header.
+- `on`: Enable.
+- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
 * `header_name` - (Optional, String) Name of the origin-pull client IP request header. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `compression` object supports the following:
 
-* `switch` - (Required, String) Whether to enable Smart compression.- `on`: Enable.- `off`: Disable.
+* `switch` - (Required, String) Whether to enable Smart compression.
+- `on`: Enable.
+- `off`: Disable.
 * `algorithms` - (Optional, Set) Compression algorithms to select. Valid values: `brotli`, `gzip`.
 
 The `follow_origin` object of `cache` supports the following:
 
-* `switch` - (Optional, String) Specifies whether to follow the origin server configuration.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Optional, String) Specifies whether to follow the origin server configuration.
+- `on`: Enable.
+- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `force_redirect` object supports the following:
 
-* `switch` - (Required, String) Whether to enable force redirect.- `on`: Enable.- `off`: Disable.
-* `redirect_status_code` - (Optional, Int) Redirection status code.- 301- 302 Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Required, String) Whether to enable force redirect.
+- `on`: Enable.
+- `off`: Disable.
+* `redirect_status_code` - (Optional, Int) Redirection status code.
+- 301
+- 302 Note: This field may return null, indicating that no valid value can be obtained.
 
 The `hsts` object of `https` supports the following:
 
-* `switch` - (Required, String) - `on`: Enable.- `off`: Disable.
+* `switch` - (Required, String) - `on`: Enable.
+- `off`: Disable.
 * `include_sub_domains` - (Optional, String) Specifies whether to include subdomain names. Valid values: `on` and `off`. Note: This field may return null, indicating that no valid value can be obtained.
 * `max_age` - (Optional, Int) MaxAge value in seconds, should be no more than 1 day. Note: This field may return null, indicating that no valid value can be obtained.
 * `preload` - (Optional, String) Specifies whether to preload. Valid values: `on` and `off`. Note: This field may return null, indicating that no valid value can be obtained.
@@ -196,60 +213,87 @@ The `hsts` object of `https` supports the following:
 The `https` object supports the following:
 
 * `hsts` - (Optional, List) HSTS Configuration. Note: This field may return null, indicating that no valid value can be obtained.
-* `http2` - (Optional, String) HTTP2 configuration switch.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
-* `ocsp_stapling` - (Optional, String) OCSP configuration switch.- `on`: Enable.- `off`: Disable.It is disabled by default. Note: This field may return null, indicating that no valid value can be obtained.
-* `tls_version` - (Optional, Set) TLS version settings. Valid values: `TLSv1`, `TLSV1.1`, `TLSV1.2`, and `TLSv1.3`.Only consecutive versions can be enabled at the same time. Note: This field may return null, indicating that no valid value can be obtained.
+* `http2` - (Optional, String) HTTP2 configuration switch.
+- `on`: Enable.
+- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `ocsp_stapling` - (Optional, String) OCSP configuration switch.
+- `on`: Enable.
+- `off`: Disable.
+It is disabled by default. Note: This field may return null, indicating that no valid value can be obtained.
+* `tls_version` - (Optional, Set) TLS version settings. Valid values: `TLSv1`, `TLSV1.1`, `TLSV1.2`, and `TLSv1.3`.
+Only consecutive versions can be enabled at the same time. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `ipv6` object supports the following:
 
-* `switch` - (Required, String) - `on`: Enable.- `off`: Disable.
+* `switch` - (Required, String) - `on`: Enable.
+- `off`: Disable.
 
 The `max_age` object supports the following:
 
-* `follow_origin` - (Optional, String) Specifies whether to follow the max cache age of the origin server.- `on`: Enable.- `off`: Disable.If is on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.
+* `follow_origin` - (Optional, String) Specifies whether to follow the max cache age of the origin server.
+- `on`: Enable.
+- `off`: Disable.
+If it's on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.
 * `max_age_time` - (Optional, Int) Specifies the max age of the cache (in seconds). The maximum value is 365 days. Note: the value 0 means not to cache. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `no_cache` object of `cache` supports the following:
 
-* `switch` - (Optional, String) Whether to cache the configuration. Valid values: `on`: Do not cache; `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Optional, String) Whether to cache the configuration.
+- `on`: Do not cache.
+- `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `offline_cache` object supports the following:
 
-* `switch` - (Required, String) Whether to enable offline cache.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Required, String) Whether to enable offline cache.
+- `on`: Enable.
+- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `origin` object supports the following:
 
 * `backup_origins` - (Optional, Set) Backup origin sites list. Note: This field may return null, indicating that no valid value can be obtained.
-* `cos_private_access` - (Optional, String) Whether access private cos bucket is allowed when `OriginType` is cos. Note: This field may return null, indicating that no valid value can be obtained.
-* `origin_pull_protocol` - (Optional, String) Origin-pull protocol.- `http`: Switch HTTPS requests to HTTP.- `follow`: Follow the protocol of the request.- `https`: Switch HTTP requests to HTTPS. This only supports port 443 on the origin server. Note: This field may return null, indicating that no valid value can be obtained.
+* `origin_pull_protocol` - (Optional, String) Origin-pull protocol.
+- `http`: Switch HTTPS requests to HTTP.
+- `follow`: Follow the protocol of the request.
+- `https`: Switch HTTP requests to HTTPS. This only supports port 443 on the origin server. Note: This field may return null, indicating that no valid value can be obtained.
 * `origins` - (Optional, Set) Origin sites list. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `post_max_size` object supports the following:
 
-* `switch` - (Required, String) Specifies whether to enable custom setting of the maximum file size.- `on`: Enable. You can set a custom max size.- `off`: Disable. In this case, the max size defaults to 32 MB.
+* `switch` - (Required, String) Specifies whether to enable custom setting of the maximum file size.
+- `on`: Enable. You can set a custom max size.
+- `off`: Disable. In this case, the max size defaults to 32 MB.
 * `max_size` - (Optional, Int) Maximum size. Value range: 1-500 MB. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `query_string` object of `cache_key` supports the following:
 
-* `switch` - (Required, String) Whether to use QueryString as part of CacheKey.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
-* `action` - (Optional, String) - `includeCustom`: Include the specified query strings.- `excludeCustom`: Exclude the specified query strings. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Required, String) Whether to use QueryString as part of CacheKey.
+- `on`: Enable.
+- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `action` - (Optional, String) - `includeCustom`: Include the specified query strings.
+- `excludeCustom`: Exclude the specified query strings. Note: This field may return null, indicating that no valid value can be obtained.
 * `value` - (Optional, Set) Array of query strings used/excluded. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `quic` object supports the following:
 
-* `switch` - (Required, String) Whether to enable QUIC.- `on`: Enable.- `off`: Disable.
+* `switch` - (Required, String) Whether to enable QUIC.
+- `on`: Enable.
+- `off`: Disable.
 
 The `smart_routing` object supports the following:
 
-* `switch` - (Required, String) Whether to enable smart acceleration.- `on`: Enable.- `off`: Disable.
+* `switch` - (Required, String) Whether to enable smart acceleration.
+- `on`: Enable.
+- `off`: Disable.
 
 The `upstream_http2` object supports the following:
 
-* `switch` - (Required, String) Whether to enable HTTP2 origin-pull.- `on`: Enable.- `off`: Disable.
+* `switch` - (Required, String) Whether to enable HTTP2 origin-pull.
+- `on`: Enable.
+- `off`: Disable.
 
 The `web_socket` object supports the following:
 
-* `switch` - (Required, String) Whether to enable custom WebSocket timeout setting. When is off: it means to keep the default WebSocket connection timeout period, which is 15 seconds. To change the timeout period, please set it to on.
+* `switch` - (Required, String) Whether to enable custom WebSocket timeout setting. When it's off: it means to keep the default WebSocket connection timeout period, which is 15 seconds. To change the timeout period, please set it to on.
 * `timeout` - (Optional, Int) Sets timeout period in seconds. Maximum value: 120.
 
 ## Attributes Reference

@@ -52,6 +52,25 @@ func ResourceTencentCloudPostgresqlReadonlyGroup() *schema.Resource {
 				Required:    true,
 				Description: "VPC subnet ID.",
 			},
+			"net_info_list": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of db instance net info.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Ip address of the net info.",
+						},
+						"port": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Port of the net info.",
+						},
+					},
+				},
+			},
 			"replay_lag_eliminate": {
 				Type:     schema.TypeInt,
 				Required: true,
@@ -191,8 +210,7 @@ func resourceTencentCloudPostgresqlReadOnlyGroupCreate(d *schema.ResourceData, m
 		return err
 	}
 
-	//return resourceTencentCloudPostgresqlReadOnlyGroupRead(d, meta)
-	return nil
+	return resourceTencentCloudPostgresqlReadOnlyGroupRead(d, meta)
 }
 
 func resourceTencentCloudPostgresqlReadOnlyGroupRead(d *schema.ResourceData, meta interface{}) error {
@@ -202,15 +220,32 @@ func resourceTencentCloudPostgresqlReadOnlyGroupRead(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	// for now, the id should be the master db instance id, cause the describe api only support this kind of filter.
-	var id string
+	var masterInsId string
 	if v, ok := d.GetOk("master_db_instance_id"); ok {
-		id = v.(string)
+		masterInsId = v.(string)
 	}
+	roGroupId := d.Id()
 
 	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	_, err := postgresqlService.DescribePostgresqlReadOnlyGroupById(ctx, id)
+	netInfos, err := postgresqlService.DescribePostgresqlReadonlyGroupNetInfosById(ctx, masterInsId, roGroupId)
 	if err != nil {
 		return err
+	}
+
+	if netInfos != nil {
+		netInfoList := []interface{}{}
+		for _, netInfo := range netInfos {
+			netInfoMap := map[string]interface{}{}
+
+			if netInfo.Ip != nil {
+				netInfoMap["ip"] = *netInfo.Ip
+			}
+			if netInfo.Port != nil {
+				netInfoMap["port"] = helper.UInt64Int64(*netInfo.Port)
+			}
+			netInfoList = append(netInfoList, netInfoMap)
+		}
+		_ = d.Set("net_info_list", netInfoList)
 	}
 
 	return nil
@@ -362,7 +397,7 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 	if err != nil {
 		return err
 	}
-	return nil
+	return resourceTencentCloudPostgresqlReadOnlyGroupRead(d, meta)
 }
 
 func resourceTencentCLoudPostgresqlReadOnlyGroupDelete(d *schema.ResourceData, meta interface{}) error {

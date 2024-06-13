@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -250,4 +251,11 @@ func SharedClientForRegion(region string) (interface{}, error) {
 	tcClient.apiV3Conn = client
 
 	return &tcClient, nil
+}
+
+func AccStepTimeSleepDuration(d time.Duration) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		time.Sleep(d)
+		return nil
+	}
 }

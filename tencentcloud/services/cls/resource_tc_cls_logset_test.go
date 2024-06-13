@@ -31,14 +31,31 @@ func testSweepClsLogset(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	clsService := localcls.NewClsService(client.GetAPIV3Conn())
+	clsService := localcls.NewClsService(client)
 
 	instances, err := clsService.DescribeClsLogsetByFilter(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.LogsetName, *v.CreateTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.LogsetId,
+				Name: *v.LogsetName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:         *v.LogsetId,
+			Name:       *v.LogsetName,
+			CreateTime: *v.CreateTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateLogset")
 
 	for _, v := range instances {
 		instanceId := v.LogsetId

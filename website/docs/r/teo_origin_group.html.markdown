@@ -11,41 +11,28 @@ description: |-
 
 Provides a resource to create a teo origin_group
 
+~> **NOTE:** Please note that `tencentcloud_teo_origin_group` had to undergo incompatible changes in version v1.81.96.
+
 ## Example Usage
 
 ### Self origin group
 
 ```hcl
-resource "tencentcloud_teo_origin_group" "origin_group" {
-  zone_id            = "zone-297z8rf93cfw"
-  configuration_type = "weight"
-  origin_group_name  = "test-group"
-  origin_type        = "self"
-  origin_records {
-    area    = []
-    port    = 8080
-    private = false
-    record  = "150.109.8.1"
+resource "tencentcloud_teo_origin_group" "basic" {
+  name    = "keep-group-1"
+  type    = "GENERAL"
+  zone_id = "zone-197z8rf93cfw"
+
+  records {
+    record  = "tf-teo.xyz"
+    type    = "IP_DOMAIN"
     weight  = 100
-  }
-}
-```
-
-### Cos origin group
-
-```hcl
-resource "tencentcloud_teo_origin_group" "origin_group" {
-  configuration_type = "weight"
-  origin_group_name  = "test"
-  origin_type        = "cos"
-  zone_id            = "zone-2o3h21ed8bpu"
-
-  origin_records {
-    area    = []
-    port    = 0
     private = true
-    record  = "test-ruichaolin-1310708577.cos.ap-nanjing.myqcloud.com"
-    weight  = 100
+
+    private_parameters {
+      name  = "SecretAccessKey"
+      value = "test"
+    }
   }
 }
 ```
@@ -54,33 +41,53 @@ resource "tencentcloud_teo_origin_group" "origin_group" {
 
 The following arguments are supported:
 
-* `configuration_type` - (Required, String) Type of the origin group, this field should be set when `OriginType` is self, otherwise leave it empty. Valid values: `area`: select an origin by using Geo info of the client IP and `Area` field in Records; `weight`: weighted select an origin by using `Weight` field in Records; `proto`: config by HTTP protocol.
-* `origin_group_name` - (Required, String) OriginGroup Name.
-* `origin_records` - (Required, List) Origin site records.
-* `origin_type` - (Required, String) Type of the origin site. Valid values: `self`: self-build website; `cos`: tencent cos; `third_party`: third party cos.
+* `records` - (Required, List) Origin site records.
+* `type` - (Required, String) Type of the origin site. Valid values:
+- `GENERAL`: Universal origin site group, only supports adding IP/domain name origin sites, which can be referenced by domain name service, rule engine, four-layer proxy, general load balancing, and HTTP-specific load balancing.
+- `HTTP`: The HTTP-specific origin site group, supports adding IP/domain name and object storage origin site as the origin site, it cannot be referenced by the four-layer proxy, it can only be added to the acceleration domain name, rule engine-modify origin site, and HTTP-specific load balancing reference.
 * `zone_id` - (Required, String, ForceNew) Site ID.
+* `host_header` - (Optional, String) Back-to-origin Host Header, it only takes effect when type = HTTP is passed in. The rule engine modifies the Host Header configuration priority to be higher than the Host Header of the origin site group.
+* `name` - (Optional, String) OriginGroup Name.
 
-The `origin_records` object supports the following:
+The `private_parameters` object of `records` supports the following:
 
-* `port` - (Required, Int) Port of the origin site. Valid value range: 1-65535.
-* `record` - (Required, String) Record value, which could be an IPv4/IPv6 address or a domain.
-* `area` - (Optional, Set) Indicating origin sites area when `Type` field is `area`. An empty List indicate the default area. Valid value:- Asia, Americas, Europe, Africa or Oceania.
-* `private_parameter` - (Optional, List) Parameters for private authentication. Only valid when `Private` is `true`.
-* `private` - (Optional, Bool) Whether origin site is using private authentication. Only valid when `OriginType` is `third_party`.
-* `weight` - (Optional, Int) Indicating origin sites weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.
+* `name` - (Required, String) Private authentication parameter name, the values are:
+  - `AccessKeyId`: Authentication parameter Access Key ID.
+  - `SecretAccessKey`: Authentication parameter Secret Access Key.
+  - `SignatureVersion`: Authentication version, v2 or v4.
+  - `Region`: Bucket region.
+* `value` - (Required, String) Private authentication parameter value.
 
-The `private_parameter` object of `origin_records` supports the following:
+The `records` object supports the following:
 
-* `name` - (Required, String) Parameter Name. Valid values: `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key.
-* `value` - (Required, String) Parameter value.
+* `record` - (Required, String) Origin site record value, does not include port information, can be: IPv4, IPv6, domain name format.
+* `private_parameters` - (Optional, List) Parameters for private authentication. Only valid when `Private` is `true`.
+* `private` - (Optional, Bool) Whether to use private authentication, it takes effect when the origin site type RecordType=COS/AWS_S3, the values are:
+  - `true`: Use private authentication.
+  - `false`: Do not use private authentication.
+* `record_id` - (Optional, String) Origin record ID.
+* `type` - (Optional, String) Origin site type, the values are:
+  - `IP_DOMAIN`: IPV4, IPV6, domain name type origin site.
+  - `COS`: COS source.
+  - `AWS_S3`: AWS S3 object storage origin site.
+* `weight` - (Optional, Int) The weight of the origin site, the value is 0-100. If it is not filled in, it means that the weight will not be set and the system will schedule it freely. If it is filled in with 0, it means that the weight is 0 and the traffic will not be scheduled to this origin site.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `create_time` - Origin site group creation time.
 * `origin_group_id` - OriginGroup ID.
-* `update_time` - Last modification date.
+* `references` - List of referenced instances of the origin site group.
+  * `instance_id` - The instance ID of the reference type.
+  * `instance_name` - Instance name of the application type.
+  * `instance_type` - Reference service type, the values are:
+  - `AccelerationDomain`: Acceleration domain name.
+  - `RuleEngine`: Rule engine.
+  - `Loadbalance`: Load balancing.
+  - `ApplicationProxy`: Four-layer proxy.
+* `update_time` - Origin site group update time.
 
 
 ## Import

@@ -33,6 +33,24 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			// add scanning resources
+			var resources, nonKeepResources []*tccommon.ResourceInstance
+			for _, v := range groups {
+				if !tccommon.CheckResourcePersist(*v.RoleName, *v.AddTime) {
+					nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+						Id:   *v.RoleId,
+						Name: *v.RoleName,
+					})
+				}
+				resources = append(resources, &tccommon.ResourceInstance{
+					Id:         *v.RoleId,
+					Name:       *v.RoleName,
+					CreateTime: *v.AddTime,
+				})
+			}
+			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateRole")
+
 			for _, v := range groups {
 				name := *v.RoleName
 

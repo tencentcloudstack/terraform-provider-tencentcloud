@@ -182,6 +182,7 @@ func resourceTencentCloudCamPolicyByNameRead(d *schema.ResourceData, meta interf
 		return err
 	}
 	if len(policies) == 0 {
+		d.SetId("")
 		return nil
 	}
 	var instance *cam.GetPolicyResponse

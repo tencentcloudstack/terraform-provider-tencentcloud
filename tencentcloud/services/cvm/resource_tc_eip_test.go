@@ -33,14 +33,31 @@ func testSweepEipInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	vpcService := svcvpc.NewVpcService(client.GetAPIV3Conn())
+	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeEipByFilter(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range instances {
+		if !tccommon.CheckResourcePersist(*v.AddressName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.AddressId,
+				Name: *v.AddressName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:         *v.AddressId,
+			Name:       *v.AddressName,
+			CreateTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "AllocateAddresses")
 
 	for _, v := range instances {
 		instanceId := *v.AddressId

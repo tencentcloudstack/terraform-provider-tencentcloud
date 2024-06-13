@@ -137,7 +137,7 @@ resource tencentcloud_gaap_security_policy "foo" {
   proxy_id = "%s"
   action   = "ACCEPT"
 }
-`, tcacctest.DefaultGaapProxyId2)
+`, "link-asnxs27x") //tcacctest.DefaultGaapProxyId)
 
 var testAccGaapSecurityPolicyDisable = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -145,11 +145,11 @@ resource tencentcloud_gaap_security_policy "foo" {
   action   = "ACCEPT"
   enable   = false
 }
-`, tcacctest.DefaultGaapProxyId2)
+`, "link-asnxs27x") //tcacctest.DefaultGaapProxyId)
 
 var testAccGaapSecurityPolicyDrop = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
   proxy_id = "%s"
   action   = "DROP"
 }
-`, tcacctest.DefaultGaapProxyId2)
+`, "link-asnxs27x") //tcacctest.DefaultGaapProxyId)

@@ -72,9 +72,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        worker.InstanceId,
-					Name:      *instance.InstanceName,
-					CreatTime: worker.CreatedTime,
+					Id:         worker.InstanceId,
+					Name:       *instance.InstanceName,
+					CreateTime: worker.CreatedTime,
 				})
 
 				created, err := time.Parse(tccommon.TENCENTCLOUD_COMMON_TIME_LAYOUT, worker.CreatedTime)
@@ -89,6 +89,9 @@ func init() {
 
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateClusterInstances")
 
+			if len(instanceIds) == 0 {
+				return nil
+			}
 			err = service.DeleteClusterInstances(ctx, clusterId, instanceIds)
 			if err != nil {
 				return err
@@ -116,6 +119,7 @@ func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "unschedulable"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "user_script", "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="),
 				),
 			},
 			{
@@ -230,7 +234,6 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 const testAccTkeScaleWorkerInstance = `
 resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
   cluster_id = "cls-r8gqwjw6"
-
   extra_args = [
     "root-dir=/var/lib/kubelet"
   ]
@@ -240,6 +243,7 @@ resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
     "test2" = "test2",
   }
   unschedulable = 0
+  user_script   = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
 
   worker_config {
     count                      				= 1
@@ -277,6 +281,7 @@ resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
     "test2" = "test2",
   }
   unschedulable = 0
+  user_script   = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
 
   worker_config {
     count                = 1

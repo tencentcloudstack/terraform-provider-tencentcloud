@@ -41,9 +41,9 @@ func init() {
 					})
 				}
 				resources = append(resources, &tccommon.ResourceInstance{
-					Id:        *v.DiskId,
-					Name:      *v.DiskName,
-					CreatTime: *v.CreateTime,
+					Id:         *v.DiskId,
+					Name:       *v.DiskName,
+					CreateTime: *v.CreateTime,
 				})
 			}
 			tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateDisks")

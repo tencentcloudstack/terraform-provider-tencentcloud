@@ -107,13 +107,13 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				Default:      CVM_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_CHARGE_TYPE),
-				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID` and `CDHPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR` and `CDHPAID`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time. `CDHPAID` instance must set `cdh_instance_type` and `cdh_host_id`.",
+				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDHPAID` and `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR` and `CDHPAID`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time. `CDHPAID` instance must set `cdh_instance_type` and `cdh_host_id`.",
 			},
 			"instance_charge_type_prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(CVM_PREPAID_PERIOD),
-				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`, `48`, `60`.",
 			},
 			"instance_charge_type_prepaid_renew_flag": {
 				Type:         schema.TypeString,
@@ -408,6 +408,21 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Expired time of the instance.",
+			},
+			"cpu": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of CPU cores of the instance.",
+			},
+			"memory": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Instance memory capacity, unit in GB.",
+			},
+			"os_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance os name.",
 			},
 		},
 	}
@@ -744,21 +759,21 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	defer tccommon.LogElapsed("resource.tencentcloud_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		cvmService = CvmService{client: client}
+		cbsService = svccbs.NewCbsService(client)
+		instanceId = d.Id()
+	)
 
-	instanceId := d.Id()
 	forceDelete := false
 	if v, ok := d.GetOkExists("force_delete"); ok {
 		forceDelete = v.(bool)
 		_ = d.Set("force_delete", forceDelete)
 	}
 
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	cvmService := CvmService{
-		client: client,
-	}
-	cbsService := svccbs.NewCbsService(client)
 	var instance *cvm.Instance
 	var errRet error
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -766,14 +781,18 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if instance != nil && instance.LatestOperationState != nil && *instance.LatestOperationState == "OPERATING" {
 			return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", *instance.InstanceId))
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if instance == nil || *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
 		d.SetId("")
 		log.Printf("[CRITAL]instance %s not exist or launch failed", instanceId)
@@ -825,6 +844,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("expired_time", instance.ExpiredTime)
 	_ = d.Set("cam_role_name", instance.CamRoleName)
 	_ = d.Set("disable_api_termination", instance.DisableApiTermination)
+	_ = d.Set("cpu", instance.CPU)
+	_ = d.Set("memory", instance.Memory)
+	_ = d.Set("os_name", instance.OsName)
 
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)
@@ -1420,6 +1442,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	instanceId := d.Id()
 	//check is force delete or not
 	forceDelete := d.Get("force_delete").(bool)
+	instanceChargeType := d.Get("instance_charge_type").(string)
 
 	cvmService := CvmService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
@@ -1439,6 +1462,20 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	})
 	if err != nil {
 		return err
+	}
+
+	// prepaid need delete again
+	if instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			errRet := cvmService.DeleteInstance(ctx, instanceId)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	//check recycling

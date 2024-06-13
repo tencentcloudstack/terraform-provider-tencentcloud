@@ -30,13 +30,30 @@ func testSweepAsScalingGroups(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(tccommon.ProviderMeta)
+	client := sharedClient.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-	asService := svcas.NewAsService(client.GetAPIV3Conn())
+	asService := svcas.NewAsService(client)
 	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, "", "", "", nil)
 	if err != nil {
 		return fmt.Errorf("list scaling group error: %s", err.Error())
 	}
+
+	// add scanning resources
+	var resources, nonKeepResources []*tccommon.ResourceInstance
+	for _, v := range scalingGroups {
+		if !tccommon.CheckResourcePersist(*v.AutoScalingGroupName, *v.CreatedTime) {
+			nonKeepResources = append(nonKeepResources, &tccommon.ResourceInstance{
+				Id:   *v.AutoScalingGroupId,
+				Name: *v.AutoScalingGroupName,
+			})
+		}
+		resources = append(resources, &tccommon.ResourceInstance{
+			Id:         *v.AutoScalingGroupId,
+			Name:       *v.AutoScalingGroupName,
+			CreateTime: *v.CreatedTime,
+		})
+	}
+	tccommon.ProcessScanCloudResources(client, resources, nonKeepResources, "CreateAutoScalingGroup")
 
 	for _, v := range scalingGroups {
 		scalingGroupId := *v.AutoScalingGroupId
