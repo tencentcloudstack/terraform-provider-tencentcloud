@@ -3,7 +3,6 @@ package tke
 import (
 	"context"
 	"fmt"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"log"
 	"strings"
 

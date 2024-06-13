@@ -18,7 +18,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 		Read:   resourceTencentCloudKubernetesScaleWorkerRead,
 		Delete: resourceTencentCloudKubernetesScaleWorkerDelete,
 		Importer: &schema.ResourceImporter{
-			StateContext: customResourceImporter,
+			StateContext: customScaleWorkerResourceImporter,
 		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
