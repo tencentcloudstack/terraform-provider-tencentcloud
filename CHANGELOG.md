@@ -1,3 +1,15 @@
+## 1.81.104 (June 14, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: Change the record list type to a set to solve the order problem. ([#2680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2680))
+* resource/tencentcloud_postgresql_instance: Fix the issue of failed instance creation read ([#2682](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2682))
+
+BUG FIXES:
+
+* resource/tencentcloud_mysql_instance: If the id is empty, retry with the same clienttoken for 10 minutes ([#2684](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2684))
+* resource/tencentcloud_user_info: fix `owner_uin` ([#2683](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2683))
+
 ## 1.81.103 (June 13, 2024)
 
 ENHANCEMENTS:
