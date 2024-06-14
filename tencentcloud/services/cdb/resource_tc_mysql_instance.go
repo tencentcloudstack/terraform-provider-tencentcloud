@@ -568,10 +568,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	var response *cdb.CreateDBInstanceResponse
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(2*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		// shadowed response will not pass to outside
-		clientToken := helper.BuildToken()
-		request.ClientToken = &clientToken
 		r, inErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstance(request)
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -581,7 +579,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 			return tccommon.RetryError(inErr)
 		}
 
-		if r.Response.InstanceIds == nil && clientToken != "" {
+		if len(r.Response.InstanceIds) < 1 && clientToken != "" {
 			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
 		}
 
@@ -621,15 +619,13 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 	}
 
 	var response *cdb.CreateDBInstanceHourResponse
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(2*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		// shadowed response will not pass to outside
-		clientToken := helper.BuildToken()
-		request.ClientToken = &clientToken
 		r, inErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstanceHour(request)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
-		if r.Response.InstanceIds == nil && clientToken != "" {
+		if len(r.Response.InstanceIds) < 1 && clientToken != "" {
 			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
 		}
 		response = r
@@ -1608,7 +1604,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 				return resource.NonRetryableError(err)
 			}
 		}
-		if mysqlInfo == nil {
+		if mysqlInfo == nil || *mysqlInfo.Status == 6 {
 			return nil
 		} else {
 			if mysqlInfo.RoGroups != nil && len(mysqlInfo.RoGroups) > 0 {
