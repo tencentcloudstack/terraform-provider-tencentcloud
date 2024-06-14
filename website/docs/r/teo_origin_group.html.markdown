@@ -41,7 +41,7 @@ resource "tencentcloud_teo_origin_group" "basic" {
 
 The following arguments are supported:
 
-* `records` - (Required, List) Origin site records.
+* `records` - (Required, Set) Origin site records.
 * `type` - (Required, String) Type of the origin site. Valid values:
 - `GENERAL`: Universal origin site group, only supports adding IP/domain name origin sites, which can be referenced by domain name service, rule engine, four-layer proxy, general load balancing, and HTTP-specific load balancing.
 - `HTTP`: The HTTP-specific origin site group, supports adding IP/domain name and object storage origin site as the origin site, it cannot be referenced by the four-layer proxy, it can only be added to the acceleration domain name, rule engine-modify origin site, and HTTP-specific load balancing reference.

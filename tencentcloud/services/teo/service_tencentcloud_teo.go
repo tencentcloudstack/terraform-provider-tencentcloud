@@ -990,7 +990,7 @@ func (me *TeoService) DescribeTeoOriginGroupById(ctx context.Context, originGrou
 	request := teo.NewDescribeOriginGroupRequest()
 	advancedFilter := &teo.AdvancedFilter{
 		Name:   helper.String("origin-group-id"),
-		Values: []*string{&originGroupId},
+		Values: []*string{helper.String(originGroupId)},
 	}
 	request.Filters = append(request.Filters, advancedFilter)
 
