@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_mysql_instance: If the id is empty, retry with the same clienttoken for 10 minutes
+```
