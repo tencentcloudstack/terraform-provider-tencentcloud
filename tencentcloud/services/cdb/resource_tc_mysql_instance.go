@@ -1608,7 +1608,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 				return resource.NonRetryableError(err)
 			}
 		}
-		if mysqlInfo == nil {
+		if mysqlInfo == nil || *mysqlInfo.Status == 6 {
 			return nil
 		} else {
 			if mysqlInfo.RoGroups != nil && len(mysqlInfo.RoGroups) > 0 {
