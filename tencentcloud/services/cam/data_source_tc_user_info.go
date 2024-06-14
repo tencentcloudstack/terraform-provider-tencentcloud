@@ -104,7 +104,7 @@ func datasourceTencentCloudUserInfoRead(d *schema.ResourceData, meta interface{}
 		uin = *response.Response.Uin
 	}
 	if response.Response.OwnerUin != nil {
-		ownerUin = *response.Response.Uin
+		ownerUin = *response.Response.OwnerUin
 	}
 	accountInfoRequest.FilterSubAccountUin = []*uint64{helper.Uint64(helper.StrToUInt64(uin))}
 
