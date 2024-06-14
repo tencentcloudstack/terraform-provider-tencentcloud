@@ -459,6 +459,63 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 	return
 }
 
+func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsById(ctx context.Context, instanceId string) (sg []string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.DBInstanceId = &instanceId
+	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	response, err := me.client.UsePostgresqlClient(iacExtInfo).DescribeDBInstanceSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	groups := response.Response.SecurityGroupSet
+	if len(groups) > 0 {
+		for i := range groups {
+			sg = append(sg, *groups[i].SecurityGroupId)
+		}
+	}
+	return
+}
+
+func (me *PostgresqlService) ModifyDBInstanceSecurityGroupsById(ctx context.Context, instanceId string, securityGroupIds []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewModifyDBInstanceSecurityGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.DBInstanceId = &instanceId
+	request.SecurityGroupIdSet = securityGroupIds
+	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	response, err := me.client.UsePostgresqlClient(iacExtInfo).ModifyDBInstanceSecurityGroups(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	errRet = err
+	return
+}
+
 func (me *PostgresqlService) DescribePostgresqlInstanceHAConfigById(ctx context.Context, instanceId string) (haConfig *postgresql.DescribeDBInstanceHAConfigResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewDescribeDBInstanceHAConfigRequest()
