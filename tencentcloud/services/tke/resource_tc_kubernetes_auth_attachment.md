@@ -162,3 +162,11 @@ output "identity_url" {
 }
 
 ```
+
+Import
+
+tke cluster authentication can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_auth_attachment.test cls-xxx
+```

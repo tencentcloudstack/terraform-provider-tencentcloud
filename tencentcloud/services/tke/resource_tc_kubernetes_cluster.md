@@ -778,3 +778,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 }
 ```
+
+Import
+
+tke cluster can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_cluster.test cls-xxx
+```

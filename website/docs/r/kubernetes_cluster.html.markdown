@@ -1016,3 +1016,11 @@ In addition to all arguments above, the following attributes are exported:
   * `lan_ip` - LAN IP of the cvm.
 
 
+## Import
+
+tke cluster can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_cluster.test cls-xxx
+```
+

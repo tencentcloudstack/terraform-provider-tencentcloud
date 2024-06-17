@@ -196,3 +196,11 @@ In addition to all arguments above, the following attributes are exported:
 * `tke_default_jwks_uri` - The default jwks_uri of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.
 
 
+## Import
+
+tke cluster authentication can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_auth_attachment.test cls-xxx
+```
+
