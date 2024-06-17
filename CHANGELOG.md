@@ -1,3 +1,9 @@
+## 1.81.105 (June 17, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_teo_acceleration_domain: Add `origin_protocol`, `http_origin_port`, `https_origin_port` and `ipv6_status` fields ([#2685](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2685))
+
 ## 1.81.104 (June 14, 2024)
 
 ENHANCEMENTS:
