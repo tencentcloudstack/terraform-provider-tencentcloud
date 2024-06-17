@@ -200,3 +200,11 @@ In addition to all arguments above, the following attributes are exported:
   * `lan_ip` - LAN IP of the cvm.
 
 
+## Import
+
+tke scale worker can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_scale_worker.test cls-xxx#ins-xxx
+```
+

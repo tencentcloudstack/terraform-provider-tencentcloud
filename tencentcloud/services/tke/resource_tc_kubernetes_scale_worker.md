@@ -100,3 +100,11 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
   }
 }
 ```
+
+Import
+
+tke scale worker can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_scale_worker.test cls-xxx#ins-xxx
+```

@@ -42,7 +42,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     "tlinux2.4x86_64",
-				Description: "Operating system of the cluster, the available values include: 'centos7.6.0_x64','ubuntu18.04.1x86_64','tlinux2.4x86_64'. Default is 'tlinux2.4x86_64'.",
+				Description: "Cluster operating system, supports setting public images (the field passes the corresponding image Name) and custom images (the field passes the corresponding image ID). For details, please refer to: https://cloud.tencent.com/document/product/457/68289.",
 			},
 
 			"cluster_subnet_id": {
@@ -658,7 +658,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"img_id": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "The valid image id, format of img-xxx.",
+							Description:  "The valid image id, format of img-xxx. Note: `img_id` will be replaced with the image corresponding to TKE `cluster_os`.",
 							ValidateFunc: tccommon.ValidateImageID,
 						},
 						"desired_pod_num": {
@@ -681,7 +681,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.",
+				Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_scale_worker'.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"count": {
@@ -921,7 +921,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"img_id": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "The valid image id, format of img-xxx.",
+							Description:  "The valid image id, format of img-xxx. Note: `img_id` will be replaced with the image corresponding to TKE `cluster_os`.",
 							ValidateFunc: tccommon.ValidateImageID,
 						},
 						"desired_pod_num": {
