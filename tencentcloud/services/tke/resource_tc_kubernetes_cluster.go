@@ -42,7 +42,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     "tlinux2.4x86_64",
-				Description: "Operating system of the cluster, the available values include: 'centos7.6.0_x64','ubuntu18.04.1x86_64','tlinux2.4x86_64'. Default is 'tlinux2.4x86_64'.",
+				Description: "Cluster operating system, supports setting public images (the field passes the corresponding image Name) and custom images (the field passes the corresponding image ID). For details, please refer to: https://cloud.tencent.com/document/product/457/68289.",
 			},
 
 			"cluster_subnet_id": {
@@ -658,7 +658,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"img_id": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "The valid image id, format of img-xxx.",
+							Description:  "The valid image id, format of img-xxx. Note: `img_id` will be replaced with the image corresponding to TKE `cluster_os`.",
 							ValidateFunc: tccommon.ValidateImageID,
 						},
 						"desired_pod_num": {
@@ -681,7 +681,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.",
+				Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_scale_worker'.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"count": {
@@ -921,7 +921,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"img_id": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "The valid image id, format of img-xxx.",
+							Description:  "The valid image id, format of img-xxx. Note: `img_id` will be replaced with the image corresponding to TKE `cluster_os`.",
 							ValidateFunc: tccommon.ValidateImageID,
 						},
 						"desired_pod_num": {
@@ -1552,12 +1552,8 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	respData1, err := service.DescribeKubernetesClusterById1(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	var respData1 *tke.DescribeClusterInstancesResponseParams
+	reqErr1 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterById1(ctx, clusterId)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesClusterReadRequestOnError1(ctx, result, e); err != nil {
@@ -1568,9 +1564,9 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		respData1 = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, err)
-		return err
+	if reqErr1 != nil {
+		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, reqErr1)
+		return reqErr1
 	}
 
 	if respData1 == nil {
@@ -1609,12 +1605,8 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		_ = d.Set("worker_instances_list", instanceSetList)
 	}
 
-	respData2, err := service.DescribeKubernetesClusterById2(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	var respData2 *tke.DescribeClusterSecurityResponseParams
+	reqErr2 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterById2(ctx, clusterId)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesClusterReadRequestOnError2(ctx, result, e); err != nil {
@@ -1625,9 +1617,9 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		respData2 = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, err)
-		return err
+	if reqErr2 != nil {
+		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, reqErr2)
+		return reqErr2
 	}
 
 	if respData2 == nil {
@@ -1692,7 +1684,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	if needChange {
 		request := tke.NewModifyClusterAttributeRequest()
 
-		request.ClusterId = &clusterId
+		request.ClusterId = helper.String(clusterId)
 
 		if v, ok := d.GetOkExists("project_id"); ok {
 			request.ProjectId = helper.IntInt64(v.(int))
@@ -1739,7 +1731,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 
 		response1 := tke.NewUpdateClusterVersionResponse()
 
-		request1.ClusterId = &clusterId
+		request1.ClusterId = helper.String(clusterId)
 
 		if v, ok := d.GetOk("cluster_version"); ok {
 			request1.DstVersion = helper.String(v.(string))
@@ -1780,7 +1772,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	if needChange2 {
 		request2 := tke.NewModifyClusterAsGroupOptionAttributeRequest()
 
-		request2.ClusterId = &clusterId
+		request2.ClusterId = helper.String(clusterId)
 
 		if clusterAsGroupOptionMap, ok := helper.InterfacesHeadMap(d, "node_pool_global_config"); ok {
 			clusterAsGroupOption := tke.ClusterAsGroupOption{}
@@ -1850,7 +1842,7 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 		response = tke.NewDeleteClusterResponse()
 	)
 
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	instanceDeleteMode := "terminate"
 	request.InstanceDeleteMode = &instanceDeleteMode
@@ -1873,7 +1865,7 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes cluster failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes cluster failed, reason:%+v", logId, err)
 		return err
 	}
 
