@@ -1552,12 +1552,8 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	respData1, err := service.DescribeKubernetesClusterById1(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	var respData1 *tke.DescribeClusterInstancesResponseParams
+	reqErr1 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterById1(ctx, clusterId)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesClusterReadRequestOnError1(ctx, result, e); err != nil {
@@ -1568,9 +1564,9 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		respData1 = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, err)
-		return err
+	if reqErr1 != nil {
+		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, reqErr1)
+		return reqErr1
 	}
 
 	if respData1 == nil {
@@ -1609,12 +1605,8 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		_ = d.Set("worker_instances_list", instanceSetList)
 	}
 
-	respData2, err := service.DescribeKubernetesClusterById2(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	var respData2 *tke.DescribeClusterSecurityResponseParams
+	reqErr2 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterById2(ctx, clusterId)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesClusterReadRequestOnError2(ctx, result, e); err != nil {
@@ -1625,9 +1617,9 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		respData2 = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, err)
-		return err
+	if reqErr2 != nil {
+		log.Printf("[CRITAL]%s read kubernetes cluster failed, reason:%+v", logId, reqErr2)
+		return reqErr2
 	}
 
 	if respData2 == nil {
@@ -1692,7 +1684,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	if needChange {
 		request := tke.NewModifyClusterAttributeRequest()
 
-		request.ClusterId = &clusterId
+		request.ClusterId = helper.String(clusterId)
 
 		if v, ok := d.GetOkExists("project_id"); ok {
 			request.ProjectId = helper.IntInt64(v.(int))
@@ -1739,7 +1731,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 
 		response1 := tke.NewUpdateClusterVersionResponse()
 
-		request1.ClusterId = &clusterId
+		request1.ClusterId = helper.String(clusterId)
 
 		if v, ok := d.GetOk("cluster_version"); ok {
 			request1.DstVersion = helper.String(v.(string))
@@ -1780,7 +1772,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	if needChange2 {
 		request2 := tke.NewModifyClusterAsGroupOptionAttributeRequest()
 
-		request2.ClusterId = &clusterId
+		request2.ClusterId = helper.String(clusterId)
 
 		if clusterAsGroupOptionMap, ok := helper.InterfacesHeadMap(d, "node_pool_global_config"); ok {
 			clusterAsGroupOption := tke.ClusterAsGroupOption{}
@@ -1850,7 +1842,7 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 		response = tke.NewDeleteClusterResponse()
 	)
 
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	instanceDeleteMode := "terminate"
 	request.InstanceDeleteMode = &instanceDeleteMode
@@ -1873,7 +1865,7 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes cluster failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes cluster failed, reason:%+v", logId, err)
 		return err
 	}
 

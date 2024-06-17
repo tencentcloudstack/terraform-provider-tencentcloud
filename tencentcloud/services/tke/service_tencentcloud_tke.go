@@ -3162,7 +3162,7 @@ func (me *TkeService) DescribeKubernetesClusterById(ctx context.Context, cluster
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeClustersRequest()
-	request.ClusterIds = []*string{&clusterId}
+	request.ClusterIds = []*string{helper.String(clusterId)}
 
 	defer func() {
 		if errRet != nil {
@@ -3179,7 +3179,7 @@ func (me *TkeService) DescribeKubernetesClusterById(ctx context.Context, cluster
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || len(response.Response.Clusters) < 1 {
+	if len(response.Response.Clusters) < 1 {
 		return
 	}
 
@@ -3191,7 +3191,7 @@ func (me *TkeService) DescribeKubernetesClusterById1(ctx context.Context, cluste
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeClusterInstancesRequest()
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	defer func() {
 		if errRet != nil {
@@ -3216,7 +3216,7 @@ func (me *TkeService) DescribeKubernetesClusterById2(ctx context.Context, cluste
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeClusterSecurityRequest()
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	defer func() {
 		if errRet != nil {
