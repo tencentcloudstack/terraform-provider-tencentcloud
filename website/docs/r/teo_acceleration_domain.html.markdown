@@ -32,6 +32,10 @@ The following arguments are supported:
 * `domain_name` - (Required, String, ForceNew) Accelerated domain name.
 * `origin_info` - (Required, List) Details of the origin.
 * `zone_id` - (Required, String, ForceNew) ID of the site related with the accelerated domain name.
+* `http_origin_port` - (Optional, Int) HTTP back-to-origin port, the value is 1-65535, effective when OriginProtocol=FOLLOW/HTTP, if not filled in, the default value is 80.
+* `https_origin_port` - (Optional, Int) HTTPS back-to-origin port. The value range is 1-65535. It takes effect when OriginProtocol=FOLLOW/HTTPS. If it is not filled in, the default value is 443.
+* `ipv6_status` - (Optional, String) IPv6 status, the value is: `follow`: follow the site IPv6 configuration; `on`: on; `off`: off. If not filled in, the default is: `follow`.
+* `origin_protocol` - (Optional, String) Origin return protocol, possible values are: `FOLLOW`: protocol follow; `HTTP`: HTTP protocol back to source; `HTTPS`: HTTPS protocol back to source. If not filled in, the default is: `FOLLOW`.
 * `status` - (Optional, String) Accelerated domain name status, the values are: `online`: enabled; `offline`: disabled.
 
 The `origin_info` object supports the following:

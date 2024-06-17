@@ -688,10 +688,10 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeAccelerationDomainsRequest()
-	request.ZoneId = &zoneId
+	request.ZoneId = helper.String(zoneId)
 	advancedFilter := &teo.AdvancedFilter{
 		Name:   helper.String("domain-name"),
-		Values: []*string{&domainName},
+		Values: []*string{helper.String(domainName)},
 	}
 	request.Filters = append(request.Filters, advancedFilter)
 
@@ -732,6 +732,7 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 	if len(instances) < 1 {
 		return
 	}
+
 	ret = instances[0]
 	return
 }
