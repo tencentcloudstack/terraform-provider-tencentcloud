@@ -104,24 +104,28 @@ func ResourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 			"origin_protocol": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Origin return protocol, possible values are: `FOLLOW`: protocol follow; `HTTP`: HTTP protocol back to source; `HTTPS`: HTTPS protocol back to source. If not filled in, the default is: `FOLLOW`.",
 			},
 
 			"http_origin_port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "HTTP back-to-origin port, the value is 1-65535, effective when OriginProtocol=FOLLOW/HTTP, if not filled in, the default value is 80.",
 			},
 
 			"https_origin_port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "HTTPS back-to-origin port. The value range is 1-65535. It takes effect when OriginProtocol=FOLLOW/HTTPS. If it is not filled in, the default value is 443.",
 			},
 
 			"ipv6_status": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "IPv6 status, the value is: `follow`: follow the site IPv6 configuration; `on`: on; `off`: off. If not filled in, the default is: `follow`.",
 			},
 		},
@@ -188,6 +192,22 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 			}
 		}
 		request.OriginInfo = &originInfo
+	}
+
+	if v, ok := d.GetOk("origin_protocol"); ok {
+		request.OriginProtocol = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("http_origin_port"); ok {
+		request.HttpOriginPort = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("https_origin_port"); ok {
+		request.HttpsOriginPort = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("ipv6_status"); ok {
+		request.IPv6Status = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -308,7 +328,7 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 	}
 
 	if respData.HttpsOriginPort != nil {
-		_ = d.Set("http_origin_port", respData.HttpsOriginPort)
+		_ = d.Set("https_origin_port", respData.HttpsOriginPort)
 	}
 
 	if respData.IPv6Status != nil {
@@ -340,7 +360,7 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 	domainName := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"origin_info", "origin_protocol", "http_origin_port", "http_origin_port", "ipv6_status"}
+	mutableArgs := []string{"origin_info", "origin_protocol", "http_origin_port", "https_origin_port", "ipv6_status"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -393,7 +413,7 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			request.HttpOriginPort = helper.IntUint64(v.(int))
 		}
 
-		if v, ok := d.GetOkExists("http_origin_port"); ok {
+		if v, ok := d.GetOkExists("https_origin_port"); ok {
 			request.HttpsOriginPort = helper.IntUint64(v.(int))
 		}
 
