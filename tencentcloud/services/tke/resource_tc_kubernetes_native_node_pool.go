@@ -1359,6 +1359,10 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 		for _, annotations := range respData.Annotations {
 			annotationsMap := map[string]interface{}{}
 
+			if annotations.Name != nil && tkeNativeNodePoolAnnotationsMap[*annotations.Name] != "" {
+				continue
+			}
+
 			if annotations.Name != nil {
 				annotationsMap["name"] = annotations.Name
 			}

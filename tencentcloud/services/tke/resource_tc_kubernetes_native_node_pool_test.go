@@ -67,9 +67,9 @@ func TestAccTencentCloudKubernetesNativeNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "native.0.data_disks.0.mount_target", "/var/lib/containerd"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "native.0.data_disks.0.auto_format_and_mount", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "native.0.key_ids.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.#", "1"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.0.name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.0.value"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.#", "0"),
+					//resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.0.name"),
+					//resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.0.value"),
 				),
 			},
 			{
@@ -107,7 +107,7 @@ func TestAccTencentCloudKubernetesNativeNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "native.0.data_disks.0.disk_size", "60"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "native.0.data_disks.0.auto_format_and_mount", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "native.0.key_ids.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_native_node_pool.native_node_pool_test", "annotations.#", "0"),
 				),
 			},
 			{
@@ -299,10 +299,10 @@ resource "tencentcloud_kubernetes_native_node_pool" "native_node_pool_test" {
     key_ids = [tencentcloud_key_pair.key_pair1.id]
   }
 
-  annotations {
-    name  = "cluster-autoscaler.kubernetes.io/scale-down-disabled"
-    value = "true"
-  }
+  //annotations {
+  //  name  = "cluster-autoscaler.kubernetes.io/scale-down-disabled"
+  //  value = "true"
+  //}
 }
 `
 
@@ -386,13 +386,13 @@ resource "tencentcloud_kubernetes_native_node_pool" "native_node_pool_test" {
     key_ids = [local.ssh1, local.ssh2]
   }
 
-  annotations {
-    name  = "cluster-autoscaler.kubernetes.io/scale-down-disabled"
-    value = "true"
-  }
-  annotations {
-    name  = "node.tke.cloud.tencent.com/security-agent"
-    value = "false"
-  }
+  //annotations {
+  //  name  = "cluster-autoscaler.kubernetes.io/scale-down-disabled"
+  //  value = "true"
+  //}
+  //annotations {
+  //  name  = "node.tke.cloud.tencent.com/security-agent"
+  //  value = "false"
+  //}
 }
 `

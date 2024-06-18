@@ -150,3 +150,10 @@ const (
 const (
 	backupStorageLocationStateAvailable = "Available"
 )
+
+// Content automatically added by the backend of cloud products
+var tkeNativeNodePoolAnnotationsMap = map[string]string{
+	"cluster-autoscaler.kubernetes.io/scale-down-disabled": "cluster-autoscaler.kubernetes.io/scale-down-disabled",
+	"node.tke.cloud.tencent.com/security-agent":            "node.tke.cloud.tencent.com/security-agent",
+	"node.tke.cloud.tencent.com/security-groups-spread":    "node.tke.cloud.tencent.com/security-groups-spread",
+}
