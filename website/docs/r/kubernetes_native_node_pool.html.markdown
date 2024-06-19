@@ -93,12 +93,12 @@ resource "tencentcloud_kubernetes_native_node_pool" "kubernetes_native_node_pool
   }
 
   annotations {
-    name  = "cluster-autoscaler.kubernetes.io/scale-down-disabled"
-    value = "true"
+    name  = "node.tke.cloud.tencent.com/test-anno"
+    value = "test"
   }
   annotations {
-    name  = "node.tke.cloud.tencent.com/security-agent"
-    value = "false"
+    name  = "node.tke.cloud.tencent.com/test-label"
+    value = "test"
   }
 }
 ```
