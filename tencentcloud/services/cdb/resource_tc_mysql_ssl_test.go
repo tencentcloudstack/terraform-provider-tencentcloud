@@ -21,7 +21,7 @@ func TestAccTencentCloudMysqlSslResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_ssl.ssl", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_ssl.ssl", "status", "ON"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_ssl.ssl", "Url"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_ssl.ssl", "url"),
 				),
 			},
 			{
@@ -34,7 +34,7 @@ func TestAccTencentCloudMysqlSslResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_ssl.ssl", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_ssl.ssl", "status", "OFF"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_ssl.ssl", "Url"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_ssl.ssl", "url"),
 				),
 			},
 		},
