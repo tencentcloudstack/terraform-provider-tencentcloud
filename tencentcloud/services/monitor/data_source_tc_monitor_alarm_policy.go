@@ -426,8 +426,8 @@ func DataSourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 													Description: "Statistical period in seconds. The valid values can be queried via DescribeAlarmMetricsNote: this field may return null, indicating that no valid value is obtained.",
 												},
 												"operator": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
 													Description: "Statistical period in seconds. The valid values can be queried via DescribeAlarmMetrics.Note: this field may return null, indicating that no valid value is obtained.Operator	String	No	Operatorintelligent = intelligent detection without thresholdeq = equal toge = greater than or equal togt = greater thanle = less than or equal tolt = less thanne = not equal today_increase = day-on-day increaseday_decrease = day-on-day decreaseday_wave = day-on-day fluctuationweek_increase = week-on-week increaseweek_decrease = week-on-week decreaseweek_wave = week-on-week fluctuationcycle_increase = cyclical increasecycle_decrease = cyclical decreasecycle_wave = cyclical fluctuationre = regex matchThe valid values can be queried via DescribeAlarmMetrics.Note: this field may return null, indicating that no valid value is obtained.",
 												},
 												"value": {

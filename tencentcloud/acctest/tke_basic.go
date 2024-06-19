@@ -87,7 +87,7 @@ locals {
 }
 `
 
-//InstanceType
+// InstanceType
 const TkeDatasourceInstanceTypeTestCase = DefaultInstanceVariable + `
 data "tencentcloud_instance_types" "ins_type" {
   filter {

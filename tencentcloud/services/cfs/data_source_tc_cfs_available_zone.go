@@ -71,8 +71,8 @@ func DataSourceTencentCloudCfsAvailableZone() *schema.Resource {
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"sale_status": {
-																Type:     schema.TypeString,
-																Computed: true,
+																Type:        schema.TypeString,
+																Computed:    true,
 																Description: "	Sale status. Valid values: sale_out (sold out), saling (purchasable), no_saling (non-purchasable).",
 															},
 															"protocol": {

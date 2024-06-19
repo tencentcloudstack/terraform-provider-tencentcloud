@@ -78,8 +78,8 @@ func DataSourceTencentCloudCosBucketInventorys() *schema.Resource {
 							},
 						},
 						"optional_fields": {
-							Type:     schema.TypeList,
-							Optional: true,
+							Type:        schema.TypeList,
+							Optional:    true,
 							Description: "Analysis items to include in the inventory result	.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
