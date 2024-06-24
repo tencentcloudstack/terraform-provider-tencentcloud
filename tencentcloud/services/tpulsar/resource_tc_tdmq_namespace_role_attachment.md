@@ -1,4 +1,4 @@
-Provide a resource to create a TDMQ role.
+Provide a resource to create a TDMQ environment role.
 
 Example Usage
 
@@ -6,7 +6,7 @@ Example Usage
 resource "tencentcloud_tdmq_instance" "example" {
   cluster_name = "tf_example"
   remark       = "remark."
-  tags         = {
+  tags = {
     "createdBy" = "terraform"
   }
 }

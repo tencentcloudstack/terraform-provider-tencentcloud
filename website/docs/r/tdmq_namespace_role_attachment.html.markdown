@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdmq_namespace_role_attachment"
 sidebar_current: "docs-tencentcloud-resource-tdmq_namespace_role_attachment"
 description: |-
-  Provide a resource to create a TDMQ role.
+  Provide a resource to create a TDMQ environment role.
 ---
 
 # tencentcloud_tdmq_namespace_role_attachment
 
-Provide a resource to create a TDMQ role.
+Provide a resource to create a TDMQ environment role.
 
 ## Example Usage
 

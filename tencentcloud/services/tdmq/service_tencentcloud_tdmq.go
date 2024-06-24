@@ -405,10 +405,11 @@ func (me *TdmqService) CreateTdmqRole(ctx context.Context, roleName string, clus
 		response = result
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s create tdmq topic failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create tdmq role failed, reason: %v", logId, err)
 		errRet = err
 		return
 	}
+
 	roleId = *response.Response.RoleName
 	return
 }
@@ -423,17 +424,23 @@ func (me *TdmqService) DescribeTdmqRoleById(ctx context.Context,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.RoleName = &roleName
+
 	request.ClusterId = &clusterId
+	request.Filters = []*tdmq.Filter{
+		{
+			Name:   common.StringPtr("RoleName"),
+			Values: common.StringPtrs([]string{roleName}),
+		},
+	}
 
 	var response *tdmq.DescribeRolesResponse
-
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, err := me.client.UseTdmqClient().DescribeRoles(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		response = result
 		return nil
 	}); err != nil {
@@ -444,8 +451,10 @@ func (me *TdmqService) DescribeTdmqRoleById(ctx context.Context,
 	if len(response.Response.RoleSets) < 1 {
 		return
 	}
+
 	has = true
 	info = response.Response.RoleSets[0]
+
 	return
 }
 
@@ -459,6 +468,7 @@ func (me *TdmqService) ModifyTdmqRoleAttribute(ctx context.Context, roleName str
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.RoleName = &roleName
 	request.ClusterId = &clusterId
 	request.Remark = &remark
@@ -469,15 +479,17 @@ func (me *TdmqService) ModifyTdmqRoleAttribute(ctx context.Context, roleName str
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s modify tdmq role failed, reason: %v", logId, err)
 		return err
 	}
+
 	return
 }
 
-func (me *TdmqService) DeleteTdmqRole(ctx context.Context, roleName string, cluserId string) (errRet error) {
+func (me *TdmqService) DeleteTdmqRole(ctx context.Context, roleName string, clusterId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tdmq.NewDeleteRolesRequest()
 	defer func() {
@@ -488,7 +500,7 @@ func (me *TdmqService) DeleteTdmqRole(ctx context.Context, roleName string, clus
 	}()
 
 	request.RoleNames = []*string{&roleName}
-	request.ClusterId = &cluserId
+	request.ClusterId = &clusterId
 
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -527,12 +539,14 @@ func (me *TdmqService) CreateTdmqNamespaceRoleAttachment(ctx context.Context, en
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
+
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s create tdmq topic failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create tdmq environment role failed, reason: %v", logId, err)
 		errRet = err
 		return
 	}
+
 	return
 }
 
@@ -546,9 +560,15 @@ func (me *TdmqService) DescribeTdmqNamespaceRoleAttachment(ctx context.Context,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.EnvironmentId = &environId
-	request.RoleName = &roleName
 	request.ClusterId = &clusterId
+	request.Filters = []*tdmq.Filter{
+		{
+			Name:   common.StringPtr("RoleName"),
+			Values: common.StringPtrs([]string{roleName}),
+		},
+	}
 
 	var response *tdmq.DescribeEnvironmentRolesResponse
 
@@ -558,6 +578,7 @@ func (me *TdmqService) DescribeTdmqNamespaceRoleAttachment(ctx context.Context,
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		response = result
 		return nil
 	}); err != nil {
@@ -568,6 +589,7 @@ func (me *TdmqService) DescribeTdmqNamespaceRoleAttachment(ctx context.Context,
 	if len(response.Response.EnvironmentRoleSets) < 1 {
 		return
 	}
+
 	has = true
 	info = response.Response.EnvironmentRoleSets[0]
 	return
@@ -583,6 +605,7 @@ func (me *TdmqService) ModifyTdmqNamespaceRoleAttachment(ctx context.Context,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.EnvironmentId = &environId
 	request.RoleName = &roleName
 	request.ClusterId = &clusterId
@@ -594,11 +617,13 @@ func (me *TdmqService) ModifyTdmqNamespaceRoleAttachment(ctx context.Context,
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s modify tdmq environment role failed, reason: %v", logId, err)
 		return err
 	}
+
 	return
 }
 
@@ -623,11 +648,13 @@ func (me *TdmqService) DeleteTdmqNamespaceRoleAttachment(ctx context.Context, en
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s delete tdmq environments roles failed, reason: %v", logId, err)
 		return err
 	}
+
 	return
 }
 

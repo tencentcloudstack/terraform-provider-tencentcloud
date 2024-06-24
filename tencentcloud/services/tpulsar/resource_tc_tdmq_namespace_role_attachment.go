@@ -22,9 +22,6 @@ func ResourceTencentCloudTdmqNamespaceRoleAttachment() *schema.Resource {
 		Read:   resourceTencentCloudTdmqNamespaceRoleAttachmentRead,
 		Update: resourceTencentCloudTdmqNamespaceRoleAttachmentUpdate,
 		Delete: resourceTencentCloudTdmqNamespaceRoleAttachmentDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"environ_id": {
@@ -61,17 +58,16 @@ func ResourceTencentCloudTdmqNamespaceRoleAttachment() *schema.Resource {
 func resourceTencentCloudTdmqNamespaceRoleAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_namespace_role_attachment.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		environId   string
 		roleName    string
 		permissions []*string
 		clusterId   string
 	)
+
 	if temp, ok := d.GetOk("environ_id"); ok {
 		environId = temp.(string)
 		if len(environId) < 1 {
@@ -113,18 +109,20 @@ func resourceTencentCloudTdmqNamespaceRoleAttachmentRead(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_namespace_role_attachment.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("environment role id is borken, id is %s", d.Id())
 	}
+
 	environId := idSplit[0]
 	roleName := idSplit[1]
 	clusterId := d.Get("cluster_id").(string)
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := tdmqService.DescribeTdmqNamespaceRoleAttachment(ctx, environId, roleName, clusterId)
@@ -135,37 +133,48 @@ func resourceTencentCloudTdmqNamespaceRoleAttachmentRead(d *schema.ResourceData,
 			d.SetId("")
 			return nil
 		}
+
 		_ = d.Set("environ_id", info.EnvironmentId)
 		_ = d.Set("role_name", info.RoleName)
 		_ = d.Set("permissions", info.Permissions)
 		_ = d.Set("create_time", info.CreateTime)
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceTencentCloudTdmqNamespaceRoleAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_namespace_role_attachment.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service     = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		permissions []*string
+	)
+
+	immutableArgs := []string{"environ_id", "role_name", "cluster_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("environment role id is borken, id is %s", d.Id())
 	}
+
 	environId := idSplit[0]
 	roleName := idSplit[1]
 	clusterId := d.Get("cluster_id").(string)
 
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
-	var (
-		permissions []*string
-	)
 	old, now := d.GetChange("permissions")
 	if d.HasChange("permissions") {
 		for _, id := range now.([]interface{}) {
@@ -190,18 +199,20 @@ func resourceTencentCloudTdmqNamespaceRoleAttachmentUpdate(d *schema.ResourceDat
 func resourceTencentCloudTdmqNamespaceRoleAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_namespace_role_attachment.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("environment role id is borken, id is %s", d.Id())
 	}
+
 	environId := idSplit[0]
 	roleName := idSplit[1]
 	clusterId := d.Get("cluster_id").(string)
-
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteTdmqNamespaceRoleAttachment(ctx, environId, roleName, clusterId); err != nil {
@@ -210,8 +221,10 @@ func resourceTencentCloudTdmqNamespaceRoleAttachmentDelete(d *schema.ResourceDat
 					return nil
 				}
 			}
+
 			return resource.RetryableError(err)
 		}
+
 		return nil
 	})
 
