@@ -657,6 +657,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_node_pools
     tencentcloud_kubernetes_cluster_instances
     tencentcloud_kubernetes_cluster_node_pools
+    tencentcloud_kubernetes_cluster_native_node_pools
 
   Resource
     tencentcloud_kubernetes_cluster
@@ -670,6 +671,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_addon_attachment
     tencentcloud_kubernetes_cluster_endpoint
     tencentcloud_kubernetes_addon
+    tencentcloud_kubernetes_native_node_pool
 
 TDMQ for Pulsar(tpulsar)
   Data Source

@@ -987,7 +987,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_instance_shards":                   cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
 			"tencentcloud_clickhouse_instance_nodes":                    cdwch.DataSourceTencentCloudClickhouseInstanceNodes(),
 			"tencentcloud_organization_org_share_area":                  tco.DataSourceTencentCloudOrganizationOrgShareArea(),
-		},
+			"tencentcloud_kubernetes_cluster_native_node_pools":         tke.DataSourceTencentCloudKubernetesClusterNativeNodePools()},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                             project.ResourceTencentCloudProject(),
@@ -1974,7 +1974,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_csip_risk_center":                                    csip.ResourceTencentCloudCsipRiskCenter(),
 			"tencentcloud_organization_org_share_unit_member":                  tco.ResourceTencentCloudOrganizationOrgShareUnitMember(),
 			"tencentcloud_organization_org_share_unit":                         tco.ResourceTencentCloudOrganizationOrgShareUnit(),
-			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon()},
+			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon(),
+			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool()},
 
 		ConfigureFunc: providerConfigure,
 	}
