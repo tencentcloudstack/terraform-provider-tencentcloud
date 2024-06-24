@@ -19,9 +19,6 @@ func ResourceTencentCloudTdmqTopic() *schema.Resource {
 		Read:   resourceTencentCloudTdmqTopicRead,
 		Update: resourceTencentCloudTdmqTopicUpdate,
 		Delete: resourceTencentCloudTdmqTopicDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"environ_id": {
@@ -51,6 +48,7 @@ func ResourceTencentCloudTdmqTopic() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The Dedicated Cluster Id.",
 			},
 			"pulsar_topic_type": {
@@ -79,12 +77,10 @@ func ResourceTencentCloudTdmqTopic() *schema.Resource {
 func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_topic.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	var (
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService     = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		environId       string
 		topicName       string
 		partitions      uint64
@@ -93,22 +89,27 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 		clusterId       string
 		pulsarTopicType int64
 	)
+
 	if temp, ok := d.GetOk("environ_id"); ok {
 		environId = temp.(string)
 		if len(environId) < 1 {
 			return fmt.Errorf("environ_id should be not empty string")
 		}
 	}
+
 	if temp, ok := d.GetOk("topic_name"); ok {
 		topicName = temp.(string)
 		if len(topicName) < 1 {
 			return fmt.Errorf("topic_name should be not empty string")
 		}
 	}
+
 	partitions = uint64(d.Get("partitions").(int))
+
 	if temp, ok := d.GetOk("remark"); ok {
 		remark = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("cluster_id"); ok {
 		clusterId = temp.(string)
 	}
@@ -128,8 +129,8 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 	if err != nil {
 		return err
 	}
-	d.SetId(topicName)
 
+	d.SetId(topicName)
 	return resourceTencentCloudTdmqTopicRead(d, meta)
 }
 
@@ -137,20 +138,22 @@ func resourceTencentCloudTdmqTopicRead(d *schema.ResourceData, meta interface{})
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	topicName := d.Id()
 	environId := d.Get("environ_id").(string)
 	clusterId := d.Get("cluster_id").(string)
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := tdmqService.DescribeTdmqTopicById(ctx, environId, topicName, clusterId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		if !has {
 			d.SetId("")
 			return nil
@@ -163,32 +166,37 @@ func resourceTencentCloudTdmqTopicRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("create_time", info.CreateTime)
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_topic.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		partitions uint64
+		remark     string
+	)
 
-	if d.HasChange("topic_type") {
-		return fmt.Errorf("`topic_type` do not support change now.")
+	immutableArgs := []string{"topic_type", "pulsar_topic_type"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	topicName := d.Id()
 	environId := d.Get("environ_id").(string)
 	clusterId := d.Get("cluster_id").(string)
 
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
-	var (
-		partitions uint64
-		remark     string
-	)
 	old, now := d.GetChange("partitions")
 	if d.HasChange("partitions") {
 		partitions = uint64(now.(int))
@@ -209,6 +217,7 @@ func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{
 		partitions, remark, clusterId); err != nil {
 		return err
 	}
+
 	d.Partial(false)
 	return resourceTencentCloudTdmqTopicRead(d, meta)
 }
@@ -216,10 +225,11 @@ func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudTdmqTopicDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	topicName := d.Id()
 	environId := d.Get("environ_id").(string)
@@ -232,8 +242,10 @@ func resourceTencentCloudTdmqTopicDelete(d *schema.ResourceData, meta interface{
 					return nil
 				}
 			}
+
 			return resource.RetryableError(err)
 		}
+
 		return nil
 	})
 

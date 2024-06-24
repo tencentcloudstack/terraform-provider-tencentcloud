@@ -10,7 +10,6 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTdmqRoleResource_basic -v
 func TestAccTencentCloudTdmqRoleResource_basic(t *testing.T) {
-	t.Parallel()
 	terraformId := "tencentcloud_tdmq_role.example"
 
 	resource.Test(t, resource.TestCase{

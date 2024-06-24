@@ -5,3 +5,15 @@ resource/tencentcloud_tdmq_role: Fix the issue of returning multiple return valu
 ```release-note:enhancement
 resource/tencentcloud_tdmq_namespace_role_attachment: Fix the issue of returning multiple return values
 ```
+
+```release-note:enhancement
+resource/tencentcloud_tdmq_instance: Fix the issue of returning multiple return values
+```
+
+```release-note:enhancement
+resource/tencentcloud_tdmq_namespace: Fix the issue of returning multiple return values
+```
+
+```release-note:enhancement
+resource/tencentcloud_tdmq_topic: Fix the issue of returning multiple return values
+```

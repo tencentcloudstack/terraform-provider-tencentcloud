@@ -40,10 +40,10 @@ func (me *TdmqService) DescribeTdmqInstanceById(ctx context.Context,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.ClusterIdList = []*string{&clusterId}
 
 	var response *tdmq.DescribeClustersResponse
-
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = clusterId
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -52,6 +52,7 @@ func (me *TdmqService) DescribeTdmqInstanceById(ctx context.Context,
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		response = result
 		return nil
 	}); err != nil {
@@ -62,6 +63,7 @@ func (me *TdmqService) DescribeTdmqInstanceById(ctx context.Context,
 	if len(response.Response.ClusterSet) < 1 {
 		return
 	}
+
 	has = true
 	info = response.Response.ClusterSet[0]
 	return
@@ -104,14 +106,17 @@ func (me *TdmqService) DeleteTdmqInstance(ctx context.Context, clusterId string)
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.ClusterId = &clusterId
 	response, err := me.client.UseTdmqClient().DeleteCluster(request)
 	if err != nil {
 		errRet = err
 		return err
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
 
@@ -140,6 +145,7 @@ func (me *TdmqService) CreateTdmqNamespace(ctx context.Context, environName stri
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
+
 		response = result
 		return nil
 	}); err != nil {
@@ -147,6 +153,7 @@ func (me *TdmqService) CreateTdmqNamespace(ctx context.Context, environName stri
 		errRet = err
 		return
 	}
+
 	environId = *response.Response.EnvironmentId
 	return
 }
@@ -161,27 +168,34 @@ func (me *TdmqService) DescribeTdmqNamespaceById(ctx context.Context,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.EnvironmentId = &environId
+
 	request.ClusterId = &clusterId
+	request.Filters = []*tdmq.Filter{
+		{
+			Name:   common.StringPtr("EnvironmentId"),
+			Values: common.StringPtrs([]string{environId}),
+		},
+	}
 
 	var response *tdmq.DescribeEnvironmentsResponse
-
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, err := me.client.UseTdmqClient().DescribeEnvironments(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		response = result
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s read tdmq failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s read tdmq namespace failed, reason: %v", logId, err)
 		return nil, false, err
 	}
 
 	if len(response.Response.EnvironmentSet) < 1 {
 		return
 	}
+
 	has = true
 	info = response.Response.EnvironmentSet[0]
 	return
@@ -209,11 +223,13 @@ func (me *TdmqService) ModifyTdmqNamespaceAttribute(ctx context.Context, environ
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s modify tdmq namespace failed, reason: %v", logId, err)
 		return err
 	}
+
 	return
 }
 
@@ -226,6 +242,7 @@ func (me *TdmqService) DeleteTdmqNamespace(ctx context.Context, environId string
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.EnvironmentIds = []*string{&environId}
 	request.ClusterId = &clusterId
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -234,11 +251,13 @@ func (me *TdmqService) DeleteTdmqNamespace(ctx context.Context, environId string
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s delete tdmq namespace failed, reason: %v", logId, err)
 		return err
 	}
+
 	return
 }
 
@@ -291,18 +310,24 @@ func (me *TdmqService) DescribeTdmqTopicById(ctx context.Context,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.EnvironmentId = &environId
-	request.TopicName = &topicName
 	request.ClusterId = &clusterId
+	request.Filters = []*tdmq.Filter{
+		{
+			Name:   common.StringPtr("TopicName"),
+			Values: common.StringPtrs([]string{topicName}),
+		},
+	}
 
 	var response *tdmq.DescribeTopicsResponse
-
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, err := me.client.UseTdmqClient().DescribeTopics(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		response = result
 		return nil
 	}); err != nil {
@@ -313,6 +338,7 @@ func (me *TdmqService) DescribeTdmqTopicById(ctx context.Context,
 	if len(response.Response.TopicSets) < 1 {
 		return
 	}
+
 	has = true
 	info = response.Response.TopicSets[0]
 	return
@@ -328,6 +354,7 @@ func (me *TdmqService) ModifyTdmqTopicAttribute(ctx context.Context, environId s
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.EnvironmentId = &environId
 	request.TopicName = &topicName
 	request.Partitions = &partitions
@@ -340,11 +367,13 @@ func (me *TdmqService) ModifyTdmqTopicAttribute(ctx context.Context, environId s
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s modify tdmq topic failed, reason: %v", logId, err)
 		return err
 	}
+
 	return
 }
 
@@ -357,11 +386,11 @@ func (me *TdmqService) DeleteTdmqTopic(ctx context.Context, environId string, to
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	var (
-		topicRecord tdmq.TopicRecord
-	)
+
+	var topicRecord tdmq.TopicRecord
 	topicRecord.TopicName = &topicName
 	topicRecord.EnvironmentId = &environId
+
 	request.TopicSets = []*tdmq.TopicRecord{&topicRecord}
 	request.ClusterId = &clusterId
 
@@ -371,11 +400,13 @@ func (me *TdmqService) DeleteTdmqTopic(ctx context.Context, environId string, to
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s delete tdmq topic failed, reason: %v", logId, err)
 		return err
 	}
+
 	return
 }
 
