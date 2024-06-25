@@ -96,6 +96,10 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   security_groups_ids = [
     tencentcloud_security_group.example.id,
   ]
+
+  tags = {
+    createdBy : "terraform"
+  }
 }
 ```
 
@@ -120,6 +124,7 @@ The following arguments are supported:
 * `need_support_ipv6` - (Optional, Int, ForceNew) Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).
 * `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `read_only_group_id` - (Optional, String) RO group ID.
+* `tags` - (Optional, Map) The information of tags to be associated with instances. This parameter is left empty by default.
 * `voucher_ids` - (Optional, List: [`String`]) Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.
 
 ## Attributes Reference
@@ -138,6 +143,6 @@ In addition to all arguments above, the following attributes are exported:
 postgresql readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_postgresql_readonly_instance.example instance_id
+$ terraform import tencentcloud_postgresql_readonly_instance.example pgro-jtb4v6oo
 ```
 
