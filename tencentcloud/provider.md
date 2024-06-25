@@ -707,6 +707,8 @@ TencentDB for MongoDB(mongodb)
     tencentcloud_mongodb_standby_instance
     tencentcloud_mongodb_instance_account
     tencentcloud_mongodb_instance_backup
+    tencentcloud_mongodb_instance_transparent_data_encryption
+    tencentcloud_mongodb_instance_backup_rule
 
 TencentDB for MySQL(cdb)
   Data Source
