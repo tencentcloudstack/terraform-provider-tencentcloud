@@ -42,6 +42,7 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "storage", "200"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "private_access_port"),
+					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "read_only_group_id"),
 				),
 			},
 			{
@@ -114,7 +115,21 @@ resource "tencentcloud_postgresql_instance" "example" {
   }
 }
 
+resource "tencentcloud_postgresql_readonly_group" "example" {
+  master_db_instance_id       = tencentcloud_postgresql_instance.example.id
+  name                        = "tf_ro_group"
+  project_id                  = 0
+  vpc_id                      = tencentcloud_vpc.vpc.id
+  subnet_id                   = tencentcloud_subnet.subnet.id
+  replay_lag_eliminate        = 1
+  replay_latency_eliminate    = 1
+  max_replay_lag              = 100
+  max_replay_latency          = 512
+  min_delay_eliminate_reserve = 1
+}
+
 resource "tencentcloud_postgresql_readonly_instance" "example" {
+  read_only_group_id    = tencentcloud_postgresql_readonly_group.example.id
   master_db_instance_id = tencentcloud_postgresql_instance.example.id
   zone                  = var.availability_zone
   name                  = "example"
@@ -179,7 +194,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   }
 }
 
-resource "tencentcloud_postgresql_readonly_group" "example" {
+resource "tencentcloud_postgresql_readonly_group" "example_new" {
   master_db_instance_id       = tencentcloud_postgresql_instance.example.id
   name                        = "tf_ro_group"
   project_id                  = 0
@@ -193,7 +208,7 @@ resource "tencentcloud_postgresql_readonly_group" "example" {
 }
 
 resource "tencentcloud_postgresql_readonly_instance" "example" {
-  read_only_group_id    = tencentcloud_postgresql_readonly_group.example.id
+  read_only_group_id    = tencentcloud_postgresql_readonly_group.example_new.id
   master_db_instance_id = tencentcloud_postgresql_instance.example.id
   zone                  = var.availability_zone
   name                  = "example"
