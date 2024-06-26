@@ -1556,6 +1556,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_acceleration_domain":                             teo.ResourceTencentCloudTeoAccelerationDomain(),
 			"tencentcloud_teo_application_proxy":                               teo.ResourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                          teo.ResourceTencentCloudTeoApplicationProxyRule(),
+			"tencentcloud_teo_realtime_log_delivery":                           teo.ResourceTencentCloudTeoRealtimeLogDelivery(),
 			"tencentcloud_tcm_mesh":                                            tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                              tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                           tcm.ResourceTencentCloudTcmPrometheusAttachment(),

@@ -1407,6 +1407,7 @@ TencentCloud EdgeOne(TEO)
     tencentcloud_teo_certificate_config
     tencentcloud_teo_acceleration_domain
     tencentcloud_teo_l4_proxy
+    tencentcloud_teo_realtime_log_delivery
 
 TencentCloud ServiceMesh(TCM)
   Data Source
