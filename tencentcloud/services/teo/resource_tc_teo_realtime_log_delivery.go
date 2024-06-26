@@ -41,13 +41,13 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 			"task_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The real-time log delivery task type. The possible values \u200b\u200bare: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address.",
+				Description: "The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address.",
 			},
 
 			"entity_list": {
 				Type:        schema.TypeList,
 				Required:    true,
-				Description: "List of entities (seven-layer domain names or four-layer proxy instances) corresponding to real-time log delivery tasks. Example values \u200b\u200bare as follows: Seven-layer domain name: domain.example.com; four-layer proxy instance: sid-2s69eb5wcms7. For values, refer to: https://cloud.tencent.com/document/api/1552/80690, https://cloud.tencent.com/document/api/1552/86336",
+				Description: "List of entities (seven-layer domain names or four-layer proxy instances) corresponding to real-time log delivery tasks. Example values are as follows: Seven-layer domain name: `domain.example.com`; four-layer proxy instance: sid-2s69eb5wcms7. For values, refer to: `https://cloud.tencent.com/document/api/1552/80690`, `https://cloud.tencent.com/document/api/1552/86336`.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -56,13 +56,13 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 			"log_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Data delivery type, the values \u200b\u200bare: `domain`: site acceleration log; `application`: four-layer proxy log; `web-rateLiming`: rate limit and CC attack protection log; `web-attack`: managed rule log; `web-rule`: custom rule log; `web-bot`: Bot management log.",
+				Description: "Data delivery type, the values are: `domain`: site acceleration log; `application`: four-layer proxy log; `web-rateLiming`: rate limit and CC attack protection log; `web-attack`: managed rule log; `web-rule`: custom rule log; `web-bot`: Bot management log.",
 			},
 
 			"area": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Data delivery area, possible values \u200b\u200bare: `mainland`: within mainland China; `overseas`: worldwide (excluding mainland China).",
+				Description: "Data delivery area, possible values are: `mainland`: within mainland China; `overseas`: worldwide (excluding mainland China).",
 			},
 
 			"fields": {
@@ -78,13 +78,13 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
-				Description: "The list of custom fields delivered supports extracting specified field values \u200b\u200bfrom HTTP request headers, response headers, and cookies. Custom field names cannot be repeated and cannot exceed 200 fields.",
+				Description: "The list of custom fields delivered supports extracting specified field values from HTTP request headers, response headers, and cookies. Custom field names cannot be repeated and cannot exceed 200 fields.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Extract data from the specified location in the HTTP request and response. The values \u200b\u200bare: `ReqHeader`: extract the specified field value from the HTTP request header; `RspHeader`: extract the specified field value from the HTTP response header; `Cookie`: extract the specified field value from the Cookie.",
+							Description: "Extract data from the specified location in the HTTP request and response. The values are: `ReqHeader`: extract the specified field value from the HTTP request header; `RspHeader`: extract the specified field value from the HTTP response header; `Cookie`: extract the specified field value from the Cookie.",
 						},
 						"value": {
 							Type:        schema.TypeString,
@@ -155,7 +155,7 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 						"format_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The default output format type for log delivery. The possible values \u200b\u200bare: `json`: Use the default log output format JSON Lines. The fields in a single log are presented as key-value pairs; `csv`: Use the default log output format csv. Only field values \u200b\u200bare presented in a single log, without field names.",
+							Description: "The default output format type for log delivery. The possible values are: `json`: Use the default log output format JSON Lines. The fields in a single log are presented as key-value pairs; `csv`: Use the default log output format csv. Only field values are presented in a single log, without field names.",
 						},
 						"batch_prefix": {
 							Type:        schema.TypeString,
@@ -180,12 +180,12 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 						"record_delimiter": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The string inserted between log records as a separator. The possible values \u200b\u200bare: `\n`: newline character; `\t`: tab character; `,`: comma.",
+							Description: "The string inserted between log records as a separator. The possible values are: `\n`: newline character; `\t`: tab character; `,`: comma.",
 						},
 						"field_delimiter": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "In a single log record, a string is inserted between fields as a separator. The possible values \u200b\u200bare: `\t`: tab character; `,`: comma; `;`: semicolon.",
+							Description: "In a single log record, a string is inserted between fields as a separator. The possible values are: `\t`: tab character; `,`: comma; `;`: semicolon.",
 						},
 					},
 				},
@@ -244,7 +244,7 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 						"compress_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Data compression type, the possible values \u200b\u200bare: `gzip`: use gzip compression. If it is not filled in, compression is not enabled.",
+							Description: "Data compression type, the possible values are: `gzip`: use gzip compression. If it is not filled in, compression is not enabled.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
@@ -311,7 +311,7 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 						"compress_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Data compression type, the values \u200b\u200bare: `gzip`: gzip compression. If it is not filled in, compression is not enabled.",
+							Description: "Data compression type, the values are: gzip: gzip compression. If it is not filled in, compression is not enabled.",
 						},
 					},
 				},
