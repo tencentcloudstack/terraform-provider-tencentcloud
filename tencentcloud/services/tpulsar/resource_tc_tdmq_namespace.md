@@ -1,4 +1,4 @@
-Provide a resource to create a tdmq namespace.
+Provide a resource to create a TDMQ namespace.
 
 Example Usage
 
@@ -28,5 +28,5 @@ Import
 Tdmq namespace can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_tdmq_instance.test namespace_id
+$ terraform import tencentcloud_tdmq_instance.example tf_example#pulsar-78bwjaj8epxv
 ```

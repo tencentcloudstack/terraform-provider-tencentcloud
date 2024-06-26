@@ -8,9 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTdmqTdmqNamespaceResource_basic -v
-func TestAccTencentCloudTdmqTdmqNamespaceResource_basic(t *testing.T) {
-	t.Parallel()
+// go test -i; go test -test.run TestAccTencentCloudTdmqNamespaceResource_basic -v
+func TestAccTencentCloudTdmqNamespaceResource_basic(t *testing.T) {
 	terraformId := "tencentcloud_tdmq_namespace.example"
 
 	resource.Test(t, resource.TestCase{
@@ -20,17 +19,23 @@ func TestAccTencentCloudTdmqTdmqNamespaceResource_basic(t *testing.T) {
 			{
 				Config: testAccTdmqNamespace,
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(terraformId, "environ_name", "tf_example"),
+					resource.TestCheckResourceAttr(terraformId, "msg_ttl", "60"),
+					resource.TestCheckResourceAttrSet(terraformId, "cluster_id"),
 					resource.TestCheckResourceAttr(terraformId, "remark", "remark."),
 				),
 			},
 			{
 				Config: testAccTdmqNamespaceUpdate,
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(terraformId, "environ_name", "tf_example"),
+					resource.TestCheckResourceAttr(terraformId, "msg_ttl", "300"),
+					resource.TestCheckResourceAttrSet(terraformId, "cluster_id"),
 					resource.TestCheckResourceAttr(terraformId, "remark", "remark update."),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_namespace.example",
+				ResourceName:      terraformId,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
