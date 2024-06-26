@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svccrs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -132,11 +132,11 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).",
 			},
-			//"tag_list": {
-			//	Type:        schema.TypeMap,
-			//	Optional:    true,
-			//	Description: "The information of tags to be associated with instances. This parameter is left empty by default..",
-			//},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The information of tags to be associated with instances. This parameter is left empty by default.",
+			},
 			"read_only_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -165,10 +165,9 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
 	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request           = postgresql.NewCreateReadOnlyDBInstanceRequest()
 		response          *postgresql.CreateReadOnlyDBInstanceResponse
 		postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
@@ -182,55 +181,72 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		dbVersion = v.(string)
 		request.DBVersion = helper.String(dbVersion)
 	}
+
 	if v, ok := d.GetOk("storage"); ok {
 		request.Storage = helper.IntUint64(v.(int))
 	}
+
 	if v, ok := d.GetOk("memory"); ok {
 		memory = v.(int)
 	}
+
 	if v, ok := d.GetOkExists("cpu"); ok {
 		cpu = v.(int)
 	}
+
 	if v, ok := d.GetOk("master_db_instance_id"); ok {
 		request.MasterDBInstanceId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("zone"); ok {
 		zone = v.(string)
 		request.Zone = helper.String(zone)
 	}
+
 	if v, ok := d.GetOk("project_id"); ok {
 		request.ProjectId = helper.IntUint64(v.(int))
 	}
+
 	if v, ok := d.GetOk("instance_charge_type"); ok {
 		request.InstanceChargeType = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("auto_renew_flag"); ok {
 		request.AutoRenewFlag = helper.IntInt64(v.(int))
 	}
+
 	if v, ok := d.Get("period").(int); ok && v > 0 {
 		request.Period = helper.IntUint64(v)
 	}
+
 	if v, ok := d.Get("auto_voucher").(int); ok && v > 0 {
 		request.AutoVoucher = helper.IntUint64(v)
 	}
+
 	if v, ok := d.GetOk("voucher_ids"); ok {
 		request.VoucherIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
+
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("subnet_id"); ok {
 		request.SubnetId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("need_support_ipv6"); ok {
 		request.NeedSupportIpv6 = helper.IntUint64(v.(int))
 	}
+
 	if v, ok := d.GetOk("read_only_group_id"); ok {
 		request.ReadOnlyGroupId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("security_groups_ids"); ok {
 		securityGroupsIds := v.(*schema.Set).List()
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroupsIds))
@@ -238,14 +254,6 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 			request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(item.(string)))
 		}
 	}
-	//if tags := helper.GetTags(d, "tag_list"); len(tags) > 0 {
-	//	for k, v := range tags {
-	//		request.TagList = &postgresql.Tag{
-	//			TagKey:   &k,
-	//			TagValue: &v,
-	//		}
-	//	}
-	//}
 
 	// get specCode with db_version and memory
 	var allowVersion, allowSpec []string
@@ -280,21 +288,23 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		}
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if specVersion == "" {
 		return fmt.Errorf(`The "db_version" value: "%s" is invalid, Valid values are one of: "%s"`, dbVersion, strings.Join(allowVersion, `", "`))
 	}
+
 	if specCode == "" {
 		return fmt.Errorf(`The "memory" value: %d or the "cpu" value: %d is invalid, Valid combine values are one of: %s .`,
 			memory, cpu, strings.Join(allowSpec, `; `))
 	}
-	request.SpecCode = helper.String(specCode)
 
+	request.SpecCode = helper.String(specCode)
 	request.InstanceCount = helper.IntUint64(1)
 	request.Period = helper.IntUint64(1)
-
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateReadOnlyDBInstance(request)
 		if e != nil {
@@ -303,18 +313,20 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
-
 	})
+
 	if err != nil {
 		return err
 	}
+
 	instanceId := *response.Response.DBInstanceIdSet[0]
 	d.SetId(instanceId)
 
 	// check creation done
-	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return tccommon.RetryError(err)
@@ -331,21 +343,35 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		return err
 	}
 
+	// create tag
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(client)
+	region := client.Region
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", region, instanceId)
+		if err = tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudPostgresqlReadOnlyInstanceRead(d, meta)
 }
 
 func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId        = d.Id()
+	)
 
-	instanceId := d.Id()
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
+
 	if !has {
 		d.SetId("")
 		return nil
@@ -371,25 +397,37 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("need_support_ipv6", instance.SupportIpv6)
-	// set readonly group when DescribeReadOnlyGroups ready for filter by the readonly group id
-	// _ = d.Set("read_only_group_id", readonlyGroup.Id)
 
-	// security groups
-	// Only redis service support modify Generic DB instance security groups
-	redisService := svccrs.NewRedisService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	sg, err := redisService.DescribeDBSecurityGroups(ctx, "postgres", d.Id())
+	// read only group
+	masterDBInstanceId := instance.MasterDBInstanceId
+	readOnlyGroupId, err := postgresqlService.DescribeReadOnlyGroupsById(ctx, *masterDBInstanceId, d.Id())
 	if err != nil {
 		return err
 	}
+
+	if readOnlyGroupId != nil {
+		_ = d.Set("read_only_group_id", readOnlyGroupId)
+	}
+
+	// security groups
+	sg, err := postgresqlService.DescribeDBInstanceSecurityGroupsById(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+
 	if len(sg) > 0 {
 		_ = d.Set("security_groups_ids", sg)
 	}
 
-	//tags := make(map[string]string, len(instance.TagList))
-	//for _, tag := range instance.TagList {
-	//	tags[*tag.TagKey] = *tag.TagValue
-	//}
-	//_ = d.Set("tag_list", tags)
+	// get tag
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(client)
+	region := client.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "postgres", "DBInstanceId", region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 
 	// computed
 	_ = d.Set("create_time", instance.CreateTime)
@@ -410,11 +448,13 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId        = d.Id()
+	)
 
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	instanceId := d.Id()
 	d.Partial(true)
 
 	if err := helper.ImmutableArgsChek(d,
@@ -456,8 +496,10 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s operate postgresql ChangeDbInstanceReadOnlyGroupOperation failed, reason:%+v", logId, err)
 			return err
@@ -480,15 +522,16 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 			}
 			return nil
 		})
+
 		if outErr != nil {
 			return outErr
 		}
+
 		// check update name done
 		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
 		if checkErr != nil {
 			return checkErr
 		}
-
 	}
 
 	// upgrade storage and memory size
@@ -499,23 +542,26 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if v, ok := d.GetOkExists("cpu"); ok {
 			cpu = v.(int)
 		}
+
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
+
 			return nil
 		})
+
 		if outErr != nil {
 			return outErr
 		}
+
 		time.Sleep(time.Second * 5)
 		// check update storage and memory done
 		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
 		if checkErr != nil {
 			return checkErr
 		}
-
 	}
 
 	// update project id
@@ -526,8 +572,10 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
+
 			return nil
 		})
+
 		if outErr != nil {
 			return outErr
 		}
@@ -537,39 +585,33 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if checkErr != nil {
 			return checkErr
 		}
-
 	}
 
 	if d.HasChange("security_groups_ids") {
-
-		// Only redis service support modify Generic DB instance security groups
-		service := svccrs.NewRedisService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		ids := d.Get("security_groups_ids").(*schema.Set).List()
 		var sgIds []*string
 		for _, id := range ids {
 			sgIds = append(sgIds, helper.String(id.(string)))
 		}
-		err := service.ModifyDBInstanceSecurityGroups(ctx, "postgres", d.Id(), sgIds)
+
+		err := postgresqlService.ModifyDBInstanceSecurityGroupsById(ctx, d.Id(), sgIds)
 		if err != nil {
 			return err
 		}
-
 	}
 
-	//if d.HasChange("tags") {
-	//
-	//	oldValue, newValue := d.GetChange("tags")
-	//	replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
-	//
-	//	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	//	tagService := svctag.NewTagService(tcClient)
-	//	resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
-	//	err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
-	//	if err != nil {
-	//		return err
-	//	}
-	//
-	//}
+	if d.HasChange("tags") {
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(client)
+		region := client.Region
+		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+	}
 
 	d.Partial(false)
 
@@ -579,11 +621,12 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 func resourceTencentCLoudPostgresqlReadOnlyInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	instanceId := d.Id()
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId        = d.Id()
+	)
 
 	// isolate
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -591,8 +634,10 @@ func resourceTencentCLoudPostgresqlReadOnlyInstanceDelete(d *schema.ResourceData
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -617,8 +662,10 @@ func resourceTencentCLoudPostgresqlReadOnlyInstanceDelete(d *schema.ResourceData
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
