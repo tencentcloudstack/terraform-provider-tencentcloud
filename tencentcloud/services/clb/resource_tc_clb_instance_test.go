@@ -22,6 +22,7 @@ const InternalClbNameUpdate = "tf-clb-update-internal"
 const SingleClbName = "single-open-clb"
 const MultiClbName = "multi-open-clb"
 const OpenClbName = "tf-clb-open"
+const OpenClbNameIpv6 = "tf-clb-open-ipv6"
 const OpenClbNameUpdate = "tf-clb-update-open"
 
 func init() {
@@ -152,6 +153,30 @@ func TestAccTencentCloudClbInstanceResource_open(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "target_region_info_region", "ap-guangzhou"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "target_region_info_vpc_id"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "tags.test", "test"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbInstanceResource_openIpv6(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbInstance_openIpv6,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_open_ipv6"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "clb_name", OpenClbNameIpv6),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "project_id", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "vpc_id", "vpc-mvhjjprd"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "subnet_id", "subnet-2qfyfvv8"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "address_ip_version", "IPv6FullChain"),
 				),
 			},
 		},
@@ -627,5 +652,16 @@ resource "tencentcloud_clb_instance" "multiple_instance" {
   tags = {
     test = "open"
   }
+}
+`
+
+const testAccClbInstance_openIpv6 = `
+resource "tencentcloud_clb_instance" "clb_open_ipv6" {
+	clb_name           = "` + OpenClbNameIpv6 + `"
+	network_type       = "OPEN"
+	project_id         = 0
+	vpc_id             = "vpc-mvhjjprd"
+	subnet_id          = "subnet-2qfyfvv8"
+	address_ip_version = "IPv6FullChain"
 }
 `
