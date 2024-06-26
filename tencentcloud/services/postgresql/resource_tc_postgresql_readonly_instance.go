@@ -397,8 +397,17 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("need_support_ipv6", instance.SupportIpv6)
-	// set readonly group when DescribeReadOnlyGroups ready for filter by the readonly group id
-	// _ = d.Set("read_only_group_id", readonlyGroup.Id)
+
+	// read only group
+	masterDBInstanceId := instance.MasterDBInstanceId
+	readOnlyGroupId, err := postgresqlService.DescribeReadOnlyGroupsById(ctx, *masterDBInstanceId, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if readOnlyGroupId != nil {
+		_ = d.Set("read_only_group_id", readOnlyGroupId)
+	}
 
 	// security groups
 	sg, err := postgresqlService.DescribeDBInstanceSecurityGroupsById(ctx, d.Id())

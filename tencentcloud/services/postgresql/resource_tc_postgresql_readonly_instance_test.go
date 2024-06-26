@@ -3,6 +3,7 @@ package postgresql_test
 import (
 	"testing"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -15,17 +16,12 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccStepSetRegion(t, "ap-guangzhou")
-			tcacctest.AccPreCheck(t)
+			acctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() {
-					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
-					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
-				},
-				Config: testAccPostgresqlReadonlyInstanceInstance_basic_without_rogroup,
+				Config: testAccPostgresqlReadonlyInstanceInstance,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "master_db_instance_id"),
@@ -46,11 +42,7 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() {
-					tcacctest.AccStepSetRegion(t, "ap-guangzhou")
-					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
-				},
-				Config: testAccPostgresqlReadonlyInstanceInstance_basic_update_rogroup,
+				Config: testAccPostgresqlReadonlyInstanceInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "master_db_instance_id"),
@@ -74,7 +66,7 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 	})
 }
 
-const testAccPostgresqlReadonlyInstanceInstance_basic_without_rogroup string = `
+const testAccPostgresqlReadonlyInstanceInstance string = `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -153,7 +145,7 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
 }
 `
 
-const testAccPostgresqlReadonlyInstanceInstance_basic_update_rogroup string = `
+const testAccPostgresqlReadonlyInstanceInstanceUpdate string = `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -194,9 +186,22 @@ resource "tencentcloud_postgresql_instance" "example" {
   }
 }
 
-resource "tencentcloud_postgresql_readonly_group" "example_new" {
+resource "tencentcloud_postgresql_readonly_group" "example" {
   master_db_instance_id       = tencentcloud_postgresql_instance.example.id
   name                        = "tf_ro_group"
+  project_id                  = 0
+  vpc_id                      = tencentcloud_vpc.vpc.id
+  subnet_id                   = tencentcloud_subnet.subnet.id
+  replay_lag_eliminate        = 1
+  replay_latency_eliminate    = 1
+  max_replay_lag              = 100
+  max_replay_latency          = 512
+  min_delay_eliminate_reserve = 1
+}
+
+resource "tencentcloud_postgresql_readonly_group" "example_new" {
+  master_db_instance_id       = tencentcloud_postgresql_instance.example.id
+  name                        = "tf_ro_group_new"
   project_id                  = 0
   vpc_id                      = tencentcloud_vpc.vpc.id
   subnet_id                   = tencentcloud_subnet.subnet.id
