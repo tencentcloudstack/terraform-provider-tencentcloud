@@ -1104,3 +1104,37 @@ func (me *TeoService) DescribeTeoL4ProxyById(ctx context.Context, zoneId string,
 	ret = response.Response.L4Proxies[0]
 	return
 }
+
+func (me *TeoService) DescribeTeoRealtimeLogDeliveryById(ctx context.Context, zoneId string, taskId string) (ret *teo.RealtimeLogDeliveryTask, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeRealtimeLogDeliveryTasksRequest()
+	request.ZoneId = helper.String(zoneId)
+	advancedFilter := &teo.AdvancedFilter{
+		Name:   helper.String("task-id"),
+		Values: []*string{helper.String(taskId)},
+	}
+	request.Filters = append(request.Filters, advancedFilter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeRealtimeLogDeliveryTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RealtimeLogDeliveryTasks) < 1 {
+		return
+	}
+
+	ret = response.Response.RealtimeLogDeliveryTasks[0]
+	return
+}
