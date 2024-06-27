@@ -28,6 +28,7 @@ func ResourceTencentCloudMongodbInstanceTransparentDataEncryption() *schema.Reso
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Instance ID, for example: cmgo-p8vn ***. Currently supported general versions include: 4.4 and 5.0, but the cloud disk version is not currently supported.",
 			},
@@ -41,7 +42,7 @@ func ResourceTencentCloudMongodbInstanceTransparentDataEncryption() *schema.Reso
 			"key_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Key ID. If this parameter is not set and the specific key ID is not specified, Tencent Cloud will automatically generate the key.",
+				Description: "Key ID. If this parameter is not set and the specific key ID is not specified, Tencent Cloud will automatically generate the key and this key will be beyond the control of Terraform.",
 			},
 			"transparent_data_encryption_status": {
 				Computed: true,

@@ -30,7 +30,7 @@ The following arguments are supported:
 - 1: Physical backup;
 - 3: Snapshot backup (supported only in cloud disk version).
 * `backup_time` - (Required, Int) Set the start time for automatic backup. The value range is: [0,23]. For example, setting this parameter to 2 means that backup starts at 02:00.
-* `instance_id` - (Required, String) Instance id.
+* `instance_id` - (Required, String, ForceNew) Instance id.
 * `backup_retention_period` - (Optional, Int) Specify the number of days to save backup data. The default is 7 days, and the support settings are 7, 30, 90, 180, 365.
 
 ## Attributes Reference

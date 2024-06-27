@@ -24,9 +24,9 @@ resource "tencentcloud_mongodb_instance_transparent_data_encryption" "encryption
 
 The following arguments are supported:
 
-* `instance_id` - (Required, String) Instance ID, for example: cmgo-p8vn ***. Currently supported general versions include: 4.4 and 5.0, but the cloud disk version is not currently supported.
+* `instance_id` - (Required, String, ForceNew) Instance ID, for example: cmgo-p8vn ***. Currently supported general versions include: 4.4 and 5.0, but the cloud disk version is not currently supported.
 * `kms_region` - (Required, String) The region where the Key Management Service (KMS) serves, such as ap-shanghai.
-* `key_id` - (Optional, String) Key ID. If this parameter is not set and the specific key ID is not specified, Tencent Cloud will automatically generate the key.
+* `key_id` - (Optional, String) Key ID. If this parameter is not set and the specific key ID is not specified, Tencent Cloud will automatically generate the key and this key will be beyond the control of Terraform.
 
 ## Attributes Reference
 
