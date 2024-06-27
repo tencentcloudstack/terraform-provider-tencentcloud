@@ -276,9 +276,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.ProjectId = &projectId
 	}
 	if v, ok := d.GetOk("subnet_id"); ok {
-		if networkType == CLB_NETWORK_TYPE_OPEN {
-			return fmt.Errorf("[CHECK][CLB instance][Create] check: OPEN network_type do not support this operation with subnet_id")
-		}
 		request.SubnetId = helper.String(v.(string))
 	}
 
@@ -600,7 +597,12 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	if instance.AddressIPVersion != nil {
-		_ = d.Set("address_ip_version", instance.AddressIPVersion)
+		if *instance.AddressIPVersion == "ipv6" && instance.IPv6Mode != nil && *instance.IPv6Mode == "IPv6FullChain" {
+			_ = d.Set("address_ip_version", instance.IPv6Mode)
+		} else {
+			_ = d.Set("address_ip_version", instance.AddressIPVersion)
+		}
+
 	}
 	if instance.NetworkAttributes != nil {
 		_ = d.Set("internet_bandwidth_max_out", instance.NetworkAttributes.InternetMaxBandwidthOut)
