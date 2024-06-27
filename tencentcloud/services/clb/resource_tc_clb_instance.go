@@ -597,7 +597,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	if instance.AddressIPVersion != nil {
-		if *instance.AddressIPVersion == "ipv6" {
+		if *instance.AddressIPVersion == "ipv6" && instance.IPv6Mode != nil && *instance.IPv6Mode == "IPv6FullChain" {
 			_ = d.Set("address_ip_version", instance.IPv6Mode)
 		} else {
 			_ = d.Set("address_ip_version", instance.AddressIPVersion)
