@@ -685,6 +685,57 @@ func (c *Client) DescribeBackupDownloadTaskWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeBackupRulesRequest() (request *DescribeBackupRulesRequest) {
+    request = &DescribeBackupRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "DescribeBackupRules")
+    
+    
+    return
+}
+
+func NewDescribeBackupRulesResponse() (response *DescribeBackupRulesResponse) {
+    response = &DescribeBackupRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBackupRules
+// 本接口（DescribeBackupRules）用于获取实例自动备份配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
+func (c *Client) DescribeBackupRules(request *DescribeBackupRulesRequest) (response *DescribeBackupRulesResponse, err error) {
+    return c.DescribeBackupRulesWithContext(context.Background(), request)
+}
+
+// DescribeBackupRules
+// 本接口（DescribeBackupRules）用于获取实例自动备份配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
+func (c *Client) DescribeBackupRulesWithContext(ctx context.Context, request *DescribeBackupRulesRequest) (response *DescribeBackupRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClientConnectionsRequest() (request *DescribeClientConnectionsRequest) {
     request = &DescribeClientConnectionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1314,6 +1365,177 @@ func (c *Client) DescribeSpecInfoWithContext(ctx context.Context, request *Descr
     return
 }
 
+func NewDescribeTransparentDataEncryptionStatusRequest() (request *DescribeTransparentDataEncryptionStatusRequest) {
+    request = &DescribeTransparentDataEncryptionStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "DescribeTransparentDataEncryptionStatus")
+    
+    
+    return
+}
+
+func NewDescribeTransparentDataEncryptionStatusResponse() (response *DescribeTransparentDataEncryptionStatusResponse) {
+    response = &DescribeTransparentDataEncryptionStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTransparentDataEncryptionStatus
+// 获取实例透明加密的开启状态
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+func (c *Client) DescribeTransparentDataEncryptionStatus(request *DescribeTransparentDataEncryptionStatusRequest) (response *DescribeTransparentDataEncryptionStatusResponse, err error) {
+    return c.DescribeTransparentDataEncryptionStatusWithContext(context.Background(), request)
+}
+
+// DescribeTransparentDataEncryptionStatus
+// 获取实例透明加密的开启状态
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+func (c *Client) DescribeTransparentDataEncryptionStatusWithContext(ctx context.Context, request *DescribeTransparentDataEncryptionStatusRequest) (response *DescribeTransparentDataEncryptionStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeTransparentDataEncryptionStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTransparentDataEncryptionStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTransparentDataEncryptionStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnableTransparentDataEncryptionRequest() (request *EnableTransparentDataEncryptionRequest) {
+    request = &EnableTransparentDataEncryptionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "EnableTransparentDataEncryption")
+    
+    
+    return
+}
+
+func NewEnableTransparentDataEncryptionResponse() (response *EnableTransparentDataEncryptionResponse) {
+    response = &EnableTransparentDataEncryptionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// EnableTransparentDataEncryption
+// 本接口(EnableTransparentDataEncryption)用于开启云数据库 MongoDB 的透明加密能力。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+func (c *Client) EnableTransparentDataEncryption(request *EnableTransparentDataEncryptionRequest) (response *EnableTransparentDataEncryptionResponse, err error) {
+    return c.EnableTransparentDataEncryptionWithContext(context.Background(), request)
+}
+
+// EnableTransparentDataEncryption
+// 本接口(EnableTransparentDataEncryption)用于开启云数据库 MongoDB 的透明加密能力。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+func (c *Client) EnableTransparentDataEncryptionWithContext(ctx context.Context, request *EnableTransparentDataEncryptionRequest) (response *EnableTransparentDataEncryptionResponse, err error) {
+    if request == nil {
+        request = NewEnableTransparentDataEncryptionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableTransparentDataEncryption require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableTransparentDataEncryptionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewFlashBackDBInstanceRequest() (request *FlashBackDBInstanceRequest) {
+    request = &FlashBackDBInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "FlashBackDBInstance")
+    
+    
+    return
+}
+
+func NewFlashBackDBInstanceResponse() (response *FlashBackDBInstanceResponse) {
+    response = &FlashBackDBInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// FlashBackDBInstance
+// 该接口用于发起按 Key 闪回任务，依据数据的闪回 Key（默认为 id）对数据进行极速回档，快速恢复业务。
+//
+// **说明：按 Key 闪回于2023年09月11日正式进行公测，在此期间，该接口仅对公测用户开放。**
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FLASHBACKBYKEYNOTOPEN = "FailedOperation.FlashbackByKeyNotOpen"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMETERSNIL = "InvalidParameter.ParametersNil"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  UNSUPPORTEDOPERATION_KERNELVERSIONNOTSUPPORT = "UnsupportedOperation.KernelVersionNotSupport"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORT = "UnsupportedOperation.VersionNotSupport"
+func (c *Client) FlashBackDBInstance(request *FlashBackDBInstanceRequest) (response *FlashBackDBInstanceResponse, err error) {
+    return c.FlashBackDBInstanceWithContext(context.Background(), request)
+}
+
+// FlashBackDBInstance
+// 该接口用于发起按 Key 闪回任务，依据数据的闪回 Key（默认为 id）对数据进行极速回档，快速恢复业务。
+//
+// **说明：按 Key 闪回于2023年09月11日正式进行公测，在此期间，该接口仅对公测用户开放。**
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FLASHBACKBYKEYNOTOPEN = "FailedOperation.FlashbackByKeyNotOpen"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMETERSNIL = "InvalidParameter.ParametersNil"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  UNSUPPORTEDOPERATION_KERNELVERSIONNOTSUPPORT = "UnsupportedOperation.KernelVersionNotSupport"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORT = "UnsupportedOperation.VersionNotSupport"
+func (c *Client) FlashBackDBInstanceWithContext(ctx context.Context, request *FlashBackDBInstanceRequest) (response *FlashBackDBInstanceResponse, err error) {
+    if request == nil {
+        request = NewFlashBackDBInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("FlashBackDBInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewFlashBackDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewFlushInstanceRouterConfigRequest() (request *FlushInstanceRouterConfigRequest) {
     request = &FlushInstanceRouterConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1678,9 +1900,10 @@ func NewModifyDBInstanceNetworkAddressResponse() (response *ModifyDBInstanceNetw
 }
 
 // ModifyDBInstanceNetworkAddress
-// 本接口(ModifyDBInstanceNetworkAddress)用于修改云数据库实例的网络信息，可进行基础网络转VPC网络和VPC网络之间的变换。
+// 本接口（ModifyDBInstanceNetworkAddress）用于修改云数据库实例的网络信息，支持基础网络切换为私有网络、私有网络切换私有网络。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWMODIFYADDRAFTEROPENWANSERVICE = "FailedOperation.NotAllowModifyAddrAfterOpenWanService"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1692,9 +1915,10 @@ func (c *Client) ModifyDBInstanceNetworkAddress(request *ModifyDBInstanceNetwork
 }
 
 // ModifyDBInstanceNetworkAddress
-// 本接口(ModifyDBInstanceNetworkAddress)用于修改云数据库实例的网络信息，可进行基础网络转VPC网络和VPC网络之间的变换。
+// 本接口（ModifyDBInstanceNetworkAddress）用于修改云数据库实例的网络信息，支持基础网络切换为私有网络、私有网络切换私有网络。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWMODIFYADDRAFTEROPENWANSERVICE = "FailedOperation.NotAllowModifyAddrAfterOpenWanService"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1839,6 +2063,69 @@ func (c *Client) ModifyDBInstanceSpecWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceSpecResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceParamsRequest() (request *ModifyInstanceParamsRequest) {
+    request = &ModifyInstanceParamsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "ModifyInstanceParams")
+    
+    
+    return
+}
+
+func NewModifyInstanceParamsResponse() (response *ModifyInstanceParamsResponse) {
+    response = &ModifyInstanceParamsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceParams
+// 本接口（ModifyInstanceParams）用于修改mongoDB实例的参数配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_OPERATIONNOTALLOWEDININSTANCELOCKING = "FailedOperation.OperationNotAllowedInInstanceLocking"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_MODIFYMONGODBPARAMS = "InvalidParameter.ModifyMongodbParams"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_MODIFYMONGODBPARAMS = "InvalidParameterValue.ModifyMongodbParams"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyInstanceParams(request *ModifyInstanceParamsRequest) (response *ModifyInstanceParamsResponse, err error) {
+    return c.ModifyInstanceParamsWithContext(context.Background(), request)
+}
+
+// ModifyInstanceParams
+// 本接口（ModifyInstanceParams）用于修改mongoDB实例的参数配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_OPERATIONNOTALLOWEDININSTANCELOCKING = "FailedOperation.OperationNotAllowedInInstanceLocking"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_MODIFYMONGODBPARAMS = "InvalidParameter.ModifyMongodbParams"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_MODIFYMONGODBPARAMS = "InvalidParameterValue.ModifyMongodbParams"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyInstanceParamsWithContext(ctx context.Context, request *ModifyInstanceParamsRequest) (response *ModifyInstanceParamsResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceParamsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceParams require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceParamsResponse()
     err = c.Send(request, response)
     return
 }
@@ -2128,6 +2415,112 @@ func (c *Client) SetAccountUserPrivilegeWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewSetAccountUserPrivilegeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSetBackupRulesRequest() (request *SetBackupRulesRequest) {
+    request = &SetBackupRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "SetBackupRules")
+    
+    
+    return
+}
+
+func NewSetBackupRulesResponse() (response *SetBackupRulesResponse) {
+    response = &SetBackupRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SetBackupRules
+// 本接口(SetBackupRules)用于设置 MongoDB 云数据库的自动备份规则。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_CHECKAPPIDFAILED = "InvalidParameterValue.CheckAppIdFailed"
+func (c *Client) SetBackupRules(request *SetBackupRulesRequest) (response *SetBackupRulesResponse, err error) {
+    return c.SetBackupRulesWithContext(context.Background(), request)
+}
+
+// SetBackupRules
+// 本接口(SetBackupRules)用于设置 MongoDB 云数据库的自动备份规则。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_CHECKAPPIDFAILED = "InvalidParameterValue.CheckAppIdFailed"
+func (c *Client) SetBackupRulesWithContext(ctx context.Context, request *SetBackupRulesRequest) (response *SetBackupRulesResponse, err error) {
+    if request == nil {
+        request = NewSetBackupRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SetBackupRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSetBackupRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSetInstanceMaintenanceRequest() (request *SetInstanceMaintenanceRequest) {
+    request = &SetInstanceMaintenanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "SetInstanceMaintenance")
+    
+    
+    return
+}
+
+func NewSetInstanceMaintenanceResponse() (response *SetInstanceMaintenanceResponse) {
+    response = &SetInstanceMaintenanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SetInstanceMaintenance
+// 本接口（SetInstanceMaintenance ） 用于设置实例维护时间窗。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) SetInstanceMaintenance(request *SetInstanceMaintenanceRequest) (response *SetInstanceMaintenanceResponse, err error) {
+    return c.SetInstanceMaintenanceWithContext(context.Background(), request)
+}
+
+// SetInstanceMaintenance
+// 本接口（SetInstanceMaintenance ） 用于设置实例维护时间窗。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CHECKAPPIDFAILED = "InternalError.CheckAppIdFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) SetInstanceMaintenanceWithContext(ctx context.Context, request *SetInstanceMaintenanceRequest) (response *SetInstanceMaintenanceResponse, err error) {
+    if request == nil {
+        request = NewSetInstanceMaintenanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SetInstanceMaintenance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSetInstanceMaintenanceResponse()
     err = c.Send(request, response)
     return
 }
