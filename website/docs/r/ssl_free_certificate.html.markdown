@@ -45,9 +45,9 @@ The following arguments are supported:
 * `csr_key_parameter` - (Optional, String) Specify CSR key parameter, only support `"2048"` for now.
 * `csr_key_password` - (Optional, String) Specify CSR key password.
 * `old_certificate_id` - (Optional, String, ForceNew) Specify old certificate ID, used for re-apply.
-* `package_type` - (Optional, String) Type of package. Only support `"2"` (TrustAsia TLS RSA CA).
+* `package_type` - (Optional, String) Type of package. Only support `"83"` (TrustAsia TLS RSA CA).
 * `project_id` - (Optional, Int) ID of projects which this certification belong to.
-* `validity_period` - (Optional, String) Specify validity period in month, only support `"12"` months for now.
+* `validity_period` - (Optional, String) Specify validity period in month, only support `"3"` months for now.
 
 ## Attributes Reference
 

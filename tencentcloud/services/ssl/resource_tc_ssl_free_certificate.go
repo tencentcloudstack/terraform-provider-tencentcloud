@@ -38,7 +38,7 @@ func ResourceTencentCloudSSLFreeCertificate() *schema.Resource {
 			"package_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Type of package. Only support `\"2\"` (TrustAsia TLS RSA CA).",
+				Description: "Type of package. Only support `\"83\"` (TrustAsia TLS RSA CA).",
 			},
 			"contact_email": {
 				Type:        schema.TypeString,
@@ -53,7 +53,7 @@ func ResourceTencentCloudSSLFreeCertificate() *schema.Resource {
 			"validity_period": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Specify validity period in month, only support `\"12\"` months for now.",
+				Description: "Specify validity period in month, only support `\"3\"` months for now.",
 			},
 			"csr_encrypt_algo": {
 				Type:        schema.TypeString,
