@@ -1,5 +1,7 @@
 Provide a resource to create a emr cluster.
 
+
+
 Example Usage
 
 ```hcl
