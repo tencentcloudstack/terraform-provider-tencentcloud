@@ -1,3 +1,23 @@
+## 1.81.106 (June 28, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_kubernetes_native_node_pool` ([#2658](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2658))
+* **New Resource:** `tencentcloud_mongodb_instance_backup_rule` ([#2692](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2692))
+* **New Resource:** `tencentcloud_mongodb_instance_transparent_data_encryption` ([#2692](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2692))
+* **New Resource:** `tencentcloud_teo_realtime_log_delivery` ([#2697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2697))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: open ipv6 clb support set `subnet_id` ([#2696](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2696))
+* resource/tencentcloud_cls_alarm: supports set `syntax_rule` ([#2699](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2699))
+* resource/tencentcloud_tdmq_instance: Fix the issue of returning multiple return values ([#2690](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2690))
+* resource/tencentcloud_tdmq_namespace: Fix the issue of returning multiple return values ([#2690](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2690))
+* resource/tencentcloud_tdmq_namespace_role_attachment: Fix the issue of returning multiple return values ([#2690](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2690))
+* resource/tencentcloud_tdmq_role: Fix the issue of returning multiple return values ([#2690](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2690))
+* resource/tencentcloud_tdmq_topic: Fix the issue of returning multiple return values ([#2690](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2690))
+* resource/tencentcloud_trocket_rocketmq_instance: support more specifications of param `sku_code` for create instance ([#2689](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2689))
+
 ## 1.81.105 (June 17, 2024)
 
 ENHANCEMENTS:
