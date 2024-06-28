@@ -36,6 +36,7 @@ resource "tencentcloud_cls_alarm" "example" {
     query             = "status:>500 | select count(*) as errorCounts"
     start_time_offset = -15
     topic_id          = "88735a07-bea4-4985-8763-e9deb6da4fad"
+    syntax_rule       = 1
   }
 
   analysis {
@@ -82,6 +83,7 @@ The `alarm_targets` object supports the following:
 * `query` - (Required, String) query rules.
 * `start_time_offset` - (Required, Int) search start time of offset.
 * `topic_id` - (Required, String) topic id.
+* `syntax_rule` - (Optional, Int) Retrieve grammar rules, 0: Lucene syntax, 1: CQL syntax, Default value is 0.
 
 The `analysis` object supports the following:
 

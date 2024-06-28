@@ -451,6 +451,7 @@ func NewCreateAlarmNoticeResponse() (response *CreateAlarmNoticeResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
@@ -467,6 +468,7 @@ func (c *Client) CreateAlarmNotice(request *CreateAlarmNoticeRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
@@ -719,7 +721,7 @@ func NewCreateConsumerResponse() (response *CreateConsumerResponse) {
 }
 
 // CreateConsumer
-// 本接口用于创建投递任务
+// 本接口用于创建投递CKafka任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -738,7 +740,7 @@ func (c *Client) CreateConsumer(request *CreateConsumerRequest) (response *Creat
 }
 
 // CreateConsumer
-// 本接口用于创建投递任务
+// 本接口用于创建投递CKafka任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -792,6 +794,7 @@ func NewCreateCosRechargeResponse() (response *CreateCosRechargeResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
@@ -811,6 +814,7 @@ func (c *Client) CreateCosRecharge(request *CreateCosRechargeRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
@@ -833,6 +837,79 @@ func (c *Client) CreateCosRechargeWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateCosRechargeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateDashboardSubscribeRequest() (request *CreateDashboardSubscribeRequest) {
+    request = &CreateDashboardSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateDashboardSubscribe")
+    
+    
+    return
+}
+
+func NewCreateDashboardSubscribeResponse() (response *CreateDashboardSubscribeResponse) {
+    response = &CreateDashboardSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateDashboardSubscribe
+// 此接口用于创建仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DASHBOARDNAMECONFLICT = "InvalidParameter.DashboardNameConflict"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_DASHBOARDRECORDNOTEXIST = "ResourceNotFound.DashboardRecordNotExist"
+func (c *Client) CreateDashboardSubscribe(request *CreateDashboardSubscribeRequest) (response *CreateDashboardSubscribeResponse, err error) {
+    return c.CreateDashboardSubscribeWithContext(context.Background(), request)
+}
+
+// CreateDashboardSubscribe
+// 此接口用于创建仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DASHBOARDNAMECONFLICT = "InvalidParameter.DashboardNameConflict"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_DASHBOARDRECORDNOTEXIST = "ResourceNotFound.DashboardRecordNotExist"
+func (c *Client) CreateDashboardSubscribeWithContext(ctx context.Context, request *CreateDashboardSubscribeRequest) (response *CreateDashboardSubscribeResponse, err error) {
+    if request == nil {
+        request = NewCreateDashboardSubscribeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDashboardSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDashboardSubscribeResponse()
     err = c.Send(request, response)
     return
 }
@@ -1133,6 +1210,7 @@ func NewCreateKafkaRechargeResponse() (response *CreateKafkaRechargeResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
@@ -1151,6 +1229,7 @@ func (c *Client) CreateKafkaRecharge(request *CreateKafkaRechargeRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
@@ -1274,6 +1353,7 @@ func NewCreateMachineGroupResponse() (response *CreateMachineGroupResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_MACHINEGROUPCONFLICT = "InvalidParameter.MachineGroupConflict"
@@ -1297,6 +1377,7 @@ func (c *Client) CreateMachineGroup(request *CreateMachineGroupRequest) (respons
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_MACHINEGROUPCONFLICT = "InvalidParameter.MachineGroupConflict"
@@ -2012,6 +2093,71 @@ func (c *Client) DeleteConsumerWithContext(ctx context.Context, request *DeleteC
     request.SetContext(ctx)
     
     response = NewDeleteConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteDashboardSubscribeRequest() (request *DeleteDashboardSubscribeRequest) {
+    request = &DeleteDashboardSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteDashboardSubscribe")
+    
+    
+    return
+}
+
+func NewDeleteDashboardSubscribeResponse() (response *DeleteDashboardSubscribeResponse) {
+    response = &DeleteDashboardSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteDashboardSubscribe
+// 此接口用于删除仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_DASHBOARDSUBSCRIBERECORDNOTEXIST = "ResourceNotFound.DashboardSubscribeRecordNotExist"
+func (c *Client) DeleteDashboardSubscribe(request *DeleteDashboardSubscribeRequest) (response *DeleteDashboardSubscribeResponse, err error) {
+    return c.DeleteDashboardSubscribeWithContext(context.Background(), request)
+}
+
+// DeleteDashboardSubscribe
+// 此接口用于删除仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_DASHBOARDSUBSCRIBERECORDNOTEXIST = "ResourceNotFound.DashboardSubscribeRecordNotExist"
+func (c *Client) DeleteDashboardSubscribeWithContext(ctx context.Context, request *DeleteDashboardSubscribeRequest) (response *DeleteDashboardSubscribeResponse, err error) {
+    if request == nil {
+        request = NewDeleteDashboardSubscribeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDashboardSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDashboardSubscribeResponse()
     err = c.Send(request, response)
     return
 }
@@ -3315,6 +3461,77 @@ func (c *Client) DescribeCosRechargesWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeDashboardSubscribesRequest() (request *DescribeDashboardSubscribesRequest) {
+    request = &DescribeDashboardSubscribesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeDashboardSubscribes")
+    
+    
+    return
+}
+
+func NewDescribeDashboardSubscribesResponse() (response *DescribeDashboardSubscribesResponse) {
+    response = &DescribeDashboardSubscribesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDashboardSubscribes
+//  本接口用于获取仪表盘订阅列表，支持分页
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeDashboardSubscribes(request *DescribeDashboardSubscribesRequest) (response *DescribeDashboardSubscribesResponse, err error) {
+    return c.DescribeDashboardSubscribesWithContext(context.Background(), request)
+}
+
+// DescribeDashboardSubscribes
+//  本接口用于获取仪表盘订阅列表，支持分页
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeDashboardSubscribesWithContext(ctx context.Context, request *DescribeDashboardSubscribesRequest) (response *DescribeDashboardSubscribesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDashboardSubscribesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDashboardSubscribes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDashboardSubscribesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDashboardsRequest() (request *DescribeDashboardsRequest) {
     request = &DescribeDashboardsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3737,73 +3954,6 @@ func (c *Client) DescribeKafkaRechargesWithContext(ctx context.Context, request 
     return
 }
 
-func NewDescribeKafkaUserRequest() (request *DescribeKafkaUserRequest) {
-    request = &DescribeKafkaUserRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cls", APIVersion, "DescribeKafkaUser")
-    
-    
-    return
-}
-
-func NewDescribeKafkaUserResponse() (response *DescribeKafkaUserResponse) {
-    response = &DescribeKafkaUserResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeKafkaUser
-// 本接口用于获取kafka用户信息
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
-//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
-//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-func (c *Client) DescribeKafkaUser(request *DescribeKafkaUserRequest) (response *DescribeKafkaUserResponse, err error) {
-    return c.DescribeKafkaUserWithContext(context.Background(), request)
-}
-
-// DescribeKafkaUser
-// 本接口用于获取kafka用户信息
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
-//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
-//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-func (c *Client) DescribeKafkaUserWithContext(ctx context.Context, request *DescribeKafkaUserRequest) (response *DescribeKafkaUserResponse, err error) {
-    if request == nil {
-        request = NewDescribeKafkaUserRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeKafkaUser require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeKafkaUserResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeLogContextRequest() (request *DescribeLogContextRequest) {
     request = &DescribeLogContextRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3824,7 +3974,7 @@ func NewDescribeLogContextResponse() (response *DescribeLogContextResponse) {
 }
 
 // DescribeLogContext
-// 本接口用于搜索日志上下文附近的内容
+// 本接口用于搜索日志上下文附近的内容，详情参考[上下文检索](https://cloud.tencent.com/document/product/614/53248)。
 //
 // API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
 //
@@ -3851,7 +4001,7 @@ func (c *Client) DescribeLogContext(request *DescribeLogContextRequest) (respons
 }
 
 // DescribeLogContext
-// 本接口用于搜索日志上下文附近的内容
+// 本接口用于搜索日志上下文附近的内容，详情参考[上下文检索](https://cloud.tencent.com/document/product/614/53248)。
 //
 // API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
 //
@@ -4274,7 +4424,7 @@ func NewDescribePartitionsResponse() (response *DescribePartitionsResponse) {
 }
 
 // DescribePartitions
-// 本接口用于获取主题分区列表。
+// 该接口已废弃，如需获取分区数量，请使用DescribeTopics接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4293,7 +4443,7 @@ func (c *Client) DescribePartitions(request *DescribePartitionsRequest) (respons
 }
 
 // DescribePartitions
-// 本接口用于获取主题分区列表。
+// 该接口已废弃，如需获取分区数量，请使用DescribeTopics接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4720,7 +4870,7 @@ func NewMergePartitionResponse() (response *MergePartitionResponse) {
 }
 
 // MergePartition
-// 本接口用于合并一个读写态的主题分区，合并时指定一个主题分区 ID，日志服务会自动合并范围右相邻的分区。
+// 该接口已废弃，如需修改分区数量，请使用ModifyTopic接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4741,7 +4891,7 @@ func (c *Client) MergePartition(request *MergePartitionRequest) (response *Merge
 }
 
 // MergePartition
-// 本接口用于合并一个读写态的主题分区，合并时指定一个主题分区 ID，日志服务会自动合并范围右相邻的分区。
+// 该接口已废弃，如需修改分区数量，请使用ModifyTopic接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5148,7 +5298,7 @@ func NewModifyConsumerResponse() (response *ModifyConsumerResponse) {
 }
 
 // ModifyConsumer
-// 本接口用于修改投递任务
+// 本接口用于修改投递Ckafka任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5166,7 +5316,7 @@ func (c *Client) ModifyConsumer(request *ModifyConsumerRequest) (response *Modif
 }
 
 // ModifyConsumer
-// 本接口用于修改投递任务
+// 本接口用于修改投递Ckafka任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5219,6 +5369,7 @@ func NewModifyCosRechargeResponse() (response *ModifyCosRechargeResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
@@ -5238,6 +5389,7 @@ func (c *Client) ModifyCosRecharge(request *ModifyCosRechargeRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
@@ -5260,6 +5412,79 @@ func (c *Client) ModifyCosRechargeWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyCosRechargeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDashboardSubscribeRequest() (request *ModifyDashboardSubscribeRequest) {
+    request = &ModifyDashboardSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyDashboardSubscribe")
+    
+    
+    return
+}
+
+func NewModifyDashboardSubscribeResponse() (response *ModifyDashboardSubscribeResponse) {
+    response = &ModifyDashboardSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDashboardSubscribe
+// 此接口用于修改仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_DASHBOARDRECORDNOTEXIST = "ResourceNotFound.DashboardRecordNotExist"
+//  RESOURCENOTFOUND_DASHBOARDSUBSCRIBERECORDNOTEXIST = "ResourceNotFound.DashboardSubscribeRecordNotExist"
+func (c *Client) ModifyDashboardSubscribe(request *ModifyDashboardSubscribeRequest) (response *ModifyDashboardSubscribeResponse, err error) {
+    return c.ModifyDashboardSubscribeWithContext(context.Background(), request)
+}
+
+// ModifyDashboardSubscribe
+// 此接口用于修改仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_DASHBOARDRECORDNOTEXIST = "ResourceNotFound.DashboardRecordNotExist"
+//  RESOURCENOTFOUND_DASHBOARDSUBSCRIBERECORDNOTEXIST = "ResourceNotFound.DashboardSubscribeRecordNotExist"
+func (c *Client) ModifyDashboardSubscribeWithContext(ctx context.Context, request *ModifyDashboardSubscribeRequest) (response *ModifyDashboardSubscribeResponse, err error) {
+    if request == nil {
+        request = NewModifyDashboardSubscribeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDashboardSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDashboardSubscribeResponse()
     err = c.Send(request, response)
     return
 }
@@ -5650,6 +5875,7 @@ func NewModifyMachineGroupResponse() (response *ModifyMachineGroupResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_MACHINEGROUPCONFLICT = "InvalidParameter.MachineGroupConflict"
@@ -5672,6 +5898,7 @@ func (c *Client) ModifyMachineGroup(request *ModifyMachineGroupRequest) (respons
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_MACHINEGROUPCONFLICT = "InvalidParameter.MachineGroupConflict"
@@ -6022,6 +6249,7 @@ func NewPreviewKafkaRechargeResponse() (response *PreviewKafkaRechargeResponse) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6039,6 +6267,7 @@ func (c *Client) PreviewKafkaRecharge(request *PreviewKafkaRechargeRequest) (res
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6343,6 +6572,77 @@ func (c *Client) SearchCosRechargeInfoWithContext(ctx context.Context, request *
     return
 }
 
+func NewSearchDashboardSubscribeRequest() (request *SearchDashboardSubscribeRequest) {
+    request = &SearchDashboardSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "SearchDashboardSubscribe")
+    
+    
+    return
+}
+
+func NewSearchDashboardSubscribeResponse() (response *SearchDashboardSubscribeResponse) {
+    response = &SearchDashboardSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SearchDashboardSubscribe
+// 此接口用于预览仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_DASHBOARDRECORDNOTEXIST = "ResourceNotFound.DashboardRecordNotExist"
+func (c *Client) SearchDashboardSubscribe(request *SearchDashboardSubscribeRequest) (response *SearchDashboardSubscribeResponse, err error) {
+    return c.SearchDashboardSubscribeWithContext(context.Background(), request)
+}
+
+// SearchDashboardSubscribe
+// 此接口用于预览仪表盘订阅
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_DASHBOARDRECORDNOTEXIST = "ResourceNotFound.DashboardRecordNotExist"
+func (c *Client) SearchDashboardSubscribeWithContext(ctx context.Context, request *SearchDashboardSubscribeRequest) (response *SearchDashboardSubscribeResponse, err error) {
+    if request == nil {
+        request = NewSearchDashboardSubscribeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SearchDashboardSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSearchDashboardSubscribeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSearchLogRequest() (request *SearchLogRequest) {
     request = &SearchLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6363,11 +6663,13 @@ func NewSearchLogResponse() (response *SearchLogResponse) {
 }
 
 // SearchLog
-// 本接口用于检索分析日志, 该接口除受默认接口请求频率限制外，针对单个日志主题，查询并发数不能超过15。
+// 本接口用于检索分析日志，使用该接口时请注意如下事项：
 //
-// 
+// 1. 该接口除受默认接口请求频率限制外，针对单个日志主题，查询并发数不能超过15。
 //
-// API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+// 2. 检索语法建议使用CQL语法规则，请使用SyntaxRule参数，将值设置为1。
+//
+// 3. API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6397,11 +6699,13 @@ func (c *Client) SearchLog(request *SearchLogRequest) (response *SearchLogRespon
 }
 
 // SearchLog
-// 本接口用于检索分析日志, 该接口除受默认接口请求频率限制外，针对单个日志主题，查询并发数不能超过15。
+// 本接口用于检索分析日志，使用该接口时请注意如下事项：
 //
-// 
+// 1. 该接口除受默认接口请求频率限制外，针对单个日志主题，查询并发数不能超过15。
 //
-// API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+// 2. 检索语法建议使用CQL语法规则，请使用SyntaxRule参数，将值设置为1。
+//
+// 3. API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6462,7 +6766,7 @@ func NewSplitPartitionResponse() (response *SplitPartitionResponse) {
 }
 
 // SplitPartition
-// 本接口用于分裂主题分区
+// 该接口已废弃，如需修改分区数量，请使用ModifyTopic接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6486,7 +6790,7 @@ func (c *Client) SplitPartition(request *SplitPartitionRequest) (response *Split
 }
 
 // SplitPartition
-// 本接口用于分裂主题分区
+// 该接口已废弃，如需修改分区数量，请使用ModifyTopic接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
