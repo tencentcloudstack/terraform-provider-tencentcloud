@@ -65,6 +65,7 @@ resource "tencentcloud_cls_alarm" "alarm" {
     query             = "status:>500 | select count(*) as errorCounts"
     start_time_offset = -15
     topic_id          = "775c0bc2-2246-43a0-8eb2-f5bc248be183"
+	syntax_rule       = 0
   }
 
   analysis {
@@ -108,6 +109,7 @@ resource "tencentcloud_cls_alarm" "alarm" {
     query             = "status:>500 | select count(*) as errorCounts"
     start_time_offset = -15
     topic_id          = "775c0bc2-2246-43a0-8eb2-f5bc248be183"
+	syntax_rule       = 1
   }
 
   analysis {
