@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
 	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
@@ -33,11 +34,6 @@ data "tencentcloud_security_groups" "security_groups2" {
 }
 data "tencentcloud_cvm_chc_hosts" "chc_hosts" {
     chc_ids = [tencentcloud_cvm_chc_config.chc_config.chc_id]
-    
-    filters {
-        values = ["ap-guangzhou-7"]
-        name = "zone"
-    }
 }
 resource "tencentcloud_vpc" "vpc" {
     name = "tf-cvm-vpc"

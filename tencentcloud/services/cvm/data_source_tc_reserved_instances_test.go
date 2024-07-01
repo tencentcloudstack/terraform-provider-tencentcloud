@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
 	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
