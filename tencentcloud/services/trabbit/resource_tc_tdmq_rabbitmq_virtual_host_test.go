@@ -14,12 +14,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTdmqRabbitmqVirtualHostResource_basic -v
-func TestAccTencentCloudNeedFixTdmqRabbitmqVirtualHostResource_basic(t *testing.T) {
-	t.Parallel()
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVirtualHostResource_basic -v
+func TestAccTencentCloudTdmqRabbitmqVirtualHostResource_basic(t *testing.T) {
+	//t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheck(t)
 		},
 		CheckDestroy: testAccCheckTdmqRabbitmqVirtualHostDestroy,
 		Providers:    tcacctest.AccProviders,
@@ -27,23 +27,28 @@ func TestAccTencentCloudNeedFixTdmqRabbitmqVirtualHostResource_basic(t *testing.
 			{
 				Config: testAccTdmqRabbitmqVirtualHost,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTdmqRabbitmqVirtualHostExists("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "virtual_host"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "description"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "trace_flag"),
+					testAccCheckTdmqRabbitmqVirtualHostExists("tencentcloud_tdmq_rabbitmq_virtual_host.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "instance_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "virtual_host"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "description"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "trace_flag"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_tdmq_rabbitmq_virtual_host.example",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			{
 				Config: testAccTdmqRabbitmqVirtualHostUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTdmqRabbitmqVirtualHostExists("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "virtual_host"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "description"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.rabbitmq_virtual_host", "trace_flag"),
+					testAccCheckTdmqRabbitmqVirtualHostExists("tencentcloud_tdmq_rabbitmq_virtual_host.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "instance_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "virtual_host"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "description"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_virtual_host.example", "trace_flag"),
 				),
 			},
 		},
@@ -115,19 +120,87 @@ func testAccCheckTdmqRabbitmqVirtualHostExists(re string) resource.TestCheckFunc
 }
 
 const testAccTdmqRabbitmqVirtualHost = `
-resource "tencentcloud_tdmq_rabbitmq_virtual_host" "rabbitmq_virtual_host" {
-  instance_id  = "amqp-kzbe8p3n"
-  virtual_host = "vh-test-1"
-  description  = "desc"
-  trace_flag   = false
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+}
+
+# create virtual host
+resource "tencentcloud_tdmq_rabbitmq_virtual_host" "example" {
+  instance_id  = tencentcloud_tdmq_rabbitmq_vip_instance.example.id
+  virtual_host = "tf-example-vhost"
+  description  = "desc."
+  trace_flag   = true
 }
 `
 
 const testAccTdmqRabbitmqVirtualHostUpdate = `
-resource "tencentcloud_tdmq_rabbitmq_virtual_host" "rabbitmq_virtual_host" {
-  instance_id  = "amqp-kzbe8p3n"
-  virtual_host = "vh-test-1"
-  description  = "desc update"
-  trace_flag   = true
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+}
+
+# create virtual host
+resource "tencentcloud_tdmq_rabbitmq_virtual_host" "example" {
+  instance_id  = tencentcloud_tdmq_rabbitmq_vip_instance.example.id
+  virtual_host = "tf-example-vhost"
+  description  = "desc update."
+  trace_flag   = false
 }
 `
