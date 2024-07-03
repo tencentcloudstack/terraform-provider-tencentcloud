@@ -14,8 +14,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTdmqRabbitmqVirtualHostResource_basic -v
-func TestAccTencentCloudNeedFixTdmqRabbitmqVirtualHostResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVirtualHostResource_basic -v
+func TestAccTencentCloudTdmqRabbitmqVirtualHostResource_basic(t *testing.T) {
 	//t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

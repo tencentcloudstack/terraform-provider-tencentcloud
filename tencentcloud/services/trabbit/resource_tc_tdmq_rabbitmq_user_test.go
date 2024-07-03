@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTdmqRabbitmqUserResource_basic -v
-func TestAccTencentCloudNeedFixTdmqRabbitmqUserResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqUserResource_basic -v
+func TestAccTencentCloudTdmqRabbitmqUserResource_basic(t *testing.T) {
 	//t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
