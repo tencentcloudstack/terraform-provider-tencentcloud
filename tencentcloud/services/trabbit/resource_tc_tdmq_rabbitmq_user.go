@@ -54,14 +54,12 @@ func ResourceTencentCloudTdmqRabbitmqUser() *schema.Resource {
 				Description: "User tag, used to determine the permission range for changing user access to RabbitMQ Management. Management: regular console user, monitoring: management console user, other values: non console user.",
 			},
 			"max_connections": {
-				Optional: true,
-				//Computed:    true,
+				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "The maximum number of connections for this user, if not filled in, there is no limit.",
 			},
 			"max_channels": {
-				Optional: true,
-				//Computed:    true,
+				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "The maximum number of channels for this user, if not filled in, there is no limit.",
 			},
