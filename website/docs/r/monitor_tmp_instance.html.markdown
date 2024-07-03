@@ -30,7 +30,7 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_monitor_tmp_instance" "foo" {
+resource "tencentcloud_monitor_tmp_instance" "example" {
   instance_name       = "tf-tmp-instance"
   vpc_id              = tencentcloud_vpc.vpc.id
   subnet_id           = tencentcloud_subnet.subnet.id
@@ -46,7 +46,7 @@ resource "tencentcloud_monitor_tmp_instance" "foo" {
 
 The following arguments are supported:
 
-* `data_retention_time` - (Required, Int) Data retention time.
+* `data_retention_time` - (Required, Int) Data retention time(in days). Value range: 15, 30, 45, 90, 180, 360, 720.
 * `instance_name` - (Required, String) Instance name.
 * `subnet_id` - (Required, String) Subnet Id.
 * `vpc_id` - (Required, String) Vpc Id.
@@ -68,6 +68,6 @@ In addition to all arguments above, the following attributes are exported:
 
 monitor tmpInstance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_tmp_instance.tmpInstance tmpInstance_id
+$ terraform import tencentcloud_monitor_tmp_instance.example prom-1uvo0tjm
 ```
 

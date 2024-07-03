@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudMonitorInstance_basic -v
 func TestAccTencentCloudMonitorInstance_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -25,24 +26,30 @@ func TestAccTencentCloudMonitorInstance_basic(t *testing.T) {
 			{
 				Config: testInstance_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInstanceExists("tencentcloud_monitor_tmp_instance.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.basic", "instance_name", "demo-test"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.basic", "data_retention_time", "30"),
+					testAccCheckInstanceExists("tencentcloud_monitor_tmp_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.example", "instance_name", "tf-tmp-instance"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_instance.example", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_instance.example", "subnet_id"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.example", "data_retention_time", "30"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_instance.example", "zone"),
 				),
 			},
 			{
 				Config: testInstance_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInstanceExists("tencentcloud_monitor_tmp_instance.update"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.update", "instance_name", "demo-test-update"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.update", "data_retention_time", "30"),
+					testAccCheckInstanceExists("tencentcloud_monitor_tmp_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.example", "instance_name", "tf-tmp-instance-update"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_instance.example", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_instance.example", "subnet_id"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_instance.example", "data_retention_time", "90"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_instance.example", "zone"),
 				),
 			},
-			//{
-			//	ResourceName:      "tencentcloud_monitor_tmp_instance.basic",
-			//	ImportState:       true,
-			//	ImportStateVerify: true,
-			//},
+			{
+				ResourceName:      "tencentcloud_monitor_tmp_instance.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -103,34 +110,60 @@ func testAccCheckInstanceExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testInstanceVar = tcacctest.DefaultAzVariable + `
-variable "vpc_id" {
-  default = "` + tcacctest.DefaultTmpVpcId + `"
+const testInstance_basic = `
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
 }
-variable "subnet_id" {
-  default = "` + tcacctest.DefaultTmpSubnetId + `"
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_monitor_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_monitor_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_monitor_tmp_instance" "example" {
+  instance_name       = "tf-tmp-instance"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  data_retention_time = 30
+  zone                = var.availability_zone
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 `
-const testInstance_basic = testInstanceVar + `
-resource "tencentcloud_monitor_tmp_instance" "basic" {
- instance_name 		= "demo-test"
- vpc_id 				= var.vpc_id
- subnet_id				= var.subnet_id
- data_retention_time	= 30
- zone 					= var.default_az
- tags = {
-   "createdBy" = "terraform"
- }
-}`
 
-const testInstance_update = testInstanceVar + `
-resource "tencentcloud_monitor_tmp_instance" "update" {
- instance_name 		= "demo-test-update"
- vpc_id 				= var.vpc_id
- subnet_id				= var.subnet_id
- data_retention_time	= 30
- zone 					= var.default_az
- tags = {
-   "createdBy" = "terraform"
- }
-}`
+const testInstance_update = `
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_monitor_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_monitor_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_monitor_tmp_instance" "example" {
+  instance_name       = "tf-tmp-instance-update"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  data_retention_time = 90
+  zone                = var.availability_zone
+  tags = {
+    "createdBy" = "terraformUpdate"
+  }
+}
+`
