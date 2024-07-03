@@ -46,7 +46,7 @@ resource "tencentcloud_monitor_tmp_instance" "foo" {
 
 The following arguments are supported:
 
-* `data_retention_time` - (Required, Int) Data retention time.
+* `data_retention_time` - (Required, Int) Data retention time(in days). Value range: 15, 30, 45, 90, 180, 360, 720.
 * `instance_name` - (Required, String) Instance name.
 * `subnet_id` - (Required, String) Subnet Id.
 * `vpc_id` - (Required, String) Vpc Id.
