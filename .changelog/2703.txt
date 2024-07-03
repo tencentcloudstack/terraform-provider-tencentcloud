@@ -5,3 +5,7 @@ resource/tencentcloud_tdmq_rabbitmq_user: supports return `max_connections`, `ma
 ```release-note:enhancement
 resource/tencentcloud_tdmq_rabbitmq_virtual_host: supports set `trace_flag` params; supports import this resource
 ```
+
+```release-note:enhancement
+resource/tencentcloud_tdmq_rabbitmq_vip_instance: update document
+```
