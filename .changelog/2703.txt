@@ -1,7 +1,7 @@
 ```release-note:enhancement
-resource/tencentcloud_tdmq_rabbitmq_user: supports return `max_connections`, `max_channels` params
+resource/tencentcloud_tdmq_rabbitmq_user: supports return `max_connections`, `max_channels` params; supports import this resource
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_tdmq_rabbitmq_virtual_host: supports set `trace_flag` params
+resource/tencentcloud_tdmq_rabbitmq_virtual_host: supports set `trace_flag` params; supports import this resource
 ```
