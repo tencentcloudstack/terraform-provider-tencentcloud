@@ -22,7 +22,9 @@ func ResourceTencentCloudTdmqRabbitmqVirtualHost() *schema.Resource {
 		Read:   resourceTencentCloudTdmqRabbitmqVirtualHostRead,
 		Update: resourceTencentCloudTdmqRabbitmqVirtualHostUpdate,
 		Delete: resourceTencentCloudTdmqRabbitmqVirtualHostDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -41,6 +43,7 @@ func ResourceTencentCloudTdmqRabbitmqVirtualHost() *schema.Resource {
 			},
 			"trace_flag": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "Message track switch, true is on, false is off, default is off.",
 			},
@@ -138,6 +141,10 @@ func resourceTencentCloudTdmqRabbitmqVirtualHostRead(d *schema.ResourceData, met
 
 	if rabbitmqVirtualHost.Description != nil {
 		_ = d.Set("description", rabbitmqVirtualHost.Description)
+	}
+
+	if rabbitmqVirtualHost.TraceFlag != nil {
+		_ = d.Set("trace_flag", rabbitmqVirtualHost.TraceFlag)
 	}
 
 	return nil

@@ -14,21 +14,26 @@ Provides a resource to create a tdmq rabbitmq_vip_instance
 ## Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
 
+# create vpc
 resource "tencentcloud_vpc" "vpc" {
-  name       = "rabbitmq-vpc"
+  name       = "vpc"
   cidr_block = "10.0.0.0/16"
 }
 
+# create vpc subnet
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
-  name              = "rabbitmq-subnet"
+  name              = "subnet"
   vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
   is_multicast      = false
 }
 
+# create rabbitmq instance
 resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
   vpc_id                                = tencentcloud_vpc.vpc.id
