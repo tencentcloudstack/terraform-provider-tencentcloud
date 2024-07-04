@@ -68,13 +68,13 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = apm.NewCreateApmInstanceRequest()
 		response   = apm.NewCreateApmInstanceResponse()
 		instanceId string
 	)
+
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
@@ -102,9 +102,11 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create apm instance failed, reason:%+v", logId, err)
 		return err
@@ -130,15 +132,24 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instance   *apm.ApmInstanceDetail
+		instanceId = d.Id()
+	)
 
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, err := service.DescribeApmInstanceById(ctx, instanceId)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
 
-	service := ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instance = result
+		return nil
+	})
 
-	instanceId := d.Id()
-
-	instance, err := service.DescribeApmInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
@@ -184,18 +195,16 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := apm.NewModifyApmInstanceRequest()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		request    = apm.NewModifyApmInstanceRequest()
+		instanceId = d.Id()
+	)
 
 	needChange := false
-
-	instanceId := d.Id()
-
 	request.InstanceId = &instanceId
 
 	mutableArgs := []string{"name", "description", "trace_duration", "span_daily_counters", "pay_mode"}
-
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -204,7 +213,6 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if needChange {
-
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
@@ -232,13 +240,14 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update apm instance failed, reason:%+v", logId, err)
 			return err
 		}
-
 	}
 
 	if d.HasChange("tags") {
@@ -260,11 +269,12 @@ func resourceTencentCloudApmInstanceDelete(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	if err := service.DeleteApmInstanceById(ctx, instanceId); err != nil {
 		return err
