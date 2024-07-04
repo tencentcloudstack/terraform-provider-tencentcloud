@@ -155,14 +155,14 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_alert_group.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = monitor.NewCreatePrometheusAlertGroupRequest()
 		response   = monitor.NewCreatePrometheusAlertGroupResponse()
 		instanceId string
 		groupId    string
 	)
+
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
@@ -187,9 +187,11 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 		if v, ok := dMap["type"]; ok {
 			prometheusAlertCustomReceiver.Type = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["url"]; ok {
 			prometheusAlertCustomReceiver.Url = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["allowed_time_ranges"]; ok {
 			for _, item := range v.([]interface{}) {
 				allowedTimeRangesMap := item.(map[string]interface{})
@@ -197,18 +199,23 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 				if v, ok := allowedTimeRangesMap["start"]; ok {
 					prometheusAlertAllowTimeRange.Start = helper.String(v.(string))
 				}
+
 				if v, ok := allowedTimeRangesMap["end"]; ok {
 					prometheusAlertAllowTimeRange.End = helper.String(v.(string))
 				}
+
 				prometheusAlertCustomReceiver.AllowedTimeRanges = append(prometheusAlertCustomReceiver.AllowedTimeRanges, &prometheusAlertAllowTimeRange)
 			}
 		}
+
 		if v, ok := dMap["cluster_id"]; ok {
 			prometheusAlertCustomReceiver.ClusterId = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["cluster_type"]; ok {
 			prometheusAlertCustomReceiver.ClusterType = helper.String(v.(string))
 		}
+
 		request.CustomReceiver = &prometheusAlertCustomReceiver
 	}
 
@@ -246,12 +253,15 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 			if v, ok := dMap["duration"]; ok {
 				prometheusAlertGroupRuleSet.Duration = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["expr"]; ok {
 				prometheusAlertGroupRuleSet.Expr = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["state"]; ok {
 				prometheusAlertGroupRuleSet.State = helper.IntInt64(v.(int))
 			}
+
 			request.Rules = append(request.Rules, &prometheusAlertGroupRuleSet)
 		}
 	}
@@ -263,9 +273,11 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpAlertGroup failed, reason:%+v", logId, err)
 		return err
@@ -281,10 +293,12 @@ func resourceTencentCloudMonitorTmpAlertGroupRead(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_alert_group.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service       = svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		tmpAlertGroup *monitor.PrometheusAlertGroupSet
+	)
 
 	ids := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(ids) != 2 {
@@ -293,7 +307,16 @@ func resourceTencentCloudMonitorTmpAlertGroupRead(d *schema.ResourceData, meta i
 	instanceId := ids[0]
 	groupId := ids[1]
 
-	tmpAlertGroup, err := service.DescribeMonitorTmpAlertGroupById(ctx, instanceId, groupId)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, err := service.DescribeMonitorTmpAlertGroupById(ctx, instanceId, groupId)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		tmpAlertGroup = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -377,6 +400,7 @@ func resourceTencentCloudMonitorTmpAlertGroupRead(d *schema.ResourceData, meta i
 						labelsMap[*labels.Key] = labels.Value
 					}
 				}
+
 				rulesMap["labels"] = labelsMap
 			}
 
@@ -407,7 +431,6 @@ func resourceTencentCloudMonitorTmpAlertGroupRead(d *schema.ResourceData, meta i
 		}
 
 		_ = d.Set("rules", rulesList)
-
 	}
 
 	return nil
@@ -417,9 +440,10 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_alert_group.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := monitor.NewUpdatePrometheusAlertGroupRequest()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		request = monitor.NewUpdatePrometheusAlertGroupRequest()
+	)
 
 	ids := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(ids) != 2 {
@@ -430,7 +454,6 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 
 	request.InstanceId = &instanceId
 	request.GroupId = &groupId
-
 	if v, ok := d.GetOk("group_name"); ok {
 		request.GroupName = helper.String(v.(string))
 	}
@@ -450,9 +473,11 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 		if v, ok := dMap["type"]; ok {
 			prometheusAlertCustomReceiver.Type = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["url"]; ok {
 			prometheusAlertCustomReceiver.Url = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["allowed_time_ranges"]; ok {
 			for _, item := range v.([]interface{}) {
 				allowedTimeRangesMap := item.(map[string]interface{})
@@ -460,18 +485,23 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 				if v, ok := allowedTimeRangesMap["start"]; ok {
 					prometheusAlertAllowTimeRange.Start = helper.String(v.(string))
 				}
+
 				if v, ok := allowedTimeRangesMap["end"]; ok {
 					prometheusAlertAllowTimeRange.End = helper.String(v.(string))
 				}
+
 				prometheusAlertCustomReceiver.AllowedTimeRanges = append(prometheusAlertCustomReceiver.AllowedTimeRanges, &prometheusAlertAllowTimeRange)
 			}
 		}
+
 		if v, ok := dMap["cluster_id"]; ok {
 			prometheusAlertCustomReceiver.ClusterId = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["cluster_type"]; ok {
 			prometheusAlertCustomReceiver.ClusterType = helper.String(v.(string))
 		}
+
 		request.CustomReceiver = &prometheusAlertCustomReceiver
 	}
 
@@ -506,15 +536,19 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 					prometheusAlertGroupRuleSet.Annotations = append(prometheusAlertGroupRuleSet.Annotations, &prometheusRuleKV)
 				}
 			}
+
 			if v, ok := dMap["duration"]; ok {
 				prometheusAlertGroupRuleSet.Duration = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["expr"]; ok {
 				prometheusAlertGroupRuleSet.Expr = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["state"]; ok {
 				prometheusAlertGroupRuleSet.State = helper.IntInt64(v.(int))
 			}
+
 			request.Rules = append(request.Rules, &prometheusAlertGroupRuleSet)
 		}
 	}
@@ -526,8 +560,10 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s update monitor tmpAlertGroup failed, reason:%+v", logId, err)
 		return err
@@ -540,10 +576,12 @@ func resourceTencentCloudMonitorTmpAlertGroupDelete(d *schema.ResourceData, meta
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_alert_group.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	ids := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(ids) != 2 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
