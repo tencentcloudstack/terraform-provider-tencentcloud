@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_rum_project: add retry operator
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_alert_group: add retry operator
+```
