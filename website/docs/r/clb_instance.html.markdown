@@ -348,7 +348,7 @@ The following arguments are supported:
 * `log_set_id` - (Optional, String) The id of log set.
 * `log_topic_id` - (Optional, String) The id of log topic.
 * `master_zone_id` - (Optional, String) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
-* `project_id` - (Optional, Int, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
+* `project_id` - (Optional, Int) ID of the project within the CLB instance, `0` - Default Project.
 * `security_groups` - (Optional, List: [`String`]) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
 * `sla_type` - (Optional, String) This parameter is required to create LCU-supported instances. Values:`SLA`: Super Large 4. When you have activated Super Large models, `SLA` refers to Super Large 4; `clb.c2.medium`: Standard; `clb.c3.small`: Advanced 1; `clb.c3.medium`: Advanced 1; `clb.c4.small`: Super Large 1; `clb.c4.medium`: Super Large 2; `clb.c4.large`: Super Large 3; `clb.c4.xlarge`: Super Large 4. For more details, see [Instance Specifications](https://intl.cloud.tencent.com/document/product/214/84689?from_cn_redirect=1).
 * `slave_zone_id` - (Optional, String) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.

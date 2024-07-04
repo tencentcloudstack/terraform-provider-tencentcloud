@@ -52,7 +52,6 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     0,
 				Description: "ID of the project within the CLB instance, `0` - Default Project.",
 			},
@@ -280,7 +279,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.VpcId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		projectId := int64(v.(int))
 		request.ProjectId = &projectId
 	}
@@ -317,7 +316,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.AddressIPVersion = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("snat_pro"); ok {
+	if v, ok := d.GetOkExists("snat_pro"); ok {
 		request.SnatPro = helper.Bool(v.(bool))
 	}
 
@@ -391,7 +390,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.SlaveZoneId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok {
+	if v, ok := d.GetOkExists("load_balancer_pass_to_target"); ok {
 		request.LoadBalancerPassToTarget = helper.Bool(v.(bool))
 	}
 
@@ -688,7 +687,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		clbId = d.Id()
 	)
 
-	immutableArgs := []string{"snat_ips", "dynamic_vip", "master_zone_id", "slave_zone_id", "project_id", "vpc_id", "subnet_id", "address_ip_version", "bandwidth_package_id", "zone_id"}
+	immutableArgs := []string{"snat_ips", "dynamic_vip", "master_zone_id", "slave_zone_id", "vpc_id", "subnet_id", "address_ip_version", "bandwidth_package_id", "zone_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -890,6 +889,38 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 
 		if err != nil {
 			log.Printf("[CRITAL]%s set CLB instance log failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("project_id") {
+		var projectId int
+		if v, ok := d.GetOkExists("project_id"); ok {
+			projectId = v.(int)
+		}
+
+		pRequest := clb.NewModifyLoadBalancersProjectRequest()
+		pRequest.LoadBalancerIds = []*string{&clbId}
+		pRequest.ProjectId = helper.IntUint64(projectId)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			pResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancersProject(pRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, pRequest.GetAction(), pRequest.ToJsonString(), pResponse.ToJsonString())
+				requestId := *pResponse.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				if retryErr != nil {
+					return tccommon.RetryError(errors.WithStack(retryErr))
+				}
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update CLB instance project_id failed, reason:%+v", logId, err)
 			return err
 		}
 	}
