@@ -2,8 +2,10 @@ package rum
 
 import (
 	"context"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"strconv"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -115,8 +117,15 @@ func (me *RumService) DescribeRumProject(ctx context.Context, id string) (projec
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
+	ReTeyDescribe:
 		response, err := me.client.UseRumClient().DescribeProjects(request)
 		if err != nil {
+			// Exceeded request frequency limit
+			if err.(*sdkErrors.TencentCloudSDKError).Code == "RequestLimitExceeded" {
+				time.Sleep(time.Second * 1)
+				goto ReTeyDescribe
+			}
+
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
