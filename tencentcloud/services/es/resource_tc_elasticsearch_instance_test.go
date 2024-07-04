@@ -119,6 +119,31 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 		},
 	})
 }
+func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessClose,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessOpen,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+				),
+			},
+		},
+	})
+}
 
 func testAccCheckElasticsearchInstanceDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -183,12 +208,23 @@ func testAccCheckElasticsearchInstanceExists(n string) resource.TestCheckFunc {
 }
 
 const testAccElasticsearchInstance = tcacctest.DefaultVpcVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "es-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "es-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_zone
+}
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test"
 	availability_zone   = var.availability_zone
 	version             = "7.10.1"
-	vpc_id              = var.vpc_id
-	subnet_id           = var.subnet_id
+	vpc_id              = tencentcloud_vpc.vpc.id
+	subnet_id           = tencentcloud_subnet.subnet.id
 	password            = "Test1234"
 	license_type        = "basic"
 	basic_security_type = 2
@@ -219,12 +255,23 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 `
 
 const testAccElasticsearchInstanceUpdate = tcacctest.DefaultVpcVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "es-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "es-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_zone
+}
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test-update"
 	availability_zone   = var.availability_zone
 	version             = "7.10.1"
-	vpc_id              = var.vpc_id
-	subnet_id           = var.subnet_id
+	vpc_id              = tencentcloud_vpc.vpc.id
+	subnet_id           = tencentcloud_subnet.subnet.id
 	password            = "Test12345"
 	license_type        = "platinum"
 
@@ -250,6 +297,66 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   
 	tags = {
 	  test = "test"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPublicAccessClose = tcacctest.DefaultVpcVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "es-kibana-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "es-kibana-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_zone
+}
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = tencentcloud_vpc.vpc.id
+	subnet_id            = tencentcloud_subnet.subnet.id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_public_access = "CLOSE"
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPublicAccessOpen = tcacctest.DefaultVpcVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "es-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "es-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_zone
+}
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = tencentcloud_vpc.vpc.id
+	subnet_id            = tencentcloud_subnet.subnet.id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_public_access = "OPEN"
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
 	}
   }
 `
