@@ -40,14 +40,14 @@ resource "tencentcloud_postgresql_instance" "example" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "10.4"
+  engine_version    = "10.23"
   root_user         = "root123"
   root_password     = "Root123$"
   charset           = "UTF8"
   project_id        = 0
-  memory            = 2
-  cpu               = 1
-  storage           = 10
+  memory            = 4
+  cpu               = 2
+  storage           = 200
 
   tags = {
     test = "tf"
@@ -84,11 +84,11 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   zone                  = var.availability_zone
   name                  = "example"
   auto_renew_flag       = 0
-  db_version            = "10.4"
+  db_version            = "10.23"
   instance_charge_type  = "POSTPAID_BY_HOUR"
   memory                = 4
   cpu                   = 2
-  storage               = 250
+  storage               = 200
   vpc_id                = tencentcloud_vpc.vpc.id
   subnet_id             = tencentcloud_subnet.subnet.id
   need_support_ipv6     = 0
@@ -96,6 +96,10 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   security_groups_ids = [
     tencentcloud_security_group.example.id,
   ]
+
+  tags = {
+    createdBy : "terraform"
+  }
 }
 ```
 
@@ -120,6 +124,7 @@ The following arguments are supported:
 * `need_support_ipv6` - (Optional, Int, ForceNew) Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).
 * `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `read_only_group_id` - (Optional, String) RO group ID.
+* `tags` - (Optional, Map) The information of tags to be associated with instances. This parameter is left empty by default.
 * `voucher_ids` - (Optional, List: [`String`]) Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.
 
 ## Attributes Reference
@@ -138,6 +143,6 @@ In addition to all arguments above, the following attributes are exported:
 postgresql readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_postgresql_readonly_instance.example instance_id
+$ terraform import tencentcloud_postgresql_readonly_instance.example pgro-jtb4v6oo
 ```
 
