@@ -697,6 +697,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
 			//LatestOperationCodeMode
+			if instance.LatestOperationErrorMsg != nil {
+				return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+			}
 			return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
