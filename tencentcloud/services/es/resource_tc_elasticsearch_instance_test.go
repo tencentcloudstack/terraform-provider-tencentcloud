@@ -80,10 +80,10 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "instance_name", "tf-ci-test"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "availability_zone", tcacctest.DefaultAZone),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "version", "7.10.1"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", tcacctest.DefaultVpcId),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", tcacctest.DefaultSubnetId),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", tcacctest.DefaultEsVpcId),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", tcacctest.DefaultEsSubnetId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "basic"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM4"),
@@ -92,6 +92,7 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.type", "hotData"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "kibana_public_access", "OPEN"),
 				),
 			},
 			{
@@ -115,6 +116,31 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"password", "basic_security_type"},
+			},
+		},
+	})
+}
+func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessClose,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessOpen,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+				),
 			},
 		},
 	})
@@ -182,7 +208,7 @@ func testAccCheckElasticsearchInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccElasticsearchInstance = tcacctest.DefaultVpcVariable + `
+const testAccElasticsearchInstance = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test"
 	availability_zone   = var.availability_zone
@@ -218,7 +244,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   }
 `
 
-const testAccElasticsearchInstanceUpdate = tcacctest.DefaultVpcVariable + `
+const testAccElasticsearchInstanceUpdate = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test-update"
 	availability_zone   = var.availability_zone
@@ -250,6 +276,44 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   
 	tags = {
 	  test = "test"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPublicAccessClose = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_public_access = "CLOSE"
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPublicAccessOpen = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_public_access = "OPEN"
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
 	}
   }
 `
