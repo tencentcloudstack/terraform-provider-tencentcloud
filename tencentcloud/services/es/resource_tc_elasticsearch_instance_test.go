@@ -80,8 +80,8 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "instance_name", "tf-ci-test"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "availability_zone", tcacctest.DefaultAZone),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "version", "7.10.1"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", tcacctest.DefaultVpcId),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", tcacctest.DefaultSubnetId),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", tcacctest.DefaultEsVpcId),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", tcacctest.DefaultEsSubnetId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.#", "1"),
@@ -207,24 +207,13 @@ func testAccCheckElasticsearchInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccElasticsearchInstance = tcacctest.DefaultVpcVariable + `
-resource "tencentcloud_vpc" "vpc" {
-	name       = "es-vpc"
-	cidr_block = "10.0.0.0/16"
-  }
-  
-resource "tencentcloud_subnet" "subnet" {
-	vpc_id            = tencentcloud_vpc.vpc.id
-	name              = "es-subnet"
-	cidr_block        = "10.0.0.0/16"
-	availability_zone = var.availability_zone
-}
+const testAccElasticsearchInstance = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test"
 	availability_zone   = var.availability_zone
 	version             = "7.10.1"
-	vpc_id              = tencentcloud_vpc.vpc.id
-	subnet_id           = tencentcloud_subnet.subnet.id
+	vpc_id              = var.vpc_id
+	subnet_id           = var.subnet_id
 	password            = "Test1234"
 	license_type        = "basic"
 	basic_security_type = 2
@@ -254,24 +243,13 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   }
 `
 
-const testAccElasticsearchInstanceUpdate = tcacctest.DefaultVpcVariable + `
-resource "tencentcloud_vpc" "vpc" {
-	name       = "es-vpc"
-	cidr_block = "10.0.0.0/16"
-  }
-  
-resource "tencentcloud_subnet" "subnet" {
-	vpc_id            = tencentcloud_vpc.vpc.id
-	name              = "es-subnet"
-	cidr_block        = "10.0.0.0/16"
-	availability_zone = var.availability_zone
-}
+const testAccElasticsearchInstanceUpdate = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test-update"
 	availability_zone   = var.availability_zone
 	version             = "7.10.1"
-	vpc_id              = tencentcloud_vpc.vpc.id
-	subnet_id           = tencentcloud_subnet.subnet.id
+	vpc_id              = var.vpc_id
+	subnet_id           = var.subnet_id
 	password            = "Test12345"
 	license_type        = "platinum"
 
@@ -301,24 +279,13 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   }
 `
 
-const testAccElasticsearchInstanceKibanaPublicAccessClose = tcacctest.DefaultVpcVariable + `
-resource "tencentcloud_vpc" "vpc" {
-	name       = "es-kibana-vpc"
-	cidr_block = "10.0.0.0/16"
-  }
-  
-resource "tencentcloud_subnet" "subnet" {
-	vpc_id            = tencentcloud_vpc.vpc.id
-	name              = "es-kibana-subnet"
-	cidr_block        = "10.0.0.0/16"
-	availability_zone = var.availability_zone
-}
+const testAccElasticsearchInstanceKibanaPublicAccessClose = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	instance_name        = "tf-ci-test-kibana"
 	availability_zone    = var.availability_zone
 	version              = "7.10.1"
-	vpc_id               = tencentcloud_vpc.vpc.id
-	subnet_id            = tencentcloud_subnet.subnet.id
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
 	password             = "Test1234"
 	license_type         = "basic"
 	basic_security_type  = 2
@@ -331,24 +298,13 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
   }
 `
 
-const testAccElasticsearchInstanceKibanaPublicAccessOpen = tcacctest.DefaultVpcVariable + `
-resource "tencentcloud_vpc" "vpc" {
-	name       = "es-vpc"
-	cidr_block = "10.0.0.0/16"
-  }
-  
-resource "tencentcloud_subnet" "subnet" {
-	vpc_id            = tencentcloud_vpc.vpc.id
-	name              = "es-subnet"
-	cidr_block        = "10.0.0.0/16"
-	availability_zone = var.availability_zone
-}
+const testAccElasticsearchInstanceKibanaPublicAccessOpen = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	instance_name        = "tf-ci-test-kibana"
 	availability_zone    = var.availability_zone
 	version              = "7.10.1"
-	vpc_id               = tencentcloud_vpc.vpc.id
-	subnet_id            = tencentcloud_subnet.subnet.id
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
 	password             = "Test1234"
 	license_type         = "basic"
 	basic_security_type  = 2
