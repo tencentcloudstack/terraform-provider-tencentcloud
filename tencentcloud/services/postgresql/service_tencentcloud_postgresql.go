@@ -459,6 +459,38 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 	return
 }
 
+func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsByGroupId(ctx context.Context, readOnlyGroupId string) (sg []string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.ReadOnlyGroupId = &readOnlyGroupId
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	groups := response.Response.SecurityGroupSet
+	if len(groups) > 0 {
+		for i := range groups {
+			sg = append(sg, *groups[i].SecurityGroupId)
+		}
+	}
+
+	return
+}
+
 func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsById(ctx context.Context, instanceId string) (sg []string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()
@@ -489,6 +521,28 @@ func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsById(ctx context.Co
 			sg = append(sg, *groups[i].SecurityGroupId)
 		}
 	}
+	return
+}
+
+func (me *PostgresqlService) ModifyDBInstanceSecurityGroupsByGroupId(ctx context.Context, readOnlyGroupId string, securityGroupIds []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewModifyDBInstanceSecurityGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.ReadOnlyGroupId = &readOnlyGroupId
+	request.SecurityGroupIdSet = securityGroupIds
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().ModifyDBInstanceSecurityGroups(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	errRet = err
 	return
 }
 
@@ -1357,6 +1411,44 @@ func (me *PostgresqlService) PostgresqlDBInstanceNetworkAccessStateRefreshFunc(d
 
 		return object, helper.PString(object.Status), nil
 	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupsById(ctx context.Context, roGroupId string) (readOnlyGroup *postgresql.ReadOnlyGroup, errRet error) {
+	tccommon.LogElapsed("DescribePostgresqlReadonlyGroupsById called")()
+
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = postgresql.NewDescribeReadOnlyGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = []*postgresql.Filter{
+		{
+			Name:   helper.String("read-only-group-id"),
+			Values: helper.Strings([]string{roGroupId}),
+		},
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ReadOnlyGroupList) < 1 {
+		return
+	}
+
+	readOnlyGroup = response.Response.ReadOnlyGroupList[0]
+	return
 }
 
 func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetInfosById(ctx context.Context, dbInstanceId, roGroupId string) (netInfos []*postgresql.DBInstanceNetInfo, errRet error) {
