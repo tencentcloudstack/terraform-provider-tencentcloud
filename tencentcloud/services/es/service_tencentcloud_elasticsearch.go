@@ -107,7 +107,7 @@ func (me *ElasticsearchService) DeleteInstance(ctx context.Context, instanceId s
 }
 
 // UpdateInstance FIXME: use *Request instead of these suck params
-func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password string, basicSecurityType int64, nodeList []*es.NodeInfo, nodeTypeInfo *es.WebNodeTypeInfo, esAcl *es.EsAcl) error {
+func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password, kibanaPublicAccess string, basicSecurityType int64, nodeList []*es.NodeInfo, nodeTypeInfo *es.WebNodeTypeInfo, esAcl *es.EsAcl) error {
 	logId := tccommon.GetLogId(ctx)
 	request := es.NewUpdateInstanceRequest()
 	request.InstanceId = &instanceId
@@ -116,6 +116,9 @@ func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, 
 	}
 	if password != "" {
 		request.Password = &password
+	}
+	if kibanaPublicAccess != "" {
+		request.KibanaPublicAccess = &kibanaPublicAccess
 	}
 	if basicSecurityType > 0 {
 		request.BasicSecurityType = &basicSecurityType
