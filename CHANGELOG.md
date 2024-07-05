@@ -1,3 +1,15 @@
+## 1.81.107 (July 5, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_apm_instance: add retry operator ([#2707](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2707))
+* resource/tencentcloud_elasticsearch_instance: support es kibana switch ([#2708](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2708))
+* resource/tencentcloud_monitor_tmp_instance: update document ([#2704](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2704))
+* resource/tencentcloud_postgresql_readonly_group: support import ([#2709](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2709))
+* resource/tencentcloud_tdmq_rabbitmq_user: supports return `max_connections`, `max_channels` params; supports import this resource ([#2703](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2703))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: update document ([#2703](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2703))
+* resource/tencentcloud_tdmq_rabbitmq_virtual_host: supports set `trace_flag` params; supports import this resource ([#2703](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2703))
+
 ## 1.81.106 (June 28, 2024)
 
 FEATURES:
