@@ -16,13 +16,13 @@ Provides a resource to create a apm instance
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_apm_instance" "instance" {
-  name                = "terraform-test"
-  description         = "for terraform test"
+resource "tencentcloud_apm_instance" "example" {
+  name                = "tf-example"
+  description         = "desc."
   trace_duration      = 15
-  span_daily_counters = 20
+  span_daily_counters = 0
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
   }
 }
 ```
@@ -51,6 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 apm instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_apm_instance.instance instance_id
+terraform import tencentcloud_apm_instance.example apm-IMVrxXl1K
 ```
 
