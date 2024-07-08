@@ -39,7 +39,7 @@ var DNSScatterTransport = &http.Transport{
 	Proxy:                 http.ProxyFromEnvironment,
 	DialContext:           DNSScatterDialContext,
 	MaxIdleConns:          100,
-	IdleConnTimeout:       90 * time.Second,
+	IdleConnTimeout:       60 * time.Second,
 	TLSHandshakeTimeout:   10 * time.Second,
 	ExpectContinueTimeout: 1 * time.Second,
 }
@@ -106,6 +106,7 @@ var NeedSignHeaders = map[string]bool{
 	"access-control-request-method":  true,
 	"access-control-request-headers": true,
 	"x-cos-object-type":              true,
+	"pic-operations":                 true,
 }
 
 // 非线程安全，只能在进程初始化（而不是Client初始化）时做设置
@@ -160,7 +161,7 @@ type AuthTime struct {
 
 // NewAuthTime 生成 AuthTime 的便捷函数
 //
-//   expire: 从现在开始多久过期.
+//	expire: 从现在开始多久过期.
 func NewAuthTime(expire time.Duration) *AuthTime {
 	signStartTime := time.Now()
 	keyStartTime := signStartTime
@@ -413,7 +414,7 @@ func (t *CVMCredentialTransport) GetRoles() ([]string, error) {
 		return nil, err
 	}
 	roles := strings.Split(strings.TrimSpace(string(bs)), "\n")
-	if len(roles) == 0 {
+	if string(bs) == "" || len(roles) == 0 {
 		return nil, fmt.Errorf("get cvm security-credentials role failed, No valid cam role was found")
 	}
 	return roles, nil

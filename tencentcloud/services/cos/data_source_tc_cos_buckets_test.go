@@ -2,7 +2,6 @@ package cos_test
 
 import (
 	"fmt"
-	"regexp"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -42,7 +41,7 @@ func TestAccTencentCloudCosBucketDataSource_tags(t *testing.T) {
 			{
 				Config: testAccCosBucketDataSource_tags(),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestMatchResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.#", regexp.MustCompile(`^[1-9]\d*$`)),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.#"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.tags.fixed_resource", "do_not_remove"),
 				),
 			},
@@ -113,10 +112,16 @@ data "tencentcloud_cos_buckets" "bucket_list" {
 func testAccCosBucketDataSource_tags() string {
 	return fmt.Sprintf(`
 %s
+%s
+resource "tencentcloud_cos_bucket" "bucket_tags" {
+	bucket = "tf-datasource-tags-${local.app_id}"
+	tags = var.fixed_tags
+}
 data "tencentcloud_cos_buckets" "bucket_list" {
   tags = var.fixed_tags
+  depends_on = [tencentcloud_cos_bucket.bucket_tags]
 }
-`, tcacctest.FixedTagVariable)
+`, tcacctest.FixedTagVariable, tcacctest.UserInfoData)
 }
 
 func testAccCosBucketDataSource_full(appid string) string {

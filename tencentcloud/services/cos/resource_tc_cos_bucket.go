@@ -1511,9 +1511,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 					HttpHeader:     &cos.BucketOriginHttpHeader{},
 				},
 				OriginInfo: &cos.BucketOriginInfo{
-					FileInfo: &cos.BucketOriginFileInfo{
-						PrefixDirective: false,
-					},
+					FileInfo: &cos.BucketOriginFileInfo{},
 				},
 			}
 		)
@@ -1534,7 +1532,9 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 			item.OriginParameter.Protocol = v.(string)
 		}
 		if v, ok := dMap["host"]; ok {
-			item.OriginInfo.HostInfo = v.(string)
+			item.OriginInfo.HostInfo = &cos.BucketOriginHostInfo{
+				HostName: v.(string),
+			}
 		}
 		if v, ok := dMap["follow_query_string"]; ok {
 			item.OriginParameter.FollowQueryString = v.(bool)
@@ -1545,20 +1545,20 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 		//if v, ok := dMap["copy_origin_data"]; ok {
 		//	item.OriginParameter.CopyOriginData = v.(bool)
 		//}
+		fileInfo := &cos.BucketOriginFileInfo{}
 		if v, ok := dMap["redirect_prefix"]; ok {
 			value := v.(string)
-			if value != "" {
-				item.OriginInfo.FileInfo.PrefixDirective = true
+			fileInfo.PrefixConfiguration = &cos.OriginPrefixConfiguration{
+				Prefix: value,
 			}
-			item.OriginInfo.FileInfo.Prefix = value
 		}
 		if v, ok := dMap["redirect_suffix"]; ok {
 			value := v.(string)
-			if value != "" {
-				item.OriginInfo.FileInfo.PrefixDirective = true
+			fileInfo.SuffixConfiguration = &cos.OriginSuffixConfiguration{
+				Suffix: value,
 			}
-			item.OriginInfo.FileInfo.Suffix = value
 		}
+		item.OriginInfo.FileInfo = fileInfo
 		if v, ok := dMap["custom_http_headers"]; ok {
 			var customHeaders []cos.OriginHttpHeader
 			for key, val := range v.(map[string]interface{}) {

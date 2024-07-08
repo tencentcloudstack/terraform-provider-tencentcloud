@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"text/template"
@@ -24,7 +25,7 @@ import (
 
 const (
 	// Version current go sdk version
-	Version               = "0.7.42"
+	Version               = "0.7.50"
 	UserAgent             = "cos-go-sdk-v5/" + Version
 	contentTypeXML        = "application/xml"
 	defaultServiceBaseURL = "http://service.cos.myqcloud.com"
@@ -42,6 +43,13 @@ var (
 	hostSuffix       = regexp.MustCompile(`^.*((cos|cos-internal|cos-website|ci)\.[a-z-1]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
 	hostPrefix       = regexp.MustCompile(`^(http://|https://){0,1}([a-z0-9-]+-[0-9]+\.){0,1}((cos|cos-internal|cos-website|ci)\.[a-z-1]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
 	invalidBucketErr = fmt.Errorf("invalid bucket format, please check your cos.BaseURL")
+
+	switchHost             = regexp.MustCompile(`([a-z0-9-]+-[0-9]+\.)(cos\.[a-z-1]+)\.(myqcloud\.com)(:[0-9]+){0,1}$`)
+	accelerateDomainSuffix = "accelerate.myqcloud.com"
+	oldDomainSuffix        = ".myqcloud.com"
+	newDomainSuffix        = ".tencentcos.cn"
+
+	ObjectKeySimplifyCheckErr = fmt.Errorf("The Getobject Key is illegal")
 )
 
 // BaseURL 访问各 API 所需的基础 URL
@@ -89,14 +97,15 @@ func NewBucketURL(bucketName, region string, secure bool) (*url.URL, error) {
 }
 
 type RetryOptions struct {
-	Count      int
-	Interval   time.Duration
-	StatusCode []int
+	Count          int
+	Interval       time.Duration
+	AutoSwitchHost bool
 }
 type Config struct {
-	EnableCRC        bool
-	RequestBodyClose bool
-	RetryOpt         RetryOptions
+	EnableCRC              bool
+	RequestBodyClose       bool
+	RetryOpt               RetryOptions
+	ObjectKeySimplifyCheck bool
 }
 
 // Client is a client manages communication with the COS API.
@@ -148,9 +157,11 @@ func NewClient(uri *BaseURL, httpClient *http.Client) *Client {
 			EnableCRC:        true,
 			RequestBodyClose: false,
 			RetryOpt: RetryOptions{
-				Count:    3,
-				Interval: time.Duration(0),
+				Count:          3,
+				Interval:       time.Duration(0),
+				AutoSwitchHost: false,
 			},
+			ObjectKeySimplifyCheck: true,
 		},
 	}
 	c.common.client = c
@@ -317,7 +328,10 @@ func (c *Client) doAPI(ctx context.Context, req *http.Request, result interface{
 
 	if result != nil {
 		if w, ok := result.(io.Writer); ok {
-			io.Copy(w, resp.Body)
+			_, err = io.Copy(w, resp.Body)
+			if err != nil { // read body failed
+				return response, err
+			}
 		} else {
 			err = xml.NewDecoder(resp.Body).Decode(result)
 			if err == io.EOF {
@@ -349,6 +363,44 @@ type sendOptions struct {
 	disableCloseBody bool
 }
 
+func toSwitchHost(oldURL *url.URL) *url.URL {
+	// 判断域名是否能够切换
+	if !switchHost.MatchString(oldURL.Host) {
+		return oldURL
+	}
+	newURL, _ := url.Parse(oldURL.String())
+	hostAndPort := strings.SplitN(newURL.Host, ":", 2)
+	newHost := hostAndPort[0]
+	// 加速域名不切换
+	if strings.HasSuffix(newHost, accelerateDomainSuffix) {
+		return oldURL
+	}
+	newHost = newHost[:len(newHost)-len(oldDomainSuffix)] + newDomainSuffix
+	if len(hostAndPort) > 1 {
+		newHost += ":" + hostAndPort[1]
+	}
+	newURL.Host = newHost
+	return newURL
+}
+
+func (c *Client) CheckRetrieable(u *url.URL, resp *Response, err error, secondLast bool) (*url.URL, bool) {
+	res := u
+	if err != nil && err != invalidBucketErr {
+		// 不重试
+		if resp != nil && resp.StatusCode < 500 {
+			return res, false
+		}
+		if c.Conf.RetryOpt.AutoSwitchHost && secondLast {
+			// 收不到报文 或者 不存在RequestId
+			if resp == nil || resp.Header.Get("X-Cos-Request-Id") == "" {
+				res = toSwitchHost(u)
+			}
+		}
+		return res, true
+	}
+	return res, false
+}
+
 func (c *Client) doRetry(ctx context.Context, opt *sendOptions) (resp *Response, err error) {
 	if opt.body != nil {
 		if _, ok := opt.body.(io.Reader); ok {
@@ -357,37 +409,36 @@ func (c *Client) doRetry(ctx context.Context, opt *sendOptions) (resp *Response,
 		}
 	}
 	count := 1
-	if count < c.Conf.RetryOpt.Count {
+	if c.Conf.RetryOpt.Count > 0 {
 		count = c.Conf.RetryOpt.Count
 	}
-	nr := 0
-	interval := c.Conf.RetryOpt.Interval
-	for nr < count {
+	retryErr := &RetryError{}
+	var retrieable bool
+	for nr := 0; nr < count; nr++ {
+		// 把上一次错误记录下来
+		if err != nil {
+			retryErr.Add(err)
+		}
 		resp, err = c.send(ctx, opt)
-		if err != nil && err != invalidBucketErr {
-			if resp != nil && resp.StatusCode <= 499 {
-				dobreak := true
-				for _, v := range c.Conf.RetryOpt.StatusCode {
-					if resp.StatusCode == v {
-						dobreak = false
-						break
-					}
-				}
-				if dobreak {
-					break
-				}
-			}
-			nr++
-			if interval > 0 && nr < count {
-				time.Sleep(interval)
+		opt.baseURL, retrieable = c.CheckRetrieable(opt.baseURL, resp, err, nr >= count-2)
+		if retrieable {
+			if c.Conf.RetryOpt.Interval > 0 && nr+1 < count {
+				time.Sleep(c.Conf.RetryOpt.Interval)
 			}
 			continue
 		}
 		break
 	}
+	// 最后一次非COS错误，输出三次结果
+	if err != nil {
+		if _, ok := err.(*ErrorResponse); !ok {
+			retryErr.Add(err)
+			err = retryErr
+		}
+	}
 	return
-
 }
+
 func (c *Client) send(ctx context.Context, opt *sendOptions) (resp *Response, err error) {
 	req, err := c.newRequest(ctx, opt.baseURL, opt.uri, opt.method, opt.body, opt.optQuery, opt.optHeader)
 	if err != nil {
@@ -471,8 +522,22 @@ func addHeaderOptions(ctx context.Context, header http.Header, opt interface{}) 
 }
 
 func checkURL(baseURL *url.URL) bool {
+	if baseURL == nil {
+		return false
+	}
+	if baseURL.Scheme == "" || baseURL.Hostname() == "" {
+		return false
+	}
 	host := baseURL.String()
 	if hostSuffix.MatchString(host) && !hostPrefix.MatchString(host) {
+		return false
+	}
+	return true
+}
+
+func CheckObjectKeySimplify(key string) bool {
+	res, err := filepath.Abs(key)
+	if res == "/" || err != nil {
 		return false
 	}
 	return true
@@ -530,6 +595,26 @@ type ACLXml struct {
 	XMLName           xml.Name `xml:"AccessControlPolicy"`
 	Owner             *Owner
 	AccessControlList []ACLGrant `xml:"AccessControlList>Grant,omitempty"`
+}
+
+type aclEnum struct {
+	Private                string
+	PublicRead             string
+	PublicReadWrite        string
+	AuthenticatedRead      string
+	Default                string
+	BucketOwnerRead        string
+	BucketOwnerFullControl string
+}
+
+var ACL = &aclEnum{
+	Private:                "private",
+	PublicRead:             "public-read",
+	PublicReadWrite:        "public-read-write",
+	AuthenticatedRead:      "authenticated-read",
+	Default:                "default",
+	BucketOwnerRead:        "bucket-owner-read",
+	BucketOwnerFullControl: "bucket-owner-full-control",
 }
 
 func decodeACL(resp *Response, res *ACLXml) {
