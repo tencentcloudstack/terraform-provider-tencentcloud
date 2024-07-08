@@ -160,7 +160,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			ForceNew:    true,
-			Description: "Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`.",
+			Description: "Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`, `8.0`.",
 		},
 		"storage_limit": {
 			Type:        schema.TypeInt,
@@ -342,7 +342,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"param_items": {
 			Type:        schema.TypeList,
 			Optional:    true,
-			Description: "Specify parameter list of database. It is valid when prarm_template_id is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.",
+			Description: "Specify parameter list of database. It is valid when `param_template_id` is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"name": {
@@ -364,10 +364,19 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			},
 		},
 		"prarm_template_id": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Computed:    true,
-			Description: "The ID of the parameter template.",
+			Type:          schema.TypeInt,
+			Optional:      true,
+			Computed:      true,
+			ConflictsWith: []string{"param_template_id"},
+			Deprecated:    "It will be deprecated. Use `param_template_id` instead.",
+			Description:   "The ID of the parameter template.",
+		},
+		"param_template_id": {
+			Type:          schema.TypeInt,
+			Optional:      true,
+			Computed:      true,
+			ConflictsWith: []string{"prarm_template_id"},
+			Description:   "The ID of the parameter template.",
 		},
 		"db_mode": {
 			Type:        schema.TypeString,
@@ -393,6 +402,11 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Optional:    true,
 			Description: "Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.",
+		},
+		"slave_zone": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Multi zone Addresses of the CynosDB Cluster.",
 		},
 		"serverless_status_flag": {
 			Type:         schema.TypeString,

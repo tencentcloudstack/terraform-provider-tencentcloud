@@ -104,7 +104,7 @@ func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId str
 	// get cluster status
 	var notExist bool
 	var clusters []*cynosdb.CynosdbCluster
-	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		clusters, errRet = me.DescribeClusters(ctx, map[string]string{"ClusterId": clusterId})
 		if errRet != nil {
@@ -165,7 +165,7 @@ func (me *CynosdbService) UpgradeInstance(ctx context.Context, instanceId string
 	request.Memory = &mem
 	request.UpgradeType = helper.String(CYNOSDB_UPGRADE_IMMEDIATE)
 
-	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, errRet = me.client.UseCynosdbClient().UpgradeInstance(request)
 		if errRet != nil {
@@ -330,7 +330,7 @@ func (me *CynosdbService) DescribeInstanceById(ctx context.Context, instanceId s
 
 	var notExist bool
 	var instances []*cynosdb.CynosdbInstance
-	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		instances, errRet = me.DescribeInstances(ctx, map[string]string{"InstanceId": instanceId})
 		if errRet != nil {
