@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket: upgrade cos sdk
+```
+
+```release-note:enhancement
+data_source/tencentcloud_cos_buckets: upgrade cos sdk
+```
