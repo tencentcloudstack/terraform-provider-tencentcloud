@@ -40,6 +40,7 @@ The following arguments are supported:
 
 * `availability_zone` - (Optional, String) The available zone that the CBS instance locates at.
 * `charge_type` - (Optional, List: [`String`]) List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).
+* `dedicated_cluster_id` - (Optional, String) Exclusive cluster id.
 * `instance_ips` - (Optional, List: [`String`]) List filter by attached instance public or private IPs.
 * `instance_name` - (Optional, List: [`String`]) List filter by attached instance name.
 * `portable` - (Optional, Bool) Filter by whether the disk is portable (Boolean `true` or `false`).
@@ -62,6 +63,7 @@ In addition to all arguments above, the following attributes are exported:
   * `availability_zone` - The zone of CBS.
   * `charge_type` - Pay type of the CBS instance.
   * `create_time` - Creation time of CBS.
+  * `dedicated_cluster_id` - Exclusive cluster id.
   * `encrypt` - Indicates whether CBS is encrypted.
   * `instance_id` - ID of the CVM instance that be mounted by this CBS.
   * `prepaid_renew_flag` - The way that CBS instance will be renew automatically or not when it reach the end of the prepaid tenancy.

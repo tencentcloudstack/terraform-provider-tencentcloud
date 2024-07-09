@@ -34,6 +34,7 @@ The following arguments are supported:
 * `storage_size` - (Required, Int) Volume of CBS, and unit is GB.
 * `storage_type` - (Required, String, ForceNew) Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.
 * `charge_type` - (Optional, String) The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.
+* `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disk_count` - (Optional, Int, ForceNew) The number of disks to be purchased. Default 1.
 * `encrypt` - (Optional, Bool, ForceNew) Indicates whether CBS is encrypted.
 * `project_id` - (Optional, Int) ID of the project to which the instance belongs.
