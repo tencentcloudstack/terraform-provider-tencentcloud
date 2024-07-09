@@ -198,7 +198,7 @@ func DataSourceTencentCloudCbsStoragesSet() *schema.Resource {
 }
 
 func dataSourceTencentCloudCbsStoragesSetRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("data_source.tencentcloud_cbs_storages.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cbs_storages_set.read")()
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
