@@ -48,7 +48,7 @@ func ResourceTencentCloudCbsStorageSet() *schema.Resource {
 				Optional:     true,
 				Default:      CBS_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CBS_CHARGE_TYPE),
-				Description:  "The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.",
+				Description:  "The charge type of CBS instance. Support `POSTPAID_BY_HOUR` and `DEDICATED_CLUSTER_PAID`. The default is `POSTPAID_BY_HOUR`.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
