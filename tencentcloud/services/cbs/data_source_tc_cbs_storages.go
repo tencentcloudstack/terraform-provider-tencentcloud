@@ -57,7 +57,7 @@ func DataSourceTencentCloudCbsStorages() *schema.Resource {
 			"charge_type": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).",
+				Description: "List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID` | `CDCPAID` | `DEDICATED_CLUSTER_PAID`).",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"portable": {
@@ -221,7 +221,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	}
 
 	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
-		params["dedicated-cluster-id "] = v.(string)
+		params["dedicated-cluster-id"] = v.(string)
 	}
 
 	if v, ok := d.GetOkExists("project_id"); ok {

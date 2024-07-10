@@ -13,8 +13,10 @@ Use this data source to query detailed information of CBS storages in parallel.
 
 ## Example Usage
 
+### Query CBS by storage set by zone
+
 ```hcl
-data "tencentcloud_cbs_storages_set" "storages" {
+data "tencentcloud_cbs_storages_set" "example" {
   availability_zone = "ap-guangzhou-3"
 }
 ```
@@ -24,7 +26,7 @@ data "tencentcloud_cbs_storages_set" "storages" {
 The following arguments are supported:
 
 * `availability_zone` - (Optional, String) The available zone that the CBS instance locates at.
-* `charge_type` - (Optional, List: [`String`]) List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).
+* `charge_type` - (Optional, List: [`String`]) List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID` | `CDCPAID` | `DEDICATED_CLUSTER_PAID`).
 * `dedicated_cluster_id` - (Optional, String) Exclusive cluster id.
 * `instance_ips` - (Optional, List: [`String`]) List filter by attached instance public or private IPs.
 * `instance_name` - (Optional, List: [`String`]) List filter by attached instance name.
