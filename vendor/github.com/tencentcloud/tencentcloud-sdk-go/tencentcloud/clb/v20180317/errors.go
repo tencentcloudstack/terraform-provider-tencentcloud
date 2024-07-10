@@ -20,6 +20,9 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// token错误
+	AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+
 	// DryRun 操作，代表请求将会是成功的，只是多传了 DryRun 参数。
 	DRYRUNOPERATION = "DryRunOperation"
 
@@ -28,6 +31,9 @@ const (
 
 	// LB状态异常。
 	FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
+
+	// 没有监听器的实例不允许停止。
+	FAILEDOPERATION_NOLISTENERINLB = "FailedOperation.NoListenerInLB"
 
 	// 正在操作指定的资源，请稍后重试。
 	FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
