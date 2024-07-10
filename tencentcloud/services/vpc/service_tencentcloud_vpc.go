@@ -484,7 +484,7 @@ func (me *VpcService) DescribeSubnet(ctx context.Context,
 	isRemoteVpcSNAT *bool,
 	tagKey,
 	cidrBlock string) (info VpcSubnetBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil, nil, isRemoteVpcSNAT, tagKey, cidrBlock)
+	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil, nil, isRemoteVpcSNAT, tagKey, cidrBlock, "")
 	if err != nil {
 		errRet = err
 		return
@@ -505,7 +505,7 @@ func (me *VpcService) DescribeSubnets(ctx context.Context,
 	isDefaultPtr *bool,
 	isRemoteVpcSNAT *bool,
 	tagKey,
-	cidrBlock string) (infos []VpcSubnetBasicInfo, errRet error) {
+	cidrBlock, cdcId string) (infos []VpcSubnetBasicInfo, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeSubnetsRequest()
@@ -550,6 +550,9 @@ func (me *VpcService) DescribeSubnets(ctx context.Context,
 	}
 	if cidrBlock != "" {
 		filters = me.fillFilter(filters, "cidr-block", cidrBlock)
+	}
+	if cdcId != "" {
+		filters = me.fillFilter(filters, "cdc-id", cdcId)
 	}
 
 	for k, v := range tags {
