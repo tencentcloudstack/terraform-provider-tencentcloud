@@ -131,6 +131,8 @@ func (me *RumService) DescribeRumProject(ctx context.Context, id string) (projec
 		})
 
 		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
 			return
 		}
