@@ -869,12 +869,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if *response.Response.TotalCount > 0 {
 			for i := range response.Response.ImageSet {
 				image := response.Response.ImageSet[i]
 				cvmImages = append(cvmImages, *image.ImageId)
 			}
 		}
+
 		return nil
 	})
 
@@ -887,6 +889,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	_ = d.Set("availability_zone", instance.Placement.Zone)
+	_ = d.Set("dedicated_cluster_id", instance.DedicatedClusterId)
 	_ = d.Set("instance_name", instance.InstanceName)
 	_ = d.Set("instance_type", instance.InstanceType)
 	_ = d.Set("project_id", instance.Placement.ProjectId)
@@ -928,6 +931,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return err
 	}
+
 	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
 	// we should remove this tag, otherwise it will cause terraform state change
 	delete(tags, "tencentcloud:autoscaling:auto-scaling-group-id")
@@ -942,6 +946,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if _, ok := d.GetOk("data_disks"); ok {
 		hasDataDisks = true
 	}
+
 	if len(instance.DataDisks) > 0 {
 		var diskIds []*string
 		for i := range instance.DataDisks {
@@ -950,22 +955,26 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			if id == nil {
 				continue
 			}
+
 			if strings.HasPrefix(*id, "disk-") {
 				diskIds = append(diskIds, id)
 			} else {
 				diskSizeMap[*id] = helper.Int64Uint64(*size)
 			}
 		}
+
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			disks, err := cbsService.DescribeDiskList(ctx, diskIds)
 			if err != nil {
 				return resource.NonRetryableError(err)
 			}
+
 			for i := range disks {
 				disk := disks[i]
 				if *disk.DiskState == "EXPANDING" {
 					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
 				}
+
 				diskSizeMap[*disk.DiskId] = disk.DiskSize
 				if hasDataDisks {
 					items := strings.Split(*disk.DiskName, "_")
@@ -975,15 +984,19 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 						isCombineDataDisks = true
 						continue
 					}
+
 					diskOrderMap[*disk.DiskId] = diskOrderInt
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
 	}
+
 	for _, disk := range instance.DataDisks {
 		dataDisk := make(map[string]interface{}, 5)
 		dataDisk["data_disk_id"] = disk.DiskId
@@ -992,6 +1005,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
 			dataDisk["data_disk_size"] = size
 		}
+
 		dataDisk["data_disk_type"] = disk.DiskType
 		dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
 		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
@@ -999,6 +1013,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		dataDisk["throughput_performance"] = disk.ThroughputPerformance
 		dataDiskList = append(dataDiskList, dataDisk)
 	}
+
 	if hasDataDisks && !isCombineDataDisks {
 		sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
 			dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
@@ -1006,14 +1021,17 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
 		})
 	}
+
 	_ = d.Set("data_disks", dataDiskList)
 
 	if len(instance.PrivateIpAddresses) > 0 {
 		_ = d.Set("private_ip", instance.PrivateIpAddresses[0])
 	}
+
 	if len(instance.PublicIpAddresses) > 0 {
 		_ = d.Set("public_ip", instance.PublicIpAddresses[0])
 	}
+
 	if len(instance.LoginSettings.KeyIds) > 0 {
 		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
 		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
@@ -1021,6 +1039,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("key_name", "")
 		_ = d.Set("key_ids", []*string{})
 	}
+
 	if instance.LoginSettings.KeepImageLogin != nil {
 		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
 	}
@@ -1037,12 +1056,12 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}) (err error) {
 	defer tccommon.LogElapsed("resource.tencentcloud_instance.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	instanceId := d.Id()
-	cvmService := CvmService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		instanceId = d.Id()
+		cvmService = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	d.Partial(true)
 
@@ -1073,19 +1092,23 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if v, ok := d.GetOk("instance_charge_type_prepaid_period"); ok {
 			period = v.(int)
 		}
+
 		if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 			renewFlag = v.(string)
 		}
+
 		// change charge type
 		err := cvmService.ModifyInstanceChargeType(ctx, instanceId, expectChargeType, period, renewFlag)
 		if err != nil {
 			return err
 		}
+
 		// query cvm status
 		err = waitForOperationFinished(d, meta, 5*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err
 		}
+
 		periodSet = true
 		renewFlagSet = true
 	}
@@ -1095,6 +1118,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	if _, ok := op.(int); !ok && np.(int) == 1 {
 		periodSet = true
 	}
+
 	if d.HasChange("instance_charge_type_prepaid_period") && !periodSet {
 		chargeType := d.Get("instance_charge_type").(string)
 		period := d.Get("instance_charge_type_prepaid_period").(int)
@@ -1103,15 +1127,18 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 			renewFlag = v.(string)
 		}
+
 		err := cvmService.ModifyInstanceChargeType(ctx, instanceId, chargeType, period, renewFlag)
 		if err != nil {
 			return err
 		}
+
 		// query cvm status
 		err = waitForOperationFinished(d, meta, 5*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err
 		}
+
 		renewFlagSet = true
 	}
 
@@ -1129,7 +1156,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		time.Sleep(tccommon.ReadRetryTimeout)
-
 	}
 
 	if d.HasChange("instance_name") {
@@ -1137,7 +1163,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("disable_api_termination") {
@@ -1153,11 +1178,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		for _, securityGroup := range securityGroups {
 			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
 		}
+
 		err := cvmService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("orderly_security_groups") {
@@ -1166,11 +1191,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		for _, securityGroup := range orderlySecurityGroups {
 			orderlySecurityGroupIds = append(orderlySecurityGroupIds, helper.String(securityGroup.(string)))
 		}
+
 		err := cvmService.ModifySecurityGroups(ctx, instanceId, orderlySecurityGroupIds)
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("project_id") {
@@ -1179,7 +1204,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-
 	}
 
 	// Reset Instance
@@ -1196,6 +1220,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if v, ok := d.GetOk("image_id"); ok {
 			request.ImageId = helper.String(v.(string))
 		}
+
 		if v, ok := d.GetOk("hostname"); ok {
 			request.HostName = helper.String(v.(string))
 		}
@@ -1240,7 +1265,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err := cvmService.ResetInstance(ctx, request); err != nil {
 			return err
 		}
-
 		// Modify Login Info Directly
 	} else {
 		if d.HasChange("password") {
@@ -1248,6 +1272,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
+
 			err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 			if err != nil {
 				return err
@@ -1264,6 +1289,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if err != nil {
 					return err
 				}
+
 				err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 				if err != nil {
 					return err
@@ -1275,6 +1301,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if err != nil {
 					return err
 				}
+
 				err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 				if err != nil {
 					return err
@@ -1286,9 +1313,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if d.HasChange("key_ids") {
 			o, n := d.GetChange("key_ids")
 			ov := o.(*schema.Set)
-
 			nv := n.(*schema.Set)
-
 			adds := nv.Difference(ov)
 			removes := ov.Difference(nv)
 			adds.Remove("")
@@ -1299,16 +1324,19 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if err != nil {
 					return err
 				}
+
 				err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 				if err != nil {
 					return err
 				}
 			}
+
 			if adds.Len() > 0 {
 				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
 				if err != nil {
 					return err
 				}
+
 				err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 				if err != nil {
 					return err
@@ -1334,15 +1362,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if !d.HasChange(sizeKey) {
 				continue
 			}
+
 			size := d.Get(sizeKey).(int)
 			diskId := d.Get(idKey).(string)
-
 			err := cbsService.ResizeDisk(ctx, diskId, size)
-
 			if err != nil {
 				return fmt.Errorf("an error occurred when modifying %s, reason: %s", sizeKey, err.Error())
 			}
-
 		}
 	}
 
@@ -1352,11 +1378,9 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err := switchInstance(&cvmService, ctx, d, flag); err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("system_disk_size") || d.HasChange("system_disk_type") {
-
 		size := d.Get("system_disk_size").(int)
 		diskType := d.Get("system_disk_type").(string)
 		//diskId := d.Get("system_disk_id").(string)
@@ -1381,27 +1405,30 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return resource.NonRetryableError(err)
 			}
+
 			if instance != nil && instance.LatestOperationState != nil {
 				if *instance.InstanceState == "FAILED" {
 					return resource.NonRetryableError(fmt.Errorf("instance operation failed"))
 				}
+
 				if *instance.InstanceState == "OPERATING" {
 					return resource.RetryableError(fmt.Errorf("instance operating"))
 				}
 			}
+
 			if instance != nil && instance.SystemDisk != nil {
 				//wait until disk result as expected
 				if *instance.SystemDisk.DiskType != diskType || int(*instance.SystemDisk.DiskSize) != size {
 					return resource.RetryableError(fmt.Errorf("waiting for expanding success"))
 				}
 			}
+
 			return nil
 		})
 
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("instance_type") {
@@ -1448,6 +1475,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
+
 		//except instance ,system disk and data disk will be tagged
 		//keep logical consistence with the console
 		//tag system disk
@@ -1459,6 +1487,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				}
 			}
 		}
+
 		//tag disk ids
 		if dataDisks, ok := d.GetOk("data_disks"); ok {
 			dataDiskList := dataDisks.([]interface{})
@@ -1471,7 +1500,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				}
 			}
 		}
-
 	}
 
 	if d.HasChange("internet_max_bandwidth_out") {
@@ -1490,7 +1518,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-
 	}
 
 	d.Partial(false)
@@ -1501,17 +1528,16 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_instance.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cvmService = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	instanceId := d.Id()
 	//check is force delete or not
 	forceDelete := d.Get("force_delete").(bool)
 	instanceChargeType := d.Get("instance_charge_type").(string)
-
-	cvmService := CvmService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
 
 	instance, err := cvmService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
@@ -1523,8 +1549,10 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -1536,8 +1564,10 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
@@ -1552,27 +1582,31 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if instance == nil {
 			notExist = true
 			return nil
 		}
+
 		if *instance.InstanceState == CVM_STATUS_SHUTDOWN && *instance.LatestOperationState != CVM_LATEST_OPERATION_STATE_OPERATING {
 			//in recycling
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
+
 	if err != nil {
 		return err
 	}
 
 	vpcService := vpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	if notExist {
 		err := waitIpRelease(ctx, vpcService, instance)
 		if err != nil {
 			return err
 		}
+
 		return nil
 	}
 
@@ -1590,13 +1624,17 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			if !ok {
 				return tccommon.RetryError(errRet)
 			}
+
 			if ee.Code == "InvalidInstanceState.Terminating" {
 				return nil
 			}
+
 			return tccommon.RetryError(errRet, "OperationDenied.InstanceOperationInProgress")
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -1607,14 +1645,18 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if instance == nil {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if v, ok := d.GetOk("data_disks"); ok {
 		dataDisks := v.([]interface{})
 		for _, d := range dataDisks {
@@ -1628,47 +1670,60 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
 					}
+
 					if *diskInfo.DiskState != svccbs.CBS_STORAGE_STATUS_UNATTACHED {
 						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
 					}
+
 					return nil
 				})
+
 				if err != nil {
 					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
 					return err
 				}
+
 				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 					e := cbsService.DeleteDiskById(ctx, diskId)
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
 					}
+
 					return nil
 				})
+
 				if err != nil {
 					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
 					return err
 				}
+
 				err = resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
 					}
+
 					if *diskInfo.DiskState == svccbs.CBS_STORAGE_STATUS_TORECYCLE {
 						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
 					}
+
 					return nil
 				})
+
 				if err != nil {
 					log.Printf("[CRITAL]%s read cbs status failed, reason:%s\n ", logId, err.Error())
 					return err
 				}
+
 				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 					e := cbsService.DeleteDiskById(ctx, diskId)
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
 					}
+
 					return nil
 				})
+
 				if err != nil {
 					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
 					return err
@@ -1678,11 +1733,14 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
 					}
+
 					if diskInfo != nil {
 						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
 					}
+
 					return nil
 				})
+
 				if err != nil {
 					log.Printf("[CRITAL]%s read cbs status failed, reason:%s\n ", logId, err.Error())
 					return err
@@ -1695,6 +1753,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -1705,16 +1764,20 @@ func switchInstance(cvmService *CvmService, ctx context.Context, d *schema.Resou
 		if err != nil {
 			return err
 		}
+
 		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
 				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
+
 			if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 				return nil
 			}
+
 			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 		})
+
 		if err != nil {
 			return err
 		}
@@ -1729,10 +1792,12 @@ func switchInstance(cvmService *CvmService, ctx context.Context, d *schema.Resou
 					return resource.NonRetryableError(err)
 				}
 			}
+
 			instance, err := cvmService.DescribeInstanceById(ctx, instanceId)
 			if err != nil {
 				return resource.NonRetryableError(err)
 			}
+
 			if instance == nil {
 				return resource.NonRetryableError(fmt.Errorf("instance %s not found", instanceId))
 			}
@@ -1743,30 +1808,38 @@ func switchInstance(cvmService *CvmService, ctx context.Context, d *schema.Resou
 					skipStopApi = true
 					return resource.RetryableError(fmt.Errorf("instance %s stop operating, retrying", instanceId))
 				}
+
 				if operationState == "FAILED" {
 					skipStopApi = false
 					return resource.RetryableError(fmt.Errorf("instance %s stop failed, retrying", instanceId))
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
+
 		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
 				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
+
 			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 				return nil
 			}
+
 			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 		})
+
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -1786,23 +1859,30 @@ func waitForOperationFinished(d *schema.ResourceData, meta interface{}, timeout 
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if instance == nil {
 			return resource.NonRetryableError(fmt.Errorf("%s not exists", instanceId))
 		}
+
 		if instance.LatestOperationState == nil {
 			return resource.RetryableError(fmt.Errorf("wait for operation update"))
 		}
+
 		if *instance.LatestOperationState == state {
 			return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", instanceId))
 		}
+
 		if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
 			return resource.NonRetryableError(fmt.Errorf("failed operation"))
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -1818,15 +1898,18 @@ func waitIpRelease(ctx context.Context, vpcService vpc.VpcService, instance *cvm
 			if errRet != nil {
 				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
+
 			if len(usedIpAddress) > 0 {
 				return resource.RetryableError(fmt.Errorf("wait cvm private ip release..."))
 			}
 
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }

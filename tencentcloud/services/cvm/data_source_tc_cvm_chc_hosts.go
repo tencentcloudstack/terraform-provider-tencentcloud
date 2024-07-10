@@ -374,9 +374,9 @@ func dataSourceTencentCloudCvmChcHostsRead(d *schema.ResourceData, meta interfac
 					placementMap["host_ids"] = chcHost.Placement.HostIds
 				}
 
-				if chcHost.Placement.HostIps != nil {
-					placementMap["host_ips"] = chcHost.Placement.HostIps
-				}
+				//if chcHost.Placement.HostIps != nil {
+				//	placementMap["host_ips"] = chcHost.Placement.HostIps
+				//}
 
 				if chcHost.Placement.HostId != nil {
 					placementMap["host_id"] = chcHost.Placement.HostId

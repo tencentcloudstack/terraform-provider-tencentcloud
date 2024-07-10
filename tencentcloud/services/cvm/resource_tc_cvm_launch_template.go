@@ -637,13 +637,13 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 				placement.HostIds = append(placement.HostIds, &hostIds)
 			}
 		}
-		if v, ok := dMap["host_ips"]; ok {
-			hostIpsSet := v.(*schema.Set).List()
-			for i := range hostIpsSet {
-				hostIps := hostIpsSet[i].(string)
-				placement.HostIps = append(placement.HostIps, &hostIps)
-			}
-		}
+		//if v, ok := dMap["host_ips"]; ok {
+		//	hostIpsSet := v.(*schema.Set).List()
+		//	for i := range hostIpsSet {
+		//		hostIps := hostIpsSet[i].(string)
+		//		placement.HostIps = append(placement.HostIps, &hostIps)
+		//	}
+		//}
 		// if v, ok := dMap["host_id"]; ok {
 		// 	placement.HostId = helper.String(v.(string))
 		// }
@@ -1020,9 +1020,9 @@ func resourceTencentCloudCvmLaunchTemplateRead(d *schema.ResourceData, meta inte
 			placementMap["host_ids"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIds
 		}
 
-		if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps != nil {
-			placementMap["host_ips"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps
-		}
+		//if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps != nil {
+		//	placementMap["host_ips"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps
+		//}
 
 		if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostId != nil {
 			placementMap["host_id"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostId
