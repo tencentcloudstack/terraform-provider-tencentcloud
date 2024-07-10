@@ -4,14 +4,12 @@ import (
 	"context"
 	"log"
 	"strconv"
-	"time"
-
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -90,8 +88,9 @@ func (me *RumService) DeleteRumTawInstanceById(ctx context.Context, instanceId s
 
 func (me *RumService) DescribeRumProject(ctx context.Context, id string) (project *rum.RumProject, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = rum.NewDescribeProjectsRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = rum.NewDescribeProjectsRequest()
+		response = rum.NewDescribeProjectsResponse()
 	)
 
 	defer func() {
@@ -118,20 +117,24 @@ func (me *RumService) DescribeRumProject(ctx context.Context, id string) (projec
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-	ReTryDescribe:
-		response, err := me.client.UseRumClient().DescribeProjects(request)
-		if err != nil {
-			// Exceeded request frequency limit
-			if err.(*sdkErrors.TencentCloudSDKError).Code == "RequestLimitExceeded" {
-				time.Sleep(time.Second * 1)
-				goto ReTryDescribe
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, err := me.client.UseRumClient().DescribeProjects(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			response = result
+			return nil
+		})
+
+		if err != nil {
 			errRet = err
 			return
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
