@@ -889,7 +889,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	_ = d.Set("availability_zone", instance.Placement.Zone)
-	//_ = d.Set("dedicated_cluster_id", instance.DedicatedClusterId)
+	_ = d.Set("dedicated_cluster_id", instance.DedicatedClusterId)
 	_ = d.Set("instance_name", instance.InstanceName)
 	_ = d.Set("instance_type", instance.InstanceType)
 	_ = d.Set("project_id", instance.Placement.ProjectId)

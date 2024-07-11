@@ -50,6 +50,11 @@ func DataSourceTencentCloudInstances() *schema.Resource {
 				Optional:    true,
 				Description: "ID of a vpc subnetwork.",
 			},
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Exclusive cluster id.",
+			},
 			"instance_set_ids": {
 				Type:          schema.TypeList,
 				Optional:      true,
@@ -92,6 +97,11 @@ func DataSourceTencentCloudInstances() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Type of the instance.",
+						},
+						"dedicated_cluster_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Exclusive cluster id.",
 						},
 						"cpu": {
 							Type:        schema.TypeInt,
@@ -252,33 +262,43 @@ func DataSourceTencentCloudInstances() *schema.Resource {
 
 func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_instances.read")()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	cvmService := CvmService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
 
-	var instanceSetIds []*string
+	var (
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cvmService     = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceSetIds []*string
+	)
 
 	filter := make(map[string]string)
 	if v, ok := d.GetOk("instance_id"); ok {
 		filter["instance-id"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("instance_name"); ok {
 		filter["instance-name"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("availability_zone"); ok {
 		filter["zone"] = v.(string)
 	}
+
 	if v, ok := d.GetOkExists("project_id"); ok {
 		filter["project-id"] = fmt.Sprintf("%d", v.(int))
 	}
+
 	if v, ok := d.GetOk("vpc_id"); ok {
 		filter["vpc-id"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("subnet_id"); ok {
 		filter["subnet-id"] = v.(string)
 	}
+
+	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
+		filter["dedicated-cluster-id"] = v.(string)
+	}
+
 	if v, ok := d.GetOk("instance_set_ids"); ok {
 		instanceSetIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
@@ -296,8 +316,10 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -309,6 +331,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"instance_id":                instance.InstanceId,
 			"instance_name":              instance.InstanceName,
 			"instance_type":              instance.InstanceType,
+			"dedicated_cluster_id":       instance.DedicatedClusterId,
 			"cpu":                        instance.CPU,
 			"memory":                     instance.Memory,
 			"os_name":                    instance.OsName,
@@ -332,12 +355,15 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"instance_charge_type_prepaid_renew_flag": instance.RenewFlag,
 			"cam_role_name": instance.CamRoleName,
 		}
+
 		if len(instance.PublicIpAddresses) > 0 {
 			mapping["public_ip"] = *instance.PublicIpAddresses[0]
 		}
+
 		if len(instance.PrivateIpAddresses) > 0 {
 			mapping["private_ip"] = *instance.PrivateIpAddresses[0]
 		}
+
 		dataDisks := make([]map[string]interface{}, 0, len(instance.DataDisks))
 		for _, v := range instance.DataDisks {
 			dataDisk := map[string]interface{}{
@@ -346,8 +372,10 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 				"data_disk_id":         v.DiskId,
 				"delete_with_instance": v.DeleteWithInstance,
 			}
+
 			dataDisks = append(dataDisks, dataDisk)
 		}
+
 		mapping["data_disks"] = dataDisks
 		instanceList = append(instanceList, mapping)
 		ids = append(ids, *instance.InstanceId)
@@ -366,6 +394,6 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			return err
 		}
 	}
-	return nil
 
+	return nil
 }

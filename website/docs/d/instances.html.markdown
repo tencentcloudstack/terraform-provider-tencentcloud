@@ -49,6 +49,7 @@ data "tencentcloud_instances" "example" {
 The following arguments are supported:
 
 * `availability_zone` - (Optional, String) The available zone that the CVM instance locates at.
+* `dedicated_cluster_id` - (Optional, String) Exclusive cluster id.
 * `instance_id` - (Optional, String) ID of the instances to be queried.
 * `instance_name` - (Optional, String) Name of the instances to be queried.
 * `instance_set_ids` - (Optional, List: [`String`]) Instance set ids, max length is 100, conflict with other field.
@@ -73,6 +74,7 @@ In addition to all arguments above, the following attributes are exported:
     * `data_disk_size` - Size of the data disk.
     * `data_disk_type` - Type of the data disk.
     * `delete_with_instance` - Indicates whether the data disk is destroyed with the instance.
+  * `dedicated_cluster_id` - Exclusive cluster id.
   * `expired_time` - Expired time of the instance.
   * `image_id` - ID of the image.
   * `instance_charge_type_prepaid_renew_flag` - The way that CVM instance will be renew automatically or not when it reach the end of the prepaid tenancy.
