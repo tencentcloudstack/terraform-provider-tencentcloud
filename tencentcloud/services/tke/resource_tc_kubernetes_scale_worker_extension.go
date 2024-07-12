@@ -435,7 +435,7 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 	}
 
 	//修改id设置,不符合id规则
-	id := clusterId + tccommon.FILED_SP + strings.Join(instanceIds, tccommon.FILED_SP)
+	id := clusterId + tccommon.FILED_SP + strings.Join(instanceIds, tccommon.COMMA_SP)
 	d.SetId(id)
 
 	//wait for LANIP
@@ -482,7 +482,7 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 		}
 
 		e = fmt.Errorf("cluster instances is still initializing.")
-		return resource.NonRetryableError(e)
+		return tccommon.RetryError(e)
 	})
 
 	if err != nil {
