@@ -440,6 +440,55 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 
 	//wait for LANIP
 	time.Sleep(tccommon.ReadRetryTimeout)
+
+	// wait for all instances status running
+	waitRequest := tke.NewDescribeClusterInstancesRequest()
+	waitRequest.ClusterId = &clusterId
+	waitRequest.InstanceIds = helper.Strings(instanceIds)
+	waitRequest.Offset = helper.Int64(0)
+	waitRequest.Limit = helper.Int64(100)
+	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClusterInstances(waitRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
+		}
+
+		// check instances status
+		tmpInstanceSet := result.Response.InstanceSet
+		if tmpInstanceSet == nil || len(tmpInstanceSet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("there is no instances in set"))
+		} else {
+			var stop int
+			for _, v := range instanceIds {
+				for _, instance := range tmpInstanceSet {
+					if v == *instance.InstanceId {
+						if *instance.InstanceState == "running" {
+							stop += 1
+						} else if *instance.InstanceState == "failed" {
+							stop += 1
+							log.Printf("instance:%s status is failed.", v)
+						} else {
+							continue
+						}
+					}
+				}
+			}
+
+			if stop == len(instanceIds) {
+				return nil
+			}
+		}
+
+		e = fmt.Errorf("cluster instances is still initializing.")
+		return resource.NonRetryableError(e)
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL] kubernetes scale worker instances status error, reason:%+v", err)
+	}
+
 	return nil
 }
 
