@@ -25,6 +25,12 @@ func DataSourceTencentCloudSubnet() *schema.Resource {
 				Required:    true,
 				Description: "The ID of the Subnet.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "ID of CDC instance.",
+			},
 			"cidr_block": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -52,14 +58,22 @@ func DataSourceTencentCloudSubnet() *schema.Resource {
 func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_subnet.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	vpcService := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		vpcService = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		vpcId      string
+		subnetId   string
+		cdcId      string
+	)
 
-	vpcId := d.Get("vpc_id").(string)
-	subnetId := d.Get("subnet_id").(string)
+	vpcId = d.Get("vpc_id").(string)
+	subnetId = d.Get("subnet_id").(string)
+	if temp, ok := d.GetOk("cdc_id"); ok {
+		cdcId = temp.(string)
+	}
 
-	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, "", "", map[string]string{}, nil, nil, "", "")
+	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, "", "", map[string]string{}, nil, nil, "", "", cdcId)
 	if err != nil {
 		return err
 	}
@@ -70,6 +84,7 @@ func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, meta interface{}) 
 
 	subnet := infos[0]
 	d.SetId(subnet.subnetId)
+	_ = d.Set("cdc_id", subnet.cdcId)
 	_ = d.Set("cidr_block", subnet.cidr)
 	_ = d.Set("name", subnet.name)
 	_ = d.Set("route_table_id", subnet.routeTableId)

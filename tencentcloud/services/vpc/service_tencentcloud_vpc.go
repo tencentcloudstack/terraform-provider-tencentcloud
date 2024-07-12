@@ -60,6 +60,7 @@ type VpcSubnetBasicInfo struct {
 	vpcId            string
 	subnetId         string
 	routeTableId     string
+	cdcId            string
 	name             string
 	cidr             string
 	isMulticast      bool
@@ -483,7 +484,7 @@ func (me *VpcService) DescribeSubnet(ctx context.Context,
 	isRemoteVpcSNAT *bool,
 	tagKey,
 	cidrBlock string) (info VpcSubnetBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil, nil, isRemoteVpcSNAT, tagKey, cidrBlock)
+	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil, nil, isRemoteVpcSNAT, tagKey, cidrBlock, "")
 	if err != nil {
 		errRet = err
 		return
@@ -504,7 +505,7 @@ func (me *VpcService) DescribeSubnets(ctx context.Context,
 	isDefaultPtr *bool,
 	isRemoteVpcSNAT *bool,
 	tagKey,
-	cidrBlock string) (infos []VpcSubnetBasicInfo, errRet error) {
+	cidrBlock, cdcId string) (infos []VpcSubnetBasicInfo, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeSubnetsRequest()
@@ -549,6 +550,9 @@ func (me *VpcService) DescribeSubnets(ctx context.Context,
 	}
 	if cidrBlock != "" {
 		filters = me.fillFilter(filters, "cidr-block", cidrBlock)
+	}
+	if cdcId != "" {
+		filters = me.fillFilter(filters, "cdc-id", cdcId)
 	}
 
 	for k, v := range tags {
@@ -604,6 +608,7 @@ getMoreData:
 		basicInfo.vpcId = *item.VpcId
 		basicInfo.subnetId = *item.SubnetId
 		basicInfo.routeTableId = *item.RouteTableId
+		basicInfo.cdcId = *item.CdcId
 
 		basicInfo.name = *item.SubnetName
 		basicInfo.isDefault = *item.IsDefault
@@ -690,7 +695,7 @@ func (me *VpcService) DeleteVpc(ctx context.Context, vpcId string) (errRet error
 
 }
 
-func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone string, tags map[string]string) (subnetId string, errRet error) {
+func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone, cdcId string, tags map[string]string) (subnetId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewCreateSubnetRequest()
 	defer func() {
@@ -704,10 +709,15 @@ func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone 
 		errRet = fmt.Errorf("CreateSubnet can not invoke by empty vpc_id.")
 		return
 	}
+
 	request.VpcId = &vpcId
 	request.SubnetName = &name
 	request.CidrBlock = &cidr
 	request.Zone = &zone
+
+	if cdcId != "" {
+		request.CdcId = &cdcId
+	}
 
 	if len(tags) > 0 {
 		for tagKey, tagValue := range tags {
