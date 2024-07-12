@@ -69,6 +69,12 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 60),
 				Description:  "In the case of purchasing a `INTERNAL` clb instance, the subnet id must be specified. The VIP of the `INTERNAL` clb instance will be generated from this subnet.",
 			},
+			"cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Cluster ID.",
+			},
 			"address_ip_version": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -284,6 +290,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("subnet_id"); ok {
 		request.SubnetId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		request.ClusterIds = []*string{helper.String(v.(string))}
 	}
 
 	//vip_isp
