@@ -17,8 +17,8 @@ import (
 
 func ResourceTencentCloudRumProject() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudRumProjectRead,
 		Create: resourceTencentCloudRumProjectCreate,
+		Read:   resourceTencentCloudRumProjectRead,
 		Update: resourceTencentCloudRumProjectUpdate,
 		Delete: resourceTencentCloudRumProjectDelete,
 		Importer: &schema.ResourceImporter{
@@ -68,9 +68,9 @@ func ResourceTencentCloudRumProject() *schema.Resource {
 			},
 
 			"desc": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Description: "	Description of the created project (optional and up to 1,000 characters).",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Description of the created project (optional and up to 1,000 characters).",
 			},
 
 			"creator": {
@@ -82,7 +82,7 @@ func ResourceTencentCloudRumProject() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Creata Time.",
+				Description: "Create Time.",
 			},
 
 			"key": {
@@ -122,9 +122,8 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_project.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = rum.NewCreateProjectRequest()
 		response *rum.CreateProjectResponse
 		id       uint64
@@ -170,6 +169,7 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
@@ -180,7 +180,6 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 	}
 
 	id = *response.Response.ID
-
 	d.SetId(strconv.Itoa(int(id)))
 	return resourceTencentCloudRumProjectRead(d, meta)
 }
@@ -189,15 +188,14 @@ func resourceTencentCloudRumProjectRead(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_project.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	projectId := d.Id()
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		projectId = d.Id()
+	)
 
 	project, err := service.DescribeRumProject(ctx, projectId)
-
 	if err != nil {
 		return err
 	}
@@ -274,11 +272,11 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_project.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := rum.NewModifyProjectRequest()
-
-	projectId := d.Id()
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		request   = rum.NewModifyProjectRequest()
+		projectId = d.Id()
+	)
 
 	id, e := strconv.Atoi(projectId)
 	if e != nil {
@@ -286,7 +284,6 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 	}
 
 	request.ID = helper.Uint64(uint64(id))
-
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
@@ -297,7 +294,6 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 		if v, ok := d.GetOk("instance_id"); ok {
 			request.InstanceID = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("rate") {
@@ -344,11 +340,12 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create rum project failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update rum project failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -359,12 +356,12 @@ func resourceTencentCloudRumProjectDelete(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_project.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	projectId := d.Id()
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		projectId = d.Id()
+	)
 
 	if err := service.DeleteRumProjectById(ctx, projectId); err != nil {
 		return err
