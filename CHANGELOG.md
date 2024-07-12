@@ -1,3 +1,15 @@
+## 1.81.108 (July 12, 2024)
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_subnet: add params `cdc_id` ([#2717](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2717))
+* data_source/tencentcloud_vpc_subnets: add params `cdc_id` ([#2717](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2717))
+* resource/tencentcloud_clb_instance: support update `project_id` params. ([#2705](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2705))
+* resource/tencentcloud_kubernetes_scale_worker: support retry ([#2723](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2723))
+* resource/tencentcloud_monitor_tmp_alert_group: add retry operator ([#2718](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2718))
+* resource/tencentcloud_rum_project: add retry operator ([#2718](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2718))
+* resource/tencentcloud_subnet: add params `cdc_id` ([#2717](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2717))
+
 ## 1.81.107 (July 5, 2024)
 
 ENHANCEMENTS:
