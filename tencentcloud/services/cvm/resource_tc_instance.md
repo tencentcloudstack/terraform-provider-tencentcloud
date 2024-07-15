@@ -169,7 +169,7 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
   name              = "subnet"
   cidr_block        = "10.0.1.0/24"
-  cdc_id            = "cluster-lchwgxhs"
+  cdc_id            = "cluster-262n63e8"
   is_multicast      = false
 }
 
@@ -179,9 +179,9 @@ resource "tencentcloud_instance" "example" {
   availability_zone    = var.availability_zone
   image_id             = data.tencentcloud_images.images.images.0.image_id
   instance_type        = data.tencentcloud_instance_types.types.instance_types.0.instance_type
-  dedicated_cluster_id = "cluster-lchwgxhs"
+  dedicated_cluster_id = "cluster-262n63e8"
   instance_charge_type = "CDCPAID"
-  system_disk_type     = "CLOUD_PREMIUM"
+  system_disk_type     = "CLOUD_SSD"
   system_disk_size     = 50
   hostname             = "user"
   project_id           = 0
@@ -189,7 +189,7 @@ resource "tencentcloud_instance" "example" {
   subnet_id            = tencentcloud_subnet.subnet.id
 
   data_disks {
-    data_disk_type = "CLOUD_PREMIUM"
+    data_disk_type = "CLOUD_SSD"
     data_disk_size = 50
     encrypt        = false
   }
