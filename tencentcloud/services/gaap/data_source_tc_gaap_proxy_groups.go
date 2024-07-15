@@ -239,7 +239,7 @@ func dataSourceTencentCloudGaapProxyGroupsRead(d *schema.ResourceData, meta inte
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["filters"] = tmpSet
+		paramMap["Filters"] = tmpSet
 	}
 
 	if v, ok := d.GetOk("tag_set"); ok {
@@ -258,7 +258,7 @@ func dataSourceTencentCloudGaapProxyGroupsRead(d *schema.ResourceData, meta inte
 			}
 			tmpSet = append(tmpSet, &tagPair)
 		}
-		paramMap["tag_set"] = tmpSet
+		paramMap["TagSet"] = tmpSet
 	}
 
 	service := GaapService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
