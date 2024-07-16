@@ -3208,6 +3208,22 @@ func (me *GaapService) CreateDomainErrorPageInfo(ctx context.Context,
 	}); err != nil {
 		return "", helper.WrapErrorf(err, "", "", "create gaap domain error page info failed")
 	}
+	describeRequest := gaap.NewDescribeDomainErrorPageInfoByIdsRequest()
+	describeRequest.ErrorPageIds = []*string{&id}
+	if err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		describeResponse, err := client.DescribeDomainErrorPageInfoByIds(describeRequest)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		if describeResponse.Response != nil && len(describeResponse.Response.ErrorPageSet) == 0 {
+			return resource.RetryableError(fmt.Errorf("creating error page"))
+		}
+		return nil
+
+	}); err != nil {
+		return "", err
+	}
 
 	return
 }
@@ -3291,6 +3307,21 @@ func (me *GaapService) DeleteDomainErrorPageInfo(ctx context.Context, id string)
 		return nil
 	}); err != nil {
 		return helper.WrapErrorf(err, id, "", "delete domain error page info failed")
+	}
+	describeRequest := gaap.NewDescribeDomainErrorPageInfoByIdsRequest()
+	describeRequest.ErrorPageIds = []*string{&id}
+	if err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		describeResponse, err := client.DescribeDomainErrorPageInfoByIds(describeRequest)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		if describeResponse.Response != nil && len(describeResponse.Response.ErrorPageSet) > 0 {
+			return resource.RetryableError(fmt.Errorf("deleting error page"))
+		}
+		return nil
+	}); err != nil {
+		return err
 	}
 
 	return nil
