@@ -810,6 +810,7 @@ Cloud Monitor(Monitor)
 Managed Service for Prometheus(TMP)
   Data Source
     tencentcloud_monitor_tmp_regions
+    tencentcloud_monitor_tmp_instances
 
   Resource
     tencentcloud_monitor_tmp_instance
