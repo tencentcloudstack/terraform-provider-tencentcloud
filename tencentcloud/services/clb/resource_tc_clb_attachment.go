@@ -440,7 +440,7 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 				"instance_id": *onlineTarget.InstanceId,
 			}
 			targets = append(targets, target)
-		} else if *onlineTarget.Type == CLB_BACKEND_TYPE_ENI || *onlineTarget.Type == CLB_BACKEND_TYPE_NAT {
+		} else if *onlineTarget.Type == CLB_BACKEND_TYPE_ENI || *onlineTarget.Type == CLB_BACKEND_TYPE_NAT || *onlineTarget.Type == CLB_BACKEND_TYPE_CCN {
 			target := map[string]interface{}{
 				"weight": int(*onlineTarget.Weight),
 				"port":   int(*onlineTarget.Port),
