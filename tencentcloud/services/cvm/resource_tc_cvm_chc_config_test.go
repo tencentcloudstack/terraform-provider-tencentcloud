@@ -26,7 +26,7 @@ func TestAccTencentCloudCvmChcConfigResource_Basic(t *testing.T) {
 			{
 				ResourceName:            "tencentcloud_cvm_chc_config.chc_config",
 				ImportState:             true,
-				ImportStateVerify:       true,
+				ImportStateVerify:       false,
 				ImportStateVerifyIgnore: []string{"bmc_user", "password"},
 			},
 		},

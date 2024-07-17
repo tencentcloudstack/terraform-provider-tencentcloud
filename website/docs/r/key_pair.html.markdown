@@ -31,7 +31,7 @@ The following arguments are supported:
 * `key_name` - (Required, String) The key pair's name. It is the only in one TencentCloud account.
 * `project_id` - (Optional, Int, ForceNew) Specifys to which project the key pair belongs.
 * `public_key` - (Optional, String, ForceNew) You can import an existing public key and using TencentCloud key pair to manage it.
-* `tags` - (Optional, Map) Tags of the key pair.
+* `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
 
