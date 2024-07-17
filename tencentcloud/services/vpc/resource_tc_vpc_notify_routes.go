@@ -67,6 +67,7 @@ func ResourceTencentCloudVpcNotifyRoutes() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
