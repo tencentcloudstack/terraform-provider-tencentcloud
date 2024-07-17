@@ -2,6 +2,7 @@ package connectivity
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -357,6 +358,19 @@ func (me *TencentCloudClient) UseVpcClient(iacExtInfo ...IacExtInfo) *vpc.Client
 	me.vpcConn.WithHttpTransport(&logRoundTripper)
 
 	return me.vpcConn
+}
+
+func (me *TencentCloudClient) UseVpcOmitNilClient() *common.Client {
+	secretId := me.Credential.SecretId
+	secretKey := me.Credential.SecretKey
+	region := me.Region
+	credential := common.NewCredential(secretId, secretKey)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = "vpc.tencentcloudapi.com"
+	cpf.HttpProfile.ReqMethod = "POST"
+	client := common.NewCommonClient(credential, region, cpf).WithLogger(log.Default())
+
+	return client
 }
 
 // UseCbsClient returns cbs client for service
