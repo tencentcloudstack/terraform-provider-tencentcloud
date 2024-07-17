@@ -1,3 +1,23 @@
+## 1.81.109 (July 17, 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ccn_routes` ([#2730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2730))
+* **New Data Source:** `tencentcloud_monitor_tmp_instances` ([#2731](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2731))
+* **New Resource:** `tencentcloud_ccn_route_table` ([#2730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2730))
+* **New Resource:** `tencentcloud_ccn_route_table_associate_instance_config` ([#2730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2730))
+* **New Resource:** `tencentcloud_ccn_route_table_broadcast_policies` ([#2730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2730))
+* **New Resource:** `tencentcloud_ccn_route_table_input_policies` ([#2730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2730))
+* **New Resource:** `tencentcloud_kubernetes_addon_config` ([#2725](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2725))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_attachment: support `CCN` backend ([#2729](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2729))
+* resource/tencentcloud_mongodb_instance: add describe retry ([#2727](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2727))
+* resource/tencentcloud_mongodb_sharding_instance: add describe retry ([#2727](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2727))
+* resource/tencentcloud_mongodb_standby_instance: add describe retry ([#2727](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2727))
+* resource/tencentcloud_route_table_entry: add computed `route_item_id` ([#2732](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2732))
+
 ## 1.81.108 (July 12, 2024)
 
 ENHANCEMENTS:
