@@ -87,7 +87,7 @@ func dataSourceTencentCloudInstanceTypesReadPostHandleResponse0(ctx context.Cont
 		log.Printf("[CRITAL]%s provider set instance type list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	context.WithValue(ctx, "typeList", typeList)
+	ctx = context.WithValue(ctx, "typeList", typeList)
 	return nil
 }
 
