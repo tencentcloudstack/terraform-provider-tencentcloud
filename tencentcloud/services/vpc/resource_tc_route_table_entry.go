@@ -66,6 +66,11 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 				ForceNew:    true,
 				Description: "Description of the routing table entry.",
 			},
+			"route_item_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ID of route table entry.",
+			},
 		},
 	}
 }
@@ -173,7 +178,7 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 				_ = d.Set("destination_cidr_block", v.destinationCidr)
 				_ = d.Set("next_type", v.nextType)
 				_ = d.Set("next_hub", v.nextBub)
-
+				_ = d.Set("route_item_id", v.routeItemId)
 				_ = d.Set("disabled", !v.enabled)
 				return nil
 			}

@@ -91,6 +91,7 @@ type VpcRouteEntryBasicInfo struct {
 	description     string
 	entryType       string
 	enabled         bool
+	routeItemId     string
 }
 
 func (info VpcRouteEntryBasicInfo) RouteEntryId() int64 {
@@ -957,6 +958,7 @@ getMoreData:
 			entry.routeEntryId = int64(*v.RouteId)
 			entry.entryType = *v.RouteType
 			entry.enabled = *v.Enabled
+			entry.routeItemId = *v.RouteItemId
 			basicInfo.entryInfos = append(basicInfo.entryInfos, entry)
 		}
 		if hasTableMap[basicInfo.routeTableId] {
