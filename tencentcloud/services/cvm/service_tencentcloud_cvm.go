@@ -9,6 +9,8 @@ import (
 	"sync"
 	"time"
 
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -1432,11 +1434,11 @@ func (me *CvmService) DeleteCvmLaunchTemplateById(ctx context.Context, launchTem
 	return
 }
 
-func (me *CvmService) DescribeCvmLaunchTemplateVersionById(ctx context.Context, launchTemplateId, launchTemplateVersionNumber string) (launchTemplateVersion *cvm.LaunchTemplateVersionInfo, errRet error) {
+func (me *CvmService) DescribeCvmLaunchTemplateVersionById(ctx context.Context, launchTemplateId string, launchTemplateVersionNumber string) (ret *cvm.LaunchTemplateVersionInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
-	request.LaunchTemplateId = &launchTemplateId
+	request.LaunchTemplateId = helper.String(launchTemplateId)
 	request.LaunchTemplateVersions = []*uint64{helper.StrToUint64Point(launchTemplateVersionNumber)}
 
 	defer func() {
@@ -1458,7 +1460,7 @@ func (me *CvmService) DescribeCvmLaunchTemplateVersionById(ctx context.Context, 
 		return
 	}
 
-	launchTemplateVersion = response.Response.LaunchTemplateVersionSet[0]
+	ret = response.Response.LaunchTemplateVersionSet[0]
 	return
 }
 
@@ -2079,5 +2081,107 @@ func (me *CvmService) DescribeReservedInstancesByFilter(ctx context.Context, par
 		offset += limit
 	}
 
+	return
+}
+
+func (me *CvmService) DescribeCvmInstanceVncUrlByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeInstanceVncUrlResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeInstanceVncUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstanceVncUrl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *CvmService) DescribeEipAddressQuotaByFilter(ctx context.Context, param map[string]interface{}) (ret []*vpc.Quota, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeAddressQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeAddressQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.QuotaSet) < 1 {
+		return
+	}
+
+	ret = response.Response.QuotaSet
+	return
+}
+
+func (me *CvmService) DescribeCvmInstancesModificationByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.InstanceTypeConfigStatus, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeInstancesModificationRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstancesModification(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceTypeConfigStatusSet) < 1 {
+		return
+	}
+
+	ret = response.Response.InstanceTypeConfigStatusSet
 	return
 }
