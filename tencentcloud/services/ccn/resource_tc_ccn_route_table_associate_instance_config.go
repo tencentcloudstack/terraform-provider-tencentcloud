@@ -3,9 +3,10 @@ package ccn
 import (
 	"context"
 	"fmt"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"log"
 	"strings"
+
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -36,7 +37,7 @@ func ResourceTencentCloudCcnRouteTableAssociateInstanceConfig() *schema.Resource
 			},
 			"instances": {
 				Required:    true,
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Description: "Instances list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -86,7 +87,7 @@ func resourceTencentCloudCcnRouteTableAssociateInstanceConfigRead(d *schema.Reso
 	ccnId := items[0]
 	routeTableId := items[1]
 
-	instanceBindList, err := service.DescribeRouteTableAssociatedInstancesById(ctx, ccnId, routeTableId)
+	instanceBindList, err := service.DescribeRouteTableAssociatedInstancesById(ctx, meta, ccnId, routeTableId)
 	if err != nil {
 		return err
 	}
@@ -103,12 +104,12 @@ func resourceTencentCloudCcnRouteTableAssociateInstanceConfigRead(d *schema.Reso
 	tmpList := make([]map[string]interface{}, 0, len(instanceBindList))
 	for _, instanceBind := range instanceBindList {
 		instanceMap := map[string]interface{}{}
-		if instanceBind.InstanceId != nil {
-			instanceMap["instance_id"] = *instanceBind.InstanceId
+		if instanceBind.instanceId != "" {
+			instanceMap["instance_id"] = instanceBind.instanceId
 		}
 
-		if instanceBind.InstanceType != nil {
-			instanceMap["instance_type"] = *instanceBind.InstanceType
+		if instanceBind.instanceType != "" {
+			instanceMap["instance_type"] = instanceBind.instanceType
 		}
 
 		tmpList = append(tmpList, instanceMap)
@@ -139,7 +140,8 @@ func resourceTencentCloudCcnRouteTableAssociateInstanceConfigUpdate(d *schema.Re
 	request.RouteTableId = helper.String(routeTableId)
 
 	if v, ok := d.GetOk("instances"); ok {
-		for _, item := range v.([]interface{}) {
+		tmpV := v.(*schema.Set).List()
+		for _, item := range tmpV {
 			instanceMap := item.(map[string]interface{})
 			instanceInfo := vpc.CcnInstanceWithoutRegion{}
 			if v, ok := instanceMap["instance_id"]; ok {

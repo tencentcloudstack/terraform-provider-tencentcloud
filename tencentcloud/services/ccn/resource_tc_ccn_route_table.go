@@ -3,9 +3,10 @@ package ccn
 import (
 	"context"
 	"fmt"
+	"log"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -79,7 +80,7 @@ func resourceTencentCloudCcnRouteTableCreate(d *schema.ResourceData, meta interf
 	}
 
 	request.RouteTable = []*vpc.CcnBatchRouteTable{
-		&vpc.CcnBatchRouteTable{
+		{
 			CcnId:       helper.String(ccnId),
 			Name:        helper.String(name),
 			Description: helper.String(description),
@@ -183,7 +184,7 @@ func resourceTencentCloudCcnRouteTableUpdate(d *schema.ResourceData, meta interf
 		}
 
 		request.RouteTableInfo = []*vpc.ModifyRouteTableInfo{
-			&vpc.ModifyRouteTableInfo{
+			{
 				RouteTableId: helper.String(routeTableId),
 				Name:         helper.String(name),
 				Description:  helper.String(description),

@@ -1,5 +1,7 @@
 Provides a resource to create a CCN Route table selection policies.
 
+~> **NOTE:** Use this resource to manage all selection policies under the routing table of CCN instances.
+
 Example Usage
 
 ```hcl

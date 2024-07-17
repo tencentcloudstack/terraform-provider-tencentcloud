@@ -1,5 +1,7 @@
 Provides a resource to create a CCN Route table broadcast policies.
 
+~> **NOTE:** Use this resource to manage all broadcast policies under the routing table of CCN instances.
+
 Example Usage
 
 ```hcl

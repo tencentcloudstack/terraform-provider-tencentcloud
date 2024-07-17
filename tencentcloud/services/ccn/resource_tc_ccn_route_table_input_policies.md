@@ -1,5 +1,7 @@
 Provides a resource to create a CCN Route table input policies.
 
+~> **NOTE:** Use this resource to manage all input policies under the routing table of CCN instances.
+
 Example Usage
 
 ```hcl

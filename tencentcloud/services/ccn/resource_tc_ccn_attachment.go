@@ -291,7 +291,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCcnAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.update")()
 
 	if d.HasChange("description") {
 		var (
