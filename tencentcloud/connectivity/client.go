@@ -208,6 +208,8 @@ type TencentCloudClient struct {
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tke2Conn *tke2.Client
+	//omit nil client
+	omitNilConn *common.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -360,17 +362,17 @@ func (me *TencentCloudClient) UseVpcClient(iacExtInfo ...IacExtInfo) *vpc.Client
 	return me.vpcConn
 }
 
-func (me *TencentCloudClient) UseVpcOmitNilClient() *common.Client {
+func (me *TencentCloudClient) UseOmitNilClient(module string) *common.Client {
 	secretId := me.Credential.SecretId
 	secretKey := me.Credential.SecretKey
 	region := me.Region
 	credential := common.NewCredential(secretId, secretKey)
 	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.Endpoint = "vpc.tencentcloudapi.com"
+	cpf.HttpProfile.Endpoint = fmt.Sprintf("%s.tencentcloudapi.com", module)
 	cpf.HttpProfile.ReqMethod = "POST"
-	client := common.NewCommonClient(credential, region, cpf).WithLogger(log.Default())
+	me.omitNilConn = common.NewCommonClient(credential, region, cpf).WithLogger(log.Default())
 
-	return client
+	return me.omitNilConn
 }
 
 // UseCbsClient returns cbs client for service

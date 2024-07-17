@@ -1046,7 +1046,7 @@ func (me *VpcService) DescribeRouteTableAssociatedInstancesById(ctx context.Cont
 		"Limit":  100,
 	}
 
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcOmitNilClient()
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOmitNilClient("vpc")
 	request := tchttp.NewCommonRequest("vpc", "2017-03-12", "DescribeRouteTableAssociatedInstances")
 	err := request.SetActionParameters(body)
 	if err != nil {

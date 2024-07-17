@@ -354,7 +354,7 @@ func resourceTencentCloudCcnRouteTableInputPoliciesDelete(d *schema.ResourceData
 		"Policys":      []interface{}{},
 	}
 
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcOmitNilClient()
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOmitNilClient("vpc")
 	request := tchttp.NewCommonRequest("vpc", "2017-03-12", "ReplaceCcnRouteTableInputPolicys")
 	err := request.SetActionParameters(body)
 	if err != nil {
