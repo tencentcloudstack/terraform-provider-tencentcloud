@@ -309,6 +309,7 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_tenant_instances
     tencentcloud_ccn_cross_border_flow_monitor
     tencentcloud_ccn_cross_border_region_bandwidth_limits
+    tencentcloud_ccn_routes
 
   Resource
     tencentcloud_ccn
@@ -318,6 +319,11 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_instances_accept_attach
     tencentcloud_ccn_instances_reject_attach
     tencentcloud_ccn_instances_reset_attach
+    tencentcloud_ccn_route_table
+    tencentcloud_ccn_route_table_input_policies
+    tencentcloud_ccn_route_table_broadcast_policies
+    tencentcloud_ccn_route_table_selection_policies
+    tencentcloud_ccn_route_table_associate_instance_config
 
 CVM Dedicated Host(CDH)
   Data Source
