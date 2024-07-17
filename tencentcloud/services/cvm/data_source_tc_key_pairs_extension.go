@@ -49,7 +49,7 @@ func dataSourceTencentCloudKeyPairsReadPostHandleResponse0(ctx context.Context, 
 		return err
 	}
 
-	context.WithValue(ctx, "keyPairList", keyPairList)
+	ctx = context.WithValue(ctx, "keyPairList", keyPairList)
 	return nil
 }
 

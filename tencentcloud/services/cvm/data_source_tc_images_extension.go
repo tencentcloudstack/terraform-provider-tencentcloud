@@ -112,7 +112,7 @@ func dataSourceTencentCloudImagesReadPostHandleResponse0(ctx context.Context, re
 		return err
 	}
 
-	context.WithValue(ctx, "imageList", imageList)
+	ctx = context.WithValue(ctx, "imageList", imageList)
 	return nil
 }
 

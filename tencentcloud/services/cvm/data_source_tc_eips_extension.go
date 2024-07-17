@@ -59,7 +59,7 @@ EIP_LOOP:
 		ids = append(ids, *eip.AddressId)
 	}
 
-	context.WithValue(ctx, "eipList", eipList)
+	ctx = context.WithValue(ctx, "eipList", eipList)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	return nil
 }

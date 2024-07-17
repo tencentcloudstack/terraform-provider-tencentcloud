@@ -93,7 +93,7 @@ func dataSourceTencentCloudInstancesReadPostHandleResponse0(ctx context.Context,
 		return err
 	}
 
-	context.WithValue(ctx, "instanceList", instanceList)
+	ctx = context.WithValue(ctx, "instanceList", instanceList)
 	return nil
 }
 

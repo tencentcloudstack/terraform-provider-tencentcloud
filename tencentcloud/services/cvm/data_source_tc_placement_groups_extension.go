@@ -38,7 +38,7 @@ func dataSourceTencentCloudPlacementGroupsReadPostHandleResponse0(ctx context.Co
 		return err
 	}
 
-	context.WithValue(ctx, "placementGroupList", placementGroupList)
+	ctx = context.WithValue(ctx, "placementGroupList", placementGroupList)
 	return nil
 }
 
