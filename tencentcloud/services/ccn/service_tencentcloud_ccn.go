@@ -2,9 +2,12 @@ package ccn
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
+
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
@@ -25,6 +28,33 @@ type CcnBasicInfo struct {
 	bandWithLimitType string
 	instanceCount     int64
 	createTime        string
+}
+
+type CcnInstanceBind struct {
+	instanceId   string
+	instanceType string
+}
+
+type CcnInstanceBindResponseData struct {
+	InstanceBindSet []struct {
+		AliasInstanceId  string `json:"AliasInstanceId"`
+		AliasType        string `json:"AliasType"`
+		CcnId            string `json:"CcnId"`
+		InstanceBindTime string `json:"InstanceBindTime"`
+		InstanceId       string `json:"InstanceId"`
+		InstanceName     string `json:"InstanceName"`
+		InstanceRegion   string `json:"InstanceRegion"`
+		InstanceType     string `json:"InstanceType"`
+		InstanceUin      string `json:"InstanceUin"`
+		RouteTableId     string `json:"RouteTableId"`
+		State            string `json:"State"`
+	} `json:"InstanceBindSet"`
+	RequestId  string `json:"RequestId"`
+	TotalCount int    `json:"TotalCount"`
+}
+
+type CcnInstanceBindApiResponse struct {
+	Response CcnInstanceBindResponseData `json:"Response"`
 }
 
 func (info CcnBasicInfo) CcnId() string {
@@ -52,6 +82,7 @@ type CcnAttachedInstanceInfo struct {
 	attachedTime   string
 	cidrBlock      []string
 	description    string
+	routeTableId   string
 }
 
 type CcnBandwidthLimit struct {
@@ -465,8 +496,56 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 		info.instanceType = *item.InstanceType
 		info.state = *item.State
 		info.description = *item.Description
+		info.routeTableId = *item.RouteTableId
 		infos = append(infos, info)
 	}
+	return
+}
+
+func (me *VpcService) DescribeVpcDescribeCcnRoutesByFilter(ctx context.Context, paramMap map[string]interface{}) (RouteSet []*vpc.CcnRoute, errRet error) {
+	var (
+		logId           = tccommon.GetLogId(ctx)
+		request         = vpc.NewDescribeCcnRoutesRequest()
+		response        = vpc.NewDescribeCcnRoutesResponse()
+		limit    uint64 = 20
+		offset   uint64 = 0
+		err      error
+	)
+
+	for k, v := range paramMap {
+		if k == "CcnId" {
+			request.CcnId = v.(*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*vpc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	for {
+		request.Limit = &limit
+		request.Offset = &offset
+		response, err = me.client.UseVpcClient().DescribeCcnRoutes(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]", logId, request.GetAction(), request.ToJsonString(), err)
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.RouteSet) < 1 {
+			break
+		}
+
+		RouteSet = append(RouteSet, response.Response.RouteSet...)
+		if len(response.Response.RouteSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
 	return
 }
 
@@ -515,7 +594,7 @@ func (me *VpcService) DescribeCcnAttachmentsByInstance(ctx context.Context, inst
 	return
 }
 
-func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string, ccnUin string, description string) (errRet error) {
+func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId, ccnUin, description, routeTableId string) (errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewAttachCcnInstancesRequest()
@@ -531,6 +610,10 @@ func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceReg
 	ccnInstance.InstanceType = &instanceType
 	if description != "" {
 		ccnInstance.Description = &description
+	}
+
+	if routeTableId != "" {
+		ccnInstance.RouteTableId = &routeTableId
 	}
 
 	request.Instances = []*vpc.CcnInstance{&ccnInstance}
@@ -944,6 +1027,222 @@ func (me *VpcService) DescribeCcnCrossBorderComplianceByFilter(ctx context.Conte
 		offset += limit
 	}
 
+	return
+}
+
+func (me *VpcService) DescribeRouteTableAssociatedInstancesById(ctx context.Context, meta interface{}, ccnId, routeTableId string) (instanceBindList []CcnInstanceBind, errRet error) {
+	body := map[string]interface{}{
+		"Filters": []map[string]interface{}{
+			{
+				"Name":   "ccn-id",
+				"Values": []string{ccnId},
+			},
+			{
+				"Name":   "ccn-route-table-id",
+				"Values": []string{routeTableId},
+			},
+		},
+		"Offset": 0,
+		"Limit":  100,
+	}
+
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOmitNilClient("vpc")
+	request := tchttp.NewCommonRequest("vpc", "2017-03-12", "DescribeRouteTableAssociatedInstances")
+	err := request.SetActionParameters(body)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	response := tchttp.NewCommonResponse()
+	err = client.Send(request, response)
+	if err != nil {
+		fmt.Printf("describe vpc DescribeRouteTableAssociatedInstances failed: %v \n", err)
+		errRet = err
+		return
+	}
+
+	resultStr := string(response.GetBody())
+	var ccnInstanceBindApiResponse CcnInstanceBindApiResponse
+	err = json.Unmarshal([]byte(resultStr), &ccnInstanceBindApiResponse)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	InstanceBindSet := ccnInstanceBindApiResponse.Response.InstanceBindSet
+	for _, BindSet := range InstanceBindSet {
+		var tmpBind CcnInstanceBind
+		if BindSet.InstanceId != "" {
+			tmpBind.instanceId = BindSet.InstanceId
+		}
+
+		if BindSet.InstanceType != "" {
+			tmpBind.instanceType = BindSet.InstanceType
+		}
+
+		instanceBindList = append(instanceBindList, tmpBind)
+	}
+
+	return
+
+	//logId := tccommon.GetLogId(ctx)
+	//
+	//request := vpc.NewDescribeRouteTableAssociatedInstancesRequest()
+	//request.Filters = []*vpc.Filter{
+	//	{
+	//		Name:   helper.String("ccn-id"),
+	//		Values: helper.Strings([]string{ccnId}),
+	//	},
+	//	{
+	//		Name:   helper.String("ccn-route-table-id"),
+	//		Values: helper.Strings([]string{routeTableId}),
+	//	},
+	//}
+	//
+	//defer func() {
+	//	if errRet != nil {
+	//		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	//	}
+	//}()
+	//
+	//ratelimit.Check(request.GetAction())
+	//response, err := me.client.UseVpcClient().DescribeRouteTableAssociatedInstances(request)
+	//if err != nil {
+	//	errRet = err
+	//	return
+	//}
+	//
+	//log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	//if response.Response == nil || len(response.Response.InstanceBindSet) < 1 {
+	//	return
+	//}
+	//
+	//instanceBindList = response.Response.InstanceBindSet
+	//return
+}
+
+func (me *VpcService) DescribeVpcReplaceCcnRouteTableInputPolicysById(ctx context.Context, ccnId, routeTableId string) (policySet *vpc.CcnRouteTableInputPolicys, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeCcnRouteTableInputPolicysRequest()
+	request.CcnId = helper.String(ccnId)
+	request.RouteTableId = helper.String(routeTableId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeCcnRouteTableInputPolicys(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response == nil || len(response.Response.PolicySet) < 1 {
+		return
+	}
+
+	policySet = response.Response.PolicySet[0]
+	return
+}
+
+func (me *VpcService) DescribeVpcReplaceCcnRouteTableBroadcastPolicysById(ctx context.Context, ccnId, routeTableId string) (policySet *vpc.CcnRouteTableBroadcastPolicys, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeCcnRouteTableBroadcastPolicysRequest()
+	request.CcnId = helper.String(ccnId)
+	request.RouteTableId = helper.String(routeTableId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeCcnRouteTableBroadcastPolicys(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response == nil || len(response.Response.PolicySet) < 1 {
+		return
+	}
+
+	policySet = response.Response.PolicySet[0]
+	return
+}
+
+func (me *VpcService) DescribeVpcReplaceCcnRouteTableSelectionPolicysById(ctx context.Context, ccnId string) (routeSelectionPolicySet []*vpc.RouteSelectionPolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeRouteTableSelectionPoliciesRequest()
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   helper.String("ccn-id"),
+			Values: helper.Strings([]string{ccnId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeRouteTableSelectionPolicies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response == nil || len(response.Response.RouteSelectionPolicySet) == 0 {
+		return
+	}
+
+	routeSelectionPolicySet = response.Response.RouteSelectionPolicySet
+	return
+}
+
+func (me *VpcService) DescribeVpcCcnRouteTablesById(ctx context.Context, routeTableId string) (ccnRouteTable *vpc.CcnRouteTable, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeCcnRouteTablesRequest()
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   helper.String("route-table-id"),
+			Values: helper.Strings([]string{routeTableId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeCcnRouteTables(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response == nil || len(response.Response.CcnRouteTableSet) != 1 {
+		return
+	}
+
+	ccnRouteTable = response.Response.CcnRouteTableSet[0]
 	return
 }
 
