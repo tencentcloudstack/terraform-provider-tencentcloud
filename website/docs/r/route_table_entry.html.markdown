@@ -43,6 +43,10 @@ resource "tencentcloud_route_table_entry" "instance" {
   next_hub               = "0"
   description            = "ci-test-route-table-entry"
 }
+
+output "item_id" {
+  value = tencentcloud_route_table_entry.instance.route_item_id
+}
 ```
 
 ## Argument Reference
@@ -61,7 +65,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `route_item_id` - ID of route table entry.
 
 
 ## Import
