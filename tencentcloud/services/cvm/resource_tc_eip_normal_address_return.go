@@ -1,13 +1,14 @@
 package cvm
 
 import (
+	"context"
 	"log"
-
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
 func ResourceTencentCloudEipNormalAddressReturn() *schema.Resource {
@@ -17,13 +18,13 @@ func ResourceTencentCloudEipNormalAddressReturn() *schema.Resource {
 		Delete: resourceTencentCloudEipNormalAddressReturnDelete,
 		Schema: map[string]*schema.Schema{
 			"address_ips": {
-				Optional: true,
-				ForceNew: true,
-				Type:     schema.TypeSet,
+				Type:        schema.TypeSet,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The IP address of the EIP, example: 101.35.139.183.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "The IP address of the EIP, example: 101.35.139.183.",
 			},
 		},
 	}
@@ -35,34 +36,42 @@ func resourceTencentCloudEipNormalAddressReturnCreate(d *schema.ResourceData, me
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
 	var (
-		request    = vpc.NewReturnNormalAddressesRequest()
 		addressIps string
 	)
-	if v, ok := d.GetOk("address_ips"); ok {
-		addressIpsSet := v.(*schema.Set).List()
-		for i := range addressIpsSet {
-			addressIp := addressIpsSet[i].(string)
-			request.AddressIps = append(request.AddressIps, &addressIp)
-			addressIps = addressIp + tccommon.FILED_SP
-		}
+	var (
+		request  = vpc.NewReturnNormalAddressesRequest()
+		response = vpc.NewReturnNormalAddressesResponse()
+	)
+
+	if err := resourceTencentCloudEipNormalAddressReturnCreatePostFillRequest0(ctx, request); err != nil {
+		return err
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ReturnNormalAddresses(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ReturnNormalAddressesWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s operate vpc normalAddressReturn failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create eip normal address return failed, reason:%+v", logId, err)
 		return err
 	}
 
+	_ = response
+
 	d.SetId(addressIps)
+
+	if err := resourceTencentCloudEipNormalAddressReturnCreateOnExit(ctx); err != nil {
+		return err
+	}
 
 	return resourceTencentCloudEipNormalAddressReturnRead(d, meta)
 }

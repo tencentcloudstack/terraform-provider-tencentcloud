@@ -6,11 +6,12 @@ import (
 	"log"
 	"strings"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func ResourceTencentCloudCvmSecurityGroupAttachment() *schema.Resource {
@@ -23,17 +24,17 @@ func ResourceTencentCloudCvmSecurityGroupAttachment() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
+				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Security group id.",
+				Description: "ID of the security group to be associated, such as sg-efil73jd. Only one security group can be associated.",
 			},
 
 			"instance_id": {
+				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Instance id.",
+				Description: "Instance ID. To obtain the instance IDs, you can call DescribeInstances and look for InstanceId in the response.",
 			},
 		},
 	}
@@ -45,28 +46,46 @@ func resourceTencentCloudCvmSecurityGroupAttachmentCreate(d *schema.ResourceData
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	request := cvm.NewAssociateSecurityGroupsRequest()
-	securityGroupId := d.Get("security_group_id").(string)
-	instanceId := d.Get("instance_id").(string)
-	request.SecurityGroupIds = []*string{}
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	request.SecurityGroupIds = []*string{&securityGroupId}
-	request.InstanceIds = []*string{&instanceId}
+	var (
+		instanceId      string
+		securityGroupId string
+	)
+	var (
+		request  = cvm.NewAssociateSecurityGroupsRequest()
+		response = cvm.NewAssociateSecurityGroupsResponse()
+	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
+	if v, ok := d.GetOk("security_group_id"); ok {
+		securityGroupId = v.(string)
+	}
+
+	request.SecurityGroupIds = []*string{helper.String(securityGroupId)}
+
+	request.InstanceIds = []*string{helper.String(instanceId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().AssociateSecurityGroups(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().AssociateSecurityGroupsWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cvm securityGroupAttachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create cvm security group attachment failed, reason:%+v", logId, err)
 		return err
 	}
-	d.SetId(instanceId + tccommon.FILED_SP + securityGroupId)
+
+	_ = response
+
+	d.SetId(strings.Join([]string{instanceId, securityGroupId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCvmSecurityGroupAttachmentRead(d, meta)
 }
@@ -77,7 +96,7 @@ func resourceTencentCloudCvmSecurityGroupAttachmentRead(d *schema.ResourceData, 
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
@@ -88,26 +107,26 @@ func resourceTencentCloudCvmSecurityGroupAttachmentRead(d *schema.ResourceData, 
 	instanceId := idSplit[0]
 	securityGroupId := idSplit[1]
 
-	instanceInfo, err := service.DescribeInstanceById(ctx, instanceId)
+	_ = d.Set("instance_id", instanceId)
+
+	_ = d.Set("security_group_id", securityGroupId)
+
+	respData, err := service.DescribeCvmSecurityGroupAttachmentById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
-	if instanceInfo == nil {
+	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CvmSecurityGroupAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `cvm_security_group_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
-	for _, sgId := range instanceInfo.SecurityGroupIds {
-		if *sgId == securityGroupId {
-			_ = d.Set("instance_id", instanceId)
-			_ = d.Set("security_group_id", securityGroupId)
-			return nil
-
-		}
+	if err := resourceTencentCloudCvmSecurityGroupAttachmentReadPostHandleResponse0(ctx, respData); err != nil {
+		return err
 	}
-	return fmt.Errorf("The security group get from api does not match with current instance %v", d.Id())
+
+	_ = securityGroupId
+	return nil
 }
 
 func resourceTencentCloudCvmSecurityGroupAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
@@ -115,6 +134,7 @@ func resourceTencentCloudCvmSecurityGroupAttachmentDelete(d *schema.ResourceData
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -123,22 +143,31 @@ func resourceTencentCloudCvmSecurityGroupAttachmentDelete(d *schema.ResourceData
 	instanceId := idSplit[0]
 	securityGroupId := idSplit[1]
 
-	request := cvm.NewDisassociateSecurityGroupsRequest()
-	request.SecurityGroupIds = []*string{&securityGroupId}
-	request.InstanceIds = []*string{&instanceId}
+	var (
+		request  = cvm.NewDisassociateSecurityGroupsRequest()
+		response = cvm.NewDisassociateSecurityGroupsResponse()
+	)
+
+	request.SecurityGroupIds = []*string{helper.String(securityGroupId)}
+
+	request.InstanceIds = []*string{helper.String(instanceId)}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().DisassociateSecurityGroups(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().DisassociateSecurityGroupsWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cvm securityGroupAttachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete cvm security group attachment failed, reason:%+v", logId, err)
 		return err
 	}
 
+	_ = response
+	_ = securityGroupId
 	return nil
 }
