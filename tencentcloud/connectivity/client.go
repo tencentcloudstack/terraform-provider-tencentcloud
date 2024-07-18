@@ -278,8 +278,13 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 }
 
 // UseTencentCosClient tencent cloud own client for service instead of aws
-func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
-	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region))
+func (me *TencentCloudClient) UseTencentCosClient(bucket string, cdcId string) *cos.Client {
+	var u *url.URL
+	if cdcId == "" {
+		u, _ = url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region))
+	} else {
+		u, _ = url.Parse(fmt.Sprintf("https://%s.%s.cos-cdc.%s.myqcloud.com", bucket, cdcId, me.Region))
+	}
 
 	if me.tencentCosConn != nil && me.tencentCosConn.BaseURL.BucketURL == u {
 		return me.tencentCosConn

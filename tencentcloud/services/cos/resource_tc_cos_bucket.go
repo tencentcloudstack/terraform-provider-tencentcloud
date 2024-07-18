@@ -525,6 +525,11 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 				Computed:    true,
 				Description: "Specify the access limit for converting standard layer data into low-frequency layer data in the configuration. The default value is once, which can be used in combination with the number of days to achieve the conversion effect. For example, if the parameter is set to 1 and the number of access days is 30, it means that objects with less than one visit in 30 consecutive days will be reduced from the standard layer to the low frequency layer.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC cluster ID.",
+			},
 			//computed
 			"cos_bucket_url": {
 				Type:        schema.TypeString,
@@ -548,6 +553,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	role, roleOk := d.GetOk("replica_role")
 	rule, ruleOk := d.GetOk("replica_rules")
 	versioning := d.Get("versioning_enable").(bool)
+	cdcId := d.Get("cdc_id").(string)
 
 	if !versioning {
 		if roleOk || role.(string) != "" {
@@ -562,9 +568,9 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	useCosService, createOptions := getBucketPutOptions(d)
 
 	if useCosService {
-		err = cosService.TencentCosPutBucket(ctx, bucket, createOptions)
+		err = cosService.TencentCosPutBucket(ctx, bucket, createOptions, cdcId)
 	} else {
-		err = cosService.PutBucket(ctx, bucket, acl)
+		err = cosService.PutBucket(ctx, bucket, acl, cdcId)
 	}
 	if err != nil {
 		return err

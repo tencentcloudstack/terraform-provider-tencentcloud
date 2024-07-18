@@ -123,7 +123,7 @@ func (me *CosService) PutObjectAcl(ctx context.Context, bucket, key, acl string)
 }
 
 // PutBucket - base on aws s3
-func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet error) {
+func (me *CosService) PutBucket(ctx context.Context, bucket, acl, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.CreateBucketInput{
@@ -150,7 +150,7 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 }
 
 // TencentCosPutBucket - To support MAZ config, We use tencentcloud cos sdk instead of aws s3
-func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, opt *cos.BucketPutOptions) (errRet error) {
+func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, opt *cos.BucketPutOptions, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	req, _ := json.Marshal(opt)
@@ -163,7 +163,8 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucket")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.Put(ctx, opt)
+
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.Put(ctx, opt)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
@@ -173,7 +174,7 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
-		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket).BaseURL.BucketURL)
+		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket, cdcId).BaseURL.BucketURL)
 
 	return nil
 }
@@ -279,7 +280,7 @@ func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet err
 func (me *CosService) TencentcloudHeadBucket(ctx context.Context, bucket string) (code int, header http.Header, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.Head(ctx)
+	response, err := me.client.UseTencentCosClient(bucket, "").Bucket.Head(ctx)
 
 	if response != nil {
 		code = response.StatusCode
@@ -1123,7 +1124,7 @@ func (me *CosService) GetBucketACL(ctx context.Context, bucket string) (result *
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucketACL")
-	acl, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetACL(ctx)
+	acl, _, err := me.client.UseTencentCosClient(bucket, "").Bucket.GetACL(ctx)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos [GetBucketACL] error: %s, bucket: %s", err.Error(), bucket)
