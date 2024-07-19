@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	resource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
 	acctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
@@ -18,7 +19,7 @@ func TestAccTencentCloudReservedInstanceConfigsDataSource_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccReservedInstanceConfigsDataSource_BasicCreate,
-				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_reserved_instance_configs.configs"), resource.TestCheckResourceAttrSet("data.tencentcloud_reserved_instance_configs.configs", "config_list.#")),
+				Check:  resource.ComposeTestCheckFunc(acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_reserved_instance_configs.configs"), resource.TestCheckResourceAttr("data.tencentcloud_reserved_instance_configs.configs", "config_list.#", "0")),
 			},
 		},
 	})
