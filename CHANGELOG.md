@@ -1,3 +1,10 @@
+## 1.81.110 (July 17, 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ccn_route_table_input_policies` ([#2730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2730))
+* **New Resource:** `tencentcloud_ccn_route_table_selection_policies` ([#2730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2730))
+
 ## 1.81.109 (July 17, 2024)
 
 FEATURES:
