@@ -1,3 +1,3 @@
 ```release-note:enhancement
-resource/tencentcloud_kubernetes_scale_worker: support retry
+resource/tencentcloud_kubernetes_scale_worker: throw error while all instances create failed
 ```

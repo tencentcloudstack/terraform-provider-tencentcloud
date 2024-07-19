@@ -1,3 +1,9 @@
+## 1.81.111 (July 19, 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_scale_worker: throw error while all instances create failed ([#2735](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2735))
+
 ## 1.81.110 (July 17, 2024)
 
 FEATURES:
