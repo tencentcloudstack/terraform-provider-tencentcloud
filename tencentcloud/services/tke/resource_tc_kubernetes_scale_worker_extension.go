@@ -457,15 +457,19 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 
 		// check instances status
 		tmpInstanceSet := result.Response.InstanceSet
-		if tmpInstanceSet == nil || len(tmpInstanceSet) == 0 {
+		if tmpInstanceSet == nil {
 			return resource.NonRetryableError(fmt.Errorf("there is no instances in set"))
 		} else {
-			var stop int
+			var (
+				stop int
+				flag bool
+			)
 			for _, v := range instanceIds {
 				for _, instance := range tmpInstanceSet {
 					if v == *instance.InstanceId {
 						if *instance.InstanceState == "running" {
 							stop += 1
+							flag = true
 						} else if *instance.InstanceState == "failed" {
 							stop += 1
 							log.Printf("instance:%s status is failed.", v)
@@ -476,17 +480,20 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 				}
 			}
 
-			if stop == len(instanceIds) {
+			if stop == len(instanceIds) && flag {
 				return nil
+			} else if stop == len(instanceIds) && !flag {
+				return resource.NonRetryableError(fmt.Errorf("cluster all instances state is failed"))
+			} else {
+				e = fmt.Errorf("cluster instances is still initializing.")
+				return tccommon.RetryError(e)
 			}
 		}
-
-		e = fmt.Errorf("cluster instances is still initializing.")
-		return tccommon.RetryError(e)
 	})
 
 	if err != nil {
 		log.Printf("[CRITAL] kubernetes scale worker instances status error, reason:%+v", err)
+		return err
 	}
 
 	return nil
