@@ -2147,3 +2147,14 @@ CDWPG
 CSIP
   Resource
     tencentcloud_csip_risk_center
+
+CDC
+  Data Source
+    tencentcloud_cdc_dedicated_cluster_hosts
+    tencentcloud_cdc_dedicated_cluster_instance_types
+    tencentcloud_cdc_dedicated_cluster_orders
+
+  Resource
+    tencentcloud_cdc_site
+    tencentcloud_cdc_dedicated_cluster
+  

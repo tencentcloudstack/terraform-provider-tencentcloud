@@ -1,56 +1,14 @@
-/*
-Provides a resource to create a cdc site
-
-# Example Usage
-
-```hcl
-
-	resource "tencentcloud_cdc_site" "site" {
-	  name = "site-1"
-	  country = "China"
-	  province = "Guangdong Province"
-	  city = "Guangzhou"
-	  address_line = ""
-	  description = ""
-	  note = ""
-	  fiber_type = ""
-	  optical_standard = ""
-	  power_connectors = ""
-	  power_feed_drop = ""
-	  max_weight = 100
-	  power_draw_kva = 10
-	  uplink_speed_gbps = 10
-	  uplink_count = 2
-	  condition_requirement = true
-	  dimension_requirement = true
-	  redundant_networking = true
-	  postal_code = 10000
-	  optional_address_line = ""
-	  need_help = true
-	  redundant_power = true
-	  breaker_requirement = true
-	}
-
-```
-
-# Import
-
-cdc site can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_cdc_site.site site_id
-```
-*/
 package cdc
 
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
@@ -95,90 +53,100 @@ func ResourceTencentCloudCdcSite() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Site Description.",
 			},
-			"note": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Site Note.",
-			},
+			//"note": {
+			//	Optional:    true,
+			//	Type:        schema.TypeString,
+			//	Description: "Site Note.",
+			//},
 			"fiber_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Site Fiber Type.",
+				Description: "Site Fiber Type. Using optical fiber type to connect the CDC device to the network SM(Single-Mode) or MM(Multi-Mode) fibers are available.",
 			},
 			"optical_standard": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Site Optical Standard.",
+				Description: "Site Optical Standard. Optical standard used to connect the CDC device to the network This field depends on the uplink speed, optical fiber type, and distance to upstream equipment. Allow value: `SM`, `MM`.",
 			},
 			"power_connectors": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Site Power Connectors.",
+				Description: "Site Power Connectors. Example: 380VAC3P.",
 			},
 			"power_feed_drop": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Site Power Feed Drop.",
+				Description: "Site Power Feed Drop. Whether power is supplied from above or below the rack. Allow value: `UP`, `DOWN`.",
 			},
 			"max_weight": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Site Max Weight.",
+				Description: "Site Max Weight capacity (KG).",
 			},
 			"power_draw_kva": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Site Power DrawKva.",
+				Description: "Site Power DrawKva (KW).",
 			},
 			"uplink_speed_gbps": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Site Uplink Speed Gbps.",
+				Description: "Uplink speed from the network to Tencent Cloud Region.",
 			},
 			"uplink_count": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Site Uplink Count.",
+				Description: "Number of uplinks used by each CDC device (2 devices per rack) when connected to the network.",
 			},
 			"condition_requirement": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Site Condition Requirement.",
+				Description: "Whether the following environmental conditions are met: n1. There are no material requirements or the acceptance standard on site that will affect the delivery and installation of the CDC device. n2. The following conditions are met for finalized rack positions: Temperature ranges from 41 to 104 degrees F (5 to 40 degrees C). Humidity ranges from 10 degrees F (-12 degrees C) to 70 degrees F (21 degrees C) and relative humidity ranges from 8% RH to 80% RH. Air flows from front to back at the rack position and there is sufficient air in CFM (cubic feet per minute). The air quantity in CFM must be 145.8 times the power consumption (in KVA) of CDC.",
 			},
 			"dimension_requirement": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Site Dimension Requirement.",
+				Description: "Whether the following dimension conditions are met: Your loading dock can accommodate one rack container (H x W x D = 94 x 54 x 48). You can provide a clear route from the delivery point of your rack (H x W x D = 80 x 24 x 48) to its final installation location. You should consider platforms, corridors, doors, turns, ramps, freight elevators as well as other access restrictions when measuring the depth. There shall be a 48 or greater front clearance and a 24 or greater rear clearance where the CDC is finally installed.",
 			},
 			"redundant_networking": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Site Redundant Networking.",
+				Description: "Whether redundant upstream equipment (switch or router) is provided so that both network devices can be connected to the network.",
 			},
-			"postal_code": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Site Postal Code.",
-			},
+			//"postal_code": {
+			//	Optional:    true,
+			//	Type:        schema.TypeInt,
+			//	Description: "Postal code of the site area.",
+			//},
 			"optional_address_line": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Site Optional Address Line.",
+				Description: "Detailed address of the site area (to be added).",
 			},
 			"need_help": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Site Need Help.",
+				Description: "Whether you need help from Tencent Cloud for rack installation.",
 			},
 			"redundant_power": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Site Redundant Power.",
+				Description: "Whether there is power redundancy.",
 			},
 			"breaker_requirement": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Site Breaker Requirement.",
+				Description: "Whether there is an upstream circuit breaker.",
 			},
 		},
 	}
@@ -218,9 +186,9 @@ func ResourceTencentCloudCdcSiteCreate(d *schema.ResourceData, meta interface{})
 		request.Description = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("note"); ok {
-		request.Note = helper.String(v.(string))
-	}
+	//if v, ok := d.GetOk("note"); ok {
+	//	request.Note = helper.String(v.(string))
+	//}
 
 	if v, ok := d.GetOk("fiber_type"); ok {
 		request.FiberType = helper.String(v.(string))
@@ -266,9 +234,9 @@ func ResourceTencentCloudCdcSiteCreate(d *schema.ResourceData, meta interface{})
 		request.RedundantNetworking = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOkExists("postal_code"); ok {
-		request.PostalCode = helper.IntInt64(v.(int))
-	}
+	//if v, ok := d.GetOkExists("postal_code"); ok {
+	//	request.PostalCode = helper.IntInt64(v.(int))
+	//}
 
 	if v, ok := d.GetOk("optional_address_line"); ok {
 		request.OptionalAddressLine = helper.String(v.(string))
@@ -407,9 +375,9 @@ func ResourceTencentCloudCdcSiteRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("redundant_networking", siteDetail.RedundantNetworking)
 	}
 
-	if siteDetail.PostalCode != nil {
-		_ = d.Set("postal_code", siteDetail.PostalCode)
-	}
+	//if siteDetail.PostalCode != nil {
+	//	_ = d.Set("postal_code", siteDetail.PostalCode)
+	//}
 
 	if siteDetail.OptionalAddressLine != nil {
 		_ = d.Set("optional_address_line", siteDetail.OptionalAddressLine)
@@ -483,27 +451,29 @@ func ResourceTencentCloudCdcSiteUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("note") {
-		if v, ok := d.GetOk("note"); ok {
-			request.Note = helper.String(v.(string))
-		}
-	}
+	//if d.HasChange("note") {
+	//	if v, ok := d.GetOk("note"); ok {
+	//		request.Note = helper.String(v.(string))
+	//	}
+	//}
 
-	if d.HasChange("postal_code") {
-		if v, ok := d.GetOkExists("postal_code"); ok {
-			request.PostalCode = helper.String(v.(string))
-		}
-	}
+	//if d.HasChange("postal_code") {
+	//	if v, ok := d.GetOkExists("postal_code"); ok {
+	//		request.PostalCode = helper.String(v.(string))
+	//	}
+	//}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdcClient().ModifySiteInfo(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdcClient().ModifySiteInfo(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s update cdc site failed, reason:%+v", logId, err)
 		return err
@@ -513,14 +483,14 @@ func ResourceTencentCloudCdcSiteUpdate(d *schema.ResourceData, meta interface{})
 }
 
 func ResourceTencentCloudCdcSiteDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdc_site.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdc_site.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := CdcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	siteId := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CdcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		siteId  = d.Id()
+	)
 
 	if err := service.DeleteCdcSiteById(ctx, siteId); err != nil {
 		return err
