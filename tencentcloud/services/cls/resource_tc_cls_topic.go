@@ -91,7 +91,6 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 			"extends": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Computed:    true,
 				MaxItems:    1,
 				Description: "Log Subject Extension Information.",
 				Elem: &schema.Resource{
@@ -147,9 +146,10 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_topic.create")()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		request  = cls.NewCreateTopicRequest()
-		response *cls.CreateTopicResponse
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		request       = cls.NewCreateTopicRequest()
+		response      *cls.CreateTopicResponse
+		isWebTracking bool
 	)
 
 	if v, ok := d.GetOk("logset_id"); ok {
@@ -203,45 +203,52 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOkExists("is_web_tracking"); ok {
 		request.IsWebTracking = helper.Bool(v.(bool))
+		isWebTracking = v.(bool)
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "extends"); ok {
-		topicExtendInfo := cls.TopicExtendInfo{}
-		if anonymousAccessMap, ok := helper.InterfaceToMap(dMap, "anonymous_access"); ok {
-			anonymousInfo := cls.AnonymousInfo{}
-			if v, ok := anonymousAccessMap["operations"]; ok {
-				tmpList := make([]*string, 0)
-				for _, operation := range v.([]interface{}) {
-					tmpList = append(tmpList, helper.String(operation.(string)))
+	if isWebTracking {
+		if dMap, ok := helper.InterfacesHeadMap(d, "extends"); ok {
+			topicExtendInfo := cls.TopicExtendInfo{}
+			if anonymousAccessMap, ok := helper.InterfaceToMap(dMap, "anonymous_access"); ok {
+				anonymousInfo := cls.AnonymousInfo{}
+				if v, ok := anonymousAccessMap["operations"]; ok {
+					tmpList := make([]*string, 0)
+					for _, operation := range v.([]interface{}) {
+						tmpList = append(tmpList, helper.String(operation.(string)))
+					}
+
+					anonymousInfo.Operations = tmpList
 				}
 
-				anonymousInfo.Operations = tmpList
-			}
+				if v, ok := anonymousAccessMap["conditions"]; ok {
+					for _, condition := range v.([]interface{}) {
+						conditionMap := condition.(map[string]interface{})
+						conditionInfo := cls.ConditionInfo{}
+						if v, ok := conditionMap["attributes"]; ok {
+							conditionInfo.Attributes = helper.String(v.(string))
+						}
 
-			if v, ok := anonymousAccessMap["conditions"]; ok {
-				for _, condition := range v.([]interface{}) {
-					conditionMap := condition.(map[string]interface{})
-					conditionInfo := cls.ConditionInfo{}
-					if v, ok := conditionMap["attributes"]; ok {
-						conditionInfo.Attributes = helper.String(v.(string))
+						if v, ok := conditionMap["rule"]; ok {
+							conditionInfo.Rule = helper.IntUint64(v.(int))
+						}
+
+						if v, ok := conditionMap["condition_value"]; ok {
+							conditionInfo.ConditionValue = helper.String(v.(string))
+						}
+
+						anonymousInfo.Conditions = append(anonymousInfo.Conditions, &conditionInfo)
 					}
-
-					if v, ok := conditionMap["rule"]; ok {
-						conditionInfo.Rule = helper.IntUint64(v.(int))
-					}
-
-					if v, ok := conditionMap["condition_value"]; ok {
-						conditionInfo.ConditionValue = helper.String(v.(string))
-					}
-
-					anonymousInfo.Conditions = append(anonymousInfo.Conditions, &conditionInfo)
 				}
+
+				topicExtendInfo.AnonymousAccess = &anonymousInfo
 			}
 
-			topicExtendInfo.AnonymousAccess = &anonymousInfo
+			request.Extends = &topicExtendInfo
 		}
-
-		request.Extends = &topicExtendInfo
+	} else {
+		if _, ok := helper.InterfacesHeadMap(d, "extends"); ok {
+			return fmt.Errorf("If `is_web_tracking` is false, Not support set `extends`.\n.")
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -311,45 +318,47 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("describes", topic.Describes)
 	_ = d.Set("is_web_tracking", topic.IsWebTracking)
 
-	if topic.Extends != nil {
-		extendMap := map[string]interface{}{}
-		if topic.Extends.AnonymousAccess != nil {
-			anonymousAccessMap := map[string]interface{}{}
-			if topic.Extends.AnonymousAccess.Operations != nil {
-				operationList := make([]string, 0, len(topic.Extends.AnonymousAccess.Operations))
-				for _, v := range topic.Extends.AnonymousAccess.Operations {
-					operationList = append(operationList, *v)
+	if *topic.IsWebTracking {
+		if topic.Extends != nil {
+			extendMap := map[string]interface{}{}
+			if topic.Extends.AnonymousAccess != nil {
+				anonymousAccessMap := map[string]interface{}{}
+				if topic.Extends.AnonymousAccess.Operations != nil {
+					operationList := make([]string, 0, len(topic.Extends.AnonymousAccess.Operations))
+					for _, v := range topic.Extends.AnonymousAccess.Operations {
+						operationList = append(operationList, *v)
+					}
+
+					anonymousAccessMap["operations"] = operationList
 				}
 
-				anonymousAccessMap["operations"] = operationList
-			}
+				if topic.Extends.AnonymousAccess.Conditions != nil {
+					conditionList := []interface{}{}
+					for _, v := range topic.Extends.AnonymousAccess.Conditions {
+						conditionMap := map[string]interface{}{}
+						if v.Attributes != nil {
+							conditionMap["attributes"] = *v.Attributes
+						}
 
-			if topic.Extends.AnonymousAccess.Conditions != nil {
-				conditionList := []interface{}{}
-				for _, v := range topic.Extends.AnonymousAccess.Conditions {
-					conditionMap := map[string]interface{}{}
-					if v.Attributes != nil {
-						conditionMap["attributes"] = *v.Attributes
+						if v.Rule != nil {
+							conditionMap["rule"] = *v.Rule
+						}
+
+						if v.ConditionValue != nil {
+							conditionMap["condition_value"] = *v.ConditionValue
+						}
+
+						conditionList = append(conditionList, conditionMap)
 					}
 
-					if v.Rule != nil {
-						conditionMap["rule"] = *v.Rule
-					}
-
-					if v.ConditionValue != nil {
-						conditionMap["condition_value"] = *v.ConditionValue
-					}
-
-					conditionList = append(conditionList, conditionMap)
+					anonymousAccessMap["conditions"] = conditionList
 				}
 
-				anonymousAccessMap["conditions"] = conditionList
+				extendMap["anonymous_access"] = []interface{}{anonymousAccessMap}
 			}
 
-			extendMap["anonymous_access"] = []interface{}{anonymousAccessMap}
+			_ = d.Set("extends", []interface{}{extendMap})
 		}
-
-		_ = d.Set("extends", []interface{}{extendMap})
 	}
 
 	return nil
@@ -359,9 +368,10 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_topic.update")()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = cls.NewModifyTopicRequest()
-		id      = d.Id()
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		request       = cls.NewModifyTopicRequest()
+		id            = d.Id()
+		isWebTracking bool
 	)
 
 	immutableArgs := []string{"partition_count", "storage_type"}
@@ -411,16 +421,15 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 		request.Describes = helper.String(d.Get("describes").(string))
 	}
 
-	if d.HasChange("is_web_tracking") {
-		if v, ok := d.GetOkExists("is_web_tracking"); ok {
-			request.IsWebTracking = helper.Bool(v.(bool))
-		}
+	if v, ok := d.GetOkExists("is_web_tracking"); ok {
+		request.IsWebTracking = helper.Bool(v.(bool))
+		isWebTracking = v.(bool)
 	}
 
-	if d.HasChange("extends") {
+	if isWebTracking {
 		if dMap, ok := helper.InterfacesHeadMap(d, "extends"); ok {
-			topicExtendInfo := cls.TopicExtendInfo{}
 			if anonymousAccessMap, ok := helper.InterfaceToMap(dMap, "anonymous_access"); ok {
+				topicExtendInfo := cls.TopicExtendInfo{}
 				anonymousInfo := cls.AnonymousInfo{}
 				if v, ok := anonymousAccessMap["operations"]; ok {
 					tmpList := make([]*string, 0)
@@ -452,9 +461,14 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 				}
 
 				topicExtendInfo.AnonymousAccess = &anonymousInfo
+				request.Extends = &topicExtendInfo
 			}
-
-			request.Extends = &topicExtendInfo
+		} else {
+			return fmt.Errorf("If `is_web_tracking` is true, Must set `extends` params.\n.")
+		}
+	} else {
+		if _, ok := helper.InterfacesHeadMap(d, "extends"); ok {
+			return fmt.Errorf("If `is_web_tracking` is false, Not support set `extends` params.\n.")
 		}
 	}
 
