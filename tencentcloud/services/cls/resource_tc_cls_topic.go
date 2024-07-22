@@ -18,8 +18,8 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClsTopicCreate,
 		Read:   resourceTencentCloudClsTopicRead,
-		Delete: resourceTencentCloudClsTopicDelete,
 		Update: resourceTencentCloudClsTopicUpdate,
+		Delete: resourceTencentCloudClsTopicDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
