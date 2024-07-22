@@ -317,6 +317,37 @@ func (me *GaapService) DeleteCertificate(ctx context.Context, id string) error {
 	return nil
 }
 
+func waitTaskReady(ctx context.Context, client *gaap.Client, reqeustId string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	describeRequest := gaap.NewDescribeTaskStatusRequest()
+	describeRequest.TaskId = helper.String(reqeustId)
+
+	err := resource.Retry(2*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+		response, err := client.DescribeTaskStatus(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return tccommon.RetryError(err)
+		}
+		// 任务状态：RUNNING，FAIL，SUCCESS
+		status := *response.Response.Status
+		if status == "SUCCESS" {
+			return nil
+		} else if status == "FAIL" {
+			return resource.NonRetryableError(fmt.Errorf("Task[%s] failed", reqeustId))
+		} else {
+			return resource.RetryableError(fmt.Errorf("Task[%s] status: %s", reqeustId, status))
+		}
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s task failed, reason: %v", logId, err)
+		return err
+	}
+	return nil
+}
+
 func (me *GaapService) CreateProxy(
 	ctx context.Context,
 	name, accessRegion, realserverRegion string,
@@ -326,7 +357,7 @@ func (me *GaapService) CreateProxy(
 ) (id string, err error) {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
-
+	var createProxyRequestId string
 	createRequest := gaap.NewCreateProxyRequest()
 	createRequest.ProxyName = &name
 	createRequest.ProjectId = helper.IntInt64(projectId)
@@ -362,57 +393,15 @@ func (me *GaapService) CreateProxy(
 		}
 
 		id = *response.Response.InstanceId
+		createProxyRequestId = *response.Response.RequestId
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s create proxy failed, reason: %v", logId, err)
 		return "", err
 	}
 
-	describeRequest := gaap.NewDescribeProxiesRequest()
-	describeRequest.ProxyIds = []*string{&id}
-
-	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(describeRequest.GetAction())
-
-		response, err := client.DescribeProxies(describeRequest)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
-			return tccommon.RetryError(err)
-		}
-
-		proxies := response.Response.ProxySet
-
-		switch len(proxies) {
-		case 0:
-			err := errors.New("read no proxy")
-			log.Printf("[DEBUG]%s %v", logId, err)
-			return resource.RetryableError(err)
-
-		default:
-			err := errors.New("return more than 1 proxy")
-			log.Printf("[DEBUG]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-
-		case 1:
-		}
-
-		proxy := proxies[0]
-		if proxy.Status == nil {
-			err := errors.New("proxy status is nil")
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-
-		if *proxy.Status != GAAP_PROXY_RUNNING {
-			err := errors.New("proxy is still creating")
-			log.Printf("[DEBUG]%s %v", logId, err)
-			return resource.RetryableError(err)
-		}
-
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s create proxy failed, reason: %v", logId, err)
+	time.Sleep(3 * time.Second)
+	if err := waitTaskReady(ctx, client, createProxyRequestId); err != nil {
 		return "", err
 	}
 
@@ -717,7 +706,7 @@ func (me *GaapService) ModifyProxyProjectId(ctx context.Context, id string, proj
 func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, bandwidth, concurrent *int) error {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
-
+	var modifyProxyRequestId string
 	modifyRequest := gaap.NewModifyProxyConfigurationRequest()
 	modifyRequest.ProxyId = &id
 	if bandwidth != nil {
@@ -731,56 +720,21 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 		ratelimit.Check(modifyRequest.GetAction())
 		modifyRequest.ClientToken = helper.String(helper.BuildToken())
 
-		if _, err := client.ModifyProxyConfiguration(modifyRequest); err != nil {
+		response, err := client.ModifyProxyConfiguration(modifyRequest)
+		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
 			return tccommon.RetryError(err)
 		}
+		modifyProxyRequestId = *response.Response.RequestId
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s modify proxy configuration failed, reason: %v", logId, err)
 		return err
 	}
 
-	time.Sleep(5 * time.Second)
-
-	describeRequest := gaap.NewDescribeProxiesRequest()
-	describeRequest.ProxyIds = []*string{&id}
-
-	if err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(describeRequest.GetAction())
-
-		response, err := client.DescribeProxies(describeRequest)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
-			return tccommon.RetryError(err)
-		}
-
-		proxies := response.Response.ProxySet
-
-		if len(proxies) != 1 {
-			err := fmt.Errorf("api[%s] read %d proxies", describeRequest.GetAction(), len(proxies))
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-
-		proxy := proxies[0]
-		if proxy.Status == nil {
-			err := fmt.Errorf("api[%s] proxy status is nil", describeRequest.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-
-		if *proxy.Status == GAAP_PROXY_ADJUSTING {
-			err := errors.New("proxy is still modifying")
-			log.Printf("[DEBUG]%s %v", logId, err)
-			return resource.RetryableError(err)
-		}
-
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s modify proxy configuration failed, reason: %v", logId, err)
+	time.Sleep(3 * time.Second)
+	if err := waitTaskReady(ctx, client, modifyProxyRequestId); err != nil {
 		return err
 	}
 
