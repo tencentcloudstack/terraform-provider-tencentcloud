@@ -3,16 +3,17 @@ Provides a resource to create a cls alarm
 Example Usage
 
 ```hcl
-resource "tencentcloud_cls_alarm" "alarm" {
-  name             = "terraform-alarm-test"
+resource "tencentcloud_cls_alarm" "example" {
+  name             = "tf-example"
   alarm_notice_ids = [
     "notice-0850756b-245d-4bc7-bb27-2a58fffc780b",
   ]
   alarm_period     = 15
   condition        = "test"
+  alarm_level      = 0
   message_template = "{{.Label}}"
   status           = true
-  tags             = {
+  tags = {
     "createdBy" = "terraform"
   }
   trigger_count = 1
@@ -24,6 +25,7 @@ resource "tencentcloud_cls_alarm" "alarm" {
     query             = "status:>500 | select count(*) as errorCounts"
     start_time_offset = -15
     topic_id          = "88735a07-bea4-4985-8763-e9deb6da4fad"
+    syntax_rule       = 1
   }
 
   analysis {
@@ -49,5 +51,5 @@ Import
 cls alarm can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_alarm.alarm alarm_id
+terraform import tencentcloud_cls_alarm.example alarm-d8529662-e10f-440c-ba80-50f3dcf215a3
 ```

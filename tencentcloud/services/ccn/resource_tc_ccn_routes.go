@@ -29,14 +29,12 @@ func ResourceTencentCloudCcnRoutes() *schema.Resource {
 				ForceNew:    true,
 				Description: "CCN Instance ID.",
 			},
-
 			"route_id": {
 				Required:    true,
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Description: "CCN Route Id List.",
 			},
-
 			"switch": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -62,11 +60,11 @@ func resourceTencentCloudCcnRoutesRead(d *schema.ResourceData, meta interface{})
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn_routes.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -104,7 +102,9 @@ func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn_routes.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -114,15 +114,10 @@ func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{
 	routeId := idSplit[1]
 
 	certSwitch := d.Get("switch").(string)
-
 	if certSwitch == "on" {
-
-		var (
-			request = vpc.NewEnableCcnRoutesRequest()
-		)
+		request := vpc.NewEnableCcnRoutesRequest()
 		request.CcnId = &ccnId
 		request.RouteIds = []*string{&routeId}
-
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().EnableCcnRoutes(request)
 			if e != nil {
@@ -130,20 +125,18 @@ func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update vpc ccnRoutes failed, reason:%+v", logId, err)
 			return err
 		}
 	} else {
-
-		var (
-			request = vpc.NewDisableCcnRoutesRequest()
-		)
+		request := vpc.NewDisableCcnRoutesRequest()
 		request.CcnId = &ccnId
 		request.RouteIds = []*string{&routeId}
-
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DisableCcnRoutes(request)
 			if e != nil {
@@ -151,13 +144,14 @@ func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update vpc ccnRoutes failed, reason:%+v", logId, err)
 			return err
 		}
-
 	}
 
 	return resourceTencentCloudCcnRoutesRead(d, meta)

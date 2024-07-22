@@ -17,27 +17,22 @@ This resource can prove useful when a module accepts a subnet id as an input var
 
 ## Example Usage
 
+### Query method 1
+
 ```hcl
-variable "subnet_id" {}
-variable "vpc_id" {}
-
-data "tencentcloud_subnet" "selected" {
-  vpc_id    = var.vpc_id
-  subnet_id = var.subnet_id
+data "tencentcloud_subnet" "subnet" {
+  vpc_id    = "vpc-ha5l97e3"
+  subnet_id = "subnet-ezgfompo"
 }
+```
 
-resource "tencentcloud_security_group" "default" {
-  name        = "test subnet data"
-  description = "test subnet data description"
-}
+### Query method 2
 
-resource "tencentcloud_security_group_rule" "subnet" {
-  security_group_id = tencentcloud_security_group.default.id
-  type              = "ingress"
-  cidr_ip           = data.tencentcloud_subnet.selected.cidr_block
-  ip_protocol       = "tcp"
-  port_range        = "80,8080"
-  policy            = "accept"
+```hcl
+data "tencentcloud_subnet" "subnet" {
+  vpc_id    = "vpc-ha5l97e3"
+  subnet_id = "subnet-ezgfompo"
+  cdc_id    = "cluster-lchwgxhs"
 }
 ```
 
@@ -47,6 +42,7 @@ The following arguments are supported:
 
 * `subnet_id` - (Required, String) The ID of the Subnet.
 * `vpc_id` - (Required, String) The VPC ID.
+* `cdc_id` - (Optional, String) ID of CDC instance.
 
 ## Attributes Reference
 

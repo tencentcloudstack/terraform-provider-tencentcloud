@@ -20,9 +20,6 @@ func ResourceTencentCloudTdmqRole() *schema.Resource {
 		Read:   resourceTencentCloudTdmqRoleRead,
 		Update: resourceTencentCloudTdmqRoleUpdate,
 		Delete: resourceTencentCloudTdmqRoleDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"role_name": {
@@ -47,27 +44,26 @@ func ResourceTencentCloudTdmqRole() *schema.Resource {
 func resourceTencentCloudTdmqRoleCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_role.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	var (
-		roleName  string
-		clusterId string
-		remark    string
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		roleName    string
+		clusterId   string
+		remark      string
 	)
+
 	if temp, ok := d.GetOk("role_name"); ok {
 		roleName = temp.(string)
 		if len(roleName) < 1 {
-			return fmt.Errorf("role_name should be not empty string")
+			return fmt.Errorf("`role_name` should be not empty string")
 		}
 	}
 
 	if temp, ok := d.GetOk("cluster_id"); ok {
 		clusterId = temp.(string)
 		if len(clusterId) < 1 {
-			return fmt.Errorf("cluster_id should be not empty string")
+			return fmt.Errorf("`cluster_id` should be not empty string")
 		}
 	}
 
@@ -75,12 +71,12 @@ func resourceTencentCloudTdmqRoleCreate(d *schema.ResourceData, meta interface{}
 		remark = temp.(string)
 	}
 
-	clusterId, err := tdmqService.CreateTdmqRole(ctx, roleName, clusterId, remark)
+	respRoleName, err := tdmqService.CreateTdmqRole(ctx, roleName, clusterId, remark)
 	if err != nil {
 		return err
 	}
-	d.SetId(clusterId)
 
+	d.SetId(respRoleName)
 	return resourceTencentCloudTdmqRoleRead(d, meta)
 }
 
@@ -88,19 +84,20 @@ func resourceTencentCloudTdmqRoleRead(d *schema.ResourceData, meta interface{}) 
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_role.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	roleName := d.Id()
-	clusterId := d.Get("cluster_id").(string)
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		roleName  = d.Id()
+		clusterId = d.Get("cluster_id").(string)
+	)
 
 	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := tdmqService.DescribeTdmqRoleById(ctx, roleName, clusterId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		if !has {
 			d.SetId("")
 			return nil
@@ -110,26 +107,34 @@ func resourceTencentCloudTdmqRoleRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("remark", info.Remark)
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceTencentCloudTdmqRoleUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_role.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	roleName := d.Id()
-	clusterId := d.Get("cluster_id").(string)
-
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	var (
-		remark string
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		roleName  = d.Id()
+		clusterId = d.Get("cluster_id").(string)
+		remark    string
 	)
+
+	immutableArgs := []string{"role_name", "cluster_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	old, now := d.GetChange("remark")
 	if d.HasChange("remark") {
 		remark = now.(string)
@@ -150,13 +155,13 @@ func resourceTencentCloudTdmqRoleUpdate(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudTdmqRoleDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_role.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	roleName := d.Id()
-	clusterId := d.Get("cluster_id").(string)
-
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		roleName  = d.Id()
+		clusterId = d.Get("cluster_id").(string)
+	)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteTdmqRole(ctx, roleName, clusterId); err != nil {
@@ -165,8 +170,10 @@ func resourceTencentCloudTdmqRoleDelete(d *schema.ResourceData, meta interface{}
 					return nil
 				}
 			}
+
 			return resource.RetryableError(err)
 		}
+
 		return nil
 	})
 

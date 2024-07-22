@@ -51,7 +51,7 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 			},
 
 			"records": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "Origin site records.",
 				Elem: &schema.Resource{
@@ -173,7 +173,7 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 		zoneId = v.(string)
 	}
 
-	request.ZoneId = &zoneId
+	request.ZoneId = helper.String(zoneId)
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -184,7 +184,7 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 	}
 
 	if v, ok := d.GetOk("records"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			recordsMap := item.(map[string]interface{})
 			originRecord := teo.OriginRecord{}
 			if v, ok := recordsMap["record"]; ok {
@@ -398,9 +398,9 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	if needChange {
 		request := teo.NewModifyOriginGroupRequest()
 
-		request.ZoneId = &zoneId
+		request.ZoneId = helper.String(zoneId)
 
-		request.GroupId = &originGroupId
+		request.GroupId = helper.String(originGroupId)
 
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
@@ -411,7 +411,7 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 		}
 
 		if v, ok := d.GetOk("records"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				recordsMap := item.(map[string]interface{})
 				originRecord := teo.OriginRecord{}
 				if v, ok := recordsMap["record"]; ok {
@@ -487,13 +487,9 @@ func resourceTencentCloudTeoOriginGroupDelete(d *schema.ResourceData, meta inter
 		response = teo.NewDeleteOriginGroupResponse()
 	)
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		zoneId = v.(string)
-	}
+	request.ZoneId = helper.String(zoneId)
 
-	request.ZoneId = &zoneId
-
-	request.GroupId = &originGroupId
+	request.GroupId = helper.String(originGroupId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteOriginGroupWithContext(ctx, request)
@@ -506,7 +502,7 @@ func resourceTencentCloudTeoOriginGroupDelete(d *schema.ResourceData, meta inter
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create teo origin group failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete teo origin group failed, reason:%+v", logId, err)
 		return err
 	}
 

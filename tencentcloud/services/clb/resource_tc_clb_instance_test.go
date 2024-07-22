@@ -22,6 +22,7 @@ const InternalClbNameUpdate = "tf-clb-update-internal"
 const SingleClbName = "single-open-clb"
 const MultiClbName = "multi-open-clb"
 const OpenClbName = "tf-clb-open"
+const OpenClbNameIpv6 = "tf-clb-open-ipv6"
 const OpenClbNameUpdate = "tf-clb-update-open"
 
 func init() {
@@ -152,6 +153,30 @@ func TestAccTencentCloudClbInstanceResource_open(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "target_region_info_region", "ap-guangzhou"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "target_region_info_vpc_id"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "tags.test", "test"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbInstanceResource_openIpv6(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbInstance_openIpv6,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_open_ipv6"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "clb_name", OpenClbNameIpv6),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "project_id", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "vpc_id", "vpc-mvhjjprd"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "subnet_id", "subnet-2qfyfvv8"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open_ipv6", "address_ip_version", "IPv6FullChain"),
 				),
 			},
 		},
@@ -424,10 +449,6 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 `
 
 const testAccClbInstance_open = `
-resource "tencentcloud_security_group" "foo" {
-  name = "keep-ci-temp-test-sg"
-}
-
 resource "tencentcloud_vpc" "foo" {
   name       = "clb-instance-open-vpc"
   cidr_block = "10.0.0.0/16"
@@ -440,7 +461,7 @@ resource "tencentcloud_clb_instance" "clb_open" {
   vpc_id                    = tencentcloud_vpc.foo.id
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = tencentcloud_vpc.foo.id
-  security_groups           = [tencentcloud_security_group.foo.id]
+  security_groups           = ["sg-if748odn"]
 
   tags = {
     test = "tf"
@@ -509,9 +530,6 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 }
 `
 const testAccClbInstance_update_open = `
-resource "tencentcloud_security_group" "foo" {
-  name = "clb-instance-sg"
-}
 
 resource "tencentcloud_vpc" "foo" {
   name       = "clb-instance-open-vpc"
@@ -525,7 +543,7 @@ resource "tencentcloud_clb_instance" "clb_open" {
   project_id                = 0
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = tencentcloud_vpc.foo.id
-  security_groups           = [tencentcloud_security_group.foo.id]
+  security_groups           = ["sg-if748odn"]
 
   tags = {
     test = "test"
@@ -546,12 +564,6 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
-resource "tencentcloud_security_group" "sglab" {
-  name        = "clb-instance-enable-sg"
-  description = "favourite sg"
-  project_id  = 0
-}
-
 resource "tencentcloud_vpc" "foo" {
   name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
@@ -568,7 +580,7 @@ resource "tencentcloud_clb_instance" "default_enable" {
   vpc_id                       = tencentcloud_vpc.foo.id
   load_balancer_pass_to_target = true
 
-  security_groups              = [tencentcloud_security_group.sglab.id]
+  security_groups              = ["sg-if748odn"]
   target_region_info_region    = "ap-guangzhou"
   target_region_info_vpc_id    = tencentcloud_vpc.foo.id
 
@@ -591,12 +603,6 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
-resource "tencentcloud_security_group" "sglab" {
-  name        = "clb-instance-enable-sg"
-  description = "favourite sg"
-  project_id  = 0
-}
-
 resource "tencentcloud_vpc" "foo" {
   name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
@@ -613,7 +619,7 @@ resource "tencentcloud_clb_instance" "default_enable" {
   vpc_id                       = tencentcloud_vpc.foo.id
   load_balancer_pass_to_target = true
 
-  security_groups              = [tencentcloud_security_group.sglab.id]
+  security_groups              = ["sg-if748odn"]
   target_region_info_region    = "ap-guangzhou"
   target_region_info_vpc_id    = tencentcloud_vpc.foo.id
 
@@ -646,5 +652,16 @@ resource "tencentcloud_clb_instance" "multiple_instance" {
   tags = {
     test = "open"
   }
+}
+`
+
+const testAccClbInstance_openIpv6 = `
+resource "tencentcloud_clb_instance" "clb_open_ipv6" {
+	clb_name           = "` + OpenClbNameIpv6 + `"
+	network_type       = "OPEN"
+	project_id         = 0
+	vpc_id             = "vpc-mvhjjprd"
+	subnet_id          = "subnet-2qfyfvv8"
+	address_ip_version = "IPv6FullChain"
 }
 `

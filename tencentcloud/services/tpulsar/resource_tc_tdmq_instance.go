@@ -57,16 +57,16 @@ func ResourceTencentCloudTdmqInstance() *schema.Resource {
 func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request  = tdmq.NewCreateClusterRequest()
 		response *tdmq.CreateClusterResponse
 	)
+
 	if v, ok := d.GetOk("cluster_name"); ok {
 		request.ClusterName = helper.String(v.(string))
 	}
@@ -87,6 +87,7 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
@@ -122,18 +123,19 @@ func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) erro
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	id := d.Id()
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		id          = d.Id()
+	)
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := tdmqService.DescribeTdmqInstanceById(ctx, id)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		if !has {
 			d.SetId("")
 			return nil
@@ -143,6 +145,7 @@ func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) erro
 		_ = d.Set("remark", info.Remark)
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -161,20 +164,26 @@ func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) erro
 func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service     = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		id          = d.Id()
+		clusterName string
+		remark      string
+	)
 
-	id := d.Id()
+	immutableArgs := []string{"bind_cluster_id"}
 
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	//internal version: replace var begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace var end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
-	var (
-		clusterName string
-		remark      string
-	)
 	old, now := d.GetChange("cluster_name")
 	if d.HasChange("cluster_name") {
 		clusterName = now.(string)
@@ -203,19 +212,22 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
+
 		//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	}
+
 	return resourceTencentCloudTdmqRead(d, meta)
 }
 
 func resourceTencentCloudTdmqDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	clusterId := d.Id()
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		clusterId = d.Id()
+	)
 
 	if err := service.DeleteTdmqInstance(ctx, clusterId); err != nil {
 		return err

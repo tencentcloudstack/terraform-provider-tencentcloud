@@ -23,8 +23,17 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// 按key回档未开启
+	FAILEDOPERATION_FLASHBACKBYKEYNOTOPEN = "FailedOperation.FlashbackByKeyNotOpen"
+
 	// 内核响应超时。
 	FAILEDOPERATION_KERNELRESPONSETIMEOUT = "FailedOperation.KernelResponseTimeout"
+
+	// 当前实例已开启外网访问。
+	FAILEDOPERATION_NOTALLOWMODIFYADDRAFTEROPENWANSERVICE = "FailedOperation.NotAllowModifyAddrAfterOpenWanService"
+
+	// 实例锁定中不允许操作。
+	FAILEDOPERATION_OPERATIONNOTALLOWEDININSTANCELOCKING = "FailedOperation.OperationNotAllowedInInstanceLocking"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -47,7 +56,13 @@ const (
 	// 无效Vip信息。
 	INVALIDPARAMETER_INVALIDVIP = "InvalidParameter.InvalidVip"
 
-	// 当前子帐号无权执行该操作。
+	// 参数名有误
+	INVALIDPARAMETER_MODIFYMONGODBPARAMS = "InvalidParameter.ModifyMongodbParams"
+
+	// 接口参数为空。
+	INVALIDPARAMETER_PARAMETERSNIL = "InvalidParameter.ParametersNil"
+
+	// 当前子账号无权执行该操作。
 	INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 
 	// 可用区已关闭售卖。
@@ -91,6 +106,9 @@ const (
 
 	// 内存和磁盘必须同时升配或降配。
 	INVALIDPARAMETERVALUE_MODIFYMODEERROR = "InvalidParameterValue.ModifyModeError"
+
+	// 参数值有误。
+	INVALIDPARAMETERVALUE_MODIFYMONGODBPARAMS = "InvalidParameterValue.ModifyMongodbParams"
 
 	// 实例版本错误。
 	INVALIDPARAMETERVALUE_MONGOVERSIONERROR = "InvalidParameterValue.MongoVersionError"
@@ -187,6 +205,9 @@ const (
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// 内核版本不支持。
+	UNSUPPORTEDOPERATION_KERNELVERSIONNOTSUPPORT = "UnsupportedOperation.KernelVersionNotSupport"
 
 	// 当前版本不支持该操作。
 	UNSUPPORTEDOPERATION_VERSIONNOTSUPPORT = "UnsupportedOperation.VersionNotSupport"

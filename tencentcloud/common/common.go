@@ -86,6 +86,8 @@ var retryableErrorCode = []string{
 	"OperationDenied.InstanceStatusLimitError",
 	// apigw
 	"UnsupportedOperation.UnsupportedDeleteService",
+	// gaap
+	"FailedOperation.ListenerHasTask",
 }
 
 // retryableCosErrorCode is retryable error code for COS/CI SDK

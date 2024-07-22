@@ -3,6 +3,7 @@ Provides an EIP resource.
 Example Usage
 
 Paid by the bandwidth package
+
 ```hcl
 resource "tencentcloud_eip" "foo" {
   name                 = "awesome_gateway_ip"
@@ -13,7 +14,8 @@ resource "tencentcloud_eip" "foo" {
 ```
 
 AntiDDos Eip
-```
+
+```hcl
 resource "tencentcloud_eip" "foo" {
   name                 = "awesome_gateway_ip"
   bandwidth_package_id = "bwp-4ocyia9s"
@@ -28,7 +30,8 @@ resource "tencentcloud_eip" "foo" {
 ```
 
 Eip With Network Egress
-```
+
+```hcl
 resource "tencentcloud_eip" "foo" {
   name                       = "egress_eip"
   egress                     = "center_egress2"

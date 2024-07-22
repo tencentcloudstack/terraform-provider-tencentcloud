@@ -32,6 +32,10 @@ resource "tencentcloud_route_table_entry" "instance" {
   next_hub               = "0"
   description            = "ci-test-route-table-entry"
 }
+
+output "item_id" {
+  value = tencentcloud_route_table_entry.instance.route_item_id
+}
 ```
 
 Import

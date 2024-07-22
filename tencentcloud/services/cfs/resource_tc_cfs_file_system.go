@@ -289,6 +289,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("ccn_id", mountTarget.CcnID)
 		_ = d.Set("cidr_block", mountTarget.CidrBlock)
 		_ = d.Set("net_interface", mountTarget.NetworkInterface)
+		_ = d.Set("fs_id", mountTarget.FSID)
 	}
 
 	return nil

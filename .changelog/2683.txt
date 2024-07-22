@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_user_info: fix `owner_uin`
+```

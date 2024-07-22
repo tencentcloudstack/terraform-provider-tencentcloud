@@ -2541,3 +2541,69 @@ func (me *MonitorService) DeleteMonitorTmpAlertGroupById(ctx context.Context, in
 
 	return
 }
+
+func (me *MonitorService) DescribeMonitorTmpInstancesByFilter(ctx context.Context, param map[string]interface{}) (tmpInstances []*monitor.PrometheusInstancesItem, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = monitor.NewDescribePrometheusInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "InstanceStatus" {
+			request.InstanceStatus = v.([]*int64)
+		}
+		if k == "InstanceName" {
+			request.InstanceName = v.(*string)
+		}
+		if k == "Zones" {
+			request.Zones = v.([]*string)
+		}
+		if k == "TagFilters" {
+			request.TagFilters = v.([]*monitor.PrometheusTag)
+		}
+		if k == "IPv4Address" {
+			request.IPv4Address = v.([]*string)
+		}
+		if k == "InstanceChargeType" {
+			request.InstanceChargeType = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMonitorClient().DescribePrometheusInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
+		tmpInstances = append(tmpInstances, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

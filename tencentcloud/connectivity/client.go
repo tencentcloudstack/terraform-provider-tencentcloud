@@ -2,13 +2,13 @@ package connectivity
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
 	"time"
 
-	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 	cos "github.com/tencentyun/cos-go-sdk-v5"
 
@@ -98,6 +98,7 @@ import (
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tke2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -203,10 +204,12 @@ type TencentCloudClient struct {
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
 	csipConn           *csip.Client
-	billingConn        *billing.Client
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	tke2Conn *tke2.Client
+	//omit nil client
+	omitNilConn *common.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -359,6 +362,19 @@ func (me *TencentCloudClient) UseVpcClient(iacExtInfo ...IacExtInfo) *vpc.Client
 	return me.vpcConn
 }
 
+func (me *TencentCloudClient) UseOmitNilClient(module string) *common.Client {
+	secretId := me.Credential.SecretId
+	secretKey := me.Credential.SecretKey
+	region := me.Region
+	credential := common.NewCredential(secretId, secretKey)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = fmt.Sprintf("%s.tencentcloudapi.com", module)
+	cpf.HttpProfile.ReqMethod = "POST"
+	me.omitNilConn = common.NewCommonClient(credential, region, cpf).WithLogger(log.Default())
+
+	return me.omitNilConn
+}
+
 // UseCbsClient returns cbs client for service
 func (me *TencentCloudClient) UseCbsClient(iacExtInfo ...IacExtInfo) *cbs.Client {
 	var logRoundTripper LogRoundTripper
@@ -474,8 +490,8 @@ func (me *TencentCloudClient) UseTkeClient(iacExtInfo ...IacExtInfo) *tke.Client
 		me.tkeConn.WithHttpTransport(&logRoundTripper)
 		return me.tkeConn
 	}
-
 	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
 	me.tkeConn, _ = tke.NewClient(me.Credential, me.Region, cpf)
 	me.tkeConn.WithHttpTransport(&logRoundTripper)
 
@@ -1535,20 +1551,6 @@ func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
 	return me.cdwpgConn
 }
 
-// UseBillingClient returns billing client for service
-func (me *TencentCloudClient) UseBillingClient() *billing.Client {
-	if me.billingConn != nil {
-		return me.billingConn
-	}
-
-	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
-	me.billingConn, _ = billing.NewClient(me.Credential, me.Region, cpf)
-	me.billingConn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.billingConn
-}
-
 // UseCsipClient returns csip client for service
 func (me *TencentCloudClient) UseCsipClient() *csip.Client {
 	if me.csipConn != nil {
@@ -1590,4 +1592,23 @@ func getEnvDefault(key string, defVal int) int {
 		panic("TENCENTCLOUD_XXX_REQUEST_TIMEOUT must be int.")
 	}
 	return timeOut
+}
+
+// UseTke2Client returns tke client for service
+func (me *TencentCloudClient) UseTke2Client(iacExtInfo ...IacExtInfo) *tke2.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.tke2Conn != nil {
+		me.tke2Conn.WithHttpTransport(&logRoundTripper)
+		return me.tke2Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tke2Conn, _ = tke2.NewClient(me.Credential, me.Region, cpf)
+	me.tke2Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.tke2Conn
 }

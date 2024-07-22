@@ -309,6 +309,7 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_tenant_instances
     tencentcloud_ccn_cross_border_flow_monitor
     tencentcloud_ccn_cross_border_region_bandwidth_limits
+    tencentcloud_ccn_routes
 
   Resource
     tencentcloud_ccn
@@ -318,6 +319,11 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_instances_accept_attach
     tencentcloud_ccn_instances_reject_attach
     tencentcloud_ccn_instances_reset_attach
+    tencentcloud_ccn_route_table
+    tencentcloud_ccn_route_table_input_policies
+    tencentcloud_ccn_route_table_broadcast_policies
+    tencentcloud_ccn_route_table_selection_policies
+    tencentcloud_ccn_route_table_associate_instance_config
 
 CVM Dedicated Host(CDH)
   Data Source
@@ -657,6 +663,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_node_pools
     tencentcloud_kubernetes_cluster_instances
     tencentcloud_kubernetes_cluster_node_pools
+    tencentcloud_kubernetes_cluster_native_node_pools
 
   Resource
     tencentcloud_kubernetes_cluster
@@ -670,6 +677,8 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_addon_attachment
     tencentcloud_kubernetes_cluster_endpoint
     tencentcloud_kubernetes_addon
+    tencentcloud_kubernetes_addon_config
+    tencentcloud_kubernetes_native_node_pool
 
 TDMQ for Pulsar(tpulsar)
   Data Source
@@ -705,6 +714,8 @@ TencentDB for MongoDB(mongodb)
     tencentcloud_mongodb_standby_instance
     tencentcloud_mongodb_instance_account
     tencentcloud_mongodb_instance_backup
+    tencentcloud_mongodb_instance_transparent_data_encryption
+    tencentcloud_mongodb_instance_backup_rule
 
 TencentDB for MySQL(cdb)
   Data Source
@@ -805,6 +816,7 @@ Cloud Monitor(Monitor)
 Managed Service for Prometheus(TMP)
   Data Source
     tencentcloud_monitor_tmp_regions
+    tencentcloud_monitor_tmp_instances
 
   Resource
     tencentcloud_monitor_tmp_instance
@@ -1405,6 +1417,7 @@ TencentCloud EdgeOne(TEO)
     tencentcloud_teo_certificate_config
     tencentcloud_teo_acceleration_domain
     tencentcloud_teo_l4_proxy
+    tencentcloud_teo_realtime_log_delivery
 
 TencentCloud ServiceMesh(TCM)
   Data Source
@@ -1649,6 +1662,9 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_member_email
     tencentcloud_organization_org_member_auth_identity_attachment
     tencentcloud_organization_org_member_policy_attachment
+    tencentcloud_organization_org_manage_policy
+    tencentcloud_organization_org_manage_policy_config
+    tencentcloud_organization_org_manage_policy_target
     tencentcloud_organization_policy_sub_account_attachment
     tencentcloud_organization_quit_organization_operation
     tencentcloud_organization_org_share_unit

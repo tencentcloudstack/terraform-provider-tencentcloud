@@ -688,10 +688,10 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeAccelerationDomainsRequest()
-	request.ZoneId = &zoneId
+	request.ZoneId = helper.String(zoneId)
 	advancedFilter := &teo.AdvancedFilter{
 		Name:   helper.String("domain-name"),
-		Values: []*string{&domainName},
+		Values: []*string{helper.String(domainName)},
 	}
 	request.Filters = append(request.Filters, advancedFilter)
 
@@ -732,6 +732,7 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 	if len(instances) < 1 {
 		return
 	}
+
 	ret = instances[0]
 	return
 }
@@ -954,10 +955,10 @@ func (me *TeoService) DescribeTeoRuleEngineById(ctx context.Context, zoneId stri
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeRulesRequest()
-	request.ZoneId = &zoneId
+	request.ZoneId = helper.String(zoneId)
 	filter := &teo.Filter{
 		Name:   helper.String("rule-id"),
-		Values: []*string{&ruleId},
+		Values: []*string{helper.String(ruleId)},
 	}
 	request.Filters = append(request.Filters, filter)
 
@@ -990,7 +991,7 @@ func (me *TeoService) DescribeTeoOriginGroupById(ctx context.Context, originGrou
 	request := teo.NewDescribeOriginGroupRequest()
 	advancedFilter := &teo.AdvancedFilter{
 		Name:   helper.String("origin-group-id"),
-		Values: []*string{&originGroupId},
+		Values: []*string{helper.String(originGroupId)},
 	}
 	request.Filters = append(request.Filters, advancedFilter)
 
@@ -1101,5 +1102,39 @@ func (me *TeoService) DescribeTeoL4ProxyById(ctx context.Context, zoneId string,
 	}
 
 	ret = response.Response.L4Proxies[0]
+	return
+}
+
+func (me *TeoService) DescribeTeoRealtimeLogDeliveryById(ctx context.Context, zoneId string, taskId string) (ret *teo.RealtimeLogDeliveryTask, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeRealtimeLogDeliveryTasksRequest()
+	request.ZoneId = helper.String(zoneId)
+	advancedFilter := &teo.AdvancedFilter{
+		Name:   helper.String("task-id"),
+		Values: []*string{helper.String(taskId)},
+	}
+	request.Filters = append(request.Filters, advancedFilter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeRealtimeLogDeliveryTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RealtimeLogDeliveryTasks) < 1 {
+		return
+	}
+
+	ret = response.Response.RealtimeLogDeliveryTasks[0]
 	return
 }

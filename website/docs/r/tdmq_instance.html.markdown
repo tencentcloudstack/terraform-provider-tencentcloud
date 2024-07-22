@@ -14,9 +14,9 @@ Provide a resource to create a TDMQ instance.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_instance" "foo" {
-  cluster_name = "example"
-  remark       = "this is description."
+resource "tencentcloud_tdmq_instance" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
   tags = {
     "createdBy" = "terraform"
   }
@@ -45,6 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 Tdmq instance can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_tdmq_instance.test tdmq_id
+$ terraform import tencentcloud_tdmq_instance.example pulsar-78bwjaj8epxv
 ```
 

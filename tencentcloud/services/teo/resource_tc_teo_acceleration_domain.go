@@ -100,6 +100,34 @@ func ResourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 				Computed:    true,
 				Description: "CNAME address.",
 			},
+
+			"origin_protocol": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Origin return protocol, possible values are: `FOLLOW`: protocol follow; `HTTP`: HTTP protocol back to source; `HTTPS`: HTTPS protocol back to source. If not filled in, the default is: `FOLLOW`.",
+			},
+
+			"http_origin_port": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "HTTP back-to-origin port, the value is 1-65535, effective when OriginProtocol=FOLLOW/HTTP, if not filled in, the default value is 80.",
+			},
+
+			"https_origin_port": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "HTTPS back-to-origin port. The value range is 1-65535. It takes effect when OriginProtocol=FOLLOW/HTTPS. If it is not filled in, the default value is 443.",
+			},
+
+			"ipv6_status": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "IPv6 status, the value is: `follow`: follow the site IPv6 configuration; `on`: on; `off`: off. If not filled in, the default is: `follow`.",
+			},
 		},
 	}
 }
@@ -164,6 +192,22 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 			}
 		}
 		request.OriginInfo = &originInfo
+	}
+
+	if v, ok := d.GetOk("origin_protocol"); ok {
+		request.OriginProtocol = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("http_origin_port"); ok {
+		request.HttpOriginPort = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("https_origin_port"); ok {
+		request.HttpsOriginPort = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("ipv6_status"); ok {
+		request.IPv6Status = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -275,6 +319,22 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 		_ = d.Set("origin_info", []interface{}{originDetailMap})
 	}
 
+	if respData.OriginProtocol != nil {
+		_ = d.Set("origin_protocol", respData.OriginProtocol)
+	}
+
+	if respData.HttpOriginPort != nil {
+		_ = d.Set("http_origin_port", respData.HttpOriginPort)
+	}
+
+	if respData.HttpsOriginPort != nil {
+		_ = d.Set("https_origin_port", respData.HttpsOriginPort)
+	}
+
+	if respData.IPv6Status != nil {
+		_ = d.Set("ipv6_status", respData.IPv6Status)
+	}
+
 	return nil
 }
 
@@ -286,6 +346,12 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
+	immutableArgs := []string{"https_origin_port"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -294,7 +360,7 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 	domainName := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"origin_info"}
+	mutableArgs := []string{"origin_info", "origin_protocol", "http_origin_port", "https_origin_port", "ipv6_status"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -305,9 +371,9 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 	if needChange {
 		request := teo.NewModifyAccelerationDomainRequest()
 
-		request.ZoneId = &zoneId
+		request.ZoneId = helper.String(zoneId)
 
-		request.DomainName = &domainName
+		request.DomainName = helper.String(domainName)
 
 		if originInfoMap, ok := helper.InterfacesHeadMap(d, "origin_info"); ok {
 			originInfo := teo.OriginInfo{}
@@ -339,6 +405,22 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			request.OriginInfo = &originInfo
 		}
 
+		if v, ok := d.GetOk("origin_protocol"); ok {
+			request.OriginProtocol = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("http_origin_port"); ok {
+			request.HttpOriginPort = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("https_origin_port"); ok {
+			request.HttpsOriginPort = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("ipv6_status"); ok {
+			request.IPv6Status = helper.String(v.(string))
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyAccelerationDomainWithContext(ctx, request)
 			if e != nil {
@@ -366,9 +448,9 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 	if needChange1 {
 		request1 := teo.NewModifyAccelerationDomainStatusesRequest()
 
-		request1.ZoneId = &zoneId
+		request1.ZoneId = helper.String(zoneId)
 
-		request1.DomainNames = []*string{&domainName}
+		request1.DomainNames = []*string{helper.String(domainName)}
 
 		if v, ok := d.GetOk("status"); ok {
 			request1.Status = helper.String(v.(string))
@@ -415,16 +497,9 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 		response = teo.NewModifyAccelerationDomainStatusesResponse()
 	)
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		zoneId = v.(string)
-	}
-	if v, ok := d.GetOk("domain_name"); ok {
-		domainName = v.(string)
-	}
+	request.ZoneId = helper.String(zoneId)
 
-	request.ZoneId = &zoneId
-
-	request.DomainNames = []*string{&domainName}
+	request.DomainNames = []*string{helper.String(domainName)}
 
 	status := "offline"
 	request.Status = &status
@@ -440,7 +515,7 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create teo acceleration domain failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete teo acceleration domain failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -454,16 +529,9 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 		response1 = teo.NewDeleteAccelerationDomainsResponse()
 	)
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		zoneId = v.(string)
-	}
-	if v, ok := d.GetOk("domain_name"); ok {
-		domainName = v.(string)
-	}
+	request1.ZoneId = helper.String(zoneId)
 
-	request1.ZoneId = &zoneId
-
-	request1.DomainNames = []*string{&domainName}
+	request1.DomainNames = []*string{helper.String(domainName)}
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteAccelerationDomainsWithContext(ctx, request1)
@@ -476,7 +544,7 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create teo acceleration domain failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete teo acceleration domain failed, reason:%+v", logId, err)
 		return err
 	}
 

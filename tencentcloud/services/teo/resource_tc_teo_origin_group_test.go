@@ -30,11 +30,19 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "name", "keep-group-1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "type", "GENERAL"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.#", "3"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.0.record"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.type", "IP_DOMAIN"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.weight", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private", "false"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.0.type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.0.weight"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.0.private"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.1.record"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.1.type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.1.weight"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.1.private"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.2.record"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.2.type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.2.weight"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.2.private"),
 				),
 			},
 			{
@@ -126,6 +134,18 @@ resource "tencentcloud_teo_origin_group" "basic" {
     type    = "IP_DOMAIN"
     weight  = 100
     private = false
+  }
+  records {
+    private   = false
+    record    = "21.1.1.1"
+    type      = "IP_DOMAIN"
+    weight    = 100
+  }
+  records {
+    private   = false
+    record    = "21.1.1.2"
+    type      = "IP_DOMAIN"
+    weight    = 11
   }
 }
 

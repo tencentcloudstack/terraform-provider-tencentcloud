@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -16,7 +17,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic -v
 func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
-	t.Parallel()
+	//t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			tcacctest.AccPreCheck(t)
@@ -29,10 +30,21 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "zone_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "subnet_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "cluster_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "node_spec"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "node_num"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "storage_size"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_create_default_ha_mirror_queue"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "time_span"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_rabbitmq_vip_instance.template",
+				ResourceName:      "tencentcloud_tdmq_rabbitmq_vip_instance.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -41,6 +53,17 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "zone_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "subnet_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "cluster_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "node_spec"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "node_num"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "storage_size"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_create_default_ha_mirror_queue"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "time_span"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
 				),
 			},
 		},
@@ -105,13 +128,31 @@ func testAccCheckTdmqRabbitmqVipInstanceDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccTdmqRabbitmqVipInstance = tcacctest.DefaultVpcSubnets + `
-data "tencentcloud_availability_zones" "zones" {}
+const testAccTdmqRabbitmqVipInstance = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
 
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
 resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
-  vpc_id                                = local.vpc_id
-  subnet_id                             = local.subnet_id
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
   cluster_name                          = "tf-example-rabbitmq-vip-instance"
   node_spec                             = "rabbit-vip-basic-1"
   node_num                              = 1
@@ -122,13 +163,31 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
 }
 `
 
-const testAccTdmqRabbitmqVipInstanceUpdate = tcacctest.DefaultVpcSubnets + `
-data "tencentcloud_availability_zones" "zones" {}
+const testAccTdmqRabbitmqVipInstanceUpdate = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
 
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
 resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
-  vpc_id                                = local.vpc_id
-  subnet_id                             = local.subnet_id
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
   cluster_name                          = "tf-example-rabbitmq-vip-instance-update"
   node_spec                             = "rabbit-vip-basic-1"
   node_num                              = 1

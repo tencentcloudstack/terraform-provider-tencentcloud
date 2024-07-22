@@ -697,6 +697,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
 			//LatestOperationCodeMode
+			if instance.LatestOperationErrorMsg != nil {
+				return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+			}
 			return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
@@ -1442,6 +1445,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	instanceId := d.Id()
 	//check is force delete or not
 	forceDelete := d.Get("force_delete").(bool)
+	instanceChargeType := d.Get("instance_charge_type").(string)
 
 	cvmService := CvmService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
@@ -1461,6 +1465,20 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	})
 	if err != nil {
 		return err
+	}
+
+	// prepaid need delete again
+	if instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			errRet := cvmService.DeleteInstance(ctx, instanceId)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	//check recycling

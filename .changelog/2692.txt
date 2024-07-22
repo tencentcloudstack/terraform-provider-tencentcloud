@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_mongodb_instance_transparent_data_encryption
+```
+
+```release-note:new-resource
+tencentcloud_mongodb_instance_backup_rule
+```

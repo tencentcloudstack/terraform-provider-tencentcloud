@@ -130,6 +130,9 @@ var TKE_ADDON_DEFAULT_VALUES_KEY = []string{
 	"global.cluster.clustertype",
 	"global.cluster.kubeversion",
 	"global.cluster.kubeminor",
+	"global.cluster.region",
+	"global.cluster.longregion",
+	"global.testenv",
 }
 
 const (
@@ -147,3 +150,10 @@ const (
 const (
 	backupStorageLocationStateAvailable = "Available"
 )
+
+// Content automatically added by the backend of cloud products
+var tkeNativeNodePoolAnnotationsMap = map[string]string{
+	"cluster-autoscaler.kubernetes.io/scale-down-disabled": "cluster-autoscaler.kubernetes.io/scale-down-disabled",
+	"node.tke.cloud.tencent.com/security-agent":            "node.tke.cloud.tencent.com/security-agent",
+	"node.tke.cloud.tencent.com/security-groups-spread":    "node.tke.cloud.tencent.com/security-groups-spread",
+}

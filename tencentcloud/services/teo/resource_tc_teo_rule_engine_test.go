@@ -80,6 +80,26 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "tags.#", "2"),
 				),
 			},
+			{
+				Config: testAccTeoRuleEngineActionUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRuleEngineExists("tencentcloud_teo_rule_engine.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_name", "rule-up"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "status", "enable"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.or.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.tags.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.operator", "equal"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.target", "filename"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.ignore_case", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.values.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "tags.#", "2"),
+				),
+			},
 		},
 	})
 }
@@ -139,12 +159,18 @@ func testAccCheckRuleEngineExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoRuleEngine = testAccTeoZone + `
+const testAccZoneVar = `
+variable "zone_id" {
+  default = "zone-2qtuhspy7cr6"
+}
+`
+
+const testAccTeoRuleEngine = testAccZoneVar + `
 
 resource "tencentcloud_teo_rule_engine" "basic" {
 	rule_name = "rule-1"
 	status    = "enable"
-	zone_id   = tencentcloud_teo_zone.basic.id
+	zone_id   = var.zone_id
   
 	rules {
 	  actions {
@@ -197,12 +223,12 @@ resource "tencentcloud_teo_rule_engine" "basic" {
   }
 `
 
-const testAccTeoRuleEngineUp = testAccTeoZone + `
+const testAccTeoRuleEngineUp = testAccZoneVar + `
 
 resource "tencentcloud_teo_rule_engine" "basic" {
 	rule_name = "rule-up"
 	status    = "enable"
-	zone_id   = tencentcloud_teo_zone.basic.id
+	zone_id   = var.zone_id
 
 	tags = ["keep-test-np1", "keep-test-np2"]
   
@@ -222,6 +248,51 @@ resource "tencentcloud_teo_rule_engine" "basic" {
 		}
 	  }
   
+	  or {
+		and {
+		  operator = "equal"
+		  target   = "extension"
+		  values   = [
+			"11",
+		  ]
+		}
+	  }
+	  sub_rules {
+		  tags = ["test-tag",]
+		  rules {
+			or {
+			  and {
+				operator = "equal"
+				target = "filename"
+				ignore_case = false
+				values = ["test.txt"]
+			  }
+			}
+			actions {
+				normal_action {
+					action = "HostHeader"
+					parameters {
+						name = "ServerName"
+						values = ["terraform-test.com"]
+					}
+				}
+			}
+		  }
+	  }
+	}
+  }
+`
+
+const testAccTeoRuleEngineActionUp = testAccZoneVar + `
+
+resource "tencentcloud_teo_rule_engine" "basic" {
+	rule_name = "rule-up"
+	status    = "enable"
+	zone_id   = var.zone_id
+
+	tags = ["keep-test-np1", "keep-test-np2"]
+  
+	rules {
 	  or {
 		and {
 		  operator = "equal"

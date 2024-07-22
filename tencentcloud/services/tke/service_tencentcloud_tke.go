@@ -9,16 +9,17 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
-	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
+	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tke2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1318,7 +1319,7 @@ func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clust
 	return
 }
 
-func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx context.Context, param map[string]interface{}) (availableClusterVersions *tke.DescribeAvailableClusterVersionResponseParams, errRet error) {
+func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx context.Context, param map[string]interface{}) (ret *tke.DescribeAvailableClusterVersionResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = tke.NewDescribeAvailableClusterVersionRequest()
@@ -1331,10 +1332,10 @@ func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx con
 	}()
 
 	for k, v := range param {
-		if k == "cluster_id" {
+		if k == "ClusterId" {
 			request.ClusterId = v.(*string)
 		}
-		if k == "cluster_ids" {
+		if k == "ClusterIds" {
 			request.ClusterIds = v.([]*string)
 		}
 	}
@@ -1348,9 +1349,15 @@ func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx con
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response != nil {
-		availableClusterVersions = response.Response
+	if err := dataSourceTencentCloudKubernetesAvailableClusterVersionsReadPostRequest0(ctx, request, response); err != nil {
+		return nil, err
 	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }
 
@@ -2691,7 +2698,7 @@ func (me *TkeService) TkeEncryptionProtectionStateRefreshFunc(clusterId string, 
 	}
 }
 
-func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Context, param map[string]interface{}) (clusterInstances []*tke.Instance, errRet error) {
+func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.Instance, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = tke.NewDescribeClusterInstancesRequest()
@@ -2718,18 +2725,15 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 		}
 	}
 
-	var offset int64 = 0
-	var limit int64 = 100
-	var total int64 = -1
+	ratelimit.Check(request.GetAction())
 
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
 	for {
-		if total >= 0 && offset >= total {
-			break
-		}
 		request.Offset = &offset
 		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-
 		response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
 		if err != nil {
 			errRet = err
@@ -2737,23 +2741,21 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if total < 0 {
-			total = int64(*response.Response.TotalCount)
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
 		}
-
-		if len(response.Response.InstanceSet) == 0 {
-			// get empty set, we're done
+		ret = append(ret, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
 			break
 		}
 
 		offset += limit
-
-		clusterInstances = append(clusterInstances, response.Response.InstanceSet...)
 	}
+
 	return
 }
 
-func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (clusterNodePools []*tke.NodePool, errRet error) {
+func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.NodePool, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = tke.NewDescribeClusterNodePoolsRequest()
@@ -2787,7 +2789,7 @@ func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Con
 		return
 	}
 
-	clusterNodePools = response.Response.NodePoolSet
+	ret = response.Response.NodePoolSet
 	return
 }
 
@@ -2818,5 +2820,752 @@ func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId
 	}
 
 	ret = response.Response.Addons[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClustersByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.Cluster, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewDescribeClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	if err := dataSourceTencentCloudKubernetesClustersReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Clusters) < 1 {
+		return
+	}
+
+	ret = response.Response.Clusters
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterLevelsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.ClusterLevelAttribute, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewDescribeClusterLevelAttributeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterID" {
+			request.ClusterID = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterLevelAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	ret = response.Response.Items
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterCommonNamesByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.CommonName, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewDescribeClusterCommonNamesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	if err := dataSourceTencentCloudKubernetesClusterCommonNamesReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	response, err := me.client.UseTkeClient().DescribeClusterCommonNames(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.CommonNames) < 1 {
+		return
+	}
+
+	ret = response.Response.CommonNames
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterAuthenticationOptionsByFilter(ctx context.Context, param map[string]interface{}) (ret *tke.DescribeClusterAuthenticationOptionsResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewDescribeClusterAuthenticationOptionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesChartsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.AppChart, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke.NewGetTkeAppChartListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Kind" {
+			request.Kind = v.(*string)
+		}
+		if k == "Arch" {
+			request.Arch = v.(*string)
+		}
+		if k == "ClusterType" {
+			request.ClusterType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().GetTkeAppChartList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AppCharts) < 1 {
+		return
+	}
+
+	ret = response.Response.AppCharts
+	return
+}
+
+func (me *TkeService) DescribeKubernetesEncryptionProtectionById(ctx context.Context, clusterId string) (ret *tke.DescribeEncryptionStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeEncryptionStatusRequest()
+	request.ClusterId = helper.String(clusterId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterAttachmentById(ctx context.Context, clusterId string) (ret *tke.Cluster, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClustersRequest()
+	request.ClusterIds = []*string{helper.String(clusterId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Clusters) < 1 {
+		return
+	}
+
+	ret = response.Response.Clusters[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterAttachmentById1(ctx context.Context, instanceId string) (ret *cvm.Instance, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeInstancesRequest()
+	request.InstanceIds = []*string{helper.String(instanceId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	ret = response.Response.InstanceSet[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterAttachmentById2(ctx context.Context, instanceId string, clusterId string) (ret *tke.Instance, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterInstancesRequest()
+	request.ClusterId = helper.String(clusterId)
+	request.InstanceIds = []*string{helper.String(instanceId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	for _, info := range response.Response.InstanceSet {
+		if info.InstanceId != nil && *info.InstanceId == instanceId {
+			ret = info
+			break
+		}
+	}
+	return
+}
+
+func (me *TkeService) DescribeKubernetesBackupStorageLocationById(ctx context.Context, name string) (ret *tke.BackupStorageLocation, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeBackupStorageLocationsRequest()
+	request.Names = []*string{helper.String(name)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeBackupStorageLocations(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.BackupStorageLocationSet) < 1 {
+		return
+	}
+
+	for _, info := range response.Response.BackupStorageLocationSet {
+		if info.Name != nil && *info.Name == name {
+			ret = info
+			break
+		}
+	}
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterById(ctx context.Context, clusterId string) (ret *tke.Cluster, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClustersRequest()
+	request.ClusterIds = []*string{helper.String(clusterId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Clusters) < 1 {
+		return
+	}
+
+	ret = response.Response.Clusters[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterById1(ctx context.Context, clusterId string) (ret *tke.DescribeClusterInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterInstancesRequest()
+	request.ClusterId = helper.String(clusterId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterById2(ctx context.Context, clusterId string) (ret *tke.DescribeClusterSecurityResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterSecurityRequest()
+	request.ClusterId = helper.String(clusterId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterSecurity(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesNodePoolById(ctx context.Context, clusterId string) (ret *tke.Cluster, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClustersRequest()
+	request.ClusterIds = []*string{&clusterId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Clusters) < 1 {
+		return
+	}
+
+	ret = response.Response.Clusters[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesNodePoolById1(ctx context.Context, clusterId string, nodePoolId string) (ret *tke.NodePool, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterNodePoolDetailRequest()
+	request.ClusterId = &clusterId
+	request.NodePoolId = &nodePoolId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterNodePoolDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.NodePool == nil {
+		return
+	}
+
+	ret = response.Response.NodePool
+	return
+}
+
+func (me *TkeService) DescribeKubernetesServerlessNodePoolById(ctx context.Context, clusterId string, nodePoolId string) (ret *tke.VirtualNodePool, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterVirtualNodePoolsRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterVirtualNodePools(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.NodePoolSet) < 1 {
+		return
+	}
+
+	for _, info := range response.Response.NodePoolSet {
+		if info.NodePoolId != nil && *info.NodePoolId == nodePoolId {
+			ret = info
+			break
+		}
+	}
+	return
+}
+
+func (me *TkeService) DescribeKubernetesAuthAttachmentById(ctx context.Context, clusterId string) (ret *tke.DescribeClusterAuthenticationOptionsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterAuthenticationOptionsRequest()
+	request.ClusterId = &clusterId
+	if err := resourceTencentCloudKubernetesAuthAttachmentReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DeleteKubernetesAuthAttachmentById(ctx context.Context, clusterId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewModifyClusterAuthenticationOptionsRequest()
+	request.ClusterId = &clusterId
+	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
+		Issuer:  helper.String("https://kubernetes.default.svc.cluster.local"),
+		JWKSURI: helper.String(""),
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().ModifyClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) DescribeKubernetesScaleWorkerById(ctx context.Context, clusterId string) (ret *tke.DescribeClustersResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClustersRequest()
+	request.ClusterIds = []*string{helper.String(clusterId)}
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest0(ctx, request, response); err != nil {
+		return nil, err
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context, clusterId string) (ret *tke.DescribeClusterInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterInstancesRequest()
+	request.ClusterId = helper.String(clusterId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx, request, response); err != nil {
+		return nil, err
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesScaleWorkerById2(ctx context.Context) (ret *cvm.DescribeInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeInstancesRequest()
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest2(ctx, request); err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx, request, response); err != nil {
+		return nil, err
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesNativeNodePoolById(ctx context.Context, clusterId string, nodePoolId string) (ret *tke2.NodePool, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke2.NewDescribeNodePoolsRequest()
+	request.ClusterId = &clusterId
+	filter := &tke2.Filter{
+		Name:   helper.String("NodePoolsId"),
+		Values: []*string{&nodePoolId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	var instances []*tke2.NodePool
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTke2Client().DescribeNodePools(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NodePools) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.NodePools...)
+		if len(response.Response.NodePools) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	ret = instances[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterNativeNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke2.NodePool, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke2.NewDescribeNodePoolsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tke2.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTke2Client().DescribeNodePools(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.NodePools) < 1 {
+		return
+	}
+
+	ret = response.Response.NodePools
 	return
 }

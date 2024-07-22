@@ -90,7 +90,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = local.first_subnet_id
-    img_id                     = local.image_id
+    # img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -484,7 +484,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = local.first_subnet_id
-    img_id                     = local.image_id
+    # img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -588,7 +588,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-    img_id                     = "img-rkiynh11"
+    # img_id                     = "img-rkiynh11"
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
@@ -777,4 +777,12 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     topic_id = "" # optional
   }
 }
+```
+
+Import
+
+tke cluster can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_cluster.test cls-xxx
 ```

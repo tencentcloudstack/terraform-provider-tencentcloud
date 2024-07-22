@@ -97,7 +97,7 @@ const (
 	DefaultGaapRealserverIp1        = "119.29.29.35"
 	DefaultGaapRealserverIpId2      = "rs-3mlpbuut"
 	DefaultGaapRealserverIp2        = "1.1.1.5"
-	DefaultHttpsDomainCertificateId = "cert-6sub5wbf"
+	DefaultHttpsDomainCertificateId = "cert-3muob2in"
 
 	DefaultSecurityGroup = "sg-05f7wnhn"
 
@@ -137,7 +137,7 @@ variable "sg_id" {
 const (
 	DefaultCvmId  = "ins-8oqqya08"
 	DefaultDiskId = "disk-5jjrs2lm"
-	DefaultSnapId = "snap-8f2updnb"
+	DefaultSnapId = "snap-gem0ivcj"
 )
 
 const DefaultCvmImageVariable = `
@@ -214,7 +214,7 @@ variable "international_subnet_id" {
 // Tke Exclusive Network Environment
 const (
 	TkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
-	DefaultTkeClusterId   = "cls-ely08ic4"
+	DefaultTkeClusterId   = "cls-r8gqwjw6"
 	DefaultTkeClusterName = "keep-tke-cluster"
 	DefaultTkeClusterType = "tke"
 	DefaultPrometheusId   = "prom-1lspn8sw"
@@ -1148,6 +1148,8 @@ const (
 	DefaultEsInstanceId    = "es-5wn36he6"
 	DefaultEsSecurityGroup = "sg-edmur627"
 	DefaultEsLogstash      = "ls-kru90fkz"
+	DefaultEsVpcId         = "vpc-lrj71tt3"
+	DefaultEsSubnetId      = "subnet-kggvos8o"
 )
 
 const DefaultEsVariables = `
@@ -1161,6 +1163,18 @@ variable "security_group_id" {
 
 variable "logstash_id" {
   default = "` + DefaultEsLogstash + `"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "vpc_id" {
+  default = "` + DefaultEsVpcId + `"
+}
+
+variable "subnet_id" {
+  default = "` + DefaultEsSubnetId + `"
 }
 `
 

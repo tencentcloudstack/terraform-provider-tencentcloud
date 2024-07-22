@@ -67,6 +67,12 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 							Required:    true,
 							Description: "logset id.",
 						},
+						"syntax_rule": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Retrieve grammar rules, 0: Lucene syntax, 1: CQL syntax, Default value is 0.",
+						},
 					},
 				},
 			},
@@ -98,6 +104,13 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 				Description: "triggering conditions.",
 			},
 
+			"alarm_level": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.",
+			},
+
 			"trigger_count": {
 				Required:    true,
 				Type:        schema.TypeInt,
@@ -121,6 +134,7 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 
 			"status": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "whether to enable the alarm policy.",
 			},
@@ -133,6 +147,7 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 
 			"call_back": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "user define callback.",
@@ -212,13 +227,13 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_alarm.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = cls.NewCreateAlarmRequest()
 		response = cls.NewCreateAlarmResponse()
 		alarmId  string
 	)
+
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
@@ -230,21 +245,31 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 			if v, ok := dMap["topic_id"]; ok {
 				alarmTarget.TopicId = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["query"]; ok {
 				alarmTarget.Query = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["number"]; ok {
 				alarmTarget.Number = helper.IntInt64(v.(int))
 			}
+
 			if v, ok := dMap["start_time_offset"]; ok {
 				alarmTarget.StartTimeOffset = helper.IntInt64(v.(int))
 			}
+
 			if v, ok := dMap["end_time_offset"]; ok {
 				alarmTarget.EndTimeOffset = helper.IntInt64(v.(int))
 			}
+
 			if v, ok := dMap["logset_id"]; ok {
 				alarmTarget.LogsetId = helper.String(v.(string))
 			}
+
+			if v, ok := dMap["syntax_rule"]; ok {
+				alarmTarget.SyntaxRule = helper.IntUint64(v.(int))
+			}
+
 			request.AlarmTargets = append(request.AlarmTargets, &alarmTarget)
 		}
 	}
@@ -254,14 +279,21 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 		if v, ok := dMap["type"]; ok {
 			monitorTime.Type = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["time"]; ok {
 			monitorTime.Time = helper.IntInt64(v.(int))
 		}
+
 		request.MonitorTime = &monitorTime
 	}
 
 	if v, ok := d.GetOk("condition"); ok {
 		request.Condition = helper.String(v.(string))
+		request.AlarmLevel = helper.IntUint64(0)
+	}
+
+	if v, ok := d.GetOkExists("alarm_level"); ok {
+		request.AlarmLevel = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOkExists("trigger_count"); ok {
@@ -293,6 +325,7 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 		if v, ok := dMap["body"]; ok {
 			callBackInfo.Body = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["headers"]; ok {
 			headersSet := v.(*schema.Set).List()
 			for i := range headersSet {
@@ -300,6 +333,7 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 				callBackInfo.Headers = append(callBackInfo.Headers, &headers)
 			}
 		}
+
 		request.CallBack = &callBackInfo
 	}
 
@@ -310,12 +344,15 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 			if v, ok := dMap["name"]; ok {
 				analysisDimensional.Name = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["type"]; ok {
 				analysisDimensional.Type = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["content"]; ok {
 				analysisDimensional.Content = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["config_info"]; ok {
 				for _, item := range v.([]interface{}) {
 					configInfoMap := item.(map[string]interface{})
@@ -323,12 +360,15 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 					if v, ok := configInfoMap["key"]; ok {
 						alarmAnalysisConfig.Key = helper.String(v.(string))
 					}
+
 					if v, ok := configInfoMap["value"]; ok {
 						alarmAnalysisConfig.Value = helper.String(v.(string))
 					}
+
 					analysisDimensional.ConfigInfo = append(analysisDimensional.ConfigInfo, &alarmAnalysisConfig)
 				}
 			}
+
 			request.Analysis = append(request.Analysis, &analysisDimensional)
 		}
 	}
@@ -340,9 +380,11 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create cls alarm failed, reason:%+v", logId, err)
 		return err
@@ -368,13 +410,12 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_alarm.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	alarmId := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		alarmId = d.Id()
+	)
 
 	alarm, err := service.DescribeClsAlarmById(ctx, alarmId)
 	if err != nil {
@@ -420,6 +461,10 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 				alarmTargetsMap["logset_id"] = alarmTarget.LogsetId
 			}
 
+			if alarmTarget.SyntaxRule != nil {
+				alarmTargetsMap["syntax_rule"] = alarmTarget.SyntaxRule
+			}
+
 			alarmTargetsList = append(alarmTargetsList, alarmTargetsMap)
 		}
 
@@ -443,6 +488,10 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 
 	if alarm.Condition != nil {
 		_ = d.Set("condition", alarm.Condition)
+	}
+
+	if alarm.AlarmLevel != nil {
+		_ = d.Set("alarm_level", alarm.AlarmLevel)
 	}
 
 	if alarm.TriggerCount != nil {
@@ -528,6 +577,7 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return err
 	}
+
 	_ = d.Set("tags", tags)
 
 	return nil
@@ -537,17 +587,16 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_alarm.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		request = cls.NewModifyAlarmRequest()
+		alarmId = d.Id()
+	)
+
 	needChange := false
-
-	request := cls.NewModifyAlarmRequest()
-
-	alarmId := d.Id()
-
 	request.AlarmId = &alarmId
-
 	mutableArgs := []string{
-		"name", "alarm_targets", "monitor_time", "condition",
+		"name", "alarm_targets", "monitor_time", "condition", "alarm_level",
 		"trigger_count", "alarm_period", "alarm_notice_ids",
 		"status", "message_template", "call_back", "analysis",
 	}
@@ -560,7 +609,6 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if needChange {
-
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
@@ -572,21 +620,31 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 				if v, ok := dMap["topic_id"]; ok {
 					alarmTarget.TopicId = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["query"]; ok {
 					alarmTarget.Query = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["number"]; ok {
 					alarmTarget.Number = helper.IntInt64(v.(int))
 				}
+
 				if v, ok := dMap["start_time_offset"]; ok {
 					alarmTarget.StartTimeOffset = helper.IntInt64(v.(int))
 				}
+
 				if v, ok := dMap["end_time_offset"]; ok {
 					alarmTarget.EndTimeOffset = helper.IntInt64(v.(int))
 				}
+
 				if v, ok := dMap["logset_id"]; ok {
 					alarmTarget.LogsetId = helper.String(v.(string))
 				}
+
+				if v, ok := dMap["syntax_rule"]; ok {
+					alarmTarget.SyntaxRule = helper.IntUint64(v.(int))
+				}
+
 				request.AlarmTargets = append(request.AlarmTargets, &alarmTarget)
 			}
 		}
@@ -596,14 +654,21 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 			if v, ok := dMap["type"]; ok {
 				monitorTime.Type = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["time"]; ok {
 				monitorTime.Time = helper.IntInt64(v.(int))
 			}
+
 			request.MonitorTime = &monitorTime
 		}
 
 		if v, ok := d.GetOk("condition"); ok {
 			request.Condition = helper.String(v.(string))
+			request.AlarmLevel = helper.IntUint64(0)
+		}
+
+		if v, ok := d.GetOkExists("alarm_level"); ok {
+			request.AlarmLevel = helper.IntUint64(v.(int))
 		}
 
 		if v, ok := d.GetOkExists("trigger_count"); ok {
@@ -635,6 +700,7 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 			if v, ok := dMap["body"]; ok {
 				callBackInfo.Body = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["headers"]; ok {
 				headersSet := v.(*schema.Set).List()
 				for i := range headersSet {
@@ -642,6 +708,7 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 					callBackInfo.Headers = append(callBackInfo.Headers, &headers)
 				}
 			}
+
 			request.CallBack = &callBackInfo
 		}
 
@@ -652,12 +719,15 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 				if v, ok := dMap["name"]; ok {
 					analysisDimensional.Name = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["type"]; ok {
 					analysisDimensional.Type = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["content"]; ok {
 					analysisDimensional.Content = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["config_info"]; ok {
 					for _, item := range v.([]interface{}) {
 						configInfoMap := item.(map[string]interface{})
@@ -665,12 +735,15 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 						if v, ok := configInfoMap["key"]; ok {
 							alarmAnalysisConfig.Key = helper.String(v.(string))
 						}
+
 						if v, ok := configInfoMap["value"]; ok {
 							alarmAnalysisConfig.Value = helper.String(v.(string))
 						}
+
 						analysisDimensional.ConfigInfo = append(analysisDimensional.ConfigInfo, &alarmAnalysisConfig)
 					}
 				}
+
 				request.Analysis = append(request.Analysis, &analysisDimensional)
 			}
 		}
@@ -682,8 +755,10 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update cls alarm failed, reason:%+v", logId, err)
 			return err
@@ -709,11 +784,12 @@ func resourceTencentCloudClsAlarmDelete(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_alarm.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	alarmId := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		alarmId = d.Id()
+	)
 
 	if err := service.DeleteClsAlarmById(ctx, alarmId); err != nil {
 		return err

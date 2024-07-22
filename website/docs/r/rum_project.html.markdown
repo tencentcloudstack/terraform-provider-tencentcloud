@@ -14,15 +14,27 @@ Provides a resource to create a rum project
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_rum_project" "project" {
-  name             = "projectName"
-  instance_id      = "rum-pasZKEI3RLgakj"
+resource "tencentcloud_rum_taw_instance" "example" {
+  area_id             = "1"
+  charge_type         = "1"
+  data_retention_days = "30"
+  instance_name       = "tf-example"
+  instance_desc       = "desc."
+
+  tags = {
+    createdBy = "terraform"
+  }
+}
+
+resource "tencentcloud_rum_project" "example" {
+  name             = "tf-example"
+  instance_id      = tencentcloud_rum_taw_instance.example.id
   rate             = "100"
   enable_url_group = "0"
   type             = "web"
-  repo             = ""
+  repo             = "https://github.com/xxx"
   url              = "iac-tf.com"
-  desc             = "projectDesc-1"
+  desc             = "desc."
 }
 ```
 
@@ -35,7 +47,7 @@ The following arguments are supported:
 * `name` - (Required, String) Name of the created project (required and up to 200 characters).
 * `rate` - (Required, String) Project sampling rate (greater than or equal to 0).
 * `type` - (Required, String) Project type (valid values: `web`, `mp`, `android`, `ios`, `node`, `hippy`, `weex`, `viola`, `rn`).
-* `desc` - (Optional, String) 	Description of the created project (optional and up to 1,000 characters).
+* `desc` - (Optional, String) Description of the created project (optional and up to 1,000 characters).
 * `repo` - (Optional, String) Repository address of the project (optional and up to 256 characters).
 * `url` - (Optional, String) Webpage address of the project (optional and up to 256 characters).
 
@@ -44,7 +56,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_time` - Creata Time.
+* `create_time` - Create Time.
 * `creator` - Creator ID.
 * `instance_key` - Instance key.
 * `instance_name` - Instance name.
@@ -57,6 +69,6 @@ In addition to all arguments above, the following attributes are exported:
 
 rum project can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_rum_project.project project_id
+$ terraform import tencentcloud_rum_project.example 139422
 ```
 

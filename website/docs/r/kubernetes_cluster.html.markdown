@@ -101,7 +101,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = local.first_subnet_id
-    img_id                     = local.image_id
+    # img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -492,7 +492,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = local.first_subnet_id
-    img_id                     = local.image_id
+    # img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -596,10 +596,10 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-    img_id                     = "img-rkiynh11"
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    user_data                  = "dGVzdA=="
+    # img_id                     = "img-rkiynh11"
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
     key_ids = "skey-11112222"
   }
@@ -816,7 +816,7 @@ The following arguments are supported:
 * `cluster_max_service_num` - (Optional, Int, ForceNew) The maximum number of services in the cluster. Default is 256. The range is from 32 to 32768. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_name` - (Optional, String) Name of the cluster.
 * `cluster_os_type` - (Optional, String, ForceNew) Image type of the cluster os, the available values include: 'GENERAL'. Default is 'GENERAL'.
-* `cluster_os` - (Optional, String, ForceNew) Operating system of the cluster, the available values include: 'centos7.6.0_x64','ubuntu18.04.1x86_64','tlinux2.4x86_64'. Default is 'tlinux2.4x86_64'.
+* `cluster_os` - (Optional, String, ForceNew) Cluster operating system, supports setting public images (the field passes the corresponding image Name) and custom images (the field passes the corresponding image ID). For details, please refer to: https://cloud.tencent.com/document/product/457/68289.
 * `cluster_subnet_id` - (Optional, String, ForceNew) Subnet ID of the cluster, such as: subnet-b3p7d7q5.
 * `cluster_version` - (Optional, String) Version of the cluster. Use `tencentcloud_kubernetes_available_cluster_versions` to get the upgradable cluster version.
 * `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher.Default is 'docker'.
@@ -847,7 +847,7 @@ The following arguments are supported:
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 * `upgrade_instances_follow_cluster` - (Optional, Bool) Indicates whether upgrade all instances when cluster_version change. Default is false.
 * `vpc_cni_type` - (Optional, String) Distinguish between shared network card multi-IP mode and independent network card mode. Fill in `tke-route-eni` for shared network card multi-IP mode and `tke-direct-eni` for independent network card mode. The default is shared network card mode. When it is necessary to turn off the vpc-cni container network capability, both `eni_subnet_ids` and `vpc_cni_type` must be set to empty.
-* `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
+* `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_scale_worker'.
 
 The `auth_options` object supports the following:
 
@@ -935,7 +935,7 @@ The `master_config` object supports the following:
 * `enhanced_security_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
 * `hostname` - (Optional, String, ForceNew) The host name of the attached instance. Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).
 * `hpc_cluster_id` - (Optional, String) Id of cvm hpc cluster.
-* `img_id` - (Optional, String) The valid image id, format of img-xxx.
+* `img_id` - (Optional, String) The valid image id, format of img-xxx. Note: `img_id` will be replaced with the image corresponding to TKE `cluster_os`.
 * `instance_charge_type_prepaid_period` - (Optional, Int, ForceNew) The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String, ForceNew) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
@@ -977,7 +977,7 @@ The `worker_config` object supports the following:
 * `enhanced_security_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
 * `hostname` - (Optional, String, ForceNew) The host name of the attached instance. Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).
 * `hpc_cluster_id` - (Optional, String) Id of cvm hpc cluster.
-* `img_id` - (Optional, String) The valid image id, format of img-xxx.
+* `img_id` - (Optional, String) The valid image id, format of img-xxx. Note: `img_id` will be replaced with the image corresponding to TKE `cluster_os`.
 * `instance_charge_type_prepaid_period` - (Optional, Int, ForceNew) The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String, ForceNew) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
@@ -1015,4 +1015,12 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_state` - State of the cvm.
   * `lan_ip` - LAN IP of the cvm.
 
+
+## Import
+
+tke cluster can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_cluster.test cls-xxx
+```
 

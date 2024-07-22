@@ -18,16 +18,42 @@ func TestAccTencentCloudCvmRebootInstanceResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCvmRebootInstance,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cvm_reboot_instance.reboot_instance", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_reboot_instance.reboot", "id"),
+				),
 			},
 		},
 	})
 }
 
-const testAccCvmRebootInstance = tcacctest.DefaultRebootCvmVariable + `
+const testAccCvmRebootInstance = `
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+data "tencentcloud_instance_types" "default" {
+  memory_size = 2
+  exclude_sold_out = true
+  filter {
+    name = "instance-family"
+    values = ["SA2","SA3","SA4","SA5","S2","S3"]
+  }
+  filter {
+    name = "zone"
+    values = ["ap-guangzhou-7"]
+  }
+  cpu_core_count = 2
+}
+resource "tencentcloud_instance" "test_cvm" {
+  image_id = data.tencentcloud_images.default.images.0.image_id
+  availability_zone = "ap-guangzhou-7"
+  instance_type = "SA2.MEDIUM2"
+  orderly_security_groups = ["sg-5275dorp"]
+  instance_charge_type = "POSTPAID_BY_HOUR"
+}
 
-resource "tencentcloud_cvm_reboot_instance" "reboot_instance" {
-  instance_id = var.cvm_id
-  stop_type = "SOFT_FIRST"
+resource tencentcloud_cvm_reboot_instance reboot {
+  instance_id = tencentcloud_instance.test_cvm.id
+  stop_type = "SOFT"
 }
 `

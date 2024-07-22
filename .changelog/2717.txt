@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_subnet: add params `cdc_id`
+```
+
+```release-note:enhancement
+data_source/tencentcloud_subnet: add params `cdc_id`
+```
+
+```release-note:enhancement
+data_source/tencentcloud_vpc_subnets: add params `cdc_id`
+```

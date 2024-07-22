@@ -18,7 +18,7 @@ data "tencentcloud_gaap_proxy_groups" "proxy_groups" {
   project_id = 0
   filters {
     name   = "GroupId"
-    values = ["lg-8h33uhwd"]
+    values = ["lg-2foz7wjh"]
   }
 }
 ```

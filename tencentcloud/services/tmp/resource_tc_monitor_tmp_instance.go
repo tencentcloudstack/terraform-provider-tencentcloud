@@ -18,8 +18,8 @@ import (
 
 func ResourceTencentCloudMonitorTmpInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorTmpInstanceRead,
 		Create: resourceTencentCloudMonitorTmpInstanceCreate,
+		Read:   resourceTencentCloudMonitorTmpInstanceRead,
 		Update: resourceTencentCloudMonitorTmpInstanceUpdate,
 		Delete: resourceTencentCloudMonitorTmpInstanceDelete,
 		Importer: &schema.ResourceImporter{
@@ -47,7 +47,7 @@ func ResourceTencentCloudMonitorTmpInstance() *schema.Resource {
 			"data_retention_time": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Data retention time.",
+				Description: "Data retention time(in days). Value range: 15, 30, 45, 90, 180, 360, 720.",
 			},
 
 			"zone": {
@@ -93,9 +93,8 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = monitor.NewCreatePrometheusMultiTenantInstancePostPayModeRequest()
 		response *monitor.CreatePrometheusMultiTenantInstancePostPayModeResponse
 	)
@@ -112,7 +111,7 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 		request.SubnetId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("data_retention_time"); ok {
+	if v, ok := d.GetOkExists("data_retention_time"); ok {
 		request.DataRetentionTime = helper.IntInt64(v.(int))
 	}
 
@@ -128,6 +127,7 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
@@ -138,7 +138,6 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	tmpInstanceId := *response.Response.InstanceId
-
 	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
@@ -147,14 +146,18 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if *instance.InstanceStatus == 2 {
 			return nil
 		}
+
 		if *instance.InstanceStatus == 3 {
 			return resource.NonRetryableError(fmt.Errorf("tmpInstance status is %v, operate failed.", *instance.InstanceStatus))
 		}
+
 		return resource.RetryableError(fmt.Errorf("tmpInstance status is %v, retry...", *instance.InstanceStatus))
 	})
+
 	if err != nil {
 		return err
 	}
@@ -167,6 +170,7 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 			return err
 		}
 	}
+
 	d.SetId(tmpInstanceId)
 	return resourceTencentCloudMonitorTmpInstanceRead(d, meta)
 }
@@ -175,15 +179,14 @@ func resourceTencentCloudMonitorTmpInstanceRead(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmpInstance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	tmpInstanceId := d.Id()
-
 	tmpInstance, err := service.DescribeMonitorTmpInstance(ctx, tmpInstanceId)
-
 	if err != nil {
 		return err
 	}
@@ -236,8 +239,8 @@ func resourceTencentCloudMonitorTmpInstanceRead(d *schema.ResourceData, meta int
 	if err != nil {
 		return err
 	}
-	_ = d.Set("tags", tags)
 
+	_ = d.Set("tags", tags)
 	return nil
 }
 
@@ -245,16 +248,11 @@ func resourceTencentCloudMonitorTmpInstanceUpdate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	request := monitor.NewModifyPrometheusInstanceAttributesRequest()
-
-	request.InstanceId = helper.String(d.Id())
-
-	if v, ok := d.GetOk("instance_name"); ok {
-		request.InstanceName = helper.String(v.(string))
-	}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request = monitor.NewModifyPrometheusInstanceAttributesRequest()
+	)
 
 	if d.HasChange("vpc_id") {
 		return fmt.Errorf("`vpc_id` do not support change now.")
@@ -264,14 +262,19 @@ func resourceTencentCloudMonitorTmpInstanceUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("`subnet_id` do not support change now.")
 	}
 
+	if d.HasChange("zone") {
+		return fmt.Errorf("`zone` do not support change now.")
+	}
+
+	request.InstanceId = helper.String(d.Id())
+	if v, ok := d.GetOk("instance_name"); ok {
+		request.InstanceName = helper.String(v.(string))
+	}
+
 	if d.HasChange("data_retention_time") {
 		if v, ok := d.GetOk("data_retention_time"); ok {
 			request.DataRetentionTime = helper.IntInt64(v.(int))
 		}
-	}
-
-	if d.HasChange("zone") {
-		return fmt.Errorf("`zone` do not support change now.")
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -282,6 +285,7 @@ func resourceTencentCloudMonitorTmpInstanceUpdate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
 
@@ -307,11 +311,12 @@ func resourceTencentCloudMonitorTmpInstanceDelete(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	tmpInstanceId := d.Id()
+	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service       = svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		tmpInstanceId = d.Id()
+	)
 
 	if err := service.IsolateMonitorTmpInstanceById(ctx, tmpInstanceId); err != nil {
 		return err
@@ -322,14 +327,18 @@ func resourceTencentCloudMonitorTmpInstanceDelete(d *schema.ResourceData, meta i
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if *instance.InstanceStatus == 6 {
 			return nil
 		}
+
 		if *instance.InstanceStatus == 3 {
 			return resource.NonRetryableError(fmt.Errorf("tmpInstance status is %v, operate failed.", *instance.InstanceStatus))
 		}
+
 		return resource.RetryableError(fmt.Errorf("tmpInstance status is %v, retry...", *instance.InstanceStatus))
 	})
+
 	if err != nil {
 		return err
 	}
@@ -337,5 +346,6 @@ func resourceTencentCloudMonitorTmpInstanceDelete(d *schema.ResourceData, meta i
 	if err := service.DeleteMonitorTmpInstanceById(ctx, tmpInstanceId); err != nil {
 		return err
 	}
+
 	return nil
 }

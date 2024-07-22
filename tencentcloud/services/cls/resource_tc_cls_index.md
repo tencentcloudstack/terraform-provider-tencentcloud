@@ -25,13 +25,17 @@ resource "tencentcloud_cls_topic" "example" {
   }
 }
 
+locals {
+  tokenizer_value = "@&?|#()='\",;:<>[]{}"
+}
+
 resource "tencentcloud_cls_index" "example" {
   topic_id = tencentcloud_cls_topic.example.id
 
   rule {
     full_text {
       case_sensitive = true
-      tokenizer      = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
+      tokenizer      = local.tokenizer_value
       contain_z_h    = true
     }
 
@@ -42,7 +46,7 @@ resource "tencentcloud_cls_index" "example" {
         value {
           contain_z_h = true
           sql_flag    = true
-          tokenizer   = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
+          tokenizer   = local.tokenizer_value
           type        = "text"
         }
       }
@@ -52,7 +56,7 @@ resource "tencentcloud_cls_index" "example" {
         value {
           contain_z_h = true
           sql_flag    = true
-          tokenizer   = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
+          tokenizer   = local.tokenizer_value
           type        = "text"
         }
       }
@@ -65,7 +69,7 @@ resource "tencentcloud_cls_index" "example" {
         value {
           contain_z_h = true
           sql_flag    = true
-          tokenizer   = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
+          tokenizer   = local.tokenizer_value
           type        = "text"
         }
       }
