@@ -198,7 +198,7 @@ func Provider() *schema.Provider {
 			//internal version: replace enableBpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			//internal version: replace enableBpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			"assume_role": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
 				Description: "The `assume_role` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
@@ -237,23 +237,23 @@ func Provider() *schema.Provider {
 							Type:          schema.TypeString,
 							Optional:      true,
 							DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SAML_ASSERTION, nil),
-							ConflictsWith: []string{"web_identity_token"},
-							RequiredWith:  []string{"principal_arn"},
+							ConflictsWith: []string{"assume_role.0.web_identity_token"},
+							RequiredWith:  []string{"assume_role.0.principal_arn"},
 							Description:   "SAML assertion information encoded in base64. And it can't be used with `web_identity_token` together.",
 						},
 						"principal_arn": {
 							Type:          schema.TypeString,
 							Optional:      true,
 							DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN, nil),
-							ConflictsWith: []string{"web_identity_token"},
-							RequiredWith:  []string{"saml_assertion"},
+							ConflictsWith: []string{"assume_role.0.web_identity_token"},
+							RequiredWith:  []string{"assume_role.0.saml_assertion"},
 							Description:   "Player Access Description Name. And it can't be used with `web_identity_token` together.",
 						},
 						"web_identity_token": {
 							Type:          schema.TypeString,
 							Optional:      true,
 							DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN, nil),
-							ConflictsWith: []string{"saml_assertion", "principal_arn"},
+							ConflictsWith: []string{"assume_role.0.saml_assertion", "assume_role.0.principal_arn"},
 							Description:   "OIDC token issued by IdP. And it can't be used with `saml_assertion` or `principal_arn` together.",
 						},
 					},
@@ -2128,12 +2128,27 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionDuration = 7200
 		}
 
-		_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+		envSamlAssertion := os.Getenv(PROVIDER_ASSUME_ROLE_SAML_ASSERTION)
+		envPrincipalArn := os.Getenv(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN)
+		envWebIdentityToken := os.Getenv(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN)
+
+		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
+			// use assume role
+			_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+		} else if envSamlAssertion != "" && envPrincipalArn != "" {
+			// use assume role with saml
+			_ = genClientWithSamlSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envSamlAssertion, envPrincipalArn)
+		} else if envWebIdentityToken != "" {
+			// use assume role with oidc
+			_ = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken)
+		} else {
+			return nil, fmt.Errorf("get `assume_role` from env error.\n")
+		}
 	}
 
 	// get assume role from tf
 	if v, ok := d.GetOk("assume_role"); ok {
-		assumeRoleList := v.(*schema.Set).List()
+		assumeRoleList := v.([]interface{})
 		if len(assumeRoleList) == 1 {
 			// assume role
 			assumeRole := assumeRoleList[0].(map[string]interface{})
@@ -2157,13 +2172,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 				// use assume role with oidc
 				_ = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken)
 			} else {
-				return nil, fmt.Errorf("`assume_role` params error.")
+				return nil, fmt.Errorf("get `assume_role` params error.\n")
 			}
 		}
 	}
 
 	if secretId == "" || secretKey == "" {
-		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.")
+		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.\n")
 	}
 
 	return &tcClient, nil
