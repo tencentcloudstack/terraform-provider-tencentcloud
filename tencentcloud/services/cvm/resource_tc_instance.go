@@ -238,6 +238,11 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
 			},
+			"system_disk_resize_online": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Resize online.",
+			},
 			"data_disks": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -1307,6 +1312,9 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		req.SystemDisk = &cvm.SystemDisk{
 			DiskSize: helper.IntInt64(size),
 			DiskType: &diskType,
+		}
+		if v, ok := d.GetOkExists("system_disk_resize_online"); ok {
+			req.ResizeOnline = helper.Bool(v.(bool))
 		}
 
 		err := cvmService.ResizeInstanceDisks(ctx, req)

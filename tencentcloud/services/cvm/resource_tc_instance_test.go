@@ -266,6 +266,141 @@ resource "tencentcloud_instance" "cvm_basic" {
 
 `
 
+func TestAccTencentCloudInstance_SystemDiskResizeOnline(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceResource_SystemDiskResizeOnline,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.cvm_system_disk_resize_online"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.cvm_system_disk_resize_online", "system_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.cvm_system_disk_resize_online", "system_disk_size", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.cvm_system_disk_resize_online", "instance_status", "RUNNING"),
+				),
+			},
+			{
+				Config: testAccCvmInstanceResource_SystemDiskResizeOnlineUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.cvm_system_disk_resize_online"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.cvm_system_disk_resize_online", "system_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.cvm_system_disk_resize_online", "system_disk_size", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.cvm_system_disk_resize_online", "instance_status", "RUNNING"),
+				),
+			},
+		},
+	})
+}
+
+const testAccCvmInstanceResource_SystemDiskResizeOnline = `
+
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_type = ["PUBLIC_IMAGE"]
+    image_name_regex = "Final"
+}
+data "tencentcloud_images" "testing" {
+    image_type = ["PUBLIC_IMAGE"]
+}
+data "tencentcloud_instance_types" "default" {
+    memory_size = 2
+    exclude_sold_out = true
+    
+    filter {
+        name = "instance-family"
+        values = ["S1","S2","S3","S4","S5"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-7"]
+    }
+    cpu_core_count = 2
+}
+resource "tencentcloud_vpc" "vpc" {
+    name = "cvm-resize-online-vpc"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+    availability_zone = "ap-guangzhou-7"
+    vpc_id = tencentcloud_vpc.vpc.id
+    name = "cvm-resize-online-subnet"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_instance" "cvm_system_disk_resize_online" {
+    instance_name = "tf-system-disk-resize-online"
+    availability_zone = "ap-guangzhou-7"
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    vpc_id = tencentcloud_vpc.vpc.id
+    
+    lifecycle {
+        ignore_changes = [instance_type]
+    }
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+    subnet_id = tencentcloud_subnet.subnet.id
+    system_disk_type = "CLOUD_PREMIUM"
+    system_disk_size = 100
+    project_id = 0
+}
+`
+
+const testAccCvmInstanceResource_SystemDiskResizeOnlineUpdate = `
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_type = ["PUBLIC_IMAGE"]
+    image_name_regex = "Final"
+}
+data "tencentcloud_images" "testing" {
+    image_type = ["PUBLIC_IMAGE"]
+}
+data "tencentcloud_instance_types" "default" {
+    memory_size = 2
+    exclude_sold_out = true
+    
+    filter {
+        name = "instance-family"
+        values = ["S1","S2","S3","S4","S5"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-7"]
+    }
+    cpu_core_count = 2
+}
+resource "tencentcloud_vpc" "vpc" {
+    name = "cvm-resize-online-vpc"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+    availability_zone = "ap-guangzhou-7"
+    vpc_id = tencentcloud_vpc.vpc.id
+    name = "cvm-resize-online-subnet"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_instance" "cvm_system_disk_resize_online" {
+    instance_name = "tf-system-disk-resize-online"
+    availability_zone = "ap-guangzhou-7"
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    vpc_id = tencentcloud_vpc.vpc.id
+    
+    lifecycle {
+        ignore_changes = [instance_type]
+    }
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+    subnet_id = tencentcloud_subnet.subnet.id
+    system_disk_type = "CLOUD_PREMIUM"
+    system_disk_size = 200
+    system_disk_resize_online = true
+    project_id = 0
+}
+`
+
 func TestAccTencentCloudInstanceResourcePrepaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
