@@ -1993,17 +1993,6 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	//var getProviderConfig = func(str string, key string) string {
-	//	if str == "" {
-	//		value, err := getConfigFromProfile(d, key)
-	//		if err == nil && value != nil {
-	//			str = value.(string)
-	//		}
-	//	}
-	//
-	//	return str
-	//}
-
 	var getProviderConfig = func(key string) string {
 		var str string
 		value, err := getConfigFromProfile(d, key)
@@ -2037,6 +2026,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if v, ok := d.GetOk("security_token"); ok {
 		securityToken = v.(string)
+	} else {
+		securityToken = getProviderConfig("token")
 	}
 
 	if v, ok := d.GetOk("region"); ok {
