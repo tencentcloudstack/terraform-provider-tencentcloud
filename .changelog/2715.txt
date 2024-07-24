@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_cbs_storage: add params `dedicated_cluster_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_cbs_storage_set: add params `dedicated_cluster_id`
+```
+
+```release-note:enhancement
+data_source/tencentcloud_cbs_storages: add params `dedicated_cluster_id`
+```
+
+```release-note:enhancement
+data_source/tencentcloud_cbs_storages_set: add params `dedicated_cluster_id`
+```
