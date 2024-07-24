@@ -127,7 +127,7 @@ The `placement` object supports the following:
 
 * `zone` - (Required, String) The available zone ID of the instance.
 * `host_ids` - (Optional, Set) The CDH ID list of the instance(input).
-* `host_ips` - (Optional, Set) Specify the host machine ip.
+* `host_ips` - (Optional, Set, **Deprecated**) It has been deprecated from version 1.81.108. Specify the host machine ip.
 * `project_id` - (Optional, Int) The project ID of the instance.
 
 The `security_service` object of `enhanced_service` supports the following:
