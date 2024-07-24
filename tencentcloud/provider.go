@@ -2223,6 +2223,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionName = assumeRole["session_name"].(string)
 			assumeRoleSessionDuration = assumeRole["session_duration"].(int)
 			assumeRolePolicy = assumeRole["policy"].(string)
+
 			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 		}
 	}
