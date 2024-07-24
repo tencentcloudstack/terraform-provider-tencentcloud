@@ -977,7 +977,6 @@ func NewCreateDomainErrorPageInfoResponse() (response *CreateDomainErrorPageInfo
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DOMAINALREADYEXISTED = "FailedOperation.DomainAlreadyExisted"
 //  FAILEDOPERATION_INVALIDLISTENERPROTOCOL = "FailedOperation.InvalidListenerProtocol"
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
@@ -1001,7 +1000,6 @@ func (c *Client) CreateDomainErrorPageInfo(request *CreateDomainErrorPageInfoReq
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DOMAINALREADYEXISTED = "FailedOperation.DomainAlreadyExisted"
 //  FAILEDOPERATION_INVALIDLISTENERPROTOCOL = "FailedOperation.InvalidListenerProtocol"
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
@@ -4701,7 +4699,6 @@ func NewDescribeProxyDetailResponse() (response *DescribeProxyDetailResponse) {
 //  FAILEDOPERATION_ACTIONISDOING = "FailedOperation.ActionIsDoing"
 //  FAILEDOPERATION_ACTIONOPERATETOOQUICKLY = "FailedOperation.ActionOperateTooQuickly"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
-//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4726,7 +4723,6 @@ func (c *Client) DescribeProxyDetail(request *DescribeProxyDetailRequest) (respo
 //  FAILEDOPERATION_ACTIONISDOING = "FailedOperation.ActionIsDoing"
 //  FAILEDOPERATION_ACTIONOPERATETOOQUICKLY = "FailedOperation.ActionOperateTooQuickly"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
-//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4779,7 +4775,6 @@ func NewDescribeProxyGroupDetailsResponse() (response *DescribeProxyGroupDetails
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4801,7 +4796,6 @@ func (c *Client) DescribeProxyGroupDetails(request *DescribeProxyGroupDetailsReq
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5847,79 +5841,6 @@ func (c *Client) DescribeTCPListenersWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeTCPListenersResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeTaskStatusRequest() (request *DescribeTaskStatusRequest) {
-    request = &DescribeTaskStatusRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("gaap", APIVersion, "DescribeTaskStatus")
-    
-    
-    return
-}
-
-func NewDescribeTaskStatusResponse() (response *DescribeTaskStatusResponse) {
-    response = &DescribeTaskStatusResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeTaskStatus
-// 查询异步任务执行状态
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DescribeTaskStatus(request *DescribeTaskStatusRequest) (response *DescribeTaskStatusResponse, err error) {
-    return c.DescribeTaskStatusWithContext(context.Background(), request)
-}
-
-// DescribeTaskStatus
-// 查询异步任务执行状态
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *DescribeTaskStatusRequest) (response *DescribeTaskStatusResponse, err error) {
-    if request == nil {
-        request = NewDescribeTaskStatusRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeTaskStatus require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeTaskStatusResponse()
     err = c.Send(request, response)
     return
 }
@@ -8009,83 +7930,6 @@ func (c *Client) SetAuthenticationWithContext(ctx context.Context, request *SetA
     request.SetContext(ctx)
     
     response = NewSetAuthenticationResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewSetTlsVersionRequest() (request *SetTlsVersionRequest) {
-    request = &SetTlsVersionRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("gaap", APIVersion, "SetTlsVersion")
-    
-    
-    return
-}
-
-func NewSetTlsVersionResponse() (response *SetTlsVersionResponse) {
-    response = &SetTlsVersionResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// SetTlsVersion
-// 设置监听器TLS配置
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION_INSTANCESTATUSNOTINRUNING = "FailedOperation.InstanceStatusNotInRuning"
-//  FAILEDOPERATION_NOTSUPPORTSCALAR = "FailedOperation.NotSupportScalar"
-//  FAILEDOPERATION_OPERATELIMITNUMOFLISTENER = "FailedOperation.OperateLimitNumofListener"
-//  FAILEDOPERATION_SECRETVALIDATEFAILED = "FailedOperation.SecretValidateFailed"
-//  FAILEDOPERATION_USERNOTAUTHENTICATED = "FailedOperation.UserNotAuthenticated"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_CONFLICTPARAMETERS = "InvalidParameter.ConflictParameters"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_CERTIFICATECONTENTNOTMATCHKEY = "InvalidParameterValue.CertificateContentNotMatchKey"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION_CROSSBORDERINISOLATING = "UnauthorizedOperation.CrossBorderInIsolating"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) SetTlsVersion(request *SetTlsVersionRequest) (response *SetTlsVersionResponse, err error) {
-    return c.SetTlsVersionWithContext(context.Background(), request)
-}
-
-// SetTlsVersion
-// 设置监听器TLS配置
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION_INSTANCESTATUSNOTINRUNING = "FailedOperation.InstanceStatusNotInRuning"
-//  FAILEDOPERATION_NOTSUPPORTSCALAR = "FailedOperation.NotSupportScalar"
-//  FAILEDOPERATION_OPERATELIMITNUMOFLISTENER = "FailedOperation.OperateLimitNumofListener"
-//  FAILEDOPERATION_SECRETVALIDATEFAILED = "FailedOperation.SecretValidateFailed"
-//  FAILEDOPERATION_USERNOTAUTHENTICATED = "FailedOperation.UserNotAuthenticated"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_CONFLICTPARAMETERS = "InvalidParameter.ConflictParameters"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_CERTIFICATECONTENTNOTMATCHKEY = "InvalidParameterValue.CertificateContentNotMatchKey"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION_CROSSBORDERINISOLATING = "UnauthorizedOperation.CrossBorderInIsolating"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) SetTlsVersionWithContext(ctx context.Context, request *SetTlsVersionRequest) (response *SetTlsVersionResponse, err error) {
-    if request == nil {
-        request = NewSetTlsVersionRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("SetTlsVersion require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewSetTlsVersionResponse()
     err = c.Send(request, response)
     return
 }
