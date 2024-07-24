@@ -34,8 +34,7 @@ provider "tencentcloud" {
 }
 
 # Get availability zones
-data "tencentcloud_availability_zones" "default" {
-}
+data "tencentcloud_availability_zones" "default" {}
 
 # Get availability images
 data "tencentcloud_images" "default" {
@@ -98,6 +97,8 @@ The following methods are supported, in this order, and explained below:
 - Static credentials
 - Environment variables
 - Assume role
+- Assume role with SAML
+- Assume role with OIDC
 - Shared credentials
 
 ### Static credentials
@@ -124,8 +125,7 @@ You can provide your credentials via `TENCENTCLOUD_SECRET_ID` and `TENCENTCLOUD_
 representing your TencentCloud Secret Id and Secret Key respectively. `TENCENTCLOUD_REGION` is also used, if applicable:
 
 ```hcl
-provider "tencentcloud" {
-}
+provider "tencentcloud" {}
 ```
 
 Usage:
@@ -139,7 +139,7 @@ $ terraform plan
 
 ### Assume role
 
-If provided with an assume role, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration` and `assume_role_policy`(optional) in-line in the tencentcloud provider block:
+If provided with an assume role, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration` and `policy`(optional) in-line in the tencentcloud provider block:
 
 Usage:
 
@@ -158,7 +158,7 @@ provider "tencentcloud" {
 }
 ```
 
-The `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` and `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variables.
+The `role_arn`, `session_name`, `session_duration` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` and `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variables.
 
 Usage:
 
@@ -169,6 +169,70 @@ $ export TENCENTCLOUD_REGION="ap-guangzhou"
 $ export TENCENTCLOUD_ASSUME_ROLE_ARN="my-role-arn"
 $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME="my-session-name"
 $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
+$ terraform plan
+```
+
+### Assume role with SAML
+
+If provided with an assume role with SAML, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration`, `saml_assertion` and `principal_arn` in-line in the tencentcloud provider block:
+
+-> **Note:** Assume-role-with-SAML is a no-AK auth type, and there is no need setting secret_id and secret_key while using it.
+
+Usage:
+
+```hcl
+provider "tencentcloud" {
+  assume_role_with_saml {
+    role_arn         = "my-role-arn"
+    session_name     = "my-session-name"
+    session_duration = 3600
+    saml_assertion   = "my-saml-assertion"
+    principal_arn    = "my-principal-arn"
+  }
+}
+```
+
+The `role_arn`, `session_name`, `session_duration`, `saml_assertion`, `principal_arn` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`, `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION` and `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN` environment variables.
+
+Usage:
+
+```shell
+$ export TENCENTCLOUD_ASSUME_ROLE_ARN="my-role-arn"
+$ export TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME="my-session-name"
+$ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
+$ export TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION="my-saml-assertion"
+$ export TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN="my-principal-arn"
+$ terraform plan
+```
+
+### Assume role with OIDC
+
+If provided with an assume role with OIDC, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration` and `web_identity_token` in-line in the tencentcloud provider block:
+
+-> **Note:** Assume-role-with-OIDC is a no-AK auth type, and there is no need setting secret_id and secret_key while using it.
+
+Usage:
+
+```hcl
+provider "tencentcloud" {
+  assume_role_with_web_identity {
+    role_arn           = "my-role-arn"
+    session_name       = "my-session-name"
+    session_duration   = 3600
+    web_identity_token = "my-web-identity-token"
+  }
+}
+```
+
+The `role_arn`, `session_name`, `session_duration`, `web_identity_token` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` and `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` environment variables.
+
+Usage:
+
+```shell
+$ export TENCENTCLOUD_SECRET_ID="my-secret-id"
+$ export TENCENTCLOUD_SECRET_KEY="my-secret-key"
+$ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
+$ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN="my-web-identity-token"
 $ terraform plan
 ```
 
@@ -207,6 +271,8 @@ In addition to generic provider arguments (e.g. alias and version), the followin
 * `shared_credentials_dir` - (Optional) The directory of the shared credentials. It can also be sourced from the `TENCENTCLOUD_SHARED_CREDENTIALS_DIR` environment variable. If not set this defaults to ~/.tccli.
 * `profile` - (Optional) The profile name as set in the shared credentials. It can also be sourced from the `TENCENTCLOUD_PROFILE` environment variable. If not set, the default profile created with `tccli configure` will be used.
 * `assume_role` - (Optional, Available in 1.33.1+) An `assume_role` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role` block may be in the configuration.
+* `assume_role_with_saml` - (Optional, Available in 1.81.111+) An `assume_role_with_saml` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role_with_saml` block may be in the configuration.
+* `assume_role_with_web_identity` - (Optional, Available in 1.81.111+) An `assume_role_with_web_identity` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role_with_web_identity` block may be in the configuration.
 * `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.
 * `domain` - (Optional, Available in 1.37.0+) The root domain of the API request, Default is `tencentcloudapi.com`. 
 
@@ -215,3 +281,16 @@ The nested `assume_role` block supports the following:
 * `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
 * `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
 * `policy` - (Optional) A more restrictive policy to apply to the temporary credentials. This gives you a way to further restrict the permissions for the resulting temporary security credentials. You cannot use the passed policy to grant permissions that are in excess of those allowed by the access policy of the role that is being assumed.
+
+The nested `assume_role_with_saml` block supports the following:
+* `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.
+* `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
+* `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
+* `saml_assertion` - (Required) SAML assertion information encoded in base64. It can be sourced from the `PROVIDER_ASSUME_ROLE_SAML_ASSERTION`.
+* `principal_arn` - (Required) Player Access Description Name. It can be sourced from the `PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN`.
+
+The nested `assume_role_with_web_identity` block supports the following:
+* `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.
+* `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
+* `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
+* `web_identity_token` - (Required) OIDC token issued by IdP. It can be sourced from the `PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.

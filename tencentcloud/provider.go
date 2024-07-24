@@ -233,28 +233,93 @@ func Provider() *schema.Provider {
 							Optional:    true,
 							Description: "A more restrictive policy when making the AssumeRole call. Its content must not contains `principal` elements. Notice: more syntax references, please refer to: [policies syntax logic](https://intl.cloud.tencent.com/document/product/598/10603).",
 						},
+					},
+				},
+			},
+			"assume_role_with_saml": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      1,
+				ConflictsWith: []string{"assume_role_with_web_identity"},
+				Description:   "The `assume_role_with_saml` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
 						"saml_assertion": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SAML_ASSERTION, nil),
-							ConflictsWith: []string{"assume_role.0.web_identity_token"},
-							RequiredWith:  []string{"assume_role.0.principal_arn"},
-							Description:   "SAML assertion information encoded in base64. And it can't be used with `web_identity_token` together.",
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SAML_ASSERTION, nil),
+							Description: "SAML assertion information encoded in base64. It can be sourced from the `PROVIDER_ASSUME_ROLE_SAML_ASSERTION`.",
 						},
 						"principal_arn": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN, nil),
-							ConflictsWith: []string{"assume_role.0.web_identity_token"},
-							RequiredWith:  []string{"assume_role.0.saml_assertion"},
-							Description:   "Player Access Description Name. And it can't be used with `web_identity_token` together.",
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN, nil),
+							Description: "Player Access Description Name. It can be sourced from the `PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN`.",
 						},
+						"role_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
+						"session_duration": {
+							Type:     schema.TypeInt,
+							Required: true,
+							DefaultFunc: func() (interface{}, error) {
+								if v := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); v != "" {
+									return strconv.Atoi(v)
+								}
+								return 7200, nil
+							},
+							ValidateFunc: tccommon.ValidateIntegerInRange(0, 43200),
+							Description:  "The duration of the session when making the AssumeRoleWithSAML call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
+						},
+					},
+				},
+			},
+			"assume_role_with_web_identity": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      1,
+				ConflictsWith: []string{"assume_role_with_saml"},
+				Description:   "The `assume_role_with_web_identity` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
 						"web_identity_token": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN, nil),
-							ConflictsWith: []string{"assume_role.0.saml_assertion", "assume_role.0.principal_arn"},
-							Description:   "OIDC token issued by IdP. And it can't be used with `saml_assertion` or `principal_arn` together.",
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN, nil),
+							Description: "OIDC token issued by IdP. It can be sourced from the `PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.",
+						},
+						"role_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
+						"session_duration": {
+							Type:     schema.TypeInt,
+							Required: true,
+							DefaultFunc: func() (interface{}, error) {
+								if v := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); v != "" {
+									return strconv.Atoi(v)
+								}
+								return 7200, nil
+							},
+							ValidateFunc: tccommon.ValidateIntegerInRange(0, 43200),
+							Description:  "The duration of the session when making the AssumeRoleWithWebIdentity call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 					},
 				},
@@ -2038,6 +2103,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		domain        string
 	)
 
+	needSecret := true
 	if v, ok := d.GetOk("secret_id"); ok {
 		secretId = v.(string)
 	} else {
@@ -2087,13 +2153,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	var (
-		assumeRoleArn              string
-		assumeRoleSessionName      string
-		assumeRoleSessionDuration  int
-		assumeRolePolicy           string
-		assumeRoleSamlAssertion    string
-		assumeRolePrincipalArn     string
-		assumeRoleWebIdentityToken string
+		assumeRoleArn             string
+		assumeRoleSessionName     string
+		assumeRoleSessionDuration int
+		assumeRolePolicy          string
 	)
 
 	// get assume role from credential
@@ -2108,7 +2171,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
 		assumeRoleSessionDuration = 7200
 		assumeRolePolicy = ""
-
 		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 	}
 
@@ -2128,19 +2190,25 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionDuration = 7200
 		}
 
+		// get assume role with saml from env
 		envSamlAssertion := os.Getenv(PROVIDER_ASSUME_ROLE_SAML_ASSERTION)
 		envPrincipalArn := os.Getenv(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN)
+		// get assume role with web identity from env
 		envWebIdentityToken := os.Getenv(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN)
 
 		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
 			// use assume role
 			_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+		} else if envSamlAssertion != "" && envPrincipalArn != "" && envWebIdentityToken != "" {
+			return nil, fmt.Errorf("can not set `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`, `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` at the same time.\n")
 		} else if envSamlAssertion != "" && envPrincipalArn != "" {
 			// use assume role with saml
 			_ = genClientWithSamlSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envSamlAssertion, envPrincipalArn)
+			needSecret = false
 		} else if envWebIdentityToken != "" {
 			// use assume role with oidc
 			_ = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken)
+			needSecret = false
 		} else {
 			return nil, fmt.Errorf("get `assume_role` from env error.\n")
 		}
@@ -2150,34 +2218,53 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if v, ok := d.GetOk("assume_role"); ok {
 		assumeRoleList := v.([]interface{})
 		if len(assumeRoleList) == 1 {
-			// assume role
 			assumeRole := assumeRoleList[0].(map[string]interface{})
 			assumeRoleArn = assumeRole["role_arn"].(string)
 			assumeRoleSessionName = assumeRole["session_name"].(string)
 			assumeRoleSessionDuration = assumeRole["session_duration"].(int)
 			assumeRolePolicy = assumeRole["policy"].(string)
-			// saml
-			assumeRoleSamlAssertion = assumeRole["saml_assertion"].(string)
-			assumeRolePrincipalArn = assumeRole["principal_arn"].(string)
-			// oidc
-			assumeRoleWebIdentityToken = assumeRole["web_identity_token"].(string)
-
-			if assumeRoleSamlAssertion == "" && assumeRolePrincipalArn == "" && assumeRoleWebIdentityToken == "" {
-				// use assume role
-				_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
-			} else if assumeRoleSamlAssertion != "" && assumeRolePrincipalArn != "" {
-				// use assume role with saml
-				_ = genClientWithSamlSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleSamlAssertion, assumeRolePrincipalArn)
-			} else if assumeRoleWebIdentityToken != "" {
-				// use assume role with oidc
-				_ = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken)
-			} else {
-				return nil, fmt.Errorf("get `assume_role` params error.\n")
-			}
+			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 		}
 	}
 
-	if secretId == "" || secretKey == "" {
+	var (
+		assumeRoleSamlAssertion    string
+		assumeRolePrincipalArn     string
+		assumeRoleWebIdentityToken string
+	)
+
+	// get assume role with saml from tf
+	if v, ok := d.GetOk("assume_role_with_saml"); ok {
+		assumeRoleWithSamlList := v.([]interface{})
+		if len(assumeRoleWithSamlList) == 1 {
+			assumeRoleWithSaml := assumeRoleWithSamlList[0].(map[string]interface{})
+			assumeRoleSamlAssertion = assumeRoleWithSaml["saml_assertion"].(string)
+			assumeRolePrincipalArn = assumeRoleWithSaml["principal_arn"].(string)
+			assumeRoleArn = assumeRoleWithSaml["role_arn"].(string)
+			assumeRoleSessionName = assumeRoleWithSaml["session_name"].(string)
+			assumeRoleSessionDuration = assumeRoleWithSaml["session_duration"].(int)
+
+			_ = genClientWithSamlSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleSamlAssertion, assumeRolePrincipalArn)
+			needSecret = false
+		}
+	}
+
+	// get assume role with web identity from tf
+	if v, ok := d.GetOk("assume_role_with_web_identity"); ok {
+		assumeRoleWithWebIdentityList := v.([]interface{})
+		if len(assumeRoleWithWebIdentityList) == 1 {
+			assumeRoleWithWebIdentity := assumeRoleWithWebIdentityList[0].(map[string]interface{})
+			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
+			assumeRoleArn = assumeRoleWithWebIdentity["role_arn"].(string)
+			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
+			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
+
+			_ = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken)
+			needSecret = false
+		}
+	}
+
+	if needSecret && (secretId == "" || secretKey == "") {
 		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.\n")
 	}
 
