@@ -745,13 +745,13 @@ func resourceTencentCloudCvmLaunchTemplateVersionCreate(d *schema.ResourceData, 
 				placement.HostIds = append(placement.HostIds, &hostIds)
 			}
 		}
-		if v, ok := dMap["host_ips"]; ok {
-			hostIpsSet := v.(*schema.Set).List()
-			for i := range hostIpsSet {
-				hostIps := hostIpsSet[i].(string)
-				placement.HostIps = append(placement.HostIps, &hostIps)
-			}
-		}
+		//if v, ok := dMap["host_ips"]; ok {
+		//	hostIpsSet := v.(*schema.Set).List()
+		//	for i := range hostIpsSet {
+		//		hostIps := hostIpsSet[i].(string)
+		//		placement.HostIps = append(placement.HostIps, &hostIps)
+		//	}
+		//}
 		request.Placement = &placement
 	}
 
@@ -1146,9 +1146,9 @@ func resourceTencentCloudCvmLaunchTemplateVersionRead(d *schema.ResourceData, me
 				placementMap["host_ids"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIds
 			}
 
-			if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps != nil {
-				placementMap["host_ips"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps
-			}
+			//if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps != nil {
+			//	placementMap["host_ips"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps
+			//}
 
 			_ = d.Set("placement", []interface{}{placementMap})
 		}

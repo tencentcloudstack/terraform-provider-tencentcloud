@@ -17,13 +17,19 @@ Provides a CVM instance resource.
 
 ## Example Usage
 
+### Create a general POSTPAID_BY_HOUR CVM instance
+
 ```hcl
-data "tencentcloud_images" "my_favorite_image" {
-  image_type       = ["PUBLIC_IMAGE"]
-  image_name_regex = "Final"
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
 }
 
-data "tencentcloud_instance_types" "my_favorite_instance_types" {
+data "tencentcloud_images" "images" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "OpenCloudOS Server"
+}
+
+data "tencentcloud_instance_types" "types" {
   filter {
     name   = "instance-family"
     values = ["S1", "S2", "S3", "S4", "S5"]
@@ -33,34 +39,32 @@ data "tencentcloud_instance_types" "my_favorite_instance_types" {
   exclude_sold_out = true
 }
 
-data "tencentcloud_availability_zones" "my_favorite_zones" {
-}
-
-// Create VPC resource
-resource "tencentcloud_vpc" "app" {
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
-  name       = "awesome_app_vpc"
+  name       = "vpc"
 }
 
-resource "tencentcloud_subnet" "app" {
-  vpc_id            = tencentcloud_vpc.app.id
-  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
-  name              = "awesome_app_subnet"
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
   cidr_block        = "10.0.1.0/24"
 }
 
-// Create a POSTPAID_BY_HOUR CVM instance
-resource "tencentcloud_instance" "cvm_postpaid" {
-  instance_name     = "cvm_postpaid"
-  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
-  image_id          = data.tencentcloud_images.my_favorite_image.images.0.image_id
-  instance_type     = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
+// create CVM instance
+resource "tencentcloud_instance" "example" {
+  instance_name     = "tf-example"
+  availability_zone = var.availability_zone
+  image_id          = data.tencentcloud_images.images.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.types.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
   hostname          = "user"
   project_id        = 0
-  vpc_id            = tencentcloud_vpc.app.id
-  subnet_id         = tencentcloud_subnet.app.id
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -72,31 +76,135 @@ resource "tencentcloud_instance" "cvm_postpaid" {
     tagKey = "tagValue"
   }
 }
+```
 
-// Create a PREPAID CVM instance
-resource "tencentcloud_instance" "cvm_prepaid" {
-  timeouts {
-    create = "30m"
+### Create a general PREPAID CVM instance
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+data "tencentcloud_images" "images" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "OpenCloudOS Server"
+}
+
+data "tencentcloud_instance_types" "types" {
+  filter {
+    name   = "instance-family"
+    values = ["S1", "S2", "S3", "S4", "S5"]
   }
-  instance_name                           = "cvm_prepaid"
-  availability_zone                       = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
-  image_id                                = data.tencentcloud_images.my_favorite_image.images.0.image_id
-  instance_type                           = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
+
+  cpu_core_count   = 2
+  exclude_sold_out = true
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+// create CVM instance
+resource "tencentcloud_instance" "example" {
+  instance_name                           = "tf-example"
+  availability_zone                       = var.availability_zone
+  image_id                                = data.tencentcloud_images.images.images.0.image_id
+  instance_type                           = data.tencentcloud_instance_types.types.instance_types.0.instance_type
   system_disk_type                        = "CLOUD_PREMIUM"
   system_disk_size                        = 50
   hostname                                = "user"
   project_id                              = 0
-  vpc_id                                  = tencentcloud_vpc.app.id
-  subnet_id                               = tencentcloud_subnet.app.id
+  vpc_id                                  = tencentcloud_vpc.vpc.id
+  subnet_id                               = tencentcloud_subnet.subnet.id
   instance_charge_type                    = "PREPAID"
   instance_charge_type_prepaid_period     = 1
   instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  force_delete                            = true
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
     encrypt        = false
   }
-  force_delete = true
+
+  tags = {
+    tagKey = "tagValue"
+  }
+
+  timeouts {
+    create = "30m"
+  }
+}
+```
+
+### Create a dedicated cluster CVM instance
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+data "tencentcloud_images" "images" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "OpenCloudOS Server"
+}
+
+data "tencentcloud_instance_types" "types" {
+  filter {
+    name   = "instance-family"
+    values = ["S1", "S2", "S3", "S4", "S5"]
+  }
+
+  cpu_core_count   = 2
+  exclude_sold_out = true
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  cdc_id            = "cluster-262n63e8"
+  is_multicast      = false
+}
+
+// create CVM instance
+resource "tencentcloud_instance" "example" {
+  instance_name        = "tf-example"
+  availability_zone    = var.availability_zone
+  image_id             = data.tencentcloud_images.images.images.0.image_id
+  instance_type        = data.tencentcloud_instance_types.types.instance_types.0.instance_type
+  dedicated_cluster_id = "cluster-262n63e8"
+  instance_charge_type = "CDCPAID"
+  system_disk_type     = "CLOUD_SSD"
+  system_disk_size     = 50
+  hostname             = "user"
+  project_id           = 0
+  vpc_id               = tencentcloud_vpc.vpc.id
+  subnet_id            = tencentcloud_subnet.subnet.id
+
+  data_disks {
+    data_disk_type = "CLOUD_SSD"
+    data_disk_size = 50
+    encrypt        = false
+  }
+
   tags = {
     tagKey = "tagValue"
   }
@@ -115,6 +223,7 @@ The following arguments are supported:
 * `cdh_host_id` - (Optional, String, ForceNew) Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `cdh_instance_type` - (Optional, String) Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.
+* `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disable_api_termination` - (Optional, Bool) Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.
 * `disable_security_service` - (Optional, Bool) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.
@@ -181,6 +290,6 @@ In addition to all arguments above, the following attributes are exported:
 CVM instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_instance.foo ins-2qol3a80
+terraform import tencentcloud_instance.example ins-2qol3a80
 ```
 

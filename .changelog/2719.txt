@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_instance: add params `dedicated_cluster_id`
+```
+
+```release-note:enhancement
+data_source/tencentcloud_instances: add params `dedicated_cluster_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_cvm_launch_template: deprecated `host_ips` param
+```
+
+```release-note:enhancement
+data_source/tencentcloud_cvm_chc_hosts: deprecated `host_ips` param
+```
