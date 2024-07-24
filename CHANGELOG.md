@@ -1,3 +1,23 @@
+## 1.81.112 (July 24, 2024)
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_cbs_storages: add params `dedicated_cluster_id` ([#2715](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2715))
+* data_source/tencentcloud_cbs_storages_set: add params `dedicated_cluster_id` ([#2715](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2715))
+* data_source/tencentcloud_clb_instances: add params `dedicated_cluster_id` ([#2720](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2720))
+* data_source/tencentcloud_cvm_chc_hosts: deprecated `host_ips` param ([#2719](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2719))
+* data_source/tencentcloud_instances: add params `dedicated_cluster_id` ([#2719](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2719))
+* provider: support securityToken for credentials ([#2739](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2739))
+* resource/tencentcloud_cbs_storage: add params `dedicated_cluster_id` ([#2715](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2715))
+* resource/tencentcloud_cbs_storage_set: add params `dedicated_cluster_id` ([#2715](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2715))
+* resource/tencentcloud_clb_instance: add params `dedicated_cluster_id` ([#2720](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2720))
+* resource/tencentcloud_cls_topic: add `is_web_tracking`, `extends` params ([#2721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2721))
+* resource/tencentcloud_cvm_launch_template: deprecated `host_ips` param ([#2719](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2719))
+* resource/tencentcloud_cynosdb_cluster: add `slave_zone` param ([#2711](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2711))
+* resource/tencentcloud_dasb_user: update param phone Adapter country area code ([#2734](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2734))
+* resource/tencentcloud_instance: add param `system_disk_resize_online` ([#2740](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2740))
+* resource/tencentcloud_instance: add params `dedicated_cluster_id` ([#2719](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2719))
+
 ## 1.81.111 (July 19, 2024)
 
 ENHANCEMENTS:
