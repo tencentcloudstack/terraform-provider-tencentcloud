@@ -59,8 +59,9 @@ func NewAllocateHostsRequest() (request *AllocateHostsRequest) {
 func NewAllocateHostsResponse() (response *AllocateHostsResponse) {
     response = &AllocateHostsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AllocateHosts
@@ -71,6 +72,7 @@ func NewAllocateHostsResponse() (response *AllocateHostsResponse) {
 // 可能返回的错误码:
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDHOSTID_MALFORMED = "InvalidHostId.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPROJECTID_NOTFOUND = "InvalidProjectId.NotFound"
@@ -89,6 +91,7 @@ func (c *Client) AllocateHosts(request *AllocateHostsRequest) (response *Allocat
 // 可能返回的错误码:
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDHOSTID_MALFORMED = "InvalidHostId.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPROJECTID_NOTFOUND = "InvalidProjectId.NotFound"
@@ -125,8 +128,9 @@ func NewAssociateInstancesKeyPairsRequest() (request *AssociateInstancesKeyPairs
 func NewAssociateInstancesKeyPairsResponse() (response *AssociateInstancesKeyPairsResponse) {
     response = &AssociateInstancesKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateInstancesKeyPairs
@@ -161,6 +165,7 @@ func NewAssociateInstancesKeyPairsResponse() (response *AssociateInstancesKeyPai
 //  UNSUPPORTEDOPERATION_INSTANCEOSWINDOWS = "UnsupportedOperation.InstanceOsWindows"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
@@ -207,6 +212,7 @@ func (c *Client) AssociateInstancesKeyPairs(request *AssociateInstancesKeyPairsR
 //  UNSUPPORTEDOPERATION_INSTANCEOSWINDOWS = "UnsupportedOperation.InstanceOsWindows"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
@@ -247,14 +253,21 @@ func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsReques
 func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResponse) {
     response = &AssociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateSecurityGroups
 // 本接口 (AssociateSecurityGroups) 用于绑定安全组到指定实例。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+//
+// <dx-alert infotype="explain" title="">
+//
+// 多个安全组绑定至实例后，将以绑定顺序作为优先级顺序依次匹配执行。如需调整安全组优先级，请参见 [调整安全组优先级](https://cloud.tencent.com/document/product/213/42842)。
+//
+// </dx-alert>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SECURITYGROUPACTIONFAILED = "FailedOperation.SecurityGroupActionFailed"
@@ -280,6 +293,12 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
 // 本接口 (AssociateSecurityGroups) 用于绑定安全组到指定实例。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+//
+// <dx-alert infotype="explain" title="">
+//
+// 多个安全组绑定至实例后，将以绑定顺序作为优先级顺序依次匹配执行。如需调整安全组优先级，请参见 [调整安全组优先级](https://cloud.tencent.com/document/product/213/42842)。
+//
+// </dx-alert>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SECURITYGROUPACTIONFAILED = "FailedOperation.SecurityGroupActionFailed"
@@ -327,8 +346,9 @@ func NewConfigureChcAssistVpcRequest() (request *ConfigureChcAssistVpcRequest) {
 func NewConfigureChcAssistVpcResponse() (response *ConfigureChcAssistVpcResponse) {
     response = &ConfigureChcAssistVpcResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ConfigureChcAssistVpc
@@ -345,6 +365,7 @@ func NewConfigureChcAssistVpcResponse() (response *ConfigureChcAssistVpcResponse
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
+//  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
 //  LIMITEXCEEDED_VPCSUBNETNUM = "LimitExceeded.VpcSubnetNum"
 //  VPCADDRNOTINSUBNET = "VpcAddrNotInSubNet"
 //  VPCIPISUSED = "VpcIpIsUsed"
@@ -366,6 +387,7 @@ func (c *Client) ConfigureChcAssistVpc(request *ConfigureChcAssistVpcRequest) (r
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
+//  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
 //  LIMITEXCEEDED_VPCSUBNETNUM = "LimitExceeded.VpcSubnetNum"
 //  VPCADDRNOTINSUBNET = "VpcAddrNotInSubNet"
 //  VPCIPISUSED = "VpcIpIsUsed"
@@ -399,20 +421,23 @@ func NewConfigureChcDeployVpcRequest() (request *ConfigureChcDeployVpcRequest) {
 func NewConfigureChcDeployVpcResponse() (response *ConfigureChcDeployVpcResponse) {
     response = &ConfigureChcDeployVpcResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ConfigureChcDeployVpc
 // 配置CHC物理服务器部署网络
 //
 // 可能返回的错误码:
+//  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
 //  INVALIDHOST_NOTSUPPORTED = "InvalidHost.NotSupported"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_AMOUNTNOTEQUAL = "InvalidParameterValue.AmountNotEqual"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_DEPLOYVPCALREADYEXISTS = "InvalidParameterValue.DeployVpcAlreadyExists"
+//  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
 //  VPCADDRNOTINSUBNET = "VpcAddrNotInSubNet"
@@ -425,12 +450,14 @@ func (c *Client) ConfigureChcDeployVpc(request *ConfigureChcDeployVpcRequest) (r
 // 配置CHC物理服务器部署网络
 //
 // 可能返回的错误码:
+//  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
 //  INVALIDHOST_NOTSUPPORTED = "InvalidHost.NotSupported"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_AMOUNTNOTEQUAL = "InvalidParameterValue.AmountNotEqual"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_DEPLOYVPCALREADYEXISTS = "InvalidParameterValue.DeployVpcAlreadyExists"
+//  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
 //  VPCADDRNOTINSUBNET = "VpcAddrNotInSubNet"
@@ -465,8 +492,9 @@ func NewCreateDisasterRecoverGroupRequest() (request *CreateDisasterRecoverGroup
 func NewCreateDisasterRecoverGroupResponse() (response *CreateDisasterRecoverGroupResponse) {
     response = &CreateDisasterRecoverGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDisasterRecoverGroup
@@ -476,6 +504,7 @@ func NewCreateDisasterRecoverGroupResponse() (response *CreateDisasterRecoverGro
 //  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCEINSUFFICIENT_INSUFFICIENTGROUPQUOTA = "ResourceInsufficient.InsufficientGroupQuota"
 func (c *Client) CreateDisasterRecoverGroup(request *CreateDisasterRecoverGroupRequest) (response *CreateDisasterRecoverGroupResponse, err error) {
     return c.CreateDisasterRecoverGroupWithContext(context.Background(), request)
 }
@@ -487,6 +516,7 @@ func (c *Client) CreateDisasterRecoverGroup(request *CreateDisasterRecoverGroupR
 //  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCEINSUFFICIENT_INSUFFICIENTGROUPQUOTA = "ResourceInsufficient.InsufficientGroupQuota"
 func (c *Client) CreateDisasterRecoverGroupWithContext(ctx context.Context, request *CreateDisasterRecoverGroupRequest) (response *CreateDisasterRecoverGroupResponse, err error) {
     if request == nil {
         request = NewCreateDisasterRecoverGroupRequest()
@@ -517,8 +547,9 @@ func NewCreateHpcClusterRequest() (request *CreateHpcClusterRequest) {
 func NewCreateHpcClusterResponse() (response *CreateHpcClusterResponse) {
     response = &CreateHpcClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateHpcCluster
@@ -573,8 +604,9 @@ func NewCreateImageRequest() (request *CreateImageRequest) {
 func NewCreateImageResponse() (response *CreateImageResponse) {
     response = &CreateImageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateImage
@@ -602,24 +634,31 @@ func NewCreateImageResponse() (response *CreateImageResponse) {
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDINSTANCETYPE = "InvalidParameterValue.PreheatNotSupportedInstanceType"
 //  INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDZONE = "InvalidParameterValue.PreheatNotSupportedZone"
+//  INVALIDPARAMETERVALUE_PREHEATUNAVAILABLEZONES = "InvalidParameterValue.PreheatUnavailableZones"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
 //  INVALIDPARAMETERVALUE_TAGQUOTALIMITEXCEEDED = "InvalidParameterValue.TagQuotaLimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_PREHEATIMAGESNAPSHOTOUTOFQUOTA = "LimitExceeded.PreheatImageSnapshotOutOfQuota"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INVALIDDISKFASTROLLBACK = "UnsupportedOperation.InvalidDiskFastRollback"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTINSTANCEIMAGE = "UnsupportedOperation.NotSupportInstanceImage"
 //  UNSUPPORTEDOPERATION_PREHEATIMAGE = "UnsupportedOperation.PreheatImage"
 //  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
@@ -653,24 +692,31 @@ func (c *Client) CreateImage(request *CreateImageRequest) (response *CreateImage
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDINSTANCETYPE = "InvalidParameterValue.PreheatNotSupportedInstanceType"
 //  INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDZONE = "InvalidParameterValue.PreheatNotSupportedZone"
+//  INVALIDPARAMETERVALUE_PREHEATUNAVAILABLEZONES = "InvalidParameterValue.PreheatUnavailableZones"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
 //  INVALIDPARAMETERVALUE_TAGQUOTALIMITEXCEEDED = "InvalidParameterValue.TagQuotaLimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_PREHEATIMAGESNAPSHOTOUTOFQUOTA = "LimitExceeded.PreheatImageSnapshotOutOfQuota"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INVALIDDISKFASTROLLBACK = "UnsupportedOperation.InvalidDiskFastRollback"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTINSTANCEIMAGE = "UnsupportedOperation.NotSupportInstanceImage"
 //  UNSUPPORTEDOPERATION_PREHEATIMAGE = "UnsupportedOperation.PreheatImage"
 //  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
@@ -705,8 +751,9 @@ func NewCreateKeyPairRequest() (request *CreateKeyPairRequest) {
 func NewCreateKeyPairResponse() (response *CreateKeyPairResponse) {
     response = &CreateKeyPairResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateKeyPair
@@ -723,6 +770,7 @@ func NewCreateKeyPairResponse() (response *CreateKeyPairResponse) {
 // * 腾讯云不会保存用户的私钥，请妥善保管。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGKEYRESERVED = "FailedOperation.TagKeyReserved"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDKEYPAIR_LIMITEXCEEDED = "InvalidKeyPair.LimitExceeded"
 //  INVALIDKEYPAIRNAME_DUPLICATE = "InvalidKeyPairName.Duplicate"
@@ -751,6 +799,7 @@ func (c *Client) CreateKeyPair(request *CreateKeyPairRequest) (response *CreateK
 // * 腾讯云不会保存用户的私钥，请妥善保管。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGKEYRESERVED = "FailedOperation.TagKeyReserved"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDKEYPAIR_LIMITEXCEEDED = "InvalidKeyPair.LimitExceeded"
 //  INVALIDKEYPAIRNAME_DUPLICATE = "InvalidKeyPairName.Duplicate"
@@ -791,8 +840,9 @@ func NewCreateLaunchTemplateRequest() (request *CreateLaunchTemplateRequest) {
 func NewCreateLaunchTemplateResponse() (response *CreateLaunchTemplateResponse) {
     response = &CreateLaunchTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLaunchTemplate
@@ -804,7 +854,7 @@ func NewCreateLaunchTemplateResponse() (response *CreateLaunchTemplateResponse) 
 //
 // 
 //
-// 初次创建实例模板后，其模板版本为默认版本1，新版本的创建可使用CreateLaunchTemplateVersion创建，版本号递增。默认情况下，在RunInstances中指定实例启动模板，若不指定模板版本号，则使用默认版本。
+// 初次创建实例模板后，其模板版本为默认版本1，新版本的创建可使用 [CreateLaunchTemplateVersion](https://cloud.tencent.com/document/product/213/66326) 创建，版本号递增。默认情况下，在[RunInstances](https://cloud.tencent.com/document/product/213/15730) 中指定实例启动模板，若不指定模板版本号，则使用默认版本。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -840,6 +890,7 @@ func NewCreateLaunchTemplateResponse() (response *CreateLaunchTemplateResponse) 
 //  INVALIDPARAMETERVALUE_INSTANCETYPEREQUIREDHPCCLUSTER = "InvalidParameterValue.InstanceTypeRequiredHpcCluster"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTOFFERING = "InvalidParameterValue.InsufficientOffering"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTPRICE = "InvalidParameterValue.InsufficientPrice"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORGIVENINSTANCETYPE = "InvalidParameterValue.InvalidImageForGivenInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
@@ -848,6 +899,7 @@ func NewCreateLaunchTemplateResponse() (response *CreateLaunchTemplateResponse) 
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHTEMPLATENAME = "InvalidParameterValue.InvalidLaunchTemplateName"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHTEMPLATEVERSIONDESCRIPTION = "InvalidParameterValue.InvalidLaunchTemplateVersionDescription"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
+//  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
@@ -880,6 +932,7 @@ func NewCreateLaunchTemplateResponse() (response *CreateLaunchTemplateResponse) 
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCENOTFOUND_NODEFAULTCBS = "ResourceNotFound.NoDefaultCbs"
 //  RESOURCENOTFOUND_NODEFAULTCBSWITHREASON = "ResourceNotFound.NoDefaultCbsWithReason"
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
@@ -906,7 +959,7 @@ func (c *Client) CreateLaunchTemplate(request *CreateLaunchTemplateRequest) (res
 //
 // 
 //
-// 初次创建实例模板后，其模板版本为默认版本1，新版本的创建可使用CreateLaunchTemplateVersion创建，版本号递增。默认情况下，在RunInstances中指定实例启动模板，若不指定模板版本号，则使用默认版本。
+// 初次创建实例模板后，其模板版本为默认版本1，新版本的创建可使用 [CreateLaunchTemplateVersion](https://cloud.tencent.com/document/product/213/66326) 创建，版本号递增。默认情况下，在[RunInstances](https://cloud.tencent.com/document/product/213/15730) 中指定实例启动模板，若不指定模板版本号，则使用默认版本。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -942,6 +995,7 @@ func (c *Client) CreateLaunchTemplate(request *CreateLaunchTemplateRequest) (res
 //  INVALIDPARAMETERVALUE_INSTANCETYPEREQUIREDHPCCLUSTER = "InvalidParameterValue.InstanceTypeRequiredHpcCluster"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTOFFERING = "InvalidParameterValue.InsufficientOffering"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTPRICE = "InvalidParameterValue.InsufficientPrice"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORGIVENINSTANCETYPE = "InvalidParameterValue.InvalidImageForGivenInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
@@ -950,6 +1004,7 @@ func (c *Client) CreateLaunchTemplate(request *CreateLaunchTemplateRequest) (res
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHTEMPLATENAME = "InvalidParameterValue.InvalidLaunchTemplateName"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHTEMPLATEVERSIONDESCRIPTION = "InvalidParameterValue.InvalidLaunchTemplateVersionDescription"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
+//  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
@@ -982,6 +1037,7 @@ func (c *Client) CreateLaunchTemplate(request *CreateLaunchTemplateRequest) (res
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCENOTFOUND_NODEFAULTCBS = "ResourceNotFound.NoDefaultCbs"
 //  RESOURCENOTFOUND_NODEFAULTCBSWITHREASON = "ResourceNotFound.NoDefaultCbsWithReason"
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
@@ -1025,8 +1081,9 @@ func NewCreateLaunchTemplateVersionRequest() (request *CreateLaunchTemplateVersi
 func NewCreateLaunchTemplateVersionResponse() (response *CreateLaunchTemplateVersionResponse) {
     response = &CreateLaunchTemplateVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLaunchTemplateVersion
@@ -1070,6 +1127,7 @@ func NewCreateLaunchTemplateVersionResponse() (response *CreateLaunchTemplateVer
 //  INVALIDPARAMETERVALUE_SUBNETNOTEXIST = "InvalidParameterValue.SubnetNotExist"
 //  INVALIDPARAMETERVALUE_THREADPERCOREVALUE = "InvalidParameterValue.ThreadPerCoreValue"
 //  INVALIDPARAMETERVALUE_VPCIDZONEIDNOTMATCH = "InvalidParameterValue.VpcIdZoneIdNotMatch"
+//  INVALIDPARAMETERVALUE_VPCNOTSUPPORTIPV6ADDRESS = "InvalidParameterValue.VpcNotSupportIpv6Address"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDPASSWORD = "InvalidPassword"
 //  INVALIDPERIOD = "InvalidPeriod"
@@ -1092,6 +1150,7 @@ func NewCreateLaunchTemplateVersionResponse() (response *CreateLaunchTemplateVer
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCENOTFOUND_NODEFAULTCBS = "ResourceNotFound.NoDefaultCbs"
 //  RESOURCENOTFOUND_NODEFAULTCBSWITHREASON = "ResourceNotFound.NoDefaultCbsWithReason"
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
@@ -1151,6 +1210,7 @@ func (c *Client) CreateLaunchTemplateVersion(request *CreateLaunchTemplateVersio
 //  INVALIDPARAMETERVALUE_SUBNETNOTEXIST = "InvalidParameterValue.SubnetNotExist"
 //  INVALIDPARAMETERVALUE_THREADPERCOREVALUE = "InvalidParameterValue.ThreadPerCoreValue"
 //  INVALIDPARAMETERVALUE_VPCIDZONEIDNOTMATCH = "InvalidParameterValue.VpcIdZoneIdNotMatch"
+//  INVALIDPARAMETERVALUE_VPCNOTSUPPORTIPV6ADDRESS = "InvalidParameterValue.VpcNotSupportIpv6Address"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDPASSWORD = "InvalidPassword"
 //  INVALIDPERIOD = "InvalidPeriod"
@@ -1173,6 +1233,7 @@ func (c *Client) CreateLaunchTemplateVersion(request *CreateLaunchTemplateVersio
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCENOTFOUND_NODEFAULTCBS = "ResourceNotFound.NoDefaultCbs"
 //  RESOURCENOTFOUND_NODEFAULTCBSWITHREASON = "ResourceNotFound.NoDefaultCbsWithReason"
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
@@ -1217,8 +1278,9 @@ func NewDeleteDisasterRecoverGroupsRequest() (request *DeleteDisasterRecoverGrou
 func NewDeleteDisasterRecoverGroupsResponse() (response *DeleteDisasterRecoverGroupsResponse) {
     response = &DeleteDisasterRecoverGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDisasterRecoverGroups
@@ -1273,8 +1335,9 @@ func NewDeleteHpcClustersRequest() (request *DeleteHpcClustersRequest) {
 func NewDeleteHpcClustersResponse() (response *DeleteHpcClustersResponse) {
     response = &DeleteHpcClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteHpcClusters
@@ -1323,8 +1386,9 @@ func NewDeleteImagesRequest() (request *DeleteImagesRequest) {
 func NewDeleteImagesResponse() (response *DeleteImagesResponse) {
     response = &DeleteImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImages
@@ -1334,7 +1398,7 @@ func NewDeleteImagesResponse() (response *DeleteImagesResponse) {
 //
 // * 当[镜像状态](https://cloud.tencent.com/document/product/213/15753#Image)为`创建中`和`使用中`时, 不允许删除。镜像状态可以通过[DescribeImages](https://cloud.tencent.com/document/api/213/9418)获取。
 //
-// * 每个地域最多只支持创建10个自定义镜像，删除镜像可以释放账户的配额。
+// * 每个地域最多只支持创建500个自定义镜像，删除镜像可以释放账户的配额。
 //
 // * 当镜像正在被其它账户分享时，不允许删除。
 //
@@ -1343,7 +1407,9 @@ func NewDeleteImagesResponse() (response *DeleteImagesResponse) {
 //  INVALIDIMAGEID_INCORRECTSTATE = "InvalidImageId.IncorrectState"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEIDISSHARED = "InvalidParameterValue.InvalidImageIdIsShared"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 func (c *Client) DeleteImages(request *DeleteImagesRequest) (response *DeleteImagesResponse, err error) {
@@ -1357,7 +1423,7 @@ func (c *Client) DeleteImages(request *DeleteImagesRequest) (response *DeleteIma
 //
 // * 当[镜像状态](https://cloud.tencent.com/document/product/213/15753#Image)为`创建中`和`使用中`时, 不允许删除。镜像状态可以通过[DescribeImages](https://cloud.tencent.com/document/api/213/9418)获取。
 //
-// * 每个地域最多只支持创建10个自定义镜像，删除镜像可以释放账户的配额。
+// * 每个地域最多只支持创建500个自定义镜像，删除镜像可以释放账户的配额。
 //
 // * 当镜像正在被其它账户分享时，不允许删除。
 //
@@ -1366,7 +1432,9 @@ func (c *Client) DeleteImages(request *DeleteImagesRequest) (response *DeleteIma
 //  INVALIDIMAGEID_INCORRECTSTATE = "InvalidImageId.IncorrectState"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEIDISSHARED = "InvalidParameterValue.InvalidImageIdIsShared"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 func (c *Client) DeleteImagesWithContext(ctx context.Context, request *DeleteImagesRequest) (response *DeleteImagesResponse, err error) {
@@ -1385,6 +1453,55 @@ func (c *Client) DeleteImagesWithContext(ctx context.Context, request *DeleteIma
     return
 }
 
+func NewDeleteInstancesActionTimerRequest() (request *DeleteInstancesActionTimerRequest) {
+    request = &DeleteInstancesActionTimerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "DeleteInstancesActionTimer")
+    
+    
+    return
+}
+
+func NewDeleteInstancesActionTimerResponse() (response *DeleteInstancesActionTimerResponse) {
+    response = &DeleteInstancesActionTimerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteInstancesActionTimer
+// 本接口 (DeleteInstancesActionTimer) 用于删除定时任务。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
+func (c *Client) DeleteInstancesActionTimer(request *DeleteInstancesActionTimerRequest) (response *DeleteInstancesActionTimerResponse, err error) {
+    return c.DeleteInstancesActionTimerWithContext(context.Background(), request)
+}
+
+// DeleteInstancesActionTimer
+// 本接口 (DeleteInstancesActionTimer) 用于删除定时任务。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
+func (c *Client) DeleteInstancesActionTimerWithContext(ctx context.Context, request *DeleteInstancesActionTimerRequest) (response *DeleteInstancesActionTimerResponse, err error) {
+    if request == nil {
+        request = NewDeleteInstancesActionTimerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteInstancesActionTimer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteInstancesActionTimerResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteKeyPairsRequest() (request *DeleteKeyPairsRequest) {
     request = &DeleteKeyPairsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1399,8 +1516,9 @@ func NewDeleteKeyPairsRequest() (request *DeleteKeyPairsRequest) {
 func NewDeleteKeyPairsResponse() (response *DeleteKeyPairsResponse) {
     response = &DeleteKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteKeyPairs
@@ -1473,8 +1591,9 @@ func NewDeleteLaunchTemplateRequest() (request *DeleteLaunchTemplateRequest) {
 func NewDeleteLaunchTemplateResponse() (response *DeleteLaunchTemplateResponse) {
     response = &DeleteLaunchTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLaunchTemplate
@@ -1533,8 +1652,9 @@ func NewDeleteLaunchTemplateVersionsRequest() (request *DeleteLaunchTemplateVers
 func NewDeleteLaunchTemplateVersionsResponse() (response *DeleteLaunchTemplateVersionsResponse) {
     response = &DeleteLaunchTemplateVersionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLaunchTemplateVersions
@@ -1599,8 +1719,9 @@ func NewDescribeAccountQuotaRequest() (request *DescribeAccountQuotaRequest) {
 func NewDescribeAccountQuotaResponse() (response *DescribeAccountQuotaResponse) {
     response = &DescribeAccountQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountQuota
@@ -1655,8 +1776,9 @@ func NewDescribeChcDeniedActionsRequest() (request *DescribeChcDeniedActionsRequ
 func NewDescribeChcDeniedActionsResponse() (response *DescribeChcDeniedActionsResponse) {
     response = &DescribeChcDeniedActionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeChcDeniedActions
@@ -1707,8 +1829,9 @@ func NewDescribeChcHostsRequest() (request *DescribeChcHostsRequest) {
 func NewDescribeChcHostsResponse() (response *DescribeChcHostsResponse) {
     response = &DescribeChcHostsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeChcHosts
@@ -1727,6 +1850,7 @@ func NewDescribeChcHostsResponse() (response *DescribeChcHostsResponse) {
 //  INVALIDPARAMETER_ATMOSTONE = "InvalidParameter.AtMostOne"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
+//  INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
 //  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
@@ -1754,6 +1878,7 @@ func (c *Client) DescribeChcHosts(request *DescribeChcHostsRequest) (response *D
 //  INVALIDPARAMETER_ATMOSTONE = "InvalidParameter.AtMostOne"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
+//  INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
 //  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
@@ -1791,8 +1916,9 @@ func NewDescribeDisasterRecoverGroupQuotaRequest() (request *DescribeDisasterRec
 func NewDescribeDisasterRecoverGroupQuotaResponse() (response *DescribeDisasterRecoverGroupQuotaResponse) {
     response = &DescribeDisasterRecoverGroupQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDisasterRecoverGroupQuota
@@ -1805,6 +1931,7 @@ func NewDescribeDisasterRecoverGroupQuotaResponse() (response *DescribeDisasterR
 //  INVALIDPARAMETER_ATMOSTONE = "InvalidParameter.AtMostOne"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
+//  INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
 //  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
@@ -1826,6 +1953,7 @@ func (c *Client) DescribeDisasterRecoverGroupQuota(request *DescribeDisasterReco
 //  INVALIDPARAMETER_ATMOSTONE = "InvalidParameter.AtMostOne"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
+//  INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
 //  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
@@ -1863,8 +1991,9 @@ func NewDescribeDisasterRecoverGroupsRequest() (request *DescribeDisasterRecover
 func NewDescribeDisasterRecoverGroupsResponse() (response *DescribeDisasterRecoverGroupsResponse) {
     response = &DescribeDisasterRecoverGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDisasterRecoverGroups
@@ -1913,14 +2042,16 @@ func NewDescribeHostsRequest() (request *DescribeHostsRequest) {
 func NewDescribeHostsResponse() (response *DescribeHostsResponse) {
     response = &DescribeHostsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHosts
 // 本接口 (DescribeHosts) 用于获取一个或多个CDH实例的详细信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGKEYRESERVED = "FailedOperation.TagKeyReserved"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDHOSTID_MALFORMED = "InvalidHostId.Malformed"
@@ -1936,6 +2067,7 @@ func (c *Client) DescribeHosts(request *DescribeHostsRequest) (response *Describ
 // 本接口 (DescribeHosts) 用于获取一个或多个CDH实例的详细信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGKEYRESERVED = "FailedOperation.TagKeyReserved"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDHOSTID_MALFORMED = "InvalidHostId.Malformed"
@@ -1973,8 +2105,9 @@ func NewDescribeHpcClustersRequest() (request *DescribeHpcClustersRequest) {
 func NewDescribeHpcClustersResponse() (response *DescribeHpcClustersResponse) {
     response = &DescribeHpcClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHpcClusters
@@ -2023,12 +2156,13 @@ func NewDescribeImageQuotaRequest() (request *DescribeImageQuotaRequest) {
 func NewDescribeImageQuotaResponse() (response *DescribeImageQuotaResponse) {
     response = &DescribeImageQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageQuota
-// 本接口(DescribeImageQuota)用于查询用户帐号的镜像配额。
+// 本接口(DescribeImageQuota)用于查询用户账号的镜像配额。
 //
 // 可能返回的错误码:
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
@@ -2038,7 +2172,7 @@ func (c *Client) DescribeImageQuota(request *DescribeImageQuotaRequest) (respons
 }
 
 // DescribeImageQuota
-// 本接口(DescribeImageQuota)用于查询用户帐号的镜像配额。
+// 本接口(DescribeImageQuota)用于查询用户账号的镜像配额。
 //
 // 可能返回的错误码:
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
@@ -2073,8 +2207,9 @@ func NewDescribeImageSharePermissionRequest() (request *DescribeImageSharePermis
 func NewDescribeImageSharePermissionResponse() (response *DescribeImageSharePermissionResponse) {
     response = &DescribeImageSharePermissionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageSharePermission
@@ -2085,6 +2220,7 @@ func NewDescribeImageSharePermissionResponse() (response *DescribeImageSharePerm
 //  INVALIDACCOUNTIS_YOURSELF = "InvalidAccountIs.YourSelf"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  OVERQUOTA = "OverQuota"
 //  UNAUTHORIZEDOPERATION_IMAGENOTBELONGTOACCOUNT = "UnauthorizedOperation.ImageNotBelongToAccount"
 func (c *Client) DescribeImageSharePermission(request *DescribeImageSharePermissionRequest) (response *DescribeImageSharePermissionResponse, err error) {
@@ -2099,6 +2235,7 @@ func (c *Client) DescribeImageSharePermission(request *DescribeImageSharePermiss
 //  INVALIDACCOUNTIS_YOURSELF = "InvalidAccountIs.YourSelf"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  OVERQUOTA = "OverQuota"
 //  UNAUTHORIZEDOPERATION_IMAGENOTBELONGTOACCOUNT = "UnauthorizedOperation.ImageNotBelongToAccount"
 func (c *Client) DescribeImageSharePermissionWithContext(ctx context.Context, request *DescribeImageSharePermissionRequest) (response *DescribeImageSharePermissionResponse, err error) {
@@ -2131,8 +2268,9 @@ func NewDescribeImagesRequest() (request *DescribeImagesRequest) {
 func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
     response = &DescribeImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImages
@@ -2145,6 +2283,7 @@ func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
 // * 指定偏移(Offset)和限制(Limit)来选择结果中的一部分，默认返回满足条件的前20个镜像信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ILLEGALTAGKEY = "FailedOperation.IllegalTagKey"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
@@ -2155,6 +2294,7 @@ func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUELIMIT = "InvalidParameterValue.InvalidParameterValueLimit"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDREGION_NOTFOUND = "InvalidRegion.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
@@ -2175,6 +2315,7 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 // * 指定偏移(Offset)和限制(Limit)来选择结果中的一部分，默认返回满足条件的前20个镜像信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ILLEGALTAGKEY = "FailedOperation.IllegalTagKey"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
@@ -2185,6 +2326,7 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUELIMIT = "InvalidParameterValue.InvalidParameterValueLimit"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDREGION_NOTFOUND = "InvalidRegion.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
@@ -2221,14 +2363,16 @@ func NewDescribeImportImageOsRequest() (request *DescribeImportImageOsRequest) {
 func NewDescribeImportImageOsResponse() (response *DescribeImportImageOsResponse) {
     response = &DescribeImportImageOsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImportImageOs
 // 查看可以导入的镜像操作系统信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ILLEGALTAGKEY = "FailedOperation.IllegalTagKey"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
@@ -2239,6 +2383,7 @@ func NewDescribeImportImageOsResponse() (response *DescribeImportImageOsResponse
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUELIMIT = "InvalidParameterValue.InvalidParameterValueLimit"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDREGION_NOTFOUND = "InvalidRegion.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
@@ -2253,6 +2398,7 @@ func (c *Client) DescribeImportImageOs(request *DescribeImportImageOsRequest) (r
 // 查看可以导入的镜像操作系统信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ILLEGALTAGKEY = "FailedOperation.IllegalTagKey"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
@@ -2263,6 +2409,7 @@ func (c *Client) DescribeImportImageOs(request *DescribeImportImageOsRequest) (r
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUELIMIT = "InvalidParameterValue.InvalidParameterValueLimit"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDREGION_NOTFOUND = "InvalidRegion.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
@@ -2299,8 +2446,9 @@ func NewDescribeInstanceFamilyConfigsRequest() (request *DescribeInstanceFamilyC
 func NewDescribeInstanceFamilyConfigsResponse() (response *DescribeInstanceFamilyConfigsResponse) {
     response = &DescribeInstanceFamilyConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceFamilyConfigs
@@ -2351,8 +2499,9 @@ func NewDescribeInstanceInternetBandwidthConfigsRequest() (request *DescribeInst
 func NewDescribeInstanceInternetBandwidthConfigsResponse() (response *DescribeInstanceInternetBandwidthConfigsResponse) {
     response = &DescribeInstanceInternetBandwidthConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceInternetBandwidthConfigs
@@ -2425,8 +2574,9 @@ func NewDescribeInstanceTypeConfigsRequest() (request *DescribeInstanceTypeConfi
 func NewDescribeInstanceTypeConfigsResponse() (response *DescribeInstanceTypeConfigsResponse) {
     response = &DescribeInstanceTypeConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceTypeConfigs
@@ -2434,7 +2584,7 @@ func NewDescribeInstanceTypeConfigsResponse() (response *DescribeInstanceTypeCon
 //
 // 
 //
-// * 可以根据`zone`、`instance-family`来查询实例机型配置。过滤条件详见过滤器[`Filter`](https://cloud.tencent.com/document/api/213/15753#Filter)。
+// * 可以根据`zone`、`instance-family`、`instance-type`来查询实例机型配置。过滤条件详见过滤器[`Filter`](https://cloud.tencent.com/document/api/213/15753#Filter)。
 //
 // * 如果参数为空，返回指定地域的所有实例机型配置。
 //
@@ -2458,7 +2608,7 @@ func (c *Client) DescribeInstanceTypeConfigs(request *DescribeInstanceTypeConfig
 //
 // 
 //
-// * 可以根据`zone`、`instance-family`来查询实例机型配置。过滤条件详见过滤器[`Filter`](https://cloud.tencent.com/document/api/213/15753#Filter)。
+// * 可以根据`zone`、`instance-family`、`instance-type`来查询实例机型配置。过滤条件详见过滤器[`Filter`](https://cloud.tencent.com/document/api/213/15753#Filter)。
 //
 // * 如果参数为空，返回指定地域的所有实例机型配置。
 //
@@ -2503,8 +2653,9 @@ func NewDescribeInstanceVncUrlRequest() (request *DescribeInstanceVncUrlRequest)
 func NewDescribeInstanceVncUrlResponse() (response *DescribeInstanceVncUrlResponse) {
     response = &DescribeInstanceVncUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceVncUrl
@@ -2548,6 +2699,7 @@ func NewDescribeInstanceVncUrlResponse() (response *DescribeInstanceVncUrlRespon
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
@@ -2608,6 +2760,7 @@ func (c *Client) DescribeInstanceVncUrl(request *DescribeInstanceVncUrlRequest) 
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
@@ -2653,8 +2806,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -2757,6 +2911,59 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeInstancesActionTimerRequest() (request *DescribeInstancesActionTimerRequest) {
+    request = &DescribeInstancesActionTimerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "DescribeInstancesActionTimer")
+    
+    
+    return
+}
+
+func NewDescribeInstancesActionTimerResponse() (response *DescribeInstancesActionTimerResponse) {
+    response = &DescribeInstancesActionTimerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstancesActionTimer
+// 本接口 (DescribeInstancesActionTimer) 用于查询定时任务信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
+//  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+func (c *Client) DescribeInstancesActionTimer(request *DescribeInstancesActionTimerRequest) (response *DescribeInstancesActionTimerResponse, err error) {
+    return c.DescribeInstancesActionTimerWithContext(context.Background(), request)
+}
+
+// DescribeInstancesActionTimer
+// 本接口 (DescribeInstancesActionTimer) 用于查询定时任务信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
+//  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+func (c *Client) DescribeInstancesActionTimerWithContext(ctx context.Context, request *DescribeInstancesActionTimerRequest) (response *DescribeInstancesActionTimerResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstancesActionTimerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstancesActionTimer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstancesActionTimerResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstancesModificationRequest() (request *DescribeInstancesModificationRequest) {
     request = &DescribeInstancesModificationRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2771,14 +2978,16 @@ func NewDescribeInstancesModificationRequest() (request *DescribeInstancesModifi
 func NewDescribeInstancesModificationResponse() (response *DescribeInstancesModificationResponse) {
     response = &DescribeInstancesModificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesModification
 // 本接口 (DescribeInstancesModification) 用于查询指定实例支持调整的机型配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ZONEINCONSISTENT = "FailedOperation.ZoneInconsistent"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -2796,6 +3005,7 @@ func (c *Client) DescribeInstancesModification(request *DescribeInstancesModific
 // 本接口 (DescribeInstancesModification) 用于查询指定实例支持调整的机型配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ZONEINCONSISTENT = "FailedOperation.ZoneInconsistent"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -2835,8 +3045,9 @@ func NewDescribeInstancesOperationLimitRequest() (request *DescribeInstancesOper
 func NewDescribeInstancesOperationLimitResponse() (response *DescribeInstancesOperationLimitResponse) {
     response = &DescribeInstancesOperationLimitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesOperationLimit
@@ -2897,8 +3108,9 @@ func NewDescribeInstancesStatusRequest() (request *DescribeInstancesStatusReques
 func NewDescribeInstancesStatusResponse() (response *DescribeInstancesStatusResponse) {
     response = &DescribeInstancesStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesStatus
@@ -2912,6 +3124,7 @@ func NewDescribeInstancesStatusResponse() (response *DescribeInstancesStatusResp
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDFILTER = "InvalidFilter"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -2933,6 +3146,7 @@ func (c *Client) DescribeInstancesStatus(request *DescribeInstancesStatusRequest
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDFILTER = "InvalidFilter"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -2969,8 +3183,9 @@ func NewDescribeInternetChargeTypeConfigsRequest() (request *DescribeInternetCha
 func NewDescribeInternetChargeTypeConfigsResponse() (response *DescribeInternetChargeTypeConfigsResponse) {
     response = &DescribeInternetChargeTypeConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternetChargeTypeConfigs
@@ -2978,6 +3193,7 @@ func NewDescribeInternetChargeTypeConfigsResponse() (response *DescribeInternetC
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDFILTER = "InvalidFilter"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -2993,6 +3209,7 @@ func (c *Client) DescribeInternetChargeTypeConfigs(request *DescribeInternetChar
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDFILTER = "InvalidFilter"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -3029,8 +3246,9 @@ func NewDescribeKeyPairsRequest() (request *DescribeKeyPairsRequest) {
 func NewDescribeKeyPairsResponse() (response *DescribeKeyPairsResponse) {
     response = &DescribeKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeKeyPairs
@@ -3107,8 +3325,9 @@ func NewDescribeLaunchTemplateVersionsRequest() (request *DescribeLaunchTemplate
 func NewDescribeLaunchTemplateVersionsResponse() (response *DescribeLaunchTemplateVersionsResponse) {
     response = &DescribeLaunchTemplateVersionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLaunchTemplateVersions
@@ -3189,8 +3408,9 @@ func NewDescribeLaunchTemplatesRequest() (request *DescribeLaunchTemplatesReques
 func NewDescribeLaunchTemplatesResponse() (response *DescribeLaunchTemplatesResponse) {
     response = &DescribeLaunchTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLaunchTemplates
@@ -3257,8 +3477,9 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
 func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
     response = &DescribeRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRegions
@@ -3305,8 +3526,9 @@ func NewDescribeReservedInstancesRequest() (request *DescribeReservedInstancesRe
 func NewDescribeReservedInstancesResponse() (response *DescribeReservedInstancesResponse) {
     response = &DescribeReservedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReservedInstances
@@ -3369,8 +3591,9 @@ func NewDescribeReservedInstancesConfigInfosRequest() (request *DescribeReserved
 func NewDescribeReservedInstancesConfigInfosResponse() (response *DescribeReservedInstancesConfigInfosResponse) {
     response = &DescribeReservedInstancesConfigInfosResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReservedInstancesConfigInfos
@@ -3423,8 +3646,9 @@ func NewDescribeReservedInstancesOfferingsRequest() (request *DescribeReservedIn
 func NewDescribeReservedInstancesOfferingsResponse() (response *DescribeReservedInstancesOfferingsResponse) {
     response = &DescribeReservedInstancesOfferingsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReservedInstancesOfferings
@@ -3487,8 +3711,9 @@ func NewDescribeTaskInfoRequest() (request *DescribeTaskInfoRequest) {
 func NewDescribeTaskInfoResponse() (response *DescribeTaskInfoResponse) {
     response = &DescribeTaskInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskInfo
@@ -3549,8 +3774,9 @@ func NewDescribeZoneInstanceConfigInfosRequest() (request *DescribeZoneInstanceC
 func NewDescribeZoneInstanceConfigInfosResponse() (response *DescribeZoneInstanceConfigInfosResponse) {
     response = &DescribeZoneInstanceConfigInfosResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeZoneInstanceConfigInfos
@@ -3570,6 +3796,7 @@ func NewDescribeZoneInstanceConfigInfosResponse() (response *DescribeZoneInstanc
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  RESOURCEINSUFFICIENT_AVAILABILITYZONESOLDOUT = "ResourceInsufficient.AvailabilityZoneSoldOut"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDPOOL = "UnsupportedOperation.UnsupportedPool"
 func (c *Client) DescribeZoneInstanceConfigInfos(request *DescribeZoneInstanceConfigInfosRequest) (response *DescribeZoneInstanceConfigInfosResponse, err error) {
     return c.DescribeZoneInstanceConfigInfosWithContext(context.Background(), request)
 }
@@ -3591,6 +3818,7 @@ func (c *Client) DescribeZoneInstanceConfigInfos(request *DescribeZoneInstanceCo
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  RESOURCEINSUFFICIENT_AVAILABILITYZONESOLDOUT = "ResourceInsufficient.AvailabilityZoneSoldOut"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDPOOL = "UnsupportedOperation.UnsupportedPool"
 func (c *Client) DescribeZoneInstanceConfigInfosWithContext(ctx context.Context, request *DescribeZoneInstanceConfigInfosRequest) (response *DescribeZoneInstanceConfigInfosResponse, err error) {
     if request == nil {
         request = NewDescribeZoneInstanceConfigInfosRequest()
@@ -3621,8 +3849,9 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
 func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
     response = &DescribeZonesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeZones
@@ -3630,6 +3859,8 @@ func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
 //
 // 可能返回的错误码:
 //  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
     return c.DescribeZonesWithContext(context.Background(), request)
@@ -3640,6 +3871,8 @@ func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *Describ
 //
 // 可能返回的错误码:
 //  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeZonesWithContext(ctx context.Context, request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
     if request == nil {
@@ -3671,8 +3904,9 @@ func NewDisassociateInstancesKeyPairsRequest() (request *DisassociateInstancesKe
 func NewDisassociateInstancesKeyPairsResponse() (response *DisassociateInstancesKeyPairsResponse) {
     response = &DisassociateInstancesKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateInstancesKeyPairs
@@ -3704,8 +3938,10 @@ func NewDisassociateInstancesKeyPairsResponse() (response *DisassociateInstances
 //  UNSUPPORTEDOPERATION_INSTANCEOSWINDOWS = "UnsupportedOperation.InstanceOsWindows"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERUNNING = "UnsupportedOperation.InstanceStateRunning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
@@ -3745,8 +3981,10 @@ func (c *Client) DisassociateInstancesKeyPairs(request *DisassociateInstancesKey
 //  UNSUPPORTEDOPERATION_INSTANCEOSWINDOWS = "UnsupportedOperation.InstanceOsWindows"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERUNNING = "UnsupportedOperation.InstanceStateRunning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
@@ -3783,8 +4021,9 @@ func NewDisassociateSecurityGroupsRequest() (request *DisassociateSecurityGroups
 func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGroupsResponse) {
     response = &DisassociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateSecurityGroups
@@ -3855,8 +4094,9 @@ func NewExportImagesRequest() (request *ExportImagesRequest) {
 func NewExportImagesResponse() (response *ExportImagesResponse) {
     response = &ExportImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportImages
@@ -3869,12 +4109,14 @@ func NewExportImagesResponse() (response *ExportImagesResponse) {
 //  INVALIDPARAMETER_IMAGEIDSSNAPSHOTIDSMUSTONE = "InvalidParameter.ImageIdsSnapshotIdsMustOne"
 //  INVALIDPARAMETER_SNAPSHOTNOTFOUND = "InvalidParameter.SnapshotNotFound"
 //  INVALIDPARAMETERVALUE_BUCKETNOTFOUND = "InvalidParameterValue.BucketNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDBUCKETPERMISSIONFOREXPORT = "InvalidParameterValue.InvalidBucketPermissionForExport"
 //  INVALIDPARAMETERVALUE_INVALIDFILENAMEPREFIXLIST = "InvalidParameterValue.InvalidFileNamePrefixList"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  LIMITEXCEEDED_EXPORTIMAGETASKLIMITEXCEEDED = "LimitExceeded.ExportImageTaskLimitExceeded"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
 //  UNSUPPORTEDOPERATION_IMAGETOOLARGEEXPORTUNSUPPORTED = "UnsupportedOperation.ImageTooLargeExportUnsupported"
@@ -3897,12 +4139,14 @@ func (c *Client) ExportImages(request *ExportImagesRequest) (response *ExportIma
 //  INVALIDPARAMETER_IMAGEIDSSNAPSHOTIDSMUSTONE = "InvalidParameter.ImageIdsSnapshotIdsMustOne"
 //  INVALIDPARAMETER_SNAPSHOTNOTFOUND = "InvalidParameter.SnapshotNotFound"
 //  INVALIDPARAMETERVALUE_BUCKETNOTFOUND = "InvalidParameterValue.BucketNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDBUCKETPERMISSIONFOREXPORT = "InvalidParameterValue.InvalidBucketPermissionForExport"
 //  INVALIDPARAMETERVALUE_INVALIDFILENAMEPREFIXLIST = "InvalidParameterValue.InvalidFileNamePrefixList"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  LIMITEXCEEDED_EXPORTIMAGETASKLIMITEXCEEDED = "LimitExceeded.ExportImageTaskLimitExceeded"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
 //  UNSUPPORTEDOPERATION_IMAGETOOLARGEEXPORTUNSUPPORTED = "UnsupportedOperation.ImageTooLargeExportUnsupported"
@@ -3941,8 +4185,9 @@ func NewImportImageRequest() (request *ImportImageRequest) {
 func NewImportImageResponse() (response *ImportImageResponse) {
     response = &ImportImageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ImportImage
@@ -3997,6 +4242,67 @@ func (c *Client) ImportImageWithContext(ctx context.Context, request *ImportImag
     return
 }
 
+func NewImportInstancesActionTimerRequest() (request *ImportInstancesActionTimerRequest) {
+    request = &ImportInstancesActionTimerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "ImportInstancesActionTimer")
+    
+    
+    return
+}
+
+func NewImportInstancesActionTimerResponse() (response *ImportInstancesActionTimerResponse) {
+    response = &ImportInstancesActionTimerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ImportInstancesActionTimer
+// 导入定时任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MUTACTIONTIMEREXIST = "FailedOperation.MutActionTimerExist"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTIMPORTINSTANCESACTIONTIMER = "UnsupportedOperation.NotSupportImportInstancesActionTimer"
+func (c *Client) ImportInstancesActionTimer(request *ImportInstancesActionTimerRequest) (response *ImportInstancesActionTimerResponse, err error) {
+    return c.ImportInstancesActionTimerWithContext(context.Background(), request)
+}
+
+// ImportInstancesActionTimer
+// 导入定时任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MUTACTIONTIMEREXIST = "FailedOperation.MutActionTimerExist"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTIMPORTINSTANCESACTIONTIMER = "UnsupportedOperation.NotSupportImportInstancesActionTimer"
+func (c *Client) ImportInstancesActionTimerWithContext(ctx context.Context, request *ImportInstancesActionTimerRequest) (response *ImportInstancesActionTimerResponse, err error) {
+    if request == nil {
+        request = NewImportInstancesActionTimerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ImportInstancesActionTimer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewImportInstancesActionTimerResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewImportKeyPairRequest() (request *ImportKeyPairRequest) {
     request = &ImportKeyPairRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4011,8 +4317,9 @@ func NewImportKeyPairRequest() (request *ImportKeyPairRequest) {
 func NewImportKeyPairResponse() (response *ImportKeyPairResponse) {
     response = &ImportKeyPairResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ImportKeyPair
@@ -4097,8 +4404,9 @@ func NewInquirePricePurchaseReservedInstancesOfferingRequest() (request *Inquire
 func NewInquirePricePurchaseReservedInstancesOfferingResponse() (response *InquirePricePurchaseReservedInstancesOfferingResponse) {
     response = &InquirePricePurchaseReservedInstancesOfferingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePricePurchaseReservedInstancesOffering
@@ -4149,8 +4457,9 @@ func NewInquiryPriceModifyInstancesChargeTypeRequest() (request *InquiryPriceMod
 func NewInquiryPriceModifyInstancesChargeTypeResponse() (response *InquiryPriceModifyInstancesChargeTypeResponse) {
     response = &InquiryPriceModifyInstancesChargeTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceModifyInstancesChargeType
@@ -4158,9 +4467,9 @@ func NewInquiryPriceModifyInstancesChargeTypeResponse() (response *InquiryPriceM
 //
 // 
 //
-// * 只支持从 `POSTPAID_BY_HOUR` 计费模式切换为`PREPAID`计费模式。
+// 
 //
-// * 关机不收费的实例、`BC1`和`BS1`机型族的实例、设置定时销毁的实例、竞价实例不支持该操作。
+// * 关机不收费的实例、`批量计算型BC1`和`批量计算型BS1`机型族的实例、设置定时销毁的实例、竞价实例不支持该操作。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -4174,9 +4483,12 @@ func NewInquiryPriceModifyInstancesChargeTypeResponse() (response *InquiryPriceM
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
@@ -4190,9 +4502,9 @@ func (c *Client) InquiryPriceModifyInstancesChargeType(request *InquiryPriceModi
 //
 // 
 //
-// * 只支持从 `POSTPAID_BY_HOUR` 计费模式切换为`PREPAID`计费模式。
+// 
 //
-// * 关机不收费的实例、`BC1`和`BS1`机型族的实例、设置定时销毁的实例、竞价实例不支持该操作。
+// * 关机不收费的实例、`批量计算型BC1`和`批量计算型BS1`机型族的实例、设置定时销毁的实例、竞价实例不支持该操作。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -4206,9 +4518,12 @@ func (c *Client) InquiryPriceModifyInstancesChargeType(request *InquiryPriceModi
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
@@ -4243,8 +4558,9 @@ func NewInquiryPriceRenewHostsRequest() (request *InquiryPriceRenewHostsRequest)
 func NewInquiryPriceRenewHostsResponse() (response *InquiryPriceRenewHostsResponse) {
     response = &InquiryPriceRenewHostsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceRenewHosts
@@ -4301,8 +4617,9 @@ func NewInquiryPriceRenewInstancesRequest() (request *InquiryPriceRenewInstances
 func NewInquiryPriceRenewInstancesResponse() (response *InquiryPriceRenewInstancesResponse) {
     response = &InquiryPriceRenewInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceRenewInstances
@@ -4323,12 +4640,17 @@ func NewInquiryPriceRenewInstancesResponse() (response *InquiryPriceRenewInstanc
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCENOTSUPPORTEDMIXPRICINGMODEL = "InvalidParameterValue.InstanceNotSupportedMixPricingModel"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
 func (c *Client) InquiryPriceRenewInstances(request *InquiryPriceRenewInstancesRequest) (response *InquiryPriceRenewInstancesResponse, err error) {
     return c.InquiryPriceRenewInstancesWithContext(context.Background(), request)
 }
@@ -4351,12 +4673,17 @@ func (c *Client) InquiryPriceRenewInstances(request *InquiryPriceRenewInstancesR
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCENOTSUPPORTEDMIXPRICINGMODEL = "InvalidParameterValue.InstanceNotSupportedMixPricingModel"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
 func (c *Client) InquiryPriceRenewInstancesWithContext(ctx context.Context, request *InquiryPriceRenewInstancesRequest) (response *InquiryPriceRenewInstancesResponse, err error) {
     if request == nil {
         request = NewInquiryPriceRenewInstancesRequest()
@@ -4387,8 +4714,9 @@ func NewInquiryPriceResetInstanceRequest() (request *InquiryPriceResetInstanceRe
 func NewInquiryPriceResetInstanceResponse() (response *InquiryPriceResetInstanceResponse) {
     response = &InquiryPriceResetInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceResetInstance
@@ -4398,7 +4726,7 @@ func NewInquiryPriceResetInstanceResponse() (response *InquiryPriceResetInstance
 //
 // * 如果指定了`ImageId`参数，则使用指定的镜像进行重装询价；否则按照当前实例使用的镜像进行重装询价。
 //
-// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/15753#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口实现`Linux`和`Windows`操作系统切换的重装询价。
+// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/15753#SystemDisk)是`CLOUD_BSSD `、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口实现`Linux`和`Windows`操作系统切换的重装询价。
 //
 // * 目前不支持境外地域的实例使用该接口实现`Linux`和`Windows`操作系统切换的重装询价。
 //
@@ -4417,11 +4745,13 @@ func NewInquiryPriceResetInstanceResponse() (response *InquiryPriceResetInstance
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEIDFORRETSETINSTANCE = "InvalidParameterValue.InvalidImageIdForRetsetInstance"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_INVALIDIMAGELICENSETYPEFORRESET = "UnsupportedOperation.InvalidImageLicenseTypeForReset"
+//  UNSUPPORTEDOPERATION_MODIFYENCRYPTIONNOTSUPPORTED = "UnsupportedOperation.ModifyEncryptionNotSupported"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
 func (c *Client) InquiryPriceResetInstance(request *InquiryPriceResetInstanceRequest) (response *InquiryPriceResetInstanceResponse, err error) {
     return c.InquiryPriceResetInstanceWithContext(context.Background(), request)
@@ -4434,7 +4764,7 @@ func (c *Client) InquiryPriceResetInstance(request *InquiryPriceResetInstanceReq
 //
 // * 如果指定了`ImageId`参数，则使用指定的镜像进行重装询价；否则按照当前实例使用的镜像进行重装询价。
 //
-// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/15753#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口实现`Linux`和`Windows`操作系统切换的重装询价。
+// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/15753#SystemDisk)是`CLOUD_BSSD `、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口实现`Linux`和`Windows`操作系统切换的重装询价。
 //
 // * 目前不支持境外地域的实例使用该接口实现`Linux`和`Windows`操作系统切换的重装询价。
 //
@@ -4453,11 +4783,13 @@ func (c *Client) InquiryPriceResetInstance(request *InquiryPriceResetInstanceReq
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEIDFORRETSETINSTANCE = "InvalidParameterValue.InvalidImageIdForRetsetInstance"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_INVALIDIMAGELICENSETYPEFORRESET = "UnsupportedOperation.InvalidImageLicenseTypeForReset"
+//  UNSUPPORTEDOPERATION_MODIFYENCRYPTIONNOTSUPPORTED = "UnsupportedOperation.ModifyEncryptionNotSupported"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
 func (c *Client) InquiryPriceResetInstanceWithContext(ctx context.Context, request *InquiryPriceResetInstanceRequest) (response *InquiryPriceResetInstanceResponse, err error) {
     if request == nil {
@@ -4489,8 +4821,9 @@ func NewInquiryPriceResetInstancesInternetMaxBandwidthRequest() (request *Inquir
 func NewInquiryPriceResetInstancesInternetMaxBandwidthResponse() (response *InquiryPriceResetInstancesInternetMaxBandwidthResponse) {
     response = &InquiryPriceResetInstancesInternetMaxBandwidthResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceResetInstancesInternetMaxBandwidth
@@ -4500,7 +4833,7 @@ func NewInquiryPriceResetInstancesInternetMaxBandwidthResponse() (response *Inqu
 //
 // * 不同机型带宽上限范围不一致，具体限制详见[公网带宽上限](https://cloud.tencent.com/document/product/213/12523)。
 //
-// * 对于`BANDWIDTH_PREPAID`计费方式的带宽，目前不支持调小带宽，且需要输入参数`StartTime`和`EndTime`，指定调整后的带宽的生效时间段。在这种场景下会涉及扣费，请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 对于`BANDWIDTH_PREPAID`计费方式的带宽，目前不支持调小带宽，且需要输入参数`StartTime`和`EndTime`，指定调整后的带宽的生效时间段。在这种场景下会涉及扣费，请确保账户余额充足。可通过 [DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253) 接口查询账户余额。
 //
 // * 对于 `TRAFFIC_POSTPAID_BY_HOUR`、 `BANDWIDTH_POSTPAID_BY_HOUR` 和 `BANDWIDTH_PACKAGE` 计费方式的带宽，使用该接口调整带宽上限是实时生效的，可以在带宽允许的范围内调大或者调小带宽，不支持输入参数 `StartTime` 和 `EndTime` 。
 //
@@ -4541,7 +4874,7 @@ func (c *Client) InquiryPriceResetInstancesInternetMaxBandwidth(request *Inquiry
 //
 // * 不同机型带宽上限范围不一致，具体限制详见[公网带宽上限](https://cloud.tencent.com/document/product/213/12523)。
 //
-// * 对于`BANDWIDTH_PREPAID`计费方式的带宽，目前不支持调小带宽，且需要输入参数`StartTime`和`EndTime`，指定调整后的带宽的生效时间段。在这种场景下会涉及扣费，请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 对于`BANDWIDTH_PREPAID`计费方式的带宽，目前不支持调小带宽，且需要输入参数`StartTime`和`EndTime`，指定调整后的带宽的生效时间段。在这种场景下会涉及扣费，请确保账户余额充足。可通过 [DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253) 接口查询账户余额。
 //
 // * 对于 `TRAFFIC_POSTPAID_BY_HOUR`、 `BANDWIDTH_POSTPAID_BY_HOUR` 和 `BANDWIDTH_PACKAGE` 计费方式的带宽，使用该接口调整带宽上限是实时生效的，可以在带宽允许的范围内调大或者调小带宽，不支持输入参数 `StartTime` 和 `EndTime` 。
 //
@@ -4601,8 +4934,9 @@ func NewInquiryPriceResetInstancesTypeRequest() (request *InquiryPriceResetInsta
 func NewInquiryPriceResetInstancesTypeResponse() (response *InquiryPriceResetInstancesTypeResponse) {
     response = &InquiryPriceResetInstancesTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceResetInstancesType
@@ -4610,7 +4944,7 @@ func NewInquiryPriceResetInstancesTypeResponse() (response *InquiryPriceResetIns
 //
 // 
 //
-// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/product/213/15753#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口进行调整机型询价。
+// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/product/213/15753#SystemDisk)是`CLOUD_BSSD`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口进行调整机型询价。
 //
 // * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型询价。
 //
@@ -4635,6 +4969,7 @@ func NewInquiryPriceResetInstancesTypeResponse() (response *InquiryPriceResetIns
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  INVALIDPROJECTID_NOTFOUND = "InvalidProjectId.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_EIPNUMLIMIT = "LimitExceeded.EipNumLimit"
 //  LIMITEXCEEDED_ENINUMLIMIT = "LimitExceeded.EniNumLimit"
@@ -4649,6 +4984,7 @@ func NewInquiryPriceResetInstancesTypeResponse() (response *InquiryPriceResetIns
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGINGSAMEFAMILY = "UnsupportedOperation.StoppedModeStopChargingSameFamily"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDARMCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedARMChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILYTOARM = "UnsupportedOperation.UnsupportedChangeInstanceFamilyToARM"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCETOTHISINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceToThisInstanceFamily"
@@ -4661,7 +4997,7 @@ func (c *Client) InquiryPriceResetInstancesType(request *InquiryPriceResetInstan
 //
 // 
 //
-// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/product/213/15753#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口进行调整机型询价。
+// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/product/213/15753#SystemDisk)是`CLOUD_BSSD`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口进行调整机型询价。
 //
 // * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型询价。
 //
@@ -4686,6 +5022,7 @@ func (c *Client) InquiryPriceResetInstancesType(request *InquiryPriceResetInstan
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  INVALIDPROJECTID_NOTFOUND = "InvalidProjectId.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_EIPNUMLIMIT = "LimitExceeded.EipNumLimit"
 //  LIMITEXCEEDED_ENINUMLIMIT = "LimitExceeded.EniNumLimit"
@@ -4700,6 +5037,7 @@ func (c *Client) InquiryPriceResetInstancesType(request *InquiryPriceResetInstan
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGINGSAMEFAMILY = "UnsupportedOperation.StoppedModeStopChargingSameFamily"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDARMCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedARMChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILYTOARM = "UnsupportedOperation.UnsupportedChangeInstanceFamilyToARM"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCETOTHISINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceToThisInstanceFamily"
@@ -4733,8 +5071,9 @@ func NewInquiryPriceResizeInstanceDisksRequest() (request *InquiryPriceResizeIns
 func NewInquiryPriceResizeInstanceDisksResponse() (response *InquiryPriceResizeInstanceDisksResponse) {
     response = &InquiryPriceResizeInstanceDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceResizeInstanceDisks
@@ -4742,7 +5081,7 @@ func NewInquiryPriceResizeInstanceDisksResponse() (response *InquiryPriceResizeI
 //
 // 
 //
-// * 目前只支持扩容非弹性数据盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价，且[数据盘类型](https://cloud.tencent.com/document/product/213/15753#DataDisk)为：`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`。
+// * 目前只支持扩容非弹性数据盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价。
 //
 // * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口扩容数据盘询价。* 仅支持包年包月实例随机器购买的数据盘。* 目前只支持扩容一块数据盘询价。
 //
@@ -4756,10 +5095,13 @@ func NewInquiryPriceResizeInstanceDisksResponse() (response *InquiryPriceResizeI
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ATLEASTONE = "MissingParameter.AtLeastOne"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPED = "UnsupportedOperation.InstanceStateStopped"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_LOCALDISKMIGRATINGTOCLOUDDISK = "UnsupportedOperation.LocalDiskMigratingToCloudDisk"
 func (c *Client) InquiryPriceResizeInstanceDisks(request *InquiryPriceResizeInstanceDisksRequest) (response *InquiryPriceResizeInstanceDisksResponse, err error) {
@@ -4771,7 +5113,7 @@ func (c *Client) InquiryPriceResizeInstanceDisks(request *InquiryPriceResizeInst
 //
 // 
 //
-// * 目前只支持扩容非弹性数据盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价，且[数据盘类型](https://cloud.tencent.com/document/product/213/15753#DataDisk)为：`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`。
+// * 目前只支持扩容非弹性数据盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价。
 //
 // * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口扩容数据盘询价。* 仅支持包年包月实例随机器购买的数据盘。* 目前只支持扩容一块数据盘询价。
 //
@@ -4785,10 +5127,13 @@ func (c *Client) InquiryPriceResizeInstanceDisks(request *InquiryPriceResizeInst
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ATLEASTONE = "MissingParameter.AtLeastOne"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPED = "UnsupportedOperation.InstanceStateStopped"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_LOCALDISKMIGRATINGTOCLOUDDISK = "UnsupportedOperation.LocalDiskMigratingToCloudDisk"
 func (c *Client) InquiryPriceResizeInstanceDisksWithContext(ctx context.Context, request *InquiryPriceResizeInstanceDisksRequest) (response *InquiryPriceResizeInstanceDisksResponse, err error) {
@@ -4821,8 +5166,9 @@ func NewInquiryPriceRunInstancesRequest() (request *InquiryPriceRunInstancesRequ
 func NewInquiryPriceRunInstancesResponse() (response *InquiryPriceRunInstancesResponse) {
     response = &InquiryPriceRunInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceRunInstances
@@ -4847,30 +5193,40 @@ func NewInquiryPriceRunInstancesResponse() (response *InquiryPriceRunInstancesRe
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
 //  INVALIDINSTANCENAME_TOOLONG = "InvalidInstanceName.TooLong"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDPARAMETER_EDGEZONEMISSINTERNETACCESSIBLE = "InvalidParameter.EdgeZoneMissInternetAccessible"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
 //  INVALIDPARAMETER_INTERNETACCESSIBLENOTSUPPORTED = "InvalidParameter.InternetAccessibleNotSupported"
+//  INVALIDPARAMETER_ONLYSUPPORTFOREDGEZONE = "InvalidParameter.OnlySupportForEdgeZone"
 //  INVALIDPARAMETER_SNAPSHOTNOTFOUND = "InvalidParameter.SnapshotNotFound"
+//  INVALIDPARAMETER_SPECIALPARAMETERFORSPECIALACCOUNT = "InvalidParameter.SpecialParameterForSpecialAccount"
 //  INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDNOTFOUND = "InvalidParameterValue.BandwidthPackageIdNotFound"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEISPNOTMATCH = "InvalidParameterValue.BandwidthPackageIspNotMatch"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEZONENOTMATCH = "InvalidParameterValue.BandwidthPackageZoneNotMatch"
 //  INVALIDPARAMETERVALUE_CLOUDSSDDATADISKSIZETOOSMALL = "InvalidParameterValue.CloudSsdDataDiskSizeTooSmall"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTFOUND = "InvalidParameterValue.InstanceTypeNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTHPCCLUSTER = "InvalidParameterValue.InstanceTypeNotSupportHpcCluster"
 //  INVALIDPARAMETERVALUE_INSTANCETYPEREQUIREDHPCCLUSTER = "InvalidParameterValue.InstanceTypeRequiredHpcCluster"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTPRICE = "InvalidParameterValue.InsufficientPrice"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORMAT = "InvalidParameterValue.InvalidImageFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
+//  INVALIDPARAMETERVALUE_ISPNOTSUPPORTFOREDGEZONE = "InvalidParameterValue.IspNotSupportForEdgeZone"
+//  INVALIDPARAMETERVALUE_ISPVALUEREPEATED = "InvalidParameterValue.IspValueRepeated"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPARAMETERVALUE_REQUIREDLOCATIONIMAGE = "InvalidParameterValue.RequiredLocationImage"
 //  INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
 //  INVALIDPARAMETERVALUE_TAGQUOTALIMITEXCEEDED = "InvalidParameterValue.TagQuotaLimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDPASSWORD = "InvalidPassword"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
@@ -4922,30 +5278,40 @@ func (c *Client) InquiryPriceRunInstances(request *InquiryPriceRunInstancesReque
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
 //  INVALIDINSTANCENAME_TOOLONG = "InvalidInstanceName.TooLong"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDPARAMETER_EDGEZONEMISSINTERNETACCESSIBLE = "InvalidParameter.EdgeZoneMissInternetAccessible"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
 //  INVALIDPARAMETER_INTERNETACCESSIBLENOTSUPPORTED = "InvalidParameter.InternetAccessibleNotSupported"
+//  INVALIDPARAMETER_ONLYSUPPORTFOREDGEZONE = "InvalidParameter.OnlySupportForEdgeZone"
 //  INVALIDPARAMETER_SNAPSHOTNOTFOUND = "InvalidParameter.SnapshotNotFound"
+//  INVALIDPARAMETER_SPECIALPARAMETERFORSPECIALACCOUNT = "InvalidParameter.SpecialParameterForSpecialAccount"
 //  INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDNOTFOUND = "InvalidParameterValue.BandwidthPackageIdNotFound"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEISPNOTMATCH = "InvalidParameterValue.BandwidthPackageIspNotMatch"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEZONENOTMATCH = "InvalidParameterValue.BandwidthPackageZoneNotMatch"
 //  INVALIDPARAMETERVALUE_CLOUDSSDDATADISKSIZETOOSMALL = "InvalidParameterValue.CloudSsdDataDiskSizeTooSmall"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTFOUND = "InvalidParameterValue.InstanceTypeNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTHPCCLUSTER = "InvalidParameterValue.InstanceTypeNotSupportHpcCluster"
 //  INVALIDPARAMETERVALUE_INSTANCETYPEREQUIREDHPCCLUSTER = "InvalidParameterValue.InstanceTypeRequiredHpcCluster"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTPRICE = "InvalidParameterValue.InsufficientPrice"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORMAT = "InvalidParameterValue.InvalidImageFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
+//  INVALIDPARAMETERVALUE_ISPNOTSUPPORTFOREDGEZONE = "InvalidParameterValue.IspNotSupportForEdgeZone"
+//  INVALIDPARAMETERVALUE_ISPVALUEREPEATED = "InvalidParameterValue.IspValueRepeated"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPARAMETERVALUE_REQUIREDLOCATIONIMAGE = "InvalidParameterValue.RequiredLocationImage"
 //  INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
 //  INVALIDPARAMETERVALUE_TAGQUOTALIMITEXCEEDED = "InvalidParameterValue.TagQuotaLimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  INVALIDPASSWORD = "InvalidPassword"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
@@ -5001,8 +5367,9 @@ func NewInquiryPriceTerminateInstancesRequest() (request *InquiryPriceTerminateI
 func NewInquiryPriceTerminateInstancesResponse() (response *InquiryPriceTerminateInstancesResponse) {
     response = &InquiryPriceTerminateInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceTerminateInstances
@@ -5095,8 +5462,9 @@ func NewModifyChcAttributeRequest() (request *ModifyChcAttributeRequest) {
 func NewModifyChcAttributeResponse() (response *ModifyChcAttributeResponse) {
     response = &ModifyChcAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyChcAttribute
@@ -5112,6 +5480,7 @@ func NewModifyChcAttributeResponse() (response *ModifyChcAttributeResponse) {
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
 //  INVALIDPASSWORD = "InvalidPassword"
+//  INVALIDSECURITYGROUPID_NOTFOUND = "InvalidSecurityGroupId.NotFound"
 func (c *Client) ModifyChcAttribute(request *ModifyChcAttributeRequest) (response *ModifyChcAttributeResponse, err error) {
     return c.ModifyChcAttributeWithContext(context.Background(), request)
 }
@@ -5129,6 +5498,7 @@ func (c *Client) ModifyChcAttribute(request *ModifyChcAttributeRequest) (respons
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
 //  INVALIDPASSWORD = "InvalidPassword"
+//  INVALIDSECURITYGROUPID_NOTFOUND = "InvalidSecurityGroupId.NotFound"
 func (c *Client) ModifyChcAttributeWithContext(ctx context.Context, request *ModifyChcAttributeRequest) (response *ModifyChcAttributeResponse, err error) {
     if request == nil {
         request = NewModifyChcAttributeRequest()
@@ -5159,8 +5529,9 @@ func NewModifyDisasterRecoverGroupAttributeRequest() (request *ModifyDisasterRec
 func NewModifyDisasterRecoverGroupAttributeResponse() (response *ModifyDisasterRecoverGroupAttributeResponse) {
     response = &ModifyDisasterRecoverGroupAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDisasterRecoverGroupAttribute
@@ -5211,8 +5582,9 @@ func NewModifyHostsAttributeRequest() (request *ModifyHostsAttributeRequest) {
 func NewModifyHostsAttributeResponse() (response *ModifyHostsAttributeResponse) {
     response = &ModifyHostsAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyHostsAttribute
@@ -5265,8 +5637,9 @@ func NewModifyHpcClusterAttributeRequest() (request *ModifyHpcClusterAttributeRe
 func NewModifyHpcClusterAttributeResponse() (response *ModifyHpcClusterAttributeResponse) {
     response = &ModifyHpcClusterAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyHpcClusterAttribute
@@ -5315,8 +5688,9 @@ func NewModifyImageAttributeRequest() (request *ModifyImageAttributeRequest) {
 func NewModifyImageAttributeResponse() (response *ModifyImageAttributeResponse) {
     response = &ModifyImageAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyImageAttribute
@@ -5331,9 +5705,9 @@ func NewModifyImageAttributeResponse() (response *ModifyImageAttributeResponse) 
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
 //  INVALIDIMAGENAME_DUPLICATE = "InvalidImageName.Duplicate"
-//  INVALIDPARAMETER_VALUETOOLARGE = "InvalidParameter.ValueTooLarge"
 //  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
 func (c *Client) ModifyImageAttribute(request *ModifyImageAttributeRequest) (response *ModifyImageAttributeResponse, err error) {
     return c.ModifyImageAttributeWithContext(context.Background(), request)
 }
@@ -5350,9 +5724,9 @@ func (c *Client) ModifyImageAttribute(request *ModifyImageAttributeRequest) (res
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
 //  INVALIDIMAGENAME_DUPLICATE = "InvalidImageName.Duplicate"
-//  INVALIDPARAMETER_VALUETOOLARGE = "InvalidParameter.ValueTooLarge"
 //  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
 func (c *Client) ModifyImageAttributeWithContext(ctx context.Context, request *ModifyImageAttributeRequest) (response *ModifyImageAttributeResponse, err error) {
     if request == nil {
         request = NewModifyImageAttributeRequest()
@@ -5383,22 +5757,23 @@ func NewModifyImageSharePermissionRequest() (request *ModifyImageSharePermission
 func NewModifyImageSharePermissionResponse() (response *ModifyImageSharePermissionResponse) {
     response = &ModifyImageSharePermissionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyImageSharePermission
-// 本接口（ModifyImageSharePermission）用于修改镜像分享信息。
+// 本接口（ModifyImageSharePermission）用于修改镜像共享信息。
 //
 // 
 //
-// * 分享镜像后，被分享账户可以通过该镜像创建实例。
+// * 共享镜像后，被共享账户可以通过该镜像创建实例。
 //
-// * 每个自定义镜像最多可共享给50个账户。
+// * 每个自定义镜像最多可共享给500个账户。
 //
-// * 分享镜像无法更改名称，描述，仅可用于创建实例。
+// * 共享镜像无法更改名称，描述，仅可用于创建实例。
 //
-// * 只支持分享到对方账户相同地域。
+// * 只支持共享到对方账户相同地域。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ACCOUNTALREADYEXISTS = "FailedOperation.AccountAlreadyExists"
@@ -5412,28 +5787,31 @@ func NewModifyImageSharePermissionResponse() (response *ModifyImageSharePermissi
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  OVERQUOTA = "OverQuota"
 //  UNAUTHORIZEDOPERATION_IMAGENOTBELONGTOACCOUNT = "UnauthorizedOperation.ImageNotBelongToAccount"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
+//  UNSUPPORTEDOPERATION_LOCATIONIMAGENOTSUPPORTED = "UnsupportedOperation.LocationImageNotSupported"
 func (c *Client) ModifyImageSharePermission(request *ModifyImageSharePermissionRequest) (response *ModifyImageSharePermissionResponse, err error) {
     return c.ModifyImageSharePermissionWithContext(context.Background(), request)
 }
 
 // ModifyImageSharePermission
-// 本接口（ModifyImageSharePermission）用于修改镜像分享信息。
+// 本接口（ModifyImageSharePermission）用于修改镜像共享信息。
 //
 // 
 //
-// * 分享镜像后，被分享账户可以通过该镜像创建实例。
+// * 共享镜像后，被共享账户可以通过该镜像创建实例。
 //
-// * 每个自定义镜像最多可共享给50个账户。
+// * 每个自定义镜像最多可共享给500个账户。
 //
-// * 分享镜像无法更改名称，描述，仅可用于创建实例。
+// * 共享镜像无法更改名称，描述，仅可用于创建实例。
 //
-// * 只支持分享到对方账户相同地域。
+// * 只支持共享到对方账户相同地域。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ACCOUNTALREADYEXISTS = "FailedOperation.AccountAlreadyExists"
@@ -5447,12 +5825,15 @@ func (c *Client) ModifyImageSharePermission(request *ModifyImageSharePermissionR
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  OVERQUOTA = "OverQuota"
 //  UNAUTHORIZEDOPERATION_IMAGENOTBELONGTOACCOUNT = "UnauthorizedOperation.ImageNotBelongToAccount"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
+//  UNSUPPORTEDOPERATION_LOCATIONIMAGENOTSUPPORTED = "UnsupportedOperation.LocationImageNotSupported"
 func (c *Client) ModifyImageSharePermissionWithContext(ctx context.Context, request *ModifyImageSharePermissionRequest) (response *ModifyImageSharePermissionResponse, err error) {
     if request == nil {
         request = NewModifyImageSharePermissionRequest()
@@ -5483,8 +5864,9 @@ func NewModifyInstanceDiskTypeRequest() (request *ModifyInstanceDiskTypeRequest)
 func NewModifyInstanceDiskTypeResponse() (response *ModifyInstanceDiskTypeResponse) {
     response = &ModifyInstanceDiskTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceDiskType
@@ -5500,7 +5882,7 @@ func NewModifyInstanceDiskTypeResponse() (response *ModifyInstanceDiskTypeRespon
 //
 // * 若实例同时存在本地系统盘和本地数据盘，需同时调整系统盘和数据盘的介质类型，不支持单独针对本地系统盘或本地数据盘修改介质类型。
 //
-// * 修改前请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/378/4397)接口查询账户余额。
+// * 修改前请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/378/4397)接口查询账户余额。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -5543,7 +5925,7 @@ func (c *Client) ModifyInstanceDiskType(request *ModifyInstanceDiskTypeRequest) 
 //
 // * 若实例同时存在本地系统盘和本地数据盘，需同时调整系统盘和数据盘的介质类型，不支持单独针对本地系统盘或本地数据盘修改介质类型。
 //
-// * 修改前请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/378/4397)接口查询账户余额。
+// * 修改前请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/378/4397)接口查询账户余额。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -5599,8 +5981,9 @@ func NewModifyInstancesAttributeRequest() (request *ModifyInstancesAttributeRequ
 func NewModifyInstancesAttributeResponse() (response *ModifyInstancesAttributeResponse) {
     response = &ModifyInstancesAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesAttribute
@@ -5618,8 +6001,11 @@ func NewModifyInstancesAttributeResponse() (response *ModifyInstancesAttributeRe
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
+// * 修改主机名后实例会立即重启，重启后新的主机名生效。
+//
 // 可能返回的错误码:
 //  AUTHFAILURE_CAMROLENAMEAUTHENTICATEFAILED = "AuthFailure.CamRoleNameAuthenticateFailed"
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_SECURITYGROUPACTIONFAILED = "FailedOperation.SecurityGroupActionFailed"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -5641,6 +6027,7 @@ func NewModifyInstancesAttributeResponse() (response *ModifyInstancesAttributeRe
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
@@ -5677,8 +6064,11 @@ func (c *Client) ModifyInstancesAttribute(request *ModifyInstancesAttributeReque
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
+// * 修改主机名后实例会立即重启，重启后新的主机名生效。
+//
 // 可能返回的错误码:
 //  AUTHFAILURE_CAMROLENAMEAUTHENTICATEFAILED = "AuthFailure.CamRoleNameAuthenticateFailed"
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_SECURITYGROUPACTIONFAILED = "FailedOperation.SecurityGroupActionFailed"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -5700,6 +6090,7 @@ func (c *Client) ModifyInstancesAttribute(request *ModifyInstancesAttributeReque
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
@@ -5747,8 +6138,9 @@ func NewModifyInstancesChargeTypeRequest() (request *ModifyInstancesChargeTypeRe
 func NewModifyInstancesChargeTypeResponse() (response *ModifyInstancesChargeTypeResponse) {
     response = &ModifyInstancesChargeTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesChargeType
@@ -5756,7 +6148,7 @@ func NewModifyInstancesChargeTypeResponse() (response *ModifyInstancesChargeType
 //
 // 
 //
-// * 关机不收费的实例、`BC1`和`BS1`机型族的实例、设置定时销毁的实例不支持该操作。
+// * 关机不收费的实例、`批量计算型BC1`和`批量计算型BS1`机型族的实例、设置定时销毁的实例不支持该操作。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
@@ -5774,20 +6166,27 @@ func NewModifyInstancesChargeTypeResponse() (response *ModifyInstancesChargeType
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
 //  LIMITEXCEEDED_INSTANCEQUOTA = "LimitExceeded.InstanceQuota"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
+//  UNSUPPORTEDOPERATION_UNDERWRITEDISCOUNTGREATERTHANPREPAIDDISCOUNT = "UnsupportedOperation.UnderwriteDiscountGreaterThanPrepaidDiscount"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
 func (c *Client) ModifyInstancesChargeType(request *ModifyInstancesChargeTypeRequest) (response *ModifyInstancesChargeTypeResponse, err error) {
     return c.ModifyInstancesChargeTypeWithContext(context.Background(), request)
 }
@@ -5797,7 +6196,7 @@ func (c *Client) ModifyInstancesChargeType(request *ModifyInstancesChargeTypeReq
 //
 // 
 //
-// * 关机不收费的实例、`BC1`和`BS1`机型族的实例、设置定时销毁的实例不支持该操作。
+// * 关机不收费的实例、`批量计算型BC1`和`批量计算型BS1`机型族的实例、设置定时销毁的实例不支持该操作。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
@@ -5815,20 +6214,27 @@ func (c *Client) ModifyInstancesChargeType(request *ModifyInstancesChargeTypeReq
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPERIOD = "InvalidPeriod"
 //  INVALIDPERMISSION = "InvalidPermission"
 //  LIMITEXCEEDED_INSTANCEQUOTA = "LimitExceeded.InstanceQuota"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
+//  UNSUPPORTEDOPERATION_UNDERWRITEDISCOUNTGREATERTHANPREPAIDDISCOUNT = "UnsupportedOperation.UnderwriteDiscountGreaterThanPrepaidDiscount"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
 func (c *Client) ModifyInstancesChargeTypeWithContext(ctx context.Context, request *ModifyInstancesChargeTypeRequest) (response *ModifyInstancesChargeTypeResponse, err error) {
     if request == nil {
         request = NewModifyInstancesChargeTypeRequest()
@@ -5859,8 +6265,9 @@ func NewModifyInstancesProjectRequest() (request *ModifyInstancesProjectRequest)
 func NewModifyInstancesProjectResponse() (response *ModifyInstancesProjectResponse) {
     response = &ModifyInstancesProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesProject
@@ -5868,9 +6275,9 @@ func NewModifyInstancesProjectResponse() (response *ModifyInstancesProjectRespon
 //
 // 
 //
-// * 项目为一个虚拟概念，用户可以在一个账户下面建立多个项目，每个项目中管理不同的资源；将多个不同实例分属到不同项目中，后续使用 [`DescribeInstances`](https://cloud.tencent.com/document/api/213/15728)接口查询实例，项目ID可用于过滤结果。
+// * 项目为一个虚拟概念，用户可以在一个账户下面建立多个项目，每个项目中管理不同的资源；将多个不同实例分属到不同项目中，后续使用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)接口查询实例，项目ID可用于过滤结果。
 //
-// * 绑定负载均衡的实例不支持修改实例所属项目，请先使用[`DeregisterInstancesFromLoadBalancer`](https://cloud.tencent.com/document/api/214/1258)接口解绑负载均衡。
+// * 绑定负载均衡的实例不支持修改实例所属项目，请先使用[DeregisterInstancesFromLoadBalancer](https://cloud.tencent.com/document/api/214/1258)接口解绑负载均衡。
 //
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
@@ -5898,9 +6305,9 @@ func (c *Client) ModifyInstancesProject(request *ModifyInstancesProjectRequest) 
 //
 // 
 //
-// * 项目为一个虚拟概念，用户可以在一个账户下面建立多个项目，每个项目中管理不同的资源；将多个不同实例分属到不同项目中，后续使用 [`DescribeInstances`](https://cloud.tencent.com/document/api/213/15728)接口查询实例，项目ID可用于过滤结果。
+// * 项目为一个虚拟概念，用户可以在一个账户下面建立多个项目，每个项目中管理不同的资源；将多个不同实例分属到不同项目中，后续使用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)接口查询实例，项目ID可用于过滤结果。
 //
-// * 绑定负载均衡的实例不支持修改实例所属项目，请先使用[`DeregisterInstancesFromLoadBalancer`](https://cloud.tencent.com/document/api/214/1258)接口解绑负载均衡。
+// * 绑定负载均衡的实例不支持修改实例所属项目，请先使用[DeregisterInstancesFromLoadBalancer](https://cloud.tencent.com/document/api/214/1258)接口解绑负载均衡。
 //
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
@@ -5949,8 +6356,9 @@ func NewModifyInstancesRenewFlagRequest() (request *ModifyInstancesRenewFlagRequ
 func NewModifyInstancesRenewFlagResponse() (response *ModifyInstancesRenewFlagResponse) {
     response = &ModifyInstancesRenewFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesRenewFlag
@@ -5977,8 +6385,11 @@ func NewModifyInstancesRenewFlagResponse() (response *ModifyInstancesRenewFlagRe
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -5988,6 +6399,7 @@ func NewModifyInstancesRenewFlagResponse() (response *ModifyInstancesRenewFlagRe
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 //  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
 func (c *Client) ModifyInstancesRenewFlag(request *ModifyInstancesRenewFlagRequest) (response *ModifyInstancesRenewFlagResponse, err error) {
     return c.ModifyInstancesRenewFlagWithContext(context.Background(), request)
@@ -6017,8 +6429,11 @@ func (c *Client) ModifyInstancesRenewFlag(request *ModifyInstancesRenewFlagReque
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -6028,6 +6443,7 @@ func (c *Client) ModifyInstancesRenewFlag(request *ModifyInstancesRenewFlagReque
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 //  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
 func (c *Client) ModifyInstancesRenewFlagWithContext(ctx context.Context, request *ModifyInstancesRenewFlagRequest) (response *ModifyInstancesRenewFlagResponse, err error) {
     if request == nil {
@@ -6059,8 +6475,9 @@ func NewModifyInstancesVpcAttributeRequest() (request *ModifyInstancesVpcAttribu
 func NewModifyInstancesVpcAttributeResponse() (response *ModifyInstancesVpcAttributeResponse) {
     response = &ModifyInstancesVpcAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesVpcAttribute
@@ -6084,16 +6501,21 @@ func NewModifyInstancesVpcAttributeResponse() (response *ModifyInstancesVpcAttri
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
+//  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_EDGEZONEINSTANCE = "UnsupportedOperation.EdgeZoneInstance"
 //  UNSUPPORTEDOPERATION_ELASTICNETWORKINTERFACE = "UnsupportedOperation.ElasticNetworkInterface"
 //  UNSUPPORTEDOPERATION_IPV6NOTSUPPORTVPCMIGRATE = "UnsupportedOperation.IPv6NotSupportVpcMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
@@ -6135,16 +6557,21 @@ func (c *Client) ModifyInstancesVpcAttribute(request *ModifyInstancesVpcAttribut
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
+//  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_EDGEZONEINSTANCE = "UnsupportedOperation.EdgeZoneInstance"
 //  UNSUPPORTEDOPERATION_ELASTICNETWORKINTERFACE = "UnsupportedOperation.ElasticNetworkInterface"
 //  UNSUPPORTEDOPERATION_IPV6NOTSUPPORTVPCMIGRATE = "UnsupportedOperation.IPv6NotSupportVpcMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
@@ -6191,8 +6618,9 @@ func NewModifyKeyPairAttributeRequest() (request *ModifyKeyPairAttributeRequest)
 func NewModifyKeyPairAttributeResponse() (response *ModifyKeyPairAttributeResponse) {
     response = &ModifyKeyPairAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyKeyPairAttribute
@@ -6205,6 +6633,8 @@ func NewModifyKeyPairAttributeResponse() (response *ModifyKeyPairAttributeRespon
 // * 密钥对名称不能和已经存在的密钥对的名称重复。
 //
 // * 密钥对ID是密钥对的唯一标识，不可修改。
+//
+// * 密钥对名称和描述信息必须指定其中之一，也支持同时指定。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -6228,6 +6658,8 @@ func (c *Client) ModifyKeyPairAttribute(request *ModifyKeyPairAttributeRequest) 
 // * 密钥对名称不能和已经存在的密钥对的名称重复。
 //
 // * 密钥对ID是密钥对的唯一标识，不可修改。
+//
+// * 密钥对名称和描述信息必须指定其中之一，也支持同时指定。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -6267,8 +6699,9 @@ func NewModifyLaunchTemplateDefaultVersionRequest() (request *ModifyLaunchTempla
 func NewModifyLaunchTemplateDefaultVersionResponse() (response *ModifyLaunchTemplateDefaultVersionResponse) {
     response = &ModifyLaunchTemplateDefaultVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLaunchTemplateDefaultVersion
@@ -6333,8 +6766,9 @@ func NewProgramFpgaImageRequest() (request *ProgramFpgaImageRequest) {
 func NewProgramFpgaImageResponse() (response *ProgramFpgaImageResponse) {
     response = &ProgramFpgaImageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ProgramFpgaImage
@@ -6401,8 +6835,9 @@ func NewPurchaseReservedInstancesOfferingRequest() (request *PurchaseReservedIns
 func NewPurchaseReservedInstancesOfferingResponse() (response *PurchaseReservedInstancesOfferingResponse) {
     response = &PurchaseReservedInstancesOfferingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PurchaseReservedInstancesOffering
@@ -6463,8 +6898,9 @@ func NewRebootInstancesRequest() (request *RebootInstancesRequest) {
 func NewRebootInstancesResponse() (response *RebootInstancesResponse) {
     response = &RebootInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RebootInstances
@@ -6483,6 +6919,7 @@ func NewRebootInstancesResponse() (response *RebootInstancesResponse) {
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
@@ -6497,10 +6934,12 @@ func NewRebootInstancesResponse() (response *RebootInstancesResponse) {
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -6532,6 +6971,7 @@ func (c *Client) RebootInstances(request *RebootInstancesRequest) (response *Reb
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
@@ -6546,10 +6986,12 @@ func (c *Client) RebootInstances(request *RebootInstancesRequest) (response *Reb
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -6591,8 +7033,9 @@ func NewRemoveChcAssistVpcRequest() (request *RemoveChcAssistVpcRequest) {
 func NewRemoveChcAssistVpcResponse() (response *RemoveChcAssistVpcResponse) {
     response = &RemoveChcAssistVpcResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveChcAssistVpc
@@ -6602,6 +7045,7 @@ func NewRemoveChcAssistVpcResponse() (response *RemoveChcAssistVpcResponse) {
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
 //  INVALIDHOST_NOTSUPPORTED = "InvalidHost.NotSupported"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
+//  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 func (c *Client) RemoveChcAssistVpc(request *RemoveChcAssistVpcRequest) (response *RemoveChcAssistVpcResponse, err error) {
     return c.RemoveChcAssistVpcWithContext(context.Background(), request)
 }
@@ -6613,6 +7057,7 @@ func (c *Client) RemoveChcAssistVpc(request *RemoveChcAssistVpcRequest) (respons
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
 //  INVALIDHOST_NOTSUPPORTED = "InvalidHost.NotSupported"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
+//  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 func (c *Client) RemoveChcAssistVpcWithContext(ctx context.Context, request *RemoveChcAssistVpcRequest) (response *RemoveChcAssistVpcResponse, err error) {
     if request == nil {
         request = NewRemoveChcAssistVpcRequest()
@@ -6643,8 +7088,9 @@ func NewRemoveChcDeployVpcRequest() (request *RemoveChcDeployVpcRequest) {
 func NewRemoveChcDeployVpcResponse() (response *RemoveChcDeployVpcResponse) {
     response = &RemoveChcDeployVpcResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveChcDeployVpc
@@ -6699,8 +7145,9 @@ func NewRenewHostsRequest() (request *RenewHostsRequest) {
 func NewRenewHostsResponse() (response *RenewHostsResponse) {
     response = &RenewHostsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewHosts
@@ -6773,8 +7220,9 @@ func NewRenewInstancesRequest() (request *RenewInstancesRequest) {
 func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
     response = &RenewInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewInstances
@@ -6784,11 +7232,12 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //
 // * 只支持操作包年包月实例。
 //
-// * 续费时请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 续费时请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -6805,6 +7254,7 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -6812,6 +7262,8 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
     return c.RenewInstancesWithContext(context.Background(), request)
 }
@@ -6823,11 +7275,12 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //
 // * 只支持操作包年包月实例。
 //
-// * 续费时请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 续费时请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -6844,6 +7297,7 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -6851,6 +7305,8 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 func (c *Client) RenewInstancesWithContext(ctx context.Context, request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
     if request == nil {
         request = NewRenewInstancesRequest()
@@ -6881,8 +7337,9 @@ func NewRepairTaskControlRequest() (request *RepairTaskControlRequest) {
 func NewRepairTaskControlResponse() (response *RepairTaskControlResponse) {
     response = &RepairTaskControlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RepairTaskControl
@@ -6951,8 +7408,9 @@ func NewResetInstanceRequest() (request *ResetInstanceRequest) {
 func NewResetInstanceResponse() (response *ResetInstanceResponse) {
     response = &ResetInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetInstance
@@ -6964,13 +7422,9 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //
 // * 系统盘将会被格式化，并重置；请确保系统盘中无重要文件。
 //
-// * `Linux`和`Windows`系统互相切换时，该实例系统盘`ID`将发生变化，系统盘关联快照将无法回滚、恢复数据。
-//
 // * 密码不指定将会通过站内信下发随机密码。
 //
-// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/9452#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口实现`Linux`和`Windows`操作系统切换。
-//
-// * 目前不支持境外地域的实例使用该接口实现`Linux`和`Windows`操作系统切换。
+// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/9452#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`、`CLOUD_BSSD`类型的实例使用该接口实现操作系统切换。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
@@ -6986,6 +7440,7 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDKEYPAIRID_MALFORMED = "InvalidKeyPairId.Malformed"
 //  INVALIDPARAMETER_HOSTNAMEILLEGAL = "InvalidParameter.HostNameIllegal"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
 //  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
@@ -6993,6 +7448,7 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  INVALIDPARAMETERVALUE_ILLEGALHOSTNAME = "InvalidParameterValue.IllegalHostName"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTFOUND = "InvalidParameterValue.InstanceTypeNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORGIVENINSTANCETYPE = "InvalidParameterValue.InvalidImageForGivenInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORMAT = "InvalidParameterValue.InvalidImageFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
@@ -7002,6 +7458,8 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
 //  INVALIDPARAMETERVALUE_KEYPAIRNOTFOUND = "InvalidParameterValue.KeyPairNotFound"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_REQUIREDLOCATIONIMAGE = "InvalidParameterValue.RequiredLocationImage"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
@@ -7009,10 +7467,12 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
@@ -7048,13 +7508,9 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //
 // * 系统盘将会被格式化，并重置；请确保系统盘中无重要文件。
 //
-// * `Linux`和`Windows`系统互相切换时，该实例系统盘`ID`将发生变化，系统盘关联快照将无法回滚、恢复数据。
-//
 // * 密码不指定将会通过站内信下发随机密码。
 //
-// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/9452#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`类型的实例使用该接口实现`Linux`和`Windows`操作系统切换。
-//
-// * 目前不支持境外地域的实例使用该接口实现`Linux`和`Windows`操作系统切换。
+// * 目前只支持[系统盘类型](https://cloud.tencent.com/document/api/213/9452#SystemDisk)是`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`、`CLOUD_BSSD`类型的实例使用该接口实现操作系统切换。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
@@ -7070,6 +7526,7 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDKEYPAIRID_MALFORMED = "InvalidKeyPairId.Malformed"
 //  INVALIDPARAMETER_HOSTNAMEILLEGAL = "InvalidParameter.HostNameIllegal"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
 //  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
@@ -7077,6 +7534,7 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  INVALIDPARAMETERVALUE_ILLEGALHOSTNAME = "InvalidParameterValue.IllegalHostName"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTFOUND = "InvalidParameterValue.InstanceTypeNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORGIVENINSTANCETYPE = "InvalidParameterValue.InvalidImageForGivenInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFORMAT = "InvalidParameterValue.InvalidImageFormat"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
@@ -7086,6 +7544,8 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
 //  INVALIDPARAMETERVALUE_KEYPAIRNOTFOUND = "InvalidParameterValue.KeyPairNotFound"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_REQUIREDLOCATIONIMAGE = "InvalidParameterValue.RequiredLocationImage"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
@@ -7093,10 +7553,12 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
@@ -7149,8 +7611,9 @@ func NewResetInstancesInternetMaxBandwidthRequest() (request *ResetInstancesInte
 func NewResetInstancesInternetMaxBandwidthResponse() (response *ResetInstancesInternetMaxBandwidthResponse) {
     response = &ResetInstancesInternetMaxBandwidthResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetInstancesInternetMaxBandwidth
@@ -7160,7 +7623,7 @@ func NewResetInstancesInternetMaxBandwidthResponse() (response *ResetInstancesIn
 //
 // * 不同机型带宽上限范围不一致，具体限制详见[公网带宽上限](https://cloud.tencent.com/document/product/213/12523)。
 //
-// * 对于 `BANDWIDTH_PREPAID` 计费方式的带宽，需要输入参数 `StartTime` 和 `EndTime` ，指定调整后的带宽的生效时间段。在这种场景下目前不支持调小带宽，会涉及扣费，请确保账户余额充足。可通过 [`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253) 接口查询账户余额。
+// * 对于 `BANDWIDTH_PREPAID` 计费方式的带宽，需要输入参数 `StartTime` 和 `EndTime` ，指定调整后的带宽的生效时间段。在这种场景下目前不支持调小带宽，会涉及扣费，请确保账户余额充足。可通过 [DescribeAccountBalance] https://cloud.tencent.com/document/product/555/20253) 接口查询账户余额。
 //
 // * 对于 `TRAFFIC_POSTPAID_BY_HOUR` 、 `BANDWIDTH_POSTPAID_BY_HOUR` 和 `BANDWIDTH_PACKAGE` 计费方式的带宽，使用该接口调整带宽上限是实时生效的，可以在带宽允许的范围内调大或者调小带宽，不支持输入参数 `StartTime` 和 `EndTime` 。
 //
@@ -7185,6 +7648,7 @@ func NewResetInstancesInternetMaxBandwidthResponse() (response *ResetInstancesIn
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPERMISSION = "InvalidPermission"
@@ -7192,9 +7656,13 @@ func NewResetInstancesInternetMaxBandwidthResponse() (response *ResetInstancesIn
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_EDGEZONEINSTANCE = "UnsupportedOperation.EdgeZoneInstance"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
@@ -7215,7 +7683,7 @@ func (c *Client) ResetInstancesInternetMaxBandwidth(request *ResetInstancesInter
 //
 // * 不同机型带宽上限范围不一致，具体限制详见[公网带宽上限](https://cloud.tencent.com/document/product/213/12523)。
 //
-// * 对于 `BANDWIDTH_PREPAID` 计费方式的带宽，需要输入参数 `StartTime` 和 `EndTime` ，指定调整后的带宽的生效时间段。在这种场景下目前不支持调小带宽，会涉及扣费，请确保账户余额充足。可通过 [`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253) 接口查询账户余额。
+// * 对于 `BANDWIDTH_PREPAID` 计费方式的带宽，需要输入参数 `StartTime` 和 `EndTime` ，指定调整后的带宽的生效时间段。在这种场景下目前不支持调小带宽，会涉及扣费，请确保账户余额充足。可通过 [DescribeAccountBalance] https://cloud.tencent.com/document/product/555/20253) 接口查询账户余额。
 //
 // * 对于 `TRAFFIC_POSTPAID_BY_HOUR` 、 `BANDWIDTH_POSTPAID_BY_HOUR` 和 `BANDWIDTH_PACKAGE` 计费方式的带宽，使用该接口调整带宽上限是实时生效的，可以在带宽允许的范围内调大或者调小带宽，不支持输入参数 `StartTime` 和 `EndTime` 。
 //
@@ -7240,6 +7708,7 @@ func (c *Client) ResetInstancesInternetMaxBandwidth(request *ResetInstancesInter
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPERMISSION = "InvalidPermission"
@@ -7247,9 +7716,13 @@ func (c *Client) ResetInstancesInternetMaxBandwidth(request *ResetInstancesInter
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_EDGEZONEINSTANCE = "UnsupportedOperation.EdgeZoneInstance"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
@@ -7289,8 +7762,9 @@ func NewResetInstancesPasswordRequest() (request *ResetInstancesPasswordRequest)
 func NewResetInstancesPasswordResponse() (response *ResetInstancesPasswordResponse) {
     response = &ResetInstancesPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetInstancesPassword
@@ -7298,7 +7772,7 @@ func NewResetInstancesPasswordResponse() (response *ResetInstancesPasswordRespon
 //
 // 
 //
-// *如果是修改系统管理云密码：实例的操作系统不同，管理员帐号也会不一样(`Windows`为`Administrator`，`Ubuntu`为`ubuntu`，其它系统为`root`)。
+// *如果是修改系统管理员密码：实例的操作系统不同，管理员账号也会不一样(`Windows`为`Administrator`，`Ubuntu`为`ubuntu`，其它系统为`root`)。
 //
 // * 重置处于运行中状态的实例密码，需要设置关机参数`ForceStop`为`TRUE`。如果没有显式指定强制关机参数，则只有处于关机状态的实例才允许执行重置密码操作。
 //
@@ -7307,6 +7781,7 @@ func NewResetInstancesPasswordResponse() (response *ResetInstancesPasswordRespon
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
@@ -7321,6 +7796,7 @@ func NewResetInstancesPasswordResponse() (response *ResetInstancesPasswordRespon
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
@@ -7345,7 +7821,7 @@ func (c *Client) ResetInstancesPassword(request *ResetInstancesPasswordRequest) 
 //
 // 
 //
-// *如果是修改系统管理云密码：实例的操作系统不同，管理员帐号也会不一样(`Windows`为`Administrator`，`Ubuntu`为`ubuntu`，其它系统为`root`)。
+// *如果是修改系统管理员密码：实例的操作系统不同，管理员账号也会不一样(`Windows`为`Administrator`，`Ubuntu`为`ubuntu`，其它系统为`root`)。
 //
 // * 重置处于运行中状态的实例密码，需要设置关机参数`ForceStop`为`TRUE`。如果没有显式指定强制关机参数，则只有处于关机状态的实例才允许执行重置密码操作。
 //
@@ -7354,6 +7830,7 @@ func (c *Client) ResetInstancesPassword(request *ResetInstancesPasswordRequest) 
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
@@ -7368,6 +7845,7 @@ func (c *Client) ResetInstancesPassword(request *ResetInstancesPasswordRequest) 
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
@@ -7413,8 +7891,9 @@ func NewResetInstancesTypeRequest() (request *ResetInstancesTypeRequest) {
 func NewResetInstancesTypeResponse() (response *ResetInstancesTypeResponse) {
     response = &ResetInstancesTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetInstancesType
@@ -7422,13 +7901,14 @@ func NewResetInstancesTypeResponse() (response *ResetInstancesTypeResponse) {
 //
 // 
 //
-// * 目前只支持[系统盘类型](/document/api/213/9452#block_device)是CLOUD_BASIC、CLOUD_PREMIUM、CLOUD_SSD类型的实例使用该接口进行机型调整。
+// * 目前只支持[系统盘类型](/document/api/213/9452#block_device)是CLOUD_BASIC、CLOUD_PREMIUM、CLOUD_SSD、CLOUD_BSSD类型的实例使用该接口进行机型调整。
 //
-// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型。对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型。对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // * 本接口为异步接口，调整实例配置请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表调整实例配置操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
 //  FAILEDOPERATION_PROMOTIONALPERIORESTRICTION = "FailedOperation.PromotionalPerioRestriction"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
@@ -7455,11 +7935,13 @@ func NewResetInstancesTypeResponse() (response *ResetInstancesTypeResponse) {
 //  INVALIDPERMISSION = "InvalidPermission"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_EIPNUMLIMIT = "LimitExceeded.EipNumLimit"
+//  LIMITEXCEEDED_ENILIMITINSTANCETYPE = "LimitExceeded.EniLimitInstanceType"
 //  LIMITEXCEEDED_ENINUMLIMIT = "LimitExceeded.EniNumLimit"
 //  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
 //  LIMITEXCEEDED_SPOTQUOTA = "LimitExceeded.SpotQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_INVALIDZONEINSTANCETYPE = "ResourceNotFound.InvalidZoneInstanceType"
@@ -7470,6 +7952,9 @@ func NewResetInstancesTypeResponse() (response *ResetInstancesTypeResponse) {
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNSUPPORTEDOPERATION_DISKSNAPCREATETIMETOOOLD = "UnsupportedOperation.DiskSnapCreateTimeTooOld"
 //  UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
@@ -7482,11 +7967,14 @@ func NewResetInstancesTypeResponse() (response *ResetInstancesTypeResponse) {
 //  UNSUPPORTEDOPERATION_LOCALDATADISKCHANGEINSTANCEFAMILY = "UnsupportedOperation.LocalDataDiskChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_LOCALDISKMIGRATINGTOCLOUDDISK = "UnsupportedOperation.LocalDiskMigratingToCloudDisk"
 //  UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTUNPAIDORDER = "UnsupportedOperation.NotSupportUnpaidOrder"
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
 //  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGINGSAMEFAMILY = "UnsupportedOperation.StoppedModeStopChargingSameFamily"
+//  UNSUPPORTEDOPERATION_SYSTEMDISKTYPE = "UnsupportedOperation.SystemDiskType"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDARMCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedARMChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILYTOARM = "UnsupportedOperation.UnsupportedChangeInstanceFamilyToARM"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCETOTHISINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceToThisInstanceFamily"
@@ -7499,13 +7987,14 @@ func (c *Client) ResetInstancesType(request *ResetInstancesTypeRequest) (respons
 //
 // 
 //
-// * 目前只支持[系统盘类型](/document/api/213/9452#block_device)是CLOUD_BASIC、CLOUD_PREMIUM、CLOUD_SSD类型的实例使用该接口进行机型调整。
+// * 目前只支持[系统盘类型](/document/api/213/9452#block_device)是CLOUD_BASIC、CLOUD_PREMIUM、CLOUD_SSD、CLOUD_BSSD类型的实例使用该接口进行机型调整。
 //
-// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型。对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型。对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // * 本接口为异步接口，调整实例配置请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表调整实例配置操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
 //  FAILEDOPERATION_PROMOTIONALPERIORESTRICTION = "FailedOperation.PromotionalPerioRestriction"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
@@ -7532,11 +8021,13 @@ func (c *Client) ResetInstancesType(request *ResetInstancesTypeRequest) (respons
 //  INVALIDPERMISSION = "InvalidPermission"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_EIPNUMLIMIT = "LimitExceeded.EipNumLimit"
+//  LIMITEXCEEDED_ENILIMITINSTANCETYPE = "LimitExceeded.EniLimitInstanceType"
 //  LIMITEXCEEDED_ENINUMLIMIT = "LimitExceeded.EniNumLimit"
 //  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
 //  LIMITEXCEEDED_SPOTQUOTA = "LimitExceeded.SpotQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_INVALIDZONEINSTANCETYPE = "ResourceNotFound.InvalidZoneInstanceType"
@@ -7547,6 +8038,9 @@ func (c *Client) ResetInstancesType(request *ResetInstancesTypeRequest) (respons
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNSUPPORTEDOPERATION_DISKSNAPCREATETIMETOOOLD = "UnsupportedOperation.DiskSnapCreateTimeTooOld"
 //  UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
@@ -7559,11 +8053,14 @@ func (c *Client) ResetInstancesType(request *ResetInstancesTypeRequest) (respons
 //  UNSUPPORTEDOPERATION_LOCALDATADISKCHANGEINSTANCEFAMILY = "UnsupportedOperation.LocalDataDiskChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_LOCALDISKMIGRATINGTOCLOUDDISK = "UnsupportedOperation.LocalDiskMigratingToCloudDisk"
 //  UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTUNPAIDORDER = "UnsupportedOperation.NotSupportUnpaidOrder"
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
 //  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGINGSAMEFAMILY = "UnsupportedOperation.StoppedModeStopChargingSameFamily"
+//  UNSUPPORTEDOPERATION_SYSTEMDISKTYPE = "UnsupportedOperation.SystemDiskType"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDARMCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedARMChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILYTOARM = "UnsupportedOperation.UnsupportedChangeInstanceFamilyToARM"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCETOTHISINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceToThisInstanceFamily"
@@ -7597,26 +8094,30 @@ func NewResizeInstanceDisksRequest() (request *ResizeInstanceDisksRequest) {
 func NewResizeInstanceDisksResponse() (response *ResizeInstanceDisksResponse) {
     response = &ResizeInstanceDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResizeInstanceDisks
-// 本接口 (ResizeInstanceDisks) 用于扩容实例的数据盘。
+// 本接口 (ResizeInstanceDisks) 用于扩容实例的磁盘。
 //
 // 
 //
-// * 目前只支持扩容非弹性盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性），且[数据盘类型](https://cloud.tencent.com/document/api/213/15753#DataDisk)为：`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`和[CDH](https://cloud.tencent.com/document/product/416)实例的`LOCAL_BASIC`、`LOCAL_SSD`类型数据盘。
+// * 目前只支持扩容非弹性盘（[ DescribeDisks ](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）。
 //
-// * 对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[ DescribeAccountBalance ](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // * 目前只支持扩容一块数据盘。
+//
+// * 默认扩容方式为关机后扩容。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // * 如果是系统盘，目前只支持扩容，不支持缩容。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -7626,16 +8127,25 @@ func NewResizeInstanceDisksResponse() (response *ResizeInstanceDisksResponse) {
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_CDHONLYLOCALDATADISKRESIZE = "InvalidParameterValue.CdhOnlyLocalDataDiskResize"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ATLEASTONE = "MissingParameter.AtLeastOne"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERUNNING = "UnsupportedOperation.InstanceStateRunning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPED = "UnsupportedOperation.InstanceStateStopped"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
@@ -7647,21 +8157,24 @@ func (c *Client) ResizeInstanceDisks(request *ResizeInstanceDisksRequest) (respo
 }
 
 // ResizeInstanceDisks
-// 本接口 (ResizeInstanceDisks) 用于扩容实例的数据盘。
+// 本接口 (ResizeInstanceDisks) 用于扩容实例的磁盘。
 //
 // 
 //
-// * 目前只支持扩容非弹性盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性），且[数据盘类型](https://cloud.tencent.com/document/api/213/15753#DataDisk)为：`CLOUD_BASIC`、`CLOUD_PREMIUM`、`CLOUD_SSD`和[CDH](https://cloud.tencent.com/document/product/416)实例的`LOCAL_BASIC`、`LOCAL_SSD`类型数据盘。
+// * 目前只支持扩容非弹性盘（[ DescribeDisks ](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）。
 //
-// * 对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[`DescribeAccountBalance`](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
+// * 对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[ DescribeAccountBalance ](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // * 目前只支持扩容一块数据盘。
+//
+// * 默认扩容方式为关机后扩容。
 //
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // * 如果是系统盘，目前只支持扩容，不支持缩容。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -7671,16 +8184,25 @@ func (c *Client) ResizeInstanceDisks(request *ResizeInstanceDisksRequest) (respo
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_CDHONLYLOCALDATADISKRESIZE = "InvalidParameterValue.CdhOnlyLocalDataDiskResize"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ATLEASTONE = "MissingParameter.AtLeastOne"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATERUNNING = "UnsupportedOperation.InstanceStateRunning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPED = "UnsupportedOperation.InstanceStateStopped"
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
@@ -7717,8 +8239,9 @@ func NewRunInstancesRequest() (request *RunInstancesRequest) {
 func NewRunInstancesResponse() (response *RunInstancesResponse) {
     response = &RunInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunInstances
@@ -7757,24 +8280,36 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDHOSTID_NOTFOUND = "InvalidHostId.NotFound"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCENAME_TOOLONG = "InvalidInstanceName.TooLong"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDKEYPAIRID_MALFORMED = "InvalidKeyPairId.Malformed"
+//  INVALIDPARAMETER_CDCNOTSUPPORTED = "InvalidParameter.CdcNotSupported"
+//  INVALIDPARAMETER_EDGEZONEMISSINTERNETACCESSIBLE = "InvalidParameter.EdgeZoneMissInternetAccessible"
 //  INVALIDPARAMETER_HOSTIDSTATUSNOTSUPPORT = "InvalidParameter.HostIdStatusNotSupport"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
 //  INVALIDPARAMETER_INTERNETACCESSIBLENOTSUPPORTED = "InvalidParameter.InternetAccessibleNotSupported"
 //  INVALIDPARAMETER_INVALIDIPFORMAT = "InvalidParameter.InvalidIpFormat"
 //  INVALIDPARAMETER_LACKCORECOUNTORTHREADPERCORE = "InvalidParameter.LackCoreCountOrThreadPerCore"
+//  INVALIDPARAMETER_ONLYSUPPORTFOREDGEZONE = "InvalidParameter.OnlySupportForEdgeZone"
 //  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETER_SNAPSHOTNOTFOUND = "InvalidParameter.SnapshotNotFound"
+//  INVALIDPARAMETER_SPECIALPARAMETERFORSPECIALACCOUNT = "InvalidParameter.SpecialParameterForSpecialAccount"
 //  INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDNOTFOUND = "InvalidParameterValue.BandwidthPackageIdNotFound"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEISPNOTMATCH = "InvalidParameterValue.BandwidthPackageIspNotMatch"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEZONENOTMATCH = "InvalidParameterValue.BandwidthPackageZoneNotMatch"
+//  INVALIDPARAMETERVALUE_CAMROLENAMEMALFORMED = "InvalidParameterValue.CamRoleNameMalformed"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_CLOUDSSDDATADISKSIZETOOSMALL = "InvalidParameterValue.CloudSsdDataDiskSizeTooSmall"
 //  INVALIDPARAMETERVALUE_CORECOUNTVALUE = "InvalidParameterValue.CoreCountValue"
+//  INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
+//  INVALIDPARAMETERVALUE_EXTERNALIPQUOTALIMITED = "InvalidParameterValue.ExternalIpQuotaLimited"
+//  INVALIDPARAMETERVALUE_HPCCLUSTERIDZONEIDNOTMATCH = "InvalidParameterValue.HpcClusterIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_IPADDRESSMALFORMED = "InvalidParameterValue.IPAddressMalformed"
 //  INVALIDPARAMETERVALUE_ILLEGALHOSTNAME = "InvalidParameterValue.IllegalHostName"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
@@ -7793,6 +8328,8 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
+//  INVALIDPARAMETERVALUE_ISPNOTSUPPORTFOREDGEZONE = "InvalidParameterValue.IspNotSupportForEdgeZone"
+//  INVALIDPARAMETERVALUE_ISPVALUEREPEATED = "InvalidParameterValue.IspValueRepeated"
 //  INVALIDPARAMETERVALUE_KEYPAIRNOTFOUND = "InvalidParameterValue.KeyPairNotFound"
 //  INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDMALFORMED = "InvalidParameterValue.LaunchTemplateIdMalformed"
 //  INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDNOTEXISTED = "InvalidParameterValue.LaunchTemplateIdNotExisted"
@@ -7820,12 +8357,14 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPROJECTID_NOTFOUND = "InvalidProjectId.NotFound"
 //  INVALIDSECURITYGROUPID_NOTFOUND = "InvalidSecurityGroupId.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  LIMITEXCEEDED_CVMINSTANCEQUOTA = "LimitExceeded.CvmInstanceQuota"
 //  LIMITEXCEEDED_CVMSVIFSPERSECGROUPLIMITEXCEEDED = "LimitExceeded.CvmsVifsPerSecGroupLimitExceeded"
 //  LIMITEXCEEDED_DISASTERRECOVERGROUP = "LimitExceeded.DisasterRecoverGroup"
 //  LIMITEXCEEDED_IPV6ADDRESSNUM = "LimitExceeded.IPv6AddressNum"
 //  LIMITEXCEEDED_INSTANCEENINUMLIMIT = "LimitExceeded.InstanceEniNumLimit"
 //  LIMITEXCEEDED_INSTANCEQUOTA = "LimitExceeded.InstanceQuota"
 //  LIMITEXCEEDED_PREPAYQUOTA = "LimitExceeded.PrepayQuota"
+//  LIMITEXCEEDED_PREPAYUNDERWRITEQUOTA = "LimitExceeded.PrepayUnderwriteQuota"
 //  LIMITEXCEEDED_SINGLEUSGQUOTA = "LimitExceeded.SingleUSGQuota"
 //  LIMITEXCEEDED_SPOTQUOTA = "LimitExceeded.SpotQuota"
 //  LIMITEXCEEDED_USERSPOTQUOTA = "LimitExceeded.UserSpotQuota"
@@ -7833,20 +8372,26 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_DPDKINSTANCETYPEREQUIREDVPC = "MissingParameter.DPDKInstanceTypeRequiredVPC"
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
+//  OPERATIONDENIED_ACCOUNTNOTSUPPORTED = "OperationDenied.AccountNotSupported"
 //  OPERATIONDENIED_CHCINSTALLCLOUDIMAGEWITHOUTDEPLOYNETWORK = "OperationDenied.ChcInstallCloudImageWithoutDeployNetwork"
+//  OPERATIONDENIED_NOTBANDWIDTHSHIFTUPUSERAPPLYEDGEZONEEIP = "OperationDenied.NotBandwidthShiftUpUserApplyEdgeZoneEip"
 //  RESOURCEINSUFFICIENT_AVAILABILITYZONESOLDOUT = "ResourceInsufficient.AvailabilityZoneSoldOut"
+//  RESOURCEINSUFFICIENT_CIDRBLOCK = "ResourceInsufficient.CidrBlock"
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCENOTFOUND_NODEFAULTCBS = "ResourceNotFound.NoDefaultCbs"
 //  RESOURCENOTFOUND_NODEFAULTCBSWITHREASON = "ResourceNotFound.NoDefaultCbsWithReason"
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_EIPINSUFFICIENT = "ResourcesSoldOut.EipInsufficient"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_HIBERNATIONOSVERSION = "UnsupportedOperation.HibernationOsVersion"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
@@ -7900,24 +8445,36 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDHOSTID_NOTFOUND = "InvalidHostId.NotFound"
 //  INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 //  INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCENAME_TOOLONG = "InvalidInstanceName.TooLong"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDKEYPAIRID_MALFORMED = "InvalidKeyPairId.Malformed"
+//  INVALIDPARAMETER_CDCNOTSUPPORTED = "InvalidParameter.CdcNotSupported"
+//  INVALIDPARAMETER_EDGEZONEMISSINTERNETACCESSIBLE = "InvalidParameter.EdgeZoneMissInternetAccessible"
 //  INVALIDPARAMETER_HOSTIDSTATUSNOTSUPPORT = "InvalidParameter.HostIdStatusNotSupport"
 //  INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
 //  INVALIDPARAMETER_INTERNETACCESSIBLENOTSUPPORTED = "InvalidParameter.InternetAccessibleNotSupported"
 //  INVALIDPARAMETER_INVALIDIPFORMAT = "InvalidParameter.InvalidIpFormat"
 //  INVALIDPARAMETER_LACKCORECOUNTORTHREADPERCORE = "InvalidParameter.LackCoreCountOrThreadPerCore"
+//  INVALIDPARAMETER_ONLYSUPPORTFOREDGEZONE = "InvalidParameter.OnlySupportForEdgeZone"
 //  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETER_SNAPSHOTNOTFOUND = "InvalidParameter.SnapshotNotFound"
+//  INVALIDPARAMETER_SPECIALPARAMETERFORSPECIALACCOUNT = "InvalidParameter.SpecialParameterForSpecialAccount"
 //  INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDNOTFOUND = "InvalidParameterValue.BandwidthPackageIdNotFound"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEISPNOTMATCH = "InvalidParameterValue.BandwidthPackageIspNotMatch"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEZONENOTMATCH = "InvalidParameterValue.BandwidthPackageZoneNotMatch"
+//  INVALIDPARAMETERVALUE_CAMROLENAMEMALFORMED = "InvalidParameterValue.CamRoleNameMalformed"
 //  INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 //  INVALIDPARAMETERVALUE_CLOUDSSDDATADISKSIZETOOSMALL = "InvalidParameterValue.CloudSsdDataDiskSizeTooSmall"
 //  INVALIDPARAMETERVALUE_CORECOUNTVALUE = "InvalidParameterValue.CoreCountValue"
+//  INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
+//  INVALIDPARAMETERVALUE_EXTERNALIPQUOTALIMITED = "InvalidParameterValue.ExternalIpQuotaLimited"
+//  INVALIDPARAMETERVALUE_HPCCLUSTERIDZONEIDNOTMATCH = "InvalidParameterValue.HpcClusterIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_IPADDRESSMALFORMED = "InvalidParameterValue.IPAddressMalformed"
 //  INVALIDPARAMETERVALUE_ILLEGALHOSTNAME = "InvalidParameterValue.IllegalHostName"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
@@ -7936,6 +8493,8 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
+//  INVALIDPARAMETERVALUE_ISPNOTSUPPORTFOREDGEZONE = "InvalidParameterValue.IspNotSupportForEdgeZone"
+//  INVALIDPARAMETERVALUE_ISPVALUEREPEATED = "InvalidParameterValue.IspValueRepeated"
 //  INVALIDPARAMETERVALUE_KEYPAIRNOTFOUND = "InvalidParameterValue.KeyPairNotFound"
 //  INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDMALFORMED = "InvalidParameterValue.LaunchTemplateIdMalformed"
 //  INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDNOTEXISTED = "InvalidParameterValue.LaunchTemplateIdNotExisted"
@@ -7963,12 +8522,14 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPROJECTID_NOTFOUND = "InvalidProjectId.NotFound"
 //  INVALIDSECURITYGROUPID_NOTFOUND = "InvalidSecurityGroupId.NotFound"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  LIMITEXCEEDED_CVMINSTANCEQUOTA = "LimitExceeded.CvmInstanceQuota"
 //  LIMITEXCEEDED_CVMSVIFSPERSECGROUPLIMITEXCEEDED = "LimitExceeded.CvmsVifsPerSecGroupLimitExceeded"
 //  LIMITEXCEEDED_DISASTERRECOVERGROUP = "LimitExceeded.DisasterRecoverGroup"
 //  LIMITEXCEEDED_IPV6ADDRESSNUM = "LimitExceeded.IPv6AddressNum"
 //  LIMITEXCEEDED_INSTANCEENINUMLIMIT = "LimitExceeded.InstanceEniNumLimit"
 //  LIMITEXCEEDED_INSTANCEQUOTA = "LimitExceeded.InstanceQuota"
 //  LIMITEXCEEDED_PREPAYQUOTA = "LimitExceeded.PrepayQuota"
+//  LIMITEXCEEDED_PREPAYUNDERWRITEQUOTA = "LimitExceeded.PrepayUnderwriteQuota"
 //  LIMITEXCEEDED_SINGLEUSGQUOTA = "LimitExceeded.SingleUSGQuota"
 //  LIMITEXCEEDED_SPOTQUOTA = "LimitExceeded.SpotQuota"
 //  LIMITEXCEEDED_USERSPOTQUOTA = "LimitExceeded.UserSpotQuota"
@@ -7976,20 +8537,26 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_DPDKINSTANCETYPEREQUIREDVPC = "MissingParameter.DPDKInstanceTypeRequiredVPC"
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
+//  OPERATIONDENIED_ACCOUNTNOTSUPPORTED = "OperationDenied.AccountNotSupported"
 //  OPERATIONDENIED_CHCINSTALLCLOUDIMAGEWITHOUTDEPLOYNETWORK = "OperationDenied.ChcInstallCloudImageWithoutDeployNetwork"
+//  OPERATIONDENIED_NOTBANDWIDTHSHIFTUPUSERAPPLYEDGEZONEEIP = "OperationDenied.NotBandwidthShiftUpUserApplyEdgeZoneEip"
 //  RESOURCEINSUFFICIENT_AVAILABILITYZONESOLDOUT = "ResourceInsufficient.AvailabilityZoneSoldOut"
+//  RESOURCEINSUFFICIENT_CIDRBLOCK = "ResourceInsufficient.CidrBlock"
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCENOTFOUND_NODEFAULTCBS = "ResourceNotFound.NoDefaultCbs"
 //  RESOURCENOTFOUND_NODEFAULTCBSWITHREASON = "ResourceNotFound.NoDefaultCbsWithReason"
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_EIPINSUFFICIENT = "ResourcesSoldOut.EipInsufficient"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_HIBERNATIONOSVERSION = "UnsupportedOperation.HibernationOsVersion"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
@@ -8033,8 +8600,9 @@ func NewStartInstancesRequest() (request *StartInstancesRequest) {
 func NewStartInstancesResponse() (response *StartInstancesResponse) {
     response = &StartInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartInstances
@@ -8058,9 +8626,11 @@ func NewStartInstancesResponse() (response *StartInstancesResponse) {
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
@@ -8102,9 +8672,11 @@ func (c *Client) StartInstances(request *StartInstancesRequest) (response *Start
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
@@ -8151,8 +8723,9 @@ func NewStopInstancesRequest() (request *StopInstancesRequest) {
 func NewStopInstancesResponse() (response *StopInstancesResponse) {
     response = &StopInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopInstances
@@ -8179,17 +8752,20 @@ func NewStopInstancesResponse() (response *StopInstancesResponse) {
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNSUPPORTEDOPERATION_HIBERNATIONFORNORMALINSTANCE = "UnsupportedOperation.HibernationForNormalInstance"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -8231,17 +8807,20 @@ func (c *Client) StopInstances(request *StopInstancesRequest) (response *StopIns
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNSUPPORTEDOPERATION_HIBERNATIONFORNORMALINSTANCE = "UnsupportedOperation.HibernationForNormalInstance"
+//  UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 //  UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
@@ -8285,8 +8864,9 @@ func NewSyncImagesRequest() (request *SyncImagesRequest) {
 func NewSyncImagesResponse() (response *SyncImagesResponse) {
     response = &SyncImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncImages
@@ -8298,7 +8878,7 @@ func NewSyncImagesResponse() (response *SyncImagesResponse) {
 //
 // * 该接口支持多个同步地域。
 //
-// * 单个帐号在每个地域最多支持存在10个自定义镜像。
+// * 单个账号在每个地域最多支持存在500个自定义镜像。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDIMAGESTATE = "FailedOperation.InvalidImageState"
@@ -8316,6 +8896,7 @@ func NewSyncImagesResponse() (response *SyncImagesResponse) {
 //  INVALIDREGION_NOTFOUND = "InvalidRegion.NotFound"
 //  INVALIDREGION_UNAVAILABLE = "InvalidRegion.Unavailable"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
+//  UNSUPPORTEDOPERATION_LOCATIONIMAGENOTSUPPORTED = "UnsupportedOperation.LocationImageNotSupported"
 //  UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
 func (c *Client) SyncImages(request *SyncImagesRequest) (response *SyncImagesResponse, err error) {
     return c.SyncImagesWithContext(context.Background(), request)
@@ -8330,7 +8911,7 @@ func (c *Client) SyncImages(request *SyncImagesRequest) (response *SyncImagesRes
 //
 // * 该接口支持多个同步地域。
 //
-// * 单个帐号在每个地域最多支持存在10个自定义镜像。
+// * 单个账号在每个地域最多支持存在500个自定义镜像。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDIMAGESTATE = "FailedOperation.InvalidImageState"
@@ -8348,6 +8929,7 @@ func (c *Client) SyncImages(request *SyncImagesRequest) (response *SyncImagesRes
 //  INVALIDREGION_NOTFOUND = "InvalidRegion.NotFound"
 //  INVALIDREGION_UNAVAILABLE = "InvalidRegion.Unavailable"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
+//  UNSUPPORTEDOPERATION_LOCATIONIMAGENOTSUPPORTED = "UnsupportedOperation.LocationImageNotSupported"
 //  UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
 func (c *Client) SyncImagesWithContext(ctx context.Context, request *SyncImagesRequest) (response *SyncImagesResponse, err error) {
     if request == nil {
@@ -8379,8 +8961,9 @@ func NewTerminateInstancesRequest() (request *TerminateInstancesRequest) {
 func NewTerminateInstancesResponse() (response *TerminateInstancesResponse) {
     response = &TerminateInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateInstances
@@ -8401,6 +8984,7 @@ func NewTerminateInstancesResponse() (response *TerminateInstancesResponse) {
 // * 批量操作时，所有实例的付费类型必须一致。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
 //  FAILEDOPERATION_UNRETURNABLE = "FailedOperation.Unreturnable"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
@@ -8440,6 +9024,7 @@ func NewTerminateInstancesResponse() (response *TerminateInstancesResponse) {
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATED = "UnsupportedOperation.InstanceStateTerminated"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
 //  UNSUPPORTEDOPERATION_INSTANCESPROTECTED = "UnsupportedOperation.InstancesProtected"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESOWNER = "UnsupportedOperation.InvalidInstancesOwner"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCETERMINATEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceTerminateUnsupported"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
 //  UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
@@ -8467,6 +9052,7 @@ func (c *Client) TerminateInstances(request *TerminateInstancesRequest) (respons
 // * 批量操作时，所有实例的付费类型必须一致。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
 //  FAILEDOPERATION_UNRETURNABLE = "FailedOperation.Unreturnable"
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
@@ -8506,6 +9092,7 @@ func (c *Client) TerminateInstances(request *TerminateInstancesRequest) (respons
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATED = "UnsupportedOperation.InstanceStateTerminated"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
 //  UNSUPPORTEDOPERATION_INSTANCESPROTECTED = "UnsupportedOperation.InstancesProtected"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESOWNER = "UnsupportedOperation.InvalidInstancesOwner"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCETERMINATEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceTerminateUnsupported"
 //  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
 //  UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"

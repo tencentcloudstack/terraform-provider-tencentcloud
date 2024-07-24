@@ -48,6 +48,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "The available zone for the CVM instance.",
 			},
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Exclusive cluster id.",
+			},
 			"instance_count": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -435,33 +441,44 @@ func ResourceTencentCloudInstance() *schema.Resource {
 
 func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_instance.create")()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	cvmService := CvmService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cvmService = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	request := cvm.NewRunInstancesRequest()
 	request.ImageId = helper.String(d.Get("image_id").(string))
 	request.Placement = &cvm.Placement{
 		Zone: helper.String(d.Get("availability_zone").(string)),
 	}
+
+	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
+		request.DedicatedClusterId = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("project_id"); ok {
 		projectId := int64(v.(int))
 		request.Placement.ProjectId = &projectId
 	}
+
 	if v, ok := d.GetOk("instance_name"); ok {
 		request.InstanceName = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("instance_count"); ok {
 		request.InstanceCount = helper.Int64(int64(v.(int)))
 	}
+
 	if v, ok := d.GetOk("instance_type"); ok {
 		request.InstanceType = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("hostname"); ok {
 		request.HostName = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("cam_role_name"); ok {
 		request.CamRoleName = helper.String(v.(string))
 	}
@@ -475,10 +492,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				periodInt64 := int64(period.(int))
 				request.InstanceChargePrepaid.Period = &periodInt64
 			}
+
 			if renewFlag, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 				request.InstanceChargePrepaid.RenewFlag = helper.String(renewFlag.(string))
 			}
 		}
+
 		if instanceChargeType == CVM_CHARGE_TYPE_SPOTPAID {
 			spotInstanceType, sitOk := d.GetOk("spot_instance_type")
 			spotMaxPrice, smpOk := d.GetOk("spot_max_price")
@@ -487,19 +506,23 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				request.InstanceMarketOptions.MarketType = helper.String(CVM_MARKET_TYPE_SPOT)
 				request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
 			}
+
 			if sitOk {
 				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = helper.String(strings.ToLower(spotInstanceType.(string)))
 			}
+
 			if smpOk {
 				request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(spotMaxPrice.(string))
 			}
 		}
+
 		if instanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
 			if v, ok := d.GetOk("cdh_instance_type"); ok {
 				request.InstanceType = helper.String(v.(string))
 			} else {
 				return fmt.Errorf("cdh_instance_type can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
+
 			if v, ok := d.GetOk("cdh_host_id"); ok {
 				request.Placement.HostIds = append(request.Placement.HostIds, helper.String(v.(string)))
 			} else {
@@ -507,6 +530,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			}
 		}
 	}
+
 	if v, ok := d.GetOk("placement_group_id"); ok {
 		request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
 	}
@@ -516,13 +540,16 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
 		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
 		maxBandwidthOut := int64(v.(int))
 		request.InternetAccessible.InternetMaxBandwidthOut = &maxBandwidthOut
 	}
+
 	if v, ok := d.GetOk("bandwidth_package_id"); ok {
 		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOkExists("allocate_public_ip"); ok {
 		allocatePublicIp := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &allocatePublicIp
@@ -563,13 +590,16 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("system_disk_type"); ok {
 		request.SystemDisk.DiskType = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("system_disk_size"); ok {
 		diskSize := int64(v.(int))
 		request.SystemDisk.DiskSize = &diskSize
 	}
+
 	if v, ok := d.GetOk("system_disk_id"); ok {
 		request.SystemDisk.DiskId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("data_disks"); ok {
 		dataDisks := v.([]interface{})
 		request.DataDisks = make([]*cvm.DataDisk, 0, len(dataDisks))
@@ -583,15 +613,18 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				DiskSize:              &diskSize,
 				ThroughputPerformance: &throughputPerformance,
 			}
+
 			if v, ok := value["data_disk_snapshot_id"]; ok && v != nil {
 				snapshotId := v.(string)
 				if snapshotId != "" {
 					dataDisk.SnapshotId = helper.String(snapshotId)
 				}
 			}
+
 			if value["data_disk_id"] != "" {
 				dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
 			}
+
 			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
 				deleteWithInstanceBool := deleteWithInstance.(bool)
 				dataDisk.DeleteWithInstance = &deleteWithInstanceBool
@@ -601,6 +634,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				encryptBool := encrypt.(bool)
 				dataDisk.Encrypt = &encryptBool
 			}
+
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
 	}
@@ -613,6 +647,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			Enabled: &securityService,
 		}
 	}
+
 	if v, ok := d.GetOkExists("disable_monitor_service"); ok {
 		monitorService := !(v.(bool))
 		request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
@@ -628,9 +663,11 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	} else if v, ok := d.GetOk("key_name"); ok {
 		request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
 	}
+
 	if v, ok := d.GetOk("password"); ok {
 		request.LoginSettings.Password = helper.String(v.(string))
 	}
+
 	v := d.Get("keep_image_login").(bool)
 	if v {
 		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
@@ -641,6 +678,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("user_data"); ok {
 		request.UserData = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("user_data_raw"); ok {
 		userData := base64.StdEncoding.EncodeToString([]byte(v.(string)))
 		request.UserData = &userData
@@ -657,17 +695,19 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				Key:   helper.String(tagKey),
 				Value: helper.String(tagValue),
 			}
+
 			tags = append(tags, &tag)
 		}
+
 		tagSpecification := cvm.TagSpecification{
 			ResourceType: helper.String("instance"),
 			Tags:         tags,
 		}
+
 		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
 	}
 
 	instanceId := ""
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check("create")
 		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().RunInstances(request)
@@ -678,21 +718,25 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, e.Code) {
 				return resource.RetryableError(fmt.Errorf("cvm create error: %s, retrying", e.Error()))
 			}
+
 			return resource.NonRetryableError(err)
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		if len(response.Response.InstanceIdSet) < 1 {
 			err = fmt.Errorf("instance id is nil")
 			return resource.NonRetryableError(err)
 		}
-		instanceId = *response.Response.InstanceIdSet[0]
 
+		instanceId = *response.Response.InstanceIdSet[0]
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	d.SetId(instanceId)
 
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
@@ -700,16 +744,20 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
 			//LatestOperationCodeMode
 			if instance.LatestOperationErrorMsg != nil {
 				return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
 			}
+
 			return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
 		}
+
 		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
 
@@ -726,13 +774,16 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			if e != nil {
 				return resource.RetryableError(e)
 			}
+
 			for tagKey, tagValue := range tags {
 				if v, ok := actualTags[tagKey]; !ok || v != tagValue {
 					return resource.RetryableError(fmt.Errorf("tag(%s, %s) modification is not completed", tagKey, tagValue))
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
@@ -750,11 +801,14 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
+
 			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 				return nil
 			}
+
 			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 		})
+
 		if err != nil {
 			return err
 		}
