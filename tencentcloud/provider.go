@@ -198,7 +198,7 @@ func Provider() *schema.Provider {
 			//internal version: replace enableBpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			//internal version: replace enableBpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			"assume_role": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				MaxItems:    1,
 				Description: "The `assume_role` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
@@ -2216,7 +2216,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	// get assume role from tf
 	if v, ok := d.GetOk("assume_role"); ok {
-		assumeRoleList := v.([]interface{})
+		assumeRoleList := v.(*schema.Set).List()
 		if len(assumeRoleList) == 1 {
 			assumeRole := assumeRoleList[0].(map[string]interface{})
 			assumeRoleArn = assumeRole["role_arn"].(string)
