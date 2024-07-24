@@ -69,6 +69,12 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 60),
 				Description:  "In the case of purchasing a `INTERNAL` clb instance, the subnet id must be specified. The VIP of the `INTERNAL` clb instance will be generated from this subnet.",
 			},
+			"cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Cluster ID.",
+			},
 			"address_ip_version": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -286,6 +292,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.SubnetId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("cluster_id"); ok {
+		request.ClusterIds = []*string{helper.String(v.(string))}
+	}
+
 	//vip_isp
 	if v, ok := d.GetOk("vip_isp"); ok {
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
@@ -459,7 +469,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
 				requestId := *sgResponse.Response.RequestId
-
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
@@ -489,7 +498,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
 					requestId := *logResponse.Response.RequestId
-
 					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 					if retryErr != nil {
 						return tccommon.RetryError(errors.WithStack(retryErr))
@@ -515,6 +523,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			Region: &targetRegionInfoRegion,
 			VpcId:  &targetRegionInfoVpcId,
 		}
+
 		mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 		mRequest.LoadBalancerId = helper.String(clbId)
 		mRequest.TargetRegionInfo = &targetRegionInfo
@@ -620,6 +629,10 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("ipv6_mode", instance.IPv6Mode)
 	_ = d.Set("address_ipv6", instance.AddressIPv6)
 
+	if instance.ClusterIds != nil && len(instance.ClusterIds) > 0 {
+		_ = d.Set("cluster_id", instance.ClusterIds[0])
+	}
+
 	if instance.SlaType != nil {
 		_ = d.Set("sla_type", instance.SlaType)
 	}
@@ -686,7 +699,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	)
 
 	immutableArgs := []string{"snat_ips", "dynamic_vip", "master_zone_id", "slave_zone_id", "vpc_id", "subnet_id", "address_ip_version", "bandwidth_package_id", "zone_id"}
-
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -801,7 +813,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		param.LoadBalancerId = &clbId
 		param.SlaType = helper.String(d.Get("sla_type").(string))
 		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
-
 		var taskId string
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerSla(slaRequest)
@@ -857,7 +868,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			log.Printf("[CRITAL]%s update CLB instance security_group failed, reason:%+v", logId, err)
 			return err
 		}
-
 	}
 
 	if d.HasChange("log_set_id") || d.HasChange("log_topic_id") {
@@ -875,7 +885,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
 				requestId := *logResponse.Response.RequestId
-
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
@@ -976,6 +985,7 @@ func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
 		clbService = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
+	flag = false
 	params := make(map[string]interface{})
 	params["clb_name"] = name
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
