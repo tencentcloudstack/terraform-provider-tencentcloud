@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdc"
 
 	"io/ioutil"
 	"net/url"
@@ -34,6 +33,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
