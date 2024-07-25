@@ -36,7 +36,7 @@ func testSweepSubnet(region string) error {
 	vpcService := svcvpc.NewVpcService(client)
 
 	instances, err := vpcService.DescribeSubnets(ctx, "", "", "", "",
-		nil, nil, nil, "", "")
+		nil, nil, nil, "", "", "")
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
