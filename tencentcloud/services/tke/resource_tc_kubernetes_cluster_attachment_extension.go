@@ -42,6 +42,7 @@ func resourceTencentCloudKubernetesClusterAttachmentCreatePostFillRequest0(ctx c
 	}
 
 	// labels
+	req.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
 	req.InstanceAdvancedSettings.Labels = GetTkeLabels(d, "labels")
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "worker_config"); ok {
