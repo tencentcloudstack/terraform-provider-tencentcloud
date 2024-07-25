@@ -61,7 +61,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.811
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.967
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.771
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777
@@ -109,7 +109,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.964
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.798
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920
 	github.com/wI2L/jsondiff v0.3.0

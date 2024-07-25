@@ -2,6 +2,7 @@ package connectivity
 
 import (
 	"fmt"
+	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
 	"log"
 	"net/http"
 	"net/url"
@@ -208,6 +209,7 @@ type TencentCloudClient struct {
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tke2Conn *tke2.Client
+	cdcConn  *cdc.Client
 	//omit nil client
 	omitNilConn *common.Client
 }
@@ -1611,4 +1613,17 @@ func (me *TencentCloudClient) UseTke2Client(iacExtInfo ...IacExtInfo) *tke2.Clie
 	me.tke2Conn.WithHttpTransport(&logRoundTripper)
 
 	return me.tke2Conn
+}
+
+// UseCdcClient returns tem client for service
+func (me *TencentCloudClient) UseCdcClient() *cdc.Client {
+	if me.cdcConn != nil {
+		return me.cdcConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.cdcConn, _ = cdc.NewClient(me.Credential, me.Region, cpf)
+	me.cdcConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdcConn
 }

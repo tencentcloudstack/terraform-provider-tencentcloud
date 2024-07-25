@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdc"
 
 	"io/ioutil"
 	"net/url"
@@ -1986,7 +1987,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_share_unit":                         tco.ResourceTencentCloudOrganizationOrgShareUnit(),
 			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon(),
 			"tencentcloud_kubernetes_addon_config":                             tke.ResourceTencentCloudKubernetesAddonConfig(),
-			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool()},
+			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool(),
+			"tencentcloud_cdc_site":                                            cdc.ResourceTencentCloudCdcSite(),
+		},
 
 		ConfigureFunc: providerConfigure,
 	}
