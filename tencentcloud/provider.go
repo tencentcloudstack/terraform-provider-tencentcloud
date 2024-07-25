@@ -33,6 +33,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
@@ -989,7 +990,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_instance_shards":                   cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
 			"tencentcloud_clickhouse_instance_nodes":                    cdwch.DataSourceTencentCloudClickhouseInstanceNodes(),
 			"tencentcloud_organization_org_share_area":                  tco.DataSourceTencentCloudOrganizationOrgShareArea(),
-			"tencentcloud_kubernetes_cluster_native_node_pools":         tke.DataSourceTencentCloudKubernetesClusterNativeNodePools()},
+			"tencentcloud_kubernetes_cluster_native_node_pools":         tke.DataSourceTencentCloudKubernetesClusterNativeNodePools(),
+			"tencentcloud_cdc_dedicated_cluster_hosts":                  cdc.DataSourceTencentCloudCdcDedicatedClusterHosts(),
+			"tencentcloud_cdc_dedicated_cluster_instance_types":         cdc.DataSourceTencentCloudCdcDedicatedClusterInstanceTypes(),
+			"tencentcloud_cdc_dedicated_cluster_orders":                 cdc.DataSourceTencentCloudCdcDedicatedClusterOrders(),
+		},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                             project.ResourceTencentCloudProject(),
@@ -1986,7 +1991,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_share_unit":                         tco.ResourceTencentCloudOrganizationOrgShareUnit(),
 			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon(),
 			"tencentcloud_kubernetes_addon_config":                             tke.ResourceTencentCloudKubernetesAddonConfig(),
-			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool()},
+			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool(),
+			"tencentcloud_cdc_site":                                            cdc.ResourceTencentCloudCdcSite(),
+			"tencentcloud_cdc_dedicated_cluster":                               cdc.ResourceTencentCloudCdcDedicatedCluster(),
+		},
 
 		ConfigureFunc: providerConfigure,
 	}
