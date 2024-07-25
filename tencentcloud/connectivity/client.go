@@ -566,7 +566,7 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 }
 
 // UseStsClient returns sts client for service
-func (me *TencentCloudClient) UseStsClient() *sts.Client {
+func (me *TencentCloudClient) UseStsClient(stsExtInfo ...StsExtInfo) *sts.Client {
 	/*
 		me.Credential will changed, don't cache it
 		if me.stsConn != nil {
@@ -574,9 +574,14 @@ func (me *TencentCloudClient) UseStsClient() *sts.Client {
 		}
 	*/
 
+	var logRoundTripper LogRoundTripper
+	if len(stsExtInfo) != 0 {
+		logRoundTripper.Authorization = stsExtInfo[0].Authorization
+	}
+
 	cpf := me.NewClientProfile(300)
 	me.stsConn, _ = sts.NewClient(me.Credential, me.Region, cpf)
-	me.stsConn.WithHttpTransport(&LogRoundTripper{})
+	me.stsConn.WithHttpTransport(&logRoundTripper)
 
 	return me.stsConn
 }
