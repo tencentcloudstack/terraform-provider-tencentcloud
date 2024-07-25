@@ -2308,7 +2308,9 @@ func genClientWithSamlSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRol
 	request.PrincipalArn = helper.String(assumeRolePrincipalArn)
 
 	ratelimit.Check(request.GetAction())
-	response, err := tcClient.apiV3Conn.UseStsClient().AssumeRoleWithSAML(request)
+	var stsExtInfo connectivity.StsExtInfo
+	stsExtInfo.Authorization = "SKIP"
+	response, err := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithSAML(request)
 	if err != nil {
 		return err
 	}
@@ -2333,7 +2335,9 @@ func genClientWithOidcSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRol
 	request.WebIdentityToken = helper.String(assumeRolePolicy)
 
 	ratelimit.Check(request.GetAction())
-	response, err := tcClient.apiV3Conn.UseStsClient().AssumeRoleWithWebIdentity(request)
+	var stsExtInfo connectivity.StsExtInfo
+	stsExtInfo.Authorization = "SKIP"
+	response, err := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithWebIdentity(request)
 	if err != nil {
 		return err
 	}
