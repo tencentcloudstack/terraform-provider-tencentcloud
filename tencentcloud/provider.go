@@ -2233,6 +2233,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRolePolicy = assumeRole["policy"].(string)
 
 			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
+			needSecret = true
 		}
 	}
 
