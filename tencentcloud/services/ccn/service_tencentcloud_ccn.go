@@ -28,6 +28,8 @@ type CcnBasicInfo struct {
 	bandWithLimitType string
 	instanceCount     int64
 	createTime        string
+	ecmpFlag          bool
+	overlapFlag       bool
 }
 
 type CcnInstanceBind struct {
@@ -205,6 +207,8 @@ getMoreData:
 		basicInfo.state = *item.State
 		basicInfo.chargeType = *item.InstanceChargeType
 		basicInfo.bandWithLimitType = *item.BandwidthLimitType
+		basicInfo.ecmpFlag = *item.RouteECMPFlag
+		basicInfo.overlapFlag = *item.RouteOverlapFlag
 
 		if has[basicInfo.ccnId] {
 			errRet = fmt.Errorf("get repeated ccn_id[%s] when doing DescribeCcns", basicInfo.ccnId)
@@ -354,7 +358,7 @@ func (me *VpcService) DeleteCcn(ctx context.Context, ccnId string) (errRet error
 	return
 }
 
-func (me *VpcService) ModifyCcnAttribute(ctx context.Context, ccnId, name, description string) (errRet error) {
+func (me *VpcService) ModifyCcnAttribute(ctx context.Context, ccnId, name, description string, ecmpFlag, overlapFlag bool) (errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewModifyCcnAttributeRequest()
@@ -363,9 +367,14 @@ func (me *VpcService) ModifyCcnAttribute(ctx context.Context, ccnId, name, descr
 	if name != "" {
 		request.CcnName = &name
 	}
+
 	if description != "" {
 		request.CcnDescription = &description
 	}
+
+	request.RouteECMPFlag = &ecmpFlag
+	request.RouteOverlapFlag = &overlapFlag
+
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().ModifyCcnAttribute(request)
 
