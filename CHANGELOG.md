@@ -1,3 +1,22 @@
+## 1.81.113 (July 26, 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cdc_dedicated_cluster_hosts` ([#2737](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2737))
+* **New Data Source:** `tencentcloud_cdc_dedicated_cluster_instance_types` ([#2737](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2737))
+* **New Data Source:** `tencentcloud_cdc_dedicated_cluster_orders` ([#2737](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2737))
+* **New Resource:** `tencentcloud_cdc_dedicated_cluster` ([#2737](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2737))
+* **New Resource:** `tencentcloud_cdc_site` ([#2737](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2737))
+
+ENHANCEMENTS:
+
+* provider: add SAML, OIDC for STS client ([#2742](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2742))
+* resource/tencentcloud_ccn: support route_ecmp_flag and route_overlap_flag ([#2746](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2746))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_cluster_attachment: fix the issue triggered by `labels` ([#2745](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2745))
+
 ## 1.81.112 (July 24, 2024)
 
 ENHANCEMENTS:
