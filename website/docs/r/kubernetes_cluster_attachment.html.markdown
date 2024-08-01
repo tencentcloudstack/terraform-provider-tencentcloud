@@ -111,6 +111,7 @@ The following arguments are supported:
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster.
 * `instance_id` - (Required, String, ForceNew) ID of the CVM instance, this cvm will reinstall the system.
 * `hostname` - (Optional, String, ForceNew) The host name of the attached instance. Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).
+* `image_id` - (Optional, String, ForceNew) ID of Node image.
 * `key_ids` - (Optional, List: [`String`], ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
 * `labels` - (Optional, Map, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
