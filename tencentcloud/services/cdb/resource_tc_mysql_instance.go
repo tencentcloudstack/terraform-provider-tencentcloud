@@ -173,11 +173,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.",
 		},
-		"ssl_status": {
-			Optional:    true,
-			Type:        schema.TypeString,
-			Description: "Whether to enable SSL. `ON` means enabled, `OFF` means not enabled. Default: `OFF`.",
-		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -205,12 +200,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Computed:    true,
 			Description: "Indicates whether GTID is enable. `0` - Not enabled; `1` - Enabled.",
-		},
-
-		"ssl_url": {
-			Computed:    true,
-			Type:        schema.TypeString,
-			Description: "The certificate download link. Example value: http://testdownload.url.",
 		},
 	}
 }
@@ -292,6 +281,12 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Default:     0,
 			Description: "Project ID, default value is 0.",
 		},
+		"ssl_status": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeString,
+			Description: "Whether to enable SSL. `ON` means enabled, `OFF` means not enabled. Default: `OFF`.",
+		},
 
 		// Computed values
 		"internet_host": {
@@ -303,6 +298,12 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Type:        schema.TypeInt,
 			Computed:    true,
 			Description: "Access port for public access.",
+		},
+
+		"ssl_url": {
+			Computed:    true,
+			Type:        schema.TypeString,
+			Description: "The certificate download link. Example value: http://testdownload.url.",
 		},
 	}
 
@@ -1295,7 +1296,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("ssl_status") {
+	if !isReadonly && d.HasChange("ssl_status") {
 		if err := mysqlInstanceSSLUpdate(ctx, d, meta); err != nil {
 			log.Printf("[CRITAL]%s update mysql ssl fail, reason:%s\n ", logId, err.Error())
 			return err

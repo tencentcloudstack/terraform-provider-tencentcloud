@@ -205,6 +205,7 @@ func ResourceTencentCloudMysqlDrInstance() *schema.Resource {
 			},
 			"ssl_status": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Whether to enable SSL. `ON` means enabled, `OFF` means not enabled. Default: `OFF`.",
 			},

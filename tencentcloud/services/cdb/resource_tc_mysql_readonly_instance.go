@@ -259,12 +259,6 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	// ssl
-	if err := mysqlInstanceSSLUpdate(ctx, d, meta); err != nil {
-		log.Printf("[CRITAL]%s update mysql ssl fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
-
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
@@ -381,27 +375,6 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	}
 	_ = d.Set("status", mysqlInfo.Status)
 	_ = d.Set("task_status", mysqlInfo.TaskStatus)
-
-	ssl, err := mysqlService.DescribeMysqlSslById(ctx, d.Id())
-	if err != nil {
-		return err
-	}
-
-	if ssl == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `tencentcloud_mysql_ssl` [%s] not found, please check if it has been deleted.",
-			logId, d.Id(),
-		)
-		return nil
-	}
-
-	if ssl.Status != nil {
-		_ = d.Set("ssl_status", ssl.Status)
-	}
-
-	if ssl.Url != nil {
-		_ = d.Set("ssl_url", ssl.Url)
-	}
 
 	return nil
 }

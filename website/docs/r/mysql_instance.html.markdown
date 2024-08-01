@@ -162,6 +162,7 @@ The following arguments are supported:
 * `security_groups` - (Optional, Set: [`String`]) Security groups to use.
 * `slave_deploy_mode` - (Optional, Int) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
 * `slave_sync_mode` - (Optional, Int) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
+* `ssl_status` - (Optional, String) Whether to enable SSL. `ON` means enabled, `OFF` means not enabled. Default: `OFF`.
 * `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional, Map) Instance tags.
 * `upgrade_subversion` - (Optional, Int) Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.
@@ -178,6 +179,7 @@ In addition to all arguments above, the following attributes are exported:
 * `internet_port` - Access port for public access.
 * `intranet_ip` - instance intranet IP.
 * `locked` - Indicates whether the instance is locked. Valid values: `0`, `1`. `0` - No; `1` - Yes.
+* `ssl_url` - The certificate download link. Example value: http://testdownload.url.
 * `status` - Instance status. Valid values: `0`, `1`, `4`, `5`. `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
