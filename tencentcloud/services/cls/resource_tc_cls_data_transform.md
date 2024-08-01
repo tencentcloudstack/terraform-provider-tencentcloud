@@ -1,4 +1,4 @@
-Provides a resource to create a cls data_transform
+Provides a resource to create a CLS data transform
 
 Example Usage
 
@@ -6,9 +6,10 @@ Example Usage
 resource "tencentcloud_cls_logset" "logset_src" {
   logset_name = "tf-example-src"
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
   }
 }
+
 resource "tencentcloud_cls_topic" "topic_src" {
   topic_name           = "tf-example_src"
   logset_id            = tencentcloud_cls_logset.logset_src.id
@@ -17,16 +18,18 @@ resource "tencentcloud_cls_topic" "topic_src" {
   partition_count      = 1
   period               = 10
   storage_type         = "hot"
-  tags                 = {
-    "test" = "test",
+  tags = {
+    createdBy = "terraform"
   }
 }
+
 resource "tencentcloud_cls_logset" "logset_dst" {
   logset_name = "tf-example-dst"
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
   }
 }
+
 resource "tencentcloud_cls_topic" "topic_dst" {
   topic_name           = "tf-example-dst"
   logset_id            = tencentcloud_cls_logset.logset_dst.id
@@ -35,29 +38,29 @@ resource "tencentcloud_cls_topic" "topic_dst" {
   partition_count      = 1
   period               = 10
   storage_type         = "hot"
-  tags                 = {
-    "test" = "test",
+  tags = {
+    createdBy = "terraform"
   }
 }
-resource "tencentcloud_cls_data_transform" "data_transform" {
-  func_type = 1
+
+resource "tencentcloud_cls_data_transform" "example" {
+  func_type    = 1
   src_topic_id = tencentcloud_cls_topic.topic_src.id
-  name = "iac-test-src"
-  etl_content = "ext_sep(\"content\", \"f1, f2, f3\", sep=\",\", quote=\"\", restrict=False, mode=\"overwrite\")fields_drop(\"content\")"
-  task_type = 3
-  enable_flag = 1
+  name         = "tf-example"
+  etl_content  = "ext_sep(\"content\", \"f1, f2, f3\", sep=\",\", quote=\"\", restrict=False, mode=\"overwrite\")fields_drop(\"content\")"
+  task_type    = 3
+  enable_flag  = 1
   dst_resources {
     topic_id = tencentcloud_cls_topic.topic_dst.id
-    alias = "iac-test-dst"
-
+    alias    = "iac-test-dst"
   }
 }
 ```
 
 Import
 
-cls data_transform can be imported using the id, e.g.
+CLS data transform can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_data_transform.data_transform data_transform_id
+terraform import tencentcloud_cls_data_transform.example 7b4bcb05-9154-4cdc-a479-f6b5743846e5
 ```
