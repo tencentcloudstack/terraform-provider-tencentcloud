@@ -38,6 +38,7 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 			"image_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "ID of Node image.",
 			},
