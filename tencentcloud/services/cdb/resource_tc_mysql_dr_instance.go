@@ -203,6 +203,11 @@ func ResourceTencentCloudMysqlDrInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			"ssl_status": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Whether to enable SSL. `ON` means enabled, `OFF` means not enabled. Default: `OFF`.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -214,6 +219,12 @@ func ResourceTencentCloudMysqlDrInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "instance intranet IP.",
+			},
+
+			"ssl_url": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "The certificate download link. Example value: http://testdownload.url.",
 			},
 		},
 	}
@@ -324,6 +335,12 @@ func resourceTencentCloudMysqlDrInstanceCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
+	// ssl
+	if err := mysqlInstanceSSLUpdate(ctx, d, meta); err != nil {
+		log.Printf("[CRITAL]%s update mysql ssl fail, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
@@ -425,6 +442,27 @@ func resourceTencentCloudMysqlDrInstanceRead(d *schema.ResourceData, meta interf
 
 	_ = d.Set("intranet_ip", mysqlInfo.Vip)
 	_ = d.Set("intranet_port", int(*mysqlInfo.Vport))
+
+	ssl, err := mysqlService.DescribeMysqlSslById(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if ssl == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `tencentcloud_mysql_ssl` [%s] not found, please check if it has been deleted.",
+			logId, d.Id(),
+		)
+		return nil
+	}
+
+	if ssl.Status != nil {
+		_ = d.Set("ssl_status", ssl.Status)
+	}
+
+	if ssl.Url != nil {
+		_ = d.Set("ssl_url", ssl.Url)
+	}
 
 	return nil
 }
