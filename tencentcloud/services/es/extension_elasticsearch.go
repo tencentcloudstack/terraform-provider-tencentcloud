@@ -67,6 +67,7 @@ var ES_NODE_DISK_TYPE = []string{
 	svccvm.CVM_DISK_TYPE_CLOUD_SSD,
 	svccvm.CVM_DISK_TYPE_CLOUD_PREMIUM,
 	svccvm.CVM_DISK_TYPE_CLOUD_HSSD,
+	svccvm.CVM_DISK_TYPE_CLOUD_BSSD,
 }
 
 var ES_RENEW_FLAG = []string{
