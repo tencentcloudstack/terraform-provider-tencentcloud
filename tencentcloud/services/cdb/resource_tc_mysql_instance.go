@@ -757,11 +757,11 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	// ssl 
+	// ssl
 	if err := mysqlInstanceSSLUpdate(ctx, d, meta); err != nil {
 		log.Printf("[CRITAL]%s update mysql ssl fail, reason:%s\n ", logId, err.Error())
 		return err
-	} 
+	}
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
@@ -1301,7 +1301,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			return err
 		}
 	}
-
 
 	if d.HasChange("tags") {
 
