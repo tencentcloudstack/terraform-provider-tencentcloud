@@ -253,6 +253,11 @@ func DataSourceTencentCloudInstances() *schema.Resource {
 							Computed:    true,
 							Description: "CAM role name authorized to access.",
 						},
+						"uuid": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Globally unique ID of the instance.",
+						},
 					},
 				},
 			},
@@ -354,6 +359,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"expired_time":               instance.ExpiredTime,
 			"instance_charge_type_prepaid_renew_flag": instance.RenewFlag,
 			"cam_role_name": instance.CamRoleName,
+			"uuid":          instance.Uuid,
 		}
 
 		if len(instance.PublicIpAddresses) > 0 {
