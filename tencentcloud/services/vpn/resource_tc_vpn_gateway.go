@@ -25,7 +25,9 @@ func ResourceTencentCloudVpnGateway() *schema.Resource {
 		Update: resourceTencentCloudVpnGatewayUpdate,
 		Delete: resourceTencentCloudVpnGatewayDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"prepaid_period": 1,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{
