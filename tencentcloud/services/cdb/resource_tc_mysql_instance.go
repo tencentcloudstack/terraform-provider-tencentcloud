@@ -1063,7 +1063,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 					return err
 				}
 			} else {
-				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 					mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 					if err != nil {
@@ -1172,7 +1172,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 					return err
 				}
 			} else {
-				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 					mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 					if err != nil {
@@ -1279,7 +1279,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				return err
 			}
 		} else {
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 				mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 				if err != nil {
