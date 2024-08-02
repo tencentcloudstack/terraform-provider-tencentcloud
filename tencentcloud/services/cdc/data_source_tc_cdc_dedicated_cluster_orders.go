@@ -478,7 +478,7 @@ func DataSourceTencentCloudCdcDedicatedClusterOrdersRead(d *schema.ResourceData,
 				dedicatedClusterOrderMap["order_type"] = dedicatedClusterOrder.OrderType
 			}
 
-			ids = append(ids)
+			ids = append(ids, *dedicatedClusterOrder.DedicatedClusterId)
 			tmpList = append(tmpList, dedicatedClusterOrderMap)
 		}
 

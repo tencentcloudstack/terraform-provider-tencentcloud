@@ -174,7 +174,7 @@ func DataSourceTencentCloudCdcDedicatedClusterHostsRead(d *schema.ResourceData, 
 				hostInfoMap["host_id"] = hostInfo.HostId
 			}
 
-			ids = append(ids)
+			ids = append(ids, *hostInfo.HostId)
 			tmpList = append(tmpList, hostInfoMap)
 		}
 
