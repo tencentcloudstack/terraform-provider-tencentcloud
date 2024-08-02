@@ -1,4 +1,4 @@
-package cdc
+package cdc_test
 
 import (
 	"testing"
