@@ -96,6 +96,7 @@ In addition to all arguments above, the following attributes are exported:
   * `system_disk_size` - Size of the system disk.
   * `system_disk_type` - Type of the system disk.
   * `tags` - Tags of the instance.
+  * `uuid` - Globally unique ID of the instance.
   * `vpc_id` - ID of the vpc.
 
 
