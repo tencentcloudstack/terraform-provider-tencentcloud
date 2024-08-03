@@ -376,6 +376,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			"ignore_service_cidr_conflict": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Indicates whether to ignore the service cidr conflict error. Only valid in `VPC-CNI` mode.",
 			},
