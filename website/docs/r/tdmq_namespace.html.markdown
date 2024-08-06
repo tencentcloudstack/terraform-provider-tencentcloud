@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdmq_namespace"
 sidebar_current: "docs-tencentcloud-resource-tdmq_namespace"
 description: |-
-  Provide a resource to create a tdmq namespace.
+  Provide a resource to create a TDMQ namespace.
 ---
 
 # tencentcloud_tdmq_namespace
 
-Provide a resource to create a tdmq namespace.
+Provide a resource to create a TDMQ namespace.
 
 ## Example Usage
 
@@ -62,6 +62,6 @@ In addition to all arguments above, the following attributes are exported:
 Tdmq namespace can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_tdmq_instance.test namespace_id
+$ terraform import tencentcloud_tdmq_instance.example tf_example#pulsar-78bwjaj8epxv
 ```
 

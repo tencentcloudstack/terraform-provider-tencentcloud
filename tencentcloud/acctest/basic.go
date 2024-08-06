@@ -97,7 +97,7 @@ const (
 	DefaultGaapRealserverIp1        = "119.29.29.35"
 	DefaultGaapRealserverIpId2      = "rs-3mlpbuut"
 	DefaultGaapRealserverIp2        = "1.1.1.5"
-	DefaultHttpsDomainCertificateId = "cert-6sub5wbf"
+	DefaultHttpsDomainCertificateId = "cert-3muob2in"
 
 	DefaultSecurityGroup = "sg-05f7wnhn"
 
@@ -1148,6 +1148,8 @@ const (
 	DefaultEsInstanceId    = "es-5wn36he6"
 	DefaultEsSecurityGroup = "sg-edmur627"
 	DefaultEsLogstash      = "ls-kru90fkz"
+	DefaultEsVpcId         = "vpc-lrj71tt3"
+	DefaultEsSubnetId      = "subnet-kggvos8o"
 )
 
 const DefaultEsVariables = `
@@ -1161,6 +1163,18 @@ variable "security_group_id" {
 
 variable "logstash_id" {
   default = "` + DefaultEsLogstash + `"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "vpc_id" {
+  default = "` + DefaultEsVpcId + `"
+}
+
+variable "subnet_id" {
+  default = "` + DefaultEsSubnetId + `"
 }
 `
 

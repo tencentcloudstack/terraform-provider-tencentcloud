@@ -2,11 +2,14 @@ package connectivity
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
 	"time"
+
+	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
 
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 	cos "github.com/tencentyun/cos-go-sdk-v5"
@@ -97,6 +100,7 @@ import (
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tke2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -205,6 +209,10 @@ type TencentCloudClient struct {
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	tke2Conn *tke2.Client
+	cdcConn  *cdc.Client
+	//omit nil client
+	omitNilConn *common.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -355,6 +363,19 @@ func (me *TencentCloudClient) UseVpcClient(iacExtInfo ...IacExtInfo) *vpc.Client
 	me.vpcConn.WithHttpTransport(&logRoundTripper)
 
 	return me.vpcConn
+}
+
+func (me *TencentCloudClient) UseOmitNilClient(module string) *common.Client {
+	secretId := me.Credential.SecretId
+	secretKey := me.Credential.SecretKey
+	region := me.Region
+	credential := common.NewCredential(secretId, secretKey)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = fmt.Sprintf("%s.tencentcloudapi.com", module)
+	cpf.HttpProfile.ReqMethod = "POST"
+	me.omitNilConn = common.NewCommonClient(credential, region, cpf).WithLogger(log.Default())
+
+	return me.omitNilConn
 }
 
 // UseCbsClient returns cbs client for service
@@ -545,7 +566,7 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 }
 
 // UseStsClient returns sts client for service
-func (me *TencentCloudClient) UseStsClient() *sts.Client {
+func (me *TencentCloudClient) UseStsClient(stsExtInfo ...StsExtInfo) *sts.Client {
 	/*
 		me.Credential will changed, don't cache it
 		if me.stsConn != nil {
@@ -553,9 +574,14 @@ func (me *TencentCloudClient) UseStsClient() *sts.Client {
 		}
 	*/
 
+	var logRoundTripper LogRoundTripper
+	if len(stsExtInfo) != 0 {
+		logRoundTripper.Authorization = stsExtInfo[0].Authorization
+	}
+
 	cpf := me.NewClientProfile(300)
 	me.stsConn, _ = sts.NewClient(me.Credential, me.Region, cpf)
-	me.stsConn.WithHttpTransport(&LogRoundTripper{})
+	me.stsConn.WithHttpTransport(&logRoundTripper)
 
 	return me.stsConn
 }
@@ -1574,4 +1600,36 @@ func getEnvDefault(key string, defVal int) int {
 		panic("TENCENTCLOUD_XXX_REQUEST_TIMEOUT must be int.")
 	}
 	return timeOut
+}
+
+// UseTke2Client returns tke client for service
+func (me *TencentCloudClient) UseTke2Client(iacExtInfo ...IacExtInfo) *tke2.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.tke2Conn != nil {
+		me.tke2Conn.WithHttpTransport(&logRoundTripper)
+		return me.tke2Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tke2Conn, _ = tke2.NewClient(me.Credential, me.Region, cpf)
+	me.tke2Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.tke2Conn
+}
+
+// UseCdcClient returns tem client for service
+func (me *TencentCloudClient) UseCdcClient() *cdc.Client {
+	if me.cdcConn != nil {
+		return me.cdcConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.cdcConn, _ = cdc.NewClient(me.Credential, me.Region, cpf)
+	me.cdcConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdcConn
 }

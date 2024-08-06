@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudKubernetesAttachResource(t *testing.T) {
+func TestAccTencentCloudKubernetesClusterAttachmentResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -154,33 +154,46 @@ locals {
 
 func testAccTkeAttachCluster() string {
 
-	return tcacctest.TkeDataSource + ClusterAttachmentInstanceType + tcacctest.DefaultImages + `
+	return TkeNewDeps + `
 variable "cluster_cidr" {
-  default = "172.16.0.0/16"
+  default = "10.31.0.0/16"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
 }
 
 data "tencentcloud_vpc_instances" "vpcs" {
   name = "keep_tke_exclusive_vpc"
 }
 
-data "tencentcloud_vpc_subnets" "sub" {
-  vpc_id        = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                  = local.vpc_id
+  cluster_cidr            = var.cluster_cidr
+  cluster_max_pod_num     = 32
+  cluster_name            = "tf_example_cluster"
+  cluster_desc            = "example for tke cluster"
+  cluster_max_service_num = 32
+  cluster_internet        = false # (can be ignored) open it after the nodes added
+  cluster_version         = "1.22.5"
+  cluster_os              = "tlinux2.2(tkernel3)x86_64"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+  # without any worker config
 }
 
 resource "tencentcloud_instance" "foo_attachment" {
   instance_name     = "tf-auto-test-1-1"
-  availability_zone = data.tencentcloud_vpc_subnets.sub.instance_list.0.availability_zone
+  availability_zone = var.availability_zone
   image_id          = var.default_img_id
-  instance_type     = local.type1
+  instance_type     = local.final_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
-  vpc_id            = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
-  subnet_id         =  data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
-  tags = data.tencentcloud_kubernetes_clusters.tke.list.0.tags # new added node will passive add tag by cluster
+  vpc_id            = local.vpc_id
+  subnet_id         = local.subnet_id1
 }
 
 resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
-  cluster_id  = local.cluster_id
+  cluster_id  = tencentcloud_kubernetes_cluster.example.id
   instance_id = tencentcloud_instance.foo_attachment.id
   password    = "Lo4wbdit"
   unschedulable = 0

@@ -29,7 +29,6 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
 			"network_type": {
 				Type:         schema.TypeString,
@@ -53,7 +52,6 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     0,
 				Description: "ID of the project within the CLB instance, `0` - Default Project.",
 			},
@@ -70,6 +68,12 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 60),
 				Description:  "In the case of purchasing a `INTERNAL` clb instance, the subnet id must be specified. The VIP of the `INTERNAL` clb instance will be generated from this subnet.",
+			},
+			"cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Cluster ID.",
 			},
 			"address_ip_version": {
 				Type:        schema.TypeString,
@@ -184,16 +188,19 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 			"master_zone_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.",
 			},
 			"zone_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Available zone id, only applicable to open CLB.",
 			},
 			"slave_zone_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.",
 			},
 			"log_set_id": {
@@ -244,9 +251,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if e != nil {
 		return e
 	}
+
 	if flag {
 		return fmt.Errorf("[CHECK][CLB instance][Create] check: Same CLB name %s exists!", clbName)
 	}
+
 	targetRegionInfoRegion := ""
 	targetRegionInfoVpcId := ""
 	if v, ok := d.GetOk("target_region_info_region"); ok {
@@ -255,12 +264,14 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with target_region_info")
 		}
 	}
+
 	if v, ok := d.GetOk("target_region_info_vpc_id"); ok {
 		targetRegionInfoVpcId = v.(string)
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with target_region_info")
 		}
 	}
+
 	if (targetRegionInfoRegion != "" && targetRegionInfoVpcId == "") || (targetRegionInfoRegion == "" && targetRegionInfoVpcId != "") {
 		return fmt.Errorf("[CHECK][CLB instance][Create] check: region and vpc_id must be set at same time")
 	}
@@ -271,15 +282,18 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("project_id"); ok {
+
+	if v, ok := d.GetOkExists("project_id"); ok {
 		projectId := int64(v.(int))
 		request.ProjectId = &projectId
 	}
+
 	if v, ok := d.GetOk("subnet_id"); ok {
-		if networkType == CLB_NETWORK_TYPE_OPEN {
-			return fmt.Errorf("[CHECK][CLB instance][Create] check: OPEN network_type do not support this operation with subnet_id")
-		}
 		request.SubnetId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		request.ClusterIds = []*string{helper.String(v.(string))}
 	}
 
 	//vip_isp
@@ -287,6 +301,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support vip ISP setting")
 		}
+
 		request.VipIsp = helper.String(v.(string))
 	}
 
@@ -305,10 +320,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support IP version setting")
 		}
+
 		request.AddressIPVersion = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("snat_pro"); ok {
+	if v, ok := d.GetOkExists("snat_pro"); ok {
 		request.SnatPro = helper.Bool(v.(bool))
 	}
 
@@ -319,9 +335,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			snatIp := &clb.SnatIp{
 				SubnetId: &subnetId,
 			}
+
 			if v, ok := item["ip"].(string); ok && v != "" {
 				snatIp.Ip = &v
 			}
+
 			request.SnatIps = append(request.SnatIps, snatIp)
 		}
 	}
@@ -337,17 +355,21 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support internet charge type setting")
 		}
+
 		request.InternetAccessible = &clb.InternetAccessible{}
 		if ok {
 			request.InternetAccessible.InternetChargeType = helper.String(chargeType)
 		}
+
 		if bok {
 			request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
 		}
+
 		if pok {
 			if chargeType != svcas.INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
 				return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
 			}
+
 			request.BandwidthPackageId = helper.String(pv.(string))
 		}
 	}
@@ -356,6 +378,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support master zone id setting")
 		}
+
 		request.MasterZoneId = helper.String(v.(string))
 	}
 
@@ -363,6 +386,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support zone id setting")
 		}
+
 		request.ZoneId = helper.String(v.(string))
 	}
 
@@ -370,10 +394,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support slave zone id setting")
 		}
+
 		request.SlaveZoneId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok {
+	if v, ok := d.GetOkExists("load_balancer_pass_to_target"); ok {
 		request.LoadBalancerPassToTarget = helper.Bool(v.(bool))
 	}
 
@@ -407,16 +432,20 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				return tccommon.RetryError(errors.WithStack(retryErr))
 			}
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
 		return err
 	}
+
 	if len(response.Response.LoadBalancerIds) < 1 {
 		return fmt.Errorf("[CHECK][CLB instance][Create] check: response error, load balancer id is nil")
 	}
+
 	d.SetId(*response.Response.LoadBalancerIds[0])
 	clbId = *response.Response.LoadBalancerIds[0]
 
@@ -431,6 +460,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
 			}
 		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			sgResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().SetLoadBalancerSecurityGroups(sgRequest)
 			if e != nil {
@@ -439,14 +469,15 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
 				requestId := *sgResponse.Response.RequestId
-
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s create CLB instance security_groups failed, reason:%+v", logId, err)
 			return err
@@ -467,14 +498,15 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
 					requestId := *logResponse.Response.RequestId
-
 					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 					if retryErr != nil {
 						return tccommon.RetryError(errors.WithStack(retryErr))
 					}
 				}
+
 				return nil
 			})
+
 			if err != nil {
 				log.Printf("[CRITAL]%s set CLB instance log failed, reason:%+v", logId, err)
 				return err
@@ -491,6 +523,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			Region: &targetRegionInfoRegion,
 			VpcId:  &targetRegionInfoVpcId,
 		}
+
 		mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 		mRequest.LoadBalancerId = helper.String(clbId)
 		mRequest.TargetRegionInfo = &targetRegionInfo
@@ -508,13 +541,16 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
 			return err
 		}
 	}
+
 	if v, ok := d.GetOkExists("delete_protect"); ok {
 		isDeleteProect := v.(bool)
 		if isDeleteProect {
@@ -534,14 +570,17 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 						return tccommon.RetryError(errors.WithStack(retryErr))
 					}
 				}
+
 				return nil
 			})
+
 			if err != nil {
 				log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
 				return err
 			}
 		}
 	}
+
 	return resourceTencentCloudClbInstanceRead(d, meta)
 }
 
@@ -549,22 +588,24 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	defer tccommon.LogElapsed("resource.tencentcloud_clb_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		clbService = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instance   *clb.LoadBalancer
+		clbId      = d.Id()
+	)
 
-	clbId := d.Id()
-	clbService := ClbService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	var instance *clb.LoadBalancer
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := clbService.DescribeLoadBalancerById(ctx, clbId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		instance = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read CLB instance failed, reason:%+v", logId, err)
 		return err
@@ -588,9 +629,14 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("ipv6_mode", instance.IPv6Mode)
 	_ = d.Set("address_ipv6", instance.AddressIPv6)
 
+	if instance.ClusterIds != nil && len(instance.ClusterIds) > 0 {
+		_ = d.Set("cluster_id", instance.ClusterIds[0])
+	}
+
 	if instance.SlaType != nil {
 		_ = d.Set("sla_type", instance.SlaType)
 	}
+
 	if instance.VipIsp != nil {
 		_ = d.Set("vip_isp", instance.VipIsp)
 	}
@@ -600,17 +646,28 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	if instance.AddressIPVersion != nil {
-		_ = d.Set("address_ip_version", instance.AddressIPVersion)
+		if *instance.AddressIPVersion == "ipv6" && instance.IPv6Mode != nil && *instance.IPv6Mode == "IPv6FullChain" {
+			_ = d.Set("address_ip_version", instance.IPv6Mode)
+		} else {
+			_ = d.Set("address_ip_version", instance.AddressIPVersion)
+		}
 	}
+
 	if instance.NetworkAttributes != nil {
 		_ = d.Set("internet_bandwidth_max_out", instance.NetworkAttributes.InternetMaxBandwidthOut)
 		_ = d.Set("internet_charge_type", instance.NetworkAttributes.InternetChargeType)
 	}
 
+	if instance.MasterZone != nil {
+		_ = d.Set("master_zone_id", instance.MasterZone.Zone)
+		_ = d.Set("zone_id", instance.MasterZone.Zone)
+	}
+
+	if instance.BackupZoneSet != nil && len(instance.BackupZoneSet) > 0 {
+		_ = d.Set("slave_zone_id", instance.BackupZoneSet[0].Zone)
+	}
+
 	_ = d.Set("load_balancer_pass_to_target", instance.LoadBalancerPassToTarget)
-	//_ = d.Set("master_zone_id", instance.MasterZone.ZoneId)
-	//_ = d.Set("zone_id", instance.Zones)
-	//_ = d.Set("slave_zone_id", instance.MasterZone)
 	_ = d.Set("log_set_id", instance.LogSetId)
 	_ = d.Set("log_topic_id", instance.LogTopicId)
 
@@ -635,12 +692,21 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		clbId = d.Id()
+	)
+
+	immutableArgs := []string{"snat_ips", "dynamic_vip", "master_zone_id", "slave_zone_id", "vpc_id", "subnet_id", "address_ip_version", "bandwidth_package_id", "zone_id"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	d.Partial(true)
 
-	clbId := d.Id()
 	request := clb.NewModifyLoadBalancerAttributesRequest()
 	request.LoadBalancerId = helper.String(clbId)
 	clbName := ""
@@ -658,9 +724,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
+
 		if flag {
 			return fmt.Errorf("[CHECK][CLB instance][Update] check: Same CLB name %s exists!", clbName)
 		}
+
 		request.LoadBalancerName = helper.String(clbName)
 	}
 
@@ -668,6 +736,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with target_region_info", clbId)
 		}
+
 		changed = true
 		region := d.Get("target_region_info_region").(string)
 		vpcId := d.Get("target_region_info_vpc_id").(string)
@@ -682,15 +751,18 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with internet setting", clbId)
 		}
+
 		changed = true
 		chargeType := d.Get("internet_charge_type").(string)
 		bandwidth := d.Get("internet_bandwidth_max_out").(int)
 		if chargeType != "" {
 			internet.InternetChargeType = &chargeType
 		}
+
 		if bandwidth > 0 {
 			internet.InternetMaxBandwidthOut = helper.IntInt64(bandwidth)
 		}
+
 		request.InternetChargeInfo = &internet
 	}
 
@@ -704,18 +776,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		request.SnatPro = &snatPro
 	}
+
 	if d.HasChange("delete_protect") {
 		changed = true
 		isDeleteProtect = d.Get("delete_protect").(bool)
 		request.DeleteProtect = &isDeleteProtect
-	}
-
-	immutableArgs := []string{"snat_ips", "dynamic_vip", "master_zone_id", "slave_zone_id", "project_id", "vpc_id", "subnet_id", "address_ip_version", "bandwidth_package_id", "zone_id"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
 	}
 
 	if changed {
@@ -732,8 +797,10 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 					return tccommon.RetryError(retryErr)
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update CLB instance failed, reason:%+v", logId, err)
 			return err
@@ -745,9 +812,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		param := clb.SlaUpdateParam{}
 		param.LoadBalancerId = &clbId
 		param.SlaType = helper.String(d.Get("sla_type").(string))
-
 		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
-
 		var taskId string
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerSla(slaRequest)
@@ -756,9 +821,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			taskId = *result.Response.RequestId
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update clb instanceSlaConfig failed, reason:%+v", logId, err)
 			return err
@@ -771,7 +838,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("security_groups") {
-
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
 		sgRequest.LoadBalancerId = helper.String(clbId)
 		securityGroups := d.Get("security_groups").([]interface{})
@@ -780,6 +846,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			securityGroup := securityGroups[i].(string)
 			sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
 		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			sgResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().SetLoadBalancerSecurityGroups(sgRequest)
 			if e != nil {
@@ -793,13 +860,14 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update CLB instance security_group failed, reason:%+v", logId, err)
 			return err
 		}
-
 	}
 
 	if d.HasChange("log_set_id") || d.HasChange("log_topic_id") {
@@ -817,25 +885,56 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
 				requestId := *logResponse.Response.RequestId
-
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s set CLB instance log failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
-	if d.HasChange("tags") {
+	if d.HasChange("project_id") {
+		var projectId int
+		if v, ok := d.GetOkExists("project_id"); ok {
+			projectId = v.(int)
+		}
 
+		pRequest := clb.NewModifyLoadBalancersProjectRequest()
+		pRequest.LoadBalancerIds = []*string{&clbId}
+		pRequest.ProjectId = helper.IntUint64(projectId)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			pResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancersProject(pRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, pRequest.GetAction(), pRequest.ToJsonString(), pResponse.ToJsonString())
+				requestId := *pResponse.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				if retryErr != nil {
+					return tccommon.RetryError(errors.WithStack(retryErr))
+				}
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update CLB instance project_id failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
-
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("clb", "clb", tcClient.Region, d.Id())
@@ -843,10 +942,9 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-
 	}
-	d.Partial(false)
 
+	d.Partial(false)
 	return nil
 }
 
@@ -856,21 +954,22 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	clbId := d.Id()
-	clbService := ClbService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		clbService = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		clbId      = d.Id()
+	)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteLoadBalancerById(ctx, clbId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete CLB instance failed, reason:%+v", logId, err)
 		return err
@@ -880,12 +979,13 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 }
 
 func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		clbService = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
+
 	flag = false
-	clbService := ClbService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
 	params := make(map[string]interface{})
 	params["clb_name"] = name
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -893,21 +993,25 @@ func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		if len(clbs) > 0 {
-			//this describe function is a fuzzy query
+			//this function is a fuzzy query
 			// so take a further check
-			for _, clb := range clbs {
-				if *clb.LoadBalancerName == name {
+			for _, clbInfo := range clbs {
+				if *clbInfo.LoadBalancerName == name {
 					flag = true
 					return nil
 				}
 			}
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read CLB instance failed, reason:%+v", logId, err)
 	}
+
 	errRet = err
 	return
 }

@@ -62,6 +62,13 @@ func ResourceTencentCloudCcnAttachment() *schema.Resource {
 				Computed:    true,
 				Description: "Uin of the ccn attached. If not set, which means the uin of this account. This parameter is used with case when attaching ccn of other account to the instance of this account. For now only support instance type `VPC`.",
 			},
+			"route_table_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Ccn instance route table ID.",
+			},
 			// Computed values
 			"state": {
 				Type:        schema.TypeString,
@@ -96,18 +103,17 @@ func ResourceTencentCloudCcnAttachment() *schema.Resource {
 func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service        = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		ccnId          = d.Get("ccn_id").(string)
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 		description    = ""
 		ccnUin         = ""
+		routeTableId   = ""
 	)
 
 	if len(ccnId) < 4 || len(instanceRegion) < 3 || len(instanceId) < 3 {
@@ -128,12 +134,17 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
+
 		if has == 0 {
 			return fmt.Errorf("ccn[%s] doesn't exist", ccnId)
 		}
 	}
 
-	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId, ccnUin, description); err != nil {
+	if v, ok := d.GetOk("route_table_id"); ok {
+		routeTableId = v.(string)
+	}
+
+	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId, ccnUin, description, routeTableId); err != nil {
 		return err
 	}
 
@@ -142,6 +153,7 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+
 	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
 	return resourceTencentCloudCcnAttachmentRead(d, meta)
@@ -151,10 +163,11 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	if v, ok := d.GetOk("ccn_uin"); ok {
 		ccnUin := v.(string)
@@ -173,6 +186,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 				d.SetId("")
 				return nil
 			}
+
 			findFlag := false
 			for _, info := range infos {
 				if *info.CcnUin == ccnUin && *info.CcnId == ccnId {
@@ -203,6 +217,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		instanceId     = d.Get("instance_id").(string)
 		onlineHas      = true
 	)
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, ccnId)
 		if e != nil {
@@ -214,30 +229,37 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 			onlineHas = false
 			return nil
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if !onlineHas {
 		return nil
 	}
+
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		if has == 0 {
 			d.SetId("")
 			return nil
 		}
 
 		_ = d.Set("description", info.description)
+		_ = d.Set("route_table_id", info.routeTableId)
 		_ = d.Set("state", strings.ToUpper(info.state))
 		_ = d.Set("attached_time", info.attachedTime)
 		_ = d.Set("cidr_block", info.cidrBlock)
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -245,22 +267,22 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		request := vpc.NewDescribeCcnRoutesRequest()
 		request.CcnId = &ccnId
-
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeCcnRoutes(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		routeIds := make([]string, 0)
 		if response != nil && response.Response != nil && len(response.Response.RouteSet) > 0 {
 			for _, route := range response.Response.RouteSet {
 				routeIds = append(routeIds, *route.RouteId)
 			}
-
 		}
-		_ = d.Set("route_ids", routeIds)
 
+		_ = d.Set("route_ids", routeIds)
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -269,29 +291,28 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCcnAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.create")()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.update")()
 
 	if d.HasChange("description") {
 		var (
+			logId          = tccommon.GetLogId(tccommon.ContextNil)
+			request        = vpc.NewModifyCcnAttachedInstancesAttributeRequest()
+			ccnInstance    vpc.CcnInstance
 			ccnId          = d.Get("ccn_id").(string)
 			instanceType   = d.Get("instance_type").(string)
 			instanceRegion = d.Get("instance_region").(string)
 			instanceId     = d.Get("instance_id").(string)
 			description    = d.Get("description").(string)
+			routeTableId   = d.Get("route_table_id").(string)
 		)
 
-		request := vpc.NewModifyCcnAttachedInstancesAttributeRequest()
 		request.CcnId = &ccnId
-
-		var ccnInstance vpc.CcnInstance
 		ccnInstance.InstanceId = &instanceId
 		ccnInstance.InstanceRegion = &instanceRegion
 		ccnInstance.InstanceType = &instanceType
 		ccnInstance.Description = &description
-
+		ccnInstance.RouteTableId = &routeTableId
 		request.Instances = []*vpc.CcnInstance{&ccnInstance}
-
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCcnAttachedInstancesAttribute(request)
@@ -300,44 +321,50 @@ func resourceTencentCloudCcnAttachmentUpdate(d *schema.ResourceData, meta interf
 					logId, request.GetAction(), request.ToJsonString(), err.Error())
 				return tccommon.RetryError(err)
 			}
+
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
 	}
+
 	return resourceTencentCloudCcnAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service        = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		ccnId          = d.Get("ccn_id").(string)
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, ccnId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		if has == 0 {
 			return nil
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if err := service.DetachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId); err != nil {
 		return err
 	}
@@ -347,9 +374,11 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 		if err != nil {
 			return resource.RetryableError(err)
 		}
+
 		if has == 0 {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("delete fail"))
 	})
 }

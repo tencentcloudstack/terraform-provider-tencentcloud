@@ -76,18 +76,17 @@ func ResourceTencentCloudTdmqNamespace() *schema.Resource {
 func resourceTencentCloudTdmqNamespaceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_namespace.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	var (
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService     = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		retentionPolicy tdmq.RetentionPolicy
 		environ_name    string
 		msg_ttl         uint64
 		remark          string
 		clusterId       string
-		retentionPolicy tdmq.RetentionPolicy
 	)
+
 	if temp, ok := d.GetOk("environ_name"); ok {
 		environ_name = temp.(string)
 		if len(environ_name) < 1 {
@@ -115,6 +114,7 @@ func resourceTencentCloudTdmqNamespaceCreate(d *schema.ResourceData, meta interf
 			retentionPolicy.SizeInMB = &sizeInMB
 		}
 	}
+
 	environId, err := tdmqService.CreateTdmqNamespace(ctx, environ_name, msg_ttl, clusterId, remark, retentionPolicy)
 	if err != nil {
 		return err
@@ -128,17 +128,19 @@ func resourceTencentCloudTdmqNamespaceRead(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_namespace.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tdmqService = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
+
 	environId := idSplit[0]
 	clusterId := idSplit[1]
-
-	tdmqService := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := tdmqService.DescribeTdmqNamespaceById(ctx, environId, clusterId)
@@ -163,32 +165,41 @@ func resourceTencentCloudTdmqNamespaceRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("retention_policy", tmpList)
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service         = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		msgTtl          uint64
+		remark          string
+		retentionPolicy = new(tdmq.RetentionPolicy)
+	)
+
+	immutableArgs := []string{"environ_name", "cluster_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
+
 	environId := idSplit[0]
 	clusterId := idSplit[1]
-
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
-	var (
-		msgTtl          uint64
-		remark          string
-		retentionPolicy = new(tdmq.RetentionPolicy)
-	)
 
 	old, now := d.GetChange("msg_ttl")
 	if d.HasChange("msg_ttl") {
@@ -218,6 +229,7 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 	}
 
 	d.Partial(true)
+
 	if err := service.ModifyTdmqNamespaceAttribute(ctx, environId, msgTtl, remark, clusterId, retentionPolicy); err != nil {
 		return err
 	}
@@ -229,17 +241,19 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudTdmqNamespaceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
+
 	environId := idSplit[0]
 	clusterId := idSplit[1]
-
-	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteTdmqNamespace(ctx, environId, clusterId); err != nil {
@@ -248,8 +262,10 @@ func resourceTencentCloudTdmqNamespaceDelete(d *schema.ResourceData, meta interf
 					return nil
 				}
 			}
+
 			return resource.RetryableError(err)
 		}
+
 		return nil
 	})
 

@@ -45,19 +45,16 @@ func ResourceTencentCloudCvmLaunchTemplate() *schema.Resource {
 							Description: "The project ID of the instance.",
 						},
 						"host_ids": {
-							Type: schema.TypeSet,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
 							Optional:    true,
 							Description: "The CDH ID list of the instance(input).",
 						},
 						"host_ips": {
-							Type: schema.TypeSet,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
 							Optional:    true,
+							Deprecated:  "It has been deprecated from version 1.81.108.",
 							Description: "Specify the host machine ip.",
 						},
 					},
@@ -637,16 +634,17 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 				placement.HostIds = append(placement.HostIds, &hostIds)
 			}
 		}
-		if v, ok := dMap["host_ips"]; ok {
-			hostIpsSet := v.(*schema.Set).List()
-			for i := range hostIpsSet {
-				hostIps := hostIpsSet[i].(string)
-				placement.HostIps = append(placement.HostIps, &hostIps)
-			}
+		// It has been deprecated from version 1.81.108
+		//if v, ok := dMap["host_ips"]; ok {
+		//	hostIpsSet := v.(*schema.Set).List()
+		//	for i := range hostIpsSet {
+		//		hostIps := hostIpsSet[i].(string)
+		//		placement.HostIps = append(placement.HostIps, &hostIps)
+		//	}
+		//}
+		if v, ok := dMap["host_id"]; ok {
+			placement.HostId = helper.String(v.(string))
 		}
-		// if v, ok := dMap["host_id"]; ok {
-		// 	placement.HostId = helper.String(v.(string))
-		// }
 		request.Placement = &placement
 	}
 
@@ -1020,9 +1018,10 @@ func resourceTencentCloudCvmLaunchTemplateRead(d *schema.ResourceData, meta inte
 			placementMap["host_ids"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIds
 		}
 
-		if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps != nil {
-			placementMap["host_ips"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps
-		}
+		// It has been deprecated from version 1.81.108
+		//if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps != nil {
+		//	placementMap["host_ips"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostIps
+		//}
 
 		if launchTemplateVersion.LaunchTemplateVersionData.Placement.HostId != nil {
 			placementMap["host_id"] = launchTemplateVersion.LaunchTemplateVersionData.Placement.HostId

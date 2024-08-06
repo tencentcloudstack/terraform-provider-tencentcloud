@@ -12,16 +12,8 @@ resource "tencentcloud_tdmq_instance" "example" {
 }
 
 resource "tencentcloud_tdmq_role" "example" {
-  role_name  = "tf_example"
+  role_name  = "role_example"
   cluster_id = tencentcloud_tdmq_instance.example.id
   remark     = "remark."
 }
-```
-
-Import
-
-Tdmq instance can be imported, e.g.
-
-```
-$ terraform import tencentcloud_tdmq_instance.test tdmq_id
 ```

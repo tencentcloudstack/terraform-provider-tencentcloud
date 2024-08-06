@@ -22,7 +22,9 @@ func ResourceTencentCloudTdmqRabbitmqUser() *schema.Resource {
 		Read:   resourceTencentCloudTdmqRabbitmqUserRead,
 		Update: resourceTencentCloudTdmqRabbitmqUserUpdate,
 		Delete: resourceTencentCloudTdmqRabbitmqUserDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -179,6 +181,14 @@ func resourceTencentCloudTdmqRabbitmqUserRead(d *schema.ResourceData, meta inter
 		_ = d.Set("tags", rabbitmqUser.Tags)
 	}
 
+	if rabbitmqUser.MaxConnections != nil {
+		_ = d.Set("max_connections", rabbitmqUser.MaxConnections)
+	}
+
+	if rabbitmqUser.MaxChannels != nil {
+		_ = d.Set("max_channels", rabbitmqUser.MaxChannels)
+	}
+
 	return nil
 }
 
@@ -207,7 +217,7 @@ func resourceTencentCloudTdmqRabbitmqUserUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if d.HasChange("description") || d.HasChange("max_connections") || d.HasChange("max_channels") {
+	if d.HasChange("description") || d.HasChange("tags") || d.HasChange("max_connections") || d.HasChange("max_channels") {
 		request.InstanceId = &instanceId
 		request.User = &user
 
@@ -217,6 +227,10 @@ func resourceTencentCloudTdmqRabbitmqUserUpdate(d *schema.ResourceData, meta int
 
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("tags"); ok {
+			request.Tags = helper.InterfacesStringsPoint(v.([]interface{}))
 		}
 
 		if v, ok := d.GetOkExists("max_connections"); ok {

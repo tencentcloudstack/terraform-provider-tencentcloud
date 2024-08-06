@@ -1685,11 +1685,29 @@ type CreateRabbitMQVipInstanceRequestParams struct {
 	// 镜像队列,不传默认为false
 	EnableCreateDefaultHaMirrorQueue *bool `json:"EnableCreateDefaultHaMirrorQueue,omitnil,omitempty" name:"EnableCreateDefaultHaMirrorQueue"`
 
-	// 自动续费,不传默认为true
+	// 预付费使用。自动续费,不传默认为true
 	AutoRenewFlag *bool `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
 	// 购买时长,不传默认为1(月)
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
+
+	// 付费方式，0 为后付费，即按量计费；1 为预付费，即包年包月。默认包年包月
+	PayMode *uint64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
+
+	// 集群版本，不传默认为 3.8.30，可选值为 3.8.30 和 3.11.8
+	ClusterVersion *string `json:"ClusterVersion,omitnil,omitempty" name:"ClusterVersion"`
+
+	// 是否国际站请求，默认 false
+	IsIntl *bool `json:"IsIntl,omitnil,omitempty" name:"IsIntl"`
+
+	// 资源标签列表
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// 公网带宽大小，单位 M
+	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
+
+	// 是否打开公网接入，不传默认为false
+	EnablePublicAccess *bool `json:"EnablePublicAccess,omitnil,omitempty" name:"EnablePublicAccess"`
 }
 
 type CreateRabbitMQVipInstanceRequest struct {
@@ -1719,11 +1737,29 @@ type CreateRabbitMQVipInstanceRequest struct {
 	// 镜像队列,不传默认为false
 	EnableCreateDefaultHaMirrorQueue *bool `json:"EnableCreateDefaultHaMirrorQueue,omitnil,omitempty" name:"EnableCreateDefaultHaMirrorQueue"`
 
-	// 自动续费,不传默认为true
+	// 预付费使用。自动续费,不传默认为true
 	AutoRenewFlag *bool `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
 	// 购买时长,不传默认为1(月)
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
+
+	// 付费方式，0 为后付费，即按量计费；1 为预付费，即包年包月。默认包年包月
+	PayMode *uint64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
+
+	// 集群版本，不传默认为 3.8.30，可选值为 3.8.30 和 3.11.8
+	ClusterVersion *string `json:"ClusterVersion,omitnil,omitempty" name:"ClusterVersion"`
+
+	// 是否国际站请求，默认 false
+	IsIntl *bool `json:"IsIntl,omitnil,omitempty" name:"IsIntl"`
+
+	// 资源标签列表
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// 公网带宽大小，单位 M
+	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
+
+	// 是否打开公网接入，不传默认为false
+	EnablePublicAccess *bool `json:"EnablePublicAccess,omitnil,omitempty" name:"EnablePublicAccess"`
 }
 
 func (r *CreateRabbitMQVipInstanceRequest) ToJsonString() string {
@@ -1748,6 +1784,12 @@ func (r *CreateRabbitMQVipInstanceRequest) FromJsonString(s string) error {
 	delete(f, "EnableCreateDefaultHaMirrorQueue")
 	delete(f, "AutoRenewFlag")
 	delete(f, "TimeSpan")
+	delete(f, "PayMode")
+	delete(f, "ClusterVersion")
+	delete(f, "IsIntl")
+	delete(f, "ResourceTags")
+	delete(f, "Bandwidth")
+	delete(f, "EnablePublicAccess")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateRabbitMQVipInstanceRequest has unknown keys!", "")
 	}
@@ -1934,6 +1976,81 @@ func (r *CreateRocketMQClusterResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateRocketMQEnvironmentRoleRequestParams struct {
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 角色名称。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 授权项，最多只能包含produce、consume两项的非空字符串数组。
+	Permissions []*string `json:"Permissions,omitnil,omitempty" name:"Permissions"`
+
+	// 必填字段，集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type CreateRocketMQEnvironmentRoleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 角色名称。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 授权项，最多只能包含produce、consume两项的非空字符串数组。
+	Permissions []*string `json:"Permissions,omitnil,omitempty" name:"Permissions"`
+
+	// 必填字段，集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *CreateRocketMQEnvironmentRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateRocketMQEnvironmentRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EnvironmentId")
+	delete(f, "RoleName")
+	delete(f, "Permissions")
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateRocketMQEnvironmentRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateRocketMQEnvironmentRoleResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateRocketMQEnvironmentRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateRocketMQEnvironmentRoleResponseParams `json:"Response"`
+}
+
+func (r *CreateRocketMQEnvironmentRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateRocketMQEnvironmentRoleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateRocketMQGroupRequestParams struct {
 	// Group名称，8~64个字符
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
@@ -2115,6 +2232,84 @@ func (r *CreateRocketMQNamespaceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateRocketMQNamespaceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateRocketMQRoleRequestParams struct {
+	// 角色名称，不支持中字以及除了短线和下划线外的特殊字符且长度必须大于0且小等于32。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 备注说明，长度必须大等于0且小等于128。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+}
+
+type CreateRocketMQRoleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 角色名称，不支持中字以及除了短线和下划线外的特殊字符且长度必须大于0且小等于32。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 备注说明，长度必须大等于0且小等于128。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+}
+
+func (r *CreateRocketMQRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateRocketMQRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RoleName")
+	delete(f, "ClusterId")
+	delete(f, "Remark")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateRocketMQRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateRocketMQRoleResponseParams struct {
+	// 角色名称
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 角色token
+	Token *string `json:"Token,omitnil,omitempty" name:"Token"`
+
+	// 备注说明
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateRocketMQRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateRocketMQRoleResponseParams `json:"Response"`
+}
+
+func (r *CreateRocketMQRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateRocketMQRoleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3151,6 +3346,9 @@ func (r *DeleteRabbitMQUserResponse) FromJsonString(s string) error {
 type DeleteRabbitMQVipInstanceRequestParams struct {
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 是否国际站请求，默认 false
+	IsIntl *bool `json:"IsIntl,omitnil,omitempty" name:"IsIntl"`
 }
 
 type DeleteRabbitMQVipInstanceRequest struct {
@@ -3158,6 +3356,9 @@ type DeleteRabbitMQVipInstanceRequest struct {
 	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 是否国际站请求，默认 false
+	IsIntl *bool `json:"IsIntl,omitnil,omitempty" name:"IsIntl"`
 }
 
 func (r *DeleteRabbitMQVipInstanceRequest) ToJsonString() string {
@@ -3173,6 +3374,7 @@ func (r *DeleteRabbitMQVipInstanceRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "InstanceId")
+	delete(f, "IsIntl")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteRabbitMQVipInstanceRequest has unknown keys!", "")
 	}
@@ -3325,6 +3527,74 @@ func (r *DeleteRocketMQClusterResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteRocketMQEnvironmentRolesRequestParams struct {
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 角色名称数组。
+	RoleNames []*string `json:"RoleNames,omitnil,omitempty" name:"RoleNames"`
+
+	// 必填字段，集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type DeleteRocketMQEnvironmentRolesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 角色名称数组。
+	RoleNames []*string `json:"RoleNames,omitnil,omitempty" name:"RoleNames"`
+
+	// 必填字段，集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *DeleteRocketMQEnvironmentRolesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRocketMQEnvironmentRolesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EnvironmentId")
+	delete(f, "RoleNames")
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteRocketMQEnvironmentRolesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteRocketMQEnvironmentRolesResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteRocketMQEnvironmentRolesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteRocketMQEnvironmentRolesResponseParams `json:"Response"`
+}
+
+func (r *DeleteRocketMQEnvironmentRolesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRocketMQEnvironmentRolesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteRocketMQGroupRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -3450,6 +3720,70 @@ func (r *DeleteRocketMQNamespaceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteRocketMQNamespaceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteRocketMQRolesRequestParams struct {
+	// 角色名称数组。
+	RoleNames []*string `json:"RoleNames,omitnil,omitempty" name:"RoleNames"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type DeleteRocketMQRolesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 角色名称数组。
+	RoleNames []*string `json:"RoleNames,omitnil,omitempty" name:"RoleNames"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *DeleteRocketMQRolesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRocketMQRolesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RoleNames")
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteRocketMQRolesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteRocketMQRolesResponseParams struct {
+	// 成功删除的角色名称数组。
+	RoleNames []*string `json:"RoleNames,omitnil,omitempty" name:"RoleNames"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteRocketMQRolesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteRocketMQRolesResponseParams `json:"Response"`
+}
+
+func (r *DeleteRocketMQRolesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRocketMQRolesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5892,6 +6226,137 @@ func (r *DescribePulsarProInstancesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeRabbitMQExchangesRequestParams struct {
+	// 实例 id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// vhost 参数
+	VirtualHost *string `json:"VirtualHost,omitnil,omitempty" name:"VirtualHost"`
+
+	// 分页 offset
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页 limit
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 搜索关键词, 支持模糊匹配 
+	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
+
+	// 筛选 exchange 类型, 数组中每个元素为选中的过滤类型
+	ExchangeTypeFilters []*string `json:"ExchangeTypeFilters,omitnil,omitempty" name:"ExchangeTypeFilters"`
+
+	// 筛选 exchange 创建来源,  "system":"系统创建", "user":"用户创建"
+	ExchangeCreatorFilters []*string `json:"ExchangeCreatorFilters,omitnil,omitempty" name:"ExchangeCreatorFilters"`
+
+	// exchange 名称，用于精确匹配
+	ExchangeName *string `json:"ExchangeName,omitnil,omitempty" name:"ExchangeName"`
+
+	// 排序依据的字段：
+	// MessageRateInOut - 生产消费速率之和；
+	// MessageRateIn - 生产速率；
+	// MessageRateOut - 消费速率；
+	SortElement *string `json:"SortElement,omitnil,omitempty" name:"SortElement"`
+
+	// 排序顺序，ascend 或 descend
+	SortOrder *string `json:"SortOrder,omitnil,omitempty" name:"SortOrder"`
+}
+
+type DescribeRabbitMQExchangesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// vhost 参数
+	VirtualHost *string `json:"VirtualHost,omitnil,omitempty" name:"VirtualHost"`
+
+	// 分页 offset
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页 limit
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 搜索关键词, 支持模糊匹配 
+	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
+
+	// 筛选 exchange 类型, 数组中每个元素为选中的过滤类型
+	ExchangeTypeFilters []*string `json:"ExchangeTypeFilters,omitnil,omitempty" name:"ExchangeTypeFilters"`
+
+	// 筛选 exchange 创建来源,  "system":"系统创建", "user":"用户创建"
+	ExchangeCreatorFilters []*string `json:"ExchangeCreatorFilters,omitnil,omitempty" name:"ExchangeCreatorFilters"`
+
+	// exchange 名称，用于精确匹配
+	ExchangeName *string `json:"ExchangeName,omitnil,omitempty" name:"ExchangeName"`
+
+	// 排序依据的字段：
+	// MessageRateInOut - 生产消费速率之和；
+	// MessageRateIn - 生产速率；
+	// MessageRateOut - 消费速率；
+	SortElement *string `json:"SortElement,omitnil,omitempty" name:"SortElement"`
+
+	// 排序顺序，ascend 或 descend
+	SortOrder *string `json:"SortOrder,omitnil,omitempty" name:"SortOrder"`
+}
+
+func (r *DescribeRabbitMQExchangesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRabbitMQExchangesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "VirtualHost")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "SearchWord")
+	delete(f, "ExchangeTypeFilters")
+	delete(f, "ExchangeCreatorFilters")
+	delete(f, "ExchangeName")
+	delete(f, "SortElement")
+	delete(f, "SortOrder")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRabbitMQExchangesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeRabbitMQExchangesResponseParams struct {
+	// 策略列表信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExchangeInfoList []*RabbitMQExchangeListInfo `json:"ExchangeInfoList,omitnil,omitempty" name:"ExchangeInfoList"`
+
+	// 策略结果总数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeRabbitMQExchangesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeRabbitMQExchangesResponseParams `json:"Response"`
+}
+
+func (r *DescribeRabbitMQExchangesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRabbitMQExchangesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeRabbitMQNodeListRequestParams struct {
 	// rabbitmq集群ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -7191,6 +7656,107 @@ func (r *DescribeRocketMQConsumerConnectionsResponse) FromJsonString(s string) e
 }
 
 // Predefined struct for user
+type DescribeRocketMQEnvironmentRolesRequestParams struct {
+	// 必填字段，RocketMQ集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 起始下标，不填默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，不填则默认为10，最大值为20。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 角色名称
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// * RoleName
+	// 按照角色名进行过滤，精确查询。
+	// 类型：String
+	// 必选：否
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeRocketMQEnvironmentRolesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 必填字段，RocketMQ集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 起始下标，不填默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，不填则默认为10，最大值为20。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 角色名称
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// * RoleName
+	// 按照角色名进行过滤，精确查询。
+	// 类型：String
+	// 必选：否
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeRocketMQEnvironmentRolesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRocketMQEnvironmentRolesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "EnvironmentId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "RoleName")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRocketMQEnvironmentRolesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeRocketMQEnvironmentRolesResponseParams struct {
+	// 记录数。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 命名空间角色集合。
+	EnvironmentRoleSets []*EnvironmentRole `json:"EnvironmentRoleSets,omitnil,omitempty" name:"EnvironmentRoleSets"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeRocketMQEnvironmentRolesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeRocketMQEnvironmentRolesResponseParams `json:"Response"`
+}
+
+func (r *DescribeRocketMQEnvironmentRolesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRocketMQEnvironmentRolesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeRocketMQGroupsRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -7952,6 +8518,100 @@ func (r *DescribeRocketMQPublicAccessPointResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeRocketMQPublicAccessPointResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeRocketMQRolesRequestParams struct {
+	// 起始下标，不填默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，不填则默认为10，最大值为20。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 角色名称，模糊查询
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// * RoleName
+	// 按照角色名进行过滤，精确查询。
+	// 类型：String
+	// 必选：否
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeRocketMQRolesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 起始下标，不填默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，不填则默认为10，最大值为20。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 角色名称，模糊查询
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// * RoleName
+	// 按照角色名进行过滤，精确查询。
+	// 类型：String
+	// 必选：否
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeRocketMQRolesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRocketMQRolesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "ClusterId")
+	delete(f, "RoleName")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRocketMQRolesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeRocketMQRolesResponseParams struct {
+	// 记录数。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 角色数组。
+	RoleSets []*Role `json:"RoleSets,omitnil,omitempty" name:"RoleSets"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeRocketMQRolesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeRocketMQRolesResponseParams `json:"Response"`
+}
+
+func (r *DescribeRocketMQRolesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRocketMQRolesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10785,6 +11445,81 @@ func (r *ModifyRocketMQClusterResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyRocketMQEnvironmentRoleRequestParams struct {
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 角色名称。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 授权项，最多只能包含produce、consume两项的非空字符串数组。
+	Permissions []*string `json:"Permissions,omitnil,omitempty" name:"Permissions"`
+
+	// 必填字段，集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type ModifyRocketMQEnvironmentRoleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 环境（命名空间）名称。
+	EnvironmentId *string `json:"EnvironmentId,omitnil,omitempty" name:"EnvironmentId"`
+
+	// 角色名称。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 授权项，最多只能包含produce、consume两项的非空字符串数组。
+	Permissions []*string `json:"Permissions,omitnil,omitempty" name:"Permissions"`
+
+	// 必填字段，集群的ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *ModifyRocketMQEnvironmentRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyRocketMQEnvironmentRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EnvironmentId")
+	delete(f, "RoleName")
+	delete(f, "Permissions")
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyRocketMQEnvironmentRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyRocketMQEnvironmentRoleResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyRocketMQEnvironmentRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyRocketMQEnvironmentRoleResponseParams `json:"Response"`
+}
+
+func (r *ModifyRocketMQEnvironmentRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyRocketMQEnvironmentRoleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyRocketMQGroupRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -11053,6 +11788,80 @@ func (r *ModifyRocketMQNamespaceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyRocketMQNamespaceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyRocketMQRoleRequestParams struct {
+	// 角色名称，不支持中字以及除了短线和下划线外的特殊字符且长度必须大于0且小等于32。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 备注说明，长度必须大等于0且小等于128。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+}
+
+type ModifyRocketMQRoleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 角色名称，不支持中字以及除了短线和下划线外的特殊字符且长度必须大于0且小等于32。
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 必填字段，集群Id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 备注说明，长度必须大等于0且小等于128。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+}
+
+func (r *ModifyRocketMQRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyRocketMQRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RoleName")
+	delete(f, "ClusterId")
+	delete(f, "Remark")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyRocketMQRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyRocketMQRoleResponseParams struct {
+	// 角色名称
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
+
+	// 备注说明
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyRocketMQRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyRocketMQRoleResponseParams `json:"Response"`
+}
+
+func (r *ModifyRocketMQRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyRocketMQRoleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -11838,6 +12647,10 @@ type RabbitMQClusterInfo struct {
 	// 集群版本信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterVersion *string `json:"ClusterVersion,omitnil,omitempty" name:"ClusterVersion"`
+
+	// 计费模式，0-后付费，1-预付费
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PayMode *uint64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 }
 
 type RabbitMQClusterSpecInfo struct {
@@ -11880,6 +12693,70 @@ type RabbitMQClusterWhiteListInfo struct {
 	// 公网数据流白名单状态
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PublicDataStreamWhiteListStatus *string `json:"PublicDataStreamWhiteListStatus,omitnil,omitempty" name:"PublicDataStreamWhiteListStatus"`
+}
+
+type RabbitMQExchangeListInfo struct {
+	// exchange 名
+	ExchangeName *string `json:"ExchangeName,omitnil,omitempty" name:"ExchangeName"`
+
+	// 备注说明
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// exchange 类型, 支持 "fanout","direct","topic","headers"
+	ExchangeType *string `json:"ExchangeType,omitnil,omitempty" name:"ExchangeType"`
+
+	// VHost参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VirtualHost *string `json:"VirtualHost,omitnil,omitempty" name:"VirtualHost"`
+
+	// exchange 创建者, "system":"系统创建", "user":"用户创建"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExchangeCreator *string `json:"ExchangeCreator,omitnil,omitempty" name:"ExchangeCreator"`
+
+	// exchange 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTimeStamp *string `json:"CreateTimeStamp,omitnil,omitempty" name:"CreateTimeStamp"`
+
+	// exchange 修改时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ModTimeStamp *string `json:"ModTimeStamp,omitnil,omitempty" name:"ModTimeStamp"`
+
+	// 输入消息速率
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MessageRateIn *float64 `json:"MessageRateIn,omitnil,omitempty" name:"MessageRateIn"`
+
+	// 输出消息速率
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MessageRateOut *float64 `json:"MessageRateOut,omitnil,omitempty" name:"MessageRateOut"`
+
+	// 是否为持久化交换机，true 为持久化，false 为非持久化
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Durable *bool `json:"Durable,omitnil,omitempty" name:"Durable"`
+
+	// 是否为自动删除交换机，true 为自动删除，false 为非自动删除
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoDelete *bool `json:"AutoDelete,omitnil,omitempty" name:"AutoDelete"`
+
+	// 是否为内部交换机，true 为内部交换机
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Internal *bool `json:"Internal,omitnil,omitempty" name:"Internal"`
+
+	// 交换机所属实例 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 生效的策略名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Policy *string `json:"Policy,omitnil,omitempty" name:"Policy"`
+
+	// 扩展参数 key-value 对象
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Arguments *string `json:"Arguments,omitnil,omitempty" name:"Arguments"`
+
+	// 未调度的延时消息数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MessagesDelayed *uint64 `json:"MessagesDelayed,omitnil,omitempty" name:"MessagesDelayed"`
 }
 
 type RabbitMQPrivateNode struct {
@@ -12019,6 +12896,14 @@ type RabbitMQUser struct {
 
 	// 用户类型，System：系统创建，User：用户创建
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 单个用户最大可用连接数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxConnections *int64 `json:"MaxConnections,omitnil,omitempty" name:"MaxConnections"`
+
+	// 单个用户最大可用通道数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxChannels *int64 `json:"MaxChannels,omitnil,omitempty" name:"MaxChannels"`
 }
 
 type RabbitMQVipInstance struct {
@@ -12081,6 +12966,10 @@ type RabbitMQVipInstance struct {
 	// VPC 接入点列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vpcs []*VpcEndpointInfo `json:"Vpcs,omitnil,omitempty" name:"Vpcs"`
+
+	// 创建时间，毫秒为单位
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 }
 
 type RabbitMQVirtualHostInfo struct {
@@ -12109,6 +12998,10 @@ type RabbitMQVirtualHostInfo struct {
 	// vhost概览统计信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VirtualHostStatistics *RabbitMQVirtualHostStatistics `json:"VirtualHostStatistics,omitnil,omitempty" name:"VirtualHostStatistics"`
+
+	// 消息轨迹开关,true打开,false关闭
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TraceFlag *bool `json:"TraceFlag,omitnil,omitempty" name:"TraceFlag"`
 
 	// vhost状态，与原生控制台对应，有running、partial、stopped、unknown
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -12648,6 +13541,14 @@ type RocketMQClusterInfo struct {
 	// 实例状态，0表示创建中，1表示正常，2表示隔离中，3表示已销毁，4 - 异常, 5 - 发货失败，6 - 变配中，7 - 变配失败
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceStatus *int64 `json:"InstanceStatus,omitnil,omitempty" name:"InstanceStatus"`
+
+	// 集群所属可用区，表明集群归属的可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 集群节点所在的可用区，若该集群为跨可用区集群，则包含该集群节点所在的多个可用区。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ZoneIds []*int64 `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 }
 
 type RocketMQClusterRecentStats struct {
@@ -12841,6 +13742,26 @@ type RocketMQInstanceConfig struct {
 	// 每个主题最大队列数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxQueuesPerTopic *uint64 `json:"MaxQueuesPerTopic,omitnil,omitempty" name:"MaxQueuesPerTopic"`
+
+	// 最大可设置消息保留时间，小时为单位	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxRetention *int64 `json:"MaxRetention,omitnil,omitempty" name:"MaxRetention"`
+
+	// 最小可设置消息保留时间，小时为单位
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MinRetention *int64 `json:"MinRetention,omitnil,omitempty" name:"MinRetention"`
+
+	// 实例消息保留时间，小时为单位
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Retention *int64 `json:"Retention,omitnil,omitempty" name:"Retention"`
+
+	// Topic个数最小配额，即免费额度，默认为集群规格单节点最小配额*节点个数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicNumLowerLimit *int64 `json:"TopicNumLowerLimit,omitnil,omitempty" name:"TopicNumLowerLimit"`
+
+	// Topic个数最大配额，默认为集群规格单节点最大配额*节点个数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicNumUpperLimit *int64 `json:"TopicNumUpperLimit,omitnil,omitempty" name:"TopicNumUpperLimit"`
 }
 
 type RocketMQMessageTrack struct {

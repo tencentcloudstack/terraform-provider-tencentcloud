@@ -77,7 +77,7 @@ In addition to all arguments above, the following attributes are exported:
   * `placement` - Availability zone.
     * `host_id` - The ID of the CDH to which the instance belongs, only used as an output parameter.
     * `host_ids` - ID list of CDHs from which the instance can be created. If you have purchased CDHs and specify this parameter, the instances you purchase will be randomly deployed on the CDHs.
-    * `host_ips` - IPs of the hosts to create CVMs.
+    * `host_ips` - (**Deprecated**) It has been deprecated from version 1.81.108. IPs of the hosts to create CVMs.
     * `project_id` - ID of the project to which the instance belongs. This parameter can be obtained from the projectId returned by DescribeProject. If this is left empty, the default project is used.
     * `zone` - ID of the availability zone where the instance resides. You can call the [DescribeZones](https://www.tencentcloud.com/document/product/213/35071) API and obtain the ID in the returned Zone field.
   * `serial_number` - Server serial number.

@@ -13,18 +13,56 @@ Provide a resource to create a CynosDB cluster.
 
 ## Example Usage
 
+### Create a single availability zone NORMAL CynosDB cluster
+
 ```hcl
-resource "tencentcloud_cynosdb_cluster" "foo" {
-  available_zone               = "ap-guangzhou-4"
-  vpc_id                       = "vpc-h70b6b49"
-  subnet_id                    = "subnet-q6fhy1mi"
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "sg desc."
+  project_id  = 0
+
+  tags = {
+    "example" = "test"
+  }
+}
+
+# create cynosdb cluster
+resource "tencentcloud_cynosdb_cluster" "example" {
+  available_zone               = var.availability_zone
+  vpc_id                       = tencentcloud_vpc.vpc.id
+  subnet_id                    = tencentcloud_subnet.subnet.id
+  db_mode                      = "NORMAL"
   db_type                      = "MYSQL"
   db_version                   = "5.7"
+  port                         = 3306
   storage_limit                = 1000
-  cluster_name                 = "tf-cynosdb"
-  password                     = "cynos@123"
+  cluster_name                 = "tf-example"
+  password                     = "cynosDB@123"
   instance_maintain_duration   = 7200
   instance_maintain_start_time = 10800
+  instance_cpu_core            = 2
+  instance_memory_size         = 4
+  force_delete                 = false
   instance_maintain_weekdays = [
     "Fri",
     "Mon",
@@ -35,28 +73,120 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     "Tue",
   ]
 
-  instance_cpu_core    = 1
-  instance_memory_size = 2
-
-  param_item {
+  param_items {
     name          = "character_set_server"
     current_value = "utf8mb4"
   }
 
-  prarm_template_id = "12345"
-
-  tags = {
-    test = "test"
+  param_items {
+    name          = "lower_case_table_names"
+    current_value = "0"
   }
 
-  force_delete = false
+  rw_group_sg = [
+    tencentcloud_security_group.example.id,
+  ]
+
+  ro_group_sg = [
+    tencentcloud_security_group.example.id,
+  ]
+
+  tags = {
+    createBy = "terraform"
+  }
+}
+```
+
+### Create a multiple availability zone SERVERLESS CynosDB cluster
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+variable "slave_zone" {
+  default = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "sg desc."
+  project_id  = 0
+
+  tags = {
+    "example" = "test"
+  }
+}
+
+# create param template
+resource "tencentcloud_cynosdb_param_template" "example" {
+  db_mode              = "SERVERLESS"
+  engine_version       = "8.0"
+  template_name        = "tf-example"
+  template_description = "terraform-template"
+
+  param_list {
+    current_value = "-1"
+    param_name    = "optimizer_trace_offset"
+  }
+}
+
+# create cynosdb cluster
+resource "tencentcloud_cynosdb_cluster" "example" {
+  available_zone               = var.availability_zone
+  slave_zone                   = var.slave_zone
+  vpc_id                       = tencentcloud_vpc.vpc.id
+  subnet_id                    = tencentcloud_subnet.subnet.id
+  db_mode                      = "SERVERLESS"
+  db_type                      = "MYSQL"
+  db_version                   = "8.0"
+  port                         = 3306
+  storage_limit                = 1000
+  cluster_name                 = "tf-example"
+  password                     = "cynosDB@123"
+  instance_maintain_duration   = 7200
+  instance_maintain_start_time = 10800
+  min_cpu                      = 2
+  max_cpu                      = 4
+  param_template_id            = tencentcloud_cynosdb_param_template.example.template_id
+  force_delete                 = false
+  instance_maintain_weekdays = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
 
   rw_group_sg = [
-    "sg-ibyjkl6r",
+    tencentcloud_security_group.example.id,
   ]
+
   ro_group_sg = [
-    "sg-ibyjkl6r",
+    tencentcloud_security_group.example.id,
   ]
+
+  tags = {
+    createBy = "terraform"
+  }
 }
 ```
 
@@ -67,7 +197,7 @@ The following arguments are supported:
 * `available_zone` - (Required, String, ForceNew) The available zone of the CynosDB Cluster.
 * `cluster_name` - (Required, String) Name of CynosDB cluster.
 * `db_type` - (Required, String, ForceNew) Type of CynosDB, and available values include `MYSQL`.
-* `db_version` - (Required, String, ForceNew) Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`.
+* `db_version` - (Required, String, ForceNew) Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`, `8.0`.
 * `password` - (Required, String, ForceNew) Password of `root` account.
 * `subnet_id` - (Required, String) ID of the subnet within this VPC.
 * `vpc_id` - (Required, String) ID of the VPC.
@@ -85,14 +215,16 @@ The following arguments are supported:
 * `max_cpu` - (Optional, Float64) Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `min_cpu` - (Optional, Float64) Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `old_ip_reserve_hours` - (Optional, Int) Recycling time of the old address, must be filled in when modifying the vpcRecycling time of the old address, must be filled in when modifying the vpc.
-* `param_items` - (Optional, List) Specify parameter list of database. It is valid when prarm_template_id is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.
+* `param_items` - (Optional, List) Specify parameter list of database. It is valid when `param_template_id` is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.
+* `param_template_id` - (Optional, Int) The ID of the parameter template.
 * `port` - (Optional, Int, ForceNew) Port of CynosDB cluster.
-* `prarm_template_id` - (Optional, Int) The ID of the parameter template.
+* `prarm_template_id` - (Optional, Int, **Deprecated**) It will be deprecated. Use `param_template_id` instead. The ID of the parameter template.
 * `prepaid_period` - (Optional, Int, ForceNew) The tenancy (time unit is month) of the prepaid instance. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional, List: [`String`]) IDs of security group for `rw_group`.
 * `serverless_status_flag` - (Optional, String) Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.
+* `slave_zone` - (Optional, String) Multi zone Addresses of the CynosDB Cluster.
 * `storage_limit` - (Optional, Int) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `storage_pay_mode` - (Optional, Int) Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
@@ -138,6 +270,6 @@ In addition to all arguments above, the following attributes are exported:
 CynosDB cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cynosdb_cluster.foo cynosdbmysql-dzj5l8gz
+$ terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
 ```
 

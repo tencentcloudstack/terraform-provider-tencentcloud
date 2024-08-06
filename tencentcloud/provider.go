@@ -33,6 +33,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
@@ -123,11 +124,14 @@ const (
 	PROVIDER_DOMAIN         = "TENCENTCLOUD_DOMAIN"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
-	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
-	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
-	PROVIDER_SHARED_CREDENTIALS_DIR       = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
-	PROVIDER_PROFILE                      = "TENCENTCLOUD_PROFILE"
+	PROVIDER_ASSUME_ROLE_ARN                = "TENCENTCLOUD_ASSUME_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_SESSION_NAME       = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
+	PROVIDER_ASSUME_ROLE_SESSION_DURATION   = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	PROVIDER_ASSUME_ROLE_SAML_ASSERTION     = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
+	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN      = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
+	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
+	PROVIDER_SHARED_CREDENTIALS_DIR         = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
+	PROVIDER_PROFILE                        = "TENCENTCLOUD_PROFILE"
 )
 
 const (
@@ -233,6 +237,94 @@ func Provider() *schema.Provider {
 					},
 				},
 			},
+			"assume_role_with_saml": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      1,
+				ConflictsWith: []string{"assume_role_with_web_identity"},
+				Description:   "The `assume_role_with_saml` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"saml_assertion": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SAML_ASSERTION, nil),
+							Description: "SAML assertion information encoded in base64. It can be sourced from the `PROVIDER_ASSUME_ROLE_SAML_ASSERTION`.",
+						},
+						"principal_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN, nil),
+							Description: "Player Access Description Name. It can be sourced from the `PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN`.",
+						},
+						"role_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
+						"session_duration": {
+							Type:     schema.TypeInt,
+							Required: true,
+							DefaultFunc: func() (interface{}, error) {
+								if v := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); v != "" {
+									return strconv.Atoi(v)
+								}
+								return 7200, nil
+							},
+							ValidateFunc: tccommon.ValidateIntegerInRange(0, 43200),
+							Description:  "The duration of the session when making the AssumeRoleWithSAML call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
+						},
+					},
+				},
+			},
+			"assume_role_with_web_identity": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      1,
+				ConflictsWith: []string{"assume_role_with_saml"},
+				Description:   "The `assume_role_with_web_identity` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"web_identity_token": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN, nil),
+							Description: "OIDC token issued by IdP. It can be sourced from the `PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.",
+						},
+						"role_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
+						"session_duration": {
+							Type:     schema.TypeInt,
+							Required: true,
+							DefaultFunc: func() (interface{}, error) {
+								if v := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); v != "" {
+									return strconv.Atoi(v)
+								}
+								return 7200, nil
+							},
+							ValidateFunc: tccommon.ValidateIntegerInRange(0, 43200),
+							Description:  "The duration of the session when making the AssumeRoleWithWebIdentity call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
+						},
+					},
+				},
+			},
 			"shared_credentials_dir": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -325,6 +417,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ha_vips":                                      vpc.DataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                       vpc.DataSourceTencentCloudHaVipEipAttachments(),
 			"tencentcloud_ccn_instances":                                ccn.DataSourceTencentCloudCcnInstances(),
+			"tencentcloud_ccn_routes":                                   ccn.DataSourceTencentCloudCcnRoutes(),
 			"tencentcloud_ccn_bandwidth_limits":                         ccn.DataSourceTencentCloudCcnBandwidthLimits(),
 			"tencentcloud_ccn_cross_border_compliance":                  ccn.DataSourceTencentCloudCcnCrossBorderCompliance(),
 			"tencentcloud_ccn_tenant_instances":                         ccn.DataSourceTencentCloudCcnTenantInstance(),
@@ -554,6 +647,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_monitor_type":                   monitor.DataSourceTencentCloudMonitorAlarmMonitorType(),
 			"tencentcloud_monitor_statistic_data":                       monitor.DataSourceTencentCloudMonitorStatisticData(),
 			"tencentcloud_monitor_tmp_regions":                          tmp.DataSourceTencentCloudMonitorTmpRegions(),
+			"tencentcloud_monitor_tmp_instances":                        tmp.DataSourceTencentCloudMonitorTmpInstances(),
 			"tencentcloud_postgresql_instances":                         postgresql.DataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         postgresql.DataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             postgresql.DataSourceTencentCloudPostgresqlXlogs(),
@@ -987,6 +1081,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_instance_shards":                   cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
 			"tencentcloud_clickhouse_instance_nodes":                    cdwch.DataSourceTencentCloudClickhouseInstanceNodes(),
 			"tencentcloud_organization_org_share_area":                  tco.DataSourceTencentCloudOrganizationOrgShareArea(),
+			"tencentcloud_kubernetes_cluster_native_node_pools":         tke.DataSourceTencentCloudKubernetesClusterNativeNodePools(),
+			"tencentcloud_cdc_dedicated_cluster_hosts":                  cdc.DataSourceTencentCloudCdcDedicatedClusterHosts(),
+			"tencentcloud_cdc_dedicated_cluster_instance_types":         cdc.DataSourceTencentCloudCdcDedicatedClusterInstanceTypes(),
+			"tencentcloud_cdc_dedicated_cluster_orders":                 cdc.DataSourceTencentCloudCdcDedicatedClusterOrders(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1061,7 +1159,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn":                                                 ccn.ResourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":                                      ccn.ResourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":                                 ccn.ResourceTencentCloudCcnBandwidthLimit(),
+			"tencentcloud_ccn_route_table":                                     ccn.ResourceTencentCloudCcnRouteTable(),
+			"tencentcloud_ccn_route_table_input_policies":                      ccn.ResourceTencentCloudCcnRouteTableInputPolicies(),
+			"tencentcloud_ccn_route_table_broadcast_policies":                  ccn.ResourceTencentCloudCcnRouteTableBroadcastPolicies(),
+			"tencentcloud_ccn_route_table_selection_policies":                  ccn.ResourceTencentCloudCcnRouteTableSelectionPolicies(),
 			"tencentcloud_ccn_routes":                                          ccn.ResourceTencentCloudCcnRoutes(),
+			"tencentcloud_ccn_route_table_associate_instance_config":           ccn.ResourceTencentCloudCcnRouteTableAssociateInstanceConfig(),
 			"tencentcloud_ccn_instances_accept_attach":                         ccn.ResourceTencentCloudCcnInstancesAcceptAttach(),
 			"tencentcloud_ccn_instances_reject_attach":                         ccn.ResourceTencentCloudCcnInstancesRejectAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                          ccn.ResourceTencentCloudCcnInstancesResetAttach(),
@@ -1218,6 +1321,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instance_account":                            mongodb.ResourceTencentCloudMongodbInstanceAccount(),
 			"tencentcloud_mongodb_instance_backup":                             mongodb.ResourceTencentCloudMongodbInstanceBackup(),
 			"tencentcloud_mongodb_instance_backup_download_task":               mongodb.ResourceTencentCloudMongodbInstanceBackupDownloadTask(),
+			"tencentcloud_mongodb_instance_transparent_data_encryption":        mongodb.ResourceTencentCloudMongodbInstanceTransparentDataEncryption(),
+			"tencentcloud_mongodb_instance_backup_rule":                        mongodb.ResourceTencentCloudMongodbInstanceBackupRule(),
 			"tencentcloud_dayu_cc_http_policy":                                 dayu.ResourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                                dayu.ResourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                                    dayu.ResourceTencentCloudDayuDdosPolicy(),
@@ -1557,6 +1662,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_acceleration_domain":                             teo.ResourceTencentCloudTeoAccelerationDomain(),
 			"tencentcloud_teo_application_proxy":                               teo.ResourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                          teo.ResourceTencentCloudTeoApplicationProxyRule(),
+			"tencentcloud_teo_realtime_log_delivery":                           teo.ResourceTencentCloudTeoRealtimeLogDelivery(),
 			"tencentcloud_tcm_mesh":                                            tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                              tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                           tcm.ResourceTencentCloudTcmPrometheusAttachment(),
@@ -1975,24 +2081,18 @@ func Provider() *schema.Provider {
 			"tencentcloud_csip_risk_center":                                    csip.ResourceTencentCloudCsipRiskCenter(),
 			"tencentcloud_organization_org_share_unit_member":                  tco.ResourceTencentCloudOrganizationOrgShareUnitMember(),
 			"tencentcloud_organization_org_share_unit":                         tco.ResourceTencentCloudOrganizationOrgShareUnit(),
-			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon()},
+			"tencentcloud_kubernetes_addon":                                    tke.ResourceTencentCloudKubernetesAddon(),
+			"tencentcloud_kubernetes_addon_config":                             tke.ResourceTencentCloudKubernetesAddonConfig(),
+			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool(),
+			"tencentcloud_cdc_site":                                            cdc.ResourceTencentCloudCdcSite(),
+			"tencentcloud_cdc_dedicated_cluster":                               cdc.ResourceTencentCloudCdcDedicatedCluster(),
+		},
 
 		ConfigureFunc: providerConfigure,
 	}
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	//var getProviderConfig = func(str string, key string) string {
-	//	if str == "" {
-	//		value, err := getConfigFromProfile(d, key)
-	//		if err == nil && value != nil {
-	//			str = value.(string)
-	//		}
-	//	}
-	//
-	//	return str
-	//}
-
 	var getProviderConfig = func(key string) string {
 		var str string
 		value, err := getConfigFromProfile(d, key)
@@ -2012,6 +2112,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		domain        string
 	)
 
+	needSecret := true
 	if v, ok := d.GetOk("secret_id"); ok {
 		secretId = v.(string)
 	} else {
@@ -2026,6 +2127,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if v, ok := d.GetOk("security_token"); ok {
 		securityToken = v.(string)
+	} else {
+		securityToken = getProviderConfig("token")
 	}
 
 	if v, ok := d.GetOk("region"); ok {
@@ -2077,7 +2180,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
 		assumeRoleSessionDuration = 7200
 		assumeRolePolicy = ""
-
 		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 	}
 
@@ -2097,7 +2199,28 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionDuration = 7200
 		}
 
-		_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+		// get assume role with saml from env
+		envSamlAssertion := os.Getenv(PROVIDER_ASSUME_ROLE_SAML_ASSERTION)
+		envPrincipalArn := os.Getenv(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN)
+		// get assume role with web identity from env
+		envWebIdentityToken := os.Getenv(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN)
+
+		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
+			// use assume role
+			_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+		} else if envSamlAssertion != "" && envPrincipalArn != "" && envWebIdentityToken != "" {
+			return nil, fmt.Errorf("can not set `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`, `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` at the same time.\n")
+		} else if envSamlAssertion != "" && envPrincipalArn != "" {
+			// use assume role with saml
+			_ = genClientWithSamlSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envSamlAssertion, envPrincipalArn)
+			needSecret = false
+		} else if envWebIdentityToken != "" {
+			// use assume role with oidc
+			_ = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken)
+			needSecret = false
+		} else {
+			return nil, fmt.Errorf("get `assume_role` from env error.\n")
+		}
 	}
 
 	// get assume role from tf
@@ -2111,11 +2234,49 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRolePolicy = assumeRole["policy"].(string)
 
 			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
+			needSecret = true
 		}
 	}
 
-	if secretId == "" || secretKey == "" {
-		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.")
+	var (
+		assumeRoleSamlAssertion    string
+		assumeRolePrincipalArn     string
+		assumeRoleWebIdentityToken string
+	)
+
+	// get assume role with saml from tf
+	if v, ok := d.GetOk("assume_role_with_saml"); ok {
+		assumeRoleWithSamlList := v.([]interface{})
+		if len(assumeRoleWithSamlList) == 1 {
+			assumeRoleWithSaml := assumeRoleWithSamlList[0].(map[string]interface{})
+			assumeRoleSamlAssertion = assumeRoleWithSaml["saml_assertion"].(string)
+			assumeRolePrincipalArn = assumeRoleWithSaml["principal_arn"].(string)
+			assumeRoleArn = assumeRoleWithSaml["role_arn"].(string)
+			assumeRoleSessionName = assumeRoleWithSaml["session_name"].(string)
+			assumeRoleSessionDuration = assumeRoleWithSaml["session_duration"].(int)
+
+			_ = genClientWithSamlSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleSamlAssertion, assumeRolePrincipalArn)
+			needSecret = false
+		}
+	}
+
+	// get assume role with web identity from tf
+	if v, ok := d.GetOk("assume_role_with_web_identity"); ok {
+		assumeRoleWithWebIdentityList := v.([]interface{})
+		if len(assumeRoleWithWebIdentityList) == 1 {
+			assumeRoleWithWebIdentity := assumeRoleWithWebIdentityList[0].(map[string]interface{})
+			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
+			assumeRoleArn = assumeRoleWithWebIdentity["role_arn"].(string)
+			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
+			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
+
+			_ = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken)
+			needSecret = false
+		}
+	}
+
+	if needSecret && (secretId == "" || secretKey == "") {
+		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.\n")
 	}
 
 	return &tcClient, nil
@@ -2133,6 +2294,60 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 
 	ratelimit.Check(request.GetAction())
 	response, err := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
+	if err != nil {
+		return err
+	}
+
+	// using STS credentials
+	tcClient.apiV3Conn.Credential = sdkcommon.NewTokenCredential(
+		*response.Response.Credentials.TmpSecretId,
+		*response.Response.Credentials.TmpSecretKey,
+		*response.Response.Credentials.Token,
+	)
+
+	return nil
+}
+
+func genClientWithSamlSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRoleSamlAssertion, assumeRolePrincipalArn string) error {
+	// applying STS credentials
+	request := sdksts.NewAssumeRoleWithSAMLRequest()
+	request.RoleArn = helper.String(assumeRoleArn)
+	request.RoleSessionName = helper.String(assumeRoleSessionName)
+	request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
+	request.SAMLAssertion = helper.String(assumeRoleSamlAssertion)
+	request.PrincipalArn = helper.String(assumeRolePrincipalArn)
+
+	ratelimit.Check(request.GetAction())
+	var stsExtInfo connectivity.StsExtInfo
+	stsExtInfo.Authorization = "SKIP"
+	response, err := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithSAML(request)
+	if err != nil {
+		return err
+	}
+
+	// using STS credentials
+	tcClient.apiV3Conn.Credential = sdkcommon.NewTokenCredential(
+		*response.Response.Credentials.TmpSecretId,
+		*response.Response.Credentials.TmpSecretKey,
+		*response.Response.Credentials.Token,
+	)
+
+	return nil
+}
+
+func genClientWithOidcSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {
+	// applying STS credentials
+	request := sdksts.NewAssumeRoleWithWebIdentityRequest()
+	request.ProviderId = helper.String("OIDC")
+	request.RoleArn = helper.String(assumeRoleArn)
+	request.RoleSessionName = helper.String(assumeRoleSessionName)
+	request.DurationSeconds = helper.IntInt64(assumeRoleSessionDuration)
+	request.WebIdentityToken = helper.String(assumeRolePolicy)
+
+	ratelimit.Check(request.GetAction())
+	var stsExtInfo connectivity.StsExtInfo
+	stsExtInfo.Authorization = "SKIP"
+	response, err := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithWebIdentity(request)
 	if err != nil {
 		return err
 	}

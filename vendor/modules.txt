@@ -1124,6 +1124,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.944
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.970
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
@@ -1148,16 +1151,16 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.748
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.860
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.961
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.860
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.970
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.944
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.971
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1168,7 +1171,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.960
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
@@ -1177,7 +1180,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.798
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
@@ -1213,7 +1216,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.771
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
@@ -1228,7 +1231,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.828
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.949
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.844
@@ -1300,7 +1303,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.932
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.955
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
@@ -1309,10 +1312,11 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.912
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.916
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.921
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.947
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.857
@@ -1324,7 +1328,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.860
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.845
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.971
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.833

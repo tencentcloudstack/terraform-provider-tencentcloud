@@ -13,10 +13,26 @@ Use this data source to query detailed information of CBS storages.
 
 ## Example Usage
 
+### Query all CBS storages
+
 ```hcl
-data "tencentcloud_cbs_storages" "storages" {
-  storage_id         = "disk-kdt0sq6m"
-  result_output_file = "mytestpath"
+data "tencentcloud_cbs_storages" "example" {}
+```
+
+### Query CBS by storage id
+
+```hcl
+data "tencentcloud_cbs_storages" "example" {
+  storage_id         = "disk-6goq404g"
+  result_output_file = "my-test-path"
+}
+```
+
+### Query CBS by dedicated cluster id
+
+```hcl
+data "tencentcloud_cbs_storages" "example" {
+  dedicated_cluster_id = "cluster-262n63e8"
 }
 ```
 
@@ -24,13 +40,13 @@ data "tencentcloud_cbs_storages" "storages" {
 
 ```hcl
 data "tencentcloud_cbs_storages" "whats_new" {
-  charge_type   = ["POSTPAID_BY_HOUR", "PREPAID"]
-  portable      = true
+  charge_type   = ["POSTPAID_BY_HOUR", "PREPAID", "CDCPAID", "DEDICATED_CLUSTER_PAID"]
   storage_state = ["ATTACHED"]
   instance_ips  = ["10.0.0.2"]
   instance_name = ["my-instance"]
-  tag_keys      = ["foo"]
+  tag_keys      = ["example"]
   tag_values    = ["bar", "baz"]
+  portable      = true
 }
 ```
 
@@ -39,7 +55,8 @@ data "tencentcloud_cbs_storages" "whats_new" {
 The following arguments are supported:
 
 * `availability_zone` - (Optional, String) The available zone that the CBS instance locates at.
-* `charge_type` - (Optional, List: [`String`]) List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).
+* `charge_type` - (Optional, List: [`String`]) List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID` | `CDCPAID` | `DEDICATED_CLUSTER_PAID`).
+* `dedicated_cluster_id` - (Optional, String) Exclusive cluster id.
 * `instance_ips` - (Optional, List: [`String`]) List filter by attached instance public or private IPs.
 * `instance_name` - (Optional, List: [`String`]) List filter by attached instance name.
 * `portable` - (Optional, Bool) Filter by whether the disk is portable (Boolean `true` or `false`).
@@ -62,6 +79,7 @@ In addition to all arguments above, the following attributes are exported:
   * `availability_zone` - The zone of CBS.
   * `charge_type` - Pay type of the CBS instance.
   * `create_time` - Creation time of CBS.
+  * `dedicated_cluster_id` - Exclusive cluster id.
   * `encrypt` - Indicates whether CBS is encrypted.
   * `instance_id` - ID of the CVM instance that be mounted by this CBS.
   * `prepaid_renew_flag` - The way that CBS instance will be renew automatically or not when it reach the end of the prepaid tenancy.

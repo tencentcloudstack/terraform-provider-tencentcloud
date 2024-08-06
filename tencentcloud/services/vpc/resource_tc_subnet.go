@@ -57,6 +57,12 @@ func ResourceTencentCloudVpcSubnet() *schema.Resource {
 				Default:     true,
 				Description: "Indicates whether multicast is enabled. The default value is 'true'.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "ID of CDC instance.",
+			},
 			"route_table_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -92,35 +98,38 @@ func ResourceTencentCloudVpcSubnet() *schema.Resource {
 func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_subnet.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	vpcService := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
+		logId            = tccommon.GetLogId(tccommon.ContextNil)
+		ctx              = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		vpcService       = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		vpcId            string
 		availabilityZone string
 		name             string
 		cidrBlock        string
 		isMulticast      bool
 		routeTableId     string
+		cdcId            string
 		tags             map[string]string
 	)
+
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		vpcId = temp.(string)
 		if len(vpcId) < 1 {
 			return fmt.Errorf("vpc_id should be not empty string")
 		}
 	}
+
 	if temp, ok := d.GetOk("availability_zone"); ok {
 		availabilityZone = temp.(string)
 		if len(availabilityZone) < 1 {
 			return fmt.Errorf("availability_zone should be not empty string")
 		}
 	}
+
 	if temp, ok := d.GetOk("name"); ok {
 		name = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("cidr_block"); ok {
 		cidrBlock = temp.(string)
 	}
@@ -134,11 +143,16 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	if temp, ok := d.GetOk("cdc_id"); ok {
+		cdcId = temp.(string)
+	}
+
 	if routeTableId != "" {
 		_, has, err := vpcService.IsRouteTableInVpc(ctx, routeTableId, vpcId)
 		if err != nil {
 			return err
 		}
+
 		if has != 1 {
 			err = fmt.Errorf("error,route_table [%s]  not found in vpc [%s]", routeTableId, vpcId)
 			log.Printf("[CRITAL]%s %s", logId, err.Error())
@@ -150,10 +164,11 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 		tags = temp
 	}
 
-	subnetId, err := vpcService.CreateSubnet(ctx, vpcId, name, cidrBlock, availabilityZone, tags)
+	subnetId, err := vpcService.CreateSubnet(ctx, vpcId, name, cidrBlock, availabilityZone, cdcId, tags)
 	if err != nil {
 		return err
 	}
+
 	d.SetId(subnetId)
 
 	err = vpcService.ModifySubnetAttribute(ctx, subnetId, name, isMulticast)
@@ -170,10 +185,8 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:subnet/%s", region, subnetId)
-
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -186,19 +199,18 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 	defer tccommon.LogElapsed("resource.tencentcloud_subnet.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	id := d.Id()
-
-	vpcService := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	var (
-		info VpcSubnetBasicInfo
-		has  int
-		e    error
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		vpcService = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService = svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region     = meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		id         = d.Id()
+		info       VpcSubnetBasicInfo
+		has        int
+		e          error
 	)
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e = vpcService.DescribeSubnet(ctx, id, nil, "", "")
 		if e != nil {
@@ -216,14 +228,18 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 			log.Printf("[CRITAL]%s %s", logId, errRet.Error())
 			return resource.NonRetryableError(errRet)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if has == 0 {
 		return nil
 	}
+
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "subnet", region, id)
 	if err != nil {
 		return err
@@ -235,6 +251,7 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("cidr_block", info.cidr)
 	_ = d.Set("is_multicast", info.isMulticast)
 	_ = d.Set("route_table_id", info.routeTableId)
+	_ = d.Set("cdc_id", info.cdcId)
 	_ = d.Set("is_default", info.isDefault)
 	_ = d.Set("available_ip_count", info.availableIpCount)
 	_ = d.Set("create_time", info.createTime)
@@ -246,17 +263,15 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_subnet.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	id := d.Id()
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service     = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		id          = d.Id()
 		name        string
 		isMulticast bool
 	)
+
 	old, now := d.GetChange("name")
 	if d.HasChange("name") {
 		name = now.(string)
@@ -287,6 +302,7 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
+
 		if has != 1 {
 			err = fmt.Errorf("error,route_table [%s]  not found in vpc [%s]", routeTableId, d.Get("vpc_id").(string))
 			log.Printf("[CRITAL]%s %s", logId, err.Error())
@@ -301,16 +317,12 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:subnet/%s", region, id)
-
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-
 	}
 
 	d.Partial(false)
@@ -321,10 +333,11 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudVpcSubnetDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_subnet.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteSubnet(ctx, d.Id()); err != nil {
@@ -333,8 +346,10 @@ func resourceTencentCloudVpcSubnetDelete(d *schema.ResourceData, meta interface{
 					return nil
 				}
 			}
+
 			return resource.RetryableError(err)
 		}
+
 		return nil
 	})
 

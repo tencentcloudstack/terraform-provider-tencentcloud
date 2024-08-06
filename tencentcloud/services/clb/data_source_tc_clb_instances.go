@@ -75,6 +75,11 @@ func DataSourceTencentCloudClbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "ID of the project.",
 						},
+						"cluster_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the cluster.",
+						},
 						"clb_vips": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -182,42 +187,49 @@ func DataSourceTencentCloudClbInstances() *schema.Resource {
 func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_clb_instances.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		clbService = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		clbs       []*clb.LoadBalancer
+	)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("clb_id"); ok {
 		params["clb_id"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("clb_name"); ok {
 		params["clb_name"] = v.(string)
 	}
+
 	if v, ok := d.GetOkExists("project_id"); ok {
 		params["project_id"] = v.(int)
 	}
+
 	if v, ok := d.GetOk("network_type"); ok {
 		params["network_type"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("master_zone"); ok {
 		params["master_zone"] = v.(string)
 	}
 
-	clbService := ClbService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	var clbs []*clb.LoadBalancer
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := clbService.DescribeLoadBalancerByFilter(ctx, params)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		clbs = results
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read CLB instances failed, reason:%+v", logId, err)
 		return err
 	}
+
 	clbList := make([]map[string]interface{}, 0, len(clbs))
 	ids := make([]string, 0, len(clbs))
 	for _, clbInstance := range clbs {
@@ -238,10 +250,16 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"vip_isp":                   clbInstance.VipIsp,
 			"security_groups":           helper.StringsInterfaces(clbInstance.SecureGroups),
 		}
+
+		if clbInstance.ClusterIds != nil && len(clbInstance.ClusterIds) > 0 {
+			mapping["cluster_id"] = *clbInstance.ClusterIds[0]
+		}
+
 		if clbInstance.NetworkAttributes != nil {
 			mapping["internet_charge_type"] = *clbInstance.NetworkAttributes.InternetChargeType
 			mapping["internet_bandwidth_max_out"] = *clbInstance.NetworkAttributes.InternetMaxBandwidthOut
 		}
+
 		if clbInstance.MasterZone != nil {
 			mapping["zone_id"] = *clbInstance.MasterZone.ZoneId
 			mapping["zone"] = *clbInstance.MasterZone.Zone
@@ -255,8 +273,10 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			for _, t := range clbInstance.Tags {
 				tags[*t.TagKey] = *t.TagValue
 			}
+
 			mapping["tags"] = tags
 		}
+
 		clbList = append(clbList, mapping)
 		ids = append(ids, *clbInstance.LoadBalancerId)
 	}

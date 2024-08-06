@@ -33,6 +33,11 @@ func DataSourceTencentCloudCbsStorages() *schema.Resource {
 				Optional:    true,
 				Description: "The available zone that the CBS instance locates at.",
 			},
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Exclusive cluster id.",
+			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -52,7 +57,7 @@ func DataSourceTencentCloudCbsStorages() *schema.Resource {
 			"charge_type": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).",
+				Description: "List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID` | `CDCPAID` | `DEDICATED_CLUSTER_PAID`).",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"portable": {
@@ -126,6 +131,11 @@ func DataSourceTencentCloudCbsStorages() *schema.Resource {
 							Computed:    true,
 							Description: "The zone of CBS.",
 						},
+						"dedicated_cluster_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Exclusive cluster id.",
+						},
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -191,25 +201,37 @@ func DataSourceTencentCloudCbsStorages() *schema.Resource {
 func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_cbs_storages.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("storage_id"); ok {
 		params["disk-id"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("storage_name"); ok {
 		params["disk-name"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("availability_zone"); ok {
 		params["zone"] = v.(string)
 	}
+
+	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
+		params["dedicated-cluster-id"] = v.(string)
+	}
+
 	if v, ok := d.GetOkExists("project_id"); ok {
 		params["project-id"] = fmt.Sprintf("%d", v.(int))
 	}
+
 	if v, ok := d.GetOk("storage_type"); ok {
 		params["disk-type"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("storage_usage"); ok {
 		params["disk-usage"] = v.(string)
 	}
@@ -229,21 +251,21 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("storage_state"); ok {
 		params["disk-state"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
+
 	if v, ok := d.GetOk("instance_ips"); ok {
 		params["instance-ip-address"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
+
 	if v, ok := d.GetOk("instance_name"); ok {
 		params["instance-name"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
+
 	if v, ok := d.GetOk("tag_keys"); ok {
 		params["tag-key"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
+
 	if v, ok := d.GetOk("tag_values"); ok {
 		params["tag-value"] = helper.InterfacesStringsPoint(v.([]interface{}))
-	}
-
-	cbsService := CbsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -251,6 +273,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		ids := make([]string, 0, len(storages))
 		storageList := make([]map[string]interface{}, 0, len(storages))
 		for _, storage := range storages {
@@ -260,6 +283,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 				"storage_usage":          storage.DiskUsage,
 				"storage_type":           storage.DiskType,
 				"availability_zone":      storage.Placement.Zone,
+				"dedicated_cluster_id":   storage.Placement.DedicatedClusterId,
 				"project_id":             storage.Placement.ProjectId,
 				"storage_size":           storage.DiskSize,
 				"attached":               storage.Attached,
@@ -271,13 +295,16 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 				"charge_type":            storage.DiskChargeType,
 				"throughput_performance": storage.ThroughputPerformance,
 			}
+
 			if storage.Tags != nil {
 				tags := make(map[string]interface{}, len(storage.Tags))
 				for _, t := range storage.Tags {
 					tags[*t.Key] = *t.Value
 				}
+
 				mapping["tags"] = tags
 			}
+
 			storageList = append(storageList, mapping)
 			ids = append(ids, *storage.DiskId)
 		}
@@ -297,6 +324,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read cbs storages failed, reason:%s\n ", logId, err.Error())
 		return err

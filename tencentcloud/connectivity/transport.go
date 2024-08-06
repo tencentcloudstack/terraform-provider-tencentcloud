@@ -25,11 +25,16 @@ func SetReqClient(name string) {
 }
 
 type LogRoundTripper struct {
-	InstanceId string
+	InstanceId    string
+	Authorization string
 }
 
 type IacExtInfo struct {
 	InstanceId string
+}
+
+type StsExtInfo struct {
+	Authorization string
 }
 
 func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Response, errRet error) {
@@ -58,6 +63,10 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	var reqClientFormat = ReqClient
 	if me.InstanceId != "" {
 		reqClientFormat = fmt.Sprintf("%s,id=%s", ReqClient, me.InstanceId)
+	}
+
+	if me.Authorization != "" {
+		request.Header.Set("Authorization", me.Authorization)
 	}
 
 	request.Header.Set("X-TC-RequestClient", reqClientFormat)

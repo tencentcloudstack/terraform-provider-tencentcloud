@@ -19,7 +19,7 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_monitor_tmp_instance" "foo" {
+resource "tencentcloud_monitor_tmp_instance" "example" {
   instance_name       = "tf-tmp-instance"
   vpc_id              = tencentcloud_vpc.vpc.id
   subnet_id           = tencentcloud_subnet.subnet.id
@@ -29,11 +29,10 @@ resource "tencentcloud_monitor_tmp_instance" "foo" {
     "createdBy" = "terraform"
   }
 }
-
 ```
 Import
 
 monitor tmpInstance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_tmp_instance.tmpInstance tmpInstance_id
+$ terraform import tencentcloud_monitor_tmp_instance.example prom-1uvo0tjm
 ```

@@ -1,40 +1,74 @@
 Provides a resource to create a rocketmq 5.x instance
 
-~> **NOTE:** It only support create postpaid rocketmq 5.x instance.
+~> **NOTE:** It only supports create postpaid rocketmq 5.x instance.
 
 Example Usage
 
-Basic Instance
+Create Basic Instance
+
 ```hcl
-resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
-  instance_type = "EXPERIMENT"
-  name = "rocketmq-instance"
-  sku_code = "experiment_500"
-  remark = "remark"
-  vpc_id = "vpc-xxxxxx"
-  subnet_id = "subnet-xxxxxx"
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rocketmq instance
+resource "tencentcloud_trocket_rocketmq_instance" "example" {
+  name          = "tf-example"
+  instance_type = "PRO"
+  sku_code      = "pro_4k"
+  remark        = "remark"
+  vpc_id        = tencentcloud_vpc.vpc.id
+  subnet_id     = tencentcloud_subnet.subnet.id
   tags = {
-    tag_key = "rocketmq"
+    tag_key   = "rocketmq"
     tag_value = "5.x"
   }
 }
 ```
 
-Enable Public Instance
+Create Enable Public Network Instance
+
 ```hcl
-resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance_public" {
-  instance_type = "EXPERIMENT"
-  name = "rocketmq-enable-public-instance"
-  sku_code = "experiment_500"
-  remark = "remark"
-  vpc_id = "vpc-xxxxxx"
-  subnet_id = "subnet-xxxxxx"
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rocketmq instance
+resource "tencentcloud_trocket_rocketmq_instance" "example" {
+  name          = "tf-example"
+  instance_type = "PRO"
+  sku_code      = "pro_4k"
+  remark        = "remark"
+  vpc_id        = tencentcloud_vpc.vpc.id
+  subnet_id     = tencentcloud_subnet.subnet.id
+  enable_public = true
+  bandwidth     = 10
   tags = {
-    tag_key = "rocketmq"
+    tag_key   = "rocketmq"
     tag_value = "5.x"
   }
-  enable_public = true
-  bandwidth = 1
 }
 ```
 
@@ -43,5 +77,5 @@ Import
 trocket rocketmq_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_trocket_rocketmq_instance.rocketmq_instance rocketmq_instance_id
+terraform import tencentcloud_trocket_rocketmq_instance.rocketmq_instance rmq-n5qado7m
 ```

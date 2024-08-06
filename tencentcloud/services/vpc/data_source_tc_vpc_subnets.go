@@ -56,6 +56,11 @@ func DataSourceTencentCloudVpcSubnets() *schema.Resource {
 				Optional:    true,
 				Description: "Filter subnet with this CIDR.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of CDC instance.",
+			},
 			"is_remote_vpc_snat": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -103,6 +108,11 @@ func DataSourceTencentCloudVpcSubnets() *schema.Resource {
 							Computed:    true,
 							Description: "A network address block of the subnet.",
 						},
+						"cdc_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of CDC instance.",
+						},
 						"is_default": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -143,14 +153,12 @@ func DataSourceTencentCloudVpcSubnets() *schema.Resource {
 func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_vpc_subnets.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	vpcService := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-
 	var (
+		logId            = tccommon.GetLogId(tccommon.ContextNil)
+		ctx              = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		vpcService       = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		tagService       = svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region           = meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		vpcId            string
 		subnetId         string
 		name             string
@@ -159,7 +167,9 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		isRemoteVpcSNAT  *bool
 		tagKey           string
 		cidrBlock        string
+		cdcId            string
 	)
+
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		vpcId = temp.(string)
 	}
@@ -192,6 +202,10 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		cidrBlock = temp.(string)
 	}
 
+	if temp, ok := d.GetOk("cdc_id"); ok {
+		cdcId = temp.(string)
+	}
+
 	var (
 		tags  = helper.GetTags(d, "tags")
 		infos []VpcSubnetBasicInfo
@@ -202,10 +216,12 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		infos, err = vpcService.DescribeSubnets(ctx, subnetId, vpcId,
 			name, availabilityZone, tags,
 			isDefault, isRemoteVpcSNAT, tagKey,
-			cidrBlock)
+			cidrBlock, cdcId)
+
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	})
 
@@ -214,7 +230,6 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 	}
 
 	var infoList = make([]map[string]interface{}, 0, len(infos))
-
 	for _, item := range infos {
 		respTags, err := tagService.DescribeResourceTags(ctx, "vpc", "subnet", region, item.subnetId)
 		if err != nil {
@@ -222,7 +237,6 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		}
 
 		var infoMap = make(map[string]interface{})
-
 		infoMap["availability_zone"] = item.zone
 		infoMap["vpc_id"] = item.vpcId
 		infoMap["subnet_id"] = item.subnetId
@@ -234,7 +248,6 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		infoMap["available_ip_count"] = item.availableIpCount
 		infoMap["create_time"] = item.createTime
 		infoMap["tags"] = respTags
-
 		infoList = append(infoList, infoMap)
 	}
 
@@ -254,6 +267,7 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		"cidrBlock":        cidrBlock,
 		"tags":             tags,
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create data source id error, reason:%s\n ", logId, err.Error())
 		return err
@@ -271,5 +285,6 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 			return err
 		}
 	}
+
 	return nil
 }

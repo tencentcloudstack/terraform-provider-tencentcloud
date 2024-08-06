@@ -31,11 +31,3 @@ resource "tencentcloud_tdmq_topic" "example" {
   remark            = "remark."
 }
 ```
-
-Import
-
-Tdmq Topic can be imported, e.g.
-
-```
-$ terraform import tencentcloud_tdmq_topic.test topic_id
-```

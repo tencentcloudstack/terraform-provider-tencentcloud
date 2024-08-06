@@ -17,8 +17,8 @@ import (
 
 func ResourceTencentCloudRumTawInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudRumTawInstanceRead,
 		Create: resourceTencentCloudRumTawInstanceCreate,
+		Read:   resourceTencentCloudRumTawInstanceRead,
 		Update: resourceTencentCloudRumTawInstanceUpdate,
 		Delete: resourceTencentCloudRumTawInstanceDelete,
 		Importer: &schema.ResourceImporter{
@@ -116,9 +116,8 @@ func resourceTencentCloudRumTawInstanceCreate(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_taw_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = rum.NewCreateTawInstanceRequest()
 		response   *rum.CreateTawInstanceResponse
 		instanceId string
@@ -178,6 +177,7 @@ func resourceTencentCloudRumTawInstanceCreate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
@@ -188,7 +188,6 @@ func resourceTencentCloudRumTawInstanceCreate(d *schema.ResourceData, meta inter
 	}
 
 	instanceId = *response.Response.InstanceId
-
 	d.SetId(instanceId)
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -208,15 +207,14 @@ func resourceTencentCloudRumTawInstanceRead(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_taw_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	tawInstance, err := service.DescribeRumTawInstance(ctx, instanceId)
-
 	if err != nil {
 		return err
 	}
@@ -248,10 +246,12 @@ func resourceTencentCloudRumTawInstanceRead(d *schema.ResourceData, meta interfa
 			if tags.Key != nil {
 				tagsMap["key"] = tags.Key
 			}
+
 			if tags.Value != nil {
 				tagsMap["value"] = tags.Value
 			}
 		}
+
 		_ = d.Set("tags", tagsMap)
 	}
 
@@ -306,12 +306,12 @@ func resourceTencentCloudRumTawInstanceUpdate(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_taw_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	request := rum.NewModifyInstanceRequest()
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request    = rum.NewModifyInstanceRequest()
+		instanceId = d.Id()
+	)
 
 	request.InstanceId = &instanceId
 
@@ -343,6 +343,7 @@ func resourceTencentCloudRumTawInstanceUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
 
@@ -369,12 +370,12 @@ func resourceTencentCloudRumTawInstanceDelete(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_rum_taw_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = RumService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	if err := service.DeleteRumTawInstanceById(ctx, instanceId); err != nil {
 		return err

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -38,12 +39,12 @@ func ResourceTencentCloudDasbUser() *schema.Resource {
 			"phone": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Fill in the mainland mobile phone number directly. If it is a number from other countries or regions, enter it in the format of country area code|mobile phone number. For example: +852|xxxxxxxx.",
+				Description: "Enter it in the format of country area code|mobile phone number. For example: +86|***********, +852|xxxxxxxx. Please provide at least one of `phone` or `email`.",
 			},
 			"email": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Email.",
+				Description: "Email. Please provide at least one of `phone` or `email`.",
 			},
 			"validate_from": {
 				Optional:    true,
@@ -198,7 +199,10 @@ func resourceTencentCloudDasbUserRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	if user.Phone != nil {
-		_ = d.Set("phone", user.Phone)
+		parts := strings.Split(*user.Phone, "|")
+		if len(parts) == 2 && parts[1] != "" {
+			_ = d.Set("phone", user.Phone)
+		}
 	}
 
 	if user.Email != nil {

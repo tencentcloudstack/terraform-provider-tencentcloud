@@ -3,7 +3,10 @@ package ccn
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
+
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -67,6 +70,23 @@ func ResourceTencentCloudCcn() *schema.Resource {
 					"`INTER_REGION_LIMIT` is the inter-regional speed limit. " +
 					"The default is `OUTER_REGION_LIMIT`.",
 			},
+			"route_ecmp_flag": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether to enable the equivalent routing function. `true`: enabled, `false`: disabled.",
+			},
+			"route_overlap_flag": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether to enable the routing overlap function. `true`: enabled, `false`: disabled.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Instance tag.",
+			},
 			// Computed values
 			"state": {
 				Type:        schema.TypeString,
@@ -83,11 +103,6 @@ func ResourceTencentCloudCcn() *schema.Resource {
 				Computed:    true,
 				Description: "Creation time of resource.",
 			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Instance tag.",
-			},
 		},
 	}
 }
@@ -95,25 +110,42 @@ func ResourceTencentCloudCcn() *schema.Resource {
 func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
-		name               = d.Get("name").(string)
-		description        = ""
-		qos                = d.Get("qos").(string)
-		chargeType         = d.Get("charge_type").(string)
-		bandwidthLimitType = d.Get("bandwidth_limit_type").(string)
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		name               string
+		description        string
+		qos                string
+		chargeType         string
+		bandwidthLimitType string
 	)
+
+	if temp, ok := d.GetOk("name"); ok {
+		name = temp.(string)
+	}
+
 	if temp, ok := d.GetOk("description"); ok {
 		description = temp.(string)
 	}
+
+	if temp, ok := d.GetOk("qos"); ok {
+		qos = temp.(string)
+	}
+
+	if temp, ok := d.GetOk("charge_type"); ok {
+		chargeType = temp.(string)
+	}
+
+	if temp, ok := d.GetOk("bandwidth_limit_type"); ok {
+		bandwidthLimitType = temp.(string)
+	}
+
 	info, err := service.CreateCcn(ctx, name, description, qos, chargeType, bandwidthLimitType)
 	if err != nil {
 		return err
 	}
+
 	d.SetId(info.ccnId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -125,6 +157,39 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
+	// set ECMP/Overlap
+	request := vpc.NewModifyCcnAttributeRequest()
+	request.CcnId = &info.ccnId
+	if temp, ok := d.GetOkExists("route_ecmp_flag"); ok {
+		request.RouteECMPFlag = helper.Bool(temp.(bool))
+	}
+
+	if temp, ok := d.GetOkExists("route_overlap_flag"); ok {
+		request.RouteOverlapFlag = helper.Bool(temp.(bool))
+	}
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCcnAttribute(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil {
+			e = fmt.Errorf("update ModifyCcnAttribute failed")
+			return resource.NonRetryableError(e)
+		}
+
+		_ = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s update ModifyCcnAttribute failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+
 	return resourceTencentCloudCcnRead(d, meta)
 }
 
@@ -132,10 +197,12 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeCcn(ctx, d.Id())
 		if e != nil {
@@ -155,12 +222,16 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("create_time", info.createTime)
 		_ = d.Set("charge_type", info.chargeType)
 		_ = d.Set("bandwidth_limit_type", info.bandWithLimitType)
+		_ = d.Set("route_ecmp_flag", info.ecmpFlag)
+		_ = d.Set("route_overlap_flag", info.overlapFlag)
 
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "ccn", tcClient.Region, d.Id())
@@ -175,37 +246,73 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
-		name        = ""
-		description = ""
-		change      = false
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		change  bool
 	)
+
+	request := vpc.NewModifyCcnAttributeRequest()
+	request.CcnId = helper.String(d.Id())
+
 	if d.HasChange("name") {
-		name = d.Get("name").(string)
+		if temp, ok := d.GetOk("name"); ok {
+			request.CcnName = helper.String(temp.(string))
+		}
+
 		change = true
 	}
 
 	if d.HasChange("description") {
 		if temp, ok := d.GetOk("description"); ok {
-			description = temp.(string)
+			request.CcnName = helper.String(temp.(string))
 		}
-		if description == "" {
-			return fmt.Errorf("can not set description='' ")
+
+		change = true
+	}
+
+	if d.HasChange("route_ecmp_flag") {
+		if temp, ok := d.GetOkExists("route_ecmp_flag"); ok {
+			request.RouteECMPFlag = helper.Bool(temp.(bool))
 		}
+
+		change = true
+	}
+
+	if d.HasChange("route_overlap_flag") {
+		if temp, ok := d.GetOkExists("route_overlap_flag"); ok {
+			request.RouteOverlapFlag = helper.Bool(temp.(bool))
+		}
+
 		change = true
 	}
 
 	d.Partial(true)
 	if change {
-		if err := service.ModifyCcnAttribute(ctx, d.Id(), name, description); err != nil {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCcnAttribute(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil {
+				e = fmt.Errorf("update ModifyCcnAttribute failed")
+				return resource.NonRetryableError(e)
+			}
+
+			_ = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update ModifyCcnAttribute failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
+
 	// modify band width limit type
 	if d.HasChange("bandwidth_limit_type") {
 		_, news := d.GetChange("bandwidth_limit_type")
@@ -213,6 +320,7 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 			if err := service.ModifyCcnRegionBandwidthLimitsType(ctx, d.Id(), news.(string)); err != nil {
 				return tccommon.RetryError(err)
 			}
+
 			return nil
 		}); err != nil {
 			return err
@@ -220,10 +328,8 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	if d.HasChange("tags") {
-
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
-
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
@@ -231,8 +337,8 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
-
 	}
+
 	d.Partial(false)
 	return resourceTencentCloudCcnRead(d, meta)
 }
@@ -240,21 +346,26 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, d.Id())
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		if has == 0 {
 			d.SetId("")
 			return nil
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -268,9 +379,11 @@ func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return resource.RetryableError(err)
 		}
+
 		if has == 0 {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("delete fail"))
 	})
 }

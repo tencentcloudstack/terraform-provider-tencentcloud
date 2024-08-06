@@ -47,7 +47,7 @@ resource "tencentcloud_tdmq_topic" "example" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) The Dedicated Cluster Id.
+* `cluster_id` - (Required, String, ForceNew) The Dedicated Cluster Id.
 * `environ_id` - (Required, String, ForceNew) The name of tdmq namespace.
 * `partitions` - (Required, Int) The partitions of topic.
 * `topic_name` - (Required, String, ForceNew) The name of topic to be created.
@@ -62,12 +62,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time of resource.
 
-
-## Import
-
-Tdmq Topic can be imported, e.g.
-
-```
-$ terraform import tencentcloud_tdmq_topic.test topic_id
-```
 
