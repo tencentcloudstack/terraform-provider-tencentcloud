@@ -1,3 +1,13 @@
+## 1.81.114 (August 2 , 2024)
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_instances: add params `uuid` ([#2757](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2757))
+* resource/tencentcloud_cls_data_transform: Update read interface ([#2750](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2750))
+* resource/tencentcloud_elasticsearch_instance: Update disk_type params ([#2751](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2751))
+* resource/tencentcloud_kubernetes_cluster_attachment: support `image_id` ([#2749](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2749))
+* resource/tencentcloud_vpn_gateway: add default value for `prepaid_period` while import ([#2759](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2759))
+
 ## 1.81.113 (July 26, 2024)
 
 FEATURES:

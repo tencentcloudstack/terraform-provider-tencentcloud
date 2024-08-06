@@ -211,7 +211,7 @@ func DataSourceTencentCloudCdcDedicatedClusterInstanceTypesRead(d *schema.Resour
 				dedicatedClusterInstanceTypeMap["status"] = dedicatedClusterInstanceType.Status
 			}
 
-			ids = append(ids)
+			ids = append(ids, *dedicatedClusterInstanceType.InstanceType)
 			tmpList = append(tmpList, dedicatedClusterInstanceTypeMap)
 		}
 

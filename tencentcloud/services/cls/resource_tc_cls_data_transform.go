@@ -27,54 +27,54 @@ func ResourceTencentCloudClsDataTransform() *schema.Resource {
 			"func_type": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "task type.",
+				Description: "Task type. `1`: Specify the theme; `2`: Dynamic creation.",
 			},
 
 			"src_topic_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "src topic id.",
+				Description: "Source topic ID.",
 			},
 
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "task name.",
+				Description: "Task name.",
 			},
 
 			"etl_content": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "data transform content.",
+				Description: "Data transform content. If `func_type` is `2`, must use `log_auto_output`.",
 			},
 
 			"task_type": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "task type.",
+				Description: "Task type. `1`: Use random data from the source log theme for processing preview; `2`: Use user-defined test data for processing preview; `3`: Create real machining tasks.",
 			},
 
 			"enable_flag": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "task enable flag.",
+				Description: "Task enable flag. `1`: enable, `2`: disable, Default is `1`.",
 			},
 
 			"dst_resources": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "data transform des resources.",
+				Description: "Data transform des resources. If `func_type` is `1`, this parameter is required. If `func_type` is `2`, this parameter does not need to be filled in.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"topic_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "dst topic id.",
+							Description: "Dst topic ID.",
 						},
 						"alias": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "alias.",
+							Description: "Alias.",
 						},
 					},
 				},
@@ -87,13 +87,13 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_data_transform.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = cls.NewCreateDataTransformRequest()
 		response = cls.NewCreateDataTransformResponse()
 		taskId   string
 	)
+
 	if v, ok := d.GetOkExists("func_type"); ok {
 		request.FuncType = helper.IntInt64(v.(int))
 	}
@@ -125,9 +125,11 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 			if v, ok := dMap["topic_id"]; ok {
 				dataTransformResouceInfo.TopicId = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["alias"]; ok {
 				dataTransformResouceInfo.Alias = helper.String(v.(string))
 			}
+
 			request.DstResources = append(request.DstResources, &dataTransformResouceInfo)
 		}
 	}
@@ -139,9 +141,11 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create cls dataTransform failed, reason:%+v", logId, err)
 		return err
@@ -157,13 +161,12 @@ func resourceTencentCloudClsDataTransformRead(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_data_transform.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	dataTransformTaskId := d.Id()
+	var (
+		logId               = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                 = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service             = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		dataTransformTaskId = d.Id()
+	)
 
 	dataTransform, err := service.DescribeClsDataTransformById(ctx, dataTransformTaskId)
 	if err != nil {
@@ -209,7 +212,6 @@ func resourceTencentCloudClsDataTransformRead(d *schema.ResourceData, meta inter
 		}
 
 		_ = d.Set("dst_resources", dstResourcesList)
-
 	}
 
 	return nil
@@ -219,21 +221,20 @@ func resourceTencentCloudClsDataTransformUpdate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_data_transform.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := cls.NewModifyDataTransformRequest()
-
-	dataTransformTaskId := d.Id()
-
-	request.TaskId = &dataTransformTaskId
+	var (
+		logId               = tccommon.GetLogId(tccommon.ContextNil)
+		request             = cls.NewModifyDataTransformRequest()
+		dataTransformTaskId = d.Id()
+	)
 
 	immutableArgs := []string{"src_topic_id", "name", "etl_content", "enable_flag", "preview_log_statistics"}
-
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
+
+	request.TaskId = &dataTransformTaskId
 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
@@ -261,9 +262,11 @@ func resourceTencentCloudClsDataTransformUpdate(d *schema.ResourceData, meta int
 				if v, ok := dMap["topic_id"]; ok {
 					dataTransformResouceInfo.TopicId = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["alias"]; ok {
 					dataTransformResouceInfo.Alias = helper.String(v.(string))
 				}
+
 				request.DstResources = append(request.DstResources, &dataTransformResouceInfo)
 			}
 		}
@@ -276,8 +279,10 @@ func resourceTencentCloudClsDataTransformUpdate(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s update cls dataTransform failed, reason:%+v", logId, err)
 		return err
@@ -290,11 +295,12 @@ func resourceTencentCloudClsDataTransformDelete(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_data_transform.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	dataTransformTaskId := d.Id()
+	var (
+		logId               = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                 = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service             = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		dataTransformTaskId = d.Id()
+	)
 
 	if err := service.DeleteClsDataTransformById(ctx, dataTransformTaskId); err != nil {
 		return err

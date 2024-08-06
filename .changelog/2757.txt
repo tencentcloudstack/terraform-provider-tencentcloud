@@ -1,0 +1,3 @@
+```release-note:enhancement
+data_source/tencentcloud_instances: add params `uuid`
+```

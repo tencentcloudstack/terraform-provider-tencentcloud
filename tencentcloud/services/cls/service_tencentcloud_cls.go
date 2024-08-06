@@ -1164,7 +1164,12 @@ func (me *ClsService) DescribeClsDataTransformById(ctx context.Context, taskId s
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeDataTransformInfoRequest()
-	request.TaskId = &taskId
+	request.Filters = []*cls.Filter{
+		{
+			Key:    common.StringPtr("taskId"),
+			Values: common.StringPtrs([]string{taskId}),
+		},
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -1179,6 +1184,7 @@ func (me *ClsService) DescribeClsDataTransformById(ctx context.Context, taskId s
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.DataTransformTaskInfos) < 1 {
