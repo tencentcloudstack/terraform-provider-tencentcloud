@@ -204,6 +204,11 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Description: "Instance tags.",
 			},
 			// Computed values
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Dedicated Cluster ID.",
+			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -611,8 +616,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("ip", info.WanIp)
 	_ = d.Set("create_time", info.Createtime)
 	_ = d.Set("auto_renew_flag", info.AutoRenewFlag)
-	_ = d.Set("product_version", info.)
-	_ = d.Set("redis_cluster_id", info.)
+	_ = d.Set("product_version", info.ProductVersion)
+	_ = d.Set("redis_cluster_id", info.RedisClusterId)
+	_ = d.Set("dedicated_cluster_id", info.DedicatedClusterId)
 	slaveReadWeight := *info.SlaveReadWeight
 	if slaveReadWeight == 0 {
 		_ = d.Set("replicas_read_only", false)
@@ -698,6 +704,8 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	unsupportedUpdateFields := []string{
 		"prepaid_period",
+		"product_version",
+		"redis_cluster_id",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
