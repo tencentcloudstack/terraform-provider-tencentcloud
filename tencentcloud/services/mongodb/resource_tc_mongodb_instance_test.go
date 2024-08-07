@@ -130,6 +130,13 @@ func TestAccTencentCloudMongodbInstanceResource_PostPaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "security_groups.0", "sg-05f7wnhn"),
 				),
 			},
+			{
+				Config: testAccMongodbInstance_updateMaintenance,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "maintenance_start", "05:00"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "maintenance_end", "06:00"),
+				),
+			},
 		},
 	})
 }
@@ -186,6 +193,13 @@ func TestAccTencentCloudMongodbInstanceResource_Prepaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "instance_name", "tf-mongodb-test-prepaid-update"),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "tags.prepaid", "prepaid"),
+				),
+			},
+			{
+				Config: testAccMongodbInstancePrepaid_updateMaintenance,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "maintenance_start", "05:00"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "maintenance_end", "06:00"),
 				),
 			},
 			{
@@ -388,6 +402,49 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 }
 `
 
+const testAccMongodbInstance_updateMaintenance = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_mongodb_instance" "mongodb" {
+  instance_name  = "tf-mongodb-update"
+  memory         = local.memory * 2
+  volume         = local.volume * 2
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  security_groups = ["sg-05f7wnhn"]
+  available_zone = "ap-guangzhou-3"
+  project_id     = 0
+  password       = "test1234update"
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
+
+  node_num = 5
+  add_node_list {
+    role = "SECONDARY"
+    zone = "ap-guangzhou-3"
+  }
+  add_node_list {
+    role = "SECONDARY"
+    zone = "ap-guangzhou-3"
+  }
+  tags = {
+    abc = "abc"
+  }
+  maintenance_start = "05:00"
+  maintenance_end = "06:00"
+}
+`
+
 const testAccMongodbInstancePrepaid = tcacctest.DefaultMongoDBSpec + `
 resource "tencentcloud_vpc" "vpc" {
 	name       = "mongodb-instance-prepaid-vpc"
@@ -455,6 +512,43 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   tags = {
     prepaid = "prepaid"
   }
+}
+`
+
+const testAccMongodbInstancePrepaid_updateMaintenance = tcacctest.DefaultMongoDBSpec + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "mongodb-instance-prepaid-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "mongodb-instance-prepaid-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
+  instance_name   = "tf-mongodb-test-prepaid-update"
+  memory         = local.memory
+  volume         = local.volume
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  security_groups = [local.security_group_id]
+  available_zone  = "ap-guangzhou-3"
+  project_id      = 0
+  password        = "test1234update"
+  charge_type     = "PREPAID"
+  prepaid_period  = 1
+  auto_renew_flag = 1
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
+
+  tags = {
+    prepaid = "prepaid"
+  }
+  maintenance_start = "05:00"
+  maintenance_end = "06:00"
 }
 `
 
