@@ -170,6 +170,7 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Optional:    true,
 							ForceNew:    true,
 							Default:     true,
+							Deprecated:  "This argument was deprecated, use `unschedulable` instead.",
 							Description: "Indicate to schedule the adding node or not. Default is true.",
 						},
 						"desired_pod_num": {
@@ -234,6 +235,7 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							ForceNew:    true,
+							Deprecated:  "This argument was no longer supported by TencentCloud TKE.",
 							Description: "Mount target. Default is not mounting.",
 						},
 						"docker_graph_path": {
@@ -241,6 +243,7 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Optional:    true,
 							ForceNew:    true,
 							Default:     "/var/lib/docker",
+							Deprecated:  "This argument was no longer supported by TencentCloud TKE.",
 							Description: "Docker graph path. Default is `/var/lib/docker`.",
 						},
 						"data_disk": {
@@ -300,6 +303,7 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							ForceNew:    true,
+							Deprecated:  "This argument was no longer supported by TencentCloud TKE.",
 							Description: "Custom parameter information related to the node. This is a white-list parameter.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -309,12 +313,14 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							ForceNew:    true,
+							Deprecated:  "This argument was no longer supported by TencentCloud TKE.",
 							Description: "Base64-encoded User Data text, the length limit is 16KB.",
 						},
 						"pre_start_user_script": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							ForceNew:    true,
+							Deprecated:  "This argument was no longer supported by TencentCloud TKE.",
 							Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
 						},
 						"is_schedule": {
@@ -322,6 +328,7 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Optional:    true,
 							ForceNew:    true,
 							Default:     true,
+							Deprecated:  "This argument was deprecated, use `unschedulable` instead.",
 							Description: "Indicate to schedule the adding node or not. Default is true.",
 						},
 						"desired_pod_num": {
@@ -386,7 +393,7 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
+				Description: "Sets whether the joining node participates in the schedule. Default is `0`, which means it participates in scheduling. Non-zero(eg: `1`) number means it does not participate in scheduling.",
 			},
 
 			"security_groups": {
@@ -496,9 +503,6 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 			}
 			instanceAdvancedSettings.GPUArgs = &gPUArgs
 		}
-		if v, ok := d.GetOkExists("unschedulable"); ok {
-			instanceAdvancedSettings.Unschedulable = helper.IntInt64(v.(int))
-		}
 		request.InstanceAdvancedSettings = &instanceAdvancedSettings
 	}
 
@@ -556,9 +560,6 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 					gPUArgs2.MIGEnable = helper.Bool(v.(bool))
 				}
 				instanceAdvancedSettings.GPUArgs = &gPUArgs2
-			}
-			if v, ok := d.GetOkExists("unschedulable"); ok {
-				instanceAdvancedSettings.Unschedulable = helper.IntInt64(v.(int))
 			}
 			request.InstanceAdvancedSettingsOverrides = append(request.InstanceAdvancedSettingsOverrides, &instanceAdvancedSettings)
 		}
