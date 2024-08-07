@@ -31,14 +31,14 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 					Type: schema.TypeInt,
 				},
 				Description: "Filter according to instance status.\n" +
-					"- 1: Creating;\n" +
-					"- 2: In operation;\n" +
-					"- 3: Abnormal;\n" +
-					"- 4: Reconstruction;\n" +
-					"- 5: Destruction;\n" +
-					"- 6: Stopped taking;\n" +
-					"- 8: Suspension of service due to arrears;\n" +
-					"- 9: Service has been suspended due to arrears.",
+					"	- 1: Creating;\n" +
+					"	- 2: In operation;\n" +
+					"	- 3: Abnormal;\n" +
+					"	- 4: Reconstruction;\n" +
+					"	- 5: Destruction;\n" +
+					"	- 6: Stopped taking;\n" +
+					"	- 8: Suspension of service due to arrears;\n" +
+					"	- 9: Service has been suspended due to arrears.",
 			},
 
 			"instance_name": {
@@ -89,8 +89,8 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 				Optional: true,
 				Type:     schema.TypeInt,
 				Description: "Filter according to instance charge type.\n" +
-					"- 2: Prepaid;\n" +
-					"- 3: Postpaid by hour.",
+					"	- 2: Prepaid;\n" +
+					"	- 3: Postpaid by hour.",
 			},
 
 			"instance_set": {
@@ -113,8 +113,8 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Instance charge type.\n" +
-								"- 2: Prepaid;\n" +
-								"- 3: Postpaid by hour.",
+								"	- 2: Prepaid;\n" +
+								"	- 3: Postpaid by hour.",
 						},
 						"region_id": {
 							Type:        schema.TypeInt,
@@ -145,14 +145,14 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Filter according to instance status.\n" +
-								"- 1: Creating;\n" +
-								"- 2: In operation;\n" +
-								"- 3: Abnormal;\n" +
-								"- 4: Reconstruction;\n" +
-								"- 5: Destruction;\n" +
-								"- 6: Stopped taking;\n" +
-								"- 8: Suspension of service due to arrears;\n" +
-								"- 9: Service has been suspended due to arrears.",
+								"	- 1: Creating;\n" +
+								"	- 2: In operation;\n" +
+								"	- 3: Abnormal;\n" +
+								"	- 4: Reconstruction;\n" +
+								"	- 5: Destruction;\n" +
+								"	- 6: Stopped taking;\n" +
+								"	- 8: Suspension of service due to arrears;\n" +
+								"	- 9: Service has been suspended due to arrears.",
 						},
 						"grafana_url": {
 							Type:        schema.TypeString,
@@ -168,8 +168,8 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Whether to enable grafana.\n" +
-								"- 0: closed;\n" +
-								"- 1: open.",
+								"	- 0: closed;\n" +
+								"	- 1: open.",
 						},
 						"ipv4_address": {
 							Type:        schema.TypeString,
@@ -204,11 +204,11 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Charge status.\n" +
-								"- 1: Normal;\n" +
-								"- 2: Expires;\n" +
-								"- 3: Destruction;\n" +
-								"- 4: Allocation;\n" +
-								"- 5: Allocation failed.",
+								"	- 1: Normal;\n" +
+								"	- 2: Expires;\n" +
+								"	- 3: Destruction;\n" +
+								"	- 4: Allocation;\n" +
+								"	- 5: Allocation failed.",
 						},
 						"spec_name": {
 							Type:        schema.TypeString,
@@ -219,17 +219,17 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Automatic renewal flag.\n" +
-								"- 0: No automatic renewal;\n" +
-								"- 1: Enable automatic renewal;\n" +
-								"- 2: Automatic renewal is prohibited;\n" +
-								"- -1: Invalid.",
+								"	- 0: No automatic renewal;\n" +
+								"	- 1: Enable automatic renewal;\n" +
+								"	- 2: Automatic renewal is prohibited;\n" +
+								"	- -1: Invalid.",
 						},
 						"is_near_expire": {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Whether it is about to expire.\n" +
-								"- 0: No;\n" +
-								"- 1: Expiring soon.",
+								"	- 0: No;\n" +
+								"	- 1: Expiring soon.",
 						},
 						"auth_token": {
 							Type:        schema.TypeString,
@@ -255,13 +255,13 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Grafana status.\n" +
-								"- 1: Creating;\n" +
-								"- 2: In operation;\n" +
-								"- 3: Abnormal;\n" +
-								"- 4: Rebooting;\n" +
-								"- 5: Destruction;\n" +
-								"- 6: Shutdown;\n" +
-								"- 7: Deleted.",
+								"	- 1: Creating;\n" +
+								"	- 2: In operation;\n" +
+								"	- 3: Abnormal;\n" +
+								"	- 4: Rebooting;\n" +
+								"	- 5: Destruction;\n" +
+								"	- 6: Shutdown;\n" +
+								"	- 7: Deleted.",
 						},
 						"grafana_ip_white_list": {
 							Type:        schema.TypeString,
@@ -326,9 +326,9 @@ func DataSourceTencentCloudMonitorTmpInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 							Description: "Migration status.\n" +
-								"- 0: Not in migration;\n+" +
-								"- 1: Migrating, original instance;\n+" +
-								"- 2: Migrating, target instance.",
+								"	- 0: Not in migration;\n+" +
+								"	- 1: Migrating, original instance;\n+" +
+								"	- 2: Migrating, target instance.",
 						},
 					},
 				},
