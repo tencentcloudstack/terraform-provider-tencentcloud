@@ -161,34 +161,41 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Specify params template id. If not set, will use default template.",
 			},
-
 			"operation_network": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(REDIS_MODIFY_NETWORK_CONFIG),
 				Description:  "Refers to the category of the pre-modified network, including: `changeVip`: refers to switching the private network, including its intranet IPv4 address and port; `changeVpc`: refers to switching the subnet to which the private network belongs; `changeBaseToVpc`: refers to switching the basic network to a private network; `changeVPort`: refers to only modifying the instance network port.",
 			},
-
 			"recycle": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(REDIS_RECYCLE_TIME),
 				Description:  "Original intranet IPv4 address retention time: unit: day, value range: `0`, `1`, `2`, `3`, `7`, `15`.",
 			},
-
 			"ip": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
 				Description: "IP address of an instance. When the `operation_network` is `changeVip`, this parameter needs to be configured.",
 			},
-
 			"wait_switch": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Switching mode: `1`-maintenance time window switching, `2`-immediate switching, default value `2`.",
 			},
-
+			"product_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Specify the product version of the instance. `local`: Local disk version, `cloud`: Cloud disk version, `cdc`: Exclusive cluster version. Default is `local`.",
+			},
+			"redis_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Exclusive cluster ID. When the `product_version` is set to `cdc`, this parameter must be set.",
+			},
 			"tags": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -196,8 +203,12 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				//internal version: replace tagComputed end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 				Description: "Instance tags.",
 			},
-
 			// Computed values
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Dedicated Cluster ID.",
+			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -267,15 +278,17 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_redis_instance.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		ctx          = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		client       = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		redisService = RedisService{client: client}
+		tagService   = svctag.NewTagService(client)
+		region       = client.Region
+	)
 
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	redisService := RedisService{client: client}
-	tagService := svctag.NewTagService(client)
 	//internal version: replace clientCreate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace clientCreate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	region := client.Region
 
 	availabilityZone := d.Get("availability_zone").(string)
 	redisName := d.Get("name").(string)
@@ -285,6 +298,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("redis_shard_num"); ok {
 		redisShardNum = v.(int)
 	}
+
 	redisReplicasNum := d.Get("redis_replicas_num").(int)
 	password := d.Get("password").(string)
 	noAuth := d.Get("no_auth").(bool)
@@ -298,11 +312,18 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	autoRenewFlag := d.Get("auto_renew_flag").(int)
 	paramsTemplateId := d.Get("params_template_id").(string)
 	operation := d.Get("operation_network").(string)
+	productVersion := d.Get("product_version").(string)
+	redisClusterId := d.Get("redis_cluster_id").(string)
+	if productVersion == "cdc" && redisClusterId == "" {
+		return fmt.Errorf("If `product_version` is set to `cdc`, params `redis_cluster_id` must be set\n.")
+	}
+
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
 	var replicasReadonly bool
 	if v, ok := d.GetOk("replicas_read_only"); ok {
 		replicasReadonly = v.(bool)
 	}
+
 	var chargePeriod uint64 = 1
 	if chargeType == REDIS_CHARGE_TYPE_PREPAID {
 		if period, ok := d.GetOk("prepaid_period"); ok {
@@ -335,6 +356,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	if err != nil {
 		return fmt.Errorf("api[DescribeRedisZoneConfig]fail, return %s", err.Error())
 	}
+
 	var regionItem *redis.RegionConf
 	var zoneItem *redis.ZoneCapacityConf
 	var redisItem *redis.ProductConf
@@ -343,18 +365,22 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 			break
 		}
 	}
+
 	if regionItem == nil {
 		return fmt.Errorf("all redis in this region `%s` be sold out", region)
 	}
+
 	for _, zones := range regionItem.ZoneSet {
 		if *zones.IsSaleout {
 			continue
 		}
+
 		if *zones.ZoneName == availabilityZone {
 			zoneItem = zones
 			break
 		}
 	}
+
 	if zoneItem == nil {
 		return fmt.Errorf("all redis in this zone `%s` be sold out", availabilityZone)
 	}
@@ -365,18 +391,22 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 			break
 		}
 	}
+
 	if redisItem == nil {
 		return fmt.Errorf("redis type_id `%d` be sold out or this type_id is not supports", typeId)
 	}
+
 	var redisShardNums []string
 	var redisReplicasNums []string
 	var numErrors []string
 	for _, v := range redisItem.ShardNum {
 		redisShardNums = append(redisShardNums, *v)
 	}
+
 	for _, v := range redisItem.ReplicaNum {
 		redisReplicasNums = append(redisReplicasNums, *v)
 	}
+
 	if !tccommon.IsContains(redisShardNums, fmt.Sprintf("%d", redisShardNum)) {
 		numErrors = append(numErrors, fmt.Sprintf("redis_shard_num : %s", strings.Join(redisShardNums, ",")))
 	}
@@ -449,7 +479,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		autoRenewFlag,
 		replicasReadonly,
 		paramsTemplateId,
+		productVersion,
+		redisClusterId,
 	)
+
 	//internal version: replace varId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace varId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	if err != nil {
@@ -476,6 +509,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		log.Printf("[CRITAL]%s create redis task fail, reason:%s\n", logId, err.Error())
 		return err
 	}
+
 	d.SetId(redisId)
 	//internal version: replace queryAndSetId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
@@ -582,6 +616,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("ip", info.WanIp)
 	_ = d.Set("create_time", info.Createtime)
 	_ = d.Set("auto_renew_flag", info.AutoRenewFlag)
+	_ = d.Set("product_version", info.ProductVersion)
+	_ = d.Set("redis_cluster_id", info.RedisClusterId)
+	_ = d.Set("dedicated_cluster_id", info.DedicatedClusterId)
 	slaveReadWeight := *info.SlaveReadWeight
 	if slaveReadWeight == 0 {
 		_ = d.Set("replicas_read_only", false)
@@ -667,6 +704,8 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	unsupportedUpdateFields := []string{
 		"prepaid_period",
+		"product_version",
+		"redis_cluster_id",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {

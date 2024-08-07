@@ -263,6 +263,8 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	autoRenewFlag int,
 	replicasReadonly bool,
 	paramsTemplateId string,
+	productVersion string,
+	redisClusterId string,
 ) (instanceIds []*string, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
@@ -346,6 +348,12 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	}
 	if paramsTemplateId != "" {
 		request.TemplateId = &paramsTemplateId
+	}
+	if productVersion != "" {
+		request.ProductVersion = &productVersion
+	}
+	if redisClusterId != "" {
+		request.RedisClusterId = &redisClusterId
 	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().CreateInstances(request)

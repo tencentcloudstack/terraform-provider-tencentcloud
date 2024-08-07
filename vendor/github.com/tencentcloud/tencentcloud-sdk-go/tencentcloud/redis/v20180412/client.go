@@ -59,8 +59,9 @@ func NewAddReplicationInstanceRequest() (request *AddReplicationInstanceRequest)
 func NewAddReplicationInstanceResponse() (response *AddReplicationInstanceResponse) {
     response = &AddReplicationInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddReplicationInstance
@@ -135,8 +136,9 @@ func NewAllocateWanAddressRequest() (request *AllocateWanAddressRequest) {
 func NewAllocateWanAddressResponse() (response *AllocateWanAddressResponse) {
     response = &AllocateWanAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AllocateWanAddress
@@ -193,8 +195,9 @@ func NewApplyParamsTemplateRequest() (request *ApplyParamsTemplateRequest) {
 func NewApplyParamsTemplateResponse() (response *ApplyParamsTemplateResponse) {
     response = &ApplyParamsTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplyParamsTemplate
@@ -267,8 +270,9 @@ func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsReques
 func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResponse) {
     response = &AssociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateSecurityGroups
@@ -280,7 +284,10 @@ func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResp
 //  FAILEDOPERATION_CLEARINSTANCEINFOFAILED = "FailedOperation.ClearInstanceInfoFailed"
 //  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
 //  FAILEDOPERATION_UPDATESECURITYGROUPSFAILED = "FailedOperation.UpdateSecurityGroupsFailed"
+//  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
+//  INVALIDPARAMETER_INSTANCESGOVERLIMITERROR = "InvalidParameter.InstanceSGOverLimitError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest) (response *AssociateSecurityGroupsResponse, err error) {
     return c.AssociateSecurityGroupsWithContext(context.Background(), request)
@@ -295,7 +302,10 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
 //  FAILEDOPERATION_CLEARINSTANCEINFOFAILED = "FailedOperation.ClearInstanceInfoFailed"
 //  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
 //  FAILEDOPERATION_UPDATESECURITYGROUPSFAILED = "FailedOperation.UpdateSecurityGroupsFailed"
+//  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
+//  INVALIDPARAMETER_INSTANCESGOVERLIMITERROR = "InvalidParameter.InstanceSGOverLimitError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request *AssociateSecurityGroupsRequest) (response *AssociateSecurityGroupsResponse, err error) {
     if request == nil {
@@ -327,8 +337,9 @@ func NewChangeInstanceRoleRequest() (request *ChangeInstanceRoleRequest) {
 func NewChangeInstanceRoleResponse() (response *ChangeInstanceRoleResponse) {
     response = &ChangeInstanceRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ChangeInstanceRole
@@ -393,17 +404,19 @@ func NewChangeMasterInstanceRequest() (request *ChangeMasterInstanceRequest) {
 func NewChangeMasterInstanceResponse() (response *ChangeMasterInstanceResponse) {
     response = &ChangeMasterInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ChangeMasterInstance
-// 复制组实例切主
+// 该接口（ChangeMasterInstance）用于将复制组内只读实例设置为主实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
 //  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
 //  LIMITEXCEEDED_REPLICATIONGROUPLOCKED = "LimitExceeded.ReplicationGroupLocked"
@@ -416,12 +429,13 @@ func (c *Client) ChangeMasterInstance(request *ChangeMasterInstanceRequest) (res
 }
 
 // ChangeMasterInstance
-// 复制组实例切主
+// 该接口（ChangeMasterInstance）用于将复制组内只读实例设置为主实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
 //  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
 //  LIMITEXCEEDED_REPLICATIONGROUPLOCKED = "LimitExceeded.ReplicationGroupLocked"
@@ -459,8 +473,9 @@ func NewChangeReplicaToMasterRequest() (request *ChangeReplicaToMasterRequest) {
 func NewChangeReplicaToMasterResponse() (response *ChangeReplicaToMasterResponse) {
     response = &ChangeReplicaToMasterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ChangeReplicaToMaster
@@ -525,8 +540,9 @@ func NewCleanUpInstanceRequest() (request *CleanUpInstanceRequest) {
 func NewCleanUpInstanceResponse() (response *CleanUpInstanceResponse) {
     response = &CleanUpInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CleanUpInstance
@@ -581,8 +597,9 @@ func NewClearInstanceRequest() (request *ClearInstanceRequest) {
 func NewClearInstanceResponse() (response *ClearInstanceResponse) {
     response = &ClearInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ClearInstance
@@ -639,8 +656,9 @@ func NewCloneInstancesRequest() (request *CloneInstancesRequest) {
 func NewCloneInstancesResponse() (response *CloneInstancesResponse) {
     response = &CloneInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloneInstances
@@ -749,8 +767,9 @@ func NewCloseSSLRequest() (request *CloseSSLRequest) {
 func NewCloseSSLResponse() (response *CloseSSLResponse) {
     response = &CloseSSLResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseSSL
@@ -813,12 +832,13 @@ func NewCreateInstanceAccountRequest() (request *CreateInstanceAccountRequest) {
 func NewCreateInstanceAccountResponse() (response *CreateInstanceAccountResponse) {
     response = &CreateInstanceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstanceAccount
-// 创建实例子账号
+// 该接口（CreateInstanceAccount）用于自定义访问实例的账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -832,7 +852,7 @@ func (c *Client) CreateInstanceAccount(request *CreateInstanceAccountRequest) (r
 }
 
 // CreateInstanceAccount
-// 创建实例子账号
+// 该接口（CreateInstanceAccount）用于自定义访问实例的账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -871,8 +891,9 @@ func NewCreateInstancesRequest() (request *CreateInstancesRequest) {
 func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
     response = &CreateInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstances
@@ -979,8 +1000,9 @@ func NewCreateParamTemplateRequest() (request *CreateParamTemplateRequest) {
 func NewCreateParamTemplateResponse() (response *CreateParamTemplateResponse) {
     response = &CreateParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateParamTemplate
@@ -1035,12 +1057,13 @@ func NewCreateReplicationGroupRequest() (request *CreateReplicationGroupRequest)
 func NewCreateReplicationGroupResponse() (response *CreateReplicationGroupResponse) {
     response = &CreateReplicationGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateReplicationGroup
-// 创建复制组
+// 该接口（CreateReplicationGroup）用于创建复制组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1055,13 +1078,14 @@ func NewCreateReplicationGroupResponse() (response *CreateReplicationGroupRespon
 //  LIMITEXCEEDED_INSTANCENOTEMPTY = "LimitExceeded.InstanceNotEmpty"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNSUPPORTEDOPERATION_LIMITPROXYVERSION = "UnsupportedOperation.LimitProxyVersion"
 func (c *Client) CreateReplicationGroup(request *CreateReplicationGroupRequest) (response *CreateReplicationGroupResponse, err error) {
     return c.CreateReplicationGroupWithContext(context.Background(), request)
 }
 
 // CreateReplicationGroup
-// 创建复制组
+// 该接口（CreateReplicationGroup）用于创建复制组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1076,6 +1100,7 @@ func (c *Client) CreateReplicationGroup(request *CreateReplicationGroupRequest) 
 //  LIMITEXCEEDED_INSTANCENOTEMPTY = "LimitExceeded.InstanceNotEmpty"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNSUPPORTEDOPERATION_LIMITPROXYVERSION = "UnsupportedOperation.LimitProxyVersion"
 func (c *Client) CreateReplicationGroupWithContext(ctx context.Context, request *CreateReplicationGroupRequest) (response *CreateReplicationGroupResponse, err error) {
     if request == nil {
@@ -1107,8 +1132,9 @@ func NewDeleteInstanceAccountRequest() (request *DeleteInstanceAccountRequest) {
 func NewDeleteInstanceAccountResponse() (response *DeleteInstanceAccountResponse) {
     response = &DeleteInstanceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstanceAccount
@@ -1165,8 +1191,9 @@ func NewDeleteParamTemplateRequest() (request *DeleteParamTemplateRequest) {
 func NewDeleteParamTemplateResponse() (response *DeleteParamTemplateResponse) {
     response = &DeleteParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteParamTemplate
@@ -1221,8 +1248,9 @@ func NewDeleteReplicationInstanceRequest() (request *DeleteReplicationInstanceRe
 func NewDeleteReplicationInstanceResponse() (response *DeleteReplicationInstanceResponse) {
     response = &DeleteReplicationInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteReplicationInstance
@@ -1285,12 +1313,13 @@ func NewDescribeAutoBackupConfigRequest() (request *DescribeAutoBackupConfigRequ
 func NewDescribeAutoBackupConfigResponse() (response *DescribeAutoBackupConfigResponse) {
     response = &DescribeAutoBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoBackupConfig
-// 获取备份配置
+// 本接口（DescribeAutoBackupConfig）用于获取自动备份配置规则。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1304,7 +1333,7 @@ func (c *Client) DescribeAutoBackupConfig(request *DescribeAutoBackupConfigReque
 }
 
 // DescribeAutoBackupConfig
-// 获取备份配置
+// 本接口（DescribeAutoBackupConfig）用于获取自动备份配置规则。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1329,6 +1358,67 @@ func (c *Client) DescribeAutoBackupConfigWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeBackupDetailRequest() (request *DescribeBackupDetailRequest) {
+    request = &DescribeBackupDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeBackupDetail")
+    
+    
+    return
+}
+
+func NewDescribeBackupDetailResponse() (response *DescribeBackupDetailResponse) {
+    response = &DescribeBackupDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBackupDetail
+// 本接口（DescribeBackupDetail）用于查询实例的备份信息详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_BACKUPNOTEXISTS = "InvalidParameterValue.BackupNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeBackupDetail(request *DescribeBackupDetailRequest) (response *DescribeBackupDetailResponse, err error) {
+    return c.DescribeBackupDetailWithContext(context.Background(), request)
+}
+
+// DescribeBackupDetail
+// 本接口（DescribeBackupDetail）用于查询实例的备份信息详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_BACKUPNOTEXISTS = "InvalidParameterValue.BackupNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeBackupDetailWithContext(ctx context.Context, request *DescribeBackupDetailRequest) (response *DescribeBackupDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeBackupDownloadRestrictionRequest() (request *DescribeBackupDownloadRestrictionRequest) {
     request = &DescribeBackupDownloadRestrictionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1343,8 +1433,9 @@ func NewDescribeBackupDownloadRestrictionRequest() (request *DescribeBackupDownl
 func NewDescribeBackupDownloadRestrictionResponse() (response *DescribeBackupDownloadRestrictionResponse) {
     response = &DescribeBackupDownloadRestrictionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupDownloadRestriction
@@ -1399,8 +1490,9 @@ func NewDescribeBackupUrlRequest() (request *DescribeBackupUrlRequest) {
 func NewDescribeBackupUrlResponse() (response *DescribeBackupUrlResponse) {
     response = &DescribeBackupUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupUrl
@@ -1410,6 +1502,7 @@ func NewDescribeBackupUrlResponse() (response *DescribeBackupUrlResponse) {
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_BACKUPNOTEXISTS = "InvalidParameterValue.BackupNotExists"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
@@ -1430,6 +1523,7 @@ func (c *Client) DescribeBackupUrl(request *DescribeBackupUrlRequest) (response 
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_BACKUPNOTEXISTS = "InvalidParameterValue.BackupNotExists"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
@@ -1469,8 +1563,9 @@ func NewDescribeBandwidthRangeRequest() (request *DescribeBandwidthRangeRequest)
 func NewDescribeBandwidthRangeResponse() (response *DescribeBandwidthRangeResponse) {
     response = &DescribeBandwidthRangeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBandwidthRange
@@ -1533,8 +1628,9 @@ func NewDescribeCommonDBInstancesRequest() (request *DescribeCommonDBInstancesRe
 func NewDescribeCommonDBInstancesResponse() (response *DescribeCommonDBInstancesResponse) {
     response = &DescribeCommonDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCommonDBInstances
@@ -1593,8 +1689,9 @@ func NewDescribeDBSecurityGroupsRequest() (request *DescribeDBSecurityGroupsRequ
 func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsResponse) {
     response = &DescribeDBSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBSecurityGroups
@@ -1612,6 +1709,7 @@ func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsRe
 //  INTERNALERROR_NETWORKERR = "InternalError.NetWorkErr"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsRequest) (response *DescribeDBSecurityGroupsResponse, err error) {
@@ -1633,6 +1731,7 @@ func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsReque
 //  INTERNALERROR_NETWORKERR = "InternalError.NetWorkErr"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, request *DescribeDBSecurityGroupsRequest) (response *DescribeDBSecurityGroupsResponse, err error) {
@@ -1651,6 +1750,61 @@ func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeGlobalReplicationAreaRequest() (request *DescribeGlobalReplicationAreaRequest) {
+    request = &DescribeGlobalReplicationAreaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeGlobalReplicationArea")
+    
+    
+    return
+}
+
+func NewDescribeGlobalReplicationAreaResponse() (response *DescribeGlobalReplicationAreaResponse) {
+    response = &DescribeGlobalReplicationAreaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGlobalReplicationArea
+// 查询全球复制支持地域信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeGlobalReplicationArea(request *DescribeGlobalReplicationAreaRequest) (response *DescribeGlobalReplicationAreaResponse, err error) {
+    return c.DescribeGlobalReplicationAreaWithContext(context.Background(), request)
+}
+
+// DescribeGlobalReplicationArea
+// 查询全球复制支持地域信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeGlobalReplicationAreaWithContext(ctx context.Context, request *DescribeGlobalReplicationAreaRequest) (response *DescribeGlobalReplicationAreaResponse, err error) {
+    if request == nil {
+        request = NewDescribeGlobalReplicationAreaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGlobalReplicationArea require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGlobalReplicationAreaResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceAccountRequest() (request *DescribeInstanceAccountRequest) {
     request = &DescribeInstanceAccountRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1665,8 +1819,9 @@ func NewDescribeInstanceAccountRequest() (request *DescribeInstanceAccountReques
 func NewDescribeInstanceAccountResponse() (response *DescribeInstanceAccountResponse) {
     response = &DescribeInstanceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceAccount
@@ -1721,8 +1876,9 @@ func NewDescribeInstanceBackupsRequest() (request *DescribeInstanceBackupsReques
 func NewDescribeInstanceBackupsResponse() (response *DescribeInstanceBackupsResponse) {
     response = &DescribeInstanceBackupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceBackups
@@ -1783,8 +1939,9 @@ func NewDescribeInstanceDTSInfoRequest() (request *DescribeInstanceDTSInfoReques
 func NewDescribeInstanceDTSInfoResponse() (response *DescribeInstanceDTSInfoResponse) {
     response = &DescribeInstanceDTSInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceDTSInfo
@@ -1835,8 +1992,9 @@ func NewDescribeInstanceDealDetailRequest() (request *DescribeInstanceDealDetail
 func NewDescribeInstanceDealDetailResponse() (response *DescribeInstanceDealDetailResponse) {
     response = &DescribeInstanceDealDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceDealDetail
@@ -1873,6 +2031,67 @@ func (c *Client) DescribeInstanceDealDetailWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeInstanceEventsRequest() (request *DescribeInstanceEventsRequest) {
+    request = &DescribeInstanceEventsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeInstanceEvents")
+    
+    
+    return
+}
+
+func NewDescribeInstanceEventsResponse() (response *DescribeInstanceEventsResponse) {
+    response = &DescribeInstanceEventsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceEvents
+// 本接口（DescribeInstanceEvents）用于查询 Redis 实例事件信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) DescribeInstanceEvents(request *DescribeInstanceEventsRequest) (response *DescribeInstanceEventsResponse, err error) {
+    return c.DescribeInstanceEventsWithContext(context.Background(), request)
+}
+
+// DescribeInstanceEvents
+// 本接口（DescribeInstanceEvents）用于查询 Redis 实例事件信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) DescribeInstanceEventsWithContext(ctx context.Context, request *DescribeInstanceEventsRequest) (response *DescribeInstanceEventsResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceEventsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceEvents require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceMonitorBigKeyRequest() (request *DescribeInstanceMonitorBigKeyRequest) {
     request = &DescribeInstanceMonitorBigKeyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1887,8 +2106,9 @@ func NewDescribeInstanceMonitorBigKeyRequest() (request *DescribeInstanceMonitor
 func NewDescribeInstanceMonitorBigKeyResponse() (response *DescribeInstanceMonitorBigKeyResponse) {
     response = &DescribeInstanceMonitorBigKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorBigKey
@@ -1935,8 +2155,9 @@ func NewDescribeInstanceMonitorBigKeySizeDistRequest() (request *DescribeInstanc
 func NewDescribeInstanceMonitorBigKeySizeDistResponse() (response *DescribeInstanceMonitorBigKeySizeDistResponse) {
     response = &DescribeInstanceMonitorBigKeySizeDistResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorBigKeySizeDist
@@ -1983,8 +2204,9 @@ func NewDescribeInstanceMonitorBigKeyTypeDistRequest() (request *DescribeInstanc
 func NewDescribeInstanceMonitorBigKeyTypeDistResponse() (response *DescribeInstanceMonitorBigKeyTypeDistResponse) {
     response = &DescribeInstanceMonitorBigKeyTypeDistResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorBigKeyTypeDist
@@ -2031,12 +2253,13 @@ func NewDescribeInstanceMonitorHotKeyRequest() (request *DescribeInstanceMonitor
 func NewDescribeInstanceMonitorHotKeyResponse() (response *DescribeInstanceMonitorHotKeyResponse) {
     response = &DescribeInstanceMonitorHotKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorHotKey
-// 查询实例热Key
+// 本接口（DescribeInstanceMonitorHotKey）用于查询实例热Key。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2045,7 +2268,7 @@ func (c *Client) DescribeInstanceMonitorHotKey(request *DescribeInstanceMonitorH
 }
 
 // DescribeInstanceMonitorHotKey
-// 查询实例热Key
+// 本接口（DescribeInstanceMonitorHotKey）用于查询实例热Key。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2079,12 +2302,13 @@ func NewDescribeInstanceMonitorSIPRequest() (request *DescribeInstanceMonitorSIP
 func NewDescribeInstanceMonitorSIPResponse() (response *DescribeInstanceMonitorSIPResponse) {
     response = &DescribeInstanceMonitorSIPResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorSIP
-// 查询实例访问来源信息
+// 该接口已下线，请使用数据库智能管家 DBbrain 接口 [DescribeProxyProcessStatistics] (https://cloud.tencent.com/document/product/1130/84544) 获取实例访问来源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2093,7 +2317,7 @@ func (c *Client) DescribeInstanceMonitorSIP(request *DescribeInstanceMonitorSIPR
 }
 
 // DescribeInstanceMonitorSIP
-// 查询实例访问来源信息
+// 该接口已下线，请使用数据库智能管家 DBbrain 接口 [DescribeProxyProcessStatistics] (https://cloud.tencent.com/document/product/1130/84544) 获取实例访问来源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2127,8 +2351,9 @@ func NewDescribeInstanceMonitorTookDistRequest() (request *DescribeInstanceMonit
 func NewDescribeInstanceMonitorTookDistResponse() (response *DescribeInstanceMonitorTookDistResponse) {
     response = &DescribeInstanceMonitorTookDistResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorTookDist
@@ -2175,8 +2400,9 @@ func NewDescribeInstanceMonitorTopNCmdRequest() (request *DescribeInstanceMonito
 func NewDescribeInstanceMonitorTopNCmdResponse() (response *DescribeInstanceMonitorTopNCmdResponse) {
     response = &DescribeInstanceMonitorTopNCmdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorTopNCmd
@@ -2223,8 +2449,9 @@ func NewDescribeInstanceMonitorTopNCmdTookRequest() (request *DescribeInstanceMo
 func NewDescribeInstanceMonitorTopNCmdTookResponse() (response *DescribeInstanceMonitorTopNCmdTookResponse) {
     response = &DescribeInstanceMonitorTopNCmdTookResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceMonitorTopNCmdTook
@@ -2271,8 +2498,9 @@ func NewDescribeInstanceNodeInfoRequest() (request *DescribeInstanceNodeInfoRequ
 func NewDescribeInstanceNodeInfoResponse() (response *DescribeInstanceNodeInfoResponse) {
     response = &DescribeInstanceNodeInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceNodeInfo
@@ -2325,8 +2553,9 @@ func NewDescribeInstanceParamRecordsRequest() (request *DescribeInstanceParamRec
 func NewDescribeInstanceParamRecordsResponse() (response *DescribeInstanceParamRecordsResponse) {
     response = &DescribeInstanceParamRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceParamRecords
@@ -2389,8 +2618,9 @@ func NewDescribeInstanceParamsRequest() (request *DescribeInstanceParamsRequest)
 func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsResponse) {
     response = &DescribeInstanceParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceParams
@@ -2459,8 +2689,9 @@ func NewDescribeInstanceSecurityGroupRequest() (request *DescribeInstanceSecurit
 func NewDescribeInstanceSecurityGroupResponse() (response *DescribeInstanceSecurityGroupResponse) {
     response = &DescribeInstanceSecurityGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceSecurityGroup
@@ -2523,8 +2754,9 @@ func NewDescribeInstanceShardsRequest() (request *DescribeInstanceShardsRequest)
 func NewDescribeInstanceShardsResponse() (response *DescribeInstanceShardsResponse) {
     response = &DescribeInstanceShardsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceShards
@@ -2561,6 +2793,116 @@ func (c *Client) DescribeInstanceShardsWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeInstanceSpecBandwidthRequest() (request *DescribeInstanceSpecBandwidthRequest) {
+    request = &DescribeInstanceSpecBandwidthRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeInstanceSpecBandwidth")
+    
+    
+    return
+}
+
+func NewDescribeInstanceSpecBandwidthResponse() (response *DescribeInstanceSpecBandwidthResponse) {
+    response = &DescribeInstanceSpecBandwidthResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceSpecBandwidth
+// 本接口（DescribeInstanceSpecBandwidth）用于查询或计算带宽规格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeInstanceSpecBandwidth(request *DescribeInstanceSpecBandwidthRequest) (response *DescribeInstanceSpecBandwidthResponse, err error) {
+    return c.DescribeInstanceSpecBandwidthWithContext(context.Background(), request)
+}
+
+// DescribeInstanceSpecBandwidth
+// 本接口（DescribeInstanceSpecBandwidth）用于查询或计算带宽规格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeInstanceSpecBandwidthWithContext(ctx context.Context, request *DescribeInstanceSpecBandwidthRequest) (response *DescribeInstanceSpecBandwidthResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceSpecBandwidthRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceSpecBandwidth require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceSpecBandwidthResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceSupportFeatureRequest() (request *DescribeInstanceSupportFeatureRequest) {
+    request = &DescribeInstanceSupportFeatureRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeInstanceSupportFeature")
+    
+    
+    return
+}
+
+func NewDescribeInstanceSupportFeatureResponse() (response *DescribeInstanceSupportFeatureResponse) {
+    response = &DescribeInstanceSupportFeatureResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceSupportFeature
+// 本接口（DescribeInstanceSupportFeature）用于查询实例支持的功能特性。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstanceSupportFeature(request *DescribeInstanceSupportFeatureRequest) (response *DescribeInstanceSupportFeatureResponse, err error) {
+    return c.DescribeInstanceSupportFeatureWithContext(context.Background(), request)
+}
+
+// DescribeInstanceSupportFeature
+// 本接口（DescribeInstanceSupportFeature）用于查询实例支持的功能特性。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstanceSupportFeatureWithContext(ctx context.Context, request *DescribeInstanceSupportFeatureRequest) (response *DescribeInstanceSupportFeatureResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceSupportFeatureRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceSupportFeature require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceSupportFeatureResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceZoneInfoRequest() (request *DescribeInstanceZoneInfoRequest) {
     request = &DescribeInstanceZoneInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2575,8 +2917,9 @@ func NewDescribeInstanceZoneInfoRequest() (request *DescribeInstanceZoneInfoRequ
 func NewDescribeInstanceZoneInfoResponse() (response *DescribeInstanceZoneInfoResponse) {
     response = &DescribeInstanceZoneInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceZoneInfo
@@ -2639,8 +2982,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -2703,12 +3047,13 @@ func NewDescribeMaintenanceWindowRequest() (request *DescribeMaintenanceWindowRe
 func NewDescribeMaintenanceWindowResponse() (response *DescribeMaintenanceWindowResponse) {
     response = &DescribeMaintenanceWindowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMaintenanceWindow
-// 查询实例维护时间窗，在实例需要进行版本升级或者架构升级的时候，会在维护时间窗时间内进行切换
+// 本接口（DescribeMaintenanceWindow）用于查询实例维护时间窗。在实例需要进行版本升级或者架构升级的时候，会在维护时间窗时间内进行切换
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2720,7 +3065,7 @@ func (c *Client) DescribeMaintenanceWindow(request *DescribeMaintenanceWindowReq
 }
 
 // DescribeMaintenanceWindow
-// 查询实例维护时间窗，在实例需要进行版本升级或者架构升级的时候，会在维护时间窗时间内进行切换
+// 本接口（DescribeMaintenanceWindow）用于查询实例维护时间窗。在实例需要进行版本升级或者架构升级的时候，会在维护时间窗时间内进行切换
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2757,8 +3102,9 @@ func NewDescribeParamTemplateInfoRequest() (request *DescribeParamTemplateInfoRe
 func NewDescribeParamTemplateInfoResponse() (response *DescribeParamTemplateInfoResponse) {
     response = &DescribeParamTemplateInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeParamTemplateInfo
@@ -2817,8 +3163,9 @@ func NewDescribeParamTemplatesRequest() (request *DescribeParamTemplatesRequest)
 func NewDescribeParamTemplatesResponse() (response *DescribeParamTemplatesResponse) {
     response = &DescribeParamTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeParamTemplates
@@ -2873,8 +3220,9 @@ func NewDescribeProductInfoRequest() (request *DescribeProductInfoRequest) {
 func NewDescribeProductInfoResponse() (response *DescribeProductInfoResponse) {
     response = &DescribeProductInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProductInfo
@@ -2929,8 +3277,9 @@ func NewDescribeProjectSecurityGroupRequest() (request *DescribeProjectSecurityG
 func NewDescribeProjectSecurityGroupResponse() (response *DescribeProjectSecurityGroupResponse) {
     response = &DescribeProjectSecurityGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProjectSecurityGroup
@@ -2995,8 +3344,9 @@ func NewDescribeProjectSecurityGroupsRequest() (request *DescribeProjectSecurity
 func NewDescribeProjectSecurityGroupsResponse() (response *DescribeProjectSecurityGroupsResponse) {
     response = &DescribeProjectSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProjectSecurityGroups
@@ -3009,8 +3359,10 @@ func NewDescribeProjectSecurityGroupsResponse() (response *DescribeProjectSecuri
 //  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
 //  FAILEDOPERATION_DTSSTATUSABNORMAL = "FailedOperation.DtsStatusAbnormal"
 //  FAILEDOPERATION_FLOWNOTEXISTS = "FailedOperation.FlowNotExists"
+//  FAILEDOPERATION_GETSECURITYGROUPDETAILFAILED = "FailedOperation.GetSecurityGroupDetailFailed"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) DescribeProjectSecurityGroups(request *DescribeProjectSecurityGroupsRequest) (response *DescribeProjectSecurityGroupsResponse, err error) {
     return c.DescribeProjectSecurityGroupsWithContext(context.Background(), request)
@@ -3026,8 +3378,10 @@ func (c *Client) DescribeProjectSecurityGroups(request *DescribeProjectSecurityG
 //  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
 //  FAILEDOPERATION_DTSSTATUSABNORMAL = "FailedOperation.DtsStatusAbnormal"
 //  FAILEDOPERATION_FLOWNOTEXISTS = "FailedOperation.FlowNotExists"
+//  FAILEDOPERATION_GETSECURITYGROUPDETAILFAILED = "FailedOperation.GetSecurityGroupDetailFailed"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) DescribeProjectSecurityGroupsWithContext(ctx context.Context, request *DescribeProjectSecurityGroupsRequest) (response *DescribeProjectSecurityGroupsResponse, err error) {
     if request == nil {
@@ -3059,8 +3413,9 @@ func NewDescribeProxySlowLogRequest() (request *DescribeProxySlowLogRequest) {
 func NewDescribeProxySlowLogResponse() (response *DescribeProxySlowLogResponse) {
     response = &DescribeProxySlowLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProxySlowLog
@@ -3107,6 +3462,108 @@ func (c *Client) DescribeProxySlowLogWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeRedisClusterOverviewRequest() (request *DescribeRedisClusterOverviewRequest) {
+    request = &DescribeRedisClusterOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeRedisClusterOverview")
+    
+    
+    return
+}
+
+func NewDescribeRedisClusterOverviewResponse() (response *DescribeRedisClusterOverviewResponse) {
+    response = &DescribeRedisClusterOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRedisClusterOverview
+// 查询Redis独享集群概览信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+func (c *Client) DescribeRedisClusterOverview(request *DescribeRedisClusterOverviewRequest) (response *DescribeRedisClusterOverviewResponse, err error) {
+    return c.DescribeRedisClusterOverviewWithContext(context.Background(), request)
+}
+
+// DescribeRedisClusterOverview
+// 查询Redis独享集群概览信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+func (c *Client) DescribeRedisClusterOverviewWithContext(ctx context.Context, request *DescribeRedisClusterOverviewRequest) (response *DescribeRedisClusterOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeRedisClusterOverviewRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRedisClusterOverview require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRedisClusterOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRedisClustersRequest() (request *DescribeRedisClustersRequest) {
+    request = &DescribeRedisClustersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeRedisClusters")
+    
+    
+    return
+}
+
+func NewDescribeRedisClustersResponse() (response *DescribeRedisClustersResponse) {
+    response = &DescribeRedisClustersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRedisClusters
+// 查询Redis独享集群列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRedisClusters(request *DescribeRedisClustersRequest) (response *DescribeRedisClustersResponse, err error) {
+    return c.DescribeRedisClustersWithContext(context.Background(), request)
+}
+
+// DescribeRedisClusters
+// 查询Redis独享集群列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRedisClustersWithContext(ctx context.Context, request *DescribeRedisClustersRequest) (response *DescribeRedisClustersResponse, err error) {
+    if request == nil {
+        request = NewDescribeRedisClustersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRedisClusters require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRedisClustersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeReplicationGroupRequest() (request *DescribeReplicationGroupRequest) {
     request = &DescribeReplicationGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3121,12 +3578,13 @@ func NewDescribeReplicationGroupRequest() (request *DescribeReplicationGroupRequ
 func NewDescribeReplicationGroupResponse() (response *DescribeReplicationGroupResponse) {
     response = &DescribeReplicationGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReplicationGroup
-// 本接口（DescribeReplicationGroup）查询复制组。
+// 本接口（DescribeReplicationGroup）用于查询复制组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3136,7 +3594,7 @@ func (c *Client) DescribeReplicationGroup(request *DescribeReplicationGroupReque
 }
 
 // DescribeReplicationGroup
-// 本接口（DescribeReplicationGroup）查询复制组。
+// 本接口（DescribeReplicationGroup）用于查询复制组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3157,6 +3615,65 @@ func (c *Client) DescribeReplicationGroupWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeReplicationGroupInstanceRequest() (request *DescribeReplicationGroupInstanceRequest) {
+    request = &DescribeReplicationGroupInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeReplicationGroupInstance")
+    
+    
+    return
+}
+
+func NewDescribeReplicationGroupInstanceResponse() (response *DescribeReplicationGroupInstanceResponse) {
+    response = &DescribeReplicationGroupInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeReplicationGroupInstance
+// 查询复制组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeReplicationGroupInstance(request *DescribeReplicationGroupInstanceRequest) (response *DescribeReplicationGroupInstanceResponse, err error) {
+    return c.DescribeReplicationGroupInstanceWithContext(context.Background(), request)
+}
+
+// DescribeReplicationGroupInstance
+// 查询复制组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeReplicationGroupInstanceWithContext(ctx context.Context, request *DescribeReplicationGroupInstanceRequest) (response *DescribeReplicationGroupInstanceResponse, err error) {
+    if request == nil {
+        request = NewDescribeReplicationGroupInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeReplicationGroupInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeReplicationGroupInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeSSLStatusRequest() (request *DescribeSSLStatusRequest) {
     request = &DescribeSSLStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3171,8 +3688,9 @@ func NewDescribeSSLStatusRequest() (request *DescribeSSLStatusRequest) {
 func NewDescribeSSLStatusResponse() (response *DescribeSSLStatusResponse) {
     response = &DescribeSSLStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSSLStatus
@@ -3233,8 +3751,9 @@ func NewDescribeSlowLogRequest() (request *DescribeSlowLogRequest) {
 func NewDescribeSlowLogResponse() (response *DescribeSlowLogResponse) {
     response = &DescribeSlowLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSlowLog
@@ -3293,12 +3812,13 @@ func NewDescribeTaskInfoRequest() (request *DescribeTaskInfoRequest) {
 func NewDescribeTaskInfoResponse() (response *DescribeTaskInfoResponse) {
     response = &DescribeTaskInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskInfo
-// 用于查询任务结果
+// 本接口（DescribeTaskInfo）用于获取指定任务的执行情况。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3309,7 +3829,7 @@ func (c *Client) DescribeTaskInfo(request *DescribeTaskInfoRequest) (response *D
 }
 
 // DescribeTaskInfo
-// 用于查询任务结果
+// 本接口（DescribeTaskInfo）用于获取指定任务的执行情况。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3345,8 +3865,9 @@ func NewDescribeTaskListRequest() (request *DescribeTaskListRequest) {
 func NewDescribeTaskListResponse() (response *DescribeTaskListResponse) {
     response = &DescribeTaskListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskList
@@ -3399,8 +3920,9 @@ func NewDescribeTendisSlowLogRequest() (request *DescribeTendisSlowLogRequest) {
 func NewDescribeTendisSlowLogResponse() (response *DescribeTendisSlowLogResponse) {
     response = &DescribeTendisSlowLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTendisSlowLog
@@ -3455,8 +3977,9 @@ func NewDestroyPostpaidInstanceRequest() (request *DestroyPostpaidInstanceReques
 func NewDestroyPostpaidInstanceResponse() (response *DestroyPostpaidInstanceResponse) {
     response = &DestroyPostpaidInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroyPostpaidInstance
@@ -3523,8 +4046,9 @@ func NewDestroyPrepaidInstanceRequest() (request *DestroyPrepaidInstanceRequest)
 func NewDestroyPrepaidInstanceResponse() (response *DestroyPrepaidInstanceResponse) {
     response = &DestroyPrepaidInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroyPrepaidInstance
@@ -3595,8 +4119,9 @@ func NewDisableReplicaReadonlyRequest() (request *DisableReplicaReadonlyRequest)
 func NewDisableReplicaReadonlyResponse() (response *DisableReplicaReadonlyResponse) {
     response = &DisableReplicaReadonlyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableReplicaReadonly
@@ -3653,8 +4178,9 @@ func NewDisassociateSecurityGroupsRequest() (request *DisassociateSecurityGroups
 func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGroupsResponse) {
     response = &DisassociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateSecurityGroups
@@ -3667,6 +4193,7 @@ func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGrou
 //  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
 //  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsRequest) (response *DisassociateSecurityGroupsResponse, err error) {
@@ -3683,6 +4210,7 @@ func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsR
 //  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
 //  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, request *DisassociateSecurityGroupsRequest) (response *DisassociateSecurityGroupsResponse, err error) {
@@ -3715,8 +4243,9 @@ func NewEnableReplicaReadonlyRequest() (request *EnableReplicaReadonlyRequest) {
 func NewEnableReplicaReadonlyResponse() (response *EnableReplicaReadonlyResponse) {
     response = &EnableReplicaReadonlyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableReplicaReadonly
@@ -3775,8 +4304,9 @@ func NewInquiryPriceCreateInstanceRequest() (request *InquiryPriceCreateInstance
 func NewInquiryPriceCreateInstanceResponse() (response *InquiryPriceCreateInstanceResponse) {
     response = &InquiryPriceCreateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceCreateInstance
@@ -3833,12 +4363,13 @@ func NewInquiryPriceRenewInstanceRequest() (request *InquiryPriceRenewInstanceRe
 func NewInquiryPriceRenewInstanceResponse() (response *InquiryPriceRenewInstanceResponse) {
     response = &InquiryPriceRenewInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceRenewInstance
-// 查询实例续费价格（包年包月）
+// 本接口（InquiryPriceRenewInstance）用于查询包年包月计费实例的续费价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3849,13 +4380,12 @@ func NewInquiryPriceRenewInstanceResponse() (response *InquiryPriceRenewInstance
 //  LIMITEXCEEDED_PERIODLESSTHANMINLIMIT = "LimitExceeded.PeriodLessThanMinLimit"
 //  RESOURCEINUSE_INSTANCEBEENLOCKED = "ResourceInUse.InstanceBeenLocked"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
-//  RESOURCEUNAVAILABLE_INSTANCEDELETED = "ResourceUnavailable.InstanceDeleted"
 func (c *Client) InquiryPriceRenewInstance(request *InquiryPriceRenewInstanceRequest) (response *InquiryPriceRenewInstanceResponse, err error) {
     return c.InquiryPriceRenewInstanceWithContext(context.Background(), request)
 }
 
 // InquiryPriceRenewInstance
-// 查询实例续费价格（包年包月）
+// 本接口（InquiryPriceRenewInstance）用于查询包年包月计费实例的续费价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3866,7 +4396,6 @@ func (c *Client) InquiryPriceRenewInstance(request *InquiryPriceRenewInstanceReq
 //  LIMITEXCEEDED_PERIODLESSTHANMINLIMIT = "LimitExceeded.PeriodLessThanMinLimit"
 //  RESOURCEINUSE_INSTANCEBEENLOCKED = "ResourceInUse.InstanceBeenLocked"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
-//  RESOURCEUNAVAILABLE_INSTANCEDELETED = "ResourceUnavailable.InstanceDeleted"
 func (c *Client) InquiryPriceRenewInstanceWithContext(ctx context.Context, request *InquiryPriceRenewInstanceRequest) (response *InquiryPriceRenewInstanceResponse, err error) {
     if request == nil {
         request = NewInquiryPriceRenewInstanceRequest()
@@ -3897,8 +4426,9 @@ func NewInquiryPriceUpgradeInstanceRequest() (request *InquiryPriceUpgradeInstan
 func NewInquiryPriceUpgradeInstanceResponse() (response *InquiryPriceUpgradeInstanceResponse) {
     response = &InquiryPriceUpgradeInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceUpgradeInstance
@@ -3959,8 +4489,9 @@ func NewKillMasterGroupRequest() (request *KillMasterGroupRequest) {
 func NewKillMasterGroupResponse() (response *KillMasterGroupResponse) {
     response = &KillMasterGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // KillMasterGroup
@@ -4033,8 +4564,9 @@ func NewManualBackupInstanceRequest() (request *ManualBackupInstanceRequest) {
 func NewManualBackupInstanceResponse() (response *ManualBackupInstanceResponse) {
     response = &ManualBackupInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManualBackupInstance
@@ -4099,8 +4631,9 @@ func NewModfiyInstancePasswordRequest() (request *ModfiyInstancePasswordRequest)
 func NewModfiyInstancePasswordResponse() (response *ModfiyInstancePasswordResponse) {
     response = &ModfiyInstancePasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModfiyInstancePassword
@@ -4165,8 +4698,9 @@ func NewModifyAutoBackupConfigRequest() (request *ModifyAutoBackupConfigRequest)
 func NewModifyAutoBackupConfigResponse() (response *ModifyAutoBackupConfigResponse) {
     response = &ModifyAutoBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAutoBackupConfig
@@ -4229,8 +4763,9 @@ func NewModifyBackupDownloadRestrictionRequest() (request *ModifyBackupDownloadR
 func NewModifyBackupDownloadRestrictionResponse() (response *ModifyBackupDownloadRestrictionResponse) {
     response = &ModifyBackupDownloadRestrictionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBackupDownloadRestriction
@@ -4285,8 +4820,9 @@ func NewModifyConnectionConfigRequest() (request *ModifyConnectionConfigRequest)
 func NewModifyConnectionConfigResponse() (response *ModifyConnectionConfigResponse) {
     response = &ModifyConnectionConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyConnectionConfig
@@ -4335,8 +4871,9 @@ func NewModifyDBInstanceSecurityGroupsRequest() (request *ModifyDBInstanceSecuri
 func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecurityGroupsResponse) {
     response = &ModifyDBInstanceSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceSecurityGroups
@@ -4354,6 +4891,7 @@ func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecu
 //  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
 //  INVALIDPARAMETER_INSTANCESGOVERLIMITERROR = "InvalidParameter.InstanceSGOverLimitError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
     return c.ModifyDBInstanceSecurityGroupsWithContext(context.Background(), request)
@@ -4374,6 +4912,7 @@ func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurit
 //  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
 //  INVALIDPARAMETER_INSTANCESGOVERLIMITERROR = "InvalidParameter.InstanceSGOverLimitError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) ModifyDBInstanceSecurityGroupsWithContext(ctx context.Context, request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
     if request == nil {
@@ -4405,8 +4944,9 @@ func NewModifyInstanceRequest() (request *ModifyInstanceRequest) {
 func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
     response = &ModifyInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstance
@@ -4467,8 +5007,9 @@ func NewModifyInstanceAccountRequest() (request *ModifyInstanceAccountRequest) {
 func NewModifyInstanceAccountResponse() (response *ModifyInstanceAccountResponse) {
     response = &ModifyInstanceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceAccount
@@ -4480,6 +5021,7 @@ func NewModifyInstanceAccountResponse() (response *ModifyInstanceAccountResponse
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCEUNAVAILABLE_GETSECURITYERROR = "ResourceUnavailable.GetSecurityError"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
 func (c *Client) ModifyInstanceAccount(request *ModifyInstanceAccountRequest) (response *ModifyInstanceAccountResponse, err error) {
@@ -4495,6 +5037,7 @@ func (c *Client) ModifyInstanceAccount(request *ModifyInstanceAccountRequest) (r
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCEUNAVAILABLE_GETSECURITYERROR = "ResourceUnavailable.GetSecurityError"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
 func (c *Client) ModifyInstanceAccountWithContext(ctx context.Context, request *ModifyInstanceAccountRequest) (response *ModifyInstanceAccountResponse, err error) {
@@ -4513,6 +5056,136 @@ func (c *Client) ModifyInstanceAccountWithContext(ctx context.Context, request *
     return
 }
 
+func NewModifyInstanceAvailabilityZonesRequest() (request *ModifyInstanceAvailabilityZonesRequest) {
+    request = &ModifyInstanceAvailabilityZonesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstanceAvailabilityZones")
+    
+    
+    return
+}
+
+func NewModifyInstanceAvailabilityZonesResponse() (response *ModifyInstanceAvailabilityZonesResponse) {
+    response = &ModifyInstanceAvailabilityZonesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceAvailabilityZones
+// 本接口（ModifyInstanceAvailabilityZones）用于变更实例可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
+//  LIMITEXCEEDED_REPLICATIONGROUPLOCKED = "LimitExceeded.ReplicationGroupLocked"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstanceAvailabilityZones(request *ModifyInstanceAvailabilityZonesRequest) (response *ModifyInstanceAvailabilityZonesResponse, err error) {
+    return c.ModifyInstanceAvailabilityZonesWithContext(context.Background(), request)
+}
+
+// ModifyInstanceAvailabilityZones
+// 本接口（ModifyInstanceAvailabilityZones）用于变更实例可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
+//  LIMITEXCEEDED_REPLICATIONGROUPLOCKED = "LimitExceeded.ReplicationGroupLocked"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstanceAvailabilityZonesWithContext(ctx context.Context, request *ModifyInstanceAvailabilityZonesRequest) (response *ModifyInstanceAvailabilityZonesResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceAvailabilityZonesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceAvailabilityZones require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceAvailabilityZonesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceEventRequest() (request *ModifyInstanceEventRequest) {
+    request = &ModifyInstanceEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstanceEvent")
+    
+    
+    return
+}
+
+func NewModifyInstanceEventResponse() (response *ModifyInstanceEventResponse) {
+    response = &ModifyInstanceEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceEvent
+// 本接口（ModifyInstanceEvent）用于修改实例的运维事件的执行计划。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstanceEvent(request *ModifyInstanceEventRequest) (response *ModifyInstanceEventResponse, err error) {
+    return c.ModifyInstanceEventWithContext(context.Background(), request)
+}
+
+// ModifyInstanceEvent
+// 本接口（ModifyInstanceEvent）用于修改实例的运维事件的执行计划。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstanceEventWithContext(ctx context.Context, request *ModifyInstanceEventRequest) (response *ModifyInstanceEventResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceEventResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyInstanceParamsRequest() (request *ModifyInstanceParamsRequest) {
     request = &ModifyInstanceParamsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4527,8 +5200,9 @@ func NewModifyInstanceParamsRequest() (request *ModifyInstanceParamsRequest) {
 func NewModifyInstanceParamsResponse() (response *ModifyInstanceParamsResponse) {
     response = &ModifyInstanceParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceParams
@@ -4599,8 +5273,9 @@ func NewModifyInstanceReadOnlyRequest() (request *ModifyInstanceReadOnlyRequest)
 func NewModifyInstanceReadOnlyResponse() (response *ModifyInstanceReadOnlyResponse) {
     response = &ModifyInstanceReadOnlyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceReadOnly
@@ -4657,8 +5332,9 @@ func NewModifyMaintenanceWindowRequest() (request *ModifyMaintenanceWindowReques
 func NewModifyMaintenanceWindowResponse() (response *ModifyMaintenanceWindowResponse) {
     response = &ModifyMaintenanceWindowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMaintenanceWindow
@@ -4715,8 +5391,9 @@ func NewModifyNetworkConfigRequest() (request *ModifyNetworkConfigRequest) {
 func NewModifyNetworkConfigResponse() (response *ModifyNetworkConfigResponse) {
     response = &ModifyNetworkConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNetworkConfig
@@ -4731,6 +5408,7 @@ func NewModifyNetworkConfigResponse() (response *ModifyNetworkConfigResponse) {
 //  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKEDERROR = "ResourceUnavailable.InstanceLockedError"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  RESOURCEUNAVAILABLE_INSTANCEUNLOCKEDERROR = "ResourceUnavailable.InstanceUnLockedError"
@@ -4753,6 +5431,7 @@ func (c *Client) ModifyNetworkConfig(request *ModifyNetworkConfigRequest) (respo
 //  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKEDERROR = "ResourceUnavailable.InstanceLockedError"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  RESOURCEUNAVAILABLE_INSTANCEUNLOCKEDERROR = "ResourceUnavailable.InstanceUnLockedError"
@@ -4789,8 +5468,9 @@ func NewModifyParamTemplateRequest() (request *ModifyParamTemplateRequest) {
 func NewModifyParamTemplateResponse() (response *ModifyParamTemplateResponse) {
     response = &ModifyParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyParamTemplate
@@ -4831,6 +5511,65 @@ func (c *Client) ModifyParamTemplateWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyReplicationGroupRequest() (request *ModifyReplicationGroupRequest) {
+    request = &ModifyReplicationGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyReplicationGroup")
+    
+    
+    return
+}
+
+func NewModifyReplicationGroupResponse() (response *ModifyReplicationGroupResponse) {
+    response = &ModifyReplicationGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyReplicationGroup
+// 修改复制组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) ModifyReplicationGroup(request *ModifyReplicationGroupRequest) (response *ModifyReplicationGroupResponse, err error) {
+    return c.ModifyReplicationGroupWithContext(context.Background(), request)
+}
+
+// ModifyReplicationGroup
+// 修改复制组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) ModifyReplicationGroupWithContext(ctx context.Context, request *ModifyReplicationGroupRequest) (response *ModifyReplicationGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyReplicationGroupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyReplicationGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyReplicationGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewOpenSSLRequest() (request *OpenSSLRequest) {
     request = &OpenSSLRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4845,8 +5584,9 @@ func NewOpenSSLRequest() (request *OpenSSLRequest) {
 func NewOpenSSLResponse() (response *OpenSSLResponse) {
     response = &OpenSSLResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenSSL
@@ -4911,8 +5651,9 @@ func NewReleaseWanAddressRequest() (request *ReleaseWanAddressRequest) {
 func NewReleaseWanAddressResponse() (response *ReleaseWanAddressResponse) {
     response = &ReleaseWanAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReleaseWanAddress
@@ -4963,8 +5704,9 @@ func NewRemoveReplicationInstanceRequest() (request *RemoveReplicationInstanceRe
 func NewRemoveReplicationInstanceResponse() (response *RemoveReplicationInstanceResponse) {
     response = &RemoveReplicationInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveReplicationInstance
@@ -5027,8 +5769,9 @@ func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
 func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
     response = &RenewInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewInstance
@@ -5093,8 +5836,9 @@ func NewResetPasswordRequest() (request *ResetPasswordRequest) {
 func NewResetPasswordResponse() (response *ResetPasswordResponse) {
     response = &ResetPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetPassword
@@ -5159,8 +5903,9 @@ func NewRestoreInstanceRequest() (request *RestoreInstanceRequest) {
 func NewRestoreInstanceResponse() (response *RestoreInstanceResponse) {
     response = &RestoreInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestoreInstance
@@ -5175,6 +5920,7 @@ func NewRestoreInstanceResponse() (response *RestoreInstanceResponse) {
 //  INVALIDPARAMETERVALUE_PASSWORDERROR = "InvalidParameterValue.PasswordError"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_BACKUPLOCKEDERROR = "ResourceUnavailable.BackupLockedError"
+//  RESOURCEUNAVAILABLE_BACKUPSPECERROR = "ResourceUnavailable.BackupSpecError"
 //  RESOURCEUNAVAILABLE_BACKUPSTATUSABNORMAL = "ResourceUnavailable.BackupStatusAbnormal"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKEDERROR = "ResourceUnavailable.InstanceLockedError"
 //  RESOURCEUNAVAILABLE_INSTANCESTATEERROR = "ResourceUnavailable.InstanceStateError"
@@ -5196,6 +5942,7 @@ func (c *Client) RestoreInstance(request *RestoreInstanceRequest) (response *Res
 //  INVALIDPARAMETERVALUE_PASSWORDERROR = "InvalidParameterValue.PasswordError"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_BACKUPLOCKEDERROR = "ResourceUnavailable.BackupLockedError"
+//  RESOURCEUNAVAILABLE_BACKUPSPECERROR = "ResourceUnavailable.BackupSpecError"
 //  RESOURCEUNAVAILABLE_BACKUPSTATUSABNORMAL = "ResourceUnavailable.BackupStatusAbnormal"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKEDERROR = "ResourceUnavailable.InstanceLockedError"
 //  RESOURCEUNAVAILABLE_INSTANCESTATEERROR = "ResourceUnavailable.InstanceStateError"
@@ -5231,8 +5978,9 @@ func NewStartupInstanceRequest() (request *StartupInstanceRequest) {
 func NewStartupInstanceResponse() (response *StartupInstanceResponse) {
     response = &StartupInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartupInstance
@@ -5283,6 +6031,63 @@ func (c *Client) StartupInstanceWithContext(ctx context.Context, request *Startu
     return
 }
 
+func NewSwitchAccessNewInstanceRequest() (request *SwitchAccessNewInstanceRequest) {
+    request = &SwitchAccessNewInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "SwitchAccessNewInstance")
+    
+    
+    return
+}
+
+func NewSwitchAccessNewInstanceResponse() (response *SwitchAccessNewInstanceResponse) {
+    response = &SwitchAccessNewInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SwitchAccessNewInstance
+// 本接口（SwitchAccessNewInstance）针对处于时间窗口中待切换操作的实例，用户可主动发起该操作。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+func (c *Client) SwitchAccessNewInstance(request *SwitchAccessNewInstanceRequest) (response *SwitchAccessNewInstanceResponse, err error) {
+    return c.SwitchAccessNewInstanceWithContext(context.Background(), request)
+}
+
+// SwitchAccessNewInstance
+// 本接口（SwitchAccessNewInstance）针对处于时间窗口中待切换操作的实例，用户可主动发起该操作。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+func (c *Client) SwitchAccessNewInstanceWithContext(ctx context.Context, request *SwitchAccessNewInstanceRequest) (response *SwitchAccessNewInstanceResponse, err error) {
+    if request == nil {
+        request = NewSwitchAccessNewInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SwitchAccessNewInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSwitchAccessNewInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSwitchInstanceVipRequest() (request *SwitchInstanceVipRequest) {
     request = &SwitchInstanceVipRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5297,8 +6102,9 @@ func NewSwitchInstanceVipRequest() (request *SwitchInstanceVipRequest) {
 func NewSwitchInstanceVipResponse() (response *SwitchInstanceVipResponse) {
     response = &SwitchInstanceVipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchInstanceVip
@@ -5359,8 +6165,9 @@ func NewSwitchProxyRequest() (request *SwitchProxyRequest) {
 func NewSwitchProxyResponse() (response *SwitchProxyResponse) {
     response = &SwitchProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchProxy
@@ -5417,8 +6224,9 @@ func NewUpgradeInstanceRequest() (request *UpgradeInstanceRequest) {
 func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
     response = &UpgradeInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeInstance
@@ -5497,12 +6305,13 @@ func NewUpgradeInstanceVersionRequest() (request *UpgradeInstanceVersionRequest)
 func NewUpgradeInstanceVersionResponse() (response *UpgradeInstanceVersionResponse) {
     response = &UpgradeInstanceVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeInstanceVersion
-// 将原本实例升级到高版本实例，或者将主从版实例升级到集群版实例
+// 将当前实例升级到更高版本，或者将当前标准架构升级至集群架构。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5515,7 +6324,7 @@ func (c *Client) UpgradeInstanceVersion(request *UpgradeInstanceVersionRequest) 
 }
 
 // UpgradeInstanceVersion
-// 将原本实例升级到高版本实例，或者将主从版实例升级到集群版实例
+// 将当前实例升级到更高版本，或者将当前标准架构升级至集群架构。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5553,8 +6362,9 @@ func NewUpgradeProxyVersionRequest() (request *UpgradeProxyVersionRequest) {
 func NewUpgradeProxyVersionResponse() (response *UpgradeProxyVersionResponse) {
     response = &UpgradeProxyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeProxyVersion
@@ -5563,6 +6373,7 @@ func NewUpgradeProxyVersionResponse() (response *UpgradeProxyVersionResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
 func (c *Client) UpgradeProxyVersion(request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
     return c.UpgradeProxyVersionWithContext(context.Background(), request)
 }
@@ -5573,6 +6384,7 @@ func (c *Client) UpgradeProxyVersion(request *UpgradeProxyVersionRequest) (respo
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
 func (c *Client) UpgradeProxyVersionWithContext(ctx context.Context, request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
     if request == nil {
         request = NewUpgradeProxyVersionRequest()
@@ -5603,8 +6415,9 @@ func NewUpgradeSmallVersionRequest() (request *UpgradeSmallVersionRequest) {
 func NewUpgradeSmallVersionResponse() (response *UpgradeSmallVersionResponse) {
     response = &UpgradeSmallVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeSmallVersion
@@ -5657,8 +6470,9 @@ func NewUpgradeVersionToMultiAvailabilityZonesRequest() (request *UpgradeVersion
 func NewUpgradeVersionToMultiAvailabilityZonesResponse() (response *UpgradeVersionToMultiAvailabilityZonesResponse) {
     response = &UpgradeVersionToMultiAvailabilityZonesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeVersionToMultiAvailabilityZones
