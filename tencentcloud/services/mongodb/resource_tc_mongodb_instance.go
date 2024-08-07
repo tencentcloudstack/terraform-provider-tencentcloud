@@ -466,8 +466,8 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("node_num", *instance.SecondaryNum+1)
-	_ = d.Set("maintenance_start", *instance.MaintenanceStart)
-	_ = d.Set("maintenance_end", *instance.MaintenanceEnd)
+	_ = d.Set("maintenance_start", (*instance.MaintenanceStart)[:5])
+	_ = d.Set("maintenance_end", (*instance.MaintenanceEnd)[:5])
 
 	replicateSets, err := mongodbService.DescribeDBInstanceNodeProperty(ctx, instanceId)
 	if err != nil {
