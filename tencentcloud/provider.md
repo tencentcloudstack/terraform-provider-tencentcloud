@@ -1242,6 +1242,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_protocol_template
     tencentcloud_protocol_template_group
     tencentcloud_route_table
+    tencentcloud_vpc_private_nat_gateway
 	tencentcloud_route_table_association
     tencentcloud_route_entry
     tencentcloud_route_table_entry

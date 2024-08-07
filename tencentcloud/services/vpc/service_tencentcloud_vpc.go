@@ -8050,3 +8050,56 @@ func (me *VpcService) DeleteVpcPeerConnectAccecptOrRejectById(ctx context.Contex
 
 	return
 }
+
+func (me *VpcService) DescribeVpcPrivateNatGatewayById(ctx context.Context, instanceId string) (privateNatGateway *vpc.PrivateNatGateway, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribePrivateNatGatewaysRequest()
+	request.NatGatewayIds = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribePrivateNatGateways(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.PrivateNatGatewaySet) < 1 {
+		return
+	}
+
+	privateNatGateway = response.Response.PrivateNatGatewaySet[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcPrivateNatGatewayById(ctx context.Context, instanceId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDeletePrivateNatGatewayRequest()
+	request.NatGatewayId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeletePrivateNatGateway(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
