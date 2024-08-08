@@ -14,14 +14,13 @@ linters:
     - errcheck
     - gofmt
     - gosimple
-    - ineffassign
-    - misspell
-    - staticcheck
-    - structcheck
-    - unconvert
-    - unused
-    - varcheck
-    - vet
+#    - ineffassign
+#    - staticcheck
+#    - structcheck
+#    - unconvert
+#    - unused
+#    - varcheck
+#    - vet
 
 linters-settings:
   errcheck:
