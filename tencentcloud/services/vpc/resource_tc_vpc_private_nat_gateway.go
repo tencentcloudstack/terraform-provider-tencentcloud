@@ -131,6 +131,9 @@ func resourceTencentCloudVpcPrivateNatGatewayCreate(d *schema.ResourceData, meta
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
 	d.SetId(instanceId)
 
 	return resourceTencentCloudVpcPrivateNatGatewayRead(d, meta)
@@ -237,6 +240,9 @@ func resourceTencentCloudVpcPrivateNatGatewayUpdate(d *schema.ResourceData, meta
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
 	return resourceTencentCloudVpcPrivateNatGatewayRead(d, meta)
 }
 
