@@ -281,6 +281,12 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Default:     0,
 			Description: "Project ID, default value is 0.",
 		},
+		"ssl_status": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeString,
+			Description: "Whether to enable SSL. `ON` means enabled, `OFF` means not enabled. Default: `OFF`.",
+		},
 
 		// Computed values
 		"internet_host": {
@@ -292,6 +298,12 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Type:        schema.TypeInt,
 			Computed:    true,
 			Description: "Access port for public access.",
+		},
+
+		"ssl_url": {
+			Computed:    true,
+			Type:        schema.TypeString,
+			Description: "The certificate download link. Example value: http://testdownload.url.",
 		},
 	}
 
@@ -746,6 +758,12 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	// ssl
+	if err := mysqlInstanceSSLUpdate(ctx, d, meta); err != nil {
+		log.Printf("[CRITAL]%s update mysql ssl fail, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 
@@ -965,6 +983,28 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return fmt.Errorf("Describe DBInstanceConfig Fail, reason:%s", err.Error())
 	}
+
+	ssl, err := mysqlService.DescribeMysqlSslById(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if ssl == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `tencentcloud_mysql_ssl` [%s] not found, please check if it has been deleted.",
+			logId, d.Id(),
+		)
+		return nil
+	}
+
+	if ssl.Status != nil {
+		_ = d.Set("ssl_status", ssl.Status)
+	}
+
+	if ssl.Url != nil {
+		_ = d.Set("ssl_url", ssl.Url)
+	}
+
 	return nil
 }
 
@@ -1256,6 +1296,13 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
+	if !isReadonly && d.HasChange("ssl_status") {
+		if err := mysqlInstanceSSLUpdate(ctx, d, meta); err != nil {
+			log.Printf("[CRITAL]%s update mysql ssl fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+	}
+
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
@@ -1529,6 +1576,81 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 	time.Sleep(7 * time.Second)
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
+}
+
+func mysqlInstanceSSLUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	instanceId := d.Id()
+	status := ""
+	if v, ok := d.GetOk("ssl_status"); ok {
+		status = v.(string)
+		if status == "ON" {
+			request := cdb.NewOpenSSLRequest()
+			request.InstanceId = helper.String(instanceId)
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().OpenSSL(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql ssl failed, reason:%+v", logId, err)
+				return err
+			}
+		} else if status == "OFF" {
+			request := cdb.NewCloseSSLRequest()
+			request.InstanceId = helper.String(instanceId)
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CloseSSL(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql ssl failed, reason:%+v", logId, err)
+				return err
+			}
+		} else {
+			return fmt.Errorf("[CRITAL]%s update mysql ssl failed, reason:your status must be ON or OFF!", logId)
+		}
+
+		if status != "" {
+			service := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			err := resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				ssl, err := service.DescribeMysqlSslById(ctx, instanceId)
+				if err != nil {
+					return resource.NonRetryableError(err)
+				}
+				if ssl == nil {
+					err = fmt.Errorf("mysqlid %s instance ssl not exists", instanceId)
+					return resource.NonRetryableError(err)
+				}
+				if *ssl.Status != status {
+					return resource.RetryableError(fmt.Errorf("mysql ssl status is (%v)", *ssl.Status))
+				}
+				if *ssl.Status == status {
+					return nil
+				}
+				err = fmt.Errorf("mysql ssl status is %v,we won't wait for it finish", *ssl.Status)
+				return resource.NonRetryableError(err)
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s mysql switchForUpgrade fail, reason:%s\n ", logId, err.Error())
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interface{}) error {

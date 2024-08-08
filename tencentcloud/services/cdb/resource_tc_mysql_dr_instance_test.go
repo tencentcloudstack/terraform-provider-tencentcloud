@@ -34,6 +34,8 @@ func TestAccTencentNeedFixCloudMysqlDrInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "volume_size", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "intranet_port", "3360"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "tags.test", "test-tf"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "ssl_status", "ON"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_dr_instance.mysql_dr", "ssl_url"),
 				),
 			},
 			{
@@ -50,6 +52,7 @@ func TestAccTencentNeedFixCloudMysqlDrInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "volume_size", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "intranet_port", "3360"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "tags.test", "test-tf"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_dr_instance.mysql_dr", "ssl_status", "OFF"),
 				),
 			},
 		},
@@ -128,6 +131,7 @@ resource "tencentcloud_mysql_dr_instance" "mysql_dr" {
   volume_size       = 100
   vpc_id            = "vpc-h6s1s3aa"
   intranet_port      = 3360
+  ssl_status		= "ON"
   tags = {
     test = "test-tf"
   }
@@ -158,6 +162,7 @@ resource "tencentcloud_mysql_dr_instance" "mysql_dr" {
   volume_size       = 100
   vpc_id            = "vpc-h6s1s3aa"
   intranet_port      = 3360
+  ssl_status		= "OFF"
   tags = {
     test = "test-tf"
   }

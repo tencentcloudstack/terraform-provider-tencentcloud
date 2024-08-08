@@ -160,6 +160,8 @@ func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_exclusive"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_exclusive", "device_type", "EXCLUSIVE"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql_exclusive", "first_slave_zone"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_exclusive", "ssl_statue", "ON"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql_exclusive", "ssl_url"),
 				),
 			},
 			{
@@ -173,6 +175,7 @@ func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_exclusive"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_exclusive", "device_type", "EXCLUSIVE"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_exclusive", "ssl_statue", "OFF"),
 				),
 			},
 		},
@@ -465,6 +468,7 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
   force_delete      = true
   device_type       = "EXCLUSIVE"
   param_template_id = var.temporary_param_tmpl_id
+  ssl_status		= "ON"
 }
 `
 
@@ -488,6 +492,7 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
   device_type       = "EXCLUSIVE"
   fast_upgrade      = 1
   param_template_id = var.temporary_param_tmpl_id
+  ssl_status		= "OFF"
 }
 `
 
