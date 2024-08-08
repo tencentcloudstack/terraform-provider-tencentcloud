@@ -48,11 +48,6 @@ func resourceTencentCloudKubernetesClusterAttachmentCreatePostFillRequest0(ctx c
 	req.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
 	req.InstanceAdvancedSettings.Labels = GetTkeLabels(d, "labels")
 
-	// only this unschedulable is valid, the is_schedule of worker_config and worker_config_overrides was deprecated.
-	if v, ok := d.GetOkExists("unschedulable"); ok {
-		req.InstanceAdvancedSettings.Unschedulable = helper.IntInt64(v.(int))
-	}
-
 	if dMap, ok := helper.InterfacesHeadMap(d, "worker_config"); ok {
 		completeInstanceAdvancedSettings(dMap, req.InstanceAdvancedSettings)
 	}
@@ -61,6 +56,11 @@ func resourceTencentCloudKubernetesClusterAttachmentCreatePostFillRequest0(ctx c
 			dMap := item.(map[string]interface{})
 			completeInstanceAdvancedSettings(dMap, req.InstanceAdvancedSettingsOverrides[i])
 		}
+	}
+
+	// only this unschedulable is valid, the is_schedule of worker_config and worker_config_overrides was deprecated.
+	if v, ok := d.GetOkExists("unschedulable"); ok {
+		req.InstanceAdvancedSettings.Unschedulable = helper.IntInt64(v.(int))
 	}
 
 	// 检查是否已经绑定
