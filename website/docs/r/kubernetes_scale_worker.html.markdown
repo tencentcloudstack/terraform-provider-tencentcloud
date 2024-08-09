@@ -118,7 +118,7 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster.
 * `worker_config` - (Required, List, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
-* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
+* `data_disk` - (Optional, List, ForceNew) Configurations of tke data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
@@ -131,19 +131,20 @@ The following arguments are supported:
 
 The `data_disk` object of `worker_config` supports the following:
 
-* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
-* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.
+* `auto_format_and_mount` - (Optional, Bool, ForceNew, **Deprecated**) This argument was deprecated, use `data_disk` instead. Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String, ForceNew, **Deprecated**) This argument was deprecated, use `data_disk` instead. The name of the device or partition to mount.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
 * `encrypt` - (Optional, Bool) Indicates whether to encrypt data disk, default `false`.
-* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
+* `file_system` - (Optional, String, ForceNew, **Deprecated**) This argument was deprecated, use `data_disk` instead. File system, e.g. `ext3/ext4/xfs`.
 * `kms_key_id` - (Optional, String) ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.
-* `mount_target` - (Optional, String, ForceNew) Mount target.
+* `mount_target` - (Optional, String, ForceNew, **Deprecated**) This argument was deprecated, use `data_disk` instead. Mount target.
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
 
 The `data_disk` object supports the following:
 
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
@@ -165,7 +166,7 @@ The `worker_config` object supports the following:
 * `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, String, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, Int, ForceNew) Number of cvm.
-* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
+* `data_disk` - (Optional, List, ForceNew) Configurations of cvm data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.
 * `disaster_recover_group_ids` - (Optional, List, ForceNew) Disaster recover groups to which a CVM instance belongs. Only support maximum 1.
 * `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.

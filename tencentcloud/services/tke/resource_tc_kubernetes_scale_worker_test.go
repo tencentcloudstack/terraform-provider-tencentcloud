@@ -114,7 +114,11 @@ func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeScaleWorkerExists(testTkeScaleWorkerResourceKey),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "cluster_id"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "data_disk.0.file_system", "xfs"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "data_disk.0.mount_target", "/data1"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "data_disk.0.auto_format_and_mount", "true"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_config.#"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_config.0.data_disk.0.encrypt", "true"),
 					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role"),
@@ -248,6 +252,14 @@ resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
   pre_start_user_script   = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
   user_script   = "IyEvYmluL3NoIGVjaG8gImhlbGxvIHdvcmxkIg=="
 
+  data_disk {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+    file_system           = "xfs"
+    mount_target          = "/data1"
+    auto_format_and_mount = true
+  }
+
   worker_config {
     count                      				= 1
     availability_zone          				= "ap-guangzhou-3"
@@ -261,6 +273,7 @@ resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
+	  encrypt = true
     }
 
     enhanced_security_service 				= false

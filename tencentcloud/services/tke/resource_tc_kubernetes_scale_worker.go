@@ -36,7 +36,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				MaxItems:    11,
-				Description: "Configurations of data disk.",
+				Description: "Configurations of tke data disk.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_format_and_mount": {
@@ -73,6 +73,13 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							ForceNew:    true,
 							Default:     "",
 							Description: "Mount target.",
+						},
+						"disk_partition": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "",
+							Description: "The name of the device or partition to mount.",
 						},
 					},
 				},
@@ -200,7 +207,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							Optional:    true,
 							ForceNew:    true,
 							MaxItems:    11,
-							Description: "Configurations of data disk.",
+							Description: "Configurations of cvm data disk.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"auto_format_and_mount": {
@@ -209,12 +216,14 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 										ForceNew:    true,
 										Default:     false,
 										Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+										Deprecated:  "This argument was deprecated, use `data_disk` instead.",
 									},
 									"disk_partition": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										ForceNew:    true,
 										Description: "The name of the device or partition to mount.",
+										Deprecated:  "This argument was deprecated, use `data_disk` instead.",
 									},
 									"disk_size": {
 										Type:        schema.TypeInt,
@@ -240,6 +249,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 										Optional:    true,
 										ForceNew:    true,
 										Description: "File system, e.g. `ext3/ext4/xfs`.",
+										Deprecated:  "This argument was deprecated, use `data_disk` instead.",
 									},
 									"kms_key_id": {
 										Type:        schema.TypeString,
@@ -251,6 +261,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 										Optional:    true,
 										ForceNew:    true,
 										Description: "Mount target.",
+										Deprecated:  "This argument was deprecated, use `data_disk` instead.",
 									},
 									"snapshot_id": {
 										Type:        schema.TypeString,

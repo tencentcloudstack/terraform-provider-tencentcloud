@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_scale_worker: fix param `data_disk` of worker_config cannot work
+```
