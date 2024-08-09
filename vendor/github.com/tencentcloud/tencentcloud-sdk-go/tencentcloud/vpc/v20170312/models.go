@@ -900,6 +900,9 @@ type AssignIpv6AddressesRequestParams struct {
 
 	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配额数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
 	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
 type AssignIpv6AddressesRequest struct {
@@ -913,6 +916,9 @@ type AssignIpv6AddressesRequest struct {
 
 	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配额数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
 	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
 func (r *AssignIpv6AddressesRequest) ToJsonString() string {
@@ -930,6 +936,7 @@ func (r *AssignIpv6AddressesRequest) FromJsonString(s string) error {
 	delete(f, "NetworkInterfaceId")
 	delete(f, "Ipv6Addresses")
 	delete(f, "Ipv6AddressCount")
+	delete(f, "ClientToken")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssignIpv6AddressesRequest has unknown keys!", "")
 	}
@@ -3357,6 +3364,7 @@ type CreateBandwidthPackageRequestParams struct {
 	// <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
 	// <li>ENHANCED95_POSTPAID_BY_MONTH: 按月后付费增强型95计费</li>
 	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 后付费日结按带宽计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费按主流量计费</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
 	// 带宽包名称。
@@ -3398,6 +3406,7 @@ type CreateBandwidthPackageRequest struct {
 	// <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
 	// <li>ENHANCED95_POSTPAID_BY_MONTH: 按月后付费增强型95计费</li>
 	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 后付费日结按带宽计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费按主流量计费</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
 	// 带宽包名称。
@@ -26184,6 +26193,20 @@ type PrivateIpAddressSpecification struct {
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 }
 
+type PrivateNatCrossDomainInfo struct {
+	// 跨域私网NAT关联的云联网ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+
+	// 跨域私网NAT本端Vpc
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocalVpcId *string `json:"LocalVpcId,omitnil,omitempty" name:"LocalVpcId"`
+
+	// 跨域私网NAT对端Vpc
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PeerVpcId *string `json:"PeerVpcId,omitnil,omitempty" name:"PeerVpcId"`
+}
+
 type PrivateNatDestinationIpPortTranslationNatRule struct {
 	// 协议
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
@@ -26233,6 +26256,26 @@ type PrivateNatGateway struct {
 	// 标签键值对。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
+
+	// 专线网关唯一`ID`
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DirectConnectGatewayIds []*string `json:"DirectConnectGatewayIds,omitnil,omitempty" name:"DirectConnectGatewayIds"`
+
+	// 私网网关类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NatType *string `json:"NatType,omitnil,omitempty" name:"NatType"`
+
+	// 私网NAT跨域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CrossDomainInfo *PrivateNatCrossDomainInfo `json:"CrossDomainInfo,omitnil,omitempty" name:"CrossDomainInfo"`
+
+	// 是否VPC型私网网关
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcType *bool `json:"VpcType,omitnil,omitempty" name:"VpcType"`
+
+	// 跨域私网NAT关联的云联网ID	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 }
 
 type PrivateNatGatewayLimit struct {
