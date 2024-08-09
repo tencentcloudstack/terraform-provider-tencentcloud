@@ -1,3 +1,14 @@
+## 1.81.115 (August 9 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vpc_private_nat_gateway` ([#2763](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2763))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_emr_cluster: fix read need_master_wan ([#2768](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2768))
+* resource/tencentcloud_kubernetes_cluster: support param `ignore_service_cidr_conflict` ([#2756](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2756))
+
 ## 1.81.114 (August 2 , 2024)
 
 ENHANCEMENTS:
