@@ -47,6 +47,10 @@ The following arguments are supported:
 			- Basic network cannot be selected.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
 * `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.
+* `maintenance_end` - (Optional, String) Maintenance window end time.
+	- The value range is any full point or half point from `00:00-23:00`, and the maintenance time duration is at least 30 minutes and at most 3 hours.
+	- The end time must be based on the start time backwards.
+* `maintenance_start` - (Optional, String) Maintenance window start time. The value range is any full point or half point from `00:00-23:00`, such as 00:00 or 00:30.
 * `node_num` - (Optional, Int) The number of nodes in each replica set. Default value: 3.
 * `password` - (Optional, String) Password of this Mongodb account.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
