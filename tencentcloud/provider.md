@@ -908,6 +908,7 @@ TencentDB for Redis(crs)
     tencentcloud_redis_instance_zone_info
     tencentcloud_redis_instance_task_list
     tencentcloud_redis_instance_node_info
+    tencentcloud_redis_clusters
 
   Resource
     tencentcloud_redis_instance
