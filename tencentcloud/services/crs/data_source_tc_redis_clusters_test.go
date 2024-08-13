@@ -1,9 +1,10 @@
 package crs_test
 
 import (
+	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	"testing"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudNeedFixRedisClustersDataSource_basic -v
