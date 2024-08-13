@@ -49,6 +49,12 @@ func ResourceTencentCloudCosBucketReferer() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to allow access with an empty referer. Enumerated values: `Allow`, `Deny` (default).",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -71,14 +77,15 @@ func resourceTencentCloudCosBucketRefererRead(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_referer.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	bucket := d.Id()
-
-	bucketReferer, err := service.DescribeCosBucketRefererById(ctx, bucket)
+	cdcId := d.Get("cdc_id").(string)
+	bucketReferer, err := service.DescribeCosBucketRefererById(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
@@ -114,18 +121,21 @@ func resourceTencentCloudCosBucketRefererUpdate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_referer.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request = cos.BucketPutRefererOptions{}
+	)
 
 	bucket := d.Id()
-
-	request := cos.BucketPutRefererOptions{}
 	if v, ok := d.GetOk("status"); ok {
 		request.Status = v.(string)
 	}
+
 	if v, ok := d.GetOk("referer_type"); ok {
 		request.RefererType = v.(string)
 	}
+
 	if v, ok := d.GetOk("domain_list"); ok {
 		domainListSet := v.(*schema.Set).List()
 		for i := range domainListSet {
@@ -133,19 +143,23 @@ func resourceTencentCloudCosBucketRefererUpdate(d *schema.ResourceData, meta int
 			request.DomainList = append(request.DomainList, domainList)
 		}
 	}
+
 	if v, ok := d.GetOk("empty_refer_configuration"); ok {
 		request.EmptyReferConfiguration = v.(string)
 	}
 
+	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.PutReferer(ctx, &request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.PutReferer(ctx, &request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%+v], response status [%s]\n", logId, "PutReferer", request, result.Status)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s cos bucketReferer failed, reason:%+v", logId, err)
 		return err

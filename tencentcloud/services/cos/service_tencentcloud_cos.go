@@ -47,7 +47,7 @@ const (
 
 const PUBLIC_GRANTEE = "http://cam.qcloud.com/groups/global/AllUsers"
 
-func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info *s3.HeadObjectOutput, errRet error) {
+func (me *CosService) HeadObject(ctx context.Context, bucket, key, cdcId string) (info *s3.HeadObjectOutput, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.HeadObjectInput{
@@ -55,7 +55,7 @@ func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info 
 		Key:    aws.String(key),
 	}
 	ratelimit.Check("HeadObject")
-	response, err := me.client.UseCosClient().HeadObject(&request)
+	response, err := me.client.UseCosClient(cdcId).HeadObject(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "head object", request.String(), err.Error())
@@ -69,7 +69,7 @@ func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info 
 	return response, nil
 }
 
-func (me *CosService) DeleteObject(ctx context.Context, bucket, key string) (errRet error) {
+func (me *CosService) DeleteObject(ctx context.Context, bucket, key, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.DeleteObjectInput{
@@ -83,7 +83,7 @@ func (me *CosService) DeleteObject(ctx context.Context, bucket, key string) (err
 		}
 	}()
 	ratelimit.Check("DeleteObject")
-	response, err := me.client.UseCosClient().DeleteObject(&request)
+	response, err := me.client.UseCosClient(cdcId).DeleteObject(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos delete object error: %s, bucket: %s, object: %s", err.Error(), bucket, key)
 		return
@@ -95,7 +95,7 @@ func (me *CosService) DeleteObject(ctx context.Context, bucket, key string) (err
 	return nil
 }
 
-func (me *CosService) PutObjectAcl(ctx context.Context, bucket, key, acl string) (errRet error) {
+func (me *CosService) PutObjectAcl(ctx context.Context, bucket, key, acl, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.PutObjectAclInput{
@@ -110,7 +110,7 @@ func (me *CosService) PutObjectAcl(ctx context.Context, bucket, key, acl string)
 		}
 	}()
 	ratelimit.Check("PutObjectAcl")
-	response, err := me.client.UseCosClient().PutObjectAcl(&request)
+	response, err := me.client.UseCosClient(cdcId).PutObjectAcl(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put object acl error: %s, bucket: %s, object: %s", err.Error(), bucket, key)
 		return
@@ -137,14 +137,14 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl, cdcId string) 
 		}
 	}()
 	ratelimit.Check("CreateBucket")
-	response, err := me.client.UseCosClient().CreateBucket(&request)
+	response, err := me.client.UseCosClient(cdcId).CreateBucket(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], endpoint %s\n",
-		logId, "put bucket", request.String(), response.String(), me.client.UseCosClient().Endpoint)
+		logId, "put bucket", request.String(), response.String(), me.client.UseCosClient(cdcId).Endpoint)
 
 	return nil
 }
@@ -179,7 +179,7 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 	return nil
 }
 
-func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket string, opt *cos.BucketPutOptions) (location string, errRet error) {
+func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket string, opt *cos.BucketPutOptions, cdcId string) (location string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	req, _ := json.Marshal(opt)
@@ -192,7 +192,7 @@ func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket st
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucket")
-	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetLocation(ctx)
+	result, response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetLocation(ctx)
 	if err != nil {
 		errRet = fmt.Errorf("cos get location error: %s, bucket: %s", err.Error(), bucket)
 		return
@@ -201,7 +201,7 @@ func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket st
 	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
-		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket).BaseURL.BucketURL)
+		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket, cdcId).BaseURL.BucketURL)
 
 	return
 }
@@ -211,6 +211,7 @@ func (me *CosService) TencentCosPutBucketACLBody(
 	bucket string,
 	reqBody string,
 	header string,
+	cdcId string,
 ) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -241,7 +242,7 @@ func (me *CosService) TencentCosPutBucketACLBody(
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucketACLBody")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutACL(ctx, opt)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.PutACL(ctx, opt)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos [PutBucketACLBody] error: %s, bucket: %s", err.Error(), bucket)
@@ -256,14 +257,14 @@ func (me *CosService) TencentCosPutBucketACLBody(
 	return nil
 }
 
-func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet error) {
+func (me *CosService) HeadBucket(ctx context.Context, bucket, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.HeadBucketInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("HeadBucket")
-	response, err := me.client.UseCosClient().HeadBucket(&request)
+	response, err := me.client.UseCosClient(cdcId).HeadBucket(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "head bucket", request.String(), err.Error())
@@ -277,10 +278,10 @@ func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet err
 	return nil
 }
 
-func (me *CosService) TencentcloudHeadBucket(ctx context.Context, bucket string) (code int, header http.Header, errRet error) {
+func (me *CosService) TencentcloudHeadBucket(ctx context.Context, bucket, cdcId string) (code int, header http.Header, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	response, err := me.client.UseTencentCosClient(bucket, "").Bucket.Head(ctx)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.Head(ctx)
 
 	if response != nil {
 		code = response.StatusCode
@@ -300,13 +301,13 @@ func (me *CosService) TencentcloudHeadBucket(ctx context.Context, bucket string)
 	return
 }
 
-func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bool, versioned bool) (errRet error) {
+func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bool, versioned bool, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	if forced {
 		log.Printf("[DEBUG]%s api[%s] triggered, bucket [%s], versioned [%v]\n",
 			logId, "ForceCleanObject", bucket, versioned)
-		err := me.ForceCleanObject(ctx, bucket, versioned)
+		err := me.ForceCleanObject(ctx, bucket, versioned, cdcId)
 		if err != nil {
 			return err
 		}
@@ -316,7 +317,7 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bo
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("DeleteBucket")
-	response, err := me.client.UseCosClient().DeleteBucket(&request)
+	response, err := me.client.UseCosClient(cdcId).DeleteBucket(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "delete bucket", request.String(), err.Error())
@@ -328,12 +329,12 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bo
 	return nil
 }
 
-func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versioned bool) error {
+func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versioned bool, cdcId string) error {
 	logId := tccommon.GetLogId(ctx)
 
 	// Get the object list of bucket with all versions
 	verOpt := cos.BucketGetObjectVersionsOptions{}
-	objList, resp, err := me.client.UseTencentCosClient(bucket).Bucket.GetObjectVersions(ctx, &verOpt)
+	objList, resp, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetObjectVersions(ctx, &verOpt)
 
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s]\n",
@@ -383,7 +384,7 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 	}
 
 	// Multi-delete by specified object.
-	result, resp, err := me.client.UseTencentCosClient(bucket).Object.DeleteMulti(ctx, &opt)
+	result, resp, err := me.client.UseTencentCosClient(bucket, cdcId).Object.DeleteMulti(ctx, &opt)
 
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s], opt[%v]\n",
@@ -411,7 +412,7 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 				Objects: unDelObjs,
 			}
 
-			result, resp, err := me.client.UseTencentCosClient(bucket).Object.DeleteMulti(ctx, &unDelOpt)
+			result, resp, err := me.client.UseTencentCosClient(bucket, cdcId).Object.DeleteMulti(ctx, &unDelOpt)
 			if err != nil {
 				log.Printf("[CRITAL][retry]%s api[%s] fail, resp body [%s], reason[%s]\n",
 					logId, "DeleteMulti ", resp.Body, err.Error())
@@ -432,7 +433,7 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 	return nil
 }
 
-func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRules []map[string]interface{}, errRet error) {
+func (me *CosService) GetBucketCors(ctx context.Context, bucket, cdcId string) (corsRules []map[string]interface{}, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketCorsInput{
@@ -440,7 +441,7 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 	}
 
 	ratelimit.Check("GetBucketCors")
-	response, err := me.client.UseCosClient().GetBucketCors(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketCors(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
 		if !ok || awsError.Code() != "NoSuchCORSConfiguration" {
@@ -476,14 +477,14 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 	return
 }
 
-func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (lifecycleRules []map[string]interface{}, errRet error) {
+func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket, cdcId string) (lifecycleRules []map[string]interface{}, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketLifecycleConfigurationInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("GetBucketLifecycleConfiguration")
-	response, err := me.client.UseCosClient().GetBucketLifecycleConfiguration(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketLifecycleConfiguration(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
 		if !ok || awsError.Code() != "NoSuchLifecycleConfiguration" {
@@ -587,7 +588,7 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 	return
 }
 
-func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket string) (lifecycleRules []map[string]interface{}, errRet error) {
+func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket, cdcId string) (lifecycleRules []map[string]interface{}, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketLifecycleConfigurationInput{
@@ -595,7 +596,7 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 	}
 
 	ratelimit.Check("GetBucketLifecycleConfiguration")
-	response, err := me.client.UseCosClient().GetBucketLifecycleConfiguration(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketLifecycleConfiguration(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
 		if !ok || awsError.Code() != "NoSuchLifecycleConfiguration" {
@@ -691,14 +692,14 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 	return
 }
 
-func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (websites []map[string]interface{}, errRet error) {
+func (me *CosService) GetBucketWebsite(ctx context.Context, bucket, cdcId string) (websites []map[string]interface{}, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketWebsiteInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("GetBucketWebsite")
-	response, err := me.client.UseCosClient().GetBucketWebsite(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketWebsite(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
 		if ok && awsError.Code() == "NoSuchWebsiteConfiguration" {
@@ -728,14 +729,14 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 	return
 }
 
-func (me *CosService) GetBucketEncryption(ctx context.Context, bucket string) (encryption string, errRet error) {
+func (me *CosService) GetBucketEncryption(ctx context.Context, bucket, cdcId string) (encryption string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketEncryptionInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("GetBucketEncryption")
-	response, err := me.client.UseCosClient().GetBucketEncryption(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketEncryption(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
 		if ok && awsError.Code() == "NoSuchEncryptionConfiguration" {
@@ -756,14 +757,14 @@ func (me *CosService) GetBucketEncryption(ctx context.Context, bucket string) (e
 	return
 }
 
-func (me *CosService) GetBucketVersioning(ctx context.Context, bucket string) (versioningEnable bool, errRet error) {
+func (me *CosService) GetBucketVersioning(ctx context.Context, bucket, cdcId string) (versioningEnable bool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketVersioningInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("GetBucketVersioning")
-	response, err := me.client.UseCosClient().GetBucketVersioning(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketVersioning(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
 		if ok && awsError.Code() == "NoSuchVersioningConfiguration" {
@@ -787,14 +788,14 @@ func (me *CosService) GetBucketVersioning(ctx context.Context, bucket string) (v
 	return
 }
 
-func (me *CosService) GetBucketAccleration(ctx context.Context, bucket string) (accelerationEnable bool, errRet error) {
+func (me *CosService) GetBucketAccleration(ctx context.Context, bucket, cdcId string) (accelerationEnable bool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketAccelerateConfigurationInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("GetBucketAccelerateConfiguration")
-	response, err := me.client.UseCosClient().GetBucketAccelerateConfiguration(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketAccelerateConfiguration(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
 		if ok && awsError.Code() == "NoSuchAccelerateConfiguration" {
@@ -818,14 +819,14 @@ func (me *CosService) GetBucketAccleration(ctx context.Context, bucket string) (
 	return
 }
 
-func (me *CosService) GetBucketLogStatus(ctx context.Context, bucket string) (logEnable bool, logTargetBucket string, logPrefix string, errRet error) {
+func (me *CosService) GetBucketLogStatus(ctx context.Context, bucket, cdcId string) (logEnable bool, logTargetBucket string, logPrefix string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketLoggingInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("GetBucketVersioning")
-	response, err := me.client.UseCosClient().GetBucketLogging(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketLogging(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "get bucket log status", request.String(), err.Error())
@@ -847,12 +848,12 @@ func (me *CosService) GetBucketLogStatus(ctx context.Context, bucket string) (lo
 	return
 }
 
-func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, errRet error) {
+func (me *CosService) ListBuckets(ctx context.Context, cdcId string) (buckets []*s3.Bucket, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.ListBucketsInput{}
 	ratelimit.Check("ListBuckets")
-	response, err := me.client.UseCosClient().ListBuckets(&request)
+	response, err := me.client.UseCosClient(cdcId).ListBuckets(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "get bucket list", request.String(), err.Error())
@@ -866,14 +867,14 @@ func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, er
 	return
 }
 
-func (me *CosService) ListObjects(ctx context.Context, bucket string) (objects []*s3.Object, errRet error) {
+func (me *CosService) ListObjects(ctx context.Context, bucket, cdcId string) (objects []*s3.Object, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.ListObjectsInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("ListObjects")
-	response, err := me.client.UseCosClient().ListObjects(&request)
+	response, err := me.client.UseCosClient(cdcId).ListObjects(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "get object list", request.String(), err.Error())
@@ -888,14 +889,14 @@ func (me *CosService) ListObjects(ctx context.Context, bucket string) (objects [
 }
 
 // SetBucketTags if len(tags) == 0, only delete tags
-func (me *CosService) SetBucketTags(ctx context.Context, bucket string, tags map[string]string) error {
+func (me *CosService) SetBucketTags(ctx context.Context, bucket string, tags map[string]string, cdcId string) error {
 	logId := tccommon.GetLogId(ctx)
 
 	deleteReq := &s3.DeleteBucketTaggingInput{Bucket: aws.String(bucket)}
 
 	ratelimit.Check("DeleteBucketTagging")
 
-	deleteResp, err := me.client.UseCosClient().DeleteBucketTagging(deleteReq)
+	deleteResp, err := me.client.UseCosClient(cdcId).DeleteBucketTagging(deleteReq)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 			logId, "delete olg tags", deleteReq.String(), err)
@@ -923,7 +924,7 @@ func (me *CosService) SetBucketTags(ctx context.Context, bucket string, tags map
 
 	ratelimit.Check("PutBucketTagging")
 
-	resp, err := me.client.UseCosClient().PutBucketTagging(putReq)
+	resp, err := me.client.UseCosClient(cdcId).PutBucketTagging(putReq)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, "put new tags", deleteReq.String(), err)
@@ -936,14 +937,14 @@ func (me *CosService) SetBucketTags(ctx context.Context, bucket string, tags map
 	return nil
 }
 
-func (me *CosService) GetBucketTags(ctx context.Context, bucket string) (map[string]string, error) {
+func (me *CosService) GetBucketTags(ctx context.Context, bucket, cdcId string) (map[string]string, error) {
 	logId := tccommon.GetLogId(ctx)
 
 	req := &s3.GetBucketTaggingInput{Bucket: aws.String(bucket)}
 
 	ratelimit.Check("GetBucketTagging")
 
-	resp, err := me.client.UseCosClient().GetBucketTagging(req)
+	resp, err := me.client.UseCosClient(cdcId).GetBucketTagging(req)
 	if err != nil {
 		if awsErr, ok := err.(awserr.Error); !ok || awsErr.Code() != "404" {
 			return nil, nil
@@ -965,7 +966,7 @@ func (me *CosService) GetBucketTags(ctx context.Context, bucket string) (map[str
 	return tags, nil
 }
 
-func (me *CosService) GetObjectTags(ctx context.Context, bucket string, key string) (map[string]string, error) {
+func (me *CosService) GetObjectTags(ctx context.Context, bucket string, key string, cdcId string) (map[string]string, error) {
 	logId := tccommon.GetLogId(ctx)
 
 	req := &s3.GetObjectTaggingInput{
@@ -974,7 +975,7 @@ func (me *CosService) GetObjectTags(ctx context.Context, bucket string, key stri
 	}
 
 	ratelimit.Check("GetObjectTagging")
-	resp, err := me.client.UseCosClient().GetObjectTagging(req)
+	resp, err := me.client.UseCosClient(cdcId).GetObjectTagging(req)
 	if err != nil {
 		if awsErr, ok := err.(awserr.Error); !ok || awsErr.Code() != "404" {
 			return nil, nil
@@ -998,7 +999,7 @@ func (me *CosService) GetObjectTags(ctx context.Context, bucket string, key stri
 }
 
 // SetObjectTags same as delete Bucket Tags
-func (me *CosService) SetObjectTags(ctx context.Context, bucket string, key string, tags map[string]string) error {
+func (me *CosService) SetObjectTags(ctx context.Context, bucket string, key string, tags map[string]string, cdcId string) error {
 	logId := tccommon.GetLogId(ctx)
 
 	deleteReq := &s3.DeleteObjectTaggingInput{
@@ -1008,7 +1009,7 @@ func (me *CosService) SetObjectTags(ctx context.Context, bucket string, key stri
 
 	ratelimit.Check("DeleteObjectTagging")
 
-	deleteResp, err := me.client.UseCosClient().DeleteObjectTagging(deleteReq)
+	deleteResp, err := me.client.UseCosClient(cdcId).DeleteObjectTagging(deleteReq)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 			logId, "delete olg object tags", deleteReq.String(), err)
@@ -1037,7 +1038,7 @@ func (me *CosService) SetObjectTags(ctx context.Context, bucket string, key stri
 
 	ratelimit.Check("PutObjectTagging")
 
-	resp, err := me.client.UseCosClient().PutObjectTagging(putReq)
+	resp, err := me.client.UseCosClient(cdcId).PutObjectTagging(putReq)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, "put new object tags", deleteReq.String(), err)
@@ -1050,7 +1051,7 @@ func (me *CosService) SetObjectTags(ctx context.Context, bucket string, key stri
 	return nil
 }
 
-func (me *CosService) PutBucketPolicy(ctx context.Context, bucket, policy string) (errRet error) {
+func (me *CosService) PutBucketPolicy(ctx context.Context, bucket, policy, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.PutBucketPolicyInput{
@@ -1064,7 +1065,7 @@ func (me *CosService) PutBucketPolicy(ctx context.Context, bucket, policy string
 		}
 	}()
 	ratelimit.Check("PutBucketPolicy")
-	response, err := me.client.UseCosClient().PutBucketPolicy(&request)
+	response, err := me.client.UseCosClient(cdcId).PutBucketPolicy(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket policy error: %s, bucket: %s", err.Error(), bucket)
 		return
@@ -1076,12 +1077,12 @@ func (me *CosService) PutBucketPolicy(ctx context.Context, bucket, policy string
 	return nil
 }
 
-func (me *CosService) DescribePolicyByBucket(ctx context.Context, bucket string) (bucketPolicy string, errRet error) {
+func (me *CosService) DescribePolicyByBucket(ctx context.Context, bucket, cdcId string) (bucketPolicy string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := s3.GetBucketPolicyInput{Bucket: aws.String(bucket)}
 
 	ratelimit.Check("GetBucketPolicy")
-	response, err := me.client.UseCosClient().GetBucketPolicy(&request)
+	response, err := me.client.UseCosClient(cdcId).GetBucketPolicy(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "get bucket policy", request.String(), err.Error())
@@ -1094,14 +1095,14 @@ func (me *CosService) DescribePolicyByBucket(ctx context.Context, bucket string)
 	return
 }
 
-func (me *CosService) DeleteBucketPolicy(ctx context.Context, bucket string) (errRet error) {
+func (me *CosService) DeleteBucketPolicy(ctx context.Context, bucket, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.DeleteBucketPolicyInput{
 		Bucket: aws.String(bucket),
 	}
 	ratelimit.Check("DeleteBucketPolicy")
-	response, err := me.client.UseCosClient().DeleteBucketPolicy(&request)
+	response, err := me.client.UseCosClient(cdcId).DeleteBucketPolicy(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "delete bucket policy", request.String(), err.Error())
@@ -1113,7 +1114,7 @@ func (me *CosService) DeleteBucketPolicy(ctx context.Context, bucket string) (er
 	return nil
 }
 
-func (me *CosService) GetBucketACL(ctx context.Context, bucket string) (result *cos.BucketGetACLResult, errRet error) {
+func (me *CosService) GetBucketACL(ctx context.Context, bucket, cdcId string) (result *cos.BucketGetACLResult, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	defer func() {
@@ -1124,7 +1125,7 @@ func (me *CosService) GetBucketACL(ctx context.Context, bucket string) (result *
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucketACL")
-	acl, _, err := me.client.UseTencentCosClient(bucket, "").Bucket.GetACL(ctx)
+	acl, _, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetACL(ctx)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos [GetBucketACL] error: %s, bucket: %s", err.Error(), bucket)
@@ -1172,7 +1173,7 @@ func GetBucketPublicACL(acl *cos.BucketGetACLResult) string {
 	return s3.ObjectCannedACLPrivate
 }
 
-func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (result []map[string]interface{}, errRet error) {
+func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket, cdcId string) (result []map[string]interface{}, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	defer func() {
@@ -1183,7 +1184,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 	}()
 
 	ratelimit.Check("TencentcloudCosGetBucketPullOrigin")
-	originConfig, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetOrigin(ctx)
+	originConfig, response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetOrigin(ctx)
 
 	if response.StatusCode == 404 {
 		return make([]map[string]interface{}, 0), nil
@@ -1254,14 +1255,14 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 	return rules, nil
 }
 
-func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, rules []cos.BucketOriginRule) (errRet error) {
+func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, rules []cos.BucketOriginRule, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	opt := &cos.BucketPutOriginOptions{
 		Rule: rules,
 	}
 	ratelimit.Check("PutBucketPullOrigin")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutOrigin(ctx, opt)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.PutOrigin(ctx, opt)
 	req, _ := json.Marshal(opt)
 	resp, _ := json.Marshal(response.Response.Body)
 
@@ -1283,7 +1284,7 @@ func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, ru
 	return nil
 }
 
-func (me *CosService) DeleteBucketPullOrigin(ctx context.Context, bucket string) (errRet error) {
+func (me *CosService) DeleteBucketPullOrigin(ctx context.Context, bucket, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	defer func() {
@@ -1294,7 +1295,7 @@ func (me *CosService) DeleteBucketPullOrigin(ctx context.Context, bucket string)
 	}()
 
 	ratelimit.Check("DeleteBucketPullOrigin")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteOrigin(ctx)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.DeleteOrigin(ctx)
 	resp, _ := json.Marshal(response.Response.Body)
 
 	if err != nil {
@@ -1308,7 +1309,7 @@ func (me *CosService) DeleteBucketPullOrigin(ctx context.Context, bucket string)
 	return nil
 }
 
-func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) (result []map[string]interface{}, errRet error) {
+func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket, cdcId string) (result []map[string]interface{}, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	defer func() {
@@ -1319,7 +1320,7 @@ func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) 
 	}()
 
 	ratelimit.Check("TencentcloudCosGetBucketOriginDomain")
-	domain, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomain(ctx)
+	domain, response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetDomain(ctx)
 
 	if response != nil && response.StatusCode == 404 {
 		log.Printf("[WARN] [GetBucketOriginDomain] returns %d, %s", 404, err)
@@ -1349,14 +1350,14 @@ func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) 
 	return rules, nil
 }
 
-func (me *CosService) PutBucketOriginDomain(ctx context.Context, bucket string, rules []cos.BucketDomainRule) (errRet error) {
+func (me *CosService) PutBucketOriginDomain(ctx context.Context, bucket string, rules []cos.BucketDomainRule, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	opt := &cos.BucketPutDomainOptions{
 		Rules: rules,
 	}
 	ratelimit.Check("PutBucketOriginDomain")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutDomain(ctx, opt)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.PutDomain(ctx, opt)
 	req, _ := json.Marshal(opt)
 	resp, _ := json.Marshal(response.Response.Body)
 
@@ -1378,7 +1379,7 @@ func (me *CosService) PutBucketOriginDomain(ctx context.Context, bucket string, 
 	return nil
 }
 
-func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket string) (errRet error) {
+func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	defer func() {
@@ -1389,7 +1390,7 @@ func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket strin
 	}()
 
 	ratelimit.Check("DeleteBucketOriginDomain")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomain(ctx)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.DeleteDomain(ctx)
 	resp, _ := json.Marshal(response.Response.Body)
 
 	if err != nil {
@@ -1403,7 +1404,7 @@ func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket strin
 	return nil
 }
 
-func (me *CosService) GetBucketReplication(ctx context.Context, bucket string) (result *cos.GetBucketReplicationResult, errRet error) {
+func (me *CosService) GetBucketReplication(ctx context.Context, bucket, cdcId string) (result *cos.GetBucketReplicationResult, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	defer func() {
 		if errRet != nil {
@@ -1413,7 +1414,7 @@ func (me *CosService) GetBucketReplication(ctx context.Context, bucket string) (
 	}()
 
 	ratelimit.Check("GetBucketReplication")
-	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetBucketReplication(ctx)
+	result, response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetBucketReplication(ctx)
 
 	if response.StatusCode == 404 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetBucketReplication", response.StatusCode)
@@ -1433,7 +1434,7 @@ func (me *CosService) GetBucketReplication(ctx context.Context, bucket string) (
 	return
 }
 
-func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, role string, rules []cos.BucketReplicationRule) (errRet error) {
+func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, role string, rules []cos.BucketReplicationRule, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	option := &cos.PutBucketReplicationOptions{
@@ -1451,7 +1452,7 @@ func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, r
 	}()
 
 	ratelimit.Check("PutBucketReplication")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutBucketReplication(ctx, option)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.PutBucketReplication(ctx, option)
 
 	resp, _ := json.Marshal(response.Response.Body)
 
@@ -1466,7 +1467,7 @@ func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, r
 	return
 }
 
-func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string) (errRet error) {
+func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	defer func() {
 		if errRet != nil {
@@ -1476,7 +1477,7 @@ func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string
 	}()
 
 	ratelimit.Check("DeleteBucketReplication")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteBucketReplication(ctx)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.DeleteBucketReplication(ctx)
 
 	resp, _ := json.Marshal(response.Response.Body)
 
@@ -1491,7 +1492,7 @@ func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string
 	return
 }
 
-func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, certId string) (result *cos.BucketGetDomainCertificateResult, bucket string, errRet error) {
+func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, certId, cdcId string) (result *cos.BucketGetDomainCertificateResult, bucket string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	ids, err := me.parseCertId(certId)
@@ -1514,7 +1515,7 @@ func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, ce
 		}
 	}()
 
-	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomainCertificate(ctx, option)
+	result, response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetDomainCertificate(ctx, option)
 	resp, _ := json.Marshal(response.Response.Body)
 	if response.StatusCode == 404 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
@@ -1532,7 +1533,7 @@ func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, ce
 	return
 }
 
-func (me *CosService) DeleteCosBucketDomainCertificate(ctx context.Context, certId string) (errRet error) {
+func (me *CosService) DeleteCosBucketDomainCertificate(ctx context.Context, certId, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	ids, err := me.parseCertId(certId)
@@ -1555,7 +1556,7 @@ func (me *CosService) DeleteCosBucketDomainCertificate(ctx context.Context, cert
 	}()
 
 	ratelimit.Check("DeleteDomainCertificate")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomainCertificate(ctx, option)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.DeleteDomainCertificate(ctx, option)
 
 	if err != nil {
 		errRet = err
@@ -1586,7 +1587,7 @@ func (me *CosService) parseCertId(configId string) (ret *CosBucketDomainCertItem
 	return
 }
 
-func (me *CosService) DescribeCosBucketRefererById(ctx context.Context, bucket string) (*cos.BucketGetRefererResult, error) {
+func (me *CosService) DescribeCosBucketRefererById(ctx context.Context, bucket, cdcId string) (*cos.BucketGetRefererResult, error) {
 	var errRet error
 	logId := tccommon.GetLogId(ctx)
 
@@ -1597,7 +1598,7 @@ func (me *CosService) DescribeCosBucketRefererById(ctx context.Context, bucket s
 	}()
 
 	resRaw, err := tccommon.RetryWithContext(ctx, tccommon.ReadRetryTimeout, func(ctx context.Context) (interface{}, error) {
-		res, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetReferer(ctx)
+		res, _, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetReferer(ctx)
 		return res, err
 	})
 
@@ -1610,7 +1611,7 @@ func (me *CosService) DescribeCosBucketRefererById(ctx context.Context, bucket s
 	return resRaw.(*cos.BucketGetRefererResult), nil
 }
 
-func (me *CosService) DescribeCosBucketVersionById(ctx context.Context, bucket string) (*cos.BucketGetVersionResult, error) {
+func (me *CosService) DescribeCosBucketVersionById(ctx context.Context, bucket, cdcId string) (*cos.BucketGetVersionResult, error) {
 	var errRet error
 	logId := tccommon.GetLogId(ctx)
 
@@ -1621,7 +1622,7 @@ func (me *CosService) DescribeCosBucketVersionById(ctx context.Context, bucket s
 	}()
 
 	resRaw, err := tccommon.RetryWithContext(ctx, tccommon.ReadRetryTimeout, func(ctx context.Context) (interface{}, error) {
-		res, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetVersioning(ctx)
+		res, _, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetVersioning(ctx)
 		return res, err
 	})
 
@@ -1634,7 +1635,7 @@ func (me *CosService) DescribeCosBucketVersionById(ctx context.Context, bucket s
 	return resRaw.(*cos.BucketGetVersionResult), nil
 }
 
-func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket string, opt *cos.BucketPutIntelligentTieringOptions) (errRet error) {
+func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket string, opt *cos.BucketPutIntelligentTieringOptions, cdcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	req, _ := json.Marshal(opt)
@@ -1647,7 +1648,7 @@ func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket st
 	}()
 
 	ratelimit.Check("BucketPutIntelligentTiering")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutIntelligentTiering(ctx, opt)
+	response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.PutIntelligentTiering(ctx, opt)
 	if err != nil {
 		errRet = fmt.Errorf("cos bucket put intelligent tiering error: %s, bucket: %s", err.Error(), bucket)
 		return
@@ -1666,11 +1667,11 @@ func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket st
 	return nil
 }
 
-func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket string) (result *cos.BucketGetIntelligentTieringResult, errRet error) {
+func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket, cdcId string) (result *cos.BucketGetIntelligentTieringResult, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	ratelimit.Check("BucketGetIntelligentTiering")
-	intelligentTieringResult, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetIntelligentTiering(ctx)
+	intelligentTieringResult, response, err := me.client.UseTencentCosClient(bucket, cdcId).Bucket.GetIntelligentTiering(ctx)
 	resp, _ := json.Marshal(response.Response.Body)
 	if response.StatusCode == 404 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)

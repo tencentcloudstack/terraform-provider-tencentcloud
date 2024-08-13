@@ -3,6 +3,7 @@ package cos
 import (
 	"context"
 	"log"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -34,6 +35,12 @@ func ResourceTencentCloudCosObjectCopyOperation() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Object key.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -42,18 +49,22 @@ func resourceTencentCloudCosObjectCopyOperationCreate(d *schema.ResourceData, me
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_object_copy_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
 	sourceURL := d.Get("source_url").(string)
-	_, _, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Object.Copy(ctx, key, sourceURL, nil)
+	cdcId := d.Get("cdc_id").(string)
+	_, _, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Object.Copy(ctx, key, sourceURL, nil)
 	if err != nil {
 		log.Printf("[CRITAL]%s Restore failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(bucket + tccommon.FILED_SP + key)
+	d.SetId(strings.Join([]string{bucket, key}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCosObjectCopyOperationRead(d, meta)
 }

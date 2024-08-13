@@ -20,14 +20,13 @@ import (
 
 func ResourceTencentCloudCosBatch() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudCosBatchRead,
 		Create: resourceTencentCloudCosBatchCreate,
+		Read:   resourceTencentCloudCosBatchRead,
 		Update: resourceTencentCloudCosBatchUpdate,
 		Delete: resourceTencentCloudCosBatchDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
 			"uin": {
 				Type:        schema.TypeString,
@@ -381,36 +380,308 @@ func ResourceTencentCloudCosBatch() *schema.Resource {
 	}
 }
 
+func resourceTencentCloudCosBatchCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cos_batch.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
+	uin := d.Get("uin").(string)
+	opt := &cos.BatchCreateJobOptions{
+		ClientRequestToken: uuid.New().String(),
+		Priority:           d.Get("priority").(int),
+		RoleArn:            d.Get("role_arn").(string),
+	}
+
+	if v, ok := d.GetOk("confirmation_required"); ok && v.(bool) {
+		opt.ConfirmationRequired = "true"
+	} else {
+		opt.ConfirmationRequired = "false"
+	}
+
+	if v, ok := d.GetOk("description"); ok {
+		opt.Description = v.(string)
+	}
+
+	if manifestMap, ok := helper.InterfacesHeadMap(d, "manifest"); ok {
+		batchJobManifest := &cos.BatchJobManifest{}
+		locationMap := manifestMap["location"].([]interface{})[0].(map[string]interface{})
+		specMap := manifestMap["spec"].([]interface{})[0].(map[string]interface{})
+		location := &cos.BatchJobManifestLocation{
+			ETag:      locationMap["etag"].(string),
+			ObjectArn: locationMap["object_arn"].(string),
+		}
+
+		if v, ok := locationMap["object_version_id"]; ok {
+			location.ObjectVersionId = v.(string)
+		}
+
+		batchJobManifest.Location = location
+		spec := &cos.BatchJobManifestSpec{Format: specMap["format"].(string)}
+		batchJobManifest.Spec = spec
+		if v, ok := specMap["fields"]; ok {
+			fields := make([]string, 0)
+			for _, item := range v.([]interface{}) {
+				fields = append(fields, item.(string))
+			}
+
+			spec.Fields = fields
+		}
+
+		opt.Manifest = batchJobManifest
+	}
+
+	if operationMap, ok := helper.InterfacesHeadMap(d, "operation"); ok {
+		operation := &cos.BatchJobOperation{}
+		if v, ok := operationMap["cos_put_object_copy"]; ok {
+			cosPutObjectCopy := v.([]interface{})[0].(map[string]interface{})
+			putObjectCopy := &cos.BatchJobOperationCopy{}
+			if v, ok := cosPutObjectCopy["access_control_directive"]; ok {
+				putObjectCopy.AccessControlDirective = v.(string)
+			}
+
+			if v, ok := cosPutObjectCopy["access_control_grants"]; ok && len(v.([]interface{})) > 0 {
+				accessControlGrantMap := v.([]interface{})[0].(map[string]interface{})
+				grantee := &cos.BatchGrantee{}
+				grant := &cos.BatchCOSGrant{}
+				if v, ok := accessControlGrantMap["display_name"]; ok {
+					grantee.DisplayName = v.(string)
+				}
+
+				if v, ok := accessControlGrantMap["identifier"]; ok {
+					grantee.Identifier = v.(string)
+				}
+
+				if v, ok := accessControlGrantMap["type_identifier"]; ok {
+					grantee.TypeIdentifier = v.(string)
+				}
+
+				grant.Grantee = grantee
+				if v, ok := accessControlGrantMap["permission"]; ok {
+					grant.Permission = v.(string)
+				}
+
+				putObjectCopy.AccessControlGrants = &cos.BatchAccessControlGrants{COSGrants: grant}
+			}
+
+			if v, ok := cosPutObjectCopy["canned_access_control_list"]; ok {
+				putObjectCopy.CannedAccessControlList = v.(string)
+			}
+
+			if v, ok := cosPutObjectCopy["prefix_replace"]; ok {
+				putObjectCopy.PrefixReplace = v.(bool)
+			}
+
+			if v, ok := cosPutObjectCopy["resources_prefix"]; ok {
+				putObjectCopy.ResourcesPrefix = v.(string)
+			}
+
+			if v, ok := cosPutObjectCopy["target_key_prefix"]; ok {
+				putObjectCopy.TargetKeyPrefix = v.(string)
+			}
+
+			if v, ok := cosPutObjectCopy["metadata_directive"]; ok {
+				putObjectCopy.MetadataDirective = v.(string)
+			}
+
+			if v, ok := cosPutObjectCopy["modified_since_constraint"]; ok {
+				putObjectCopy.ModifiedSinceConstraint = int64(v.(int))
+			}
+
+			if v, ok := cosPutObjectCopy["unmodified_since_constraint"]; ok {
+				putObjectCopy.UnModifiedSinceConstraint = int64(v.(int))
+			}
+
+			if v, ok := cosPutObjectCopy["new_object_metadata"]; ok && len(v.([]interface{})) > 0 {
+				newObjectMetadataMap := v.([]interface{})[0].(map[string]interface{})
+				newObjectMetadata := &cos.BatchNewObjectMetadata{}
+				if v, ok := newObjectMetadataMap["cache_control"]; ok {
+					newObjectMetadata.CacheControl = v.(string)
+				}
+
+				if v, ok := newObjectMetadataMap["content_disposition"]; ok {
+					newObjectMetadata.ContentDisposition = v.(string)
+				}
+
+				if v, ok := newObjectMetadataMap["content_encoding"]; ok {
+					newObjectMetadata.ContentEncoding = v.(string)
+				}
+
+				if v, ok := newObjectMetadataMap["content_type"]; ok {
+					newObjectMetadata.ContentType = v.(string)
+				}
+
+				if v, ok := newObjectMetadataMap["http_expires_date"]; ok {
+					newObjectMetadata.HttpExpiresDate = v.(string)
+				}
+
+				if v, ok := newObjectMetadataMap["sse_algorithm"]; ok {
+					newObjectMetadata.SSEAlgorithm = v.(string)
+				}
+
+				if v, ok := newObjectMetadataMap["user_metadata"]; ok {
+					newObjectMetadata.UserMetadata = make([]cos.BatchMetadata, 0)
+					for _, userMetadataItem := range v.([]interface{}) {
+						userMetadataItemMap := userMetadataItem.(map[string]interface{})
+						batchMetadata := cos.BatchMetadata{
+							Key:   userMetadataItemMap["key"].(string),
+							Value: userMetadataItemMap["value"].(string),
+						}
+
+						newObjectMetadata.UserMetadata = append(newObjectMetadata.UserMetadata, batchMetadata)
+					}
+				}
+
+				putObjectCopy.NewObjectMetadata = newObjectMetadata
+			}
+
+			if v, ok := cosPutObjectCopy["tagging_directive"]; ok {
+				putObjectCopy.TaggingDirective = v.(string)
+			}
+
+			if v, ok := cosPutObjectCopy["new_object_tagging"]; ok {
+				newObjectTaggings := v.([]interface{})
+				cosTags := make([]cos.BatchCOSTag, 0)
+				for _, item := range newObjectTaggings {
+					tag := item.(map[string]interface{})
+					cosTags = append(cosTags, cos.BatchCOSTag{
+						Key:   tag["key"].(string),
+						Value: tag["value"].(string),
+					})
+				}
+
+				putObjectCopy.NewObjectTagging = &cos.BatchNewObjectTagging{COSTag: cosTags}
+			}
+
+			if v, ok := cosPutObjectCopy["storage_class"]; ok {
+				putObjectCopy.StorageClass = v.(string)
+			}
+
+			if v, ok := cosPutObjectCopy["target_resource"]; ok {
+				putObjectCopy.TargetResource = v.(string)
+			}
+
+			operation.PutObjectCopy = putObjectCopy
+		}
+
+		if v, ok := operationMap["cos_initiate_restore_object"]; ok && len(v.([]interface{})) > 0 {
+			restoreObject := &cos.BatchInitiateRestoreObject{}
+			cosInitiateRestoreObject := v.([]interface{})[0].(map[string]interface{})
+			if v, ok := cosInitiateRestoreObject["expiration_in_days"]; ok {
+				restoreObject.ExpirationInDays = v.(int)
+			}
+
+			if v, ok := cosInitiateRestoreObject["job_tier"]; ok {
+				restoreObject.JobTier = v.(string)
+			}
+
+			operation.RestoreObject = restoreObject
+		}
+
+		opt.Operation = operation
+	}
+
+	if reportMap, ok := helper.InterfacesHeadMap(d, "report"); ok {
+		batchJobReport := &cos.BatchJobReport{}
+		if v, ok := reportMap["bucket"]; ok {
+			batchJobReport.Bucket = v.(string)
+		}
+
+		if v, ok := reportMap["enabled"]; ok {
+			batchJobReport.Enabled = v.(string)
+		}
+
+		if v, ok := reportMap["format"]; ok {
+			batchJobReport.Format = v.(string)
+		}
+
+		if v, ok := reportMap["prefix"]; ok {
+			batchJobReport.Prefix = v.(string)
+		}
+
+		if v, ok := reportMap["report_scope"]; ok {
+			batchJobReport.ReportScope = v.(string)
+		}
+
+		opt.Report = batchJobReport
+	}
+
+	appid := d.Get("appid").(int)
+	headers := &cos.BatchRequestHeaders{XCosAppid: appid}
+	var batchCreateJobResult *cos.BatchCreateJobResult
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		req, _ := json.Marshal(opt)
+		result, response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosBatchClient(uin).Batch.CreateJob(ctx, opt, headers)
+		responseBody, _ := json.Marshal(response.Body)
+		log.Printf("[DEBUG]%s api[CreateJob], request body [%s], response body [%s]\n", logId, req, responseBody)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		batchCreateJobResult = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create job failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if v, ok := d.GetOk("status"); ok {
+		opt := &cos.BatchUpdateStatusOptions{
+			JobId:              batchCreateJobResult.JobId,
+			RequestedJobStatus: v.(string),
+		}
+		req, _ := json.Marshal(opt)
+		_, response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosBatchClient(uin).Batch.UpdateJobStatus(ctx, opt, headers)
+		responseBody, _ := json.Marshal(response.Body)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[UpdateJobStatus] error, request body [%s], response body [%s], err: [%s]\n", logId, req, responseBody, err.Error())
+			return err
+		}
+	}
+
+	d.SetId(strings.Join([]string{uin, strconv.Itoa(appid), batchCreateJobResult.JobId}, tccommon.FILED_SP))
+	return resourceTencentCloudCosBatchRead(d, meta)
+}
+
 func resourceTencentCloudCosBatchRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_batch.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	uin := idSplit[0]
 	appid, _ := strconv.Atoi(idSplit[1])
 	jobId := idSplit[2]
-	headers := &cos.BatchRequestHeaders{
-		XCosAppid: appid,
-	}
-
+	headers := &cos.BatchRequestHeaders{XCosAppid: appid}
 	result, response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosBatchClient(uin).Batch.DescribeJob(ctx, jobId, headers)
 	responseBody, _ := json.Marshal(response.Body)
 	if err != nil {
 		log.Printf("[DEBUG]%s api[DescribeJob] success, request body [%s], response body [%s], err: [%s]\n", logId, jobId, responseBody, err.Error())
 		return err
 	}
+
 	if result == nil || result.Job == nil {
 		return fmt.Errorf("DescribeJob response is nil!")
 	}
+
 	confirmationRequired, err := strconv.ParseBool(result.Job.ConfirmationRequired)
 	if err != nil {
 		return err
 	}
+
 	_ = d.Set("uin", uin)
 	_ = d.Set("appid", appid)
 	_ = d.Set("job_id", jobId)
@@ -446,7 +717,6 @@ func resourceTencentCloudCosBatchRead(d *schema.ResourceData, meta interface{}) 
 			accessControlGrantsResult["type_identifier"] = accessControlGrants.COSGrants.Grantee.TypeIdentifier
 			accessControlGrantsResult["permission"] = accessControlGrants.COSGrants.Permission
 			putObjectCopyResult["access_control_grants"] = []interface{}{accessControlGrantsResult}
-
 		}
 
 		putObjectCopyResult["canned_access_control_list"] = putObjectCopy.CannedAccessControlList
@@ -474,6 +744,7 @@ func resourceTencentCloudCosBatchRead(d *schema.ResourceData, meta interface{}) 
 					"value": item.Value,
 				})
 			}
+
 			newObjectMetadataResult["user_metadata"] = userMetadataResult
 			putObjectCopyResult["new_object_metadata"] = []interface{}{newObjectMetadataResult}
 		}
@@ -487,14 +758,15 @@ func resourceTencentCloudCosBatchRead(d *schema.ResourceData, meta interface{}) 
 					"value": item.Value,
 				})
 			}
+
 			putObjectCopyResult["new_object_tagging"] = cosTagResult
 		}
 
 		putObjectCopyResult["storage_class"] = putObjectCopy.StorageClass
 		putObjectCopyResult["target_resource"] = putObjectCopy.TargetResource
-
 		operationResult["cos_put_object_copy"] = []interface{}{putObjectCopyResult}
 	}
+
 	if result.Job.Operation.RestoreObject != nil {
 		restoreObjectResult := make(map[string]interface{})
 		restoreObject := result.Job.Operation.RestoreObject
@@ -519,254 +791,24 @@ func resourceTencentCloudCosBatchRead(d *schema.ResourceData, meta interface{}) 
 	return nil
 }
 
-func resourceTencentCloudCosBatchCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cos_batch.create")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	uin := d.Get("uin").(string)
-	opt := &cos.BatchCreateJobOptions{
-		ClientRequestToken: uuid.New().String(),
-		Priority:           d.Get("priority").(int),
-		RoleArn:            d.Get("role_arn").(string),
-	}
-	if v, ok := d.GetOk("confirmation_required"); ok && v.(bool) {
-		opt.ConfirmationRequired = "true"
-	} else {
-		opt.ConfirmationRequired = "false"
-	}
-
-	if v, ok := d.GetOk("description"); ok {
-		opt.Description = v.(string)
-	}
-
-	if manifestMap, ok := helper.InterfacesHeadMap(d, "manifest"); ok {
-		batchJobManifest := &cos.BatchJobManifest{}
-		locationMap := manifestMap["location"].([]interface{})[0].(map[string]interface{})
-		specMap := manifestMap["spec"].([]interface{})[0].(map[string]interface{})
-		location := &cos.BatchJobManifestLocation{
-			ETag:      locationMap["etag"].(string),
-			ObjectArn: locationMap["object_arn"].(string),
-		}
-		if v, ok := locationMap["object_version_id"]; ok {
-			location.ObjectVersionId = v.(string)
-		}
-		batchJobManifest.Location = location
-		spec := &cos.BatchJobManifestSpec{
-			Format: specMap["format"].(string),
-		}
-		batchJobManifest.Spec = spec
-		if v, ok := specMap["fields"]; ok {
-			fields := make([]string, 0)
-			for _, item := range v.([]interface{}) {
-				fields = append(fields, item.(string))
-			}
-			spec.Fields = fields
-		}
-		opt.Manifest = batchJobManifest
-	}
-
-	if operationMap, ok := helper.InterfacesHeadMap(d, "operation"); ok {
-		operation := &cos.BatchJobOperation{}
-		if v, ok := operationMap["cos_put_object_copy"]; ok {
-			cosPutObjectCopy := v.([]interface{})[0].(map[string]interface{})
-			putObjectCopy := &cos.BatchJobOperationCopy{}
-
-			if v, ok := cosPutObjectCopy["access_control_directive"]; ok {
-				putObjectCopy.AccessControlDirective = v.(string)
-			}
-			if v, ok := cosPutObjectCopy["access_control_grants"]; ok && len(v.([]interface{})) > 0 {
-				accessControlGrantMap := v.([]interface{})[0].(map[string]interface{})
-				grantee := &cos.BatchGrantee{}
-				grant := &cos.BatchCOSGrant{}
-				if v, ok := accessControlGrantMap["display_name"]; ok {
-					grantee.DisplayName = v.(string)
-				}
-				if v, ok := accessControlGrantMap["identifier"]; ok {
-					grantee.Identifier = v.(string)
-				}
-				if v, ok := accessControlGrantMap["type_identifier"]; ok {
-					grantee.TypeIdentifier = v.(string)
-				}
-				grant.Grantee = grantee
-				if v, ok := accessControlGrantMap["permission"]; ok {
-					grant.Permission = v.(string)
-				}
-				putObjectCopy.AccessControlGrants = &cos.BatchAccessControlGrants{
-					COSGrants: grant,
-				}
-			}
-			if v, ok := cosPutObjectCopy["canned_access_control_list"]; ok {
-				putObjectCopy.CannedAccessControlList = v.(string)
-			}
-			if v, ok := cosPutObjectCopy["prefix_replace"]; ok {
-				putObjectCopy.PrefixReplace = v.(bool)
-			}
-			if v, ok := cosPutObjectCopy["resources_prefix"]; ok {
-				putObjectCopy.ResourcesPrefix = v.(string)
-			}
-			if v, ok := cosPutObjectCopy["target_key_prefix"]; ok {
-				putObjectCopy.TargetKeyPrefix = v.(string)
-			}
-			if v, ok := cosPutObjectCopy["metadata_directive"]; ok {
-				putObjectCopy.MetadataDirective = v.(string)
-			}
-			if v, ok := cosPutObjectCopy["modified_since_constraint"]; ok {
-				putObjectCopy.ModifiedSinceConstraint = int64(v.(int))
-			}
-			if v, ok := cosPutObjectCopy["unmodified_since_constraint"]; ok {
-				putObjectCopy.UnModifiedSinceConstraint = int64(v.(int))
-			}
-
-			if v, ok := cosPutObjectCopy["new_object_metadata"]; ok && len(v.([]interface{})) > 0 {
-				newObjectMetadataMap := v.([]interface{})[0].(map[string]interface{})
-				newObjectMetadata := &cos.BatchNewObjectMetadata{}
-				if v, ok := newObjectMetadataMap["cache_control"]; ok {
-					newObjectMetadata.CacheControl = v.(string)
-				}
-				if v, ok := newObjectMetadataMap["content_disposition"]; ok {
-					newObjectMetadata.ContentDisposition = v.(string)
-				}
-				if v, ok := newObjectMetadataMap["content_encoding"]; ok {
-					newObjectMetadata.ContentEncoding = v.(string)
-				}
-				if v, ok := newObjectMetadataMap["content_type"]; ok {
-					newObjectMetadata.ContentType = v.(string)
-				}
-				if v, ok := newObjectMetadataMap["http_expires_date"]; ok {
-					newObjectMetadata.HttpExpiresDate = v.(string)
-				}
-				if v, ok := newObjectMetadataMap["sse_algorithm"]; ok {
-					newObjectMetadata.SSEAlgorithm = v.(string)
-				}
-				if v, ok := newObjectMetadataMap["user_metadata"]; ok {
-					newObjectMetadata.UserMetadata = make([]cos.BatchMetadata, 0)
-					for _, userMetadataItem := range v.([]interface{}) {
-						userMetadataItemMap := userMetadataItem.(map[string]interface{})
-						batchMetadata := cos.BatchMetadata{
-							Key:   userMetadataItemMap["key"].(string),
-							Value: userMetadataItemMap["value"].(string),
-						}
-						newObjectMetadata.UserMetadata = append(newObjectMetadata.UserMetadata, batchMetadata)
-					}
-				}
-				putObjectCopy.NewObjectMetadata = newObjectMetadata
-			}
-
-			if v, ok := cosPutObjectCopy["tagging_directive"]; ok {
-				putObjectCopy.TaggingDirective = v.(string)
-			}
-			if v, ok := cosPutObjectCopy["new_object_tagging"]; ok {
-				newObjectTaggings := v.([]interface{})
-				cosTags := make([]cos.BatchCOSTag, 0)
-				for _, item := range newObjectTaggings {
-					tag := item.(map[string]interface{})
-					cosTags = append(cosTags, cos.BatchCOSTag{
-						Key:   tag["key"].(string),
-						Value: tag["value"].(string),
-					})
-				}
-				putObjectCopy.NewObjectTagging = &cos.BatchNewObjectTagging{COSTag: cosTags}
-			}
-			if v, ok := cosPutObjectCopy["storage_class"]; ok {
-				putObjectCopy.StorageClass = v.(string)
-			}
-			if v, ok := cosPutObjectCopy["target_resource"]; ok {
-				putObjectCopy.TargetResource = v.(string)
-			}
-
-			operation.PutObjectCopy = putObjectCopy
-
-		}
-
-		if v, ok := operationMap["cos_initiate_restore_object"]; ok && len(v.([]interface{})) > 0 {
-			restoreObject := &cos.BatchInitiateRestoreObject{}
-			cosInitiateRestoreObject := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := cosInitiateRestoreObject["expiration_in_days"]; ok {
-				restoreObject.ExpirationInDays = v.(int)
-			}
-			if v, ok := cosInitiateRestoreObject["job_tier"]; ok {
-				restoreObject.JobTier = v.(string)
-			}
-			operation.RestoreObject = restoreObject
-		}
-		opt.Operation = operation
-	}
-
-	if reportMap, ok := helper.InterfacesHeadMap(d, "report"); ok {
-		batchJobReport := &cos.BatchJobReport{}
-		if v, ok := reportMap["bucket"]; ok {
-			batchJobReport.Bucket = v.(string)
-		}
-		if v, ok := reportMap["enabled"]; ok {
-			batchJobReport.Enabled = v.(string)
-		}
-		if v, ok := reportMap["format"]; ok {
-			batchJobReport.Format = v.(string)
-		}
-		if v, ok := reportMap["prefix"]; ok {
-			batchJobReport.Prefix = v.(string)
-		}
-		if v, ok := reportMap["report_scope"]; ok {
-			batchJobReport.ReportScope = v.(string)
-		}
-		opt.Report = batchJobReport
-	}
-	appid := d.Get("appid").(int)
-	headers := &cos.BatchRequestHeaders{
-		XCosAppid: appid,
-	}
-	var batchCreateJobResult *cos.BatchCreateJobResult
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		req, _ := json.Marshal(opt)
-		result, response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosBatchClient(uin).Batch.CreateJob(ctx, opt, headers)
-		responseBody, _ := json.Marshal(response.Body)
-		log.Printf("[DEBUG]%s api[CreateJob], request body [%s], response body [%s]\n", logId, req, responseBody)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		batchCreateJobResult = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create job failed, reason:%+v", logId, err)
-		return err
-	}
-	if v, ok := d.GetOk("status"); ok {
-		opt := &cos.BatchUpdateStatusOptions{
-			JobId:              batchCreateJobResult.JobId,
-			RequestedJobStatus: v.(string),
-		}
-		req, _ := json.Marshal(opt)
-		_, response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosBatchClient(uin).Batch.UpdateJobStatus(ctx, opt, headers)
-		responseBody, _ := json.Marshal(response.Body)
-		if err != nil {
-			log.Printf("[DEBUG]%s api[UpdateJobStatus] error, request body [%s], response body [%s], err: [%s]\n", logId, req, responseBody, err.Error())
-			return err
-		}
-	}
-	d.SetId(uin + tccommon.FILED_SP + strconv.Itoa(appid) + tccommon.FILED_SP + batchCreateJobResult.JobId)
-	return resourceTencentCloudCosBatchRead(d, meta)
-}
-
 func resourceTencentCloudCosBatchUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_batch.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	uin := idSplit[0]
 	appid, _ := strconv.Atoi(idSplit[1])
 	jobId := idSplit[2]
-	headers := &cos.BatchRequestHeaders{
-		XCosAppid: appid,
-	}
+	headers := &cos.BatchRequestHeaders{XCosAppid: appid}
 	if d.HasChange("priority") {
 		opt := &cos.BatchUpdatePriorityOptions{
 			JobId:    jobId,
@@ -780,6 +822,7 @@ func resourceTencentCloudCosBatchUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 	}
+
 	if d.HasChange("status") {
 		opt := &cos.BatchUpdateStatusOptions{
 			JobId:              jobId,
@@ -793,18 +836,24 @@ func resourceTencentCloudCosBatchUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 	}
+
 	return resourceTencentCloudCosBatchRead(d, meta)
 }
 
 func resourceTencentCloudCosBatchDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_batch.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	uin := idSplit[0]
 	appid, _ := strconv.Atoi(idSplit[1])
 	jobId := idSplit[2]
@@ -817,5 +866,6 @@ func resourceTencentCloudCosBatchDelete(d *schema.ResourceData, meta interface{}
 		log.Printf("[DEBUG]%s api[DeleteJob] success, response body [%s], err: [%s]\n", logId, responseBody, err.Error())
 		return err
 	}
+
 	return nil
 }

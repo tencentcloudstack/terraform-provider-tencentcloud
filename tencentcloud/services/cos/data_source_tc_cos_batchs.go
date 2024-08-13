@@ -33,6 +33,7 @@ func DataSourceTencentCloudCosBatchs() *schema.Resource {
 				Optional:    true,
 				Description: "The task status information you need to query. If you do not specify a task status, COS returns the status of all tasks that have been executed, including those that are in progress. If you specify a task status, COS returns the task in the specified state. Optional task states include: Active, Cancelled, Cancelling, Complete, Completing, Failed, Failing, New, Paused, Pausing, Preparing, Ready, Suspended.",
 			},
+			// computed
 			"jobs": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -113,19 +114,20 @@ func DataSourceTencentCloudCosBatchs() *schema.Resource {
 func dataSourceTencentCloudCosBatchsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_cos_batchs.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	uin := d.Get("uin").(string)
 	appid := d.Get("appid").(int)
 	jobs := make([]map[string]interface{}, 0)
-
 	opt := &cos.BatchListJobsOptions{}
 	if v, ok := d.GetOk("job_statuses"); ok {
 		opt.JobStatuses = v.(string)
 	}
-	headers := &cos.BatchRequestHeaders{
-		XCosAppid: appid,
-	}
+
+	headers := &cos.BatchRequestHeaders{XCosAppid: appid}
 	ids := make([]string, 0)
 	for {
 		req, _ := json.Marshal(opt)
@@ -135,6 +137,7 @@ func dataSourceTencentCloudCosBatchsRead(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
+
 		for _, item := range result.Jobs.Members {
 			jobItem := make(map[string]interface{})
 			jobItem["creation_time"] = item.CreationTime
@@ -149,10 +152,12 @@ func dataSourceTencentCloudCosBatchsRead(d *schema.ResourceData, meta interface{
 				"number_of_tasks_succeeded": item.ProgressSummary.NumberOfTasksSucceeded,
 				"total_number_of_tasks":     item.ProgressSummary.TotalNumberOfTasks,
 			}
+
 			jobItem["progress_summary"] = []interface{}{progressSummary}
 			ids = append(ids, item.JobId)
 			jobs = append(jobs, jobItem)
 		}
+
 		if result.NextToken != "" {
 			opt.NextToken = result.NextToken
 		} else {

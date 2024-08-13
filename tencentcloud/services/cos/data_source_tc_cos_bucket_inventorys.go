@@ -23,6 +23,12 @@ func DataSourceTencentCloudCosBucketInventorys() *schema.Resource {
 				Required:    true,
 				Description: "Bucket.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC cluster ID.",
+			},
+			// computed
 			"inventorys": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -78,8 +84,8 @@ func DataSourceTencentCloudCosBucketInventorys() *schema.Resource {
 							},
 						},
 						"optional_fields": {
-							Type:     schema.TypeList,
-							Optional: true,
+							Type:        schema.TypeList,
+							Optional:    true,
 							Description: "Analysis items to include in the inventory result	.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -166,14 +172,18 @@ func DataSourceTencentCloudCosBucketInventorys() *schema.Resource {
 func dataSourceTencentCloudCosBucketInventorysRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_cos_bucket_inventorys.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	bucket := d.Get("bucket").(string)
+	cdcId := d.Get("cdc_id").(string)
 	inventoryConfigurations := make([]map[string]interface{}, 0)
 	token := ""
 	ids := make([]string, 0)
 	for {
-		result, response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.ListInventoryConfigurations(ctx, token)
+		result, response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.ListInventoryConfigurations(ctx, token)
 		responseBody, _ := json.Marshal(response.Body)
 		log.Printf("[DEBUG]%s api[ListInventoryConfigurations] success, response body [%s]\n", logId, responseBody)
 		if err != nil {
@@ -194,13 +204,17 @@ func dataSourceTencentCloudCosBucketInventorysRead(d *schema.ResourceData, meta 
 					if item.Filter.Period.StartTime != 0 {
 						periodMap["start_time"] = strconv.FormatInt(item.Filter.Period.StartTime, 10)
 					}
+
 					if item.Filter.Period.EndTime != 0 {
 						periodMap["end_time"] = strconv.FormatInt(item.Filter.Period.EndTime, 10)
 					}
+
 					filterMap["period"] = []interface{}{periodMap}
 				}
+
 				itemMap["filter"] = []interface{}{filterMap}
 			}
+
 			if item.OptionalFields != nil {
 				optionalFieldsMap := make(map[string]interface{})
 				fields := make([]string, 0)
@@ -208,6 +222,7 @@ func dataSourceTencentCloudCosBucketInventorysRead(d *schema.ResourceData, meta 
 					fields = append(fields, item.OptionalFields.BucketInventoryFields...)
 					optionalFieldsMap["fields"] = fields
 				}
+
 				itemMap["optional_fields"] = []interface{}{optionalFieldsMap}
 			}
 
@@ -225,16 +240,17 @@ func dataSourceTencentCloudCosBucketInventorysRead(d *schema.ResourceData, meta 
 				destinationMap["format"] = item.Destination.Format
 				if item.Destination.Encryption != nil && item.Destination.Encryption.SSECOS != "" {
 					encryptionMap := make(map[string]interface{})
-
 					encryptionMap["sse_cos"] = item.Destination.Encryption.SSECOS
 					destinationMap["encryption"] = []interface{}{encryptionMap}
-
 				}
+
 				itemMap["destination"] = []interface{}{destinationMap}
 			}
+
 			ids = append(ids, item.ID)
 			inventoryConfigurations = append(inventoryConfigurations, itemMap)
 		}
+
 		if result.NextContinuationToken != "" {
 			token = result.NextContinuationToken
 		} else {

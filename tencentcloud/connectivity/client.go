@@ -252,15 +252,21 @@ func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.Cli
 }
 
 // UseCosClient returns cos client for service
-func (me *TencentCloudClient) UseCosClient() *s3.S3 {
-	if me.cosConn != nil {
-		return me.cosConn
-	}
+func (me *TencentCloudClient) UseCosClient(cdcId string) *s3.S3 {
+	//if me.cosConn != nil {
+	//	return me.cosConn
+	//}
 
 	resolver := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
 		if service == endpoints.S3ServiceID {
+			var endpointUrl string
+			if cdcId == "" {
+				endpointUrl = fmt.Sprintf("https://cos.%s.myqcloud.com", region)
+			} else {
+				endpointUrl = fmt.Sprintf("https://%s.cos-cdc.%s.myqcloud.com", cdcId, region)
+			}
 			return endpoints.ResolvedEndpoint{
-				URL:           fmt.Sprintf("https://cos.%s.myqcloud.com", region),
+				URL:           endpointUrl,
 				SigningRegion: region,
 			}, nil
 		}

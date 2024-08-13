@@ -28,11 +28,17 @@ func DataSourceTencentCloudCosBucketObject() *schema.Resource {
 				Required:    true,
 				Description: "The full path to the object inside the bucket.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC cluster ID.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
+			// computed
 			"cache_control": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -75,18 +81,20 @@ func DataSourceTencentCloudCosBucketObject() *schema.Resource {
 func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_cos_bucket_object.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
+	cdcId := d.Get("cdc_id").(string)
 	outputMap := make(map[string]string)
 	outputMap["bucket"] = bucket
 	outputMap["key"] = key
-	cosService := CosService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	info, err := cosService.HeadObject(ctx, bucket, key)
+
+	info, err := cosService.HeadObject(ctx, bucket, key, cdcId)
 	if err != nil {
 		return err
 	}
@@ -94,19 +102,26 @@ func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta int
 	ids := []string{bucket, key}
 	d.SetId(helper.DataResourceIdsHash(ids))
 	_ = d.Set("cache_control", info.CacheControl)
+
 	outputMap["cache_control"] = getStringValue(info.CacheControl)
 	_ = d.Set("content_disposition", info.ContentDisposition)
+
 	outputMap["content_disposition"] = getStringValue(info.ContentDisposition)
 	_ = d.Set("content_encoding", info.ContentEncoding)
+
 	outputMap["content_encoding"] = getStringValue(info.ContentEncoding)
 	_ = d.Set("content_type", info.ContentType)
+
 	outputMap["content_type"] = getStringValue(info.ContentType)
 	etag := getStringValue(info.ETag)
 	_ = d.Set("etag", strings.Trim(etag, `"`))
+
 	outputMap["etag"] = strings.Trim(etag, `"`)
 	_ = d.Set("last_modified", info.LastModified.Format(time.RFC1123))
+
 	outputMap["last_modified"] = info.LastModified.Format(time.RFC1123)
 	_ = d.Set("storage_class", s3.StorageClassStandard)
+
 	outputMap["storage_class"] = s3.StorageClassStandard
 	if info.StorageClass != nil {
 		_ = d.Set("storage_class", info.StorageClass)
@@ -127,5 +142,6 @@ func getStringValue(p *string) string {
 	if p == nil {
 		return ""
 	}
+
 	return *p
 }

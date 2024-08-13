@@ -100,6 +100,12 @@ func ResourceTencentCloudCosBucketObject() *schema.Resource {
 				Computed:    true,
 				Description: "The ETag generated for the object (an MD5 sum of the object content).",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -107,21 +113,28 @@ func ResourceTencentCloudCosBucketObject() *schema.Resource {
 func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_object.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		body    io.ReadSeeker
+	)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
-	var body io.ReadSeeker
+	cdcId := d.Get("cdc_id").(string)
 	if v, ok := d.GetOk("source"); ok {
 		source := v.(string)
 		path, err := homedir.Expand(source)
 		if err != nil {
 			return fmt.Errorf("cos object source (%s) homedir expand error: %s", source, err.Error())
 		}
+
 		file, err := os.Open(path)
 		if err != nil {
 			return fmt.Errorf("cos object source (%s) open error: %s", source, err.Error())
 		}
+
 		body = file
 		defer func() {
 			err := file.Close()
@@ -145,41 +158,42 @@ func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOk("acl"); ok {
 		request.ACL = aws.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("cache_control"); ok {
 		request.CacheControl = aws.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("content_disposition"); ok {
 		request.ContentDisposition = aws.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("content_encoding"); ok {
 		request.ContentEncoding = aws.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("content_type"); ok {
 		request.ContentType = aws.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("storage_class"); ok {
 		request.StorageClass = aws.String(v.(string))
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutObject(request)
+	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutObject(request)
 	if err != nil {
 		return fmt.Errorf("putting object (%s) in cos bucket (%s) error: %s", key, bucket, err.Error())
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "put object", request.String(), response.String())
 
 	if v, ok := d.GetOk("tags"); ok {
-		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service := CosService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
 		tags := make(map[string]string)
-
 		for key, val := range v.(map[string]interface{}) {
 			tags[key] = val.(string)
 		}
 
-		if err := service.SetObjectTags(ctx, bucket, key, tags); err != nil {
+		if err := service.SetObjectTags(ctx, bucket, key, tags, cdcId); err != nil {
 			log.Printf("[WARN] set object tags error, skip processing")
 		}
 	}
@@ -191,22 +205,24 @@ func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta inte
 func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_object.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
+	cdcId := d.Get("cdc_id").(string)
 
-	cosService := CosService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	response, err := cosService.HeadObject(ctx, bucket, key)
+	response, err := cosService.HeadObject(ctx, bucket, key, cdcId)
 	if err != nil {
 		if awsError, ok := err.(awserr.RequestFailure); ok && awsError.StatusCode() == 404 {
 			log.Printf("[WARN]%s object (%s) in bucket (%s) not found, error code (404)", logId, key, bucket)
 			d.SetId("")
 			return nil
 		}
+
 		return err
 	}
 
@@ -220,10 +236,11 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 		_ = d.Set("storage_class", response.StorageClass)
 	}
 
-	_, aclResponse, aclErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Object.GetACL(ctx, key)
+	_, aclResponse, aclErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Object.GetACL(ctx, key)
 	if aclErr != nil {
 		return fmt.Errorf("cos [GetACL] error: %s, bucket: %s, object: %s", aclErr.Error(), bucket, key)
 	}
+
 	if aclResponse.StatusCode == 404 {
 		log.Printf("[WARN] [GetACL] returns %d, %s", 404, err)
 		return nil
@@ -232,15 +249,17 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 	_ = d.Set("acl", aclResponse.Header.Get("x-cos-acl"))
 
 	var tags map[string]string
-	tags, err = cosService.GetObjectTags(ctx, bucket, key)
+	tags, err = cosService.GetObjectTags(ctx, bucket, key, cdcId)
 	if err != nil {
 		if awsError, ok := err.(awserr.RequestFailure); ok && awsError.StatusCode() == 404 {
 			log.Printf("[WARN]%s tags in object (%s) of bucket (%s) not found, error code (404)", logId, key, bucket)
 			d.SetId("")
 			return nil
 		}
+
 		return err
 	}
+
 	_ = d.Set("tags", tags)
 
 	return nil
@@ -249,8 +268,11 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_object.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	fields := []string{
 		"cache_control",
@@ -262,6 +284,7 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 		"storage_class",
 		"etag",
 	}
+
 	for _, key := range fields {
 		if d.HasChange(key) {
 			return resourceTencentCloudCosBucketObjectCreate(d, meta)
@@ -270,13 +293,11 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
-	cosService := CosService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	cdcId := d.Get("cdc_id").(string)
 
 	if d.HasChange("acl") {
 		acl := d.Get("acl").(string)
-		err := cosService.PutObjectAcl(ctx, bucket, key, acl)
+		err := cosService.PutObjectAcl(ctx, bucket, key, acl, cdcId)
 		if err != nil {
 			return err
 		}
@@ -288,7 +309,8 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 		for key, val := range v {
 			tags[key] = val.(string)
 		}
-		if err := cosService.SetObjectTags(ctx, bucket, key, tags); err != nil {
+
+		if err := cosService.SetObjectTags(ctx, bucket, key, tags, cdcId); err != nil {
 			return err
 		}
 	}
@@ -299,16 +321,17 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 func resourceTencentCloudCosBucketObjectDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_object.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
+	cdcId := d.Get("cdc_id").(string)
 
-	cosService := CosService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	err := cosService.DeleteObject(ctx, bucket, key)
+	err := cosService.DeleteObject(ctx, bucket, key, cdcId)
 	if err != nil {
 		return err
 	}

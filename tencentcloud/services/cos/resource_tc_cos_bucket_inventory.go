@@ -83,9 +83,9 @@ func ResourceTencentCloudCosBucketInventory() *schema.Resource {
 				},
 			},
 			"optional_fields": {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
 				Description: "Analysis items to include in the inventory result	.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -160,6 +160,12 @@ func ResourceTencentCloudCosBucketInventory() *schema.Resource {
 					},
 				},
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -168,12 +174,16 @@ func resourceTencentCloudCosBucketInventoryCreate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_inventory.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	bucket := d.Get("bucket").(string)
 	name := d.Get("name").(string)
 	isEnabled := d.Get("is_enabled").(string)
 	includedObjectVersions := d.Get("included_object_versions").(string)
+	cdcId := d.Get("cdc_id").(string)
 
 	var filter cos.BucketInventoryFilter
 	if v, ok := d.GetOk("filter"); ok && len(v.([]interface{})) != 0 {
@@ -186,21 +196,27 @@ func resourceTencentCloudCosBucketInventoryCreate(d *schema.ResourceData, meta i
 				if err != nil {
 					return err
 				}
+
 				period.StartTime = vStr
 			}
+
 			if v, ok := periodMap["end_time"]; ok && v.(string) != "" {
 				vStr, err := strconv.ParseInt(v.(string), 10, 64)
 				if err != nil {
 					return err
 				}
+
 				period.EndTime = vStr
 			}
+
 			filter.Period = &period
 		}
+
 		if v, ok := filterMap["prefix"]; ok {
 			filter.Prefix = v.(string)
 		}
 	}
+
 	var optionalFields cos.BucketInventoryOptionalFields
 	if v, ok := d.GetOk("optional_fields"); ok && len(v.([]interface{})) != 0 {
 		optionalFieldsMap := v.([]interface{})[0].(map[string]interface{})
@@ -226,22 +242,25 @@ func resourceTencentCloudCosBucketInventoryCreate(d *schema.ResourceData, meta i
 		if v, ok := destinationMap["bucket"]; ok {
 			destination.Bucket = v.(string)
 		}
+
 		if v, ok := destinationMap["account_id"]; ok {
 			destination.AccountId = v.(string)
 		}
+
 		if v, ok := destinationMap["prefix"]; ok {
 			destination.Prefix = v.(string)
 		}
+
 		if v, ok := destinationMap["format"]; ok {
 			destination.Format = v.(string)
 		}
+
 		if v, ok := destinationMap["encryption"]; ok && len(v.([]interface{})) > 0 {
 			encryptionMap := v.([]interface{})[0].(map[string]interface{})
 			if v, ok := encryptionMap["sse_cos"]; ok {
 				destination.Encryption = &cos.BucketInventoryEncryption{
 					SSECOS: v.(string),
 				}
-
 			}
 		}
 	}
@@ -258,19 +277,22 @@ func resourceTencentCloudCosBucketInventoryCreate(d *schema.ResourceData, meta i
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		req, _ := json.Marshal(opt)
-		resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.PutInventory(ctx, name, opt)
+		resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.PutInventory(ctx, name, opt)
 		responseBody, _ := json.Marshal(resp.Body)
 		if e != nil {
 			log.Printf("[DEBUG]%s api[PutInventory] success, request body [%s], response body [%s], err: [%s]\n", logId, req, responseBody, e.Error())
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create cos bucketInventory failed, reason:%+v", logId, err)
 		return err
 	}
-	d.SetId(bucket + tccommon.FILED_SP + name)
+
+	d.SetId(strings.Join([]string{bucket, name}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCosBucketInventoryRead(d, meta)
 }
@@ -279,20 +301,25 @@ func resourceTencentCloudCosBucketInventoryRead(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_inventory.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	bucket := idSplit[0]
 	name := idSplit[1]
-	result, _, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.GetInventory(ctx, name)
+	cdcId := d.Get("cdc_id").(string)
+	result, _, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.GetInventory(ctx, name)
 	if err != nil {
 		log.Printf("[CRITAL]%s get cos bucketInventory failed, reason:%+v", logId, err)
 		return err
 	}
+
 	_ = d.Set("bucket", bucket)
 	_ = d.Set("name", name)
 	_ = d.Set("is_enabled", result.IsEnabled)
@@ -305,12 +332,15 @@ func resourceTencentCloudCosBucketInventoryRead(d *schema.ResourceData, meta int
 			if result.Filter.Period.StartTime != 0 {
 				periodMap["start_time"] = strconv.FormatInt(result.Filter.Period.StartTime, 10)
 			}
+
 			if result.Filter.Period.EndTime != 0 {
 				periodMap["end_time"] = strconv.FormatInt(result.Filter.Period.EndTime, 10)
 			}
+
 			filterMap["period"] = []interface{}{periodMap}
 		}
 	}
+
 	_ = d.Set("filter", []interface{}{filterMap})
 	optionalFieldsMap := make(map[string]interface{})
 	if result.OptionalFields != nil {
@@ -320,12 +350,14 @@ func resourceTencentCloudCosBucketInventoryRead(d *schema.ResourceData, meta int
 			optionalFieldsMap["fields"] = fields
 		}
 	}
+
 	_ = d.Set("optional_fields", []interface{}{optionalFieldsMap})
 
 	scheduleMap := make(map[string]interface{})
 	if result.Schedule != nil {
 		scheduleMap["frequency"] = result.Schedule.Frequency
 	}
+
 	_ = d.Set("schedule", []interface{}{scheduleMap})
 
 	destinationMap := make(map[string]interface{})
@@ -336,12 +368,11 @@ func resourceTencentCloudCosBucketInventoryRead(d *schema.ResourceData, meta int
 		destinationMap["format"] = result.Destination.Format
 		if result.Destination.Encryption != nil && result.Destination.Encryption.SSECOS != "" {
 			encryptionMap := make(map[string]interface{})
-
 			encryptionMap["sse_cos"] = result.Destination.Encryption.SSECOS
 			destinationMap["encryption"] = []interface{}{encryptionMap}
-
 		}
 	}
+
 	_ = d.Set("destination", []interface{}{destinationMap})
 
 	return nil
@@ -350,20 +381,26 @@ func resourceTencentCloudCosBucketInventoryRead(d *schema.ResourceData, meta int
 func resourceTencentCloudCosBucketInventoryUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_inventory.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	bucket := idSplit[0]
 	name := idSplit[1]
 	if !d.HasChange("is_enabled") && !d.HasChange("included_object_versions") && !d.HasChange("filter") && !d.HasChange("optional_fields") && !d.HasChange("schedule") && !d.HasChange("destination") {
 		return resourceTencentCloudCosBucketInventoryRead(d, meta)
 	}
+
 	isEnabled := d.Get("is_enabled").(string)
 	includedObjectVersions := d.Get("included_object_versions").(string)
-
+	cdcId := d.Get("cdc_id").(string)
 	var filter cos.BucketInventoryFilter
 	if v, ok := d.GetOk("filter"); ok && len(v.([]interface{})) != 0 {
 		var period cos.BucketInventoryFilterPeriod
@@ -375,21 +412,27 @@ func resourceTencentCloudCosBucketInventoryUpdate(d *schema.ResourceData, meta i
 				if err != nil {
 					return err
 				}
+
 				period.StartTime = vStr
 			}
+
 			if v, ok := periodMap["end_time"]; ok && v.(string) != "" {
 				vStr, err := strconv.ParseInt(v.(string), 10, 64)
 				if err != nil {
 					return err
 				}
+
 				period.EndTime = vStr
 			}
+
 			filter.Period = &period
 		}
+
 		if v, ok := filterMap["prefix"]; ok {
 			filter.Prefix = v.(string)
 		}
 	}
+
 	var optionalFields cos.BucketInventoryOptionalFields
 	if v, ok := d.GetOk("optional_fields"); ok && len(v.([]interface{})) != 0 {
 		optionalFieldsMap := v.([]interface{})[0].(map[string]interface{})
@@ -415,22 +458,25 @@ func resourceTencentCloudCosBucketInventoryUpdate(d *schema.ResourceData, meta i
 		if v, ok := destinationMap["bucket"]; ok {
 			destination.Bucket = v.(string)
 		}
+
 		if v, ok := destinationMap["account_id"]; ok {
 			destination.AccountId = v.(string)
 		}
+
 		if v, ok := destinationMap["prefix"]; ok {
 			destination.Prefix = v.(string)
 		}
+
 		if v, ok := destinationMap["format"]; ok {
 			destination.Format = v.(string)
 		}
+
 		if v, ok := destinationMap["encryption"]; ok && len(v.([]interface{})) > 0 {
 			encryptionMap := v.([]interface{})[0].(map[string]interface{})
 			if v, ok := encryptionMap["sse_cos"]; ok {
 				destination.Encryption = &cos.BucketInventoryEncryption{
 					SSECOS: v.(string),
 				}
-
 			}
 		}
 	}
@@ -447,14 +493,16 @@ func resourceTencentCloudCosBucketInventoryUpdate(d *schema.ResourceData, meta i
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		req, _ := json.Marshal(opt)
-		resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.PutInventory(ctx, name, opt)
+		resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.PutInventory(ctx, name, opt)
 		responseBody, _ := json.Marshal(resp.Body)
 		if e != nil {
 			log.Printf("[DEBUG]%s api[PutInventory] success, request body [%s], response body [%s], err: [%s]\n", logId, req, responseBody, e.Error())
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create cos bucketInventory failed, reason:%+v", logId, err)
 		return err
@@ -467,25 +515,30 @@ func resourceTencentCloudCosBucketInventoryDelete(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_inventory.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	bucket := idSplit[0]
 	name := idSplit[1]
-
+	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.DeleteInventory(ctx, name)
+		resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.DeleteInventory(ctx, name)
 		if e != nil {
 			log.Printf("[CRITAL][retry]%s api[%s] fail, resp body [%s], reason[%s]\n",
 				logId, "DeleteInventory ", resp.Body, e.Error())
 			return tccommon.RetryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete cos bucketInventory failed, reason:%+v", logId, err)
 		return err

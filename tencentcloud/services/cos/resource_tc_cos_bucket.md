@@ -11,7 +11,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "private_sbucket" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "private-bucket-${local.app_id}"
   acl    = "private"
 }
@@ -26,10 +26,10 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "multi_zone_bucket" {
-  bucket   = "multi-zone-bucket-${local.app_id}"
-  acl      = "private"
-  multi_az = true
+resource "tencentcloud_cos_bucket" "example" {
+  bucket            = "multi-zone-bucket-${local.app_id}"
+  acl               = "private"
+  multi_az          = true
   versioning_enable = true
   force_clean       = true
 }
@@ -44,7 +44,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_acl" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucketwith-acl-${local.app_id}"
   # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
   acl_body = <<EOF
@@ -121,7 +121,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucket-with-static-website-${local.app_id}"
 
   website {
@@ -131,7 +131,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
 }
 
 output "endpoint_test" {
-    value = tencentcloud_cos_bucket.bucket_with_static_website.website.0.endpoint
+  value = tencentcloud_cos_bucket.example.website.0.endpoint
 }
 ```
 
@@ -144,12 +144,12 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_cors" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucket-with-cors-${local.app_id}"
   acl    = "public-read-write"
 
   cors_rules {
-    allowed_origins = ["http://*.abc.com"]
+    allowed_origins = ["https://*.abc.com"]
     allowed_methods = ["PUT", "POST"]
     allowed_headers = ["*"]
     max_age_seconds = 300
@@ -167,7 +167,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucket-with-lifecycle-${local.app_id}"
   acl    = "public-read-write"
 
@@ -187,32 +187,33 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
 ```
 
 Using replication
+
 ```hcl
 data "tencentcloud_user_info" "info" {}
 
 locals {
-  app_id = data.tencentcloud_user_info.info.app_id
-  uin = data.tencentcloud_user_info.info.uin
+  app_id    = data.tencentcloud_user_info.info.app_id
+  uin       = data.tencentcloud_user_info.info.uin
   owner_uin = data.tencentcloud_user_info.info.owner_uin
-  region = "ap-guangzhou"
+  region    = "ap-guangzhou"
 }
 
-resource "tencentcloud_cos_bucket" "bucket_replicate" {
-  bucket = "bucket-replicate-${local.app_id}"
-  acl    = "private"
+resource "tencentcloud_cos_bucket" "example1" {
+  bucket            = "bucket-replicate-${local.app_id}"
+  acl               = "private"
   versioning_enable = true
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_replication" {
-  bucket = "bucket-with-replication-${local.app_id}"
-  acl    = "private"
+resource "tencentcloud_cos_bucket" "example2" {
+  bucket            = "bucket-with-replication-${local.app_id}"
+  acl               = "private"
   versioning_enable = true
-  replica_role = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
+  replica_role      = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
-    id = "test-rep1"
-    status = "Enabled"
-    prefix = "dist"
-    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    id                 = "test-rep1"
+    status             = "Enabled"
+    prefix             = "dist"
+    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.example1.bucket}"
   }
 }
 ```
@@ -222,5 +223,5 @@ Import
 COS bucket can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_cos_bucket.bucket bucket-name
+$ terraform import tencentcloud_cos_bucket.example bucket-name-1309118522
 ```

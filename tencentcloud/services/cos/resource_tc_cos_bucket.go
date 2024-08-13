@@ -528,6 +528,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 			"cdc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "CDC cluster ID.",
 			},
 			//computed
@@ -543,10 +544,12 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket.create")()
 
-	var err error
-
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err        error
+	)
 
 	bucket := d.Get("bucket").(string)
 	acl := d.Get("acl").(string)
@@ -563,23 +566,22 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	useCosService, createOptions := getBucketPutOptions(d)
-
 	if useCosService {
+		// tencent
 		err = cosService.TencentCosPutBucket(ctx, bucket, createOptions, cdcId)
 	} else {
+		// s3
 		err = cosService.PutBucket(ctx, bucket, acl, cdcId)
 	}
+
 	if err != nil {
 		return err
 	}
 
 	d.SetId(bucket)
-
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		if err := cosService.SetBucketTags(ctx, bucket, tags); err != nil {
+		if err := cosService.SetBucketTags(ctx, bucket, tags, cdcId); err != nil {
 			return err
 		}
 	}
@@ -591,13 +593,15 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		bucket     = d.Id()
+	)
 
-	bucket := d.Id()
-	cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	code, header, err := cosService.TencentcloudHeadBucket(ctx, bucket)
+	cdcId := d.Get("cdc_id").(string)
+	code, header, err := cosService.TencentcloudHeadBucket(ctx, bucket, cdcId)
 	if err != nil {
 		if code == 404 {
 			log.Printf("[WARN]%s bucket (%s) not found, error code (404)", logId, bucket)
@@ -619,12 +623,8 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("bucket", d.Id())
 	}
 
-	if err != nil {
-		return err
-	}
-
 	// acl
-	aclResult, err := cosService.GetBucketACL(ctx, bucket)
+	aclResult, err := cosService.GetBucketACL(ctx, bucket, cdcId)
 
 	if err != nil {
 		return err
@@ -642,15 +642,16 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("acl", acl)
 
 	// read the cors
-	corsRules, err := cosService.GetBucketCors(ctx, bucket)
+	corsRules, err := cosService.GetBucketCors(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
+
 	if err = d.Set("cors_rules", corsRules); err != nil {
 		return fmt.Errorf("setting cors_rules error: %v", err)
 	}
 
-	originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket)
+	originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
@@ -659,65 +660,72 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting origin_pull_rules error: %v", err)
 	}
 
-	originDomainRules, err := cosService.GetBucketOriginDomain(ctx, bucket)
+	originDomainRules, err := cosService.GetBucketOriginDomain(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
+
 	if err = d.Set("origin_domain_rules", originDomainRules); err != nil {
 		return fmt.Errorf("setting origin_domain_rules error: %v", err)
 	}
 
 	// read the lifecycle
-	lifecycleRules, err := cosService.GetBucketLifecycle(ctx, bucket)
+	lifecycleRules, err := cosService.GetBucketLifecycle(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
+
 	if err = d.Set("lifecycle_rules", lifecycleRules); err != nil {
 		return fmt.Errorf("setting lifecycle_rules error: %v", err)
 	}
 
 	// read the website
-	website, err := cosService.GetBucketWebsite(ctx, bucket)
+	website, err := cosService.GetBucketWebsite(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
+
 	if len(website) > 0 {
 		// {bucket}.cos-website.{region}.myqcloud.com
 		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
 		website[0]["endpoint"] = endPointUrl
 	}
+
 	if err = d.Set("website", website); err != nil {
 		return fmt.Errorf("setting website error: %v", err)
 	}
 
 	// read the encryption algorithm
-	encryption, err := cosService.GetBucketEncryption(ctx, bucket)
+	encryption, err := cosService.GetBucketEncryption(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
+
 	if err = d.Set("encryption_algorithm", encryption); err != nil {
 		return fmt.Errorf("setting encryption error: %v", err)
 	}
 
 	// read the versioning
-	versioning, err := cosService.GetBucketVersioning(ctx, bucket)
+	versioning, err := cosService.GetBucketVersioning(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
+
 	if err = d.Set("versioning_enable", versioning); err != nil {
 		return fmt.Errorf("setting versioning_enable error: %v", err)
 	}
 
 	// read the acceleration
-	acceleration, err := cosService.GetBucketAccleration(ctx, bucket)
+	acceleration, err := cosService.GetBucketAccleration(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
+
 	if err = d.Set("acceleration_enable", acceleration); err != nil {
 		return fmt.Errorf("setting acceleration_enable error: %v", err)
 	}
 
-	replicaResult, err := cosService.GetBucketReplication(ctx, bucket)
+	replicaResult, err := cosService.GetBucketReplication(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
@@ -730,7 +738,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	//read the log
-	logEnable, logTargetBucket, logPrefix, err := cosService.GetBucketLogStatus(ctx, bucket)
+	logEnable, logTargetBucket, logPrefix, err := cosService.GetBucketLogStatus(ctx, bucket, cdcId)
 	if err != nil {
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
 			if e.GetCode() != "UnSupportedLoggingRegion" {
@@ -744,19 +752,21 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	// read the tags
-	tags, err := cosService.GetBucketTags(ctx, bucket)
+	tags, err := cosService.GetBucketTags(ctx, bucket, cdcId)
 	if err != nil {
 		return fmt.Errorf("get tags failed: %v", err)
 	}
+
 	if len(tags) > 0 {
 		_ = d.Set("tags", tags)
 	}
 
 	//read intelligent tiering
-	result, err := cosService.BucketGetIntelligentTiering(ctx, bucket)
+	result, err := cosService.BucketGetIntelligentTiering(ctx, bucket, cdcId)
 	if err != nil {
 		return fmt.Errorf("get intelligent tiering failed: %v", err)
 	}
+
 	if result != nil {
 		if result.Status == "Enabled" {
 			_ = d.Set("enable_intelligent_tiering", true)
@@ -764,34 +774,39 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 			_ = d.Set("enable_intelligent_tiering", false)
 		}
 	}
+
 	if result != nil && result.Transition != nil {
 		_ = d.Set("intelligent_tiering_days", result.Transition.Days)
 		_ = d.Set("intelligent_tiering_request_frequent", result.Transition.RequestFrequent)
 	}
+
 	return nil
 }
 
 func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	d.Partial(true)
-
+	cdcId := d.Get("cdc_id").(string)
 	if d.HasChange("enable_intelligent_tiering") || d.HasChange("intelligent_tiering_days") || d.HasChange("intelligent_tiering_request_frequent") {
 		old, new := d.GetChange("enable_intelligent_tiering")
 		if old.(bool) && !new.(bool) {
 			return fmt.Errorf("enable_intelligent_tiering, intelligent_tiering_days and intelligent_tiering_request_frequent not support change!")
 		}
+
 		var transition cos.BucketIntelligentTieringTransition
 		if v, ok := d.GetOk("intelligent_tiering_days"); ok {
 			transition.Days = v.(int)
 		} else {
 			transition.Days = 30
 		}
+
 		if v, ok := d.GetOk("intelligent_tiering_request_frequent"); ok {
 			transition.RequestFrequent = v.(int)
 		} else {
@@ -803,7 +818,8 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 				Status:     "Enabled",
 				Transition: &transition,
 			}
-			err := cosService.BucketPutIntelligentTiering(ctx, d.Id(), opt)
+
+			err := cosService.BucketPutIntelligentTiering(ctx, d.Id(), opt, cdcId)
 			if err != nil {
 				return err
 			}
@@ -812,7 +828,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("acl") {
 		bucket := d.Get("bucket").(string)
-		err := waitAclEnable(ctx, meta, bucket)
+		err := waitAclEnable(ctx, meta, bucket, cdcId)
 		if err != nil {
 			return err
 		}
@@ -826,7 +842,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("acl_body") {
 		body := d.Get("acl_body")
 		bucket := d.Get("bucket").(string)
-		err := waitAclEnable(ctx, meta, bucket)
+		err := waitAclEnable(ctx, meta, bucket, cdcId)
 		if err != nil {
 			return err
 		}
@@ -842,7 +858,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("origin_pull_rules") {
@@ -851,6 +866,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
+
 		_ = d.Set("origin_pull_rules", rules)
 	}
 
@@ -859,6 +875,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err := resourceTencentCloudCosBucketOriginDomainUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
+
 		_ = d.Set("origin_domain_rules", rules)
 	}
 
@@ -867,7 +884,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("website") {
@@ -875,7 +891,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("encryption_algorithm") {
@@ -883,7 +898,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("versioning_enable") {
@@ -891,7 +905,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("acceleration_enable") {
@@ -899,12 +912,10 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("replica_role") || d.HasChange("replica_rules") {
 		err := resourceTencentCloudCosBucketReplicaUpdate(ctx, cosService, d)
-
 		if err != nil {
 			return err
 		}
@@ -912,12 +923,10 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("tags") {
 		bucket := d.Id()
-
 		cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		if err := cosService.SetBucketTags(ctx, bucket, helper.GetTags(d, "tags")); err != nil {
+		if err := cosService.SetBucketTags(ctx, bucket, helper.GetTags(d, "tags"), cdcId); err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("log_enable") || d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
@@ -925,7 +934,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
 	}
 
 	d.Partial(false)
@@ -937,11 +945,11 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	return resourceTencentCloudCosBucketRead(d, meta)
 }
 
-func waitAclEnable(ctx context.Context, meta interface{}, bucket string) error {
+func waitAclEnable(ctx context.Context, meta interface{}, bucket, cdcId string) error {
 	logId := tccommon.GetLogId(ctx)
 	cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		aclResult, e := cosService.GetBucketACL(ctx, bucket)
+		aclResult, e := cosService.GetBucketACL(ctx, bucket, cdcId)
 		if e != nil {
 			if strings.Contains(e.Error(), "NoSuchBucket") {
 				log.Printf("[CRITAL][retry]%s api[%s] because of bucket[%s] still on creating, need try again.\n", logId, "GetBucketACL", bucket)
@@ -962,16 +970,18 @@ func waitAclEnable(ctx context.Context, meta interface{}, bucket string) error {
 func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	bucket := d.Id()
 	forced := d.Get("force_clean").(bool)
 	versioned := d.Get("versioning_enable").(bool)
-	cosService := CosService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	err := cosService.DeleteBucket(ctx, bucket, forced, versioned)
+	cdcId := d.Get("cdc_id").(string)
+
+	err := cosService.DeleteBucket(ctx, bucket, forced, versioned, cdcId)
 	if err != nil {
 		return err
 	}
@@ -988,11 +998,12 @@ func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, meta int
 
 	bucket := d.Get("bucket").(string)
 	encryption := d.Get("encryption_algorithm").(string)
+	cdcId := d.Get("cdc_id").(string)
 	if encryption == "" {
 		request := s3.DeleteBucketEncryptionInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().DeleteBucketEncryption(&request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).DeleteBucketEncryption(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket encryption", request.String(), err.Error())
@@ -1018,7 +1029,7 @@ func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, meta int
 	rules = append(rules, rule)
 	request.ServerSideEncryptionConfiguration.Rules = rules
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketEncryption(&request)
+	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketEncryption(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "put bucket encryption", request.String(), err.Error())
@@ -1035,6 +1046,7 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, meta int
 
 	bucket := d.Get("bucket").(string)
 	versioning := d.Get("versioning_enable").(bool)
+	cdcId := d.Get("cdc_id").(string)
 	status := "Suspended"
 	if versioning {
 		status = "Enabled"
@@ -1045,7 +1057,7 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, meta int
 			Status: aws.String(status),
 		},
 	}
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketVersioning(&request)
+	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketVersioning(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "put bucket encryption", request.String(), err.Error())
@@ -1062,6 +1074,7 @@ func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, meta i
 
 	bucket := d.Get("bucket").(string)
 	enabled := d.Get("acceleration_enable").(bool)
+	cdcId := d.Get("cdc_id").(string)
 	status := "Suspended"
 	if enabled {
 		status = "Enabled"
@@ -1070,7 +1083,7 @@ func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, meta i
 	opt := &cos.BucketPutAccelerateOptions{
 		Status: status,
 	}
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.PutAccelerate(ctx, opt)
+	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.PutAccelerate(ctx, opt)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, status [%s], reason[%s]\n",
 			logId, "put bucket acceleration", opt.Status, err.Error())
@@ -1088,25 +1101,26 @@ func resourceTencentCloudCosBucketReplicaUpdate(ctx context.Context, service Cos
 	bucket := d.Get("bucket").(string)
 	oldRole, newRole := d.GetChange("replica_role")
 	oldRules, newRules := d.GetChange("replica_rules")
+	cdcId := d.Get("cdc_id").(string)
 	oldRuleLength := len(oldRules.([]interface{}))
 	newRuleLength := len(newRules.([]interface{}))
 
 	// check if remove
 	if oldRole.(string) != "" && newRole.(string) == "" || oldRuleLength > 0 && newRuleLength == 0 {
-		result, err := service.GetBucketReplication(ctx, bucket)
+		result, err := service.GetBucketReplication(ctx, bucket, cdcId)
 		if err != nil {
 			return err
 		}
 
 		if result != nil {
-			err := service.DeleteBucketReplication(ctx, d.Get("bucket").(string))
+			err := service.DeleteBucketReplication(ctx, d.Get("bucket").(string), cdcId)
 			if err != nil {
 				return err
 			}
 		}
 	} else if newRole.(string) != "" || newRuleLength > 0 {
 		role, rules, _ := getBucketReplications(d)
-		err := service.PutBucketReplication(ctx, d.Get("bucket").(string), role, rules)
+		err := service.PutBucketReplication(ctx, d.Get("bucket").(string), role, rules, cdcId)
 		if err != nil {
 			return err
 		}
@@ -1120,11 +1134,12 @@ func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, meta interface{
 
 	bucket := d.Get("bucket").(string)
 	acl := d.Get("acl").(string)
+	cdcId := d.Get("cdc_id").(string)
 	request := s3.PutBucketAclInput{
 		Bucket: aws.String(bucket),
 		ACL:    aws.String(acl),
 	}
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketAcl(&request)
+	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketAcl(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "put bucket acl", request.String(), err.Error())
@@ -1141,12 +1156,13 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, meta interface
 
 	bucket := d.Get("bucket").(string)
 	cors := d.Get("cors_rules").([]interface{})
+	cdcId := d.Get("cdc_id").(string)
 
 	if len(cors) == 0 {
 		request := s3.DeleteBucketCorsInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().DeleteBucketCors(&request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).DeleteBucketCors(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket cors", request.String(), err.Error())
@@ -1189,7 +1205,7 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, meta interface
 				CORSRules: rules,
 			},
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketCors(&request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketCors(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "put bucket cors", request.String(), err.Error())
@@ -1206,11 +1222,12 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 
 	bucket := d.Get("bucket").(string)
 	lifecycleRules := d.Get("lifecycle_rules").([]interface{})
+	cdcId := d.Get("cdc_id").(string)
 	if len(lifecycleRules) == 0 {
 		request := s3.DeleteBucketLifecycleInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().DeleteBucketLifecycle(&request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).DeleteBucketLifecycle(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket lifecycle", request.String(), err.Error())
@@ -1332,7 +1349,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 				Rules: rules,
 			},
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketLifecycleConfiguration(&request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketLifecycleConfiguration(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "put bucket lifecycle", request.String(), err.Error())
@@ -1350,12 +1367,13 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 
 	bucket := d.Get("bucket").(string)
 	website := d.Get("website").([]interface{})
+	cdcId := d.Get("cdc_id").(string)
 
 	if len(website) == 0 {
 		request := s3.DeleteBucketWebsiteInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().DeleteBucketWebsite(&request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).DeleteBucketWebsite(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket website", request.String(), err.Error())
@@ -1388,7 +1406,7 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 				},
 			},
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketWebsite(&request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketWebsite(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "put bucket website", request.String(), err.Error())
@@ -1407,6 +1425,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, meta inte
 	bucket := d.Id()
 
 	logSwitch := d.Get("log_enable").(bool)
+	cdcId := d.Get("cdc_id").(string)
 	if logSwitch {
 		if d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
 			targetBucket := d.Get("log_target_bucket").(string)
@@ -1428,7 +1447,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, meta inte
 				},
 			}
 
-			resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketLogging(request)
+			resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketLogging(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, "cos enable log error", request.String(), err.Error())
@@ -1450,7 +1469,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, meta inte
 			BucketLoggingStatus: &s3.BucketLoggingStatus{},
 		}
 
-		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient().PutBucketLogging(request)
+		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClient(cdcId).PutBucketLogging(request)
 		if err != nil {
 			return fmt.Errorf("cos disable log error: %s, bucket: %s", err.Error(), bucket)
 		}
@@ -1469,6 +1488,7 @@ func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, servi
 	body, bodyOk := d.GetOk("acl_body")
 	header, headerOk := d.GetOk("acl")
 	bucket := d.Get("bucket").(string)
+	cdcId := d.Get("cdc_id").(string)
 	// If ACLXML update to empty, this will pass default header to delete verbose acl info
 	if bodyOk {
 		aclBody = body.(string)
@@ -1485,7 +1505,7 @@ func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, servi
 
 	log.Printf("[DEBUG]%s transACLBodyOrderly success, before:[\n%s\n], after:[\n%s\n]\n", logId, aclBody, aclBodyOrderly)
 
-	if err = service.TencentCosPutBucketACLBody(ctx, bucket, aclBodyOrderly, aclHeader); err != nil {
+	if err = service.TencentCosPutBucketACLBody(ctx, bucket, aclBodyOrderly, aclHeader, cdcId); err != nil {
 		return err
 	}
 
@@ -1498,8 +1518,9 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 	var rules []cos.BucketOriginRule
 	v, ok := d.GetOk("origin_pull_rules")
 	bucket := d.Get("bucket").(string)
+	cdcId := d.Get("cdc_id").(string)
 	if !ok {
-		if err := service.DeleteBucketPullOrigin(ctx, bucket); err != nil {
+		if err := service.DeleteBucketPullOrigin(ctx, bucket, cdcId); err != nil {
 			return err
 		}
 		return nil
@@ -1589,7 +1610,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 		rules = append(rules, *item)
 	}
 
-	if err := service.PutBucketPullOrigin(ctx, bucket, rules); err != nil {
+	if err := service.PutBucketPullOrigin(ctx, bucket, rules, cdcId); err != nil {
 		return err
 	}
 
@@ -1599,33 +1620,39 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 func resourceTencentCloudCosBucketOriginDomainUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
 	v, ok := d.GetOk("origin_domain_rules")
 	bucket := d.Get("bucket").(string)
+	cdcId := d.Get("cdc_id").(string)
 	if !ok {
-		if err := service.DeleteBucketOriginDomain(ctx, bucket); err != nil {
+		if err := service.DeleteBucketOriginDomain(ctx, bucket, cdcId); err != nil {
 			return err
 		}
+
 		return nil
 	}
+
 	rules := v.([]interface{})
 	domainRules := make([]cos.BucketDomainRule, 0)
-
 	for _, rule := range rules {
 		dMap := rule.(map[string]interface{})
 		item := cos.BucketDomainRule{}
 		if name, ok := dMap["domain"]; ok {
 			item.Name = name.(string)
 		}
+
 		if status, ok := dMap["status"]; ok {
 			item.Status = status.(string)
 		}
+
 		if domainType, ok := dMap["type"]; ok {
 			item.Type = domainType.(string)
 		}
+
 		domainRules = append(domainRules, item)
 	}
 
-	if err := service.PutBucketOriginDomain(ctx, bucket, domainRules); err != nil {
+	if err := service.PutBucketOriginDomain(ctx, bucket, domainRules, cdcId); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -1650,15 +1677,19 @@ func getBucketPutOptions(d *schema.ResourceData) (useCosService bool, options *c
 		if v, ok := headers["grant_read"]; ok {
 			opt.XCosGrantRead = v.(string)
 		}
+
 		if v, ok := headers["grant_write"]; ok {
 			opt.XCosGrantWrite = v.(string)
 		}
+
 		if v, ok := headers["grant_read_acp"]; ok {
 			opt.XCosGrantReadACP = v.(string)
 		}
+
 		if v, ok := headers["grant_write_acp"]; ok {
 			opt.XCosGrantWriteACP = v.(string)
 		}
+
 		if v, ok := headers["grant_full_control"]; ok {
 			opt.XCosGrantFullControl = v.(string)
 		}

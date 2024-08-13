@@ -34,6 +34,12 @@ func ResourceTencentCloudCosObjectAbortMultipartUploadOperation() *schema.Resour
 				Type:        schema.TypeString,
 				Description: "Multipart uploaded id.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -42,12 +48,16 @@ func resourceTencentCloudCosObjectAbortMultipartUploadOperationCreate(d *schema.
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_object_abort_multipart_upload_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
 	uploadId := d.Get("upload_id").(string)
-	_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Object.AbortMultipartUpload(ctx, key, uploadId)
+	cdcId := d.Get("cdc_id").(string)
+	_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Object.AbortMultipartUpload(ctx, key, uploadId)
 	if err != nil {
 		log.Printf("[CRITAL]%s AbortMultipartUpload failed, reason:%+v", logId, err)
 		return err

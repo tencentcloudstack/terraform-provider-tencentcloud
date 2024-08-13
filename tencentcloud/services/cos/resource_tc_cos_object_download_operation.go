@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -36,6 +37,12 @@ func ResourceTencentCloudCosObjectDownloadOperation() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Download path.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -44,16 +51,21 @@ func resourceTencentCloudCosObjectDownloadOperationCreate(d *schema.ResourceData
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_object_download_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
 	downloadPath := d.Get("download_path").(string)
-	resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Object.Get(ctx, key, nil)
+	cdcId := d.Get("cdc_id").(string)
+	resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Object.Get(ctx, key, nil)
 	if err != nil {
 		log.Printf("[CRITAL]%s object download failed, reason:%+v", logId, err)
 		return err
 	}
+
 	defer resp.Body.Close()
 
 	fd, err := os.OpenFile(downloadPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0660)
@@ -67,7 +79,7 @@ func resourceTencentCloudCosObjectDownloadOperationCreate(d *schema.ResourceData
 		return err
 	}
 
-	d.SetId(bucket + tccommon.FILED_SP + key)
+	d.SetId(strings.Join([]string{bucket, key}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCosObjectDownloadOperationRead(d, meta)
 }

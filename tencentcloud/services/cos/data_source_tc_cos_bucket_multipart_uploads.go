@@ -38,6 +38,12 @@ func DataSourceTencentCloudCosBucketMultipartUploads() *schema.Resource {
 				Optional:    true,
 				Description: "The returned Object key must be prefixed with Prefix. Note that when using the prefix query, the returned key still contains Prefix.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC cluster ID.",
+			},
+			// computed
 			"uploads": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -117,27 +123,35 @@ func DataSourceTencentCloudCosBucketMultipartUploads() *schema.Resource {
 func dataSourceTencentCloudCosBucketMultipartUploadsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_cos_bucket_multipart_uploads.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	bucket := d.Get("bucket").(string)
+	cdcId := d.Get("cdc_id").(string)
 	multipartUploads := make([]map[string]interface{}, 0)
 	opt := &cos.ListMultipartUploadsOptions{}
 	if v, ok := d.GetOk("delimiter"); ok {
 		opt.Delimiter = v.(string)
 	}
+
 	if v, ok := d.GetOk("encoding_type"); ok {
 		opt.EncodingType = v.(string)
 	}
+
 	if v, ok := d.GetOk("prefix"); ok {
 		opt.Prefix = v.(string)
 	}
+
 	ids := make([]string, 0)
 	for {
-		result, response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.ListMultipartUploads(ctx, opt)
+		result, response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.ListMultipartUploads(ctx, opt)
 		responseBody, _ := json.Marshal(response.Body)
 		if err != nil {
 			return err
 		}
+
 		log.Printf("[DEBUG]%s api[ListMultipartUploads] success, response body [%s]\n", logId, responseBody)
 		for _, item := range result.Uploads {
 			itemMap := make(map[string]interface{})
@@ -150,18 +164,23 @@ func dataSourceTencentCloudCosBucketMultipartUploadsRead(d *schema.ResourceData,
 					"display_name": item.Owner.DisplayName,
 					"id":           item.Owner.ID,
 				}
+
 				itemMap["owner"] = []map[string]interface{}{owner}
 			}
+
 			if item.Initiator != nil {
 				initiator := map[string]interface{}{
 					"display_name": item.Initiator.DisplayName,
 					"id":           item.Initiator.ID,
 				}
+
 				itemMap["initiator"] = []map[string]interface{}{initiator}
 			}
+
 			ids = append(ids, item.UploadID)
 			multipartUploads = append(multipartUploads, itemMap)
 		}
+
 		if result.IsTruncated {
 			opt.KeyMarker = result.KeyMarker
 			opt.UploadIDMarker = result.UploadIDMarker

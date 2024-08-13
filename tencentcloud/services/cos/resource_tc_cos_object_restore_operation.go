@@ -3,6 +3,7 @@ package cos
 import (
 	"context"
 	"log"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -48,6 +49,12 @@ func ResourceTencentCloudCosObjectRestoreOperation() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Specifies the valid duration of the restored temporary copy in days.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -56,25 +63,30 @@ func resourceTencentCloudCosObjectRestoreOperationCreate(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_object_restore_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
 	tier := d.Get("tier").(string)
 	days := d.Get("days").(int)
+	cdcId := d.Get("cdc_id").(string)
 	opt := &cos.ObjectRestoreOptions{
 		Days: days,
 		Tier: &cos.CASJobParameters{
 			Tier: tier,
 		},
 	}
-	_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Object.PostRestore(ctx, key, opt)
+
+	_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Object.PostRestore(ctx, key, opt)
 	if err != nil {
 		log.Printf("[CRITAL]%s Restore failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(bucket + tccommon.FILED_SP + key)
+	d.SetId(strings.Join([]string{bucket, key}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCosObjectRestoreOperationRead(d, meta)
 }

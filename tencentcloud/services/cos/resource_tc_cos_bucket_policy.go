@@ -54,6 +54,12 @@ func ResourceTencentCloudCosBucketPolicy() *schema.Resource {
 				},
 				Description: "The text of the policy. For more info please refer to [Tencent official doc](https://intl.cloud.tencent.com/document/product/436/18023).",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -61,24 +67,27 @@ func ResourceTencentCloudCosBucketPolicy() *schema.Resource {
 func resourceTencentCloudCosBucketPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_policy.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		camService = svccam.NewCamService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
+
 	bucket := d.Get("bucket").(string)
 	policy := d.Get("policy").(string)
+	cdcId := d.Get("cdc_id").(string)
 
-	cosService := CosService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	camService := svccam.NewCamService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	policyErr := camService.PolicyDocumentForceCheck(policy)
 	if policyErr != nil {
 		return policyErr
 	}
 
-	err := cosService.PutBucketPolicy(ctx, bucket, policy)
+	err := cosService.PutBucketPolicy(ctx, bucket, policy, cdcId)
 	if err != nil {
 		return err
 	}
+
 	d.SetId(bucket)
 
 	return resourceTencentCloudCosBucketPolicyRead(d, meta)
@@ -87,34 +96,41 @@ func resourceTencentCloudCosBucketPolicyCreate(d *schema.ResourceData, meta inte
 func resourceTencentCloudCosBucketPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_policy.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		result     string
+	)
 
 	bucket := d.Id()
-	cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	var result string
+	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		policy, e := cosService.DescribePolicyByBucket(ctx, bucket)
+		policy, e := cosService.DescribePolicyByBucket(ctx, bucket, cdcId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		result = policy
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read cos bucket policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
 	result, err = removeSid(result)
 	if err != nil {
 		log.Printf("[CRITAL]%s read cos bucket policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
 	if result == "" {
 		d.SetId("")
 		return nil
 	}
+
 	_ = d.Set("policy", result)
 	_ = d.Set("bucket", bucket)
 
@@ -124,11 +140,14 @@ func resourceTencentCloudCosBucketPolicyRead(d *schema.ResourceData, meta interf
 func resourceTencentCloudCosBucketPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_policy.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	bucket := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
+	bucket := d.Id()
+	cdcId := d.Get("cdc_id").(string)
 	if d.HasChange("policy") {
 		policy := d.Get("policy").(string)
 		camService := svccam.NewCamService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
@@ -136,7 +155,8 @@ func resourceTencentCloudCosBucketPolicyUpdate(d *schema.ResourceData, meta inte
 		if policyErr != nil {
 			return policyErr
 		}
-		err := cosService.PutBucketPolicy(ctx, bucket, policy)
+
+		err := cosService.PutBucketPolicy(ctx, bucket, policy, cdcId)
 		if err != nil {
 			return err
 		}
@@ -152,14 +172,15 @@ func resourceTencentCloudCosBucketPolicyUpdate(d *schema.ResourceData, meta inte
 func resourceTencentCloudCosBucketPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_policy.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	bucket := d.Id()
-	cosService := CosService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-	err := cosService.DeleteBucketPolicy(ctx, bucket)
+	cdcId := d.Get("cdc_id").(string)
+	err := cosService.DeleteBucketPolicy(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
@@ -178,18 +199,22 @@ func removeSid(v string) (result string, err error) {
 	if err != nil {
 		return
 	}
+
 	var stateMend []interface{}
 	if v, ok := m["Statement"]; ok {
 		stateMend = v.([]interface{})
 	}
+
 	for index, v := range stateMend {
 		mp := v.(map[string]interface{})
 		delete(mp, "Sid")
 		stateMend[index] = mp
 	}
+
 	if _, ok := m["Statement"]; ok {
 		m["Statement"] = stateMend
 	}
+
 	s, err := json.Marshal(m)
 	return string(s), err
 }

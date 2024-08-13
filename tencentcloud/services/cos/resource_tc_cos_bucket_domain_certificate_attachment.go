@@ -19,9 +19,8 @@ import (
 
 func ResourceTencentCloudCosBucketDomainCertificateAttachment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudCosBucketDomainCertificateAttachmentRead,
 		Create: resourceTencentCloudCosBucketDomainCertificateAttachmentCreate,
-		// Update: resourceTencentCloudCosBucketDomainCertificateAttachmentUpdate,
+		Read:   resourceTencentCloudCosBucketDomainCertificateAttachmentRead,
 		Delete: resourceTencentCloudCosBucketDomainCertificateAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -85,6 +84,12 @@ func ResourceTencentCloudCosBucketDomainCertificateAttachment() *schema.Resource
 					},
 				},
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
+			},
 		},
 	}
 }
@@ -93,9 +98,12 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentCreate(d *schema.Re
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_domain_certificate_attachment.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	var bucket string
+	var (
+		logId  = tccommon.GetLogId(tccommon.ContextNil)
+		ctx    = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		option = cos.BucketPutDomainCertificateOptions{}
+		bucket string
+	)
 
 	if v, ok := d.GetOk("bucket"); ok {
 		bucket = v.(string)
@@ -103,23 +111,26 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentCreate(d *schema.Re
 		return errors.New("get bucket failed!")
 	}
 
-	option := cos.BucketPutDomainCertificateOptions{}
 	if dcMap, ok := helper.InterfacesHeadMap(d, "domain_certificate"); ok {
 		if certMap, ok := helper.InterfaceToMap(dcMap, "certificate"); ok {
 			certificateInfo := cos.BucketDomainCertificateInfo{}
 			if v, ok := certMap["cert_type"]; ok {
 				certificateInfo.CertType = v.(string)
 			}
+
 			if CustomCertMap, ok := helper.InterfaceToMap(certMap, "custom_cert"); ok {
 				customCert := cos.BucketDomainCustomCert{}
 				if v, ok := CustomCertMap["cert"]; ok {
 					customCert.Cert = v.(string)
 				}
+
 				if v, ok := CustomCertMap["private_key"]; ok {
 					customCert.PrivateKey = v.(string)
 				}
+
 				certificateInfo.CustomCert = &customCert
 			}
+
 			option.CertificateInfo = &certificateInfo
 		}
 
@@ -128,8 +139,9 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentCreate(d *schema.Re
 		}
 	}
 
+	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.PutDomainCertificate(ctx, &option)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.PutDomainCertificate(ctx, &option)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -137,6 +149,7 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentCreate(d *schema.Re
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, "PutDomainCertificate", request, result.Response.Body)
 		}
+
 		return nil
 	})
 
@@ -155,14 +168,15 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentRead(d *schema.Reso
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_domain_certificate_attachment.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	id := d.Id()
-
-	certResult, bucket, err := service.DescribeCosBucketDomainCertificate(ctx, id)
+	cdcId := d.Get("cdc_id").(string)
+	certResult, bucket, err := service.DescribeCosBucketDomainCertificate(ctx, id, cdcId)
 	log.Printf("[DEBUG] resource `bucketDomainCertificate certResult:%s`\n", certResult)
 	if err != nil {
 		return err
@@ -179,16 +193,18 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentRead(d *schema.Reso
 }
 
 func resourceTencentCloudCosBucketDomainCertificateAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	id := d.Id()
-	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_domain_certificate_attachment.delete id:", id)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_domain_certificate_attachment.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	service := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	if err := service.DeleteCosBucketDomainCertificate(ctx, id); err != nil {
+	id := d.Id()
+	cdcId := d.Get("cdc_id").(string)
+	if err := service.DeleteCosBucketDomainCertificate(ctx, id, cdcId); err != nil {
 		return err
 	}
 

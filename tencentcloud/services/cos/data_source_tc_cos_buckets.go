@@ -29,12 +29,16 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 				Optional:    true,
 				Description: "Tags to filter bucket.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC cluster ID.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
-
 			// computed
 			"bucket_list": {
 				Type:        schema.TypeList,
@@ -341,12 +345,14 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_cos_buckets.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cosService = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	cosService := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	buckets, err := cosService.ListBuckets(ctx)
+	cdcId := d.Get("cdc_id").(string)
+	buckets, err := cosService.ListBuckets(ctx, cdcId)
 	if err != nil {
 		return err
 	}
@@ -355,14 +361,13 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 	tags := helper.GetTags(d, "tags")
 
 	bucketList := make([]map[string]interface{}, 0, len(buckets))
-
 	for _, v := range buckets {
 		bucket := make(map[string]interface{})
 		if prefix != "" && !strings.HasPrefix(*v.Name, prefix) {
 			continue
 		}
 
-		respTags, err := cosService.GetBucketTags(ctx, *v.Name)
+		respTags, err := cosService.GetBucketTags(ctx, *v.Name, cdcId)
 		if err != nil {
 			return err
 		}
@@ -381,44 +386,41 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 		}
 
 		bucket["bucket"] = *v.Name
-
-		corsRules, err := cosService.GetBucketCors(ctx, *v.Name)
+		corsRules, err := cosService.GetBucketCors(ctx, *v.Name, cdcId)
 		if err != nil {
 			return err
 		}
+
 		bucket["cors_rules"] = corsRules
-
-		lifecycleRules, err := cosService.GetDataSourceBucketLifecycle(ctx, *v.Name)
+		lifecycleRules, err := cosService.GetDataSourceBucketLifecycle(ctx, *v.Name, cdcId)
 		if err != nil {
 			return err
 		}
+
 		bucket["lifecycle_rules"] = lifecycleRules
-
-		website, err := cosService.GetBucketWebsite(ctx, *v.Name)
+		website, err := cosService.GetBucketWebsite(ctx, *v.Name, cdcId)
 		if err != nil {
 			return err
 		}
+
 		bucket["website"] = website
-
-		originRules, err := cosService.GetBucketPullOrigin(ctx, *v.Name)
+		originRules, err := cosService.GetBucketPullOrigin(ctx, *v.Name, cdcId)
 		if err != nil {
 			return err
 		}
-		bucket["origin_pull_rules"] = originRules
 
-		domainRules, err := cosService.GetBucketOriginDomain(ctx, *v.Name)
+		bucket["origin_pull_rules"] = originRules
+		domainRules, err := cosService.GetBucketOriginDomain(ctx, *v.Name, cdcId)
 		if err == nil {
 			bucket["origin_domain_rules"] = domainRules
 		}
 
-		aclBody, err := cosService.GetBucketACL(ctx, *v.Name)
-
+		aclBody, err := cosService.GetBucketACL(ctx, *v.Name, cdcId)
 		if err != nil {
 			return err
 		}
 
 		aclXML, err := xml.Marshal(aclBody)
-
 		if err != nil {
 			log.Printf("WARN: acl body marshal failed: %s", err.Error())
 		} else {

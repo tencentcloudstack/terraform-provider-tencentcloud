@@ -26,11 +26,16 @@ func ResourceTencentCloudCosBucketVersion() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.",
 			},
-
 			"status": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Whether to enable versioning. Valid values: `Suspended`, `Enabled`.",
+			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "CDC cluster ID.",
 			},
 		},
 	}
@@ -54,14 +59,15 @@ func resourceTencentCloudCosBucketVersionRead(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_version.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	bucket := d.Id()
-
-	bucketVersion, err := service.DescribeCosBucketVersionById(ctx, bucket)
+	cdcId := d.Get("cdc_id").(string)
+	bucketVersion, err := service.DescribeCosBucketVersionById(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
@@ -85,25 +91,29 @@ func resourceTencentCloudCosBucketVersionUpdate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_version.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request = cos.BucketPutVersionOptions{}
+	)
 
 	bucket := d.Id()
-
-	request := cos.BucketPutVersionOptions{}
 	if v, ok := d.GetOk("status"); ok {
 		request.Status = v.(string)
 	}
 
+	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket).Bucket.PutVersioning(ctx, &request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClient(bucket, cdcId).Bucket.PutVersioning(ctx, &request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%+v], response status [%s]\n", logId, "PutVersioning", request, result.Status)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s cos versioning failed, reason:%+v", logId, err)
 		return err
