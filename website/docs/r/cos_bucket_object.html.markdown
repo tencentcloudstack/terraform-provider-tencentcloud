@@ -46,6 +46,7 @@ The following arguments are supported:
 * `key` - (Required, String, ForceNew) The name of the object once it is in the bucket.
 * `acl` - (Optional, String) The canned ACL to apply. Available values include `private`, `public-read`, and `public-read-write`. Defaults to `private`.
 * `cache_control` - (Optional, String) Specifies caching behavior along the request/reply chain. For further details, RFC2616 can be referred.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `content_disposition` - (Optional, String) Specifies presentational information for the object.
 * `content_encoding` - (Optional, String) Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
 * `content_type` - (Optional, String) A standard MIME type describing the format of the object data.

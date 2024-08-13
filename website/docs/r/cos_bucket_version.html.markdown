@@ -26,6 +26,7 @@ The following arguments are supported:
 
 * `bucket` - (Required, String) Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
 * `status` - (Required, String) Whether to enable versioning. Valid values: `Suspended`, `Enabled`.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 
 ## Attributes Reference
 

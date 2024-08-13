@@ -35,6 +35,7 @@ The following arguments are supported:
 
 * `bucket` - (Required, String, ForceNew) Bucket name.
 * `domain_certificate` - (Required, List, ForceNew) The certificate of specified doamin.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 
 The `certificate` object of `domain_certificate` supports the following:
 

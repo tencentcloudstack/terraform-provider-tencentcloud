@@ -27,6 +27,7 @@ The following arguments are supported:
 
 * `bucket` - (Required, String) Name of the bucket that contains the objects to query.
 * `key` - (Required, String) The full path to the object inside the bucket.
+* `cdc_id` - (Optional, String) CDC cluster ID.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference

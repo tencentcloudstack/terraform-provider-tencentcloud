@@ -48,6 +48,7 @@ The following arguments are supported:
 
 * `bucket` - (Required, String, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
 * `policy` - (Required, String) The text of the policy. For more info please refer to [Tencent official doc](https://intl.cloud.tencent.com/document/product/436/18023).
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 
 ## Attributes Reference
 

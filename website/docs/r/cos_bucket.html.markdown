@@ -22,7 +22,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "private_sbucket" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "private-bucket-${local.app_id}"
   acl    = "private"
 }
@@ -37,7 +37,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "multi_zone_bucket" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket            = "multi-zone-bucket-${local.app_id}"
   acl               = "private"
   multi_az          = true
@@ -55,7 +55,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_acl" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucketwith-acl-${local.app_id}"
   # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
   acl_body = <<EOF
@@ -132,7 +132,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucket-with-static-website-${local.app_id}"
 
   website {
@@ -142,7 +142,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
 }
 
 output "endpoint_test" {
-  value = tencentcloud_cos_bucket.bucket_with_static_website.website.0.endpoint
+  value = tencentcloud_cos_bucket.example.website.0.endpoint
 }
 ```
 
@@ -155,12 +155,12 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_cors" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucket-with-cors-${local.app_id}"
   acl    = "public-read-write"
 
   cors_rules {
-    allowed_origins = ["http://*.abc.com"]
+    allowed_origins = ["https://*.abc.com"]
     allowed_methods = ["PUT", "POST"]
     allowed_headers = ["*"]
     max_age_seconds = 300
@@ -178,7 +178,7 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
+resource "tencentcloud_cos_bucket" "example" {
   bucket = "bucket-with-lifecycle-${local.app_id}"
   acl    = "public-read-write"
 
@@ -209,13 +209,13 @@ locals {
   region    = "ap-guangzhou"
 }
 
-resource "tencentcloud_cos_bucket" "bucket_replicate" {
+resource "tencentcloud_cos_bucket" "example1" {
   bucket            = "bucket-replicate-${local.app_id}"
   acl               = "private"
   versioning_enable = true
 }
 
-resource "tencentcloud_cos_bucket" "bucket_with_replication" {
+resource "tencentcloud_cos_bucket" "example2" {
   bucket            = "bucket-with-replication-${local.app_id}"
   acl               = "private"
   versioning_enable = true
@@ -224,7 +224,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_replication" {
     id                 = "test-rep1"
     status             = "Enabled"
     prefix             = "dist"
-    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.example1.bucket}"
   }
 }
 ```
@@ -237,6 +237,7 @@ The following arguments are supported:
 * `acceleration_enable` - (Optional, Bool) Enable bucket acceleration.
 * `acl_body` - (Optional, String) ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.
 * `acl` - (Optional, String) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
 * `enable_intelligent_tiering` - (Optional, Bool) Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.
 * `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid value is `AES256`.
@@ -343,6 +344,6 @@ In addition to all arguments above, the following attributes are exported:
 COS bucket can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_cos_bucket.bucket bucket-name
+$ terraform import tencentcloud_cos_bucket.example bucket-name-1309118522
 ```
 

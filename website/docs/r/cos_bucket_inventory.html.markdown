@@ -50,6 +50,7 @@ The following arguments are supported:
 * `is_enabled` - (Required, String) Whether to enable the inventory. true or false.
 * `name` - (Required, String, ForceNew) Inventory Name.
 * `schedule` - (Required, List) Inventory job cycle.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `filter` - (Optional, List) Filters objects prefixed with the specified value to analyze.
 * `optional_fields` - (Optional, List) Analysis items to include in the inventory result	.
 

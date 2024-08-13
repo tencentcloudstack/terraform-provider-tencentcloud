@@ -28,6 +28,7 @@ The following arguments are supported:
 * `bucket` - (Required, String, ForceNew) Bucket.
 * `key` - (Required, String, ForceNew) Object key.
 * `upload_id` - (Required, String, ForceNew) Multipart uploaded id.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 
 ## Attributes Reference
 

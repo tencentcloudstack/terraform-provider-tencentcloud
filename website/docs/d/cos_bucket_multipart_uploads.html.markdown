@@ -24,6 +24,7 @@ data "tencentcloud_cos_bucket_multipart_uploads" "cos_bucket_multipart_uploads" 
 The following arguments are supported:
 
 * `bucket` - (Required, String) Bucket.
+* `cdc_id` - (Optional, String) CDC cluster ID.
 * `delimiter` - (Optional, String) The delimiter is a symbol, and the Object name contains the Object between the specified prefix and the first occurrence of delimiter characters as a set of elements: common prefix. If there is no prefix, start from the beginning of the path.
 * `encoding_type` - (Optional, String) Specifies the encoding format of the return value. Legal value: url.
 * `prefix` - (Optional, String) The returned Object key must be prefixed with Prefix. Note that when using the prefix query, the returned key still contains Prefix.

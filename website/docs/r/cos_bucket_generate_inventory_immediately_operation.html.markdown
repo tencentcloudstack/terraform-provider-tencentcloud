@@ -26,6 +26,7 @@ The following arguments are supported:
 
 * `bucket` - (Required, String, ForceNew) Bucket.
 * `inventory_id` - (Required, String, ForceNew) The id of inventory.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 
 ## Attributes Reference
 

@@ -24,6 +24,7 @@ data "tencentcloud_cos_bucket_inventorys" "cos_bucket_inventorys" {
 The following arguments are supported:
 
 * `bucket` - (Required, String) Bucket.
+* `cdc_id` - (Optional, String) CDC cluster ID.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference

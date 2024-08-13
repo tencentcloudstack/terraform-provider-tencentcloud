@@ -31,6 +31,7 @@ The following arguments are supported:
 * `domain_list` - (Required, Set: [`String`]) A list of domain names in the blocklist/allowlist.
 * `referer_type` - (Required, String) Hotlink protection type. Enumerated values: `Black-List`, `White-List`.
 * `status` - (Required, String) Whether to enable hotlink protection. Enumerated values: `Enabled`, `Disabled`.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `empty_refer_configuration` - (Optional, String) Whether to allow access with an empty referer. Enumerated values: `Allow`, `Deny` (default).
 
 ## Attributes Reference

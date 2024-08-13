@@ -37,6 +37,7 @@ There are three recovery models for recovering archived storage type data, which
 For deep recovery archive storage type data, there are two recovery models, which are:
 - Standard: standard retrieval mode, recovery time is 12-24 hours.
 - Bulk: batch retrieval mode, recovery time is 24-48 hours.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 
 ## Attributes Reference
 

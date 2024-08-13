@@ -28,6 +28,7 @@ The following arguments are supported:
 * `bucket` - (Required, String, ForceNew) Bucket.
 * `download_path` - (Required, String, ForceNew) Download path.
 * `key` - (Required, String, ForceNew) Object key.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 
 ## Attributes Reference
 

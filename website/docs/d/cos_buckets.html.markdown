@@ -25,6 +25,7 @@ data "tencentcloud_cos_buckets" "cos_buckets" {
 The following arguments are supported:
 
 * `bucket_prefix` - (Optional, String) A prefix string to filter results by bucket name.
+* `cdc_id` - (Optional, String) CDC cluster ID.
 * `result_output_file` - (Optional, String) Used to save results.
 * `tags` - (Optional, Map) Tags to filter bucket.
 
