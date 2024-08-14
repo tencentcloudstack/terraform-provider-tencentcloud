@@ -903,3 +903,23 @@ func (me *MongodbService) DescribeDBInstanceDeal(ctx context.Context, dealId str
 
 	return
 }
+
+func (me *MongodbService) SetInstanceMaintenance(ctx context.Context, instanceId, maintenanceStart, maintenanceEnd string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewSetInstanceMaintenanceRequest()
+	request.InstanceId = helper.String(instanceId)
+	request.MaintenanceStart = helper.String(maintenanceStart)
+	request.MaintenanceEnd = helper.String(maintenanceEnd)
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().SetInstanceMaintenance(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
