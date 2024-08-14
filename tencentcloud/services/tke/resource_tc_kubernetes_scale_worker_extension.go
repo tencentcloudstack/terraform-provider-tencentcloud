@@ -136,7 +136,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 					dataDisks = append(dataDisks, disk)
 				}
 				if importFlag1 {
-					_ = d.Set("data_disk", dataDisks)
+					_ = d.Set("data_disk", dataDisks) // out layer data_disk
 				}
 			}
 
@@ -260,7 +260,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Conte
 			dataDisks = append(dataDisks, dataDisk)
 		}
 
-		mapping["data_disk"] = dataDisks
+		mapping["data_disk"] = dataDisks // worker_config.data_disk
 		instanceList = append(instanceList, mapping)
 	}
 	if importFlag1 {
