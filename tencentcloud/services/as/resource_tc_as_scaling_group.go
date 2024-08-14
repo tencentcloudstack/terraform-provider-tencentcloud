@@ -174,6 +174,18 @@ func ResourceTencentCloudAsScalingGroup() *schema.Resource {
 				Optional:    true,
 				Description: "Enable unhealthy instance replacement. If set to `true`, AS will replace instances that are found unhealthy in the CLB health check.",
 			},
+			"health_check_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Health check type of instances in a scaling group.<br><li>CVM: confirm whether an instance is healthy based on the network status. If the pinged instance is unreachable, the instance will be considered unhealthy. For more information, see [Instance Health Check](https://intl.cloud.tencent.com/document/product/377/8553?from_cn_redirect=1)<br><li>CLB: confirm whether an instance is healthy based on the CLB health check status. For more information, see [Health Check Overview](https://intl.cloud.tencent.com/document/product/214/6097?from_cn_redirect=1).<br>If the parameter is set to `CLB`, the scaling group will check both the network status and the CLB health check status. If the network check indicates unhealthy, the `HealthStatus` field will return `UNHEALTHY`. If the CLB health check indicates unhealthy, the `HealthStatus` field will return `CLB_UNHEALTHY`. If both checks indicate unhealthy, the `HealthStatus` field will return `UNHEALTHY|CLB_UNHEALTHY`. Default value: `CLB`.",
+			},
+			"lb_health_check_grace_period": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Grace period of the CLB health check during which the `IN_SERVICE` instances added will not be marked as `CLB_UNHEALTHY`.<br>Valid range: 0-7200, in seconds. Default value: `0`.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -292,6 +304,14 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("multi_zone_subnet_policy"); ok {
 		request.MultiZoneSubnetPolicy = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("health_check_type"); ok {
+		request.HealthCheckType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("lb_health_check_grace_period"); ok {
+		request.LoadBalancerHealthCheckGracePeriod = helper.IntUint64(v.(int))
 	}
 
 	var (
@@ -418,6 +438,9 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("termination_policies", helper.StringsInterfaces(scalingGroup.TerminationPolicySet))
 	_ = d.Set("retry_policy", scalingGroup.RetryPolicy)
 	_ = d.Set("create_time", scalingGroup.CreatedTime)
+	_ = d.Set("retry_policy", scalingGroup.RetryPolicy)
+	_ = d.Set("health_check_type", scalingGroup.HealthCheckType)
+	_ = d.Set("lb_health_check_grace_period", scalingGroup.LoadBalancerHealthCheckGracePeriod)
 	if v, ok := d.GetOk("multi_zone_subnet_policy"); ok && v.(string) != "" {
 		_ = d.Set("multi_zone_subnet_policy", scalingGroup.MultiZoneSubnetPolicy)
 	}
@@ -565,6 +588,13 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 			ScalingMode:                  &scalingMode,
 			ReplaceMonitorUnhealthy:      &replaceMonitor,
 			ReplaceLoadBalancerUnhealthy: &replaceLB,
+		}
+	}
+
+	if d.HasChange("health_check_type") || d.HasChange("lb_health_check_grace_period") {
+		request.HealthCheckType = helper.String(d.Get("health_check_type").(string))
+		if v, ok := d.GetOkExists("lb_health_check_grace_period"); ok {
+			request.LoadBalancerHealthCheckGracePeriod = helper.IntUint64(v.(int))
 		}
 	}
 
