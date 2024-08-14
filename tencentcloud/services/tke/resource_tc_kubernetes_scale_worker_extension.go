@@ -28,7 +28,10 @@ var WorkersNewWorkerInstancesList []map[string]interface{}
 var WorkersLabelsMap map[string]string
 
 func init() {
-
+	// need to support append by multiple calls when the paging occurred
+	WorkersNewWorkerInstancesList = make([]map[string]interface{}, 0)
+	WorkersLabelsMap = make(map[string]string)
+	WorkersInstanceIds = make([]*string, 0)
 }
 
 func customScaleWorkerResourceImporter(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
@@ -91,9 +94,6 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 		}
 	}
 
-	WorkersNewWorkerInstancesList = make([]map[string]interface{}, 0, len(workers))
-	WorkersLabelsMap = make(map[string]string)
-	WorkersInstanceIds = make([]*string, 0)
 	for sub, cvmInfo := range workers {
 		if _, ok := instanceMap[cvmInfo.InstanceId]; !ok {
 			continue
@@ -486,7 +486,7 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 				return resource.NonRetryableError(fmt.Errorf("cluster all instances state is failed"))
 			} else {
 				e = fmt.Errorf("cluster instances is still initializing.")
-				return tccommon.RetryError(e)
+				return resource.RetryableError(e)
 			}
 		}
 	})
