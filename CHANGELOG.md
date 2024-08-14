@@ -1,3 +1,23 @@
+## 1.81.116 (August 14 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mysql_ssl` ([#2687](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2687))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_lifecycle_hook: support import and parameter `lifecycle_command` ([#2772](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2772))
+* resource/tencentcloud_as_scaling_group: support `health_check_type` and `lb_health_check_grace_period` ([#2772](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2772))
+* resource/tencentcloud_dnspod_record: compatible with record value ends with dot ([#2773](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2773))
+* resource/tencentcloud_mongodb_instance: support `maintenance_start` and `maintenance_end` ([#2765](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2765))
+
+BUG FIXES:
+
+* resource/tencentcloud_dnspod_record: fix weight auto update to 0 when update value ([#2770](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2770))
+* resource/tencentcloud_kubernetes_cluster_attachment: fix the issue that param `unschedulable` cannot work ([#2764](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2764))
+* resource/tencentcloud_kubernetes_scale_worker: fix param `data_disk` of worker_config cannot work ([#2769](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2769))
+* resource/tencentcloud_kubernetes_scale_worker: fix the cluster instance paging logic ([#2774](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2774))
+
 ## 1.81.115 (August 9 , 2024)
 
 FEATURES:
