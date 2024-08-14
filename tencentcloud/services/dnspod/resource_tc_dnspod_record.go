@@ -191,7 +191,16 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 		_ = d.Set("domain", items[0])
 		_ = d.Set("record_line", recordInfo.RecordLine)
 		_ = d.Set("record_type", recordInfo.RecordType)
-		_ = d.Set("value", recordInfo.Value)
+		if v, ok := d.GetOk("value"); ok {
+			value := v.(string)
+			if strings.HasSuffix(value, ".") {
+				_ = d.Set("value", recordInfo.Value)
+			} else {
+				_ = d.Set("value", strings.TrimSuffix(*recordInfo.Value, "."))
+			}
+		} else {
+			_ = d.Set("value", recordInfo.Value)
+		}
 		_ = d.Set("remark", recordInfo.Remark)
 		if *recordInfo.Enabled == uint64(0) {
 			_ = d.Set("status", "DISABLE")

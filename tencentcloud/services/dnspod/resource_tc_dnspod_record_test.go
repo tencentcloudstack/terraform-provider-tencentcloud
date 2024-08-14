@@ -83,7 +83,22 @@ func TestAccTencentCloudDnspodRecordResource_MX(t *testing.T) {
 		CheckDestroy: testAccCheckDnspodRecordDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDnspodRecordMx,
+				Config: testAccTencentCloudDnspodRecordMXValueWithOutDot,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_type", "MX"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "value", "1.2.3.9"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "sub_domain", "@"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "mx", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "ttl", "86400"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test"),
+				),
+			},
+			{
+				Config: testAccTencentCloudDnspodRecordMXValueWithDot,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "iac-tf.cloud"),
@@ -100,6 +115,7 @@ func TestAccTencentCloudDnspodRecordResource_MX(t *testing.T) {
 			{
 				Config: testAccTencentCloudDnspodRecordMxUpdate,
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_type", "MX"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
@@ -231,7 +247,20 @@ resource "tencentcloud_dnspod_record" "demo" {
 }
 `
 
-const testAccTencentCloudDnspodRecordMx = `
+const testAccTencentCloudDnspodRecordMXValueWithOutDot = `
+resource "tencentcloud_dnspod_record" "demo" {
+  domain      = "iac-tf.cloud"
+  record_type = "MX"
+  record_line = "默认"
+  value       = "1.2.3.9"
+  sub_domain  = "@"
+  mx          = 10
+  ttl         = 86400
+  status      = "ENABLE"
+  remark      = "terraform-test"
+}
+`
+const testAccTencentCloudDnspodRecordMXValueWithDot = `
 resource "tencentcloud_dnspod_record" "demo" {
   domain      = "iac-tf.cloud"
   record_type = "MX"
@@ -244,6 +273,7 @@ resource "tencentcloud_dnspod_record" "demo" {
   remark      = "terraform-test"
 }
 `
+
 const testAccTencentCloudDnspodRecordMxUpdate = `
 resource "tencentcloud_dnspod_record" "demo" {
   domain      = "iac-tf.cloud"
