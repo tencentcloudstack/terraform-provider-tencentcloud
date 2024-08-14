@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_dnspod_record: fix weight auto update to 0 when update value
+```
