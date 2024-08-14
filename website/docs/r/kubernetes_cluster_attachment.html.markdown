@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to attach an existing  cvm to kubernetes cluster.
 
+~> **NOTE:** Use `unschedulable` to set whether the join node participates in the schedule. The `is_schedule` of 'worker_config' and 'worker_config_overrides' was deprecated.
+
 ## Example Usage
 
 ```hcl
@@ -115,7 +117,7 @@ The following arguments are supported:
 * `key_ids` - (Optional, List: [`String`], ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
 * `labels` - (Optional, Map, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
-* `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is `0`, which means it participates in scheduling. Non-zero(eg: `1`) number means it does not participate in scheduling.
 * `worker_config_overrides` - (Optional, List, ForceNew) Override variable worker_config, commonly used to attach existing instances.
 * `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
 
@@ -157,13 +159,13 @@ The `worker_config_overrides` object supports the following:
 
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
-* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `docker_graph_path` - (Optional, String, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, List, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Custom parameter information related to the node. This is a white-list parameter.
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
-* `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
-* `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
-* `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
-* `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
+* `is_schedule` - (Optional, Bool, ForceNew, **Deprecated**) This argument was deprecated, use `unschedulable` instead. Indicate to schedule the adding node or not. Default is true.
+* `mount_target` - (Optional, String, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Mount target. Default is not mounting.
+* `pre_start_user_script` - (Optional, String, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
+* `user_data` - (Optional, String, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Base64-encoded User Data text, the length limit is 16KB.
 
 The `worker_config` object supports the following:
 
@@ -172,7 +174,7 @@ The `worker_config` object supports the following:
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
-* `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
+* `is_schedule` - (Optional, Bool, ForceNew, **Deprecated**) This argument was deprecated, use `unschedulable` instead. Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.

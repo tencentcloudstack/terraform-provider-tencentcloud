@@ -27,7 +27,18 @@ func TestAccTencentCloudKubernetesClusterAttachmentResource(t *testing.T) {
 					testAccCheckTkeAttachExists("tencentcloud_kubernetes_cluster_attachment.test_attach"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "cluster_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "unschedulable"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "unschedulable", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test1", "test1"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test2", "test2"),
+				),
+			},
+			{
+				Config: testAccTkeAttachClusterUpdate(),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeAttachExists("tencentcloud_kubernetes_cluster_attachment.test_attach"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "cluster_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "instance_id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "unschedulable", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test1", "test1"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test2", "test2"),
 				),
@@ -197,6 +208,61 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   instance_id = tencentcloud_instance.foo_attachment.id
   password    = "Lo4wbdit"
   unschedulable = 0
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+}
+`
+}
+
+func testAccTkeAttachClusterUpdate() string {
+
+	return TkeNewDeps + `
+variable "cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+data "tencentcloud_vpc_instances" "vpcs" {
+  name = "keep_tke_exclusive_vpc"
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                  = local.vpc_id
+  cluster_cidr            = var.cluster_cidr
+  cluster_max_pod_num     = 32
+  cluster_name            = "tf_example_cluster"
+  cluster_desc            = "example for tke cluster"
+  cluster_max_service_num = 32
+  cluster_internet        = false # (can be ignored) open it after the nodes added
+  cluster_version         = "1.22.5"
+  cluster_os              = "tlinux2.2(tkernel3)x86_64"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+  # without any worker config
+}
+
+resource "tencentcloud_instance" "foo_attachment_new" {
+  instance_name     = "tf-auto-test-1-2"
+  availability_zone = var.availability_zone
+  image_id          = var.default_img_id
+  instance_type     = local.final_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  system_disk_size  = 50
+  vpc_id            = local.vpc_id
+  subnet_id         = local.subnet_id1
+}
+
+resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
+  cluster_id  = tencentcloud_kubernetes_cluster.example.id
+  instance_id = tencentcloud_instance.foo_attachment_new.id
+  password    = "Lo4wbdit"
+  unschedulable = 1
 
   labels = {
     "test1" = "test1",

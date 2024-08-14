@@ -1,5 +1,7 @@
 Provide a resource to attach an existing  cvm to kubernetes cluster.
 
+~> **NOTE:** Use `unschedulable` to set whether the join node participates in the schedule. The `is_schedule` of 'worker_config' and 'worker_config_overrides' was deprecated.
+
 Example Usage
 
 ```hcl
