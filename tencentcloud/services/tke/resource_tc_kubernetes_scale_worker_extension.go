@@ -94,9 +94,6 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 		}
 	}
 
-	// WorkersNewWorkerInstancesList = make([]map[string]interface{}, 0, len(workers))
-	// WorkersLabelsMap = make(map[string]string)
-	// WorkersInstanceIds = make([]*string, 0)
 	for sub, cvmInfo := range workers {
 		if _, ok := instanceMap[cvmInfo.InstanceId]; !ok {
 			continue
