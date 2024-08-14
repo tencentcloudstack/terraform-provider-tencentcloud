@@ -45,12 +45,12 @@ resource "tencentcloud_as_scaling_group" "example" {
 }
 
 resource "tencentcloud_as_lifecycle_hook" "example" {
-  scaling_group_id         = tencentcloud_as_scaling_group.example.id
-  lifecycle_hook_name      = "tf-as-lifecycle-hook"
-  lifecycle_transition     = "INSTANCE_LAUNCHING"
-  default_result           = "CONTINUE"
-  heartbeat_timeout        = 500
-  notification_metadata    = "tf test"
+  scaling_group_id      = tencentcloud_as_scaling_group.example.id
+  lifecycle_hook_name   = "tf-as-lifecycle-hook"
+  lifecycle_transition  = "INSTANCE_LAUNCHING"
+  default_result        = "CONTINUE"
+  heartbeat_timeout     = 500
+  notification_metadata = "tf test"
 }
 ```
 
@@ -82,4 +82,28 @@ resource "tencentcloud_as_lifecycle_hook" "example" {
   notification_target_type = "CMQ_TOPIC"
   notification_topic_name  = "lifcyclehook"
 }
+```
+
+Use TAT Command
+
+```hcl
+resource "tencentcloud_as_lifecycle_hook" "example" {
+  default_result       = "CONTINUE"
+  heartbeat_timeout    = 300
+  lifecycle_hook_name  = "test"
+  lifecycle_transition = "INSTANCE_TERMINATING"
+  scaling_group_id     = tencentcloud_as_scaling_group.example.id
+
+  lifecycle_command {
+    command_id = "cmd-xxxx"
+  }
+}
+```
+
+Import
+
+lifecycle hook can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_as_lifecycle_hook.example lifecycle_hook_id
 ```

@@ -36,12 +36,15 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 
 resource "tencentcloud_as_scaling_group" "example" {
-  scaling_group_name = "tf-example"
-  configuration_id   = tencentcloud_as_scaling_config.example.id
-  max_size           = 1
-  min_size           = 0
-  vpc_id             = tencentcloud_vpc.vpc.id
-  subnet_ids         = [tencentcloud_subnet.subnet.id]
+  scaling_group_name              = "tf-example"
+  configuration_id                = tencentcloud_as_scaling_config.example.id
+  max_size                        = 1
+  min_size                        = 0
+  vpc_id                          = tencentcloud_vpc.vpc.id
+  subnet_ids                      = [tencentcloud_subnet.subnet.id]
+  health_check_type               = "CLB"
+  replace_load_balancer_unhealthy = true
+  lb_health_check_grace_period    = 30
 }
 ```
 
