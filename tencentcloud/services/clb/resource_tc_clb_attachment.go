@@ -225,7 +225,7 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	clbId := items[2]
 
 	if locationIdOrDomainUrl != "" {
-		if strings.HasSuffix(locationIdOrDomainUrl, "loc-") && !strings.Contains(locationIdOrDomainUrl, ",") {
+		if strings.HasPrefix(locationIdOrDomainUrl, "loc-") && !strings.Contains(locationIdOrDomainUrl, ",") {
 			// get locationId
 			locationId = locationIdOrDomainUrl
 		} else {
@@ -252,7 +252,9 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	}
 
 	//see if read empty
-	if instance == nil || (len(instance.Targets) == 0 && locationId == "") || (len(instance.Rules) == 0 && locationId != "") {
+	if instance == nil ||
+		(len(instance.Targets) == 0 && locationId == "" && domain == "" && url == "") ||
+		(len(instance.Rules) == 0 && locationId != "") {
 		d.SetId("")
 		return nil
 	}
@@ -401,7 +403,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	clbId := items[2]
 
 	if locationIdOrDomainUrl != "" {
-		if strings.HasSuffix(locationIdOrDomainUrl, "loc-") && !strings.Contains(locationIdOrDomainUrl, ",") {
+		if strings.HasPrefix(locationIdOrDomainUrl, "loc-") && !strings.Contains(locationIdOrDomainUrl, ",") {
 			// get locationId
 			locationId = locationIdOrDomainUrl
 		} else {
@@ -497,7 +499,7 @@ func resourceTencentCloudClbServerAttachmentRemove(d *schema.ResourceData, meta 
 	listenerId := items[1]
 	clbId := items[2]
 	if locationIdOrDomainUrl != "" {
-		if strings.HasSuffix(locationIdOrDomainUrl, "loc-") && !strings.Contains(locationIdOrDomainUrl, ",") {
+		if strings.HasPrefix(locationIdOrDomainUrl, "loc-") && !strings.Contains(locationIdOrDomainUrl, ",") {
 			// get locationId
 			locationId = locationIdOrDomainUrl
 		} else {
