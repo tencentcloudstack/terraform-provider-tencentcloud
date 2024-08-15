@@ -1160,6 +1160,54 @@ func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context
 	return
 }
 
+func (me *ClsService) DescribeClsLogsetsByFilter(ctx context.Context, param map[string]interface{}) (Logsets []*cls.LogsetInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cls.NewDescribeLogsetsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cls.Filter)
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	Logsets = make([]*cls.LogsetInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeLogsets(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Logsets) < 1 {
+			break
+		}
+		Logsets = append(Logsets, response.Response.Logsets...)
+		if len(response.Response.Logsets) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *ClsService) DescribeClsDataTransformById(ctx context.Context, taskId string) (dataTransform *cls.DataTransformTaskInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
