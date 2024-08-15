@@ -100,8 +100,8 @@ resource "tencentcloud_clb_attachment" "example" {
   rule_id     = "loc-4xxr2cy7"
 
   targets {
-    eni_ip = "example-ip"
-    port   = 23
+    eni_ip = "172.16.16.52"
+    port   = 8090
     weight = 50
   }
 }

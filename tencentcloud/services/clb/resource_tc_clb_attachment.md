@@ -89,11 +89,11 @@ resource "tencentcloud_clb_attachment" "example" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-hh141sn9"
   rule_id     = "loc-4xxr2cy7"
-  
+
   targets {
-    eni_ip      = "example-ip"
-    port        = 23
-    weight      = 50
+    eni_ip = "172.16.16.52"
+    port   = 8090
+    weight = 50
   }
 }
 ```
@@ -108,9 +108,9 @@ resource "tencentcloud_clb_attachment" "example" {
   url         = "/"
   
   targets {
-    eni_ip      = "172.16.16.52"
-    port        = 8090
-    weight      = 50
+    eni_ip = "172.16.16.52"
+    port   = 8090
+    weight = 50
   }
 }
 ```
