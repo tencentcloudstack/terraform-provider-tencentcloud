@@ -31,7 +31,9 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 		Update: resourceTencentCloudPostgresqlInstanceUpdate,
 		Delete: resourceTencentCLoudPostgresqlInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"delete_protection": false,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -704,10 +706,6 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		has           bool
 		outErr, inErr error
 	)
-
-	if v, ok := d.GetOkExists("delete_protection"); ok {
-		_ = d.Set("delete_protection", v.(bool))
-	}
 
 	// Check if import
 	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
