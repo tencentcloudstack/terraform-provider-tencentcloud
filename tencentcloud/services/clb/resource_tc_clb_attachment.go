@@ -316,6 +316,11 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 		return nil
 	})
 
+	if err != nil {
+		log.Printf("[CRITAL]%s read CLB attachment tag failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return nil
 }
 
