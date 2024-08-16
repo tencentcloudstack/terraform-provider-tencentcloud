@@ -626,7 +626,7 @@ func ShortRegionNameParse(shortRegion string) string {
 
 func GetAuthFromCAM(roleName string) (camResp *CAMResponse, err error) {
 	url := fmt.Sprintf("http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/%s", roleName)
-	log.Printf("[CRITAL] Request CAM security credentials url: %s", url)
+	log.Printf("[CRITAL] Request CAM security credentials url: %s\n", url)
 	// maximum waiting time
 	client := &http.Client{Timeout: 2 * time.Second}
 	req, err := http.NewRequest("GET", url, nil)
