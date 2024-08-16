@@ -5,8 +5,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -31,6 +33,15 @@ const COMMA_SP = ","
 var ContextNil context.Context = nil
 
 type contextLogId string
+
+type CAMResponse struct {
+	TmpSecretId  string `json:"TmpSecretId"`
+	TmpSecretKey string `json:"TmpSecretKey"`
+	ExpiredTime  int64  `json:"ExpiredTime"`
+	Expiration   string `json:"Expiration"`
+	Token        string `json:"Token"`
+	Code         string `json:"Code"`
+}
 
 const LogIdKey = contextLogId("logId")
 
@@ -611,4 +622,37 @@ func ShortRegionNameParse(shortRegion string) string {
 		"ca":      "na-toronto",
 	}
 	return regionMap[shortRegion]
+}
+
+func GetAuthFromCAM(roleName string) (camResp *CAMResponse, err error) {
+	url := fmt.Sprintf("http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/%s", roleName)
+	log.Printf("[CRITAL] Request CAM security credentials url: %s\n", url)
+	// maximum waiting time
+	client := &http.Client{Timeout: 2 * time.Second}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("[CRITAL] Request CAM security credentials resp err: %s", err.Error())
+		return
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("[CRITAL] Request CAM security credentials body read err: %s", err.Error())
+		return
+	}
+
+	err = json.Unmarshal(body, &camResp)
+	if err != nil {
+		log.Printf("[CRITAL] Request CAM security credentials resp json err: %s", err.Error())
+		return
+	}
+
+	return
 }

@@ -132,6 +132,7 @@ const (
 	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
 	PROVIDER_SHARED_CREDENTIALS_DIR         = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
 	PROVIDER_PROFILE                        = "TENCENTCLOUD_PROFILE"
+	PROVIDER_CAM_ROLE_NAME                  = "TENCENTCLOUD_CAM_ROLE_NAME"
 )
 
 const (
@@ -161,13 +162,13 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
-				Description: "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
+				Description: "This is the TencentCloud access key. It can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
 			},
 			"secret_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
-				Description: "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
+				Description: "This is the TencentCloud secret key. It can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
 				Sensitive:   true,
 			},
 			"security_token": {
@@ -181,7 +182,7 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_REGION, nil),
-				Description: "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
+				Description: "This is the TencentCloud region. It can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
@@ -336,6 +337,12 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
 				Description: "The profile name as set in the shared credentials. It can also be sourced from the `TENCENTCLOUD_PROFILE` environment variable. If not set, the default profile created with `tccli configure` will be used.",
+			},
+			"cam_role_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_CAM_ROLE_NAME, nil),
+				Description: "The name of the CVM instance CAM role. It can be sourced from the `TENCENTCLOUD_CAM_ROLE_NAME` environment variable.",
 			},
 		},
 
@@ -2112,6 +2119,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		region        string
 		protocol      string
 		domain        string
+		camRoleName   string
 	)
 
 	needSecret := true
@@ -2150,6 +2158,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		domain = v.(string)
 	}
 
+	if v, ok := d.GetOk("cam_role_name"); ok {
+		camRoleName = v.(string)
+	}
+
 	// standard client
 	var tcClient TencentCloudClient
 	tcClient.apiV3Conn = &connectivity.TencentCloudClient{
@@ -2161,6 +2173,12 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Region:   region,
 		Protocol: protocol,
 		Domain:   domain,
+	}
+
+	// get auth from CAM role name
+	if camRoleName != "" {
+		needSecret = false
+		_ = genClientWithCAM(&tcClient, camRoleName)
 	}
 
 	var (
@@ -2282,6 +2300,22 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	return &tcClient, nil
+}
+
+func genClientWithCAM(tcClient *TencentCloudClient, roleName string) error {
+	camResp, err := tccommon.GetAuthFromCAM(roleName)
+	if err != nil {
+		return err
+	}
+
+	// using STS credentials
+	tcClient.apiV3Conn.Credential = sdkcommon.NewTokenCredential(
+		camResp.TmpSecretId,
+		camResp.TmpSecretKey,
+		camResp.Token,
+	)
+
+	return nil
 }
 
 func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {
