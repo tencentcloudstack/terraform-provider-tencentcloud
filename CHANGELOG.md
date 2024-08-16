@@ -1,3 +1,16 @@
+## 1.81.117 (August 16 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cls_logsets` ([#2775](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2775))
+
+ENHANCEMENTS:
+
+* provider: support cam role name auth ([#2767](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2767))
+* resource/tencentcloud_clb_attachment: support domain and url params ([#2776](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2776))
+* resource/tencentcloud_postgresql_instance: support delete protection ([#2777](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2777))
+* resource/tencentcloud_vpn_gateway: Optimize VPN gateway change issue. ([#2778](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2778))
+
 ## 1.81.116 (August 14 , 2024)
 
 FEATURES:
