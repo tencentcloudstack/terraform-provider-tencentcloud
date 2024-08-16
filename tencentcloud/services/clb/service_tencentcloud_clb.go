@@ -465,6 +465,59 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	return
 }
 
+func (me *ClbService) DescribeTargetsByPara(ctx context.Context, clbId, listenerId, locationId string) (clbAttachment *clb.ListenerBackend, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := clb.NewDescribeTargetsRequest()
+	request.LoadBalancerId = &clbId
+	request.ListenerIds = []*string{&listenerId}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DescribeTargets(request)
+	if err != nil {
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	//listener not found, return empty
+	if len(response.Response.Listeners) < 1 {
+		return
+	}
+
+	clbListener := response.Response.Listeners[0]
+	protocol := clbListener.Protocol
+	port := clbListener.Port
+
+	aRequest := clb.NewDescribeTargetsRequest()
+	aRequest.ListenerIds = []*string{&listenerId}
+	aRequest.LoadBalancerId = &clbId
+	aRequest.Protocol = protocol
+	aRequest.Port = port
+	ratelimit.Check(request.GetAction())
+	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
+
+	if aErr != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := aErr.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
+		errRet = errors.WithStack(aErr)
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, aRequest.GetAction(), aRequest.ToJsonString(), aResponse.ToJsonString())
+
+	if len(aResponse.Response.Listeners) < 1 {
+		return
+	} else {
+		clbAttachment = aResponse.Response.Listeners[0]
+	}
+
+	return
+}
+
 func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params map[string]string) (clbAttachments []*clb.ListenerBackend, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	//listener filter
@@ -541,7 +594,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	return
 }
 
-func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, listenerId string, locationId string, targets []interface{}) error {
+func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, listenerId string, locationId string, targets []interface{}, domain string, url string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := clb.NewDeregisterTargetsRequest()
 	request.ListenerId = &listenerId
@@ -551,7 +604,12 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 	}
 	if locationId != "" {
-		request.LocationId = &locationId
+		request.LocationId = helper.String(locationId)
+	}
+
+	if domain != "" && url != "" {
+		request.Domain = helper.String(domain)
+		request.Url = helper.String(url)
 	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
