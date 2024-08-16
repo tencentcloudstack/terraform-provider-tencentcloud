@@ -16,6 +16,8 @@ Use this resource to create postgresql instance.
 
 ## Example Usage
 
+### Create a postgresql instance
+
 ```hcl
 variable "availability_zone" {
   default = "ap-guangzhou-3"
@@ -59,7 +61,53 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### Create a multi available zone bucket
+### Create a postgresql instance with delete protection
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create postgresql
+resource "tencentcloud_postgresql_instance" "example" {
+  name              = "example"
+  availability_zone = var.availability_zone
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  db_major_version  = "10"
+  engine_version    = "10.23"
+  root_user         = "root123"
+  root_password     = "Root123$"
+  charset           = "UTF8"
+  project_id        = 0
+  cpu               = 1
+  memory            = 2
+  storage           = 10
+  delete_protection = true
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
+### Create a multi available zone postgresql instance
 
 ```hcl
 variable "availability_zone" {
@@ -116,7 +164,7 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### create pgsql with kms key
+### Create pgsql with kms key
 
 ```hcl
 variable "availability_zone" {
@@ -154,7 +202,7 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### upgrade kernel version
+### Upgrade kernel version
 
 ```hcl
 variable "availability_zone" {
@@ -212,6 +260,7 @@ The following arguments are supported:
 * `db_major_version` - (Optional, String) PostgreSQL major version number. Valid values: 10, 11, 12, 13, 14, 15, 16. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_major_vesion` - (Optional, String, **Deprecated**) `db_major_vesion` will be deprecated, use `db_major_version` instead. PostgreSQL major version number. Valid values: 10, 11, 12, 13, 14, 15, 16. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_node_set` - (Optional, Set) Specify instance node info for disaster migration.
+* `delete_protection` - (Optional, Bool) Whether to enable instance deletion protection. Default: false.
 * `engine_version` - (Optional, String) Version of the postgresql database engine. Valid values: `10.4`, `10.17`, `10.23`, `11.8`, `11.12`, `11.22`, `12.4`, `12.7`, `12.18`, `13.3`, `14.2`, `14.11`, `15.1`, `16.0`.
 * `kms_key_id` - (Optional, String) KeyId of the custom key.
 * `kms_region` - (Optional, String) Region of the custom key.
