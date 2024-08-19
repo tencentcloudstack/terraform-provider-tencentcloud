@@ -1673,6 +1673,59 @@ func (me *MysqlService) DescribeMysqlSecurityGroupsAttachmentById(ctx context.Co
 	return
 }
 
+func (me *MysqlService) DescribeMysqlInstanceLogToCLSById(ctx context.Context, instanceId string) (logToCLSResponseParam *cdb.DescribeDBInstanceLogToCLSResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cdb.NewDescribeDBInstanceLogToCLSRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeDBInstanceLogToCLS(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	logToCLSResponseParam = response.Response
+	return
+}
+
+func (me *MysqlService) DeleteMysqlInstanceLogToCLSById(ctx context.Context, instanceId string, logType string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cdb.NewModifyDBInstanceLogToCLSRequest()
+	request.InstanceId = &instanceId
+	request.LogType = &logType
+	request.Status = helper.String("OFF")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().ModifyDBInstanceLogToCLS(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *MysqlService) DeleteMysqlSecurityGroupsAttachmentById(ctx context.Context, securityGroupId string, instanceId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

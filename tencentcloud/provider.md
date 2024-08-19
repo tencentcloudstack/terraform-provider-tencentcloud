@@ -785,6 +785,7 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_isolate_instance
     tencentcloud_mysql_dr_instance
     tencentcloud_mysql_ssl
+    tencentcloud_mysql_cls_log_attachment
 
 Cloud Monitor(Monitor)
   Data Source
