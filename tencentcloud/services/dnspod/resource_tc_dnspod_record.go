@@ -191,7 +191,16 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 		_ = d.Set("domain", items[0])
 		_ = d.Set("record_line", recordInfo.RecordLine)
 		_ = d.Set("record_type", recordInfo.RecordType)
-		_ = d.Set("value", recordInfo.Value)
+		if v, ok := d.GetOk("value"); ok {
+			value := v.(string)
+			if strings.HasSuffix(value, ".") {
+				_ = d.Set("value", recordInfo.Value)
+			} else {
+				_ = d.Set("value", strings.TrimSuffix(*recordInfo.Value, "."))
+			}
+		} else {
+			_ = d.Set("value", recordInfo.Value)
+		}
 		_ = d.Set("remark", recordInfo.Remark)
 		if *recordInfo.Enabled == uint64(0) {
 			_ = d.Set("status", "DISABLE")
@@ -235,19 +244,19 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 	request.Value = &value
 	request.SubDomain = &subDomain
 
-	if d.HasChange("status") {
-		status := d.Get("status").(string)
+	if v, ok := d.GetOk("status"); ok {
+		status := v.(string)
 		request.Status = &status
 	}
 	if v, ok := d.GetOk("mx"); ok {
 		request.MX = helper.IntUint64(v.(int))
 	}
-	if d.HasChange("ttl") {
-		ttl := d.Get("ttl").(int)
+	if v, ok := d.GetOk("ttl"); ok {
+		ttl := v.(int)
 		request.TTL = helper.IntUint64(ttl)
 	}
-	if d.HasChange("weight") {
-		weight := d.Get("weight").(int)
+	if v, ok := d.GetOk("weight"); ok {
+		weight := v.(int)
 		request.Weight = helper.IntUint64(weight)
 	}
 	d.Partial(true)

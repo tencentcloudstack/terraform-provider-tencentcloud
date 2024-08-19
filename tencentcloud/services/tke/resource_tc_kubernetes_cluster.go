@@ -373,6 +373,14 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Description: "Indicates whether to ignore the cluster cidr conflict error. Default is false.",
 			},
 
+			"ignore_service_cidr_conflict": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Indicates whether to ignore the service cidr conflict error. Only valid in `VPC-CNI` mode.",
+			},
+
 			"cluster_max_pod_num": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -1306,6 +1314,9 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOkExists("ignore_cluster_cidr_conflict"); ok {
 		clusterCIDRSettings.IgnoreClusterCIDRConflict = helper.Bool(v.(bool))
 	}
+	if v, ok := d.GetOkExists("ignore_service_cidr_conflict"); ok {
+		clusterCIDRSettings.IgnoreServiceCIDRConflict = helper.Bool(v.(bool))
+	}
 	if v, ok := d.GetOkExists("cluster_max_service_num"); ok {
 		clusterCIDRSettings.MaxClusterServiceNum = helper.IntUint64(v.(int))
 	}
@@ -1508,6 +1519,10 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 
 		if respData.ClusterNetworkSettings.IgnoreClusterCIDRConflict != nil {
 			_ = d.Set("ignore_cluster_cidr_conflict", respData.ClusterNetworkSettings.IgnoreClusterCIDRConflict)
+		}
+
+		if respData.ClusterNetworkSettings.IgnoreServiceCIDRConflict != nil {
+			_ = d.Set("ignore_service_cidr_conflict", respData.ClusterNetworkSettings.IgnoreServiceCIDRConflict)
 		}
 
 		if respData.ClusterNetworkSettings.MaxNodePodNum != nil {

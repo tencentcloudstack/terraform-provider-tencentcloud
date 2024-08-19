@@ -116,9 +116,9 @@ variable "default_project" {
 
 // EMR
 const (
-	DefaultEMRVpcId    = DefaultVpcId
-	DefaultEMRSubnetId = DefaultSubnetId
-	DefaultEMRSgId     = "sg-694qit0p"
+	DefaultEMRVpcId    = "vpc-axrsmmrv"
+	DefaultEMRSubnetId = "subnet-j5vja918"
+	DefaultEMRSgId     = "sg-bzbu5ezt"
 )
 
 const DefaultEMRVariable = `

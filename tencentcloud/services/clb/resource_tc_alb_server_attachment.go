@@ -218,7 +218,7 @@ func resourceTencentCloudAlbServerAttachmentDelete(d *schema.ResourceData, meta 
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("backends").(*schema.Set).List())
+		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("backends").(*schema.Set).List(), "", "")
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

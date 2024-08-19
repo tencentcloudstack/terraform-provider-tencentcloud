@@ -123,6 +123,20 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			RequiredWith: []string{"availability_zone_list"},
 			Description:  "The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.",
 		},
+		"maintenance_start": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Maintenance window start time. The value range is any full point or half point from `00:00-23:00`, such as 00:00 or 00:30.",
+		},
+		"maintenance_end": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+			Description: "Maintenance window end time.\n" +
+				"	- The value range is any full point or half point from `00:00-23:00`, and the maintenance time duration is at least 30 minutes and at most 3 hours.\n" +
+				"	- The end time must be based on the start time backwards.",
+		},
 	}
 	basic := TencentMongodbBasicInfo()
 	conflictList := []string{"mongos_cpu", "mongos_memory", "mongos_node_num"}
@@ -350,6 +364,16 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	if !has {
 		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
+
+	maintenanceStart, okMaintenanceStart := d.GetOk("maintenance_start")
+	maintenanceEnd, okMaintenanceEnd := d.GetOk("maintenance_end")
+	if okMaintenanceStart && okMaintenanceEnd {
+		err := mongodbService.SetInstanceMaintenance(ctx, instanceId, maintenanceStart.(string), maintenanceEnd.(string))
+		if err != nil {
+			return err
+		}
+	}
+	// mongodbService.SetInstanceMaintenance()
 	//internal version: replace begin begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace begin end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -442,6 +466,12 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("node_num", *instance.SecondaryNum+1)
+	if instance.MaintenanceStart != nil && len(*instance.MaintenanceStart) == 8 {
+		_ = d.Set("maintenance_start", (*instance.MaintenanceStart)[:5])
+	}
+	if instance.MaintenanceEnd != nil && len(*instance.MaintenanceEnd) == 8 {
+		_ = d.Set("maintenance_end", (*instance.MaintenanceEnd)[:5])
+	}
 
 	replicateSets, err := mongodbService.DescribeDBInstanceNodeProperty(ctx, instanceId)
 	if err != nil {
@@ -627,6 +657,17 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		err := mongodbService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
 		if err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("maintenance_start") || d.HasChange("maintenance_end") {
+		maintenanceStart, okMaintenanceStart := d.GetOk("maintenance_start")
+		maintenanceEnd, okMaintenanceEnd := d.GetOk("maintenance_end")
+		if okMaintenanceStart && okMaintenanceEnd {
+			err := mongodbService.SetInstanceMaintenance(ctx, instanceId, maintenanceStart.(string), maintenanceEnd.(string))
+			if err != nil {
+				return err
+			}
 		}
 	}
 

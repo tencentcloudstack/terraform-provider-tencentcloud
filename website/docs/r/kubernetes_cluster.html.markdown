@@ -830,6 +830,7 @@ The following arguments are supported:
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
 * `globe_desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
+* `ignore_service_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the service cidr conflict error. Only valid in `VPC-CNI` mode.
 * `is_non_static_ip_mode` - (Optional, Bool, ForceNew) Indicates whether non-static ip mode is enabled. Default is false.
 * `kube_proxy_mode` - (Optional, String) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.
 * `labels` - (Optional, Map, ForceNew) Labels of tke cluster nodes.

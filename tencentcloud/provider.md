@@ -784,6 +784,7 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_ro_stop_replication
     tencentcloud_mysql_isolate_instance
     tencentcloud_mysql_dr_instance
+    tencentcloud_mysql_ssl
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1242,6 +1243,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_protocol_template
     tencentcloud_protocol_template_group
     tencentcloud_route_table
+    tencentcloud_vpc_private_nat_gateway
 	tencentcloud_route_table_association
     tencentcloud_route_entry
     tencentcloud_route_table_entry
@@ -1354,6 +1356,7 @@ Cloud Log Service(CLS)
     tencentcloud_cls_shipper_tasks
     tencentcloud_cls_machines
     tencentcloud_cls_machine_group_configs
+    tencentcloud_cls_logsets
 
 TencentCloud Lighthouse(Lighthouse)
   Resource
@@ -2147,3 +2150,14 @@ CDWPG
 CSIP
   Resource
     tencentcloud_csip_risk_center
+
+CDC
+  Data Source
+    tencentcloud_cdc_dedicated_cluster_hosts
+    tencentcloud_cdc_dedicated_cluster_instance_types
+    tencentcloud_cdc_dedicated_cluster_orders
+
+  Resource
+    tencentcloud_cdc_site
+    tencentcloud_cdc_dedicated_cluster
+  

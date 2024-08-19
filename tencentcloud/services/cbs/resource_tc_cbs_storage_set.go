@@ -48,13 +48,19 @@ func ResourceTencentCloudCbsStorageSet() *schema.Resource {
 				Optional:     true,
 				Default:      CBS_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CBS_CHARGE_TYPE),
-				Description:  "The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.",
+				Description:  "The charge type of CBS instance. Support `POSTPAID_BY_HOUR` and `DEDICATED_CLUSTER_PAID`. The default is `POSTPAID_BY_HOUR`.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
 				Description: "The available zone that the CBS instance locates at.",
+			},
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Exclusive cluster id.",
 			},
 			"storage_name": {
 				Type:         schema.TypeString,
@@ -112,11 +118,12 @@ func ResourceTencentCloudCbsStorageSet() *schema.Resource {
 func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		request   = cbs.NewCreateDisksRequest()
+		diskCount int
+	)
 
-	var diskCount int
-
-	request := cbs.NewCreateDisksRequest()
 	request.DiskName = helper.String(d.Get("storage_name").(string))
 	request.DiskType = helper.String(d.Get("storage_type").(string))
 	request.DiskSize = helper.IntUint64(d.Get("storage_size").(int))
@@ -124,15 +131,23 @@ func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interf
 		diskCount = v.(int)
 		request.DiskCount = helper.Uint64(uint64(diskCount))
 	}
+
 	request.Placement = &cbs.Placement{
 		Zone: helper.String(d.Get("availability_zone").(string)),
 	}
+
+	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
+		request.Placement.DedicatedClusterId = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("project_id"); ok {
 		request.Placement.ProjectId = helper.IntUint64(v.(int))
 	}
+
 	if v, ok := d.GetOk("snapshot_id"); ok {
 		request.SnapshotId = helper.String(v.(string))
 	}
+
 	if _, ok := d.GetOk("encrypt"); ok {
 		request.Encrypt = helper.String("ENCRYPT")
 	}
@@ -157,6 +172,7 @@ func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interf
 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
 				return resource.RetryableError(fmt.Errorf("cbs create error: %s, retrying", e.Error()))
 			}
+
 			return resource.NonRetryableError(e)
 		}
 
@@ -168,6 +184,7 @@ func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interf
 		storageIds = response.Response.DiskIdSet
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create cbs failed, reason:%s\n ", logId, err.Error())
 		return err
@@ -183,21 +200,20 @@ func resourceTencentCloudCbsStorageSetRead(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	storageId := d.Id()
-	cbsService := CbsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
-
-	var storageSet []*cbs.Disk
-	var errRet error
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		storageSet []*cbs.Disk
+		errRet     error
+		storageId  = d.Id()
+	)
 
 	storageSet, errRet = cbsService.DescribeDiskSetByIds(ctx, storageId)
 	if errRet != nil {
 		return errRet
 	}
+
 	if storageSet == nil {
 		d.SetId("")
 		return nil
@@ -209,6 +225,7 @@ func resourceTencentCloudCbsStorageSetRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("storage_type", storage.DiskType)
 	_ = d.Set("storage_size", storage.DiskSize)
 	_ = d.Set("availability_zone", storage.Placement.Zone)
+	_ = d.Set("dedicated_cluster_id", storage.Placement.DedicatedClusterId)
 	_ = d.Set("storage_name", d.Get("storage_name"))
 	_ = d.Set("project_id", storage.Placement.ProjectId)
 	_ = d.Set("encrypt", storage.Encrypt)
@@ -229,27 +246,26 @@ func resourceTencentCloudCbsStorageSetUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudCbsStorageSetDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	storageId := d.Id()
-
-	cbsService := CbsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		storageId  = d.Id()
+		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := cbsService.DeleteDiskSetByIds(ctx, storageId)
 		if e != nil {
-			log.Printf("[CRITAL][first delete]%s api[%s] fail, reason[%s]\n",
-				logId, "delete", e.Error())
+			log.Printf("[CRITAL][first delete]%s api[%s] fail, reason[%s]\n", logId, "delete", e.Error())
 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
 			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
 				return resource.RetryableError(fmt.Errorf("[first delete]cvm delete error: %s, retrying", ee.Error()))
 			}
+
 			return resource.NonRetryableError(e)
 		}
+
 		return nil
 	})
 

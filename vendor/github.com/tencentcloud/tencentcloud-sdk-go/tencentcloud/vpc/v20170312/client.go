@@ -3111,6 +3111,7 @@ func NewCreateDefaultVpcResponse() (response *CreateDefaultVpcResponse) {
 //  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAP = "InvalidParameterValue.SubnetOverlap"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_DEFAULTVPCLIMITEXCEEDED = "LimitExceeded.DefaultVpcLimitExceeded"
 //  RESOURCEINSUFFICIENT_CIDRBLOCK = "ResourceInsufficient.CidrBlock"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
@@ -3141,6 +3142,7 @@ func (c *Client) CreateDefaultVpc(request *CreateDefaultVpcRequest) (response *C
 //  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAP = "InvalidParameterValue.SubnetOverlap"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_DEFAULTVPCLIMITEXCEEDED = "LimitExceeded.DefaultVpcLimitExceeded"
 //  RESOURCEINSUFFICIENT_CIDRBLOCK = "ResourceInsufficient.CidrBlock"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
@@ -9299,6 +9301,10 @@ func NewDeleteVpnConnectionResponse() (response *DeleteVpnConnectionResponse) {
 // DeleteVpnConnection
 // 本接口（DeleteVpnConnection）用于删除VPN通道。
 //
+// >?本接口为异步接口
+//
+// >
+//
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -9312,6 +9318,10 @@ func (c *Client) DeleteVpnConnection(request *DeleteVpnConnectionRequest) (respo
 
 // DeleteVpnConnection
 // 本接口（DeleteVpnConnection）用于删除VPN通道。
+//
+// >?本接口为异步接口
+//
+// >
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"

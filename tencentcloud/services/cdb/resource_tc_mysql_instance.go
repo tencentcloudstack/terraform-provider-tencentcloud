@@ -1035,31 +1035,55 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				return err
 			}
 
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
-				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if waitSwitch != InWindow {
+				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+					taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+					if err != nil {
+						if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+							return resource.RetryableError(err)
+						} else {
+							return resource.NonRetryableError(err)
+						}
+					}
+
+					if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+						return nil
+					}
+					if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+						return resource.RetryableError(fmt.Errorf("update mysql mem_size/volume_size status is %s", taskStatus))
+					}
+					err = fmt.Errorf("update mysql mem_size/volume_size task status is %s, we won't wait for it finish, it show message:%s",
+						taskStatus, message)
+					return resource.NonRetryableError(err)
+				})
 
 				if err != nil {
-					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-						return resource.RetryableError(err)
-					} else {
-						return resource.NonRetryableError(err)
+					log.Printf("[CRITAL]%s update mysql mem_size/volume_size fail, reason:%s\n", logId, err.Error())
+					return err
+				}
+			} else {
+				err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+					mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+
+					if err != nil {
+						if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+							return resource.RetryableError(err)
+						} else {
+							return resource.NonRetryableError(err)
+						}
 					}
-				}
 
-				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-					return nil
-				}
-				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-					return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
-				}
-				err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
-					",", message)
-				return resource.NonRetryableError(err)
-			})
+					if *mysqlInfo.TaskStatus == 15 {
+						return nil
+					}
+					return resource.RetryableError(fmt.Errorf("update mysql mem_size/volume_size task status is %v", mysqlInfo.TaskStatus))
+				})
 
-			if err != nil {
-				log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
-				return err
+				if err != nil {
+					log.Printf("[CRITAL]%s update mysql mem_size/volume_size fail, reason:%s\n", logId, err.Error())
+					return err
+				}
 			}
 		}
 	} else {
@@ -1120,31 +1144,55 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				return err
 			}
 
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
-				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if waitSwitch != InWindow {
+				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+					taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+					if err != nil {
+						if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+							return resource.RetryableError(err)
+						} else {
+							return resource.NonRetryableError(err)
+						}
+					}
+
+					if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+						return nil
+					}
+					if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+						return resource.RetryableError(fmt.Errorf("update mysql mem_size/volume_size status is %s", taskStatus))
+					}
+					err = fmt.Errorf("update mysql mem_size/volume_size task status is %s, we won't wait for it finish, it show message:%s",
+						taskStatus, message)
+					return resource.NonRetryableError(err)
+				})
 
 				if err != nil {
-					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-						return resource.RetryableError(err)
-					} else {
-						return resource.NonRetryableError(err)
+					log.Printf("[CRITAL]%s update mysql mem_size/volume_size fail, reason:%s\n ", logId, err.Error())
+					return err
+				}
+			} else {
+				err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+					mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+
+					if err != nil {
+						if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+							return resource.RetryableError(err)
+						} else {
+							return resource.NonRetryableError(err)
+						}
 					}
-				}
 
-				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-					return nil
-				}
-				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-					return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
-				}
-				err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
-					",", message)
-				return resource.NonRetryableError(err)
-			})
+					if *mysqlInfo.TaskStatus == 15 {
+						return nil
+					}
+					return resource.RetryableError(fmt.Errorf("update mysql engineVersion task status is %v", mysqlInfo.TaskStatus))
+				})
 
-			if err != nil {
-				log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
-				return err
+				if err != nil {
+					log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n", logId, err.Error())
+					return err
+				}
 			}
 		}
 	}
@@ -1221,17 +1269,17 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 					return resource.RetryableError(fmt.Errorf("update mysql engineVersion status is %s", taskStatus))
 				}
-				err = fmt.Errorf("update mysql engineVersion task status is %s,we won't wait for it finish ,it show message:%s",
-					",", message)
+				err = fmt.Errorf("update mysql engineVersion task status is %s, we won't wait for it finish, it show message:%s",
+					taskStatus, message)
 				return resource.NonRetryableError(err)
 			})
 
 			if err != nil {
-				log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
+				log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n", logId, err.Error())
 				return err
 			}
 		} else {
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 				mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 				if err != nil {
@@ -1249,7 +1297,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			})
 
 			if err != nil {
-				log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
+				log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n", logId, err.Error())
 				return err
 			}
 

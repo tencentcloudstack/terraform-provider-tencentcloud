@@ -13,21 +13,29 @@ Provides a resource to create a CLB instance.
 
 ## Example Usage
 
-### INTERNAL CLB
+### Create INTERNAL CLB
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
+// create subnet
 resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = "ap-guangzhou-4"
+  availability_zone = var.availability_zone
   name              = "subnet"
   cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type = "INTERNAL"
   clb_name     = "tf-example"
@@ -41,21 +49,67 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### LCU-supported CLB
+### Create dedicated cluster clb
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
+// create subnet
 resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = "ap-guangzhou-4"
+  availability_zone = var.availability_zone
   name              = "subnet"
   cidr_block        = "10.0.1.0/24"
+  cdc_id            = "cluster-lchwgxhs"
+  is_multicast      = false
 }
 
+// create clb
+resource "tencentcloud_clb_instance" "example" {
+  network_type = "INTERNAL"
+  clb_name     = "tf-example"
+  project_id   = 0
+  cluster_id   = "cluster-lchwgxhs"
+  vpc_id       = tencentcloud_vpc.vpc.id
+  subnet_id    = tencentcloud_subnet.subnet.id
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
+### Create LCU-supported CLB
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type = "INTERNAL"
   clb_name     = "tf-example"
@@ -70,14 +124,20 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### OPEN CLB
+### Create OPEN CLB
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
+// create security group
 resource "tencentcloud_security_group" "example" {
   name        = "tf-example"
   description = "sg desc."
@@ -88,6 +148,7 @@ resource "tencentcloud_security_group" "example" {
   }
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type    = "OPEN"
   clb_name        = "tf-example"
@@ -104,11 +165,21 @@ resource "tencentcloud_clb_instance" "example" {
 ### Support CORS
 
 ```hcl
+variable "zone" {
+  default = "ap-guangzhou"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
+// create security group
 resource "tencentcloud_security_group" "example" {
   name        = "tf-example"
   description = "sg desc."
@@ -119,13 +190,15 @@ resource "tencentcloud_security_group" "example" {
   }
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type              = "OPEN"
   clb_name                  = "tf-example"
   project_id                = 0
-  target_region_info_region = "ap-guangzhou"
-  security_groups           = [tencentcloud_security_group.example.id]
   vpc_id                    = tencentcloud_vpc.vpc.id
+  security_groups           = [tencentcloud_security_group.example.id]
+  target_region_info_region = var.zone
+  target_region_info_vpc_id = tencentcloud_vpc.vpc.id
 
   tags = {
     tagKey = "tagValue"
@@ -133,7 +206,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### OPEN CLB with VipIsp
+### Open CLB with VipIsp
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -141,6 +214,7 @@ resource "tencentcloud_vpc" "vpc" {
   name       = "vpc"
 }
 
+// create vpc bandwidth package
 resource "tencentcloud_vpc_bandwidth_package" "example" {
   network_type           = "SINGLEISP_CMCC"
   charge_type            = "ENHANCED95_POSTPAID_BY_MONTH"
@@ -149,10 +223,11 @@ resource "tencentcloud_vpc_bandwidth_package" "example" {
   egress                 = "center_egress1"
 
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
   }
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type         = "OPEN"
   clb_name             = "tf-example"
@@ -171,11 +246,30 @@ resource "tencentcloud_clb_instance" "example" {
 ### Dynamic Vip Instance
 
 ```hcl
+variable "zone" {
+  default = "ap-guangzhou"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create security group
 resource "tencentcloud_security_group" "example" {
   name        = "tf-example"
   description = "sg desc."
@@ -186,14 +280,15 @@ resource "tencentcloud_security_group" "example" {
   }
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type              = "OPEN"
   clb_name                  = "tf-example"
   project_id                = 0
   vpc_id                    = tencentcloud_vpc.vpc.id
+  target_region_info_region = var.zone
   target_region_info_vpc_id = tencentcloud_vpc.vpc.id
   security_groups           = [tencentcloud_security_group.example.id]
-  target_region_info_region = "ap-guangzhou"
   dynamic_vip               = true
 
   tags = {
@@ -209,11 +304,17 @@ output "domain" {
 ### Specified Vip Instance
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
+// create security group
 resource "tencentcloud_security_group" "example" {
   name        = "tf-example"
   description = "sg desc."
@@ -224,6 +325,7 @@ resource "tencentcloud_security_group" "example" {
   }
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type    = "OPEN"
   clb_name        = "tf-example"
@@ -238,18 +340,37 @@ resource "tencentcloud_clb_instance" "example" {
 }
 
 output "domain" {
-  value = tencentcloud_clb_instance.example
+  value = tencentcloud_clb_instance.example.domain
 }
 ```
 
 ### Default enable
 
 ```hcl
+variable "zone" {
+  default = "ap-guangzhou"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create security group
 resource "tencentcloud_security_group" "example" {
   name        = "tf-example"
   description = "sg desc."
@@ -260,15 +381,16 @@ resource "tencentcloud_security_group" "example" {
   }
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type                 = "OPEN"
   clb_name                     = "tf-example"
   project_id                   = 0
   load_balancer_pass_to_target = true
-  target_region_info_region    = "ap-guangzhou"
   vpc_id                       = tencentcloud_vpc.vpc.id
-  target_region_info_vpc_id    = tencentcloud_vpc.vpc.id
   security_groups              = [tencentcloud_security_group.example.id]
+  target_region_info_vpc_id    = tencentcloud_vpc.vpc.id
+  target_region_info_region    = var.zone
 
   tags = {
     tagKey = "tagValue"
@@ -276,55 +398,76 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### CREATE multiple instance
+### Create multiple instance
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
 resource "tencentcloud_clb_instance" "example" {
   network_type   = "OPEN"
   clb_name       = "tf-example"
-  master_zone_id = "ap-guangzhou-3"
+  master_zone_id = var.availability_zone
 }
 ```
 
 ### Create instance with log
 
 ```hcl
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
   name       = "vpc"
 }
 
-resource "tencentcloud_route_table" "example" {
-  name   = "tf-example"
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create route table
+resource "tencentcloud_route_table" "route" {
+  name   = "route_table"
   vpc_id = tencentcloud_vpc.vpc.id
 }
 
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  route_table_id    = tencentcloud_route_table.example.id
-  availability_zone = "ap-guangzhou-4"
-  name              = "subnet"
-  cidr_block        = "10.0.1.0/24"
+// create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "sg desc."
+  project_id  = 0
+
+  tags = {
+    "example" = "test"
+  }
 }
 
-resource "tencentcloud_clb_log_set" "example" {
+resource "tencentcloud_clb_log_set" "log" {
   period = 7
 }
 
-resource "tencentcloud_clb_log_topic" "example" {
-  log_set_id = tencentcloud_clb_log_set.example.id
+// create topic
+resource "tencentcloud_clb_log_topic" "topic" {
+  log_set_id = tencentcloud_clb_log_set.log.id
   topic_name = "clb-topic"
 }
 
+// create clb
 resource "tencentcloud_clb_instance" "example" {
   network_type                 = "INTERNAL"
   clb_name                     = "tf-example"
   project_id                   = 0
+  load_balancer_pass_to_target = true
   vpc_id                       = tencentcloud_vpc.vpc.id
   subnet_id                    = tencentcloud_subnet.subnet.id
-  log_set_id                   = tencentcloud_clb_log_set.example.id
-  log_topic_id                 = tencentcloud_clb_log_topic.example.id
-  load_balancer_pass_to_target = true
+  security_groups              = [tencentcloud_security_group.example.id]
+  log_set_id                   = tencentcloud_clb_log_set.log.id
+  log_topic_id                 = tencentcloud_clb_log_topic.topic.id
 
   tags = {
     tagKey = "tagValue"
@@ -340,6 +483,7 @@ The following arguments are supported:
 * `network_type` - (Required, String, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
 * `address_ip_version` - (Optional, String) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
 * `bandwidth_package_id` - (Optional, String) Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.
+* `cluster_id` - (Optional, String, ForceNew) Cluster ID.
 * `delete_protect` - (Optional, Bool) Whether to enable delete protection.
 * `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
 * `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.

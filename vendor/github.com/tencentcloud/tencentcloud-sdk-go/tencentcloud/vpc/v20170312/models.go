@@ -900,6 +900,9 @@ type AssignIpv6AddressesRequestParams struct {
 
 	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配额数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
 	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
 type AssignIpv6AddressesRequest struct {
@@ -913,6 +916,9 @@ type AssignIpv6AddressesRequest struct {
 
 	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配额数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
 	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
 func (r *AssignIpv6AddressesRequest) ToJsonString() string {
@@ -930,6 +936,7 @@ func (r *AssignIpv6AddressesRequest) FromJsonString(s string) error {
 	delete(f, "NetworkInterfaceId")
 	delete(f, "Ipv6Addresses")
 	delete(f, "Ipv6AddressCount")
+	delete(f, "ClientToken")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssignIpv6AddressesRequest has unknown keys!", "")
 	}
@@ -2167,6 +2174,26 @@ type CCN struct {
 	// 是否开启云联网路由传播策略。`False` 未开启，`True` 开启。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteBroadcastPolicyFlag *bool `json:"RouteBroadcastPolicyFlag,omitnil,omitempty" name:"RouteBroadcastPolicyFlag"`
+
+	// 是否开启等价路由功能。`False` 未开启，`True` 开启。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteECMPFlag *bool `json:"RouteECMPFlag,omitnil,omitempty" name:"RouteECMPFlag"`
+
+	// 是否开启路由重叠功能。`False` 未开启，`True` 开启。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteOverlapFlag *bool `json:"RouteOverlapFlag,omitnil,omitempty" name:"RouteOverlapFlag"`
+
+	// 是否开启QOS。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TrafficMarkingPolicyFlag *bool `json:"TrafficMarkingPolicyFlag,omitnil,omitempty" name:"TrafficMarkingPolicyFlag"`
+
+	// 是否开启路由表选择策略。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteSelectPolicyFlag *bool `json:"RouteSelectPolicyFlag,omitnil,omitempty" name:"RouteSelectPolicyFlag"`
+
+	// 是否开启二层云联网通道。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DirectConnectAccelerateChannelFlag *bool `json:"DirectConnectAccelerateChannelFlag,omitnil,omitempty" name:"DirectConnectAccelerateChannelFlag"`
 }
 
 type CcnAttachedInstance struct {
@@ -2352,6 +2379,10 @@ type CcnInstance struct {
 	// 实例关联的路由表ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
+
+	// 实例付费方式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 }
 
 type CcnInstanceInfo struct {
@@ -3333,6 +3364,7 @@ type CreateBandwidthPackageRequestParams struct {
 	// <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
 	// <li>ENHANCED95_POSTPAID_BY_MONTH: 按月后付费增强型95计费</li>
 	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 后付费日结按带宽计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费按主流量计费</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
 	// 带宽包名称。
@@ -3374,6 +3406,7 @@ type CreateBandwidthPackageRequest struct {
 	// <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
 	// <li>ENHANCED95_POSTPAID_BY_MONTH: 按月后付费增强型95计费</li>
 	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 后付费日结按带宽计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费按主流量计费</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
 	// 带宽包名称。
@@ -4181,17 +4214,20 @@ type CreateHaVipRequestParams struct {
 	// `HAVIP`所在私有网络`ID`。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// `HAVIP`所在子网`ID`。
-	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
-
 	// `HAVIP`名称。
 	HaVipName *string `json:"HaVipName,omitnil,omitempty" name:"HaVipName"`
+
+	// `HAVIP`所在子网`ID`。
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 指定虚拟IP地址，必须在`VPC`网段内且未被占用。不指定则自动分配。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// `HAVIP`所在弹性网卡`ID`。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
+
+	// 是否开启`HAVIP`漂移时子机或网卡范围的校验。默认不开启。
+	CheckAssociate *bool `json:"CheckAssociate,omitnil,omitempty" name:"CheckAssociate"`
 }
 
 type CreateHaVipRequest struct {
@@ -4200,17 +4236,20 @@ type CreateHaVipRequest struct {
 	// `HAVIP`所在私有网络`ID`。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// `HAVIP`所在子网`ID`。
-	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
-
 	// `HAVIP`名称。
 	HaVipName *string `json:"HaVipName,omitnil,omitempty" name:"HaVipName"`
+
+	// `HAVIP`所在子网`ID`。
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 指定虚拟IP地址，必须在`VPC`网段内且未被占用。不指定则自动分配。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// `HAVIP`所在弹性网卡`ID`。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
+
+	// 是否开启`HAVIP`漂移时子机或网卡范围的校验。默认不开启。
+	CheckAssociate *bool `json:"CheckAssociate,omitnil,omitempty" name:"CheckAssociate"`
 }
 
 func (r *CreateHaVipRequest) ToJsonString() string {
@@ -4226,10 +4265,11 @@ func (r *CreateHaVipRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "VpcId")
-	delete(f, "SubnetId")
 	delete(f, "HaVipName")
+	delete(f, "SubnetId")
 	delete(f, "Vip")
 	delete(f, "NetworkInterfaceId")
+	delete(f, "CheckAssociate")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateHaVipRequest has unknown keys!", "")
 	}
@@ -7367,6 +7407,14 @@ type CrossBorderCompliance struct {
 
 	// 审批单创建时间。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
+
+	// 法定代表人身份证号。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LegalPersonId *string `json:"LegalPersonId,omitnil,omitempty" name:"LegalPersonId"`
+
+	// 法定代表人身份证。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LegalPersonIdCard *string `json:"LegalPersonIdCard,omitnil,omitempty" name:"LegalPersonIdCard"`
 }
 
 type CrossBorderFlowMonitorData struct {
@@ -12776,13 +12824,7 @@ type DescribeHaVipsRequestParams struct {
 	// `HAVIP`唯一`ID`，形如：`havip-9o233uri`。
 	HaVipIds []*string `json:"HaVipIds,omitnil,omitempty" name:"HaVipIds"`
 
-	// 过滤条件，参数不支持同时指定`HaVipIds`和`Filters`。
-	// <li>havip-id - String - `HAVIP`唯一`ID`，形如：`havip-9o233uri`。</li>
-	// <li>havip-name - String - `HAVIP`名称。</li>
-	// <li>vpc-id - String - `HAVIP`所在私有网络`ID`。</li>
-	// <li>subnet-id - String - `HAVIP`所在子网`ID`。</li>
-	// <li>vip - String - `HAVIP`的地址`VIP`。</li>
-	// <li>address-ip - String - `HAVIP`绑定的弹性公网`IP`。</li>
+	// 过滤条件，参数不支持同时指定`HaVipIds`和`Filters`。<li>havip-id - String - `HAVIP`唯一`ID`，形如：`havip-9o233uri`。</li><li>havip-name - String - `HAVIP`名称。</li><li>vpc-id - String - `HAVIP`所在私有网络`ID`。</li><li>subnet-id - String - `HAVIP`所在子网`ID`。</li><li>vip - String - `HAVIP`的地址`VIP`。</li><li>address-ip - String - `HAVIP`绑定的弹性公网`IP`。</li><li>havip-association.instance-id - String - `HAVIP`绑定的子机或网卡。</li><li>havip-association.instance-type - String - `HAVIP`绑定的类型，取值:CVM, ENI。</li><li>check-associate - Bool - 是否开启HaVip飘移时校验绑定的子机或网卡。</li><li>cdc-id - String - CDC实例ID。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -12798,13 +12840,7 @@ type DescribeHaVipsRequest struct {
 	// `HAVIP`唯一`ID`，形如：`havip-9o233uri`。
 	HaVipIds []*string `json:"HaVipIds,omitnil,omitempty" name:"HaVipIds"`
 
-	// 过滤条件，参数不支持同时指定`HaVipIds`和`Filters`。
-	// <li>havip-id - String - `HAVIP`唯一`ID`，形如：`havip-9o233uri`。</li>
-	// <li>havip-name - String - `HAVIP`名称。</li>
-	// <li>vpc-id - String - `HAVIP`所在私有网络`ID`。</li>
-	// <li>subnet-id - String - `HAVIP`所在子网`ID`。</li>
-	// <li>vip - String - `HAVIP`的地址`VIP`。</li>
-	// <li>address-ip - String - `HAVIP`绑定的弹性公网`IP`。</li>
+	// 过滤条件，参数不支持同时指定`HaVipIds`和`Filters`。<li>havip-id - String - `HAVIP`唯一`ID`，形如：`havip-9o233uri`。</li><li>havip-name - String - `HAVIP`名称。</li><li>vpc-id - String - `HAVIP`所在私有网络`ID`。</li><li>subnet-id - String - `HAVIP`所在子网`ID`。</li><li>vip - String - `HAVIP`的地址`VIP`。</li><li>address-ip - String - `HAVIP`绑定的弹性公网`IP`。</li><li>havip-association.instance-id - String - `HAVIP`绑定的子机或网卡。</li><li>havip-association.instance-type - String - `HAVIP`绑定的类型，取值:CVM, ENI。</li><li>check-associate - Bool - 是否开启HaVip飘移时校验绑定的子机或网卡。</li><li>cdc-id - String - CDC实例ID。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -20413,6 +20449,18 @@ type HaVip struct {
 
 	// 使用havip的业务标识。
 	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
+
+	// `HAVIP`的飘移范围。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HaVipAssociationSet []*HaVipAssociation `json:"HaVipAssociationSet,omitnil,omitempty" name:"HaVipAssociationSet"`
+
+	// 是否开启`HAVIP`的飘移范围校验。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CheckAssociate *bool `json:"CheckAssociate,omitnil,omitempty" name:"CheckAssociate"`
+
+	// HAVIP 刷新时间。该参数只作为出参数。以下场景会触发 FlushTime 被刷新：1）子机发出免费 ARP 触发 HAVIP 漂移；2）手动HAVIP解绑网卡; 没有更新时默认值：0000-00-00 00:00:00
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlushedTime *string `json:"FlushedTime,omitnil,omitempty" name:"FlushedTime"`
 }
 
 // Predefined struct for user
@@ -20474,6 +20522,20 @@ func (r *HaVipAssociateAddressIpResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *HaVipAssociateAddressIpResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type HaVipAssociation struct {
+	// HaVip实例唯一ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HaVipId *string `json:"HaVipId,omitnil,omitempty" name:"HaVipId"`
+
+	// HaVip绑定的子机或网卡唯一ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// HaVip绑定的类型。取值:CVM, ENI。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 }
 
 // Predefined struct for user
@@ -20918,7 +20980,7 @@ type InstanceBind struct {
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 实例所在地域。
-	InstanceRegion []*string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
+	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 
 	// 实例所属的账户uin。
 	InstanceUin *string `json:"InstanceUin,omitnil,omitempty" name:"InstanceUin"`
@@ -25136,6 +25198,9 @@ type ModifyVpnGatewayAttributeRequestParams struct {
 
 	// BGP ASN。ASN取值范围为1- 4294967295，默认值64551，其中139341、45090和58835不可用。
 	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
+
+	// 服务端最大连接数个数。
+	MaxConnection *uint64 `json:"MaxConnection,omitnil,omitempty" name:"MaxConnection"`
 }
 
 type ModifyVpnGatewayAttributeRequest struct {
@@ -25152,6 +25217,9 @@ type ModifyVpnGatewayAttributeRequest struct {
 
 	// BGP ASN。ASN取值范围为1- 4294967295，默认值64551，其中139341、45090和58835不可用。
 	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
+
+	// 服务端最大连接数个数。
+	MaxConnection *uint64 `json:"MaxConnection,omitnil,omitempty" name:"MaxConnection"`
 }
 
 func (r *ModifyVpnGatewayAttributeRequest) ToJsonString() string {
@@ -25170,6 +25238,7 @@ func (r *ModifyVpnGatewayAttributeRequest) FromJsonString(s string) error {
 	delete(f, "VpnGatewayName")
 	delete(f, "InstanceChargeType")
 	delete(f, "BgpAsn")
+	delete(f, "MaxConnection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpnGatewayAttributeRequest has unknown keys!", "")
 	}
@@ -25774,7 +25843,7 @@ type NetworkAclEntry struct {
 	// 协议, 取值: TCP,UDP, ICMP, ALL。
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 端口(all, 单个port,  range)。当Protocol为ALL或ICMP时，不能指定Port。
+	// 端口(all, 单个port,  range)。当Protocol为ALL或ICMP时，不能指定Port。使用-指定端口范围，如：10-20。
 	Port *string `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 网段或IP(互斥)。增量创建ACL规则时，CidrBlock和Ipv6CidrBlock至少提供一个。
@@ -26124,6 +26193,20 @@ type PrivateIpAddressSpecification struct {
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 }
 
+type PrivateNatCrossDomainInfo struct {
+	// 跨域私网NAT关联的云联网ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+
+	// 跨域私网NAT本端Vpc
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocalVpcId *string `json:"LocalVpcId,omitnil,omitempty" name:"LocalVpcId"`
+
+	// 跨域私网NAT对端Vpc
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PeerVpcId *string `json:"PeerVpcId,omitnil,omitempty" name:"PeerVpcId"`
+}
+
 type PrivateNatDestinationIpPortTranslationNatRule struct {
 	// 协议
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
@@ -26173,6 +26256,26 @@ type PrivateNatGateway struct {
 	// 标签键值对。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
+
+	// 专线网关唯一`ID`
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DirectConnectGatewayIds []*string `json:"DirectConnectGatewayIds,omitnil,omitempty" name:"DirectConnectGatewayIds"`
+
+	// 私网网关类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NatType *string `json:"NatType,omitnil,omitempty" name:"NatType"`
+
+	// 私网NAT跨域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CrossDomainInfo *PrivateNatCrossDomainInfo `json:"CrossDomainInfo,omitnil,omitempty" name:"CrossDomainInfo"`
+
+	// 是否VPC型私网网关
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcType *bool `json:"VpcType,omitnil,omitempty" name:"VpcType"`
+
+	// 跨域私网NAT关联的云联网ID	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 }
 
 type PrivateNatGatewayLimit struct {

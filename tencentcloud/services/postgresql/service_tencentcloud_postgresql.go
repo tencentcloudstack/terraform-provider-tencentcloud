@@ -491,6 +491,52 @@ func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsByGroupId(ctx conte
 	return
 }
 
+func (me *PostgresqlService) DescribeReadOnlyGroupsById(ctx context.Context, masterDBInstanceId string, instanceId string) (readOnlyGroupId *string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDescribeReadOnlyGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Filters = []*postgresql.Filter{
+		{
+			Name: helper.String("db-master-instance-id"),
+			Values: []*string{
+				helper.String(masterDBInstanceId),
+			},
+		},
+	}
+
+	response, err := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	roGroupList := response.Response.ReadOnlyGroupList
+	if len(roGroupList) > 0 {
+		for _, roGroup := range roGroupList {
+			roDBInstanceList := roGroup.ReadOnlyDBInstanceList
+			for _, roDBInstance := range roDBInstanceList {
+				roDBInstanceId := *roDBInstance.DBInstanceId
+				if roDBInstanceId == instanceId {
+					readOnlyGroupId = roGroup.ReadOnlyGroupId
+					return
+				}
+			}
+		}
+	}
+
+	return
+}
+
 func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsById(ctx context.Context, instanceId string) (sg []string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()

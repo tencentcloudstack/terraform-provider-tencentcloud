@@ -22,6 +22,8 @@ resource "tencentcloud_ccn" "example" {
   qos                  = "AG"
   charge_type          = "PREPAID"
   bandwidth_limit_type = "INTER_REGION_LIMIT"
+  route_ecmp_flag      = true
+  route_overlap_flag   = true
   tags = {
     createBy = "terraform"
   }
@@ -37,6 +39,8 @@ resource "tencentcloud_ccn" "example" {
   qos                  = "AG"
   charge_type          = "POSTPAID"
   bandwidth_limit_type = "OUTER_REGION_LIMIT"
+  route_ecmp_flag      = false
+  route_overlap_flag   = false
   tags = {
     createBy = "terraform"
   }
@@ -64,6 +68,8 @@ The following arguments are supported:
 * `charge_type` - (Optional, String, ForceNew) Billing mode. Valid values: `PREPAID`, `POSTPAID`. `PREPAID` means prepaid, which means annual and monthly subscription, `POSTPAID` means post-payment, which means billing by volume. The default is `POSTPAID`. The prepaid model only supports inter-regional speed limit, and the post-paid model supports inter-regional speed limit and regional export speed limit.
 * `description` - (Optional, String) Description of CCN, and maximum length does not exceed 100 bytes.
 * `qos` - (Optional, String, ForceNew) Service quality of CCN. Valid values: `PT`, `AU`, `AG`. The default is `AU`.
+* `route_ecmp_flag` - (Optional, Bool) Whether to enable the equivalent routing function. `true`: enabled, `false`: disabled.
+* `route_overlap_flag` - (Optional, Bool) Whether to enable the routing overlap function. `true`: enabled, `false`: disabled.
 * `tags` - (Optional, Map) Instance tag.
 
 ## Attributes Reference

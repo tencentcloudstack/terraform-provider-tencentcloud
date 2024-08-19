@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_cluster_attachment: fix the issue triggered by `labels`
+```

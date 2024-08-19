@@ -11,6 +11,8 @@ resource "tencentcloud_ccn" "example" {
   qos                  = "AG"
   charge_type          = "PREPAID"
   bandwidth_limit_type = "INTER_REGION_LIMIT"
+  route_ecmp_flag      = true
+  route_overlap_flag   = true
   tags = {
     createBy = "terraform"
   }
@@ -26,6 +28,8 @@ resource "tencentcloud_ccn" "example" {
   qos                  = "AG"
   charge_type          = "POSTPAID"
   bandwidth_limit_type = "OUTER_REGION_LIMIT"
+  route_ecmp_flag      = false
+  route_overlap_flag   = false
   tags = {
     createBy = "terraform"
   }

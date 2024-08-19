@@ -13,15 +13,33 @@ Provides a resource to create CBS set.
 
 ## Example Usage
 
+### Create 3 standard CBS storages
+
 ```hcl
-resource "tencentcloud_cbs_storage_set" "storage" {
-  disk_count        = 10
-  storage_name      = "mystorage"
+resource "tencentcloud_cbs_storage_set" "example" {
+  disk_count        = 3
+  storage_name      = "tf-example"
   storage_type      = "CLOUD_SSD"
   storage_size      = 100
   availability_zone = "ap-guangzhou-3"
   project_id        = 0
   encrypt           = false
+}
+```
+
+### Create 3 dedicated cluster CBS storages
+
+```hcl
+resource "tencentcloud_cbs_storage_set" "example" {
+  disk_count           = 3
+  storage_name         = "tf-example"
+  storage_type         = "CLOUD_SSD"
+  storage_size         = 100
+  availability_zone    = "ap-guangzhou-4"
+  dedicated_cluster_id = "cluster-262n63e8"
+  charge_type          = "DEDICATED_CLUSTER_PAID"
+  project_id           = 0
+  encrypt              = false
 }
 ```
 
@@ -33,7 +51,8 @@ The following arguments are supported:
 * `storage_name` - (Required, String) Name of CBS. The maximum length can not exceed 60 bytes.
 * `storage_size` - (Required, Int) Volume of CBS, and unit is GB.
 * `storage_type` - (Required, String, ForceNew) Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.
-* `charge_type` - (Optional, String) The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.
+* `charge_type` - (Optional, String) The charge type of CBS instance. Support `POSTPAID_BY_HOUR` and `DEDICATED_CLUSTER_PAID`. The default is `POSTPAID_BY_HOUR`.
+* `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disk_count` - (Optional, Int, ForceNew) The number of disks to be purchased. Default 1.
 * `encrypt` - (Optional, Bool, ForceNew) Indicates whether CBS is encrypted.
 * `project_id` - (Optional, Int) ID of the project to which the instance belongs.

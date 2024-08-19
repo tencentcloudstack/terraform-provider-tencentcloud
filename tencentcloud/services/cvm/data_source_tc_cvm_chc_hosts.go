@@ -109,11 +109,10 @@ func DataSourceTencentCloudCvmChcHosts() *schema.Resource {
 										Description: "ID list of CDHs from which the instance can be created. If you have purchased CDHs and specify this parameter, the instances you purchase will be randomly deployed on the CDHs.",
 									},
 									"host_ips": {
-										Type: schema.TypeSet,
-										Elem: &schema.Schema{
-											Type: schema.TypeString,
-										},
+										Type:        schema.TypeSet,
+										Elem:        &schema.Schema{Type: schema.TypeString},
 										Computed:    true,
+										Deprecated:  "It has been deprecated from version 1.81.108.",
 										Description: "IPs of the hosts to create CVMs.",
 									},
 									"host_id": {
@@ -374,9 +373,10 @@ func dataSourceTencentCloudCvmChcHostsRead(d *schema.ResourceData, meta interfac
 					placementMap["host_ids"] = chcHost.Placement.HostIds
 				}
 
-				if chcHost.Placement.HostIps != nil {
-					placementMap["host_ips"] = chcHost.Placement.HostIps
-				}
+				// It has been deprecated from version 1.81.108
+				//if chcHost.Placement.HostIps != nil {
+				//	placementMap["host_ips"] = chcHost.Placement.HostIps
+				//}
 
 				if chcHost.Placement.HostId != nil {
 					placementMap["host_id"] = chcHost.Placement.HostId

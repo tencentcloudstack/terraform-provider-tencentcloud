@@ -326,8 +326,9 @@ func (me *TemService) DeleteTemLogConfigById(ctx context.Context, environmentId 
 
 func (me *TemService) DescribeTemScaleRule(ctx context.Context, environmentId string, applicationId string, scaleRuleId string) (scaleRule *tem.Autoscaler, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = tem.NewDescribeApplicationAutoscalerListRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = tem.NewDescribeApplicationAutoscalerListRequest()
+		response = tem.NewDescribeApplicationAutoscalerListResponse()
 	)
 
 	defer func() {
@@ -339,15 +340,21 @@ func (me *TemService) DescribeTemScaleRule(ctx context.Context, environmentId st
 	request.EnvironmentId = &environmentId
 	request.ApplicationId = &applicationId
 
-	response, err := me.client.UseTemClient().DescribeApplicationAutoscalerList(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTemClient().DescribeApplicationAutoscalerList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
+		return nil, err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	scaleRuleList := response.Response.Result
 	for _, rule := range scaleRuleList {
 		if *rule.AutoscalerId == scaleRuleId {

@@ -20,7 +20,9 @@ func ResourceTencentCloudAsLifecycleHook() *schema.Resource {
 		Read:   resourceTencentCloudAsLifecycleHookRead,
 		Update: resourceTencentCloudAsLifecycleHookUpdate,
 		Delete: resourceTencentCloudAsLifecycleHookDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"scaling_group_id": {
 				Type:        schema.TypeString,
@@ -62,8 +64,8 @@ func ResourceTencentCloudAsLifecycleHook() *schema.Resource {
 			"notification_target_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"CMQ_QUEUE", "CMQ_TOPIC"}),
-				Description:  "Target type. Valid values: `CMQ_QUEUE`, `CMQ_TOPIC`.",
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"CMQ_QUEUE", "CMQ_TOPIC", "TDMQ_CMQ_QUEUE", "TDMQ_CMQ_TOPIC"}),
+				Description:  "Target type. Valid values: `CMQ_QUEUE`, `CMQ_TOPIC`, `TDMQ_CMQ_QUEUE`, `TDMQ_CMQ_TOPIC`.",
 			},
 			"notification_queue_name": {
 				Type:        schema.TypeString,
@@ -74,6 +76,27 @@ func ResourceTencentCloudAsLifecycleHook() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "For CMQ_TOPIC type, a name of topic must be set.",
+			},
+			"lifecycle_command": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Computed:    true,
+				Optional:    true,
+				Description: "Remote command execution object. `NotificationTarget` and `LifecycleCommand` cannot be specified at the same time.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"command_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Remote command ID. It is required to execute a command.",
+						},
+						"parameters": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Custom parameter. The field type is JSON encoded string. For example, {\"varA\": \"222\"}.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -115,6 +138,17 @@ func resourceTencentCloudAsLifecycleHookCreate(d *schema.ResourceData, meta inte
 				return fmt.Errorf("topic_name must ot be null when target_type is CMQ_TOPIC")
 			}
 		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "lifecycle_command"); ok {
+		lifecycleCommand := as.LifecycleCommand{}
+		if v, ok := dMap["command_id"]; ok {
+			lifecycleCommand.CommandId = helper.String(v.(string))
+		}
+		if v, ok := dMap["parameters"]; ok {
+			lifecycleCommand.Parameters = helper.String(v.(string))
+		}
+		request.LifecycleCommand = &lifecycleCommand
 	}
 
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLifecycleHook(request)
@@ -175,6 +209,16 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 				_ = d.Set("notification_topic_name", *lifecycleHook.NotificationTarget.TopicName)
 			}
 		}
+		if lifecycleHook.LifecycleCommand != nil {
+			commandMap := map[string]interface{}{}
+			if lifecycleHook.LifecycleCommand.CommandId != nil {
+				commandMap["command_id"] = lifecycleHook.LifecycleCommand.CommandId
+			}
+			if lifecycleHook.LifecycleCommand.Parameters != nil {
+				commandMap["parameters"] = lifecycleHook.LifecycleCommand.Parameters
+			}
+			_ = d.Set("lifecycle_command", []interface{}{commandMap})
+		}
 		return nil
 	})
 	if err != nil {
@@ -219,6 +263,17 @@ func resourceTencentCloudAsLifecycleHookUpdate(d *schema.ResourceData, meta inte
 				return fmt.Errorf("topic_name must ot be null when target_type is CMQ_TOPIC")
 			}
 		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "lifecycle_command"); ok {
+		lifecycleCommand := as.LifecycleCommand{}
+		if v, ok := dMap["command_id"]; ok {
+			lifecycleCommand.CommandId = helper.String(v.(string))
+		}
+		if v, ok := dMap["parameters"]; ok {
+			lifecycleCommand.Parameters = helper.String(v.(string))
+		}
+		request.LifecycleCommand = &lifecycleCommand
 	}
 
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().UpgradeLifecycleHook(request)

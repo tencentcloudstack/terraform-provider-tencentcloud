@@ -43,6 +43,7 @@ In addition to all arguments above, the following attributes are exported:
   * `clb_id` - ID of CLB.
   * `clb_name` - Name of CLB.
   * `clb_vips` - The virtual service address table of the CLB.
+  * `cluster_id` - ID of the cluster.
   * `create_time` - Create time of the CLB.
   * `internet_bandwidth_max_out` - Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
   * `internet_charge_type` - Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.

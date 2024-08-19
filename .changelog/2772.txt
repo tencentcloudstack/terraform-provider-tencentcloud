@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_as_scaling_group: support `health_check_type` and `lb_health_check_grace_period`
+```
+
+```release-note:enhancement
+resource/tencentcloud_as_lifecycle_hook: support import and parameter `lifecycle_command`
+```

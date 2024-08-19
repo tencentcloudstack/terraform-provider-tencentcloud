@@ -25,7 +25,9 @@ func ResourceTencentCloudVpnGateway() *schema.Resource {
 		Update: resourceTencentCloudVpnGatewayUpdate,
 		Delete: resourceTencentCloudVpnGatewayDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"prepaid_period": 1,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -285,7 +287,11 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("type", gateway.Type)
 	_ = d.Set("create_time", gateway.CreatedTime)
 	_ = d.Set("state", gateway.State)
-	_ = d.Set("prepaid_renew_flag", gateway.RenewFlag)
+	if gateway.RenewFlag != nil {
+		_ = d.Set("prepaid_renew_flag", *gateway.RenewFlag)
+	} else {
+		_ = d.Set("prepaid_renew_flag", svcvpc.VPN_PERIOD_PREPAID_RENEW_FLAG_AUTO_NOTIFY)
+	}
 	_ = d.Set("charge_type", gateway.InstanceChargeType)
 	_ = d.Set("expired_time", gateway.ExpiredTime)
 	_ = d.Set("is_address_blocked", gateway.IsAddressBlocked)

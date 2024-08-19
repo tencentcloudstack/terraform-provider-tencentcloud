@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_clb_instance: add params `dedicated_cluster_id`
+```
+
+```release-note:enhancement
+data_source/tencentcloud_clb_instances: add params `dedicated_cluster_id`
+```
