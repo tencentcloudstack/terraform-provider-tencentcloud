@@ -585,6 +585,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
+				Computed:    true,
 				Description: "Node pool tag specifications, will passthroughs to the scaling instances.",
 			},
 
