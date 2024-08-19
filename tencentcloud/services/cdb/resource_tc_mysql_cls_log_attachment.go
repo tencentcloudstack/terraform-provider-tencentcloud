@@ -132,7 +132,7 @@ func resourceTencentCloudMysqlClsLogAttachmentCreate(d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql securityGroupsAttachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create mysql ModifyDBInstanceLogToCLS failed, reason:%+v", logId, err)
 		return err
 	}
 
