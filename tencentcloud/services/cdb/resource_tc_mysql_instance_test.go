@@ -339,6 +339,7 @@ func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql8", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "charge_type", "POSTPAID"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "engine_version", "8.0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "engine_type", "InnoDB"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "internet_service", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "slave_deploy_mode", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "first_slave_zone", "ap-guangzhou-4"),
@@ -362,6 +363,7 @@ func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql8", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "charge_type", "POSTPAID"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "engine_version", "8.0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "engine_type", "InnoDB"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "internet_service", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "slave_deploy_mode", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "first_slave_zone", "ap-guangzhou-4"),
@@ -628,9 +630,10 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
 func testAccMysqlMasterInstance_mysql8(value string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_mysql_instance" "mysql8" {
-	internet_service = 1
-	engine_version   = "8.0"
-	charge_type = "POSTPAID"
+	internet_service  = 1
+	engine_version    = "8.0"
+  	engine_type	      = "InnoDB"
+	charge_type 	  = "POSTPAID"
 	root_password     = "password123"
 	slave_deploy_mode = 0
 	first_slave_zone  = "ap-guangzhou-4"
