@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -115,7 +115,7 @@ func dataSourceTencentCloudKubernetesClusterAuthenticationOptionsRead(d *schema.
 		paramMap["ClusterId"] = helper.String(v.(string))
 	}
 
-	var respData *tke.DescribeClusterAuthenticationOptionsResponseParams
+	var respData *tkev20180525.DescribeClusterAuthenticationOptionsResponseParams
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterAuthenticationOptionsByFilter(ctx, paramMap)
 		if e != nil {

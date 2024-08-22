@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -77,8 +77,8 @@ func resourceTencentCloudKubernetesBackupStorageLocationCreate(d *schema.Resourc
 		name string
 	)
 	var (
-		request  = tke.NewCreateBackupStorageLocationRequest()
-		response = tke.NewCreateBackupStorageLocationResponse()
+		request  = tkev20180525.NewCreateBackupStorageLocationRequest()
+		response = tkev20180525.NewCreateBackupStorageLocationResponse()
 	)
 
 	if v, ok := d.GetOk("name"); ok {
@@ -102,7 +102,7 @@ func resourceTencentCloudKubernetesBackupStorageLocationCreate(d *schema.Resourc
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().CreateBackupStorageLocationWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().CreateBackupStorageLocationWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -188,14 +188,14 @@ func resourceTencentCloudKubernetesBackupStorageLocationDelete(d *schema.Resourc
 	name := d.Id()
 
 	var (
-		request  = tke.NewDeleteBackupStorageLocationRequest()
-		response = tke.NewDeleteBackupStorageLocationResponse()
+		request  = tkev20180525.NewDeleteBackupStorageLocationRequest()
+		response = tkev20180525.NewDeleteBackupStorageLocationResponse()
 	)
 
 	request.Name = helper.String(name)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DeleteBackupStorageLocationWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DeleteBackupStorageLocationWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {

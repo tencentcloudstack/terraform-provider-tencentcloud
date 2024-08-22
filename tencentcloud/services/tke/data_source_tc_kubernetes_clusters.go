@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -320,7 +320,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
-	var respData []*tke.Cluster
+	var respData []*tkev20180525.Cluster
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClustersByFilter(ctx, paramMap)
 		if e != nil {
@@ -337,7 +337,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		return err
 	}
 
-	ids := make([]string, 0, len(respData))
+	var ids []string
 	clustersList := make([]map[string]interface{}, 0, len(respData))
 	if respData != nil {
 		for _, clusters := range respData {

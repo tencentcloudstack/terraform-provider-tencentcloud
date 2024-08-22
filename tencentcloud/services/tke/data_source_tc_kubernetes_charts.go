@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -106,7 +106,7 @@ func dataSourceTencentCloudKubernetesChartsRead(d *schema.ResourceData, meta int
 		paramMap["ClusterType"] = helper.String(v.(string))
 	}
 
-	var respData []*tke.AppChart
+	var respData []*tkev20180525.AppChart
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesChartsByFilter(ctx, paramMap)
 		if e != nil {

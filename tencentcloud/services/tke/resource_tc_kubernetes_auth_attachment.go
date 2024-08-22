@@ -8,7 +8,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -108,8 +109,8 @@ func resourceTencentCloudKubernetesAuthAttachmentCreate(d *schema.ResourceData, 
 		clusterId string
 	)
 	var (
-		request  = tke.NewModifyClusterAuthenticationOptionsRequest()
-		response = tke.NewModifyClusterAuthenticationOptionsResponse()
+		request  = tkev20180525.NewModifyClusterAuthenticationOptionsRequest()
+		response = tkev20180525.NewModifyClusterAuthenticationOptionsResponse()
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -120,7 +121,7 @@ func resourceTencentCloudKubernetesAuthAttachmentCreate(d *schema.ResourceData, 
 		request.ClusterId = helper.String(v.(string))
 	}
 
-	serviceAccountAuthenticationOptions := tke.ServiceAccountAuthenticationOptions{}
+	serviceAccountAuthenticationOptions := tkev20180525.ServiceAccountAuthenticationOptions{}
 	if v, ok := d.GetOkExists("use_tke_default"); ok {
 		serviceAccountAuthenticationOptions.UseTKEDefault = helper.Bool(v.(bool))
 	}
@@ -135,7 +136,7 @@ func resourceTencentCloudKubernetesAuthAttachmentCreate(d *schema.ResourceData, 
 	}
 	request.ServiceAccounts = &serviceAccountAuthenticationOptions
 
-	oIDCConfigAuthenticationOptions := tke.OIDCConfigAuthenticationOptions{}
+	oIDCConfigAuthenticationOptions := tkev20180525.OIDCConfigAuthenticationOptions{}
 	if v, ok := d.GetOkExists("auto_create_oidc_config"); ok {
 		oIDCConfigAuthenticationOptions.AutoCreateOIDCConfig = helper.Bool(v.(bool))
 	}
@@ -156,7 +157,7 @@ func resourceTencentCloudKubernetesAuthAttachmentCreate(d *schema.ResourceData, 
 			return err
 		}
 
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesAuthAttachmentCreateRequestOnError0(ctx, request, e); err != nil {
 				return err
@@ -194,12 +195,8 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 
 	_ = d.Set("cluster_id", clusterId)
 
-	respData, err := service.DescribeKubernetesAuthAttachmentById(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	var respData *tkev20180525.DescribeClusterAuthenticationOptionsResponseParams
+	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesAuthAttachmentById(ctx, clusterId)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -210,9 +207,9 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 		respData = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read kubernetes auth attachment failed, reason:%+v", logId, err)
-		return err
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s read kubernetes auth attachment failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
 	if respData == nil {
@@ -274,7 +271,7 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 	clusterId := d.Id()
 
 	needChange := false
-	mutableArgs := []string{"use_tke_default", "issuer", "jwksuri", "auto_create_discovery_anonymous_auth", "auto_create_oidc_config", "auto_create_client_id", "auto_install_pod_identity_webhook_addon"}
+	mutableArgs := []string{"use_tke_default", "issuer", "jwks_uri", "auto_create_discovery_anonymous_auth", "auto_create_oidc_config", "auto_create_client_id", "auto_install_pod_identity_webhook_addon"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -283,11 +280,11 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 	}
 
 	if needChange {
-		request := tke.NewModifyClusterAuthenticationOptionsRequest()
+		request := tkev20180525.NewModifyClusterAuthenticationOptionsRequest()
 
-		request.ClusterId = &clusterId
+		request.ClusterId = helper.String(clusterId)
 
-		serviceAccountAuthenticationOptions := tke.ServiceAccountAuthenticationOptions{}
+		serviceAccountAuthenticationOptions := tkev20180525.ServiceAccountAuthenticationOptions{}
 		if v, ok := d.GetOkExists("use_tke_default"); ok {
 			serviceAccountAuthenticationOptions.UseTKEDefault = helper.Bool(v.(bool))
 		}
@@ -302,7 +299,7 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 		}
 		request.ServiceAccounts = &serviceAccountAuthenticationOptions
 
-		oIDCConfigAuthenticationOptions := tke.OIDCConfigAuthenticationOptions{}
+		oIDCConfigAuthenticationOptions := tkev20180525.OIDCConfigAuthenticationOptions{}
 		if v, ok := d.GetOkExists("auto_create_oidc_config"); ok {
 			oIDCConfigAuthenticationOptions.AutoCreateOIDCConfig = helper.Bool(v.(bool))
 		}
@@ -323,7 +320,7 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 				return err
 			}
 
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
 			if e != nil {
 				if err := resourceTencentCloudKubernetesAuthAttachmentUpdateRequestOnError0(ctx, request, e); err != nil {
 					return err
@@ -353,22 +350,18 @@ func resourceTencentCloudKubernetesAuthAttachmentDelete(d *schema.ResourceData, 
 	clusterId := d.Id()
 
 	var (
-		request  = tke.NewModifyClusterAuthenticationOptionsRequest()
-		response = tke.NewModifyClusterAuthenticationOptionsResponse()
+		request  = tkev20180525.NewModifyClusterAuthenticationOptionsRequest()
+		response = tkev20180525.NewModifyClusterAuthenticationOptionsResponse()
 	)
 
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
-
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if err := resourceTencentCloudKubernetesAuthAttachmentDeletePreRequest0(ctx, request); err != nil {
 			return err
 		}
 
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterAuthenticationOptionsWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -378,7 +371,7 @@ func resourceTencentCloudKubernetesAuthAttachmentDelete(d *schema.ResourceData, 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes auth attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes auth attachment failed, reason:%+v", logId, err)
 		return err
 	}
 

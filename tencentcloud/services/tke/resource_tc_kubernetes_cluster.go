@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1303,11 +1303,11 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 		clusterId string
 	)
 	var (
-		request  = tke.NewCreateClusterRequest()
-		response = tke.NewCreateClusterResponse()
+		request  = tkev20180525.NewCreateClusterRequest()
+		response = tkev20180525.NewCreateClusterResponse()
 	)
 
-	clusterCIDRSettings := tke.ClusterCIDRSettings{}
+	clusterCIDRSettings := tkev20180525.ClusterCIDRSettings{}
 	if v, ok := d.GetOk("cluster_cidr"); ok {
 		clusterCIDRSettings.ClusterCIDR = helper.String(v.(string))
 	}
@@ -1328,7 +1328,7 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 	}
 	request.ClusterCIDRSettings = &clusterCIDRSettings
 
-	clusterBasicSettings := tke.ClusterBasicSettings{}
+	clusterBasicSettings := tkev20180525.ClusterBasicSettings{}
 	if v, ok := d.GetOk("cluster_version"); ok {
 		clusterBasicSettings.ClusterVersion = helper.String(v.(string))
 	}
@@ -1350,14 +1350,14 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOk("cluster_level"); ok {
 		clusterBasicSettings.ClusterLevel = helper.String(v.(string))
 	}
-	autoUpgradeClusterLevel := tke.AutoUpgradeClusterLevel{}
+	autoUpgradeClusterLevel := tkev20180525.AutoUpgradeClusterLevel{}
 	if v, ok := d.GetOkExists("auto_upgrade_cluster_level"); ok {
 		autoUpgradeClusterLevel.IsAutoUpgrade = helper.Bool(v.(bool))
 	}
 	clusterBasicSettings.AutoUpgradeClusterLevel = &autoUpgradeClusterLevel
 	request.ClusterBasicSettings = &clusterBasicSettings
 
-	clusterAdvancedSettings := tke.ClusterAdvancedSettings{}
+	clusterAdvancedSettings := tkev20180525.ClusterAdvancedSettings{}
 	if v, ok := d.GetOkExists("cluster_ipvs"); ok {
 		clusterAdvancedSettings.IPVS = helper.Bool(v.(bool))
 	}
@@ -1371,23 +1371,23 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 		clusterAdvancedSettings.NodeNameType = helper.String(v.(string))
 	}
 	if extraArgsMap, ok := helper.InterfacesHeadMap(d, "cluster_extra_args"); ok {
-		clusterExtraArgs := tke.ClusterExtraArgs{}
+		clusterExtraArgs := tkev20180525.ClusterExtraArgs{}
 		if v, ok := extraArgsMap["kube_apiserver"]; ok {
-			kubeAPIServerSet := v.(*schema.Set).List()
+			kubeAPIServerSet := v.([]interface{})
 			for i := range kubeAPIServerSet {
 				kubeAPIServer := kubeAPIServerSet[i].(string)
 				clusterExtraArgs.KubeAPIServer = append(clusterExtraArgs.KubeAPIServer, helper.String(kubeAPIServer))
 			}
 		}
 		if v, ok := extraArgsMap["kube_controller_manager"]; ok {
-			kubeControllerManagerSet := v.(*schema.Set).List()
+			kubeControllerManagerSet := v.([]interface{})
 			for i := range kubeControllerManagerSet {
 				kubeControllerManager := kubeControllerManagerSet[i].(string)
 				clusterExtraArgs.KubeControllerManager = append(clusterExtraArgs.KubeControllerManager, helper.String(kubeControllerManager))
 			}
 		}
 		if v, ok := extraArgsMap["kube_scheduler"]; ok {
-			kubeSchedulerSet := v.(*schema.Set).List()
+			kubeSchedulerSet := v.([]interface{})
 			for i := range kubeSchedulerSet {
 				kubeScheduler := kubeSchedulerSet[i].(string)
 				clusterExtraArgs.KubeScheduler = append(clusterExtraArgs.KubeScheduler, helper.String(kubeScheduler))
@@ -1418,7 +1418,7 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 	}
 	request.ClusterAdvancedSettings = &clusterAdvancedSettings
 
-	instanceAdvancedSettings := tke.InstanceAdvancedSettings{}
+	instanceAdvancedSettings := tkev20180525.InstanceAdvancedSettings{}
 	if v, ok := d.GetOkExists("globe_desired_pod_num"); ok {
 		instanceAdvancedSettings.DesiredPodNumber = helper.IntInt64(v.(int))
 	}
@@ -1433,7 +1433,7 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOk("extension_addon"); ok {
 		for _, item := range v.([]interface{}) {
 			extensionAddonsMap := item.(map[string]interface{})
-			extensionAddon := tke.ExtensionAddon{}
+			extensionAddon := tkev20180525.ExtensionAddon{}
 			if v, ok := extensionAddonsMap["name"]; ok {
 				extensionAddon.AddonName = helper.String(v.(string))
 			}
@@ -1449,7 +1449,7 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().CreateClusterWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().CreateClusterWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -1567,7 +1567,7 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	var respData1 *tke.DescribeClusterInstancesResponseParams
+	var respData1 *tkev20180525.DescribeClusterInstancesResponseParams
 	reqErr1 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterById1(ctx, clusterId)
 		if e != nil {
@@ -1620,7 +1620,7 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		_ = d.Set("worker_instances_list", instanceSetList)
 	}
 
-	var respData2 *tke.DescribeClusterSecurityResponseParams
+	var respData2 *tkev20180525.DescribeClusterSecurityResponseParams
 	reqErr2 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterById2(ctx, clusterId)
 		if e != nil {
@@ -1697,7 +1697,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	}
 
 	if needChange {
-		request := tke.NewModifyClusterAttributeRequest()
+		request := tkev20180525.NewModifyClusterAttributeRequest()
 
 		request.ClusterId = helper.String(clusterId)
 
@@ -1718,7 +1718,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAttributeWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterAttributeWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -1742,9 +1742,9 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	}
 
 	if needChange1 {
-		request1 := tke.NewUpdateClusterVersionRequest()
+		request1 := tkev20180525.NewUpdateClusterVersionRequest()
 
-		response1 := tke.NewUpdateClusterVersionResponse()
+		response1 := tkev20180525.NewUpdateClusterVersionResponse()
 
 		request1.ClusterId = helper.String(clusterId)
 
@@ -1757,7 +1757,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().UpdateClusterVersionWithContext(ctx, request1)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().UpdateClusterVersionWithContext(ctx, request1)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -1785,12 +1785,12 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	}
 
 	if needChange2 {
-		request2 := tke.NewModifyClusterAsGroupOptionAttributeRequest()
+		request2 := tkev20180525.NewModifyClusterAsGroupOptionAttributeRequest()
 
 		request2.ClusterId = helper.String(clusterId)
 
 		if clusterAsGroupOptionMap, ok := helper.InterfacesHeadMap(d, "node_pool_global_config"); ok {
-			clusterAsGroupOption := tke.ClusterAsGroupOption{}
+			clusterAsGroupOption := tkev20180525.ClusterAsGroupOption{}
 			if v, ok := clusterAsGroupOptionMap["is_scale_in_enabled"]; ok {
 				clusterAsGroupOption.IsScaleDownEnabled = helper.Bool(v.(bool))
 			}
@@ -1822,7 +1822,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterAsGroupOptionAttributeWithContext(ctx, request2)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterAsGroupOptionAttributeWithContext(ctx, request2)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -1853,8 +1853,8 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 	clusterId := d.Id()
 
 	var (
-		request  = tke.NewDeleteClusterRequest()
-		response = tke.NewDeleteClusterResponse()
+		request  = tkev20180525.NewDeleteClusterRequest()
+		response = tkev20180525.NewDeleteClusterResponse()
 	)
 
 	request.ClusterId = helper.String(clusterId)
@@ -1867,7 +1867,7 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DeleteClusterWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DeleteClusterWithContext(ctx, request)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesClusterDeleteRequestOnError0(ctx, e); err != nil {
 				return err
