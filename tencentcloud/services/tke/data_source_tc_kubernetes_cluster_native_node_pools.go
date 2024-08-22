@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke2v20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke2/v20220501"
+	tkev20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -487,7 +487,7 @@ func dataSourceTencentCloudKubernetesClusterNativeNodePoolsRead(d *schema.Resour
 	logId := tccommon.GetLogId(nil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	service := Tke2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -496,10 +496,10 @@ func dataSourceTencentCloudKubernetesClusterNativeNodePoolsRead(d *schema.Resour
 
 	if v, ok := d.GetOk("filters"); ok {
 		filtersSet := v.([]interface{})
-		tmpSet := make([]*tke2v20220501.Filter, 0, len(filtersSet))
+		tmpSet := make([]*tkev20220501.Filter, 0, len(filtersSet))
 		for _, item := range filtersSet {
 			filtersMap := item.(map[string]interface{})
-			filter := tke2v20220501.Filter{}
+			filter := tkev20220501.Filter{}
 			if v, ok := filtersMap["name"]; ok {
 				filter.Name = helper.String(v.(string))
 			}
@@ -515,7 +515,7 @@ func dataSourceTencentCloudKubernetesClusterNativeNodePoolsRead(d *schema.Resour
 		paramMap["Filters"] = tmpSet
 	}
 
-	var respData []*tke2v20220501.NodePool
+	var respData []*tkev20220501.NodePool
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterNativeNodePoolsByFilter(ctx, paramMap)
 		if e != nil {

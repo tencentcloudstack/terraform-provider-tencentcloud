@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke2v20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke2/v20220501"
+	tkev20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -499,8 +499,8 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 		nodePoolId string
 	)
 	var (
-		request  = tke2v20220501.NewCreateNodePoolRequest()
-		response = tke2v20220501.NewCreateNodePoolResponse()
+		request  = tkev20220501.NewCreateNodePoolRequest()
+		response = tkev20220501.NewCreateNodePoolResponse()
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -520,7 +520,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 	if v, ok := d.GetOk("labels"); ok {
 		for _, item := range v.([]interface{}) {
 			labelsMap := item.(map[string]interface{})
-			label := tke2v20220501.Label{}
+			label := tkev20220501.Label{}
 			if v, ok := labelsMap["name"]; ok {
 				label.Name = helper.String(v.(string))
 			}
@@ -534,7 +534,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 	if v, ok := d.GetOk("taints"); ok {
 		for _, item := range v.([]interface{}) {
 			taintsMap := item.(map[string]interface{})
-			taint := tke2v20220501.Taint{}
+			taint := tkev20220501.Taint{}
 			if v, ok := taintsMap["key"]; ok {
 				taint.Key = helper.String(v.(string))
 			}
@@ -551,14 +551,14 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 	if v, ok := d.GetOk("tags"); ok {
 		for _, item := range v.([]interface{}) {
 			tagsMap := item.(map[string]interface{})
-			tagSpecification := tke2v20220501.TagSpecification{}
+			tagSpecification := tkev20220501.TagSpecification{}
 			if v, ok := tagsMap["resource_type"]; ok {
 				tagSpecification.ResourceType = helper.String(v.(string))
 			}
 			if v, ok := tagsMap["tags"]; ok {
 				for _, item := range v.([]interface{}) {
 					tagsMap := item.(map[string]interface{})
-					tag := tke2v20220501.Tag{}
+					tag := tkev20220501.Tag{}
 					if v, ok := tagsMap["key"]; ok {
 						tag.Key = helper.String(v.(string))
 					}
@@ -581,9 +581,9 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 	}
 
 	if nativeMap, ok := helper.InterfacesHeadMap(d, "native"); ok {
-		createNativeNodePoolParam := tke2v20220501.CreateNativeNodePoolParam{}
+		createNativeNodePoolParam := tkev20220501.CreateNativeNodePoolParam{}
 		if scalingMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["scaling"]); ok {
-			machineSetScaling := tke2v20220501.MachineSetScaling{}
+			machineSetScaling := tkev20220501.MachineSetScaling{}
 			if v, ok := scalingMap["min_replicas"]; ok {
 				machineSetScaling.MinReplicas = helper.IntInt64(v.(int))
 			}
@@ -606,7 +606,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 			createNativeNodePoolParam.InstanceChargeType = helper.String(v.(string))
 		}
 		if systemDiskMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["system_disk"]); ok {
-			disk := tke2v20220501.Disk{}
+			disk := tkev20220501.Disk{}
 			if v, ok := systemDiskMap["disk_type"]; ok {
 				disk.DiskType = helper.String(v.(string))
 			}
@@ -633,7 +633,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 			createNativeNodePoolParam.AutoRepair = helper.Bool(v.(bool))
 		}
 		if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
-			instanceChargePrepaid := tke2v20220501.InstanceChargePrepaid{}
+			instanceChargePrepaid := tkev20220501.InstanceChargePrepaid{}
 			if v, ok := instanceChargePrepaidMap["period"]; ok {
 				instanceChargePrepaid.Period = helper.IntUint64(v.(int))
 			}
@@ -643,7 +643,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 			createNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 		}
 		if managementMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["management"]); ok {
-			managementConfig := tke2v20220501.ManagementConfig{}
+			managementConfig := tkev20220501.ManagementConfig{}
 			if v, ok := managementMap["nameservers"]; ok {
 				nameserversSet := v.([]interface{})
 				for i := range nameserversSet {
@@ -681,7 +681,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 			}
 		}
 		if lifecycleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["lifecycle"]); ok {
-			lifecycleConfig := tke2v20220501.LifecycleConfig{}
+			lifecycleConfig := tkev20220501.LifecycleConfig{}
 			if v, ok := lifecycleMap["pre_init"]; ok {
 				lifecycleConfig.PreInit = helper.String(v.(string))
 			}
@@ -700,7 +700,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 			createNativeNodePoolParam.Replicas = helper.IntInt64(v.(int))
 		}
 		if internetAccessibleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["internet_accessible"]); ok {
-			internetAccessible := tke2v20220501.InternetAccessible{}
+			internetAccessible := tkev20220501.InternetAccessible{}
 			if v, ok := internetAccessibleMap["max_bandwidth_out"]; ok {
 				internetAccessible.MaxBandwidthOut = helper.IntInt64(v.(int))
 			}
@@ -715,7 +715,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 		if v, ok := nativeMap["data_disks"]; ok {
 			for _, item := range v.([]interface{}) {
 				dataDisksMap := item.(map[string]interface{})
-				dataDisk := tke2v20220501.DataDisk{}
+				dataDisk := tkev20220501.DataDisk{}
 				if v, ok := dataDisksMap["disk_type"]; ok {
 					dataDisk.DiskType = helper.String(v.(string))
 				}
@@ -762,7 +762,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 	if v, ok := d.GetOk("annotations"); ok {
 		for _, item := range v.(*schema.Set).List() {
 			annotationsMap := item.(map[string]interface{})
-			annotation := tke2v20220501.Annotation{}
+			annotation := tkev20220501.Annotation{}
 			if v, ok := annotationsMap["name"]; ok {
 				annotation.Name = helper.String(v.(string))
 			}
@@ -774,7 +774,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsCreate(d *schema.ResourceData,
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2V20220501Client().CreateNodePoolWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().CreateNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -803,7 +803,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsRead(d *schema.ResourceData, m
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	service := Tke2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -1176,7 +1176,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 	}
 
 	if needChange {
-		request := tke2v20220501.NewModifyNodePoolRequest()
+		request := tkev20220501.NewModifyNodePoolRequest()
 
 		request.ClusterId = helper.String(clusterId)
 
@@ -1189,7 +1189,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 		if v, ok := d.GetOk("labels"); ok {
 			for _, item := range v.([]interface{}) {
 				labelsMap := item.(map[string]interface{})
-				label := tke2v20220501.Label{}
+				label := tkev20220501.Label{}
 				if v, ok := labelsMap["name"]; ok {
 					label.Name = helper.String(v.(string))
 				}
@@ -1203,7 +1203,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 		if v, ok := d.GetOk("taints"); ok {
 			for _, item := range v.([]interface{}) {
 				taintsMap := item.(map[string]interface{})
-				taint := tke2v20220501.Taint{}
+				taint := tkev20220501.Taint{}
 				if v, ok := taintsMap["key"]; ok {
 					taint.Key = helper.String(v.(string))
 				}
@@ -1220,14 +1220,14 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 		if v, ok := d.GetOk("tags"); ok {
 			for _, item := range v.([]interface{}) {
 				tagsMap := item.(map[string]interface{})
-				tagSpecification := tke2v20220501.TagSpecification{}
+				tagSpecification := tkev20220501.TagSpecification{}
 				if v, ok := tagsMap["resource_type"]; ok {
 					tagSpecification.ResourceType = helper.String(v.(string))
 				}
 				if v, ok := tagsMap["tags"]; ok {
 					for _, item := range v.([]interface{}) {
 						tagsMap := item.(map[string]interface{})
-						tag := tke2v20220501.Tag{}
+						tag := tkev20220501.Tag{}
 						if v, ok := tagsMap["key"]; ok {
 							tag.Key = helper.String(v.(string))
 						}
@@ -1250,9 +1250,9 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 		}
 
 		if nativeMap, ok := helper.InterfacesHeadMap(d, "native"); ok {
-			updateNativeNodePoolParam := tke2v20220501.UpdateNativeNodePoolParam{}
+			updateNativeNodePoolParam := tkev20220501.UpdateNativeNodePoolParam{}
 			if scalingMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["scaling"]); ok {
-				machineSetScaling := tke2v20220501.MachineSetScaling{}
+				machineSetScaling := tkev20220501.MachineSetScaling{}
 				if v, ok := scalingMap["min_replicas"]; ok {
 					machineSetScaling.MinReplicas = helper.IntInt64(v.(int))
 				}
@@ -1285,7 +1285,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 				updateNativeNodePoolParam.InstanceChargeType = helper.String(v.(string))
 			}
 			if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
-				instanceChargePrepaid := tke2v20220501.InstanceChargePrepaid{}
+				instanceChargePrepaid := tkev20220501.InstanceChargePrepaid{}
 				if v, ok := instanceChargePrepaidMap["period"]; ok {
 					instanceChargePrepaid.Period = helper.IntUint64(v.(int))
 				}
@@ -1295,7 +1295,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 				updateNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 			}
 			if systemDiskMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["system_disk"]); ok {
-				disk := tke2v20220501.Disk{}
+				disk := tkev20220501.Disk{}
 				if v, ok := systemDiskMap["disk_type"]; ok {
 					disk.DiskType = helper.String(v.(string))
 				}
@@ -1305,7 +1305,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 				updateNativeNodePoolParam.SystemDisk = &disk
 			}
 			if managementMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["management"]); ok {
-				managementConfig := tke2v20220501.ManagementConfig{}
+				managementConfig := tkev20220501.ManagementConfig{}
 				if v, ok := managementMap["nameservers"]; ok {
 					nameserversSet := v.([]interface{})
 					for i := range nameserversSet {
@@ -1343,7 +1343,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 				}
 			}
 			if lifecycleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["lifecycle"]); ok {
-				lifecycleConfig := tke2v20220501.LifecycleConfig{}
+				lifecycleConfig := tkev20220501.LifecycleConfig{}
 				if v, ok := lifecycleMap["pre_init"]; ok {
 					lifecycleConfig.PreInit = helper.String(v.(string))
 				}
@@ -1371,7 +1371,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 			if v, ok := nativeMap["data_disks"]; ok {
 				for _, item := range v.([]interface{}) {
 					dataDisksMap := item.(map[string]interface{})
-					dataDisk := tke2v20220501.DataDisk{}
+					dataDisk := tkev20220501.DataDisk{}
 					if v, ok := dataDisksMap["disk_type"]; ok {
 						dataDisk.DiskType = helper.String(v.(string))
 					}
@@ -1418,7 +1418,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 		if v, ok := d.GetOk("annotations"); ok {
 			for _, item := range v.([]interface{}) {
 				annotationsMap := item.(map[string]interface{})
-				annotation := tke2v20220501.Annotation{}
+				annotation := tkev20220501.Annotation{}
 				if v, ok := annotationsMap["name"]; ok {
 					annotation.Name = helper.String(v.(string))
 				}
@@ -1430,7 +1430,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsUpdate(d *schema.ResourceData,
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2V20220501Client().ModifyNodePoolWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().ModifyNodePoolWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -1462,8 +1462,8 @@ func resourceTencentCloudKubernetesNativeNodePoolsDelete(d *schema.ResourceData,
 	nodePoolId := idSplit[1]
 
 	var (
-		request  = tke2v20220501.NewDeleteNodePoolRequest()
-		response = tke2v20220501.NewDeleteNodePoolResponse()
+		request  = tkev20220501.NewDeleteNodePoolRequest()
+		response = tkev20220501.NewDeleteNodePoolResponse()
 	)
 
 	request.ClusterId = helper.String(clusterId)
@@ -1471,7 +1471,7 @@ func resourceTencentCloudKubernetesNativeNodePoolsDelete(d *schema.ResourceData,
 	request.NodePoolId = helper.String(nodePoolId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2V20220501Client().DeleteNodePoolWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DeleteNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {

@@ -208,6 +208,7 @@ type TencentCloudClient struct {
 	omitNilConn       *common.Client
 	tkev20180525Conn  *tke.Client
 	tke2v20220501Conn *v20220501.Client
+	tkev20220501Conn  *tke2.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1653,4 +1654,17 @@ func (me *TencentCloudClient) UseTke2V20220501Client() *v20220501.Client {
 	me.tke2v20220501Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tke2v20220501Conn
+}
+
+// UseTkeV20220501Client return TKE client for service
+func (me *TencentCloudClient) UseTkeV20220501Client() *tke2.Client {
+	if me.tkev20220501Conn != nil {
+		return me.tkev20220501Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.tkev20220501Conn, _ = tke2.NewClient(me.Credential, me.Region, cpf)
+	me.tkev20220501Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tkev20220501Conn
 }

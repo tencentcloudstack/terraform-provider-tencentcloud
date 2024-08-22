@@ -18,7 +18,6 @@ import (
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tke2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke2/v20220501"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -3539,10 +3538,10 @@ func (me *TkeService) DescribeKubernetesNativeNodePoolById(ctx context.Context, 
 	return
 }
 
-func (me *Tke2Service) DescribeKubernetesClusterNativeNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (ret []*v20220501.NodePool, errRet error) {
+func (me *TkeService) DescribeKubernetesClusterNativeNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke2.NodePool, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
-		request = v20220501.NewDescribeNodePoolsRequest()
+		request = tke2.NewDescribeNodePoolsRequest()
 	)
 
 	defer func() {
@@ -3556,13 +3555,13 @@ func (me *Tke2Service) DescribeKubernetesClusterNativeNodePoolsByFilter(ctx cont
 			request.ClusterId = v.(*string)
 		}
 		if k == "Filters" {
-			request.Filters = v.([]*v20220501.Filter)
+			request.Filters = v.([]*tke2.Filter)
 		}
 	}
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTke2V20220501Client().DescribeNodePools(request)
+	response, err := me.client.UseTkeV20220501Client().DescribeNodePools(request)
 	if err != nil {
 		errRet = err
 		return
@@ -3609,12 +3608,12 @@ func (me *TkeService) DescribeKubernetesAddonAttachmentById(ctx context.Context)
 	return
 }
 
-func (me *Tke2Service) DescribeKubernetesNativeNodePoolsById(ctx context.Context, clusterId string, nodePoolId string) (ret *v20220501.NodePool, errRet error) {
+func (me *TkeService) DescribeKubernetesNativeNodePoolsById(ctx context.Context, clusterId string, nodePoolId string) (ret *tke2.NodePool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := v20220501.NewDescribeNodePoolsRequest()
+	request := tke2.NewDescribeNodePoolsRequest()
 	request.ClusterId = helper.String(clusterId)
-	filter := &v20220501.Filter{
+	filter := &tke2.Filter{
 		Name:   helper.String("NodePoolsId"),
 		Values: []*string{helper.String(nodePoolId)},
 	}
@@ -3632,11 +3631,11 @@ func (me *Tke2Service) DescribeKubernetesNativeNodePoolsById(ctx context.Context
 		offset int64 = 0
 		limit  int64 = 20
 	)
-	var instances []*v20220501.NodePool
+	var instances []*tke2.NodePool
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTke2V20220501Client().DescribeNodePools(request)
+		response, err := me.client.UseTkeV20220501Client().DescribeNodePools(request)
 		if err != nil {
 			errRet = err
 			return
