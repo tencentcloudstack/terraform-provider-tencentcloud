@@ -1,5 +1,7 @@
 Provides a resource to create a mysql log to cls
 
+~> **NOTE:** The CLS resource bound to resource `tencentcloud_mysql_cls_log_attachment` needs to be manually deleted.
+
 Example Usage
 
 Create Error Log to ClS
@@ -53,37 +55,17 @@ resource "tencentcloud_mysql_instance" "example" {
   }
 }
 
-# create cls logset
-resource "tencentcloud_cls_logset" "example" {
-  logset_name = "tf_example"
-  tags = {
-    tagKey = "tagValue"
-  }
-}
-
-# create cls topic
-resource "tencentcloud_cls_topic" "example" {
-  topic_name           = "tf_example"
-  logset_id            = tencentcloud_cls_logset.example.id
-  auto_split           = false
-  max_split_partitions = 20
-  partition_count      = 1
-  period               = 30
-  storage_type         = "hot"
-  tags = {
-    tagKey = "tagValue"
-  }
-}
-
 # attachment cls log
 resource "tencentcloud_mysql_cls_log_attachment" "example" {
-  instance_id  = tencentcloud_mysql_instance.example.id
-  log_type     = "error"
-  log_set_id   = tencentcloud_cls_logset.example.id
-  log_topic_id = tencentcloud_cls_topic.example.id
-  period       = 30
-  create_index = true
-  cls_region   = "ap-guangzhou"
+  instance_id      = tencentcloud_mysql_instance.example.id
+  log_type         = "error"
+  create_log_set   = true
+  create_log_topic = true
+  log_set          = "tf_log_set"
+  log_topic        = "tf_log_topic"
+  period           = 30
+  create_index     = true
+  cls_region       = "ap-guangzhou"
 }
 ```
 
@@ -91,10 +73,10 @@ Create Slow Log to ClS
 
 ```hcl
 resource "tencentcloud_mysql_cls_log_attachment" "example" {
-  instance_id  = tencentcloud_mysql_instance.example.id
-  log_type     = "slowlog"
-  log_set_id   = tencentcloud_cls_logset.example.id
-  log_topic_id = tencentcloud_cls_topic.example.id
+  instance_id = tencentcloud_mysql_instance.example.id
+  log_type    = "slowlog"
+  log_set     = "50d499a8-c4c0-4442-aa04-e8aa8a02437d"
+  log_topic   = "140d4d39-4307-45a8-9655-290f679b063d"
 }
 ```
 

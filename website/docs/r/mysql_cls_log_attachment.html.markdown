@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a mysql log to cls
 
+~> **NOTE:** The CLS resource bound to resource `tencentcloud_mysql_cls_log_attachment` needs to be manually deleted.
+
 ## Example Usage
 
 ### Create Error Log to ClS
@@ -64,37 +66,17 @@ resource "tencentcloud_mysql_instance" "example" {
   }
 }
 
-# create cls logset
-resource "tencentcloud_cls_logset" "example" {
-  logset_name = "tf_example"
-  tags = {
-    tagKey = "tagValue"
-  }
-}
-
-# create cls topic
-resource "tencentcloud_cls_topic" "example" {
-  topic_name           = "tf_example"
-  logset_id            = tencentcloud_cls_logset.example.id
-  auto_split           = false
-  max_split_partitions = 20
-  partition_count      = 1
-  period               = 30
-  storage_type         = "hot"
-  tags = {
-    tagKey = "tagValue"
-  }
-}
-
 # attachment cls log
 resource "tencentcloud_mysql_cls_log_attachment" "example" {
-  instance_id  = tencentcloud_mysql_instance.example.id
-  log_type     = "error"
-  log_set_id   = tencentcloud_cls_logset.example.id
-  log_topic_id = tencentcloud_cls_topic.example.id
-  period       = 30
-  create_index = true
-  cls_region   = "ap-guangzhou"
+  instance_id      = tencentcloud_mysql_instance.example.id
+  log_type         = "error"
+  create_log_set   = true
+  create_log_topic = true
+  log_set          = "tf_log_set"
+  log_topic        = "tf_log_topic"
+  period           = 30
+  create_index     = true
+  cls_region       = "ap-guangzhou"
 }
 ```
 
@@ -102,10 +84,10 @@ resource "tencentcloud_mysql_cls_log_attachment" "example" {
 
 ```hcl
 resource "tencentcloud_mysql_cls_log_attachment" "example" {
-  instance_id  = tencentcloud_mysql_instance.example.id
-  log_type     = "slowlog"
-  log_set_id   = tencentcloud_cls_logset.example.id
-  log_topic_id = tencentcloud_cls_topic.example.id
+  instance_id = tencentcloud_mysql_instance.example.id
+  log_type    = "slowlog"
+  log_set     = "50d499a8-c4c0-4442-aa04-e8aa8a02437d"
+  log_topic   = "140d4d39-4307-45a8-9655-290f679b063d"
 }
 ```
 
@@ -114,11 +96,13 @@ resource "tencentcloud_mysql_cls_log_attachment" "example" {
 The following arguments are supported:
 
 * `instance_id` - (Required, String, ForceNew) The id of instance.
-* `log_set_id` - (Required, String, ForceNew) Log set Id.
-* `log_topic_id` - (Required, String, ForceNew) Log topic Id.
+* `log_set` - (Required, String, ForceNew) If `create_log_set` is `true`, use log set name, Else use log set Id.
+* `log_topic` - (Required, String, ForceNew) If `create_log_topic` is `true`, use log topic name, Else use log topic Id.
 * `log_type` - (Required, String, ForceNew) Log type. Support `error` or `slowlog`.
 * `cls_region` - (Optional, String) Cls region.
 * `create_index` - (Optional, Bool, ForceNew) Whether to create index.
+* `create_log_set` - (Optional, Bool, ForceNew) Whether to create log set.
+* `create_log_topic` - (Optional, Bool, ForceNew) Whether to create log topic.
 * `period` - (Optional, Int, ForceNew) The validity period of the log theme is 30 days by default when not filled in.
 
 ## Attributes Reference
@@ -126,6 +110,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `log_set_id` - Log set Id.
+* `log_topic_id` - Log topic Id.
 * `status` - Log Status.
 
 

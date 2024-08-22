@@ -20,9 +20,7 @@ func ResourceTencentCloudMysqlClsLogAttachment() *schema.Resource {
 		Create: resourceTencentCloudMysqlClsLogAttachmentCreate,
 		Read:   resourceTencentCloudMysqlClsLogAttachmentRead,
 		Delete: resourceTencentCloudMysqlClsLogAttachmentDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -37,17 +35,29 @@ func ResourceTencentCloudMysqlClsLogAttachment() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(MYSQL_LOG_TO_CLS_TYPE),
 				Description:  "Log type. Support `error` or `slowlog`.",
 			},
-			"log_set_id": {
-				Required:    true,
+			"create_log_set": {
+				Optional:    true,
 				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Log set Id.",
+				Type:        schema.TypeBool,
+				Description: "Whether to create log set.",
 			},
-			"log_topic_id": {
+			"create_log_topic": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to create log topic.",
+			},
+			"log_set": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Log topic Id.",
+				Description: "If `create_log_set` is `true`, use log set name, Else use log set Id.",
+			},
+			"log_topic": {
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "If `create_log_topic` is `true`, use log topic name, Else use log topic Id.",
 			},
 			"period": {
 				Optional:    true,
@@ -66,6 +76,16 @@ func ResourceTencentCloudMysqlClsLogAttachment() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Cls region.",
+			},
+			"log_set_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Log set Id.",
+			},
+			"log_topic_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Log topic Id.",
 			},
 			"status": {
 				Computed:    true,
@@ -97,11 +117,19 @@ func resourceTencentCloudMysqlClsLogAttachmentCreate(d *schema.ResourceData, met
 		request.LogType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("log_set_id"); ok {
+	if v, ok := d.GetOkExists("create_log_set"); ok {
+		request.CreateLogset = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("create_log_topic"); ok {
+		request.CreateLogTopic = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("log_set"); ok {
 		request.Logset = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("log_topic_id"); ok {
+	if v, ok := d.GetOk("log_topic"); ok {
 		request.LogTopic = helper.String(v.(string))
 	}
 
@@ -118,8 +146,6 @@ func resourceTencentCloudMysqlClsLogAttachmentCreate(d *schema.ResourceData, met
 	}
 
 	request.Status = helper.String("ON")
-	request.CreateLogset = helper.Bool(false)
-	request.CreateLogTopic = helper.Bool(false)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().ModifyDBInstanceLogToCLS(request)
 		if e != nil {
