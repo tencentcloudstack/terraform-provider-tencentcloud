@@ -9,11 +9,10 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 )
 
@@ -640,15 +639,15 @@ func resourceTencentCloudKubernetesNodePoolCreate(d *schema.ResourceData, meta i
 		nodePoolId string
 	)
 	var (
-		request  = tke.NewCreateClusterNodePoolRequest()
-		response = tke.NewCreateClusterNodePoolResponse()
+		request  = tkev20180525.NewCreateClusterNodePoolRequest()
+		response = tkev20180525.NewCreateClusterNodePoolResponse()
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
 	}
 
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	if v, ok := d.GetOkExists("enable_auto_scale"); ok {
 		request.EnableAutoscale = helper.Bool(v.(bool))
@@ -661,7 +660,7 @@ func resourceTencentCloudKubernetesNodePoolCreate(d *schema.ResourceData, meta i
 	if v, ok := d.GetOk("taints"); ok {
 		for _, item := range v.([]interface{}) {
 			taintsMap := item.(map[string]interface{})
-			taint := tke.Taint{}
+			taint := tkev20180525.Taint{}
 			if v, ok := taintsMap["key"]; ok {
 				taint.Key = helper.String(v.(string))
 			}
@@ -684,7 +683,7 @@ func resourceTencentCloudKubernetesNodePoolCreate(d *schema.ResourceData, meta i
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().CreateClusterNodePoolWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().CreateClusterNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -739,12 +738,8 @@ func resourceTencentCloudKubernetesNodePoolRead(d *schema.ResourceData, meta int
 		return nil
 	}
 
-	respData1, err := service.DescribeKubernetesNodePoolById1(ctx, clusterId, nodePoolId)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	var respData1 *tkev20180525.NodePool
+	reqErr1 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesNodePoolById1(ctx, clusterId, nodePoolId)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesNodePoolReadRequestOnError1(ctx, result, e); err != nil {
@@ -758,9 +753,9 @@ func resourceTencentCloudKubernetesNodePoolRead(d *schema.ResourceData, meta int
 		respData1 = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read kubernetes node pool failed, reason:%+v", logId, err)
-		return err
+	if reqErr1 != nil {
+		log.Printf("[CRITAL]%s read kubernetes node pool failed, reason:%+v", logId, reqErr1)
+		return reqErr1
 	}
 
 	if respData1 == nil {
@@ -855,12 +850,6 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"cluster_id"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -882,11 +871,11 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 	}
 
 	if needChange {
-		request := tke.NewModifyClusterNodePoolRequest()
+		request := tkev20180525.NewModifyClusterNodePoolRequest()
 
-		request.ClusterId = &clusterId
+		request.ClusterId = helper.String(clusterId)
 
-		request.NodePoolId = &nodePoolId
+		request.NodePoolId = helper.String(nodePoolId)
 
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
@@ -903,7 +892,7 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 		if v, ok := d.GetOk("taints"); ok {
 			for _, item := range v.([]interface{}) {
 				taintsMap := item.(map[string]interface{})
-				taint := tke.Taint{}
+				taint := tkev20180525.Taint{}
 				if v, ok := taintsMap["key"]; ok {
 					taint.Key = helper.String(v.(string))
 				}
@@ -926,7 +915,7 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterNodePoolWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterNodePoolWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -962,17 +951,13 @@ func resourceTencentCloudKubernetesNodePoolDelete(d *schema.ResourceData, meta i
 	nodePoolId := idSplit[1]
 
 	var (
-		request  = tke.NewDeleteClusterNodePoolRequest()
-		response = tke.NewDeleteClusterNodePoolResponse()
+		request  = tkev20180525.NewDeleteClusterNodePoolRequest()
+		response = tkev20180525.NewDeleteClusterNodePoolResponse()
 	)
 
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
+	request.ClusterId = helper.String(clusterId)
 
-	request.ClusterId = &clusterId
-
-	request.NodePoolIds = []*string{&nodePoolId}
+	request.NodePoolIds = []*string{helper.String(nodePoolId)}
 
 	if v, ok := d.GetOkExists("delete_keep_instance"); ok {
 		request.KeepInstance = helper.Bool(v.(bool))
@@ -983,7 +968,7 @@ func resourceTencentCloudKubernetesNodePoolDelete(d *schema.ResourceData, meta i
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DeleteClusterNodePoolWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DeleteClusterNodePoolWithContext(ctx, request)
 		if e != nil {
 			if err := resourceTencentCloudKubernetesNodePoolDeleteRequestOnError0(ctx, e); err != nil {
 				return err
@@ -996,7 +981,7 @@ func resourceTencentCloudKubernetesNodePoolDelete(d *schema.ResourceData, meta i
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes node pool failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes node pool failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
@@ -196,7 +196,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 	return nil
 }
 
-func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Context, req *cvm.DescribeInstancesRequest, resp *cvm.DescribeInstancesResponse) error {
+func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Context, req *v.DescribeInstancesRequest, resp *v.DescribeInstancesResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 
 	instances := make([]*cvm.Instance, 0)
@@ -336,7 +336,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest0(ctx context.Conte
 	return nil
 }
 
-func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest2(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
+func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest2(ctx context.Context, req *v.DescribeInstancesRequest) error {
 	req.InstanceIds = WorkersInstanceIds
 	return nil
 }
