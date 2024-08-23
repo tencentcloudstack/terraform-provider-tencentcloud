@@ -2307,7 +2307,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if v, ok := d.GetOkExists("enable_pod_oidc"); ok && v.(bool) {
 		if os.Getenv(POD_OIDC_TKE_REGION) != "" && os.Getenv(POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE) != "" && os.Getenv(POD_OIDC_TKE_PROVIDER_ID) != "" && os.Getenv(POD_OIDC_TKE_ROLE_ARN) != "" {
-			_ = genClientWithPodOidc(&tcClient)
+			err := genClientWithPodOidc(&tcClient)
+			if err != nil {
+				return nil, err
+			}
 			needSecret = false
 		} else {
 			return nil, fmt.Errorf("Can not get `TKE_REGION`, `TKE_WEB_IDENTITY_TOKEN_FILE`, `TKE_PROVIDER_ID`, `TKE_ROLE_ARN`. Must config serviceAccountName for pod.\n")
@@ -2514,6 +2517,7 @@ func genClientWithPodOidc(tcClient *TencentCloudClient) error {
 	if err != nil {
 		return err
 	}
+
 	tcClient.apiV3Conn.Credential = sdkcommon.NewTokenCredential(
 		assumeResp.GetSecretId(),
 		assumeResp.GetSecretKey(),
