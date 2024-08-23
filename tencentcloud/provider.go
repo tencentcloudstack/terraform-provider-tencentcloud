@@ -2095,7 +2095,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool(),
 			"tencentcloud_cdc_site":                                            cdc.ResourceTencentCloudCdcSite(),
 			"tencentcloud_cdc_dedicated_cluster":                               cdc.ResourceTencentCloudCdcDedicatedCluster(),
-		},
+			"tencentcloud_kubernetes_native_node_pools":                        tke.ResourceTencentCloudKubernetesNativeNodePools()},
 
 		ConfigureFunc: providerConfigure,
 	}

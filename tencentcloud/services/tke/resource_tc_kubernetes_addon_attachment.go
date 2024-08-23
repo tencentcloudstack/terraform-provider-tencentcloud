@@ -9,7 +9,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -109,8 +110,8 @@ func resourceTencentCloudKubernetesAddonAttachmentCreate(d *schema.ResourceData,
 		name      string
 	)
 	var (
-		request  = tke.NewForwardApplicationRequestV3Request()
-		response = tke.NewForwardApplicationRequestV3Response()
+		request  = tkev20180525.NewForwardApplicationRequestV3Request()
+		response = tkev20180525.NewForwardApplicationRequestV3Response()
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -137,7 +138,7 @@ func resourceTencentCloudKubernetesAddonAttachmentCreate(d *schema.ResourceData,
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ForwardApplicationRequestV3WithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ForwardApplicationRequestV3WithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -214,12 +215,6 @@ func resourceTencentCloudKubernetesAddonAttachmentUpdate(d *schema.ResourceData,
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"cluster_id", "name"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -237,10 +232,10 @@ func resourceTencentCloudKubernetesAddonAttachmentUpdate(d *schema.ResourceData,
 	}
 
 	if needChange {
-		request := tke.NewForwardApplicationRequestV3Request()
+		request := tkev20180525.NewForwardApplicationRequestV3Request()
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ForwardApplicationRequestV3WithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ForwardApplicationRequestV3WithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -278,23 +273,16 @@ func resourceTencentCloudKubernetesAddonAttachmentDelete(d *schema.ResourceData,
 	name := idSplit[1]
 
 	var (
-		request  = tke.NewForwardApplicationRequestV3Request()
-		response = tke.NewForwardApplicationRequestV3Response()
+		request  = tkev20180525.NewForwardApplicationRequestV3Request()
+		response = tkev20180525.NewForwardApplicationRequestV3Response()
 	)
-
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
-	if v, ok := d.GetOk("name"); ok {
-		name = v.(string)
-	}
 
 	if err := resourceTencentCloudKubernetesAddonAttachmentDeletePostFillRequest0(ctx, request); err != nil {
 		return err
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ForwardApplicationRequestV3WithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ForwardApplicationRequestV3WithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -304,7 +292,7 @@ func resourceTencentCloudKubernetesAddonAttachmentDelete(d *schema.ResourceData,
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create kubernetes addon attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete kubernetes addon attachment failed, reason:%+v", logId, err)
 		return err
 	}
 

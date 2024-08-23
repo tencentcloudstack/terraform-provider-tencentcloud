@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -69,8 +69,8 @@ func resourceTencentCloudKubernetesEncryptionProtectionCreate(d *schema.Resource
 		clusterId string
 	)
 	var (
-		request  = tke.NewEnableEncryptionProtectionRequest()
-		response = tke.NewEnableEncryptionProtectionResponse()
+		request  = tkev20180525.NewEnableEncryptionProtectionRequest()
+		response = tkev20180525.NewEnableEncryptionProtectionResponse()
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -82,7 +82,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionCreate(d *schema.Resource
 	}
 
 	if kMSConfigurationMap, ok := helper.InterfacesHeadMap(d, "kms_configuration"); ok {
-		kMSConfiguration := tke.KMSConfiguration{}
+		kMSConfiguration := tkev20180525.KMSConfiguration{}
 		if v, ok := kMSConfigurationMap["key_id"]; ok {
 			kMSConfiguration.KeyId = helper.String(v.(string))
 		}
@@ -93,7 +93,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionCreate(d *schema.Resource
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().EnableEncryptionProtectionWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().EnableEncryptionProtectionWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -159,14 +159,14 @@ func resourceTencentCloudKubernetesEncryptionProtectionDelete(d *schema.Resource
 	clusterId := d.Id()
 
 	var (
-		request  = tke.NewDisableEncryptionProtectionRequest()
-		response = tke.NewDisableEncryptionProtectionResponse()
+		request  = tkev20180525.NewDisableEncryptionProtectionRequest()
+		response = tkev20180525.NewDisableEncryptionProtectionResponse()
 	)
 
 	request.ClusterId = helper.String(clusterId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DisableEncryptionProtectionWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DisableEncryptionProtectionWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
