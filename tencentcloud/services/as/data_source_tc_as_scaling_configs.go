@@ -164,6 +164,11 @@ func DataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 							Computed:    true,
 							Description: "Policy of cloud disk type.",
 						},
+						"version_number": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Version Number.",
+						},
 					},
 				},
 			},
@@ -216,6 +221,7 @@ func dataSourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta inte
 			"status":                     *config.LaunchConfigurationStatus,
 			"create_time":                *config.CreatedTime,
 			"disk_type_policy":           *config.DiskTypePolicy,
+			"version_number":             *config.VersionNumber,
 		}
 		if config.SystemDisk.DiskType != nil {
 			mapping["system_disk_type"] = *config.SystemDisk.DiskType
