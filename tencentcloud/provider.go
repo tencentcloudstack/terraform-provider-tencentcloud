@@ -133,6 +133,10 @@ const (
 	PROVIDER_SHARED_CREDENTIALS_DIR         = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
 	PROVIDER_PROFILE                        = "TENCENTCLOUD_PROFILE"
 	PROVIDER_CAM_ROLE_NAME                  = "TENCENTCLOUD_CAM_ROLE_NAME"
+	POD_OIDC_TKE_REGION                     = "TKE_REGION"
+	POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE    = "TKE_WEB_IDENTITY_TOKEN_FILE"
+	POD_OIDC_TKE_PROVIDER_ID                = "TKE_PROVIDER_ID"
+	POD_OIDC_TKE_ROLE_ARN                   = "TKE_ROLE_ARN"
 )
 
 const (
@@ -284,6 +288,11 @@ func Provider() *schema.Provider {
 						},
 					},
 				},
+			},
+			"enable_pod_oidc": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable pod oidc.",
 			},
 			"assume_role_with_web_identity": {
 				Type:          schema.TypeList,
@@ -2296,6 +2305,18 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		}
 	}
 
+	if v, ok := d.GetOkExists("enable_pod_oidc"); ok && v.(bool) {
+		if os.Getenv(POD_OIDC_TKE_REGION) != "" && os.Getenv(POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE) != "" && os.Getenv(POD_OIDC_TKE_PROVIDER_ID) != "" && os.Getenv(POD_OIDC_TKE_ROLE_ARN) != "" {
+			err := genClientWithPodOidc(&tcClient)
+			if err != nil {
+				return nil, err
+			}
+			needSecret = false
+		} else {
+			return nil, fmt.Errorf("Can not get `TKE_REGION`, `TKE_WEB_IDENTITY_TOKEN_FILE`, `TKE_PROVIDER_ID`, `TKE_ROLE_ARN`. Must config serviceAccountName for pod.\n")
+		}
+	}
+
 	if needSecret && (secretId == "" || secretKey == "") {
 		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.\n")
 	}
@@ -2485,4 +2506,23 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 	}
 
 	return providerConfig[ProfileKey], nil
+}
+
+func genClientWithPodOidc(tcClient *TencentCloudClient) error {
+	provider, err := sdkcommon.DefaultTkeOIDCRoleArnProvider()
+	if err != nil {
+		return err
+	}
+	assumeResp, err := provider.GetCredential()
+	if err != nil {
+		return err
+	}
+
+	tcClient.apiV3Conn.Credential = sdkcommon.NewTokenCredential(
+		assumeResp.GetSecretId(),
+		assumeResp.GetSecretKey(),
+		assumeResp.GetToken(),
+	)
+
+	return nil
 }
