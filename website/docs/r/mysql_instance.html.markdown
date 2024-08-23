@@ -144,6 +144,7 @@ The following arguments are supported:
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cpu` - (Optional, Int) CPU cores.
 * `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
+* `engine_type` - (Optional, String) Instance engine type. The default value is `InnoDB`. Supported values include `InnoDB` and `RocksDB`.
 * `engine_version` - (Optional, String) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.
 * `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
 * `first_slave_zone` - (Optional, String) Zone information about first slave instance.
