@@ -1,3 +1,17 @@
+## 1.81.118 (August 23 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mysql_cls_log_attachment` ([#2780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2780))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_as_scaling_configs: add `version_number`. ([#2786](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2786))
+* provider: support tke cam role auth ([#2785](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2785))
+* resource/tencentcloud_kubernetes_node_pool: add computed to field `tags`. ([#2781](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2781))
+* resource/tencentcloud_mysql_instance: Optimize code logic ([#2752](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2752))
+* resource/tencentcloud_mysql_instance: support mysql `engine_type`. ([#2779](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2779))
+
 ## 1.81.117 (August 16 , 2024)
 
 FEATURES:
