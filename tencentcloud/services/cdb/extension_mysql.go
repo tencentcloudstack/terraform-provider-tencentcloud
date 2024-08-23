@@ -127,3 +127,13 @@ var MYSQL_TASK_TYPES = map[string]int64{
 	"DROP TABLES":         12,
 	"SWITCH DR TO MASTER": 13,
 }
+
+const (
+	MYSQL_LOG_TO_CLS_TYPE_ERROR = "error"
+	MYSQL_LOG_TO_CLS_TYPE_SLOW  = "slowlog"
+)
+
+var MYSQL_LOG_TO_CLS_TYPE = []string{
+	MYSQL_LOG_TO_CLS_TYPE_ERROR,
+	MYSQL_LOG_TO_CLS_TYPE_SLOW,
+}
