@@ -292,7 +292,7 @@ func Provider() *schema.Provider {
 			"enable_pod_oidc": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Enable pod oidc.",
+				Description: "Whether to enable pod oidc.",
 			},
 			"assume_role_with_web_identity": {
 				Type:          schema.TypeList,
