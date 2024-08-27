@@ -375,15 +375,19 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 				findFlag = true
 				break
 			} else if len(domains) > 0 {
+				tmpRef := true
 				for i := range domains {
 					if *domains[i] != *rule.Domains[i] {
+						tmpRef = false
 						break
 					}
 				}
 
-				ruleOutput = *rule
-				findFlag = true
-				break
+				if tmpRef {
+					ruleOutput = *rule
+					findFlag = true
+					break
+				}
 			}
 		}
 	}
