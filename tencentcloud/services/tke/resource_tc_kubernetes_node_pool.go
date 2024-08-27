@@ -457,6 +457,12 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Computed:    true,
 							Description: "Instance name, no more than 60 characters. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
 						},
+						"instance_name_style": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Type of CVM instance name. Valid values: `ORIGINAL` and `UNIQUE`. Default value: `ORIGINAL`. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
+						},
 						"host_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
