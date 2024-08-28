@@ -1544,7 +1544,7 @@ func clusterCidrValidateFunc(v interface{}, k string) (ws []string, errs []error
 		errs = append(errs, fmt.Errorf("%q must be a network segment", k))
 		return
 	}
-	if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
+	if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "11.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
 		errs = append(errs, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
 		return
 	}

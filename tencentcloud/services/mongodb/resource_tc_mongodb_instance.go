@@ -17,10 +17,9 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-)
 
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+)
 
 func ResourceTencentCloudMongodbInstance() *schema.Resource {
 	mongodbInstanceInfo := map[string]*schema.Schema{
@@ -279,8 +278,21 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateDBInstance(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			// query deal by bpass
+			e, ok := err.(*sdkErrors.TencentCloudSDKError)
+			log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Error())
+
+			if ok && tccommon.IsContains("InvalidParameterValue.InvalidTradeOperation", e.Code) {
+				// yunti prepaid user
+				return tccommon.RetryError(fmt.Errorf("[DEBUG] wait pass the bpass for yunti prepaid user, retry... error msg:[%s]", e.Message))
+			}
+
+			// if id != nil {
+			// 	// yunti prepaid user
+			// 	resourceId = *id
+			// 	return nil
+			// }
+
 			return tccommon.RetryError(err)
 		}
 		return nil
@@ -326,8 +338,20 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 
 	instanceId := d.Id()
 
-	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	// set tag before query the instance
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err := tagService.WaitTagsEnable(ctx, "mongodb", "instance", instanceId, region, tags)
+		if err != nil {
+			return err
+		}
+	}
+
 	_, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -350,16 +374,14 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	if !has {
 		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
-	//internal version: replace begin begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace begin end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
-	//internal version: replace end begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace end end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
 

@@ -6,7 +6,6 @@ import (
 	svctdmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmq"
 
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,10 +13,8 @@ import (
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 )
-
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func ResourceTencentCloudTdmqInstance() *schema.Resource {
 	return &schema.Resource{
@@ -60,8 +57,9 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := client.Region
 
 	var (
 		request  = tdmq.NewCreateClusterRequest()
@@ -99,18 +97,18 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	clusterId := *response.Response.ClusterId
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		//internal version: replace buildName begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-		resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, clusterId)
-		//internal version: replace buildName end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		resourceName := tccommon.BuildTagResourceName("tdmq", "cluster", region, clusterId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 
-		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		// Wait the tags enabled
+		err = tagService.WaitTagsEnable(ctx, "tdmq", "cluster", clusterId, region, tags)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	d.SetId(clusterId)
@@ -168,8 +166,8 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 
 	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	//internal version: replace var begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace var end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 
 	var (
 		clusterName string
@@ -194,16 +192,19 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if d.HasChange("tags") {
-		//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := tccommon.BuildTagResourceName("tdmq", "cluster", tcClient.Region, d.Id())
+		replaceTags, deleteTags := tag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("tdmq", "cluster", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
+		// Wait the tags enabled
+		err := tagService.WaitTagsEnable(ctx, "tdmq", "cluster", d.Id(), region, replaceTags)
+		if err != nil {
+			return err
+		}
+
 	}
 	return resourceTencentCloudTdmqRead(d, meta)
 }

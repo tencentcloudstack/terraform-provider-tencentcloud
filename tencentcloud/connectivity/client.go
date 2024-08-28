@@ -103,10 +103,9 @@ import (
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
-)
 
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
+)
 
 const (
 	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
@@ -203,8 +202,7 @@ type TencentCloudClient struct {
 	cdwpgConn          *cdwpg.Client
 	csipConn           *csip.Client
 	regionConn         *region.Client
-	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	billingConn        *billing.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1561,8 +1559,17 @@ func (me *TencentCloudClient) UseRegionClient() *region.Client {
 	return me.regionConn
 }
 
-//internal version: replace useClient begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace useClient end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+func (me *TencentCloudClient) UseBillingClient() *billing.Client {
+	if me.billingConn != nil {
+		return me.billingConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.billingConn, _ = billing.NewClient(me.Credential, me.Region, cpf)
+	me.billingConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.billingConn
+}
 
 func getEnvDefault(key string, defVal int) int {
 	val, ex := os.LookupEnv(key)

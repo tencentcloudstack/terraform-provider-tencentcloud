@@ -17,10 +17,8 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
 )
-
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func ResourceTencentCloudCynosdbCluster() *schema.Resource {
 	return &schema.Resource{
@@ -47,12 +45,11 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		cynosdbService = CynosdbService{client: client}
 		tagService     = svctag.NewTagService(client)
 		region         = client.Region
-		//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		billingService = billing.BillingService{Client: client}
+
 		request = cynosdb.NewCreateClustersRequest()
 	)
-	//internal version: replace varId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace varId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	var id string
 	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
 	request.Zone = helper.String(d.Get("available_zone").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -125,11 +122,9 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	var chargeType int64 = 0
-	//internal version: replace varCharge begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace varCharge end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	var chargeTypeStr string
 	if v, ok := d.GetOk("charge_type"); ok {
-		//internal version: replace strCharge begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace strCharge end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		chargeTypeStr = v.(string)
 		if v == CYNOSDB_CHARGE_TYPE_PREPAID {
 			chargeType = 1
 			if vv, ok := d.GetOk("prepaid_period"); ok {
@@ -157,8 +152,21 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 				}
 			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			if chargeTypeStr == CYNOSDB_CHARGE_TYPE_PREPAID {
+				regx := "\"dealNames\":\\[\"(.*)\"\\]"
+				// query deal by bpass
+				resourceId, billErr := billingService.QueryDealByBpass(ctx, regx, err)
+				if billErr != nil {
+					log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+					return resource.NonRetryableError(billErr)
+				}
+				// yunti prepaid user
+				if resourceId != nil {
+					id = *resourceId
+					return nil
+				}
+			}
+
 			return tccommon.RetryError(err)
 		}
 		return nil
@@ -195,13 +203,27 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if dealRes != nil && dealRes.Response != nil && len(dealRes.Response.BillingResourceInfos) != 1 {
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
-	//internal version: replace normal begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	id := *dealRes.Response.BillingResourceInfos[0].ClusterId
-	//internal version: replace normal end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	// normal user
+	if !billingService.IsYunTiAccount() {
+		id = *dealRes.Response.BillingResourceInfos[0].ClusterId
+	}
+
 	d.SetId(id)
 
-	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	// set tag before query the instance
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := tccommon.BuildTagResourceName("cynosdb", "cluster", region, id)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err = tagService.WaitTagsEnable(ctx, "cynosdb", "cluster", id, region, tags)
+		if err != nil {
+			return err
+		}
+	}
+
 	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
@@ -657,8 +679,12 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
-		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		// Wait the tags enabled
+		err := tagService.WaitTagsEnable(ctx, "cynosdb", "cluster", d.Id(), region, replaceTags)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	// update sg

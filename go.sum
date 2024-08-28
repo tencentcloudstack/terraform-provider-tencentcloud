@@ -830,6 +830,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756 h1:dx4aBdOW
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756/go.mod h1:lwWeh6aHg6GlttTMp+VIVtpZOtmpP6DQnnYWpyYW37Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824 h1:DVKvZ6h+qd7tadUrCjVAkCCmE3TsbK2ZmwGd3AJcpWc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824/go.mod h1:DvBpDX/qdJG4KKLeULmRvhAjPYiw8za0HeTSu2y/lFw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.809 h1:VjC67w70LDzXBKi42yUA2fC3LzbW7+o17/jC492WXu0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.809/go.mod h1:8Axgkq64uJeAJ9kwhpu868Gu5cycOlcIJULQiTz8aWI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.760 h1:Ky9dRsTL2HXKWUrTFpQFZWQ1TrM+o+P35kczR7thalo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.760/go.mod h1:AAfdrxknvUedvigxbbzKQLxN+1EG5NPbytpiqmfuFvU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.825 h1:TgO9L1yNPkWeXqrvys/9RL3u958xx9dcTAy4WmaxBnE=
@@ -902,6 +904,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.798/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.799/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.800/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.807/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.809/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.811/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.816/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.822/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=

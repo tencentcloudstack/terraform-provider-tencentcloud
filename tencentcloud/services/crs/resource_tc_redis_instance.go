@@ -18,10 +18,8 @@ import (
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
 )
-
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 func ResourceTencentCloudRedisInstance() *schema.Resource {
 	types := []string{}
@@ -190,10 +188,9 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 			},
 
 			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				//internal version: replace tagComputed begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-				//internal version: replace tagComputed end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
 				Description: "Instance tags.",
 			},
 
@@ -273,8 +270,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	redisService := RedisService{client: client}
 	tagService := svctag.NewTagService(client)
-	//internal version: replace clientCreate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace clientCreate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	billingService := billing.BillingService{Client: client}
 	region := client.Region
 
 	availabilityZone := d.Get("availability_zone").(string)
@@ -399,16 +395,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
-	//internal version: replace null begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-
 	nodeInfo := make([]*redis.RedisNodeInfo, 0)
 	if raw, ok := d.GetOk("replica_zone_ids"); ok {
 		zoneIds := raw.([]interface{})
-		//internal version: replace redisServer begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		masterZoneId, err := service.getZoneId(availabilityZone)
-		//internal version: replace redisServer end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		masterZoneId, err := redisService.getZoneId(availabilityZone)
 
 		if err != nil {
 			return err
@@ -450,43 +440,65 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		replicasReadonly,
 		paramsTemplateId,
 	)
-	//internal version: replace varId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace varId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	var resourceId string
 	if err != nil {
-		//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		return err
-		//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\n", logId, err.Error())
+
+		if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+			regx := "\"dealNames\":\\[\"(.*)\"\\]" // dealNames:\["(.*)"\]
+			// query deal by bpass
+			id, inErr := billingService.QueryDealByBpass(ctx, regx, err)
+			if inErr != nil {
+				return inErr
+			}
+			// yunti prepaid user
+			if id != nil {
+				resourceId = *id
+			}
+		} else {
+			return err
+		}
+
 	}
 
 	if len(instanceIds) == 0 {
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
 	}
 
-	//internal version: replace getId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	var redisId = *instanceIds[0]
-	//internal version: replace getId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	// normal user
+	if !billingService.IsYunTiAccount() || chargeType == REDIS_CHARGE_TYPE_POSTPAID {
+		resourceId = *instanceIds[0]
+	}
 
-	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	// set tag before query the instance
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		log.Printf("[DEBUG]%s begin to modify tags, len(tags):[%v], tags:[%s]\n", logId, len(tags), tags)
+		for k, v := range tags {
+			log.Printf("[DEBUG]%s tags[k:%s, v:%s]", logId, k, v)
+		}
+		resourceName := tccommon.BuildTagResourceName("redis", "instance", region, resourceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			log.Printf("[CRITAL]%s modify tags failed, reason:%s\n", logId, err.Error())
+			return err
+		}
 
-	//internal version: replace queryAndSetId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*tccommon.ReadRetryTimeout)
+		// Wait the tags enabled
+		err = tagService.WaitTagsEnable(ctx, "redis", "instance", resourceId, region, tags)
+		if err != nil {
+			return err
+		}
+		// wait for describe enable
+		time.Sleep(3 * time.Second)
+	}
+
+	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, resourceId, 20*tccommon.ReadRetryTimeout)
 
 	if err != nil {
 		log.Printf("[CRITAL]%s create redis task fail, reason:%s\n", logId, err.Error())
 		return err
 	}
-	d.SetId(redisId)
-	//internal version: replace queryAndSetId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
-	//internal version: replace null begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := tccommon.BuildTagResourceName("redis", "instance", region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-	//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	d.SetId(resourceId)
 
 	return resourceTencentCloudRedisInstanceRead(d, meta)
 }
@@ -497,9 +509,11 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	//internal version: replace clientRead begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	//internal version: replace clientRead end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	service := RedisService{client: tcClient}
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+
+	instanceId := d.Id()
 
 	var onlineHas = true
 	var (
@@ -534,9 +548,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 			return nil
 		})
 		if err != nil {
-			//internal version: replace redisFail begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-			return fmt.Errorf("Fail to get info from redis, reaseon %s", err.Error())
-			//internal version: replace redisFail end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			log.Printf("[WARN]%s resource `tencentcloud_redis_instance` [%s] not found, please check if it has been deleted.", logId, instanceId)
+			return nil
+
 		}
 		if !onlineHas {
 			return nil
@@ -634,11 +648,8 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 			_ = d.Set("replica_zone_ids", zoneIds)
 		}
 	}
-	//internal version: replace resourceTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := svctag.NewTagService(tcClient)
-	tags, err := tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, d.Id())
-	//internal version: replace resourceTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	var tags map[string]string
+	tags, err = tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, instanceId)
 
 	if err != nil {
 		return err
@@ -982,15 +993,17 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		//internal version: replace setTagUpdate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		resourceName := tccommon.BuildTagResourceName("redis", "instance", region, id)
-		//internal version: replace setTagUpdate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		resourceName := tccommon.BuildTagResourceName("redis", "instance", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 
-		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		// Wait the tags enabled
+		err := tagService.WaitTagsEnable(ctx, "redis", "instance", d.Id(), region, replaceTags)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	d.Partial(false)
