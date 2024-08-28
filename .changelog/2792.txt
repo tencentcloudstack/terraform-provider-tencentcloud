@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_organization_service_assign
+```
+
+```release-note:new-data-source
+tencentcloud_organization_services
+```
