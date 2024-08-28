@@ -288,6 +288,13 @@ func ResourceTencentCloudInstance() *schema.Resource {
 							ForceNew:    true,
 							Description: "Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), default is true.",
 						},
+						"delete_with_instance_prepaid": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							ForceNew:    true,
+							Description: "Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `PREPAID` instance), default is false.",
+						},
 						"encrypt": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -997,13 +1004,27 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	for _, disk := range instance.DataDisks {
+	tmpDataDisks := make([]interface{}, 0, len(instance.DataDisks))
+	if v, ok := d.GetOk("data_disks"); ok {
+		tmpDataDisks = v.([]interface{})
+	}
+
+	for index, disk := range instance.DataDisks {
 		dataDisk := make(map[string]interface{}, 5)
 		dataDisk["data_disk_id"] = disk.DiskId
 		if disk.DiskId == nil {
 			dataDisk["data_disk_size"] = disk.DiskSize
 		} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
 			dataDisk["data_disk_size"] = size
+		}
+
+		dataDisk["delete_with_instance_prepaid"] = false
+		if len(tmpDataDisks) == len(instance.DataDisks) {
+			tmpDataDisk := tmpDataDisks[index].(map[string]interface{})
+			if deleteWithInstancePrepaid, ok := tmpDataDisk["delete_with_instance_prepaid"]; ok {
+				deleteWithInstancePrepaidBool := deleteWithInstancePrepaid.(bool)
+				dataDisk["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+			}
 		}
 
 		dataDisk["data_disk_type"] = disk.DiskType
@@ -1616,8 +1637,8 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			for _, d := range dataDisks {
 				value := d.(map[string]interface{})
 				diskId := value["data_disk_id"].(string)
-				deleteWithInstance := value["delete_with_instance"].(bool)
-				if deleteWithInstance {
+				deleteWithInstancePrepaid := value["delete_with_instance_prepaid"].(bool)
+				if deleteWithInstancePrepaid {
 					cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 					err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 						diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
@@ -1759,6 +1780,91 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			diskId := value["data_disk_id"].(string)
 			deleteWithInstance := value["delete_with_instance"].(bool)
 			if deleteWithInstance {
+				cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+				err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
+					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					if *diskInfo.DiskState != svccbs.CBS_STORAGE_STATUS_UNATTACHED {
+						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+
+				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					e := cbsService.DeleteDiskById(ctx, diskId)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+
+				err = resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
+					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					if *diskInfo.DiskState == svccbs.CBS_STORAGE_STATUS_TORECYCLE {
+						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s read cbs status failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+
+				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					e := cbsService.DeleteDiskById(ctx, diskId)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+				err = resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
+					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					if diskInfo != nil {
+						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s read cbs status failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+			}
+
+			deleteWithInstancePrepaid := value["delete_with_instance_prepaid"].(bool)
+			if deleteWithInstancePrepaid {
 				cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 				err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
