@@ -1658,6 +1658,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_financial_by_month
     tencentcloud_organization_org_financial_by_product
     tencentcloud_organization_org_share_area
+    tencentcloud_organization_services
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node
@@ -1673,6 +1674,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_quit_organization_operation
     tencentcloud_organization_org_share_unit
     tencentcloud_organization_org_share_unit_member
+    tencentcloud_organization_service_assign
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source

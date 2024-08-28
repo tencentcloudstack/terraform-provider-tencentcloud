@@ -1160,7 +1160,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.970
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.984
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.991
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1243,7 +1243,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.910
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.991
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.873
