@@ -26,13 +26,13 @@ func TestAccTencentCloudKubernetesCommonNamesDataSource(t *testing.T) {
 	})
 }
 
-const KeepTkeCNRoleName = `
-variable "keep_tke_cn" {
-  default = "keep-for-tke-cn"
-}
-`
+// const KeepTkeCNRoleName = `
+// variable "keep_tke_cn" {
+//   default = "keep-for-tke-cn"
+// }
+// `
 
-const testAccKubernetesCommonNamesBasic = KeepTkeCNRoleName + `
+const testAccKubernetesCommonNamesBasic = testAccTkeCluster + `
 data "tencentcloud_user_info" "info" {}
 
 locals {
@@ -40,16 +40,17 @@ locals {
   uin    = data.tencentcloud_user_info.info.uin
 }
 
-data "tencentcloud_kubernetes_clusters" "cls" {
-  cluster_name = "` + tcacctest.DefaultTkeClusterName + `"
-}
+// data "tencentcloud_kubernetes_clusters" "cls" {
+//   cluster_name = "` + tcacctest.DefaultTkeClusterName + `"
+// }
 
 data "tencentcloud_cam_roles" "role_basic" {
-  name          = var.keep_tke_cn
+//   name          = var.keep_tke_cn
+    name = "TKE_QCSRole"
 }
 
 data "tencentcloud_kubernetes_cluster_common_names" "foo" {
-  cluster_id = data.tencentcloud_kubernetes_clusters.cls.list.0.cluster_id
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
   role_ids = [data.tencentcloud_cam_roles.role_basic.role_list.0.role_id]
 }
 `
