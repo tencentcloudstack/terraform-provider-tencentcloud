@@ -3,7 +3,9 @@ package tke
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -12,8 +14,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
-
-var addonResponseData = &AddonResponseData{}
 
 func resourceTencentCloudKubernetesAddonAttachmentCreatePostFillRequest0(ctx context.Context, req *tke.ForwardApplicationRequestV3Request) error {
 	d := tccommon.ResourceDataFromContext(ctx)
@@ -116,7 +116,7 @@ func resourceTencentCloudKubernetesAddonAttachmentReadPreRequest0(ctx context.Co
 	clusterName := d.Get("cluster_id").(string)
 	addonName := d.Get("name").(string)
 
-	_, has, err = service.PollingAddonsPhase(ctx, clusterName, addonName, addonResponseData)
+	_, has, err = service.PollingAddonsPhase(ctx, clusterName, addonName, nil)
 
 	if err != nil || !has {
 		d.SetId("")
@@ -133,14 +133,23 @@ func resourceTencentCloudKubernetesAddonAttachmentReadPreRequest0(ctx context.Co
 func resourceTencentCloudKubernetesAddonAttachmentReadPostHandleResponse0(ctx context.Context, resp *tke.ForwardApplicationRequestV3ResponseParams) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 
+	// get the addonResponseData from respbody of each response rather than from a global attribute
+	var addonResponseData = &AddonResponseData{}
+	response := *resp.ResponseBody
+	if err := json.Unmarshal([]byte(response), addonResponseData); err != nil {
+		return err
+	}
+
 	spec := addonResponseData.Spec
 	statuses := addonResponseData.Status
 	clusterId := d.Get("cluster_id").(string)
+	name := d.Get("name").(string)
 
 	if spec != nil {
 		_ = d.Set("cluster_id", clusterId)
 		_ = d.Set("name", spec.Chart.ChartName)
 		_ = d.Set("version", spec.Chart.ChartVersion)
+		log.Printf("set clusterId:[%v] name:[%s] chartName:[%s]\n", clusterId, name, *spec.Chart.ChartName)
 		if spec.Values != nil && len(spec.Values.Values) > 0 {
 
 			// Filter auto-filled values from addon creation
