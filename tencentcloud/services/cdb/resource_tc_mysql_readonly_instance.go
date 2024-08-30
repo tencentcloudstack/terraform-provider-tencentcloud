@@ -42,6 +42,12 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 			Default:      0,
 			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
 		},
+		"ro_group_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Read only group id. If rogroupId is empty, a new ro group is created by default. If it is not empty, the existing ro group is used.",
+		},
 	}
 
 	basic := TencentMsyqlBasicInfo()
@@ -114,8 +120,14 @@ func mysqlCreateReadonlyInstancePayByMonth(ctx context.Context, d *schema.Resour
 	request.MasterInstanceId = &masterInstanceId
 
 	// readonly group is not currently supported
-	defaultRoGroupMode := "allinone"
-	request.RoGroup = &cdb.RoGroup{RoGroupMode: &defaultRoGroupMode}
+	if v, ok := d.GetOk("ro_group_id"); ok {
+		roGroupId := v.(string)
+		defaultRoGroupMode := "join"
+		request.RoGroup = &cdb.RoGroup{RoGroupMode: &defaultRoGroupMode, RoGroupId: &roGroupId}
+	} else {
+		defaultRoGroupMode := "allinone"
+		request.RoGroup = &cdb.RoGroup{RoGroupMode: &defaultRoGroupMode}
+	}
 
 	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err
@@ -148,8 +160,14 @@ func mysqlCreateReadonlyInstancePayByUse(ctx context.Context, d *schema.Resource
 	request.MasterInstanceId = &masterInstanceId
 
 	// readonly group is not currently supported
-	defaultRoGroupMode := "allinone"
-	request.RoGroup = &cdb.RoGroup{RoGroupMode: &defaultRoGroupMode}
+	if v, ok := d.GetOk("ro_group_id"); ok {
+		roGroupId := v.(string)
+		defaultRoGroupMode := "join"
+		request.RoGroup = &cdb.RoGroup{RoGroupMode: &defaultRoGroupMode, RoGroupId: &roGroupId}
+	} else {
+		defaultRoGroupMode := "allinone"
+		request.RoGroup = &cdb.RoGroup{RoGroupMode: &defaultRoGroupMode}
+	}
 
 	if v, ok := d.GetOk("mem_size"); ok {
 		request.Memory = helper.IntInt64(v.(int))
@@ -376,6 +394,15 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("status", mysqlInfo.Status)
 	_ = d.Set("task_status", mysqlInfo.TaskStatus)
 
+	roGroup, err := mysqlService.DescribeRoGroupByIdAndRoId(ctx, *mysqlInfo.MasterInfo.InstanceId, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if roGroup != nil && roGroup.RoGroupId != nil {
+		_ = d.Set("ro_group_id", *roGroup.RoGroupId)
+	}
+
 	return nil
 }
 
@@ -408,6 +435,7 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 		"master_instance_id",
 		"zone",
 		"master_region",
+		"ro_group_id",
 	}
 
 	for _, f := range immutableFields {
