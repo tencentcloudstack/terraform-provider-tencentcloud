@@ -1104,6 +1104,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdc_dedicated_cluster_hosts":                  cdc.DataSourceTencentCloudCdcDedicatedClusterHosts(),
 			"tencentcloud_cdc_dedicated_cluster_instance_types":         cdc.DataSourceTencentCloudCdcDedicatedClusterInstanceTypes(),
 			"tencentcloud_cdc_dedicated_cluster_orders":                 cdc.DataSourceTencentCloudCdcDedicatedClusterOrders(),
+			"tencentcloud_cdwdoris_instances":                           cdwdoris.DataSourceTencentCloudCdwdorisInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

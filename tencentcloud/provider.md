@@ -2163,8 +2163,10 @@ CDC
   Resource
     tencentcloud_cdc_site
     tencentcloud_cdc_dedicated_cluster
-
+  
 CdwDoris
+  Data Source
+    tencentcloud_cdwdoris_instances
   Resource
     tencentcloud_cdwdoris_instance
     tencentcloud_cdwdoris_workload_group

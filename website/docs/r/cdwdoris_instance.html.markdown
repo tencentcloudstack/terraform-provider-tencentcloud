@@ -151,6 +151,7 @@ The following arguments are supported:
 * `case_sensitive` - (Optional, Int) Whether the table name is case sensitive, 0 refers to sensitive, 1 refers to insensitive, compared in lowercase; 2 refers to insensitive, and the table name is changed to lowercase for storage.
 * `enable_multi_zones` - (Optional, Bool) Whether to enable multi-availability zone.
 * `ha_type` - (Optional, Int) High availability type: 0 indicates non-high availability (only one FE, FeSpec.CreateInstanceSpec.Count=1), 1 indicates read high availability (at least 3 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=3, and it must be an odd number), 2 indicates read and write high availability (at least 5 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=5, and it must be an odd number).
+* `security_group_ids` - (Optional, List: [`String`]) Security Group Id list.
 * `tags` - (Optional, List) Tag list.
 * `user_multi_zone_infos` - (Optional, List) After the Multi-AZ is enabled, all user's Availability Zones and Subnets information are shown.
 

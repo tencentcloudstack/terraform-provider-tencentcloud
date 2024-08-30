@@ -3,6 +3,7 @@ package cdwdoris
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 
@@ -18,6 +19,7 @@ func ResourceTencentCloudCdwdorisUser() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCdwdorisUserCreate,
 		Read:   resourceTencentCloudCdwdorisUserRead,
+		Update: resourceTencentCloudCdwdorisUserUpdate,
 		Delete: resourceTencentCloudCdwdorisUserDelete,
 		Schema: map[string]*schema.Schema{
 			"user_info": {
@@ -71,13 +73,13 @@ func ResourceTencentCloudCdwdorisUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "api type",
+				Description: "Api type.",
 			},
 			"user_privilege": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "User permission type. 0: Ordinary user; 1: Administrator",
+				Description: "User permission type. 0: Ordinary user; 1: Administrator.",
 			},
 		},
 	}
@@ -157,6 +159,64 @@ func resourceTencentCloudCdwdorisUserCreate(d *schema.ResourceData, meta interfa
 
 func resourceTencentCloudCdwdorisUserRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_user.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = CdwdorisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+
+	instanceId := idSplit[0]
+	userName := idSplit[1]
+
+	respData, err := service.DescribeCdwdorisSqlApiById(ctx, instanceId, userName)
+	if err != nil {
+		return err
+	}
+
+	if respData == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `cdwdoris_workload_group` [%s] not found, please check if it has been deleted.. ", logId, d.Id())
+		return nil
+	}
+
+	_ = d.Set("instance_id", instanceId)
+	workloadGroupsList := make([]map[string]interface{}, 0)
+	workloadGroupsMap := map[string]interface{}{}
+	if respData.WorkloadGroupName != nil {
+		workloadGroupsMap["workload_group_name"] = respData.WorkloadGroupName
+	}
+
+	if respData.CpuShare != nil {
+		workloadGroupsMap["cpu_share"] = respData.CpuShare
+	}
+
+	if respData.MemoryLimit != nil {
+		workloadGroupsMap["memory_limit"] = respData.MemoryLimit
+	}
+
+	if respData.EnableMemoryOverCommit != nil {
+		workloadGroupsMap["enable_memory_over_commit"] = respData.EnableMemoryOverCommit
+	}
+
+	if respData.CpuHardLimit != nil {
+		workloadGroupsMap["cpu_hard_limit"] = respData.CpuHardLimit
+	}
+
+	workloadGroupsList = append(workloadGroupsList, workloadGroupsMap)
+	_ = d.Set("workload_group", workloadGroupsList)
+
+	return nil
+}
+
+func resourceTencentCloudCdwdorisUserUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_user.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil

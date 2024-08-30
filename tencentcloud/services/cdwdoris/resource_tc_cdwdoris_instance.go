@@ -197,6 +197,12 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 					},
 				},
 			},
+			"security_group_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Security Group Id list.",
+			},
 			"workload_group_status": {
 				Type:         schema.TypeString,
 				Required:     true,
@@ -391,6 +397,34 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
+	if v, ok := d.GetOk("security_group_ids"); ok {
+		securityGroupIds := v.([]interface{})
+		tmpList := make([]*string, 0, len(securityGroupIds))
+		for _, item := range securityGroupIds {
+			securityGroupId := item.(string)
+			tmpList = append(tmpList, &securityGroupId)
+		}
+
+		sgRequest := cdwdorisv20211228.NewModifySecurityGroupsRequest()
+		sgRequest.InstanceId = &instanceId
+		sgRequest.ModifySecurityGroupIds = tmpList
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifySecurityGroupsWithContext(ctx, sgRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify cdwdoris Security Groups failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	if v, ok := d.GetOk("workload_group_status"); ok {
 		workloadGroupStatus = v.(string)
 		if workloadGroupStatus == WORKLOAD_GROUP_STATUS_OPEN {
@@ -527,8 +561,8 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 		_ = d.Set("ha_type", respData.HaType)
 	}
 
-	tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
 	if respData.Tags != nil {
+		tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
 		for _, tags := range respData.Tags {
 			tagsMap := map[string]interface{}{}
 			if tags.TagKey != nil {
@@ -543,6 +577,15 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 		}
 
 		_ = d.Set("tags", tagsList)
+	}
+
+	if respData.BindSGs != nil {
+		tmpList := make([]string, 0, len(respData.BindSGs))
+		for _, item := range respData.BindSGs {
+			tmpList = append(tmpList, *item)
+		}
+
+		_ = d.Set("security_group_ids", tmpList)
 	}
 
 	respData1, err := service.DescribeCdwdorisWorkloadGroupsById(ctx, instanceId)
@@ -600,6 +643,43 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 
 		if err != nil {
 			log.Printf("[CRITAL]%s update cdwdoris instance instance_name failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("security_group_ids") {
+		oldValue, newValue := d.GetChange("security_group_ids")
+		oldSecurityGroupIds := oldValue.([]interface{})
+		newSecurityGroupIds := newValue.([]interface{})
+		tmpOld := make([]*string, 0, len(oldSecurityGroupIds))
+		tmpNew := make([]*string, 0, len(newSecurityGroupIds))
+		for _, item := range oldSecurityGroupIds {
+			securityGroupId := item.(string)
+			tmpOld = append(tmpOld, &securityGroupId)
+		}
+
+		for _, item := range newSecurityGroupIds {
+			securityGroupId := item.(string)
+			tmpNew = append(tmpNew, &securityGroupId)
+		}
+
+		request := cdwdorisv20211228.NewModifySecurityGroupsRequest()
+		request.InstanceId = &instanceId
+		request.OldSecurityGroupIds = tmpOld
+		request.ModifySecurityGroupIds = tmpNew
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifySecurityGroupsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify cdwdoris Security Groups failed, reason:%+v", logId, err)
 			return err
 		}
 	}

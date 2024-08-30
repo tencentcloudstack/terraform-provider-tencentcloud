@@ -35,7 +35,7 @@ func ResourceTencentCloudCdwdorisWorkloadGroup() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
-				Description: "Resource group configuration",
+				Description: "Resource group configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"workload_group_name": {
