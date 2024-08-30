@@ -16,12 +16,14 @@ func TestAccTencentCloudCdwdorisInstancesDataSource_basic(t *testing.T) {
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{{
-			Config: testAccCdwdorisInstancesDataSource,
-			Check: resource.ComposeTestCheckFunc(
-				tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_cdwdoris_instances.example"),
-			),
-		}},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCdwdorisInstancesDataSource,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cdwdoris_instances.example", "id"),
+				),
+			},
+		},
 	})
 }
 

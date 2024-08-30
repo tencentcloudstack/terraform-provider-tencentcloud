@@ -36,7 +36,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   ha_flag               = false
   case_sensitive        = 0
   enable_multi_zones    = false
-  workload_group_status = true
+  workload_group_status = "open"
 
   charge_properties {
     charge_type = "POSTPAID_BY_HOUR"

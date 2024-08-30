@@ -25,6 +25,16 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
+# create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "security group desc."
+
+  tags = {
+    "createBy" = "Terraform"
+  }
+}
+
 # create POSTPAID instance
 resource "tencentcloud_cdwdoris_instance" "example" {
   zone                  = var.availability_zone
@@ -36,7 +46,11 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   ha_flag               = false
   case_sensitive        = 0
   enable_multi_zones    = false
-  workload_group_status = true
+  workload_group_status = "open"
+
+  security_group_ids = [
+    tencentcloud_security_group.example.id
+  ]
 
   charge_properties {
     charge_type = "POSTPAID_BY_HOUR"
@@ -84,6 +98,16 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
+# create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "security group desc."
+
+  tags = {
+    "createBy" = "Terraform"
+  }
+}
+
 # create PREPAID instance
 resource "tencentcloud_cdwdoris_instance" "example" {
   zone                  = var.availability_zone
@@ -95,7 +119,11 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   ha_flag               = false
   case_sensitive        = 0
   enable_multi_zones    = false
-  workload_group_status = false
+  workload_group_status = "close"
+
+  security_group_ids = [
+    tencentcloud_security_group.example.id
+  ]
 
   charge_properties {
     charge_type = "PREPAID"

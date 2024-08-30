@@ -168,31 +168,33 @@ func (me *CdwdorisService) DescribeCdwdorisWorkloadGroupsById(ctx context.Contex
 }
 
 func (me *CdwdorisService) DescribeCdwdorisSqlApiById(ctx context.Context, instanceId, userName string) (workloadGroupConfig *cdwdorisv20211228.WorkloadGroupConfig, errRet error) {
-	logId := tccommon.GetLogId(ctx)
+	//logId := tccommon.GetLogId(ctx)
 
-	request := cdwdorisv20211228.NewDescribeWorkloadGroupRequest()
-	request.InstanceId = helper.String(instanceId)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCdwdorisV20211228Client().DescribeWorkloadGroup(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || len(response.Response.WorkloadGroups) == 0 {
-		return
-	}
-
+	//request := cdwdorisv20211228.NewDescribeSqlApisRequest()
+	//request.InstanceId = helper.String(instanceId)
+	//request.ApiType = helper.String("GetUsers")
+	//request.UserName = helper.String(userName)
+	//
+	//defer func() {
+	//	if errRet != nil {
+	//		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	//	}
+	//}()
+	//
+	//ratelimit.Check(request.GetAction())
+	//
+	//response, err := me.client.UseCdwdorisV20211228Client().DescribeSqlApis(request)
+	//if err != nil {
+	//	errRet = err
+	//	return
+	//}
+	//
+	//log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	//
+	//if response == nil || len(response.Response.) == 0 {
+	//	return
+	//}
+	//
 	//for _, item := range response.Response.WorkloadGroups {
 	//	if *item.WorkloadGroupName == workloadGroupName {
 	//		workloadGroupConfig = item

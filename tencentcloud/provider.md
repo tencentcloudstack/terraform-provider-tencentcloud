@@ -2170,4 +2170,3 @@ CdwDoris
   Resource
     tencentcloud_cdwdoris_instance
     tencentcloud_cdwdoris_workload_group
-    tencentcloud_cdwdoris_user
