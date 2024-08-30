@@ -2163,4 +2163,9 @@ CDC
   Resource
     tencentcloud_cdc_site
     tencentcloud_cdc_dedicated_cluster
-  
+
+CdwDoris
+  Resource
+    tencentcloud_cdwdoris_instance
+    tencentcloud_cdwdoris_workload_group
+    tencentcloud_cdwdoris_user

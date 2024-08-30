@@ -46,6 +46,7 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+	cdwdoris "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris/v20211228"
 	cdwpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg/v20201230"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
@@ -209,8 +210,9 @@ type TencentCloudClient struct {
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	tke2Conn *tke2.Client
-	cdcConn  *cdc.Client
+	tke2Conn     *tke2.Client
+	cdcConn      *cdc.Client
+	cdwdorisConn *cdwdoris.Client
 	//omit nil client
 	omitNilConn *common.Client
 }
@@ -1632,4 +1634,17 @@ func (me *TencentCloudClient) UseCdcClient() *cdc.Client {
 	me.cdcConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cdcConn
+}
+
+// UseCdwdoris return CDWDORIS client for service
+func (me *TencentCloudClient) UseCdwdorisV20211228Client() *cdwdoris.Client {
+	if me.cdwdorisConn != nil {
+		return me.cdwdorisConn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cdwdorisConn, _ = cdwdoris.NewClient(me.Credential, me.Region, cpf)
+	me.cdwdorisConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdwdorisConn
 }

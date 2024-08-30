@@ -37,6 +37,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwdoris"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfw"
@@ -2107,6 +2108,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_native_node_pool":                         tke.ResourceTencentCloudKubernetesNativeNodePool(),
 			"tencentcloud_cdc_site":                                            cdc.ResourceTencentCloudCdcSite(),
 			"tencentcloud_cdc_dedicated_cluster":                               cdc.ResourceTencentCloudCdcDedicatedCluster(),
+			"tencentcloud_cdwdoris_instance":                                   cdwdoris.ResourceTencentCloudCdwdorisInstance(),
+			"tencentcloud_cdwdoris_workload_group":                             cdwdoris.ResourceTencentCloudCdwdorisWorkloadGroup(),
+			"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
 		},
 
 		ConfigureFunc: providerConfigure,
