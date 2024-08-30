@@ -341,7 +341,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	return
 }
 
-func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, listenerId string, domain string, url string) (clbRule *clb.RuleOutput, errRet error) {
+func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, listenerId string, domain string, url string, domains []*string) (clbRule *clb.RuleOutput, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
@@ -369,10 +369,26 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	var ruleOutput clb.RuleOutput
 	findFlag := false
 	for _, rule := range clbListener.Rules {
-		if *rule.Domain == domain && *rule.Url == url {
-			ruleOutput = *rule
-			findFlag = true
-			break
+		if *rule.Url == url {
+			if domain != "" && *rule.Domain == domain {
+				ruleOutput = *rule
+				findFlag = true
+				break
+			} else if len(domains) > 0 {
+				tmpRef := true
+				for i := range domains {
+					if *domains[i] != *rule.Domains[i] {
+						tmpRef = false
+						break
+					}
+				}
+
+				if tmpRef {
+					ruleOutput = *rule
+					findFlag = true
+					break
+				}
+			}
 		}
 	}
 	if !findFlag {
