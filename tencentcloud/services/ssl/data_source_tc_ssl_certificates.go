@@ -294,6 +294,9 @@ func GetCertificateList(ctx context.Context, sslService SSLService, id, name, ce
 		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			certificateList, inErr = sslService.DescribeCertificates(ctx, describeRequest)
 			if inErr != nil {
+				if sdkErr := helper.UnwarpSDKError(inErr); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
+					return resource.RetryableError(inErr)
+				}
 				return tccommon.RetryError(inErr)
 			}
 			return nil
@@ -313,6 +316,9 @@ func GetCertificateList(ctx context.Context, sslService SSLService, id, name, ce
 		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			certificatesById, inErr = sslService.DescribeCertificates(ctx, describeRequest)
 			if inErr != nil {
+				if sdkErr := helper.UnwarpSDKError(inErr); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
+					return resource.RetryableError(inErr)
+				}
 				return tccommon.RetryError(inErr)
 			}
 			return nil
@@ -330,6 +336,9 @@ func GetCertificateList(ctx context.Context, sslService SSLService, id, name, ce
 		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			certificatesByName, inErr = sslService.DescribeCertificates(ctx, describeRequest)
 			if inErr != nil {
+				if sdkErr := helper.UnwarpSDKError(inErr); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
+					return resource.RetryableError(inErr)
+				}
 				return tccommon.RetryError(inErr)
 			}
 			return nil
