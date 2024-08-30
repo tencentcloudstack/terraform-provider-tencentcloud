@@ -33,6 +33,7 @@ func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "task_status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "ro_group_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.test", "test-tf"),
 				),
 			},
@@ -79,6 +80,13 @@ func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "1000"),
+				),
+			},
+			{
+				Config: testAccMysqlReadonlyInstance_roGroup(tcacctest.CommonPresetMysql),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly_ro_group"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly_ro_group", "ro_group_id"),
 				),
 			},
 			// // update intranet_port
@@ -204,6 +212,26 @@ func testAccMysqlReadonlyInstance_memSize(mysqlTestCase string) string {
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   master_instance_id = local.mysql_id
+  mem_size           = 1000
+  cpu                = 1
+  volume_size        = 200
+  instance_name      = "mysql-readonly-test"
+  intranet_port      = 3360
+  master_region = var.region
+  zone = var.availability_zone
+  tags = {
+    test = "test-tf"
+  }
+}
+	`, mysqlTestCase)
+}
+
+func testAccMysqlReadonlyInstance_roGroup(mysqlTestCase string) string {
+	return fmt.Sprintf(`
+%s
+resource "tencentcloud_mysql_readonly_instance" "mysql_readonly_ro_group" {
+  master_instance_id = local.mysql_id
+  ro_group_id 		 = tencentcloud_mysql_readonly_instance.mysql_readonly.ro_group_id
   mem_size           = 1000
   cpu                = 1
   volume_size        = 200

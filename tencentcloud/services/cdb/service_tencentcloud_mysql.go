@@ -3154,6 +3154,45 @@ func (me *MysqlService) DescribeMysqlRoGroupById(ctx context.Context, instanceId
 	return
 }
 
+func (me *MysqlService) DescribeRoGroupByIdAndRoId(ctx context.Context, instanceId string, roInstanceId string) (roGroup *cdb.RoGroup, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cdb.NewDescribeRoGroupsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeRoGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RoGroups) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.RoGroups {
+		if len(v.RoInstances) > 0 {
+			for _, ro := range v.RoInstances {
+				if *ro.InstanceId == roInstanceId {
+					roGroup = v
+					return
+				}
+			}
+		}
+	}
+
+	return
+}
+
 func (me *MysqlService) DescribeMysqlErrorLogByFilter(ctx context.Context, param map[string]interface{}) (errorLog []*cdb.ErrlogItem, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)

@@ -101,6 +101,7 @@ The following arguments are supported:
 * `pay_type` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
 * `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
 * `prepaid_period` - (Optional, Int) Period of instance. NOTES: Only supported prepaid instance.
+* `ro_group_id` - (Optional, String) Read only group id. If rogroupId is empty, a new ro group is created by default. If it is not empty, the existing ro group is used.
 * `security_groups` - (Optional, Set: [`String`]) Security groups to use.
 * `slave_deploy_mode` - (Optional, Int) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
 * `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.
