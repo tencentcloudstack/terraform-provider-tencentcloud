@@ -3,11 +3,11 @@ package ssl
 import (
 	"context"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func DataSourceTencentCloudSslDescribeCertificate() *schema.Resource {
@@ -539,6 +539,9 @@ func dataSourceTencentCloudSslDescribeCertificateRead(d *schema.ResourceData, me
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSslDescribeCertificateByID(ctx, CertificateId)
 		if e != nil {
+			if sdkErr := helper.UnwarpSDKError(e); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
+				return resource.RetryableError(e)
+			}
 			return tccommon.RetryError(e)
 		}
 		responese = *result
