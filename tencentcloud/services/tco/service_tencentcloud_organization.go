@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -1149,6 +1150,132 @@ func (me *OrganizationService) DeleteOrganizationOrgManagePolicyTargetById(ctx c
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationServiceAssignMemberById(ctx context.Context, serviceId string) (items []*organization.OrganizationServiceAssignMember, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListOrgServiceAssignMemberRequest()
+	serviceIdInt, _ := strconv.ParseUint(serviceId, 10, 64)
+	request.ServiceId = &serviceIdInt
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var offset uint64 = 0
+	var pageSize uint64 = 10
+	items = make([]*organization.OrganizationServiceAssignMember, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().ListOrgServiceAssignMember(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+
+		items = append(items, response.Response.Items...)
+		if len(response.Response.Items) < int(pageSize) {
+			break
+		}
+
+		offset += pageSize
+	}
+
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationServiceAssignMemberById(ctx context.Context, serviceId string, memberUinList []*int64) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeleteOrgServiceAssignRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	serviceIdInt, _ := strconv.ParseUint(serviceId, 10, 64)
+	for _, memberUin := range memberUinList {
+		ratelimit.Check(request.GetAction())
+		request.ServiceId = &serviceIdInt
+		request.MemberUin = memberUin
+		response, err := me.client.UseOrganizationClient().DeleteOrgServiceAssign(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationServicesByFilter(ctx context.Context, param map[string]interface{}) (members []*organization.OrganizationServiceAssign, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewListOrganizationServiceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 10
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().ListOrganizationService(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+
+		members = append(members, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
 
 	return
 }
