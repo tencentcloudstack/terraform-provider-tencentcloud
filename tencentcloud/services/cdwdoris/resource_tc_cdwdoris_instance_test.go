@@ -8,8 +8,8 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCdwdorisInstanceResource_basic -v
-func TestAccTencentCloudCdwdorisInstanceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixCdwdorisInstanceResource_basic -v
+func TestAccTencentCloudNeedFixCdwdorisInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
