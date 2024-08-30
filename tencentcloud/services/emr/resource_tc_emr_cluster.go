@@ -205,6 +205,12 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Computed:    true,
 				Description: "Tag description list.",
 			},
+			"auto_renew": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "0 means turn off automatic renewal, 1 means turn on automatic renewal. Default is 0.",
+			},
 		},
 	}
 }
@@ -214,7 +220,7 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	immutableFields := []string{"placement", "placement_info", "display_strategy", "login_settings", "resource_spec.0.master_count", "resource_spec.0.task_count", "resource_spec.0.core_count"}
+	immutableFields := []string{"auto_renew", "placement", "placement_info", "display_strategy", "login_settings", "resource_spec.0.master_count", "resource_spec.0.task_count", "resource_spec.0.core_count"}
 	for _, f := range immutableFields {
 		if d.HasChange(f) {
 			return fmt.Errorf("cannot update argument `%s`", f)
@@ -392,6 +398,35 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 	})
 	if err != nil {
 		return err
+	}
+
+	// 预付费删除
+	payMode := d.Get("pay_mode").(int)
+	if payMode == 1 {
+		if err = emrService.DeleteInstance(ctx, d); err != nil {
+			return err
+		}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
+
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "ResourceNotFound.InstanceNotFound" {
+					return nil
+				}
+			}
+
+			if len(clusters) > 0 {
+				return resource.RetryableError(fmt.Errorf("%v being destroyed", instanceId))
+			}
+
+			if err != nil {
+				return resource.RetryableError(err)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	if metaDB != nil && *metaDB != "" {
@@ -625,5 +660,22 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	_ = d.Set("tags", tags)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, err := emrService.DescribeClusterNodes(ctx, instanceId, "all", "all", 0, 10)
+
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+
+		if len(result) > 0 {
+			_ = d.Set("auto_renew", result[0].IsAutoRenew)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
