@@ -24,33 +24,35 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 			"zone": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Availability zone.",
+				Description: "Availability zone",
 			},
+
 			"fe_spec": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "FE specifications.",
+				Description: "FE specifications",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"spec_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Specification name.",
+							Description: "Specification name",
 						},
 						"count": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Quantities.",
+							Description: "Quantities",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Cloud disk size.",
+							Description: "Cloud disk size",
 						},
 					},
 				},
 			},
+
 			"be_spec": {
 				Type:        schema.TypeList,
 				Required:    true,
@@ -61,117 +63,127 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 						"spec_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Specification name.",
+							Description: "Specification name",
 						},
 						"count": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Quantities.",
+							Description: "Quantities",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Cloud disk size.",
+							Description: "Cloud disk size",
 						},
 					},
 				},
 			},
+
 			"ha_flag": {
 				Type:        schema.TypeBool,
 				Required:    true,
 				Description: "Whether it is highly available.",
 			},
+
 			"user_vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "User VPCID.",
+				Description: "User VPCID",
 			},
+
 			"user_subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "User subnet ID.",
+				Description: "User subnet ID",
 			},
+
 			"product_version": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Product version number.",
+				Description: "Product version number",
 			},
+
 			"charge_properties": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "Payment type.",
+				Description: "Payment type",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"charge_type": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: tccommon.ValidateAllowedStringValue(CHARGE_TYPE),
-							Description:  "Billing type: `PREPAID` for prepayment, and `POSTPAID_BY_HOUR` for postpayment. Note: This field may return null, indicating that no valid values can be obtained.",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Billing type: PREPAID for prepayment, and POSTPAID_BY_HOUR for postpayment.\nNote: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"renew_flag": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Whether to automatically renew. 1 means automatic renewal is enabled. Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Whether to automatically renew. 1 means automatic renewal is enabled.\nNote: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"time_span": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Billing duration Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Billing duration\nNote: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"time_unit": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Billing time unit, and `m` means month, etc. Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Billing time unit, and \"m\" means month, etc.\nNote: This field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
 			},
+
 			"instance_name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Instance name.",
+				Description: "Instance name",
 			},
+
 			"doris_user_pwd": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Sensitive:   true,
-				Description: "Database password.",
+				Description: "Database password",
 			},
+
 			"tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Tag list.",
+				Description: "Tag list",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Tag key.",
+							Description: "Tag key",
 						},
 						"tag_value": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Tag value.",
+							Description: "Tag value",
 						},
 					},
 				},
 			},
+
 			"ha_type": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "High availability type: 0 indicates non-high availability (only one FE, FeSpec.CreateInstanceSpec.Count=1), 1 indicates read high availability (at least 3 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=3, and it must be an odd number), 2 indicates read and write high availability (at least 5 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=5, and it must be an odd number).",
+				Description: "High availability type:\n0 indicates non-high availability (only one FE, FeSpec.CreateInstanceSpec.Count=1),\n1 indicates read high availability (at least 3 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=3, and it must be an odd number),\n2 indicates read and write high availability (at least 5 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=5, and it must be an odd number).",
 			},
+
 			"case_sensitive": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Whether the table name is case sensitive, 0 refers to sensitive, 1 refers to insensitive, compared in lowercase; 2 refers to insensitive, and the table name is changed to lowercase for storage.",
 			},
+
 			"enable_multi_zones": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Whether to enable multi-availability zone.",
 			},
+
 			"user_multi_zone_infos": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -182,32 +194,20 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 						"zone": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Availability zone Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Availability zone\nNote: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Subnet ID Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Subnet ID\nNote: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"subnet_ip_num": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The number of available IP addresses in the current subnet Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "The number of available IP addresses in the current subnet\nNote: This field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
-			},
-			"security_group_ids": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Security Group Id list.",
-			},
-			"workload_group_status": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(WORKLOAD_GROUP_STATUS),
-				Description:  "Whether to enable resource group. `open` - enable, `close` - disable.",
 			},
 		},
 	}
@@ -217,13 +217,16 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
 	var (
-		logId               = tccommon.GetLogId(tccommon.ContextNil)
-		ctx                 = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request             = cdwdorisv20211228.NewCreateInstanceNewRequest()
-		response            = cdwdorisv20211228.NewCreateInstanceNewResponse()
-		instanceId          string
-		workloadGroupStatus string
+		instanceId string
+	)
+	var (
+		request  = cdwdorisv20211228.NewCreateInstanceNewRequest()
+		response = cdwdorisv20211228.NewCreateInstanceNewResponse()
 	)
 
 	if v, ok := d.GetOk("zone"); ok {
@@ -235,15 +238,12 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		if v, ok := feSpecMap["spec_name"]; ok {
 			createInstanceSpec.SpecName = helper.String(v.(string))
 		}
-
 		if v, ok := feSpecMap["count"]; ok {
 			createInstanceSpec.Count = helper.IntUint64(v.(int))
 		}
-
 		if v, ok := feSpecMap["disk_size"]; ok {
 			createInstanceSpec.DiskSize = helper.IntUint64(v.(int))
 		}
-
 		request.FeSpec = &createInstanceSpec
 	}
 
@@ -252,15 +252,12 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		if v, ok := beSpecMap["spec_name"]; ok {
 			createInstanceSpec2.SpecName = helper.String(v.(string))
 		}
-
 		if v, ok := beSpecMap["count"]; ok {
 			createInstanceSpec2.Count = helper.IntUint64(v.(int))
 		}
-
 		if v, ok := beSpecMap["disk_size"]; ok {
 			createInstanceSpec2.DiskSize = helper.IntUint64(v.(int))
 		}
-
 		request.BeSpec = &createInstanceSpec2
 	}
 
@@ -285,19 +282,15 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		if v, ok := chargePropertiesMap["charge_type"]; ok {
 			chargeProperties.ChargeType = helper.String(v.(string))
 		}
-
 		if v, ok := chargePropertiesMap["renew_flag"]; ok {
 			chargeProperties.RenewFlag = helper.IntInt64(v.(int))
 		}
-
 		if v, ok := chargePropertiesMap["time_span"]; ok {
 			chargeProperties.TimeSpan = helper.IntInt64(v.(int))
 		}
-
 		if v, ok := chargePropertiesMap["time_unit"]; ok {
 			chargeProperties.TimeUnit = helper.String(v.(string))
 		}
-
 		request.ChargeProperties = &chargeProperties
 	}
 
@@ -316,11 +309,9 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 			if v, ok := tagsMap["tag_key"]; ok {
 				tag.TagKey = helper.String(v.(string))
 			}
-
 			if v, ok := tagsMap["tag_value"]; ok {
 				tag.TagValue = helper.String(v.(string))
 			}
-
 			request.Tags = append(request.Tags, &tag)
 		}
 	}
@@ -342,15 +333,12 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		if v, ok := userMultiZoneInfosMap["zone"]; ok {
 			networkInfo.Zone = helper.String(v.(string))
 		}
-
 		if v, ok := userMultiZoneInfosMap["subnet_id"]; ok {
 			networkInfo.SubnetId = helper.String(v.(string))
 		}
-
 		if v, ok := userMultiZoneInfosMap["subnet_ip_num"]; ok {
 			networkInfo.SubnetIpNum = helper.IntInt64(v.(int))
 		}
-
 		request.UserMultiZoneInfos = &networkInfo
 	}
 
@@ -359,116 +347,17 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create cdwdoris instance failed, reason:%+v", logId, err)
 		return err
 	}
 
-	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
-
-	// wait
-	waitRequest := cdwdorisv20211228.NewDescribeInstanceStateRequest()
-	waitRequest.InstanceId = &instanceId
-	err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstanceStateWithContext(ctx, waitRequest)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-
-		if *result.Response.InstanceState != INSTANCE_STATE_SERVING {
-			return resource.RetryableError(fmt.Errorf("instance status is %s, retry...", *result.Response.InstanceState))
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create cdwdoris instance failed, reason:%+v", logId, err)
-		return err
-	}
-
-	if v, ok := d.GetOk("security_group_ids"); ok {
-		securityGroupIds := v.([]interface{})
-		tmpList := make([]*string, 0, len(securityGroupIds))
-		for _, item := range securityGroupIds {
-			securityGroupId := item.(string)
-			tmpList = append(tmpList, &securityGroupId)
-		}
-
-		sgRequest := cdwdorisv20211228.NewModifySecurityGroupsRequest()
-		sgRequest.InstanceId = &instanceId
-		sgRequest.ModifySecurityGroupIds = tmpList
-		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifySecurityGroupsWithContext(ctx, sgRequest)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s modify cdwdoris Security Groups failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
-	if v, ok := d.GetOk("workload_group_status"); ok {
-		workloadGroupStatus = v.(string)
-		if workloadGroupStatus == WORKLOAD_GROUP_STATUS_OPEN {
-			workloadGroupStatusRequest := cdwdorisv20211228.NewModifyWorkloadGroupStatusRequest()
-			workloadGroupStatusRequest.InstanceId = &instanceId
-			workloadGroupStatusRequest.OperationType = &workloadGroupStatus
-			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifyWorkloadGroupStatusWithContext(ctx, workloadGroupStatusRequest)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify cdwdoris instance workload group status failed, reason:%+v", logId, err)
-				return err
-			}
-
-			// wait
-			err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstanceStateWithContext(ctx, waitRequest)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				if *result.Response.InstanceState != INSTANCE_STATE_SERVING {
-					return resource.RetryableError(fmt.Errorf("instance status is %s, retry...", *result.Response.InstanceState))
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify cdwdoris instance workload group status failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
 
 	return resourceTencentCloudCdwdorisInstanceRead(d, meta)
 }
@@ -477,30 +366,42 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		service    = CdwdorisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		instanceId = d.Id()
-	)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	respData, err := service.DescribeCdwdorisInstanceById(ctx, instanceId)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	service := CdwdorisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	instanceId := d.Id()
+
+	respData, err := service.DescribeCdwdorisInstanceById(ctx)
 	if err != nil {
 		return err
 	}
 
 	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `cdwdoris_instance` [%s] not found, please check if it has been deleted.", logId, d.Id())
+		log.Printf("[WARN]%s resource `cdwdoris_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
+	}
+	if respData.InstanceId != nil {
+		_ = d.Set("instance_id", respData.InstanceId)
 	}
 
 	if respData.InstanceName != nil {
 		_ = d.Set("instance_name", respData.InstanceName)
 	}
 
+	if respData.Status != nil {
+		_ = d.Set("status", respData.Status)
+	}
+
 	if respData.Version != nil {
-		_ = d.Set("product_version", respData.Version)
+		_ = d.Set("version", respData.Version)
+	}
+
+	if respData.Region != nil {
+		_ = d.Set("region", respData.Region)
 	}
 
 	if respData.Zone != nil {
@@ -508,63 +409,226 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 	}
 
 	if respData.VpcId != nil {
-		_ = d.Set("user_vpc_id", respData.VpcId)
+		_ = d.Set("vpc_id", respData.VpcId)
 	}
 
 	if respData.SubnetId != nil {
-		_ = d.Set("user_subnet_id", respData.SubnetId)
+		_ = d.Set("subnet_id", respData.SubnetId)
 	}
 
+	if respData.PayMode != nil {
+		_ = d.Set("pay_mode", respData.PayMode)
+	}
+
+	if respData.CreateTime != nil {
+		_ = d.Set("create_time", respData.CreateTime)
+	}
+
+	if respData.ExpireTime != nil {
+		_ = d.Set("expire_time", respData.ExpireTime)
+	}
+
+	masterSummaryMap := map[string]interface{}{}
+
 	if respData.MasterSummary != nil {
-		masterSummaryMap := map[string]interface{}{}
 		if respData.MasterSummary.Spec != nil {
-			masterSummaryMap["spec_name"] = respData.MasterSummary.Spec
+			masterSummaryMap["spec"] = respData.MasterSummary.Spec
 		}
 
 		if respData.MasterSummary.NodeSize != nil {
-			masterSummaryMap["count"] = respData.MasterSummary.NodeSize
+			masterSummaryMap["node_size"] = respData.MasterSummary.NodeSize
+		}
+
+		if respData.MasterSummary.Core != nil {
+			masterSummaryMap["core"] = respData.MasterSummary.Core
+		}
+
+		if respData.MasterSummary.Memory != nil {
+			masterSummaryMap["memory"] = respData.MasterSummary.Memory
 		}
 
 		if respData.MasterSummary.Disk != nil {
-			masterSummaryMap["disk_size"] = respData.MasterSummary.Disk
+			masterSummaryMap["disk"] = respData.MasterSummary.Disk
 		}
 
-		_ = d.Set("fe_spec", []interface{}{masterSummaryMap})
+		if respData.MasterSummary.DiskType != nil {
+			masterSummaryMap["disk_type"] = respData.MasterSummary.DiskType
+		}
+
+		if respData.MasterSummary.DiskDesc != nil {
+			masterSummaryMap["disk_desc"] = respData.MasterSummary.DiskDesc
+		}
+
+		attachCBSSpecMap := map[string]interface{}{}
+
+		if respData.MasterSummary.AttachCBSSpec != nil {
+			if respData.MasterSummary.AttachCBSSpec.DiskType != nil {
+				attachCBSSpecMap["disk_type"] = respData.MasterSummary.AttachCBSSpec.DiskType
+			}
+
+			if respData.MasterSummary.AttachCBSSpec.DiskSize != nil {
+				attachCBSSpecMap["disk_size"] = respData.MasterSummary.AttachCBSSpec.DiskSize
+			}
+
+			if respData.MasterSummary.AttachCBSSpec.DiskCount != nil {
+				attachCBSSpecMap["disk_count"] = respData.MasterSummary.AttachCBSSpec.DiskCount
+			}
+
+			if respData.MasterSummary.AttachCBSSpec.DiskDesc != nil {
+				attachCBSSpecMap["disk_desc"] = respData.MasterSummary.AttachCBSSpec.DiskDesc
+			}
+
+			masterSummaryMap["attach_cbs_spec"] = []interface{}{attachCBSSpecMap}
+		}
+
+		if respData.MasterSummary.SubProductType != nil {
+			masterSummaryMap["sub_product_type"] = respData.MasterSummary.SubProductType
+		}
+
+		if respData.MasterSummary.SpecCore != nil {
+			masterSummaryMap["spec_core"] = respData.MasterSummary.SpecCore
+		}
+
+		if respData.MasterSummary.SpecMemory != nil {
+			masterSummaryMap["spec_memory"] = respData.MasterSummary.SpecMemory
+		}
+
+		if respData.MasterSummary.DiskCount != nil {
+			masterSummaryMap["disk_count"] = respData.MasterSummary.DiskCount
+		}
+
+		if respData.MasterSummary.Encrypt != nil {
+			masterSummaryMap["encrypt"] = respData.MasterSummary.Encrypt
+		}
+
+		if respData.MasterSummary.MaxDiskSize != nil {
+			masterSummaryMap["max_disk_size"] = respData.MasterSummary.MaxDiskSize
+		}
+
+		_ = d.Set("master_summary", []interface{}{masterSummaryMap})
 	}
 
+	coreSummaryMap := map[string]interface{}{}
+
 	if respData.CoreSummary != nil {
-		coreSummaryMap := map[string]interface{}{}
 		if respData.CoreSummary.Spec != nil {
-			coreSummaryMap["spec_name"] = respData.CoreSummary.Spec
+			coreSummaryMap["spec"] = respData.CoreSummary.Spec
 		}
 
 		if respData.CoreSummary.NodeSize != nil {
-			coreSummaryMap["count"] = respData.CoreSummary.NodeSize
+			coreSummaryMap["node_size"] = respData.CoreSummary.NodeSize
+		}
+
+		if respData.CoreSummary.Core != nil {
+			coreSummaryMap["core"] = respData.CoreSummary.Core
+		}
+
+		if respData.CoreSummary.Memory != nil {
+			coreSummaryMap["memory"] = respData.CoreSummary.Memory
 		}
 
 		if respData.CoreSummary.Disk != nil {
-			coreSummaryMap["disk_size"] = respData.CoreSummary.Disk
+			coreSummaryMap["disk"] = respData.CoreSummary.Disk
 		}
 
-		_ = d.Set("be_spec", []interface{}{coreSummaryMap})
+		if respData.CoreSummary.DiskType != nil {
+			coreSummaryMap["disk_type"] = respData.CoreSummary.DiskType
+		}
+
+		if respData.CoreSummary.DiskDesc != nil {
+			coreSummaryMap["disk_desc"] = respData.CoreSummary.DiskDesc
+		}
+
+		attachCBSSpecMap := map[string]interface{}{}
+
+		if respData.CoreSummary.AttachCBSSpec != nil {
+			if respData.CoreSummary.AttachCBSSpec.DiskType != nil {
+				attachCBSSpecMap["disk_type"] = respData.CoreSummary.AttachCBSSpec.DiskType
+			}
+
+			if respData.CoreSummary.AttachCBSSpec.DiskSize != nil {
+				attachCBSSpecMap["disk_size"] = respData.CoreSummary.AttachCBSSpec.DiskSize
+			}
+
+			if respData.CoreSummary.AttachCBSSpec.DiskCount != nil {
+				attachCBSSpecMap["disk_count"] = respData.CoreSummary.AttachCBSSpec.DiskCount
+			}
+
+			if respData.CoreSummary.AttachCBSSpec.DiskDesc != nil {
+				attachCBSSpecMap["disk_desc"] = respData.CoreSummary.AttachCBSSpec.DiskDesc
+			}
+
+			coreSummaryMap["attach_cbs_spec"] = []interface{}{attachCBSSpecMap}
+		}
+
+		if respData.CoreSummary.SubProductType != nil {
+			coreSummaryMap["sub_product_type"] = respData.CoreSummary.SubProductType
+		}
+
+		if respData.CoreSummary.SpecCore != nil {
+			coreSummaryMap["spec_core"] = respData.CoreSummary.SpecCore
+		}
+
+		if respData.CoreSummary.SpecMemory != nil {
+			coreSummaryMap["spec_memory"] = respData.CoreSummary.SpecMemory
+		}
+
+		if respData.CoreSummary.DiskCount != nil {
+			coreSummaryMap["disk_count"] = respData.CoreSummary.DiskCount
+		}
+
+		if respData.CoreSummary.Encrypt != nil {
+			coreSummaryMap["encrypt"] = respData.CoreSummary.Encrypt
+		}
+
+		if respData.CoreSummary.MaxDiskSize != nil {
+			coreSummaryMap["max_disk_size"] = respData.CoreSummary.MaxDiskSize
+		}
+
+		_ = d.Set("core_summary", []interface{}{coreSummaryMap})
 	}
 
 	if respData.HA != nil {
-		if *respData.HA == "true" {
-			_ = d.Set("ha_flag", true)
-		} else {
-			_ = d.Set("ha_flag", false)
-		}
+		_ = d.Set("ha", respData.HA)
 	}
 
 	if respData.HaType != nil {
 		_ = d.Set("ha_type", respData.HaType)
 	}
 
+	if respData.AccessInfo != nil {
+		_ = d.Set("access_info", respData.AccessInfo)
+	}
+
+	if respData.Id != nil {
+		_ = d.Set("id", respData.Id)
+	}
+
+	if respData.RegionId != nil {
+		_ = d.Set("region_id", respData.RegionId)
+	}
+
+	if respData.ZoneDesc != nil {
+		_ = d.Set("zone_desc", respData.ZoneDesc)
+	}
+
+	if respData.FlowMsg != nil {
+		_ = d.Set("flow_msg", respData.FlowMsg)
+	}
+
+	if respData.StatusDesc != nil {
+		_ = d.Set("status_desc", respData.StatusDesc)
+	}
+
+	if respData.RenewFlag != nil {
+		_ = d.Set("renew_flag", respData.RenewFlag)
+	}
+
+	tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
 	if respData.Tags != nil {
-		tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
 		for _, tags := range respData.Tags {
 			tagsMap := map[string]interface{}{}
+
 			if tags.TagKey != nil {
 				tagsMap["tag_key"] = tags.TagKey
 			}
@@ -579,30 +643,198 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 		_ = d.Set("tags", tagsList)
 	}
 
-	if respData.BindSGs != nil {
-		tmpList := make([]string, 0, len(respData.BindSGs))
-		for _, item := range respData.BindSGs {
-			tmpList = append(tmpList, *item)
-		}
-
-		_ = d.Set("security_group_ids", tmpList)
+	if respData.Monitor != nil {
+		_ = d.Set("monitor", respData.Monitor)
 	}
 
-	respData1, err := service.DescribeCdwdorisWorkloadGroupsById(ctx, instanceId)
+	if respData.HasClsTopic != nil {
+		_ = d.Set("has_cls_topic", respData.HasClsTopic)
+	}
+
+	if respData.ClsTopicId != nil {
+		_ = d.Set("cls_topic_id", respData.ClsTopicId)
+	}
+
+	if respData.ClsLogSetId != nil {
+		_ = d.Set("cls_log_set_id", respData.ClsLogSetId)
+	}
+
+	if respData.EnableXMLConfig != nil {
+		_ = d.Set("enable_xml_config", respData.EnableXMLConfig)
+	}
+
+	if respData.RegionDesc != nil {
+		_ = d.Set("region_desc", respData.RegionDesc)
+	}
+
+	if respData.Eip != nil {
+		_ = d.Set("eip", respData.Eip)
+	}
+
+	if respData.CosMoveFactor != nil {
+		_ = d.Set("cos_move_factor", respData.CosMoveFactor)
+	}
+
+	if respData.Kind != nil {
+		_ = d.Set("kind", respData.Kind)
+	}
+
+	if respData.CosBucketName != nil {
+		_ = d.Set("cos_bucket_name", respData.CosBucketName)
+	}
+
+	if respData.CanAttachCbs != nil {
+		_ = d.Set("can_attach_cbs", respData.CanAttachCbs)
+	}
+
+	if respData.BuildVersion != nil {
+		_ = d.Set("build_version", respData.BuildVersion)
+	}
+
+	if respData.Components != nil {
+		_ = d.Set("components", respData.Components)
+	}
+
+	if respData.Characteristic != nil {
+		_ = d.Set("characteristic", respData.Characteristic)
+	}
+
+	if respData.RestartTimeout != nil {
+		_ = d.Set("restart_timeout", respData.RestartTimeout)
+	}
+
+	if respData.GraceShutdownWaitSeconds != nil {
+		_ = d.Set("grace_shutdown_wait_seconds", respData.GraceShutdownWaitSeconds)
+	}
+
+	if respData.CaseSensitive != nil {
+		_ = d.Set("case_sensitive", respData.CaseSensitive)
+	}
+
+	if respData.IsWhiteSGs != nil {
+		_ = d.Set("is_white_s_gs", respData.IsWhiteSGs)
+	}
+
+	if respData.BindSGs != nil {
+		_ = d.Set("bind_s_gs", respData.BindSGs)
+	}
+
+	if respData.EnableMultiZones != nil {
+		_ = d.Set("enable_multi_zones", respData.EnableMultiZones)
+	}
+
+	if respData.UserNetworkInfos != nil {
+		_ = d.Set("user_network_infos", respData.UserNetworkInfos)
+	}
+
+	if respData.EnableCoolDown != nil {
+		_ = d.Set("enable_cool_down", respData.EnableCoolDown)
+	}
+
+	if respData.CoolDownBucket != nil {
+		_ = d.Set("cool_down_bucket", respData.CoolDownBucket)
+	}
+
+	respData1, err := service.DescribeCdwdorisInstanceById1(ctx)
 	if err != nil {
 		return err
 	}
 
 	if respData1 == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `cdwdoris_workload_group` [%s] not found, please check if it has been deleted.", logId, d.Id())
+		log.Printf("[WARN]%s resource `cdwdoris_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
-	if respData1.Status != nil {
-		_ = d.Set("workload_group_status", respData1.Status)
+	if respData1.InstanceState != nil {
+		_ = d.Set("instance_state", respData1.InstanceState)
 	}
 
+	if respData1.FlowCreateTime != nil {
+		_ = d.Set("flow_create_time", respData1.FlowCreateTime)
+	}
+
+	if respData1.FlowName != nil {
+		_ = d.Set("flow_name", respData1.FlowName)
+	}
+
+	if respData1.FlowProgress != nil {
+		_ = d.Set("flow_progress", respData1.FlowProgress)
+	}
+
+	if respData1.InstanceStateDesc != nil {
+		_ = d.Set("instance_state_desc", respData1.InstanceStateDesc)
+	}
+
+	if respData1.FlowMsg != nil {
+		_ = d.Set("flow_msg", respData1.FlowMsg)
+	}
+
+	respData2, err := service.DescribeCdwdorisInstanceById2(ctx)
+	if err != nil {
+		return err
+	}
+
+	if respData2 == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `cdwdoris_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+	operationsList := make([]map[string]interface{}, 0, len(respData2.Operations))
+	if respData2.Operations != nil {
+		for _, operations := range respData2.Operations {
+			operationsMap := map[string]interface{}{}
+
+			if operations.Name != nil {
+				operationsMap["name"] = operations.Name
+			}
+
+			if operations.Result != nil {
+				operationsMap["result"] = operations.Result
+			}
+
+			if operations.Desc != nil {
+				operationsMap["desc"] = operations.Desc
+			}
+
+			if operations.Level != nil {
+				operationsMap["level"] = operations.Level
+			}
+
+			if operations.LevelDesc != nil {
+				operationsMap["level_desc"] = operations.LevelDesc
+			}
+
+			if operations.StartTime != nil {
+				operationsMap["start_time"] = operations.StartTime
+			}
+
+			if operations.EndTime != nil {
+				operationsMap["end_time"] = operations.EndTime
+			}
+
+			if operations.ResultDesc != nil {
+				operationsMap["result_desc"] = operations.ResultDesc
+			}
+
+			if operations.OperateUin != nil {
+				operationsMap["operate_uin"] = operations.OperateUin
+			}
+
+			if operations.JobId != nil {
+				operationsMap["job_id"] = operations.JobId
+			}
+
+			if operations.OperationDetail != nil {
+				operationsMap["operation_detail"] = operations.OperationDetail
+			}
+
+			operationsList = append(operationsList, operationsMap)
+		}
+
+		_ = d.Set("operations", operationsList)
+	}
+
+	_ = instanceId
 	return nil
 }
 
@@ -610,22 +842,34 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		instanceId = d.Id()
-	)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_type", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos"}
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
+	instanceId := d.Id()
 
-	if d.HasChange("instance_name") {
+	needChange := false
+	mutableArgs := []string{"instance_id", "instance_name"}
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
+	}
+
+	if needChange {
 		request := cdwdorisv20211228.NewModifyInstanceRequest()
-		request.InstanceId = &instanceId
+
+		if v, ok := d.GetOk("instance_id"); ok {
+			request.InstanceId = helper.String(v.(string))
+		}
+
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
@@ -635,100 +879,185 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
-
 			return nil
 		})
-
 		if err != nil {
-			log.Printf("[CRITAL]%s update cdwdoris instance instance_name failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
-	if d.HasChange("security_group_ids") {
-		oldValue, newValue := d.GetChange("security_group_ids")
-		oldSecurityGroupIds := oldValue.([]interface{})
-		newSecurityGroupIds := newValue.([]interface{})
-		tmpOld := make([]*string, 0, len(oldSecurityGroupIds))
-		tmpNew := make([]*string, 0, len(newSecurityGroupIds))
-		for _, item := range oldSecurityGroupIds {
-			securityGroupId := item.(string)
-			tmpOld = append(tmpOld, &securityGroupId)
+	needChange1 := false
+	mutableArgs1 := []string{"instance_id", "type", "node_count", "ha_type"}
+	for _, v := range mutableArgs1 {
+		if d.HasChange(v) {
+			needChange1 = true
+			break
+		}
+	}
+
+	if needChange1 {
+		request1 := cdwdorisv20211228.NewScaleOutInstanceRequest()
+
+		if v, ok := d.GetOk("instance_id"); ok {
+			request1.InstanceId = helper.String(v.(string))
 		}
 
-		for _, item := range newSecurityGroupIds {
-			securityGroupId := item.(string)
-			tmpNew = append(tmpNew, &securityGroupId)
+		if v, ok := d.GetOk("type"); ok {
+			request1.Type = helper.String(v.(string))
 		}
 
-		request := cdwdorisv20211228.NewModifySecurityGroupsRequest()
-		request.InstanceId = &instanceId
-		request.OldSecurityGroupIds = tmpOld
-		request.ModifySecurityGroupIds = tmpNew
+		if v, ok := d.GetOkExists("node_count"); ok {
+			request1.NodeCount = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("ha_type"); ok {
+			request1.HaType = helper.IntInt64(v.(int))
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifySecurityGroupsWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ScaleOutInstanceWithContext(ctx, request1)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request1.GetAction(), request1.ToJsonString(), result.ToJsonString())
 			}
-
 			return nil
 		})
-
 		if err != nil {
-			log.Printf("[CRITAL]%s modify cdwdoris Security Groups failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
-	if d.HasChange("workload_group_status") {
-		workloadGroupStatus := d.Get("workload_group_status").(string)
-		request := cdwdorisv20211228.NewModifyWorkloadGroupStatusRequest()
-		request.InstanceId = &instanceId
-		request.OperationType = &workloadGroupStatus
+	needChange2 := false
+	mutableArgs2 := []string{"instance_id", "spec_name", "type"}
+	for _, v := range mutableArgs2 {
+		if d.HasChange(v) {
+			needChange2 = true
+			break
+		}
+	}
+
+	if needChange2 {
+		request2 := cdwdorisv20211228.NewScaleUpInstanceRequest()
+
+		if v, ok := d.GetOk("instance_id"); ok {
+			request2.InstanceId = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("spec_name"); ok {
+			request2.SpecName = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("type"); ok {
+			request2.Type = helper.String(v.(string))
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifyWorkloadGroupStatusWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ScaleUpInstanceWithContext(ctx, request2)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request2.GetAction(), request2.ToJsonString(), result.ToJsonString())
 			}
-
 			return nil
 		})
-
 		if err != nil {
-			log.Printf("[CRITAL]%s modify cdwdoris instance workload group status failed, reason:%+v", logId, err)
-			return err
-		}
-
-		// wait
-		waitRequest := cdwdorisv20211228.NewDescribeInstanceStateRequest()
-		waitRequest.InstanceId = &instanceId
-		err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstanceStateWithContext(ctx, waitRequest)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			if *result.Response.InstanceState != INSTANCE_STATE_SERVING {
-				return resource.RetryableError(fmt.Errorf("instance status is %s, retry...", *result.Response.InstanceState))
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s modify cdwdoris instance workload group status failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
+	needChange3 := false
+	mutableArgs3 := []string{"instance_id", "del_hosts", "type", "ha_type"}
+	for _, v := range mutableArgs3 {
+		if d.HasChange(v) {
+			needChange3 = true
+			break
+		}
+	}
+
+	if needChange3 {
+		request3 := cdwdorisv20211228.NewReduceInstanceRequest()
+
+		if v, ok := d.GetOk("instance_id"); ok {
+			request3.InstanceId = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("del_hosts"); ok {
+			delHostsSet := v.([]interface{})
+			for i := range delHostsSet {
+				delHosts := delHostsSet[i].(string)
+				request3.DelHosts = append(request3.DelHosts, helper.String(delHosts))
+			}
+		}
+
+		if v, ok := d.GetOk("type"); ok {
+			request3.Type = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("ha_type"); ok {
+			request3.HaType = helper.IntInt64(v.(int))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ReduceInstanceWithContext(ctx, request3)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request3.GetAction(), request3.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	needChange4 := false
+	mutableArgs4 := []string{"instance_id", "type", "disk_size"}
+	for _, v := range mutableArgs4 {
+		if d.HasChange(v) {
+			needChange4 = true
+			break
+		}
+	}
+
+	if needChange4 {
+		request4 := cdwdorisv20211228.NewResizeDiskRequest()
+
+		if v, ok := d.GetOk("instance_id"); ok {
+			request4.InstanceId = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("type"); ok {
+			request4.Type = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("disk_size"); ok {
+			request4.DiskSize = helper.IntUint64(v.(int))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ResizeDiskWithContext(ctx, request4)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request4.GetAction(), request4.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	_ = instanceId
 	return resourceTencentCloudCdwdorisInstanceRead(d, meta)
 }
 
@@ -736,124 +1065,35 @@ func resourceTencentCloudCdwdorisInstanceDelete(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	instanceId := d.Id()
+
 	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request    = cdwdorisv20211228.NewDestroyInstanceRequest()
-		instanceId = d.Id()
-		chargeType string
+		request  = cdwdorisv20211228.NewDestroyInstanceRequest()
+		response = cdwdorisv20211228.NewDestroyInstanceResponse()
 	)
 
-	if chargePropertiesMap, ok := helper.InterfacesHeadMap(d, "charge_properties"); ok {
-		if v, ok := chargePropertiesMap["charge_type"]; ok {
-			chargeType = v.(string)
-		}
+	if v, ok := d.GetOk("instance_id"); ok {
+		request.InstanceId = helper.String(v.(string))
 	}
 
-	request.InstanceId = &instanceId
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DestroyInstanceWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s delete cdwdoris instance failed, reason:%+v", logId, err)
 		return err
 	}
 
-	// wait
-	describeRequest := cdwdorisv20211228.NewDescribeInstancesRequest()
-	describeRequest.SearchInstanceId = helper.String(instanceId)
-	if chargeType == CHARGE_TYPE_POSTPAID_BY_HOUR {
-		err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstancesWithContext(ctx, describeRequest)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			if len(result.Response.InstancesList) != 0 {
-				instanceState := result.Response.InstancesList[0].Status
-				return resource.RetryableError(fmt.Errorf("instance status is %s, retry...", *instanceState))
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s delete cdwdoris instance failed, reason:%+v", logId, err)
-			return err
-		}
-	} else {
-		waitRequest := cdwdorisv20211228.NewDescribeInstanceStateRequest()
-		waitRequest.InstanceId = &instanceId
-		err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstanceStateWithContext(ctx, waitRequest)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			if *result.Response.InstanceState != INSTANCE_STATE_ISOLATED {
-				return resource.RetryableError(fmt.Errorf("instance status is %s, retry...", *result.Response.InstanceState))
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s delete cdwdoris instance failed, reason:%+v", logId, err)
-			return err
-		}
-
-		// prepaid need delete again
-		if chargeType == CHARGE_TYPE_PREPAID {
-			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DestroyInstanceWithContext(ctx, request)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s delete cdwdoris instance failed, reason:%+v", logId, err)
-				return err
-			}
-
-			err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstancesWithContext(ctx, describeRequest)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s] ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				if len(result.Response.InstancesList) != 0 {
-					instanceState := result.Response.InstancesList[0].Status
-					return resource.RetryableError(fmt.Errorf("instance status is %s, retry...", *instanceState))
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s delete cdwdoris instance failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
-
+	_ = instanceId
 	return nil
 }

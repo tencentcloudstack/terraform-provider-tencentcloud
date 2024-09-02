@@ -3,9 +3,7 @@ package cdwdoris
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,67 +17,67 @@ func ResourceTencentCloudCdwdorisUser() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCdwdorisUserCreate,
 		Read:   resourceTencentCloudCdwdorisUserRead,
-		Update: resourceTencentCloudCdwdorisUserUpdate,
 		Delete: resourceTencentCloudCdwdorisUserDelete,
 		Schema: map[string]*schema.Schema{
 			"user_info": {
 				Type:        schema.TypeList,
 				Required:    true,
+				ForceNew:    true,
 				MaxItems:    1,
-				Description: "User info.",
+				Description: "User info",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Instance ID.",
+							Description: "Instance ID",
 						},
-						"username": {
+						"user_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "User name.",
+							Description: "User name",
 						},
-						"password": {
+						"pass_word": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Sensitive:   true,
-							Description: "Password.",
+							Description: "Password",
 						},
 						"white_host": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The IP the user linked from.",
+							Description: "The IP the user linked from",
+						},
+						"old_white_host": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The IP from which the user link came before modification",
 						},
 						"describe": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Describe.",
+							Description: "Describe",
 						},
-						"cam_uin": {
+						"old_pwd": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The bound sub user uin.",
-						},
-						"cam_ranger_group_ids": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Elem:        &schema.Schema{Type: schema.TypeInt},
-							Description: "Ranger group id list.",
+							Description: "Old password",
 						},
 					},
 				},
 			},
+
 			"api_type": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Api type.",
+				Description: "api type",
 			},
+
 			"user_privilege": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "User permission type. 0: Ordinary user; 1: Administrator.",
+				Description: "User permission type\n0: Ordinary user\n1: Administrator",
 			},
 		},
 	}
@@ -89,42 +87,41 @@ func resourceTencentCloudCdwdorisUserCreate(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_user.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
 	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request    = cdwdorisv20211228.NewActionAlterUserRequest()
 		instanceId string
-		userName   string
+	)
+	var (
+		request  = cdwdorisv20211228.NewActionAlterUserRequest()
+		response = cdwdorisv20211228.NewActionAlterUserResponse()
 	)
 
 	if userInfoMap, ok := helper.InterfacesHeadMap(d, "user_info"); ok {
 		userInfo := cdwdorisv20211228.UserInfo{}
 		if v, ok := userInfoMap["instance_id"]; ok {
 			userInfo.InstanceId = helper.String(v.(string))
-			instanceId = v.(string)
 		}
-
-		if v, ok := userInfoMap["username"]; ok {
+		if v, ok := userInfoMap["user_name"]; ok {
 			userInfo.UserName = helper.String(v.(string))
-			userName = v.(string)
 		}
-
-		if v, ok := userInfoMap["password"]; ok {
+		if v, ok := userInfoMap["pass_word"]; ok {
 			userInfo.PassWord = helper.String(v.(string))
 		}
-
 		if v, ok := userInfoMap["white_host"]; ok {
 			userInfo.WhiteHost = helper.String(v.(string))
 		}
-
+		if v, ok := userInfoMap["old_white_host"]; ok {
+			userInfo.OldWhiteHost = helper.String(v.(string))
+		}
 		if v, ok := userInfoMap["describe"]; ok {
 			userInfo.Describe = helper.String(v.(string))
 		}
-
-		if v, ok := userInfoMap["cam_uin"]; ok {
-			userInfo.CamUin = helper.String(v.(string))
+		if v, ok := userInfoMap["old_pwd"]; ok {
+			userInfo.OldPwd = helper.String(v.(string))
 		}
-
 		request.UserInfo = &userInfo
 	}
 
@@ -143,80 +140,21 @@ func resourceTencentCloudCdwdorisUserCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create cdwdoris user failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(strings.Join([]string{instanceId, userName}, tccommon.FILED_SP))
+	d.SetId(instanceId)
 
 	return resourceTencentCloudCdwdorisUserRead(d, meta)
 }
 
 func resourceTencentCloudCdwdorisUserRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_user.read")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		service = CdwdorisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	)
-
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-
-	instanceId := idSplit[0]
-	userName := idSplit[1]
-
-	respData, err := service.DescribeCdwdorisSqlApiById(ctx, instanceId, userName)
-	if err != nil {
-		return err
-	}
-
-	if respData == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `cdwdoris_workload_group` [%s] not found, please check if it has been deleted.. ", logId, d.Id())
-		return nil
-	}
-
-	_ = d.Set("instance_id", instanceId)
-	workloadGroupsList := make([]map[string]interface{}, 0)
-	workloadGroupsMap := map[string]interface{}{}
-	if respData.WorkloadGroupName != nil {
-		workloadGroupsMap["workload_group_name"] = respData.WorkloadGroupName
-	}
-
-	if respData.CpuShare != nil {
-		workloadGroupsMap["cpu_share"] = respData.CpuShare
-	}
-
-	if respData.MemoryLimit != nil {
-		workloadGroupsMap["memory_limit"] = respData.MemoryLimit
-	}
-
-	if respData.EnableMemoryOverCommit != nil {
-		workloadGroupsMap["enable_memory_over_commit"] = respData.EnableMemoryOverCommit
-	}
-
-	if respData.CpuHardLimit != nil {
-		workloadGroupsMap["cpu_hard_limit"] = respData.CpuHardLimit
-	}
-
-	workloadGroupsList = append(workloadGroupsList, workloadGroupsMap)
-	_ = d.Set("workload_group", workloadGroupsList)
-
-	return nil
-}
-
-func resourceTencentCloudCdwdorisUserUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_user.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil

@@ -22,11 +22,10 @@ type CdwdorisService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *CdwdorisService) DescribeCdwdorisInstanceById(ctx context.Context, instanceId string) (ret *cdwdorisv20211228.InstanceInfo, errRet error) {
+func (me *CdwdorisService) DescribeCdwdorisInstanceById(ctx context.Context) (ret *cdwdorisv20211228.InstanceInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdwdorisv20211228.NewDescribeInstanceRequest()
-	request.InstanceId = &instanceId
 
 	defer func() {
 		if errRet != nil {
@@ -41,7 +40,6 @@ func (me *CdwdorisService) DescribeCdwdorisInstanceById(ctx context.Context, ins
 		errRet = err
 		return
 	}
-
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response.Response == nil {
@@ -100,7 +98,7 @@ func (me *CdwdorisService) DescribeCdwdorisInstanceById2(ctx context.Context) (r
 	return
 }
 
-func (me *CdwdorisService) DescribeCdwdorisWorkloadGroupById(ctx context.Context, instanceId, workloadGroupName string) (workloadGroupConfig *cdwdorisv20211228.WorkloadGroupConfig, errRet error) {
+func (me *CdwdorisService) DescribeCdwdorisWorkloadGroupById(ctx context.Context, instanceId string) (ret *cdwdorisv20211228.DescribeWorkloadGroupResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdwdorisv20211228.NewDescribeWorkloadGroupRequest()
@@ -119,20 +117,9 @@ func (me *CdwdorisService) DescribeCdwdorisWorkloadGroupById(ctx context.Context
 		errRet = err
 		return
 	}
-
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || len(response.Response.WorkloadGroups) == 0 {
-		return
-	}
-
-	for _, item := range response.Response.WorkloadGroups {
-		if *item.WorkloadGroupName == workloadGroupName {
-			workloadGroupConfig = item
-			return
-		}
-	}
-
+	ret = response.Response
 	return
 }
 
@@ -260,5 +247,30 @@ func (me *CdwdorisService) DescribeCdwdorisInstancesByFilter(ctx context.Context
 		offset += limit
 	}
 
+	return
+}
+
+func (me *CdwdorisService) DescribeCdwdorisWorkloadGroupById1(ctx context.Context, instanceId string) (ret *cdwdorisv20211228.DescribeUserBindWorkloadGroupResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cdwdorisv20211228.NewDescribeUserBindWorkloadGroupRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwdorisV20211228Client().DescribeUserBindWorkloadGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }
