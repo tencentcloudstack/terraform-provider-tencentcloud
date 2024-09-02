@@ -210,6 +210,14 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				},
 			},
 
+			"security_group_ids": {
+				Type:        schema.TypeList,
+				Description: "security group ids",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -252,6 +260,10 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		request  = cdwdorisv20211228.NewCreateInstanceNewRequest()
 		response = cdwdorisv20211228.NewCreateInstanceNewResponse()
 	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
 
 	if v, ok := d.GetOk("zone"); ok {
 		request.Zone = helper.String(v.(string))
@@ -397,6 +409,8 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 	service := CdwdorisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
+
+	_ = d.Set("instance_id", instanceId)
 
 	respData, err := service.DescribeCdwdorisInstanceById(ctx, instanceId)
 	if err != nil {
@@ -869,7 +883,7 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos"}
+	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "instance_id"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -1071,6 +1085,41 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request4.GetAction(), request4.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	needChange5 := false
+	mutableArgs5 := []string{"security_group_ids"}
+	for _, v := range mutableArgs5 {
+		if d.HasChange(v) {
+			needChange5 = true
+			break
+		}
+	}
+
+	if needChange5 {
+		request5 := cdwdorisv20211228.NewModifySecurityGroupsRequest()
+
+		if v, ok := d.GetOk("security_group_ids"); ok {
+			securityGroupIdsSet := v.([]interface{})
+			for i := range securityGroupIdsSet {
+				securityGroupIds := securityGroupIdsSet[i].(string)
+				request5.SecurityGroupIds = append(request5.SecurityGroupIds, helper.String(securityGroupIds))
+			}
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifySecurityGroupsWithContext(ctx, request5)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request5.GetAction(), request5.ToJsonString(), result.ToJsonString())
 			}
 			return nil
 		})
