@@ -374,7 +374,7 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 
 	instanceId := d.Id()
 
-	respData, err := service.DescribeCdwdorisInstanceById(ctx)
+	respData, err := service.DescribeCdwdorisInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
@@ -834,7 +834,6 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 		_ = d.Set("operations", operationsList)
 	}
 
-	_ = instanceId
 	return nil
 }
 
