@@ -212,10 +212,17 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 
 			"security_group_ids": {
 				Type:        schema.TypeList,
-				Description: "security group ids",
+				Description: "Security Group Id list",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+			},
+
+			"workload_group_status": {
+				Type:         schema.TypeString,
+				Required:     true,
+				Description:  "Whether to enable resource group. `open` - enable, `close` - disable",
+				ValidateFunc: tccommon.ValidateAllowedStringValue(WORKLOAD_GROUP_STATUS),
 			},
 
 			"instance_id": {
@@ -240,6 +247,11 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "expire time",
+			},
+
+			"operation_type": {
+				Type:        schema.TypeString,
+				Description: "Operation Type",
 			},
 		},
 	}
@@ -392,6 +404,72 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		log.Printf("[CRITAL]%s create cdwdoris instance failed, reason:%+v", logId, err)
 		return err
 	}
+
+	var (
+		request1  = cdwdorisv20211228.NewModifySecurityGroupsRequest()
+		response1 = cdwdorisv20211228.NewModifySecurityGroupsResponse()
+	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
+
+	if v, ok := d.GetOk("security_group_ids"); ok {
+		securityGroupIdsSet := v.([]interface{})
+		for i := range securityGroupIdsSet {
+			securityGroupIds := securityGroupIdsSet[i].(string)
+			request1.SecurityGroupIds = append(request1.SecurityGroupIds, helper.String(securityGroupIds))
+		}
+	}
+
+	err1 := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifySecurityGroupsWithContext(ctx, request1)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request1.GetAction(), request1.ToJsonString(), result.ToJsonString())
+		}
+		response1 = result
+		return nil
+	})
+	if err1 != nil {
+		log.Printf("[CRITAL]%s create cdwdoris instance failed, reason:%+v", logId, err1)
+		return err1
+	}
+
+	var (
+		request2  = cdwdorisv20211228.NewModifyWorkloadGroupStatusRequest()
+		response2 = cdwdorisv20211228.NewModifyWorkloadGroupStatusResponse()
+	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		request2.InstanceId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("operation_type"); ok {
+		request2.OperationType = helper.String(v.(string))
+	}
+
+	err2 := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifyWorkloadGroupStatusWithContext(ctx, request2)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request2.GetAction(), request2.ToJsonString(), result.ToJsonString())
+		}
+		response2 = result
+		return nil
+	})
+	if err2 != nil {
+		log.Printf("[CRITAL]%s create cdwdoris instance failed, reason:%+v", logId, err2)
+		return err2
+	}
+
+	_ = response2
 
 	d.SetId(instanceId)
 
@@ -883,7 +961,7 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "instance_id"}
+	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "workload_group_status", "instance_id"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -1120,6 +1198,41 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request5.GetAction(), request5.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	needChange6 := false
+	mutableArgs6 := []string{"instance_id", "operation_type"}
+	for _, v := range mutableArgs6 {
+		if d.HasChange(v) {
+			needChange6 = true
+			break
+		}
+	}
+
+	if needChange6 {
+		request6 := cdwdorisv20211228.NewModifyWorkloadGroupStatusRequest()
+
+		if v, ok := d.GetOk("instance_id"); ok {
+			request6.InstanceId = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("operation_type"); ok {
+			request6.OperationType = helper.String(v.(string))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifyWorkloadGroupStatusWithContext(ctx, request6)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request6.GetAction(), request6.ToJsonString(), result.ToJsonString())
 			}
 			return nil
 		})
