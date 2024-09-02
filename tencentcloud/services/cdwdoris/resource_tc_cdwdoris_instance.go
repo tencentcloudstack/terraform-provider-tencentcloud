@@ -209,6 +209,30 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 					},
 				},
 			},
+
+			"instance_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance id",
+			},
+
+			"pay_mode": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "pad mod",
+			},
+
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "create time",
+			},
+
+			"expire_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "expire time",
+			},
 		},
 	}
 }
@@ -397,7 +421,7 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 	}
 
 	if respData.Version != nil {
-		_ = d.Set("version", respData.Version)
+		_ = d.Set("product_version", respData.Version)
 	}
 
 	if respData.Region != nil {
@@ -409,11 +433,11 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 	}
 
 	if respData.VpcId != nil {
-		_ = d.Set("vpc_id", respData.VpcId)
+		_ = d.Set("user_vpc_id", respData.VpcId)
 	}
 
 	if respData.SubnetId != nil {
-		_ = d.Set("subnet_id", respData.SubnetId)
+		_ = d.Set("user_subnet_id", respData.SubnetId)
 	}
 
 	if respData.PayMode != nil {
