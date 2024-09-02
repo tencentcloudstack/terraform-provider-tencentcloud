@@ -2120,7 +2120,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwdoris_instance":                                               cdwdoris.ResourceTencentCloudCdwdorisInstance(),
 			"tencentcloud_cdwdoris_workload_group":                                         cdwdoris.ResourceTencentCloudCdwdorisWorkloadGroup(),
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
-		},
+			"tencentcloud_cdwdoris_user": cdwdoris.ResourceTencentCloudCdwdorisUser()},
 
 		ConfigureFunc: providerConfigure,
 	}
