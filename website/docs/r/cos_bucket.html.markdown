@@ -141,46 +141,6 @@ EOF
 }
 ```
 
-### Using verbose acl with CDC
-
-```hcl
-data "tencentcloud_user_info" "info" {}
-
-locals {
-  app_id = data.tencentcloud_user_info.info.app_id
-}
-
-resource "tencentcloud_cos_bucket" "bucket_with_acl" {
-  bucket = "bucketwith-acl-${local.app_id}"
-  cdc_id = "cluster-262n63e8"
-  # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
-  acl_body = <<EOF
-<AccessControlPolicy
-    xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-    <Owner>
-        <ID>qcs::cam::uin/100023201586:uin/100023201586</ID>
-    </Owner>
-    <AccessControlList>
-        <Grant>
-            <Grantee
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100023201586:uin/100023201586</ID>
-            </Grantee>
-            <Permission>FULL_CONTROL</Permission>
-        </Grant>
-        <Grant>
-            <Grantee
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>100015006748</ID>
-            </Grantee>
-            <Permission>READ</Permission>
-        </Grant>
-    </AccessControlList>
-</AccessControlPolicy>
-EOF
-}
-```
-
 ### Static Website
 
 ```hcl
