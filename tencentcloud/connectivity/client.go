@@ -204,7 +204,7 @@ type TencentCloudClient struct {
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tkev20220501Conn *tkev20220501.Client
 	cdcConn          *cdc.Client
-	cdwdorisConn *cdwdoris.Client
+	cdwdorisConn     *cdwdoris.Client
 	//omit nil client
 	omitNilConn *common.Client
 }
