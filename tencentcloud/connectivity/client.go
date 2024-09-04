@@ -9,24 +9,6 @@ import (
 	"strconv"
 	"time"
 
-	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
-
-	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
-	cos "github.com/tencentyun/cos-go-sdk-v5"
-
-	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
-
-	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
-
-	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
-
-	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
-
-	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
-	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
-
-	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
@@ -44,25 +26,31 @@ import (
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
 	cdwdoris "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris/v20211228"
 	cdwpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg/v20201230"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
+	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
+	cvmv20170312 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
+	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
+	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
@@ -77,6 +65,7 @@ import (
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
+	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
@@ -100,14 +89,17 @@ import (
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
-	tke2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
+	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
+	cos "github.com/tencentyun/cos-go-sdk-v5"
 )
 
 //internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -132,13 +124,13 @@ type TencentCloudClient struct {
 	asConn             *as.Client
 	vpcConn            *vpc.Client
 	cbsConn            *cbs.Client
-	cvmConn            *cvm.Client
+	cvmv20170312Conn   *cvmv20170312.Client
 	clbConn            *clb.Client
 	dayuConn           *dayu.Client
 	dcConn             *dc.Client
 	tagConn            *tag.Client
 	mongodbConn        *mongodb.Client
-	tkeConn            *tke.Client
+	tkev20180525Conn   *tkev20180525.Client
 	tdmqConn           *tdmq.Client
 	tcrConn            *tcr.Client
 	camConn            *cam.Client
@@ -210,9 +202,9 @@ type TencentCloudClient struct {
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	tke2Conn     *tke2.Client
-	cdcConn      *cdc.Client
-	cdwdorisConn *cdwdoris.Client
+	tkev20220501Conn *tkev20220501.Client
+	cdcConn          *cdc.Client
+	cdwdorisConn     *cdwdoris.Client
 	//omit nil client
 	omitNilConn *common.Client
 }
@@ -452,23 +444,43 @@ func (me *TencentCloudClient) UseClbClient(iacExtInfo ...IacExtInfo) *clb.Client
 }
 
 // UseCvmClient returns cvm client for service
-func (me *TencentCloudClient) UseCvmClient(iacExtInfo ...IacExtInfo) *cvm.Client {
+func (me *TencentCloudClient) UseCvmClient(iacExtInfo ...IacExtInfo) *cvmv20170312.Client {
 	var logRoundTripper LogRoundTripper
 	if len(iacExtInfo) != 0 {
 		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
 	}
 
-	if me.cvmConn != nil {
-		me.cvmConn.WithHttpTransport(&logRoundTripper)
-		return me.cvmConn
+	if me.cvmv20170312Conn != nil {
+		me.cvmv20170312Conn.WithHttpTransport(&logRoundTripper)
+		return me.cvmv20170312Conn
 	}
 
 	var reqTimeout = getEnvDefault(PROVIDER_CVM_REQUEST_TIMEOUT, 300)
 	cpf := me.NewClientProfile(reqTimeout)
-	me.cvmConn, _ = cvm.NewClient(me.Credential, me.Region, cpf)
-	me.cvmConn.WithHttpTransport(&logRoundTripper)
+	me.cvmv20170312Conn, _ = cvmv20170312.NewClient(me.Credential, me.Region, cpf)
+	me.cvmv20170312Conn.WithHttpTransport(&logRoundTripper)
 
-	return me.cvmConn
+	return me.cvmv20170312Conn
+}
+
+// UseCvmV20170312Client returns cvm client for service
+func (me *TencentCloudClient) UseCvmV20170312Client(iacExtInfo ...IacExtInfo) *cvmv20170312.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.cvmv20170312Conn != nil {
+		me.cvmv20170312Conn.WithHttpTransport(&logRoundTripper)
+		return me.cvmv20170312Conn
+	}
+
+	var reqTimeout = getEnvDefault(PROVIDER_CVM_REQUEST_TIMEOUT, 300)
+	cpf := me.NewClientProfile(reqTimeout)
+	me.cvmv20170312Conn, _ = cvmv20170312.NewClient(me.Credential, me.Region, cpf)
+	me.cvmv20170312Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.cvmv20170312Conn
 }
 
 // UseTagClient returns tag client for service
@@ -485,22 +497,41 @@ func (me *TencentCloudClient) UseTagClient() *tag.Client {
 }
 
 // UseTkeClient returns tke client for service
-func (me *TencentCloudClient) UseTkeClient(iacExtInfo ...IacExtInfo) *tke.Client {
+func (me *TencentCloudClient) UseTkeClient(iacExtInfo ...IacExtInfo) *tkev20180525.Client {
 	var logRoundTripper LogRoundTripper
 	if len(iacExtInfo) != 0 {
 		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
 	}
 
-	if me.tkeConn != nil {
-		me.tkeConn.WithHttpTransport(&logRoundTripper)
-		return me.tkeConn
+	if me.tkev20180525Conn != nil {
+		me.tkev20180525Conn.WithHttpTransport(&logRoundTripper)
+		return me.tkev20180525Conn
 	}
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
-	me.tkeConn, _ = tke.NewClient(me.Credential, me.Region, cpf)
-	me.tkeConn.WithHttpTransport(&logRoundTripper)
+	me.tkev20180525Conn, _ = tkev20180525.NewClient(me.Credential, me.Region, cpf)
+	me.tkev20180525Conn.WithHttpTransport(&logRoundTripper)
 
-	return me.tkeConn
+	return me.tkev20180525Conn
+}
+
+// UseTkeV20180525Client returns tke client for service
+func (me *TencentCloudClient) UseTkeV20180525Client(iacExtInfo ...IacExtInfo) *tkev20180525.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.tkev20180525Conn != nil {
+		me.tkev20180525Conn.WithHttpTransport(&logRoundTripper)
+		return me.tkev20180525Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.tkev20180525Conn, _ = tkev20180525.NewClient(me.Credential, me.Region, cpf)
+	me.tkev20180525Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.tkev20180525Conn
 }
 
 // UseTdmqClient returns Tdmq client for service
@@ -1605,22 +1636,41 @@ func getEnvDefault(key string, defVal int) int {
 }
 
 // UseTke2Client returns tke client for service
-func (me *TencentCloudClient) UseTke2Client(iacExtInfo ...IacExtInfo) *tke2.Client {
+func (me *TencentCloudClient) UseTke2Client(iacExtInfo ...IacExtInfo) *tkev20220501.Client {
 	var logRoundTripper LogRoundTripper
 	if len(iacExtInfo) != 0 {
 		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
 	}
 
-	if me.tke2Conn != nil {
-		me.tke2Conn.WithHttpTransport(&logRoundTripper)
-		return me.tke2Conn
+	if me.tkev20220501Conn != nil {
+		me.tkev20220501Conn.WithHttpTransport(&logRoundTripper)
+		return me.tkev20220501Conn
 	}
 
 	cpf := me.NewClientProfile(300)
-	me.tke2Conn, _ = tke2.NewClient(me.Credential, me.Region, cpf)
-	me.tke2Conn.WithHttpTransport(&logRoundTripper)
+	me.tkev20220501Conn, _ = tkev20220501.NewClient(me.Credential, me.Region, cpf)
+	me.tkev20220501Conn.WithHttpTransport(&logRoundTripper)
 
-	return me.tke2Conn
+	return me.tkev20220501Conn
+}
+
+// UseTkeV20220501Client returns tke client for service
+func (me *TencentCloudClient) UseTkeV20220501Client(iacExtInfo ...IacExtInfo) *tkev20220501.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.tkev20220501Conn != nil {
+		me.tkev20220501Conn.WithHttpTransport(&logRoundTripper)
+		return me.tkev20220501Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tkev20220501Conn, _ = tkev20220501.NewClient(me.Credential, me.Region, cpf)
+	me.tkev20220501Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.tkev20220501Conn
 }
 
 // UseCdcClient returns tem client for service

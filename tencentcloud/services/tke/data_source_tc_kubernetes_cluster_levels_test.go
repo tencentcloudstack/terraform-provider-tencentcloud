@@ -39,14 +39,14 @@ func testAccDataSourceKubernetesClusterLevelDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccDataSourceKubernetesClusterLevelBasic = `
+const testAccDataSourceKubernetesClusterLevelBasic = testAccTkeCluster + `
 data "tencentcloud_kubernetes_cluster_levels" "foo" {}
 
-data "tencentcloud_kubernetes_clusters" "cls" {
-  cluster_name = "` + tcacctest.DefaultTkeClusterName + `"
-}
+// data "tencentcloud_kubernetes_clusters" "cls" {
+//   cluster_name = "` + tcacctest.DefaultTkeClusterName + `"
+// }
 
 data "tencentcloud_kubernetes_cluster_levels" "with_cluster" {
-	cluster_id = data.tencentcloud_kubernetes_clusters.cls.list.0.cluster_id
+	cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 }
 `
