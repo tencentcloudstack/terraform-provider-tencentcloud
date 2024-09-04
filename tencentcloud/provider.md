@@ -2178,3 +2178,7 @@ CdwDoris
   Resource
     tencentcloud_cdwdoris_instance
     tencentcloud_cdwdoris_workload_group
+
+ControlCenter
+  Resource
+    tencentcloud_batch_apply_account_baselines

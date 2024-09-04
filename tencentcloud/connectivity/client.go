@@ -41,6 +41,7 @@ import (
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	controlcenter "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 	cvmv20170312 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
@@ -206,7 +207,9 @@ type TencentCloudClient struct {
 	cdcConn          *cdc.Client
 	cdwdorisConn     *cdwdoris.Client
 	//omit nil client
-	omitNilConn *common.Client
+	omitNilConn                *common.Client
+	cdwdorisv20211228Conn      *cdwdoris.Client
+	controlcenterv20230110Conn *controlcenter.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1697,4 +1700,17 @@ func (me *TencentCloudClient) UseCdwdorisV20211228Client() *cdwdoris.Client {
 	me.cdwdorisConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cdwdorisConn
+}
+
+// UseControlcenter return CONTROLCENTER client for service
+func (me *TencentCloudClient) UseControlcenterV20230110Client() *controlcenter.Client {
+	if me.controlcenterv20230110Conn != nil {
+		return me.controlcenterv20230110Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.controlcenterv20230110Conn, _ = controlcenter.NewClient(me.Credential, me.Region, cpf)
+	me.controlcenterv20230110Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.controlcenterv20230110Conn
 }
