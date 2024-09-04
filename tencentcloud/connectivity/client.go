@@ -206,7 +206,8 @@ type TencentCloudClient struct {
 	cdcConn          *cdc.Client
 	cdwdorisConn     *cdwdoris.Client
 	//omit nil client
-	omitNilConn *common.Client
+	omitNilConn           *common.Client
+	cdwdorisv20211228Conn *cdwdoris.Client
 }
 
 // NewClientProfile returns a new ClientProfile

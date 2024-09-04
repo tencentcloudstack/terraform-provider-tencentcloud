@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,48 +20,44 @@ func ResourceTencentCloudCdwdorisWorkloadGroup() *schema.Resource {
 		Read:   resourceTencentCloudCdwdorisWorkloadGroupRead,
 		Update: resourceTencentCloudCdwdorisWorkloadGroupUpdate,
 		Delete: resourceTencentCloudCdwdorisWorkloadGroupDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "Instance id.",
+				Description: "Instance id",
 			},
+
 			"workload_group": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
-				Description: "Resource group configuration.",
+				Description: "Resource group configuration",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"workload_group_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
-							Description: "Workload group name. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Workload group name\nNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"cpu_share": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "CPU weight. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "CPU weight\nNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"memory_limit": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Memory limit, the sum of the memory limit values of all resource groups should be less than or equal to 100. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Memory limit, the sum of the memory limit values of all resource groups should be less than or equal to 100\nNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"enable_memory_over_commit": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "Whether to allow over-allocation. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Whether to allow over-allocation\nNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"cpu_hard_limit": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Cpu hard limit. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Cpu hard limit\nNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -75,42 +70,39 @@ func resourceTencentCloudCdwdorisWorkloadGroupCreate(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_workload_group.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
 	var (
-		logId             = tccommon.GetLogId(tccommon.ContextNil)
-		ctx               = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request           = cdwdorisv20211228.NewCreateWorkloadGroupRequest()
-		instanceId        string
-		workloadGroupName string
+		instanceId string
+	)
+	var (
+		request  = cdwdorisv20211228.NewCreateWorkloadGroupRequest()
+		response = cdwdorisv20211228.NewCreateWorkloadGroupResponse()
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if workloadGroupMap, ok := helper.InterfacesHeadMap(d, "workload_group"); ok {
 		workloadGroupConfig := cdwdorisv20211228.WorkloadGroupConfig{}
 		if v, ok := workloadGroupMap["workload_group_name"]; ok {
 			workloadGroupConfig.WorkloadGroupName = helper.String(v.(string))
-			workloadGroupName = v.(string)
 		}
-
 		if v, ok := workloadGroupMap["cpu_share"]; ok {
 			workloadGroupConfig.CpuShare = helper.IntInt64(v.(int))
 		}
-
 		if v, ok := workloadGroupMap["memory_limit"]; ok {
 			workloadGroupConfig.MemoryLimit = helper.IntInt64(v.(int))
 		}
-
 		if v, ok := workloadGroupMap["enable_memory_over_commit"]; ok {
 			workloadGroupConfig.EnableMemoryOverCommit = helper.Bool(v.(bool))
 		}
-
 		if v, ok := workloadGroupMap["cpu_hard_limit"]; ok {
 			workloadGroupConfig.CpuHardLimit = helper.String(v.(string))
 		}
-
 		request.WorkloadGroup = &workloadGroupConfig
 	}
 
@@ -119,18 +111,19 @@ func resourceTencentCloudCdwdorisWorkloadGroupCreate(d *schema.ResourceData, met
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]. ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create cdwdoris workload group failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(strings.Join([]string{instanceId, workloadGroupName}, tccommon.FILED_SP))
+	instanceId = *response.Response.InstanceId
+
+	d.SetId(instanceId)
 
 	return resourceTencentCloudCdwdorisWorkloadGroupRead(d, meta)
 }
@@ -139,56 +132,95 @@ func resourceTencentCloudCdwdorisWorkloadGroupRead(d *schema.ResourceData, meta 
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_workload_group.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		service = CdwdorisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	instanceId := idSplit[0]
-	workloadGroupName := idSplit[1]
+	service := CdwdorisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	respData, err := service.DescribeCdwdorisWorkloadGroupById(ctx, instanceId, workloadGroupName)
+	instanceId := d.Id()
+
+	respData, err := service.DescribeCdwdorisWorkloadGroupById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
 	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `cdwdoris_workload_group` [%s] not found, please check if it has been deleted.. ", logId, d.Id())
+		log.Printf("[WARN]%s resource `cdwdoris_workload_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+	workloadGroupsList := make([]map[string]interface{}, 0, len(respData.WorkloadGroups))
+	if respData.WorkloadGroups != nil {
+		for _, workloadGroups := range respData.WorkloadGroups {
+			workloadGroupsMap := map[string]interface{}{}
 
-	_ = d.Set("instance_id", instanceId)
-	workloadGroupsList := make([]map[string]interface{}, 0)
-	workloadGroupsMap := map[string]interface{}{}
-	if respData.WorkloadGroupName != nil {
-		workloadGroupsMap["workload_group_name"] = respData.WorkloadGroupName
+			if workloadGroups.WorkloadGroupName != nil {
+				workloadGroupsMap["workload_group_name"] = workloadGroups.WorkloadGroupName
+			}
+
+			if workloadGroups.CpuShare != nil {
+				workloadGroupsMap["cpu_share"] = workloadGroups.CpuShare
+			}
+
+			if workloadGroups.MemoryLimit != nil {
+				workloadGroupsMap["memory_limit"] = workloadGroups.MemoryLimit
+			}
+
+			if workloadGroups.EnableMemoryOverCommit != nil {
+				workloadGroupsMap["enable_memory_over_commit"] = workloadGroups.EnableMemoryOverCommit
+			}
+
+			if workloadGroups.CpuHardLimit != nil {
+				workloadGroupsMap["cpu_hard_limit"] = workloadGroups.CpuHardLimit
+			}
+
+			workloadGroupsList = append(workloadGroupsList, workloadGroupsMap)
+		}
+
+		_ = d.Set("workload_groups", workloadGroupsList)
 	}
 
-	if respData.CpuShare != nil {
-		workloadGroupsMap["cpu_share"] = respData.CpuShare
+	if respData.Status != nil {
+		_ = d.Set("status", respData.Status)
 	}
 
-	if respData.MemoryLimit != nil {
-		workloadGroupsMap["memory_limit"] = respData.MemoryLimit
+	if respData.ErrorMsg != nil {
+		_ = d.Set("error_msg", respData.ErrorMsg)
 	}
 
-	if respData.EnableMemoryOverCommit != nil {
-		workloadGroupsMap["enable_memory_over_commit"] = respData.EnableMemoryOverCommit
+	respData1, err := service.DescribeCdwdorisWorkloadGroupById1(ctx, instanceId)
+	if err != nil {
+		return err
 	}
 
-	if respData.CpuHardLimit != nil {
-		workloadGroupsMap["cpu_hard_limit"] = respData.CpuHardLimit
+	if respData1 == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `cdwdoris_workload_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+	userBindInfosList := make([]map[string]interface{}, 0, len(respData1.UserBindInfos))
+	if respData1.UserBindInfos != nil {
+		for _, userBindInfos := range respData1.UserBindInfos {
+			userBindInfosMap := map[string]interface{}{}
+
+			if userBindInfos.UserName != nil {
+				userBindInfosMap["user_name"] = userBindInfos.UserName
+			}
+
+			if userBindInfos.WorkloadGroupName != nil {
+				userBindInfosMap["workload_group_name"] = userBindInfos.WorkloadGroupName
+			}
+
+			userBindInfosList = append(userBindInfosList, userBindInfosMap)
+		}
+
+		_ = d.Set("user_bind_infos", userBindInfosList)
 	}
 
-	workloadGroupsList = append(workloadGroupsList, workloadGroupsMap)
-	_ = d.Set("workload_group", workloadGroupsList)
+	if respData1.ErrorMsg != nil {
+		_ = d.Set("error_msg", respData1.ErrorMsg)
+	}
 
 	return nil
 }
@@ -197,56 +229,65 @@ func resourceTencentCloudCdwdorisWorkloadGroupUpdate(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_workload_group.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request = cdwdorisv20211228.NewModifyWorkloadGroupRequest()
-	)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	immutableArgs := []string{"instance_id"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	instanceId := d.Id()
+
+	needChange := false
+	mutableArgs := []string{"workload_group"}
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
 	}
 
-	instanceId := idSplit[0]
-	workloadGroupName := idSplit[1]
-	request.InstanceId = &instanceId
-	if workloadGroupMap, ok := helper.InterfacesHeadMap(d, "workload_group"); ok {
-		workloadGroupConfig := cdwdorisv20211228.WorkloadGroupConfig{}
-		workloadGroupConfig.WorkloadGroupName = helper.String(workloadGroupName)
-		if v, ok := workloadGroupMap["cpu_share"]; ok {
-			workloadGroupConfig.CpuShare = helper.IntInt64(v.(int))
+	if needChange {
+		request := cdwdorisv20211228.NewModifyWorkloadGroupRequest()
+
+		request.InstanceId = helper.String(instanceId)
+
+		if workloadGroupMap, ok := helper.InterfacesHeadMap(d, "workload_group"); ok {
+			workloadGroupConfig := cdwdorisv20211228.WorkloadGroupConfig{}
+			if v, ok := workloadGroupMap["workload_group_name"]; ok {
+				workloadGroupConfig.WorkloadGroupName = helper.String(v.(string))
+			}
+			if v, ok := workloadGroupMap["cpu_share"]; ok {
+				workloadGroupConfig.CpuShare = helper.IntInt64(v.(int))
+			}
+			if v, ok := workloadGroupMap["memory_limit"]; ok {
+				workloadGroupConfig.MemoryLimit = helper.IntInt64(v.(int))
+			}
+			if v, ok := workloadGroupMap["enable_memory_over_commit"]; ok {
+				workloadGroupConfig.EnableMemoryOverCommit = helper.Bool(v.(bool))
+			}
+			if v, ok := workloadGroupMap["cpu_hard_limit"]; ok {
+				workloadGroupConfig.CpuHardLimit = helper.String(v.(string))
+			}
+			request.WorkloadGroup = &workloadGroupConfig
 		}
 
-		if v, ok := workloadGroupMap["memory_limit"]; ok {
-			workloadGroupConfig.MemoryLimit = helper.IntInt64(v.(int))
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifyWorkloadGroupWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cdwdoris workload group failed, reason:%+v", logId, err)
+			return err
 		}
-
-		if v, ok := workloadGroupMap["enable_memory_over_commit"]; ok {
-			workloadGroupConfig.EnableMemoryOverCommit = helper.Bool(v.(bool))
-		}
-
-		if v, ok := workloadGroupMap["cpu_hard_limit"]; ok {
-			workloadGroupConfig.CpuHardLimit = helper.String(v.(string))
-		}
-
-		request.WorkloadGroup = &workloadGroupConfig
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().ModifyWorkloadGroupWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]. ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s update cdwdoris workload group failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudCdwdorisWorkloadGroupRead(d, meta)
@@ -256,36 +297,33 @@ func resourceTencentCloudCdwdorisWorkloadGroupDelete(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwdoris_workload_group.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	instanceId := d.Id()
+
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request = cdwdorisv20211228.NewDeleteWorkloadGroupRequest()
+		request  = cdwdorisv20211228.NewDeleteWorkloadGroupRequest()
+		response = cdwdorisv20211228.NewDeleteWorkloadGroupResponse()
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-
-	instanceId := idSplit[0]
-	workloadGroupName := idSplit[1]
 	request.InstanceId = helper.String(instanceId)
-	request.WorkloadGroupName = helper.String(workloadGroupName)
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DeleteWorkloadGroupWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]. ", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s delete cdwdoris workload group failed, reason:%+v", logId, err)
 		return err
 	}
 
+	_ = response
 	return nil
 }
