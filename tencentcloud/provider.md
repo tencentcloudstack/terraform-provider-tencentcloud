@@ -894,7 +894,6 @@ TencentDB for PostgreSQL(PostgreSQL)
     tencentcloud_postgresql_base_backup
     tencentcloud_postgresql_instance_ha_config
     tencentcloud_postgresql_account
-    tencentcloud_postgresql_account_privileges_operation
 
 TencentDB for Redis(crs)
   Data Source
