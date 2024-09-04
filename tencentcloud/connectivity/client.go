@@ -203,13 +203,12 @@ type TencentCloudClient struct {
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	tkev20220501Conn *tkev20220501.Client
-	cdcConn          *cdc.Client
-	cdwdorisConn     *cdwdoris.Client
+	tkev20220501Conn  *tkev20220501.Client
+	cdcConn           *cdc.Client
+	cdwdorisConn      *cdwdoris.Client
+	controlcenterConn *controlcenter.Client
 	//omit nil client
-	omitNilConn                *common.Client
-	cdwdorisv20211228Conn      *cdwdoris.Client
-	controlcenterv20230110Conn *controlcenter.Client
+	omitNilConn *common.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1704,13 +1703,13 @@ func (me *TencentCloudClient) UseCdwdorisV20211228Client() *cdwdoris.Client {
 
 // UseControlcenter return CONTROLCENTER client for service
 func (me *TencentCloudClient) UseControlcenterV20230110Client() *controlcenter.Client {
-	if me.controlcenterv20230110Conn != nil {
-		return me.controlcenterv20230110Conn
+	if me.controlcenterConn != nil {
+		return me.controlcenterConn
 	}
 	cpf := me.NewClientProfile(300)
 	cpf.Language = "zh-CN"
-	me.controlcenterv20230110Conn, _ = controlcenter.NewClient(me.Credential, me.Region, cpf)
-	me.controlcenterv20230110Conn.WithHttpTransport(&LogRoundTripper{})
+	me.controlcenterConn, _ = controlcenter.NewClient(me.Credential, me.Region, cpf)
+	me.controlcenterConn.WithHttpTransport(&LogRoundTripper{})
 
-	return me.controlcenterv20230110Conn
+	return me.controlcenterConn
 }
