@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_identity_center_user: read add retry
+```
+
+```release-note:enhancement
+resource/tencentcloud_identity_center_role_configuration_permission_policy_attachment: support `role_policy_name`
+```
