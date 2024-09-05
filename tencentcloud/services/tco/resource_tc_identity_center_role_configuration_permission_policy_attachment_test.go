@@ -20,6 +20,7 @@ func TestAccTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachmen
 				Config: testAccIdentityCenterRoleConfigurationPermissionPolicyAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_role_configuration_permission_policy_attachment.identity_center_role_configuration_permission_policy_attachment", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_role_configuration_permission_policy_attachment.identity_center_role_configuration_permission_policy_attachment", "role_policy_name"),
 				),
 			},
 			{
@@ -42,5 +43,6 @@ resource "tencentcloud_identity_center_role_configuration_permission_policy_atta
     zone_id = "z-s64jh54hbcra"
     role_configuration_id = tencentcloud_identity_center_role_configuration.identity_center_role_configuration.role_configuration_id
     role_policy_id = 186457
+	role_policy_name = "QcloudVPCReadOnlyAccess"
 }
 `

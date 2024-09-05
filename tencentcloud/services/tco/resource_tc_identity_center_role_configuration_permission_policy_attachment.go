@@ -47,6 +47,7 @@ func ResourceTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachme
 
 			"role_policy_name": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
 				Description: "Role policy name.",
 			},
@@ -111,10 +112,14 @@ func resourceTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachme
 	request.RolePolicyType = helper.String("System")
 
 	if v, ok := d.GetOk("role_policy_id"); ok {
+		policyDetail := &organization.PolicyDetail{
+			PolicyId: helper.IntInt64(v.(int)),
+		}
+		if vv, innerOk := d.GetOk("role_policy_name"); innerOk {
+			policyDetail.PolicyName = helper.String(vv.(string))
+		}
 		request.RolePolicies = []*organization.PolicyDetail{
-			{
-				PolicyId: helper.IntInt64(v.(int)),
-			},
+			policyDetail,
 		}
 	}
 
