@@ -133,13 +133,13 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 		request := vpc.NewDisableRoutesRequest()
 		request.RouteTableId = &routeTableId
 		request.RouteIds = []*uint64{helper.Int64Uint64(entryId)}
-		err := service.DisableRoutes(ctx, request)
+		err = service.DisableRoutes(ctx, request)
 		if err != nil {
 			return err
 		}
 	}
 
-	return nil
+	return resourceTencentCloudVpcRouteEntryRead(d, meta)
 }
 
 func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interface{}) error {

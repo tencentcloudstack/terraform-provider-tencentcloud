@@ -15,37 +15,42 @@ Provides a resource to create an entry of a routing table.
 
 ```hcl
 variable "availability_zone" {
-  default = "na-siliconvalley-1"
+  default = "ap-guangzhou-4"
 }
 
-resource "tencentcloud_vpc" "foo" {
-  name       = "ci-temp-test"
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
   cidr_block = "10.0.0.0/16"
 }
 
-resource "tencentcloud_subnet" "foo" {
-  vpc_id            = tencentcloud_vpc.foo.id
-  name              = "terraform test subnet"
+# create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "subnet"
   cidr_block        = "10.0.12.0/24"
   availability_zone = var.availability_zone
-  route_table_id    = tencentcloud_route_table.foo.id
+  route_table_id    = tencentcloud_route_table.example.id
 }
 
-resource "tencentcloud_route_table" "foo" {
-  vpc_id = tencentcloud_vpc.foo.id
-  name   = "ci-temp-test-rt"
+# create route table
+resource "tencentcloud_route_table" "example" {
+  vpc_id = tencentcloud_vpc.vpc.id
+  name   = "tf-example"
 }
 
-resource "tencentcloud_route_table_entry" "instance" {
-  route_table_id         = tencentcloud_route_table.foo.id
+# create route table entry
+resource "tencentcloud_route_table_entry" "example" {
+  route_table_id         = tencentcloud_route_table.example.id
   destination_cidr_block = "10.4.4.0/24"
   next_type              = "EIP"
   next_hub               = "0"
-  description            = "ci-test-route-table-entry"
+  description            = "describe"
 }
 
+# output
 output "item_id" {
-  value = tencentcloud_route_table_entry.instance.route_item_id
+  value = tencentcloud_route_table_entry.example.route_item_id
 }
 ```
 
@@ -73,6 +78,6 @@ In addition to all arguments above, the following attributes are exported:
 Route table entry can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_route_table_entry.foo 83517.rtb-mlhpg09u
+$ terraform import tencentcloud_route_table_entry.example 3065857.rtb-b050fg94
 ```
 
