@@ -872,6 +872,7 @@ TencentDB for PostgreSQL(PostgreSQL)
     tencentcloud_postgresql_regions
     tencentcloud_postgresql_db_instance_versions
     tencentcloud_postgresql_zones
+    tencentcloud_postgresql_account_privileges
 
   Resource
     tencentcloud_postgresql_instance
@@ -892,6 +893,7 @@ TencentDB for PostgreSQL(PostgreSQL)
     tencentcloud_postgresql_modify_switch_time_period_operation
     tencentcloud_postgresql_base_backup
     tencentcloud_postgresql_instance_ha_config
+    tencentcloud_postgresql_account
 
 TencentDB for Redis(crs)
   Data Source
