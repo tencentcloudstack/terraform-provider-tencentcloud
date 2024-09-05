@@ -3,11 +3,13 @@ Provide a resource to create a Private Dns Record.
 Example Usage
 
 ```hcl
+# create vpc
 resource "tencentcloud_vpc" "vpc" {
   name       = "vpc-example"
   cidr_block = "10.0.0.0/16"
 }
 
+# create private dns zone
 resource "tencentcloud_private_dns_zone" "example" {
   domain = "domain.com"
   remark = "remark."
@@ -25,6 +27,7 @@ resource "tencentcloud_private_dns_zone" "example" {
   }
 }
 
+# create private dns record
 resource "tencentcloud_private_dns_record" "example" {
   zone_id      = tencentcloud_private_dns_zone.example.id
   record_type  = "A"
