@@ -48,6 +48,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/controlcenter"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/csip"
@@ -2120,6 +2121,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwdoris_instance":                                               cdwdoris.ResourceTencentCloudCdwdorisInstance(),
 			"tencentcloud_cdwdoris_workload_group":                                         cdwdoris.ResourceTencentCloudCdwdorisWorkloadGroup(),
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
+			"tencentcloud_batch_apply_account_baselines": controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_batch_apply_account_baselines
+```
