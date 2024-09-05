@@ -1177,6 +1177,21 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 		return
 	}
 
+	if *response.Response.TotalCount != 1 {
+		errRet = fmt.Errorf("CreateRoutes return %d routeTable. but we only request 1.\n", *response.Response.TotalCount)
+		return
+	}
+
+	if len(response.Response.RouteTableSet) != 1 {
+		errRet = fmt.Errorf("CreateRoutes return %d routeTable info. but we only request 1.\n", len(response.Response.RouteTableSet))
+		return
+	}
+
+	if len(response.Response.RouteTableSet[0].RouteSet) != 1 {
+		errRet = fmt.Errorf("CreateRoutes return %d routeTableSet info. but we only create 1.\n", len(response.Response.RouteTableSet[0].RouteSet))
+		return
+	}
+
 	entryId = int64(*response.Response.RouteTableSet[0].RouteSet[0].RouteId)
 
 	return
