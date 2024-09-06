@@ -140,6 +140,18 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				Description: "Instance name",
 			},
 
+			"status": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Status",
+			},
+
+			"region": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Region",
+			},
+
 			"doris_user_pwd": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -225,33 +237,33 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(WORKLOAD_GROUP_STATUS),
 			},
 
+			"operation_type": {
+				Type:        schema.TypeString,
+				Description: "Operation Type",
+			},
+
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Instance id",
+				Description: "Instance ID",
 			},
 
 			"pay_mode": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "pad mod",
+				Description: "Pay Mode",
 			},
 
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "create time",
+				Description: "Create Time",
 			},
 
 			"expire_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "expire time",
-			},
-
-			"operation_type": {
-				Type:        schema.TypeString,
-				Description: "Operation Type",
+				Description: "Expire Time",
 			},
 		},
 	}
