@@ -1,3 +1,21 @@
+## 1.81.120 (September 6 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_postgresql_account_privileges` ([#2807](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2807))
+* **New Resource:** `tencentcloud_batch_apply_account_baselines` ([#2803](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2803))
+* **New Resource:** `tencentcloud_postgresql_account` ([#2807](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2807))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_group: Support update `configuration_id` ([#2811](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2811))
+* resource/tencentcloud_cdn_domain: Add more origin type ([#2812](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2812))
+* resource/tencentcloud_clb_attachment: support `SRV` type ([#2806](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2806))
+* resource/tencentcloud_identity_center_role_configuration_permission_policy_attachment: support `role_policy_name` ([#2809](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2809))
+* resource/tencentcloud_identity_center_user: read add retry ([#2809](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2809))
+* resource/tencentcloud_private_dns_record: Optimize the logic for deleting resources ([#2810](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2810))
+* resource/tencentcloud_route_table_entry: fix creation failure ([#2808](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2808))
+
 ## 1.81.119 (August 30 , 2024)
 
 FEATURES:
