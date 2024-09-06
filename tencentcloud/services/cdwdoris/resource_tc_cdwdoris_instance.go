@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"text/template"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -155,7 +157,8 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 			"doris_user_pwd": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Database password",
+				Sensitive:   true,
+				Description: "Database Password",
 			},
 
 			"tags": {
@@ -224,6 +227,7 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 
 			"security_group_ids": {
 				Type:        schema.TypeList,
+				Optional:    true,
 				Description: "Security Group Id list",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -239,6 +243,7 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 
 			"operation_type": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Operation Type",
 			},
 
@@ -1252,6 +1257,16 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 			log.Printf("[CRITAL]%s update cdwdoris instance failed, reason:%+v", logId, err)
 			return err
 		}
+		if _, err := (&resource.StateChangeConf{
+			Delay:      10 * time.Second,
+			MinTimeout: 3 * time.Second,
+			Pending:    []string{},
+			Refresh:    resourceCdwdorisInstanceUpdateStateRefreshFunc_6_0(ctx, instanceId),
+			Target:     []string{"Serving"},
+			Timeout:    600 * time.Second,
+		}).WaitForStateContext(ctx); err != nil {
+			return err
+		}
 	}
 
 	_ = instanceId
@@ -1293,4 +1308,35 @@ func resourceTencentCloudCdwdorisInstanceDelete(d *schema.ResourceData, meta int
 
 	_ = instanceId
 	return nil
+}
+
+func resourceCdwdorisInstanceUpdateStateRefreshFunc_6_0(ctx context.Context, instanceId string) resource.StateRefreshFunc {
+	var req *cdwdorisv20211228.DescribeInstanceStateRequest
+	t := template.New("gotpl")
+	var tplObj *template.Template
+	return func() (interface{}, string, error) {
+		meta := tccommon.ProviderMetaFromContext(ctx)
+		if meta == nil {
+			return nil, "", fmt.Errorf("resource data can not be nil")
+		}
+		if req == nil {
+			d := tccommon.ResourceDataFromContext(ctx)
+			if d == nil {
+				return nil, "", fmt.Errorf("resource data can not be nil")
+			}
+			_ = d
+			req = cdwdorisv20211228.NewDescribeInstanceStateRequest()
+			req.InstanceId = helper.String(instanceId)
+
+		}
+		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstanceStateWithContext(ctx, req)
+		if err != nil {
+			return nil, "", err
+		}
+		if resp == nil || resp.Response == nil {
+			return nil, "", nil
+		}
+		state := ""
+		return resp.Response, state, nil
+	}
 }
