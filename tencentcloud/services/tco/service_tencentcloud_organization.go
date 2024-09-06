@@ -1287,6 +1287,7 @@ func (me *OrganizationService) DescribeIdentityCenterUserById(ctx context.Contex
 	request := organization.NewGetUserRequest()
 	request.UserId = helper.String(userId)
 	request.ZoneId = helper.String(zoneId)
+	response := organization.NewGetUserResponse()
 
 	defer func() {
 		if errRet != nil {
@@ -1294,14 +1295,22 @@ func (me *OrganizationService) DescribeIdentityCenterUserById(ctx context.Contex
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseOrganizationClient().GetUser(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseOrganizationClient().GetUser(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
+		log.Printf("[CRITAL]%s update identity center user failed, reason:%+v", logId, err)
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response.Response == nil {
 		return

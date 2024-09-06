@@ -28,6 +28,7 @@ The following arguments are supported:
 * `role_configuration_id` - (Required, String, ForceNew) Permission configuration ID.
 * `role_policy_id` - (Required, Int, ForceNew) Role policy id.
 * `zone_id` - (Required, String, ForceNew) Space ID.
+* `role_policy_name` - (Optional, String) Role policy name.
 
 ## Attributes Reference
 
@@ -36,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `add_time` - Role policy add time.
 * `role_policy_document` - Role policy document.
-* `role_policy_name` - Role policy name.
 * `role_policy_type` - Role policy type.
 
 
