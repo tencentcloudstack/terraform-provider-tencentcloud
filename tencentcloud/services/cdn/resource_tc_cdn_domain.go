@@ -89,7 +89,11 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_ORIGIN_TYPE),
-							Description:  "Master origin server type. The following types are supported: `domain`: domain name type, `cos`: COS origin, `ip`: IP list used as origin server, `ipv6`: origin server list is a single IPv6 address, `ip_ipv6`: origin server list is multiple IPv4 addresses and an IPv6 address.",
+							Description: "Master origin server type. The following types are supported: `domain`: Domain name, `domainv6`: IPv6 domain name, `cos`: COS bucket address, `third_party`: Third-party object storage origin, " +
+								"`igtm`: IGTM origin, `ip`: IP address, `ipv6`: One IPv6 address, `ip_ipv6`: Multiple IPv4 addresses and one IPv6 address, " +
+								"`ip_domain`: IP addresses and domain names (only available to beta users), `ip_domainv6`: Multiple IPv4 addresses and one IPv6 domain name, `ipv6_domain`: Multiple IPv6 addresses and one domain name, `ipv6_domainv6`: Multiple IPv6 addresses and one IPv6 domain name, " +
+								"`domain_domainv6`: Multiple IPv4 domain names and one IPv6 domain name, `ip_ipv6_domain`: Multiple IPv4 and IPv6 addresses and one domain name, `ip_ipv6_domainv6`: Multiple IPv4 and IPv6 addresses and one IPv6 domain name, `ip_domain_domainv6`: Multiple IPv4 addresses and IPv4 domain names and one IPv6 domain name, " +
+								"`ipv6_domain_domainv6`: Multiple IPv4 domain names and IPv6 addresses and one IPv6 domain name, `ip_ipv6_domain_domainv6`: Multiple IPv4 and IPv6 addresses and IPv4 domain names and one IPv6 domain name.",
 						},
 						"origin_list": {
 							Type:        schema.TypeList,
@@ -120,7 +124,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_BACKUP_ORIGIN_TYPE),
-							Description:  "Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server.",
+							Description:  "Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server, `ipv6_domain`: Multiple IPv6 addresses and one domain name, `ip_ipv6`: Multiple IPv4 addresses and one IPv6 address, `ip_ipv6_domain`: Multiple IPv4 and IPv6 addresses and one domain name.",
 						},
 						"backup_origin_list": {
 							Type:        schema.TypeList,
