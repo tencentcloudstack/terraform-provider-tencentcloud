@@ -513,6 +513,10 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		updateAttrs = append(updateAttrs, "scaling_group_name")
 		request.AutoScalingGroupName = helper.String(d.Get("scaling_group_name").(string))
 	}
+	if d.HasChange("configuration_id") {
+		updateAttrs = append(updateAttrs, "configuration_id")
+		request.LaunchConfigurationId = helper.String(d.Get("configuration_id").(string))
+	}
 	if d.HasChange("max_size") {
 		updateAttrs = append(updateAttrs, "max_size")
 		request.MaxSize = helper.IntUint64(d.Get("max_size").(int))
