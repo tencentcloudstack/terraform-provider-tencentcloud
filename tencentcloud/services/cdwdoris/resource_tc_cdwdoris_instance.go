@@ -113,9 +113,10 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"charge_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Billing type: PREPAID for prepayment, and POSTPAID_BY_HOUR for postpayment.\nNote: This field may return null, indicating that no valid values can be obtained.",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "Billing type: PREPAID for prepayment, and POSTPAID_BY_HOUR for postpayment.\nNote: This field may return null, indicating that no valid values can be obtained.",
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CHARGE_TYPE),
 						},
 						"renew_flag": {
 							Type:        schema.TypeInt,
@@ -454,6 +455,8 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		return err1
 	}
 
+	_ = response1
+
 	var (
 		request2  = cdwdorisv20211228.NewModifyWorkloadGroupStatusRequest()
 		response2 = cdwdorisv20211228.NewModifyWorkloadGroupStatusResponse()
@@ -488,6 +491,16 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 
 	_ = response2
 
+	if _, err := (&resource.StateChangeConf{
+		Delay:      10 * time.Second,
+		MinTimeout: 3 * time.Second,
+		Pending:    []string{},
+		Refresh:    resourceCdwdorisInstanceCreateStateRefreshFunc_2_0(ctx, instanceId),
+		Target:     []string{"Serving"},
+		Timeout:    600 * time.Second,
+	}).WaitForStateContext(ctx); err != nil {
+		return err
+	}
 	d.SetId(instanceId)
 
 	return resourceTencentCloudCdwdorisInstanceRead(d, meta)
@@ -1225,7 +1238,7 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 	}
 
 	needChange6 := false
-	mutableArgs6 := []string{"instance_id", "operation_type"}
+	mutableArgs6 := []string{"operation_type"}
 	for _, v := range mutableArgs6 {
 		if d.HasChange(v) {
 			needChange6 = true
@@ -1236,9 +1249,7 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 	if needChange6 {
 		request6 := cdwdorisv20211228.NewModifyWorkloadGroupStatusRequest()
 
-		if v, ok := d.GetOk("instance_id"); ok {
-			request6.InstanceId = helper.String(v.(string))
-		}
+		request6.InstanceId = helper.String(instanceId)
 
 		if v, ok := d.GetOk("operation_type"); ok {
 			request6.OperationType = helper.String(v.(string))
@@ -1269,7 +1280,6 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	_ = instanceId
 	return resourceTencentCloudCdwdorisInstanceRead(d, meta)
 }
 
@@ -1308,6 +1318,37 @@ func resourceTencentCloudCdwdorisInstanceDelete(d *schema.ResourceData, meta int
 
 	_ = instanceId
 	return nil
+}
+
+func resourceCdwdorisInstanceCreateStateRefreshFunc_2_0(ctx context.Context, instanceId string) resource.StateRefreshFunc {
+	var req *cdwdorisv20211228.DescribeInstanceStateRequest
+	t := template.New("gotpl")
+	var tplObj *template.Template
+	return func() (interface{}, string, error) {
+		meta := tccommon.ProviderMetaFromContext(ctx)
+		if meta == nil {
+			return nil, "", fmt.Errorf("resource data can not be nil")
+		}
+		if req == nil {
+			d := tccommon.ResourceDataFromContext(ctx)
+			if d == nil {
+				return nil, "", fmt.Errorf("resource data can not be nil")
+			}
+			_ = d
+			req = cdwdorisv20211228.NewDescribeInstanceStateRequest()
+			req.InstanceId = helper.String(instanceId)
+
+		}
+		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwdorisV20211228Client().DescribeInstanceStateWithContext(ctx, req)
+		if err != nil {
+			return nil, "", err
+		}
+		if resp == nil || resp.Response == nil {
+			return nil, "", nil
+		}
+		state := ""
+		return resp.Response, state, nil
+	}
 }
 
 func resourceCdwdorisInstanceUpdateStateRefreshFunc_6_0(ctx context.Context, instanceId string) resource.StateRefreshFunc {
