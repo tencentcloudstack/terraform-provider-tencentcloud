@@ -370,6 +370,12 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 				Optional:    true,
 				Description: "Instance hostname.",
 			},
+			// computed
+			"resource_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "CVM instance ID.",
+			},
 		},
 	}
 }
@@ -738,6 +744,8 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 		log.Printf("[CRITAL]instance %s not exist or launch failed", cvmInstanceId)
 		return nil
 	}
+
+	_ = d.Set("resource_id", cvmInstanceId)
 
 	if respData.SpaceName != nil {
 		_ = d.Set("space_name", respData.SpaceName)

@@ -316,7 +316,7 @@ The `virtual_private_cloud` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `resource_id` - CVM instance ID.
 
 
 ## Import
