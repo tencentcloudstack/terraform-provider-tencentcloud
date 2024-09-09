@@ -1340,6 +1340,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_scale_out_instances":                                          as.ResourceTencentCloudAsScaleOutInstances(),
 			"tencentcloud_as_execute_scaling_policy":                                       as.ResourceTencentCloudAsExecuteScalingPolicy(),
 			"tencentcloud_as_complete_lifecycle":                                           as.ResourceTencentCloudAsCompleteLifecycle(),
+			"tencentcloud_as_start_instance_refresh":                                       as.ResourceTencentCloudAsStartInstanceRefresh(),
 			"tencentcloud_mongodb_instance":                                                mongodb.ResourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":                                       mongodb.ResourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_mongodb_instance_account":                                        mongodb.ResourceTencentCloudMongodbInstanceAccount(),

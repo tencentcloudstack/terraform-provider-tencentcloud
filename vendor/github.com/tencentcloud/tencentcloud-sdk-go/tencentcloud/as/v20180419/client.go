@@ -59,8 +59,9 @@ func NewAttachInstancesRequest() (request *AttachInstancesRequest) {
 func NewAttachInstancesResponse() (response *AttachInstancesResponse) {
     response = &AttachInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachInstances
@@ -149,8 +150,9 @@ func NewAttachLoadBalancersRequest() (request *AttachLoadBalancersRequest) {
 func NewAttachLoadBalancersResponse() (response *AttachLoadBalancersResponse) {
     response = &AttachLoadBalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachLoadBalancers
@@ -170,6 +172,7 @@ func NewAttachLoadBalancersResponse() (response *AttachLoadBalancersResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_LISTENERTARGETTYPENOTSUPPORTED = "InvalidParameterValue.ListenerTargetTypeNotSupported"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
@@ -204,6 +207,7 @@ func (c *Client) AttachLoadBalancers(request *AttachLoadBalancersRequest) (respo
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_LISTENERTARGETTYPENOTSUPPORTED = "InvalidParameterValue.ListenerTargetTypeNotSupported"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
@@ -233,6 +237,71 @@ func (c *Client) AttachLoadBalancersWithContext(ctx context.Context, request *At
     return
 }
 
+func NewCancelInstanceRefreshRequest() (request *CancelInstanceRefreshRequest) {
+    request = &CancelInstanceRefreshRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "CancelInstanceRefresh")
+    
+    
+    return
+}
+
+func NewCancelInstanceRefreshResponse() (response *CancelInstanceRefreshResponse) {
+    response = &CancelInstanceRefreshResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CancelInstanceRefresh
+// 取消伸缩组的实例刷新活动。
+//
+// * 已刷新/正在刷新的批次不受影响，待刷新批次被取消
+//
+// * 刷新失败的实例保持备用中状态，需用户手动处理后尝试退出备用中状态或销毁
+//
+// * 取消后不允许回滚操作，也不支持恢复操作
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_REFRESHACTIVITYNOTFOUND = "ResourceNotFound.RefreshActivityNotFound"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) CancelInstanceRefresh(request *CancelInstanceRefreshRequest) (response *CancelInstanceRefreshResponse, err error) {
+    return c.CancelInstanceRefreshWithContext(context.Background(), request)
+}
+
+// CancelInstanceRefresh
+// 取消伸缩组的实例刷新活动。
+//
+// * 已刷新/正在刷新的批次不受影响，待刷新批次被取消
+//
+// * 刷新失败的实例保持备用中状态，需用户手动处理后尝试退出备用中状态或销毁
+//
+// * 取消后不允许回滚操作，也不支持恢复操作
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_REFRESHACTIVITYNOTFOUND = "ResourceNotFound.RefreshActivityNotFound"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) CancelInstanceRefreshWithContext(ctx context.Context, request *CancelInstanceRefreshRequest) (response *CancelInstanceRefreshResponse, err error) {
+    if request == nil {
+        request = NewCancelInstanceRefreshRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CancelInstanceRefresh require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCancelInstanceRefreshResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewClearLaunchConfigurationAttributesRequest() (request *ClearLaunchConfigurationAttributesRequest) {
     request = &ClearLaunchConfigurationAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -247,8 +316,9 @@ func NewClearLaunchConfigurationAttributesRequest() (request *ClearLaunchConfigu
 func NewClearLaunchConfigurationAttributesResponse() (response *ClearLaunchConfigurationAttributesResponse) {
     response = &ClearLaunchConfigurationAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ClearLaunchConfigurationAttributes
@@ -297,8 +367,9 @@ func NewCompleteLifecycleActionRequest() (request *CompleteLifecycleActionReques
 func NewCompleteLifecycleActionResponse() (response *CompleteLifecycleActionResponse) {
     response = &CompleteLifecycleActionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CompleteLifecycleAction
@@ -375,8 +446,9 @@ func NewCreateAutoScalingGroupRequest() (request *CreateAutoScalingGroupRequest)
 func NewCreateAutoScalingGroupResponse() (response *CreateAutoScalingGroupResponse) {
     response = &CreateAutoScalingGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAutoScalingGroup
@@ -507,8 +579,9 @@ func NewCreateAutoScalingGroupFromInstanceRequest() (request *CreateAutoScalingG
 func NewCreateAutoScalingGroupFromInstanceResponse() (response *CreateAutoScalingGroupFromInstanceResponse) {
     response = &CreateAutoScalingGroupFromInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAutoScalingGroupFromInstance
@@ -613,8 +686,9 @@ func NewCreateLaunchConfigurationRequest() (request *CreateLaunchConfigurationRe
 func NewCreateLaunchConfigurationResponse() (response *CreateLaunchConfigurationResponse) {
     response = &CreateLaunchConfigurationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLaunchConfiguration
@@ -641,9 +715,11 @@ func NewCreateLaunchConfigurationResponse() (response *CreateLaunchConfiguration
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_HOSTNAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.HostNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
+//  INVALIDPARAMETERVALUE_INSTANCENAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.InstanceNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
 //  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
@@ -696,9 +772,11 @@ func (c *Client) CreateLaunchConfiguration(request *CreateLaunchConfigurationReq
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_HOSTNAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.HostNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
+//  INVALIDPARAMETERVALUE_INSTANCENAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.InstanceNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
 //  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
@@ -753,8 +831,9 @@ func NewCreateLifecycleHookRequest() (request *CreateLifecycleHookRequest) {
 func NewCreateLifecycleHookResponse() (response *CreateLifecycleHookResponse) {
     response = &CreateLifecycleHookResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLifecycleHook
@@ -921,8 +1000,9 @@ func NewCreateNotificationConfigurationRequest() (request *CreateNotificationCon
 func NewCreateNotificationConfigurationResponse() (response *CreateNotificationConfigurationResponse) {
     response = &CreateNotificationConfigurationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNotificationConfiguration
@@ -1105,8 +1185,9 @@ func NewCreateScalingPolicyRequest() (request *CreateScalingPolicyRequest) {
 func NewCreateScalingPolicyResponse() (response *CreateScalingPolicyResponse) {
     response = &CreateScalingPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateScalingPolicy
@@ -1181,8 +1262,9 @@ func NewCreateScheduledActionRequest() (request *CreateScheduledActionRequest) {
 func NewCreateScheduledActionResponse() (response *CreateScheduledActionResponse) {
     response = &CreateScheduledActionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateScheduledAction
@@ -1263,8 +1345,9 @@ func NewDeleteAutoScalingGroupRequest() (request *DeleteAutoScalingGroupRequest)
 func NewDeleteAutoScalingGroupResponse() (response *DeleteAutoScalingGroupResponse) {
     response = &DeleteAutoScalingGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAutoScalingGroup
@@ -1331,8 +1414,9 @@ func NewDeleteLaunchConfigurationRequest() (request *DeleteLaunchConfigurationRe
 func NewDeleteLaunchConfigurationResponse() (response *DeleteLaunchConfigurationResponse) {
     response = &DeleteLaunchConfigurationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLaunchConfiguration
@@ -1393,8 +1477,9 @@ func NewDeleteLifecycleHookRequest() (request *DeleteLifecycleHookRequest) {
 func NewDeleteLifecycleHookResponse() (response *DeleteLifecycleHookResponse) {
     response = &DeleteLifecycleHookResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLifecycleHook
@@ -1451,8 +1536,9 @@ func NewDeleteNotificationConfigurationRequest() (request *DeleteNotificationCon
 func NewDeleteNotificationConfigurationResponse() (response *DeleteNotificationConfigurationResponse) {
     response = &DeleteNotificationConfigurationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNotificationConfiguration
@@ -1503,8 +1589,9 @@ func NewDeleteScalingPolicyRequest() (request *DeleteScalingPolicyRequest) {
 func NewDeleteScalingPolicyResponse() (response *DeleteScalingPolicyResponse) {
     response = &DeleteScalingPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteScalingPolicy
@@ -1557,8 +1644,9 @@ func NewDeleteScheduledActionRequest() (request *DeleteScheduledActionRequest) {
 func NewDeleteScheduledActionResponse() (response *DeleteScheduledActionResponse) {
     response = &DeleteScheduledActionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteScheduledAction
@@ -1609,8 +1697,9 @@ func NewDescribeAccountLimitsRequest() (request *DescribeAccountLimitsRequest) {
 func NewDescribeAccountLimitsResponse() (response *DescribeAccountLimitsResponse) {
     response = &DescribeAccountLimitsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountLimits
@@ -1659,8 +1748,9 @@ func NewDescribeAutoScalingActivitiesRequest() (request *DescribeAutoScalingActi
 func NewDescribeAutoScalingActivitiesResponse() (response *DescribeAutoScalingActivitiesResponse) {
     response = &DescribeAutoScalingActivitiesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoScalingActivities
@@ -1723,8 +1813,9 @@ func NewDescribeAutoScalingAdvicesRequest() (request *DescribeAutoScalingAdvices
 func NewDescribeAutoScalingAdvicesResponse() (response *DescribeAutoScalingAdvicesResponse) {
     response = &DescribeAutoScalingAdvicesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoScalingAdvices
@@ -1775,8 +1866,9 @@ func NewDescribeAutoScalingGroupLastActivitiesRequest() (request *DescribeAutoSc
 func NewDescribeAutoScalingGroupLastActivitiesResponse() (response *DescribeAutoScalingGroupLastActivitiesResponse) {
     response = &DescribeAutoScalingGroupLastActivitiesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoScalingGroupLastActivities
@@ -1829,8 +1921,9 @@ func NewDescribeAutoScalingGroupsRequest() (request *DescribeAutoScalingGroupsRe
 func NewDescribeAutoScalingGroupsResponse() (response *DescribeAutoScalingGroupsResponse) {
     response = &DescribeAutoScalingGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoScalingGroups
@@ -1911,8 +2004,9 @@ func NewDescribeAutoScalingInstancesRequest() (request *DescribeAutoScalingInsta
 func NewDescribeAutoScalingInstancesResponse() (response *DescribeAutoScalingInstancesResponse) {
     response = &DescribeAutoScalingInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoScalingInstances
@@ -1987,8 +2081,9 @@ func NewDescribeLaunchConfigurationsRequest() (request *DescribeLaunchConfigurat
 func NewDescribeLaunchConfigurationsResponse() (response *DescribeLaunchConfigurationsResponse) {
     response = &DescribeLaunchConfigurationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLaunchConfigurations
@@ -2065,8 +2160,9 @@ func NewDescribeLifecycleHooksRequest() (request *DescribeLifecycleHooksRequest)
 func NewDescribeLifecycleHooksResponse() (response *DescribeLifecycleHooksResponse) {
     response = &DescribeLifecycleHooksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLifecycleHooks
@@ -2139,8 +2235,9 @@ func NewDescribeNotificationConfigurationsRequest() (request *DescribeNotificati
 func NewDescribeNotificationConfigurationsResponse() (response *DescribeNotificationConfigurationsResponse) {
     response = &DescribeNotificationConfigurationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNotificationConfigurations
@@ -2193,6 +2290,69 @@ func (c *Client) DescribeNotificationConfigurationsWithContext(ctx context.Conte
     return
 }
 
+func NewDescribeRefreshActivitiesRequest() (request *DescribeRefreshActivitiesRequest) {
+    request = &DescribeRefreshActivitiesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "DescribeRefreshActivities")
+    
+    
+    return
+}
+
+func NewDescribeRefreshActivitiesResponse() (response *DescribeRefreshActivitiesResponse) {
+    response = &DescribeRefreshActivitiesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRefreshActivities
+// 本接口（DescribeRefreshActivities）用于查询伸缩组的实例刷新活动记录。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
+//  INVALIDPARAMETERVALUE_FILTER = "InvalidParameterValue.Filter"
+//  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
+func (c *Client) DescribeRefreshActivities(request *DescribeRefreshActivitiesRequest) (response *DescribeRefreshActivitiesResponse, err error) {
+    return c.DescribeRefreshActivitiesWithContext(context.Background(), request)
+}
+
+// DescribeRefreshActivities
+// 本接口（DescribeRefreshActivities）用于查询伸缩组的实例刷新活动记录。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
+//  INVALIDPARAMETERVALUE_FILTER = "InvalidParameterValue.Filter"
+//  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
+func (c *Client) DescribeRefreshActivitiesWithContext(ctx context.Context, request *DescribeRefreshActivitiesRequest) (response *DescribeRefreshActivitiesResponse, err error) {
+    if request == nil {
+        request = NewDescribeRefreshActivitiesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRefreshActivities require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRefreshActivitiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeScalingPoliciesRequest() (request *DescribeScalingPoliciesRequest) {
     request = &DescribeScalingPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2207,8 +2367,9 @@ func NewDescribeScalingPoliciesRequest() (request *DescribeScalingPoliciesReques
 func NewDescribeScalingPoliciesResponse() (response *DescribeScalingPoliciesResponse) {
     response = &DescribeScalingPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScalingPolicies
@@ -2269,8 +2430,9 @@ func NewDescribeScheduledActionsRequest() (request *DescribeScheduledActionsRequ
 func NewDescribeScheduledActionsResponse() (response *DescribeScheduledActionsResponse) {
     response = &DescribeScheduledActionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScheduledActions
@@ -2343,8 +2505,9 @@ func NewDetachInstancesRequest() (request *DetachInstancesRequest) {
 func NewDetachInstancesResponse() (response *DetachInstancesResponse) {
     response = &DetachInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachInstances
@@ -2427,8 +2590,9 @@ func NewDetachLoadBalancersRequest() (request *DetachLoadBalancersRequest) {
 func NewDetachLoadBalancersResponse() (response *DetachLoadBalancersResponse) {
     response = &DetachLoadBalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachLoadBalancers
@@ -2519,8 +2683,9 @@ func NewDisableAutoScalingGroupRequest() (request *DisableAutoScalingGroupReques
 func NewDisableAutoScalingGroupResponse() (response *DisableAutoScalingGroupResponse) {
     response = &DisableAutoScalingGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableAutoScalingGroup
@@ -2625,8 +2790,9 @@ func NewEnableAutoScalingGroupRequest() (request *EnableAutoScalingGroupRequest)
 func NewEnableAutoScalingGroupResponse() (response *EnableAutoScalingGroupResponse) {
     response = &EnableAutoScalingGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableAutoScalingGroup
@@ -2681,8 +2847,9 @@ func NewExecuteScalingPolicyRequest() (request *ExecuteScalingPolicyRequest) {
 func NewExecuteScalingPolicyResponse() (response *ExecuteScalingPolicyResponse) {
     response = &ExecuteScalingPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExecuteScalingPolicy
@@ -2749,6 +2916,87 @@ func (c *Client) ExecuteScalingPolicyWithContext(ctx context.Context, request *E
     return
 }
 
+func NewExitStandbyRequest() (request *ExitStandbyRequest) {
+    request = &ExitStandbyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "ExitStandby")
+    
+    
+    return
+}
+
+func NewExitStandbyResponse() (response *ExitStandbyResponse) {
+    response = &ExitStandbyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ExitStandby
+// 伸缩组内实例退出备用中状态。
+//
+// * 备用中状态的实例负载均衡器权重值为 0，退出备用中状态后，权重值也会恢复
+//
+// * 对备用中状态实例进行开关机操作也会使其退出备用中状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
+//  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCENOTFOUND_INSTANCESNOTFOUND = "ResourceNotFound.InstancesNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_INSTANCEINOPERATION = "ResourceUnavailable.InstanceInOperation"
+//  RESOURCEUNAVAILABLE_LOADBALANCERINOPERATION = "ResourceUnavailable.LoadBalancerInOperation"
+func (c *Client) ExitStandby(request *ExitStandbyRequest) (response *ExitStandbyResponse, err error) {
+    return c.ExitStandbyWithContext(context.Background(), request)
+}
+
+// ExitStandby
+// 伸缩组内实例退出备用中状态。
+//
+// * 备用中状态的实例负载均衡器权重值为 0，退出备用中状态后，权重值也会恢复
+//
+// * 对备用中状态实例进行开关机操作也会使其退出备用中状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
+//  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCENOTFOUND_INSTANCESNOTFOUND = "ResourceNotFound.InstancesNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_INSTANCEINOPERATION = "ResourceUnavailable.InstanceInOperation"
+//  RESOURCEUNAVAILABLE_LOADBALANCERINOPERATION = "ResourceUnavailable.LoadBalancerInOperation"
+func (c *Client) ExitStandbyWithContext(ctx context.Context, request *ExitStandbyRequest) (response *ExitStandbyResponse, err error) {
+    if request == nil {
+        request = NewExitStandbyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ExitStandby require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewExitStandbyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAutoScalingGroupRequest() (request *ModifyAutoScalingGroupRequest) {
     request = &ModifyAutoScalingGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2763,8 +3011,9 @@ func NewModifyAutoScalingGroupRequest() (request *ModifyAutoScalingGroupRequest)
 func NewModifyAutoScalingGroupResponse() (response *ModifyAutoScalingGroupResponse) {
     response = &ModifyAutoScalingGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAutoScalingGroup
@@ -2776,6 +3025,7 @@ func NewModifyAutoScalingGroupResponse() (response *ModifyAutoScalingGroupRespon
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_INSCENARIO = "InvalidParameter.InScenario"
+//  INVALIDPARAMETERVALUE_ASSERTDESIREDCAPACITYFAILED = "InvalidParameterValue.AssertDesiredCapacityFailed"
 //  INVALIDPARAMETERVALUE_BASECAPACITYTOOLARGE = "InvalidParameterValue.BaseCapacityTooLarge"
 //  INVALIDPARAMETERVALUE_CVMERROR = "InvalidParameterValue.CvmError"
 //  INVALIDPARAMETERVALUE_DUPLICATEDSUBNET = "InvalidParameterValue.DuplicatedSubnet"
@@ -2814,6 +3064,7 @@ func (c *Client) ModifyAutoScalingGroup(request *ModifyAutoScalingGroupRequest) 
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_INSCENARIO = "InvalidParameter.InScenario"
+//  INVALIDPARAMETERVALUE_ASSERTDESIREDCAPACITYFAILED = "InvalidParameterValue.AssertDesiredCapacityFailed"
 //  INVALIDPARAMETERVALUE_BASECAPACITYTOOLARGE = "InvalidParameterValue.BaseCapacityTooLarge"
 //  INVALIDPARAMETERVALUE_CVMERROR = "InvalidParameterValue.CvmError"
 //  INVALIDPARAMETERVALUE_DUPLICATEDSUBNET = "InvalidParameterValue.DuplicatedSubnet"
@@ -2869,8 +3120,9 @@ func NewModifyDesiredCapacityRequest() (request *ModifyDesiredCapacityRequest) {
 func NewModifyDesiredCapacityResponse() (response *ModifyDesiredCapacityResponse) {
     response = &ModifyDesiredCapacityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDesiredCapacity
@@ -2879,6 +3131,7 @@ func NewModifyDesiredCapacityResponse() (response *ModifyDesiredCapacityResponse
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETERVALUE_ASSERTDESIREDCAPACITYFAILED = "InvalidParameterValue.AssertDesiredCapacityFailed"
 //  INVALIDPARAMETERVALUE_BASECAPACITYTOOLARGE = "InvalidParameterValue.BaseCapacityTooLarge"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
@@ -2897,6 +3150,7 @@ func (c *Client) ModifyDesiredCapacity(request *ModifyDesiredCapacityRequest) (r
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETERVALUE_ASSERTDESIREDCAPACITYFAILED = "InvalidParameterValue.AssertDesiredCapacityFailed"
 //  INVALIDPARAMETERVALUE_BASECAPACITYTOOLARGE = "InvalidParameterValue.BaseCapacityTooLarge"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
@@ -2935,8 +3189,9 @@ func NewModifyLaunchConfigurationAttributesRequest() (request *ModifyLaunchConfi
 func NewModifyLaunchConfigurationAttributesResponse() (response *ModifyLaunchConfigurationAttributesResponse) {
     response = &ModifyLaunchConfigurationAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLaunchConfigurationAttributes
@@ -2961,9 +3216,11 @@ func NewModifyLaunchConfigurationAttributesResponse() (response *ModifyLaunchCon
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_HOSTNAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.HostNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
+//  INVALIDPARAMETERVALUE_INSTANCENAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.InstanceNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
 //  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
@@ -3010,9 +3267,11 @@ func (c *Client) ModifyLaunchConfigurationAttributes(request *ModifyLaunchConfig
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_HOSTNAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.HostNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
+//  INVALIDPARAMETERVALUE_INSTANCENAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.InstanceNameWithSuffixTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
 //  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
@@ -3063,8 +3322,9 @@ func NewModifyLifecycleHookRequest() (request *ModifyLifecycleHookRequest) {
 func NewModifyLifecycleHookResponse() (response *ModifyLifecycleHookResponse) {
     response = &ModifyLifecycleHookResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLifecycleHook
@@ -3131,8 +3391,9 @@ func NewModifyLoadBalancerTargetAttributesRequest() (request *ModifyLoadBalancer
 func NewModifyLoadBalancerTargetAttributesResponse() (response *ModifyLoadBalancerTargetAttributesResponse) {
     response = &ModifyLoadBalancerTargetAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLoadBalancerTargetAttributes
@@ -3229,8 +3490,9 @@ func NewModifyLoadBalancersRequest() (request *ModifyLoadBalancersRequest) {
 func NewModifyLoadBalancersResponse() (response *ModifyLoadBalancersResponse) {
     response = &ModifyLoadBalancersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLoadBalancers
@@ -3339,8 +3601,9 @@ func NewModifyNotificationConfigurationRequest() (request *ModifyNotificationCon
 func NewModifyNotificationConfigurationResponse() (response *ModifyNotificationConfigurationResponse) {
     response = &ModifyNotificationConfigurationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNotificationConfiguration
@@ -3409,8 +3672,9 @@ func NewModifyScalingPolicyRequest() (request *ModifyScalingPolicyRequest) {
 func NewModifyScalingPolicyResponse() (response *ModifyScalingPolicyResponse) {
     response = &ModifyScalingPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyScalingPolicy
@@ -3475,8 +3739,9 @@ func NewModifyScheduledActionRequest() (request *ModifyScheduledActionRequest) {
 func NewModifyScheduledActionResponse() (response *ModifyScheduledActionResponse) {
     response = &ModifyScheduledActionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyScheduledAction
@@ -3553,8 +3818,9 @@ func NewRemoveInstancesRequest() (request *RemoveInstancesRequest) {
 func NewRemoveInstancesResponse() (response *RemoveInstancesResponse) {
     response = &RemoveInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveInstances
@@ -3619,6 +3885,146 @@ func (c *Client) RemoveInstancesWithContext(ctx context.Context, request *Remove
     return
 }
 
+func NewResumeInstanceRefreshRequest() (request *ResumeInstanceRefreshRequest) {
+    request = &ResumeInstanceRefreshRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "ResumeInstanceRefresh")
+    
+    
+    return
+}
+
+func NewResumeInstanceRefreshResponse() (response *ResumeInstanceRefreshResponse) {
+    response = &ResumeInstanceRefreshResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResumeInstanceRefresh
+// 恢复暂停状态的实例刷新活动，使其重试当前批次刷新失败实例或继续刷新后续批次，非暂停状态下调用该接口无效。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_REFRESHACTIVITYNOTFOUND = "ResourceNotFound.RefreshActivityNotFound"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) ResumeInstanceRefresh(request *ResumeInstanceRefreshRequest) (response *ResumeInstanceRefreshResponse, err error) {
+    return c.ResumeInstanceRefreshWithContext(context.Background(), request)
+}
+
+// ResumeInstanceRefresh
+// 恢复暂停状态的实例刷新活动，使其重试当前批次刷新失败实例或继续刷新后续批次，非暂停状态下调用该接口无效。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_REFRESHACTIVITYNOTFOUND = "ResourceNotFound.RefreshActivityNotFound"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) ResumeInstanceRefreshWithContext(ctx context.Context, request *ResumeInstanceRefreshRequest) (response *ResumeInstanceRefreshResponse, err error) {
+    if request == nil {
+        request = NewResumeInstanceRefreshRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResumeInstanceRefresh require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResumeInstanceRefreshResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRollbackInstanceRefreshRequest() (request *RollbackInstanceRefreshRequest) {
+    request = &RollbackInstanceRefreshRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "RollbackInstanceRefresh")
+    
+    
+    return
+}
+
+func NewRollbackInstanceRefreshResponse() (response *RollbackInstanceRefreshResponse) {
+    response = &RollbackInstanceRefreshResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RollbackInstanceRefresh
+// 回滚操作会生成一个新的实例刷新活动，该活动也支持分批次刷新以及暂停、恢复、取消操作，接口返回回滚活动的 RefreshActivityId。
+//
+// * 原活动中待刷新实例变更为已取消，忽略不存在实例，其他状态实例进入回滚流程
+//
+// * 原活动中正在刷新的实例不会立刻终止，刷新结束后再执行回滚活动
+//
+// * 暂停状态或最近一次成功的刷新活动支持回滚，其他状态不支持回滚
+//
+// * 原活动刷新方式为重装实例时，对于 ImageId参数，会自动恢复到回滚前镜像 ID；对于 UserData、EnhancedService、LoginSettings、 HostName 参数，依然会从启动配置中读取，需用户在回滚前自行修改启动配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BATCHNUMBERTOOLARGE = "InvalidParameterValue.BatchNumberTooLarge"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPIDNOTFOUND = "ResourceNotFound.AutoScalingGroupIdNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPABNORMALSTATUS = "ResourceUnavailable.AutoScalingGroupAbnormalStatus"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINREFRESHACTIVITY = "ResourceUnavailable.AutoScalingGroupInRefreshActivity"
+//  RESOURCEUNAVAILABLE_INQUIRYPRICERESETINSTANCEFAILED = "ResourceUnavailable.InquiryPriceResetInstanceFailed"
+//  RESOURCEUNAVAILABLE_NOINSTANCECANREFRESH = "ResourceUnavailable.NoInstanceCanRefresh"
+//  RESOURCEUNAVAILABLE_NOINSTANCECANROLLBACK = "ResourceUnavailable.NoInstanceCanRollback"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYCANNOTROLLBACK = "ResourceUnavailable.RefreshActivityCanNotRollback"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  RESOURCEUNAVAILABLE_ROLLBACKTYPEACTIVITYCANNOTROLLBACKAGAIN = "ResourceUnavailable.RollbackTypeActivityCanNotRollbackAgain"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) RollbackInstanceRefresh(request *RollbackInstanceRefreshRequest) (response *RollbackInstanceRefreshResponse, err error) {
+    return c.RollbackInstanceRefreshWithContext(context.Background(), request)
+}
+
+// RollbackInstanceRefresh
+// 回滚操作会生成一个新的实例刷新活动，该活动也支持分批次刷新以及暂停、恢复、取消操作，接口返回回滚活动的 RefreshActivityId。
+//
+// * 原活动中待刷新实例变更为已取消，忽略不存在实例，其他状态实例进入回滚流程
+//
+// * 原活动中正在刷新的实例不会立刻终止，刷新结束后再执行回滚活动
+//
+// * 暂停状态或最近一次成功的刷新活动支持回滚，其他状态不支持回滚
+//
+// * 原活动刷新方式为重装实例时，对于 ImageId参数，会自动恢复到回滚前镜像 ID；对于 UserData、EnhancedService、LoginSettings、 HostName 参数，依然会从启动配置中读取，需用户在回滚前自行修改启动配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BATCHNUMBERTOOLARGE = "InvalidParameterValue.BatchNumberTooLarge"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPIDNOTFOUND = "ResourceNotFound.AutoScalingGroupIdNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPABNORMALSTATUS = "ResourceUnavailable.AutoScalingGroupAbnormalStatus"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINREFRESHACTIVITY = "ResourceUnavailable.AutoScalingGroupInRefreshActivity"
+//  RESOURCEUNAVAILABLE_INQUIRYPRICERESETINSTANCEFAILED = "ResourceUnavailable.InquiryPriceResetInstanceFailed"
+//  RESOURCEUNAVAILABLE_NOINSTANCECANREFRESH = "ResourceUnavailable.NoInstanceCanRefresh"
+//  RESOURCEUNAVAILABLE_NOINSTANCECANROLLBACK = "ResourceUnavailable.NoInstanceCanRollback"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYCANNOTROLLBACK = "ResourceUnavailable.RefreshActivityCanNotRollback"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  RESOURCEUNAVAILABLE_ROLLBACKTYPEACTIVITYCANNOTROLLBACKAGAIN = "ResourceUnavailable.RollbackTypeActivityCanNotRollbackAgain"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) RollbackInstanceRefreshWithContext(ctx context.Context, request *RollbackInstanceRefreshRequest) (response *RollbackInstanceRefreshResponse, err error) {
+    if request == nil {
+        request = NewRollbackInstanceRefreshRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RollbackInstanceRefresh require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRollbackInstanceRefreshResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewScaleInInstancesRequest() (request *ScaleInInstancesRequest) {
     request = &ScaleInInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3633,8 +4039,9 @@ func NewScaleInInstancesRequest() (request *ScaleInInstancesRequest) {
 func NewScaleInInstancesResponse() (response *ScaleInInstancesResponse) {
     response = &ScaleInInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleInInstances
@@ -3717,8 +4124,9 @@ func NewScaleOutInstancesRequest() (request *ScaleOutInstancesRequest) {
 func NewScaleOutInstancesResponse() (response *ScaleOutInstancesResponse) {
     response = &ScaleOutInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleOutInstances
@@ -3797,8 +4205,9 @@ func NewSetInstancesProtectionRequest() (request *SetInstancesProtectionRequest)
 func NewSetInstancesProtectionResponse() (response *SetInstancesProtectionResponse) {
     response = &SetInstancesProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetInstancesProtection
@@ -3859,8 +4268,9 @@ func NewStartAutoScalingInstancesRequest() (request *StartAutoScalingInstancesRe
 func NewStartAutoScalingInstancesResponse() (response *StartAutoScalingInstancesResponse) {
     response = &StartAutoScalingInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartAutoScalingInstances
@@ -3921,6 +4331,91 @@ func (c *Client) StartAutoScalingInstancesWithContext(ctx context.Context, reque
     return
 }
 
+func NewStartInstanceRefreshRequest() (request *StartInstanceRefreshRequest) {
+    request = &StartInstanceRefreshRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "StartInstanceRefresh")
+    
+    
+    return
+}
+
+func NewStartInstanceRefreshResponse() (response *StartInstanceRefreshResponse) {
+    response = &StartInstanceRefreshResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartInstanceRefresh
+// 根据启动配置中参数，刷新伸缩组内运行中状态 CVM 实例，返回实例刷新活动的 RefreshActivityId。
+//
+// * 对于重装实例的刷新方式（目前仅支持重装），重装时仅会从启动配置中获取 ImageId、UserData、EnhancedService、 HostName、LoginSettings 参数进行刷新，实例的其他参数不会刷新
+//
+// * 实例刷新期间（包括暂停状态），伸缩组会被停用。不建议刷新期间修改关联启动配置，否则会影响刷新参数，造成实例配置不一致
+//
+// * 滚动更新模式会分成多批次进行刷新实例，单批次中若存在刷新失败实例，活动会进入失败暂停状态
+//
+// * 若待刷新实例被移出或销毁，会被标记为 NOT_FOUND 状态，不阻塞实例刷新活动
+//
+// * 运行中状态实例与最新启动配置参数一致，实例也会再次刷新
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BATCHNUMBERTOOLARGE = "InvalidParameterValue.BatchNumberTooLarge"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPIDNOTFOUND = "ResourceNotFound.AutoScalingGroupIdNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPABNORMALSTATUS = "ResourceUnavailable.AutoScalingGroupAbnormalStatus"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINREFRESHACTIVITY = "ResourceUnavailable.AutoScalingGroupInRefreshActivity"
+//  RESOURCEUNAVAILABLE_INQUIRYPRICERESETINSTANCEFAILED = "ResourceUnavailable.InquiryPriceResetInstanceFailed"
+//  RESOURCEUNAVAILABLE_NOINSTANCECANREFRESH = "ResourceUnavailable.NoInstanceCanRefresh"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) StartInstanceRefresh(request *StartInstanceRefreshRequest) (response *StartInstanceRefreshResponse, err error) {
+    return c.StartInstanceRefreshWithContext(context.Background(), request)
+}
+
+// StartInstanceRefresh
+// 根据启动配置中参数，刷新伸缩组内运行中状态 CVM 实例，返回实例刷新活动的 RefreshActivityId。
+//
+// * 对于重装实例的刷新方式（目前仅支持重装），重装时仅会从启动配置中获取 ImageId、UserData、EnhancedService、 HostName、LoginSettings 参数进行刷新，实例的其他参数不会刷新
+//
+// * 实例刷新期间（包括暂停状态），伸缩组会被停用。不建议刷新期间修改关联启动配置，否则会影响刷新参数，造成实例配置不一致
+//
+// * 滚动更新模式会分成多批次进行刷新实例，单批次中若存在刷新失败实例，活动会进入失败暂停状态
+//
+// * 若待刷新实例被移出或销毁，会被标记为 NOT_FOUND 状态，不阻塞实例刷新活动
+//
+// * 运行中状态实例与最新启动配置参数一致，实例也会再次刷新
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BATCHNUMBERTOOLARGE = "InvalidParameterValue.BatchNumberTooLarge"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPIDNOTFOUND = "ResourceNotFound.AutoScalingGroupIdNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPABNORMALSTATUS = "ResourceUnavailable.AutoScalingGroupAbnormalStatus"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINREFRESHACTIVITY = "ResourceUnavailable.AutoScalingGroupInRefreshActivity"
+//  RESOURCEUNAVAILABLE_INQUIRYPRICERESETINSTANCEFAILED = "ResourceUnavailable.InquiryPriceResetInstanceFailed"
+//  RESOURCEUNAVAILABLE_NOINSTANCECANREFRESH = "ResourceUnavailable.NoInstanceCanRefresh"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) StartInstanceRefreshWithContext(ctx context.Context, request *StartInstanceRefreshRequest) (response *StartInstanceRefreshResponse, err error) {
+    if request == nil {
+        request = NewStartInstanceRefreshRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartInstanceRefresh require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartInstanceRefreshResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewStopAutoScalingInstancesRequest() (request *StopAutoScalingInstancesRequest) {
     request = &StopAutoScalingInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3935,8 +4430,9 @@ func NewStopAutoScalingInstancesRequest() (request *StopAutoScalingInstancesRequ
 func NewStopAutoScalingInstancesResponse() (response *StopAutoScalingInstancesResponse) {
     response = &StopAutoScalingInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopAutoScalingInstances
@@ -4013,6 +4509,67 @@ func (c *Client) StopAutoScalingInstancesWithContext(ctx context.Context, reques
     return
 }
 
+func NewStopInstanceRefreshRequest() (request *StopInstanceRefreshRequest) {
+    request = &StopInstanceRefreshRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "StopInstanceRefresh")
+    
+    
+    return
+}
+
+func NewStopInstanceRefreshResponse() (response *StopInstanceRefreshResponse) {
+    response = &StopInstanceRefreshResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopInstanceRefresh
+// 暂停正在执行的实例刷新活动。
+//
+// * 暂停状态下，伸缩组也会处于停用中状态
+//
+// * 当前正在更新的实例不会暂停，待更新的实例会暂停更新
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_REFRESHACTIVITYNOTFOUND = "ResourceNotFound.RefreshActivityNotFound"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) StopInstanceRefresh(request *StopInstanceRefreshRequest) (response *StopInstanceRefreshResponse, err error) {
+    return c.StopInstanceRefreshWithContext(context.Background(), request)
+}
+
+// StopInstanceRefresh
+// 暂停正在执行的实例刷新活动。
+//
+// * 暂停状态下，伸缩组也会处于停用中状态
+//
+// * 当前正在更新的实例不会暂停，待更新的实例会暂停更新
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_REFRESHACTIVITYNOTFOUND = "ResourceNotFound.RefreshActivityNotFound"
+//  RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
+func (c *Client) StopInstanceRefreshWithContext(ctx context.Context, request *StopInstanceRefreshRequest) (response *StopInstanceRefreshResponse, err error) {
+    if request == nil {
+        request = NewStopInstanceRefreshRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopInstanceRefresh require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopInstanceRefreshResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpgradeLaunchConfigurationRequest() (request *UpgradeLaunchConfigurationRequest) {
     request = &UpgradeLaunchConfigurationRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4027,8 +4584,9 @@ func NewUpgradeLaunchConfigurationRequest() (request *UpgradeLaunchConfiguration
 func NewUpgradeLaunchConfigurationResponse() (response *UpgradeLaunchConfigurationResponse) {
     response = &UpgradeLaunchConfigurationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeLaunchConfiguration
@@ -4151,8 +4709,9 @@ func NewUpgradeLifecycleHookRequest() (request *UpgradeLifecycleHookRequest) {
 func NewUpgradeLifecycleHookResponse() (response *UpgradeLifecycleHookResponse) {
     response = &UpgradeLifecycleHookResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeLifecycleHook
