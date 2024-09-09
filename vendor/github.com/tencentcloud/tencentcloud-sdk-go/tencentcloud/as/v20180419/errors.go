@@ -113,8 +113,14 @@ const (
 	// 当前账户不支持带宽包ID参数。
 	INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 
+	// 声明的原有期望实例数和实际原有期望实例数不一致。
+	INVALIDPARAMETERVALUE_ASSERTDESIREDCAPACITYFAILED = "InvalidParameterValue.AssertDesiredCapacityFailed"
+
 	// 指定的基础容量过大，需小于等于最大实例数。
 	INVALIDPARAMETERVALUE_BASECAPACITYTOOLARGE = "InvalidParameterValue.BaseCapacityTooLarge"
+
+	// 批次数不能大于待刷新实例总数。
+	INVALIDPARAMETERVALUE_BATCHNUMBERTOOLARGE = "InvalidParameterValue.BatchNumberTooLarge"
 
 	// 在应当指定传统型负载均衡器的参数中，错误地指定了一个非传统型的负载均衡器。
 	INVALIDPARAMETERVALUE_CLASSICLB = "InvalidParameterValue.ClassicLb"
@@ -152,6 +158,9 @@ const (
 	// 主机名不合法。
 	INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
 
+	// 带后缀的主机名称过长，超过了规定上限。
+	INVALIDPARAMETERVALUE_HOSTNAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.HostNameWithSuffixTooLong"
+
 	// 指定的IPv6公网带宽计费模式不合法。
 	INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 
@@ -160,6 +169,9 @@ const (
 
 	// 设置的实例名称不合法。
 	INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
+
+	// 带后缀的实例名称过长，超过了规定上限。
+	INVALIDPARAMETERVALUE_INSTANCENAMEWITHSUFFIXTOOLONG = "InvalidParameterValue.InstanceNameWithSuffixTooLong"
 
 	// 实例机型不支持。
 	INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
@@ -375,6 +387,9 @@ const (
 	RESOURCEINSUFFICIENT_INSERVICEINSTANCEBELOWMINSIZE = "ResourceInsufficient.InServiceInstanceBelowMinSize"
 
 	// 伸缩组不存在。
+	RESOURCENOTFOUND_AUTOSCALINGGROUPIDNOTFOUND = "ResourceNotFound.AutoScalingGroupIdNotFound"
+
+	// 伸缩组不存在。
 	RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 
 	// 通知不存在。
@@ -422,6 +437,9 @@ const (
 	// 指定的Location不存在。
 	RESOURCENOTFOUND_LOCATIONNOTFOUND = "ResourceNotFound.LocationNotFound"
 
+	// 指定的实例刷新活动不存在。
+	RESOURCENOTFOUND_REFRESHACTIVITYNOTFOUND = "ResourceNotFound.RefreshActivityNotFound"
+
 	// 告警策略不存在。
 	RESOURCENOTFOUND_SCALINGPOLICYNOTFOUND = "ResourceNotFound.ScalingPolicyNotFound"
 
@@ -455,6 +473,9 @@ const (
 	// 绑定负载均衡器的伸缩组禁止修改Vpc。
 	RESOURCEUNAVAILABLE_FORBIDDENMODIFYVPC = "ResourceUnavailable.ForbiddenModifyVpc"
 
+	// 重装实例询价失败，新镜像与该实例其他参数存在冲突或新镜像不存在。
+	RESOURCEUNAVAILABLE_INQUIRYPRICERESETINSTANCEFAILED = "ResourceUnavailable.InquiryPriceResetInstanceFailed"
+
 	// 实例无法添加至伸缩组。
 	RESOURCEUNAVAILABLE_INSTANCECANNOTATTACH = "ResourceUnavailable.InstanceCannotAttach"
 
@@ -485,8 +506,23 @@ const (
 	// LB 在指定的伸缩组内处于活动中。
 	RESOURCEUNAVAILABLE_LOADBALANCERINOPERATION = "ResourceUnavailable.LoadBalancerInOperation"
 
+	// 伸缩组内不存在运行中状态的实例，无法进行实例刷新。
+	RESOURCEUNAVAILABLE_NOINSTANCECANREFRESH = "ResourceUnavailable.NoInstanceCanRefresh"
+
+	// 伸缩组中不存在可回滚的实例。
+	RESOURCEUNAVAILABLE_NOINSTANCECANROLLBACK = "ResourceUnavailable.NoInstanceCanRollback"
+
 	// 项目不一致。
 	RESOURCEUNAVAILABLE_PROJECTINCONSISTENT = "ResourceUnavailable.ProjectInconsistent"
+
+	// 当前刷新活动为成功状态，且不是最近一次执行的刷新活动，无法回滚。
+	RESOURCEUNAVAILABLE_REFRESHACTIVITYCANNOTROLLBACK = "ResourceUnavailable.RefreshActivityCanNotRollback"
+
+	// 实例刷新活动状态与当前操作冲突。
+	RESOURCEUNAVAILABLE_REFRESHACTIVITYSTATUSCONFLICTWITHOPERATION = "ResourceUnavailable.RefreshActivityStatusConflictWithOperation"
+
+	// 回滚类型的实例刷新活动无法再次回滚。
+	RESOURCEUNAVAILABLE_ROLLBACKTYPEACTIVITYCANNOTROLLBACKAGAIN = "ResourceUnavailable.RollbackTypeActivityCanNotRollbackAgain"
 
 	// 关机实例不允许添加到伸缩组。
 	RESOURCEUNAVAILABLE_STOPPEDINSTANCENOTALLOWATTACH = "ResourceUnavailable.StoppedInstanceNotAllowAttach"

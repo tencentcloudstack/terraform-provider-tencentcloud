@@ -187,6 +187,7 @@ Auto Scaling(AS)
     tencentcloud_as_scale_out_instances
     tencentcloud_as_execute_scaling_policy
     tencentcloud_as_complete_lifecycle
+    tencentcloud_as_start_instance_refresh
 
 Content Delivery Network(CDN)
   Data Source
