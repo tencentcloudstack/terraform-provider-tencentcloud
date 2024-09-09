@@ -43,7 +43,7 @@ func (me *ThpcService) DescribeThpcWorkspacesById(ctx context.Context, spaceId s
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil {
+	if response == nil || response.Response == nil || len(response.Response.SpaceSet) != 1{
 		return
 	}
 
