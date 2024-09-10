@@ -67,14 +67,14 @@ func ResourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether health check is enable, default value is `false`. NOTES: Only supports listeners of `TCP` protocol.",
+				Description: "Indicates whether health check is enable, default value is `false`.",
 			},
 			"interval": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      5,
 				ValidateFunc: tccommon.ValidateIntegerInRange(5, 300),
-				Description:  "Interval of the health check, default value is 5s. NOTES: Only supports listeners of `TCP` protocol.",
+				Description:  "Interval of the health check, default value is 5s.",
 			},
 			"connect_timeout": {
 				Type:         schema.TypeInt,
@@ -82,6 +82,52 @@ func ResourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Default:      2,
 				ValidateFunc: tccommon.ValidateIntegerInRange(2, 60),
 				Description:  "Timeout of the health check response, should less than interval, default value is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.",
+			},
+			"healthy_threshold": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1,
+				ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
+				Description:  "Health threshold, which indicates how many consecutive inspections are successful, the source station is determined to be healthy. Range from 1 to 10. Default value is 1.",
+			},
+			"unhealthy_threshold": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1,
+				ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
+				Description:  "Unhealthy threshold, which indicates how many consecutive check failures the source station is considered unhealthy. Range from 1 to 10. Default value is 1.",
+			},
+			"check_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"PORT", "PING"}),
+				Description:  "UDP origin server health type. PORT means check port, and PING means PING.",
+			},
+			"check_port": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "UDP origin station health check probe port.",
+			},
+			"context_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"TEXT"}),
+				Description:  "UDP source station health check port probe message type: TEXT represents text. Only used when the health check type is PORT.",
+			},
+			"send_context": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "UDP source server health check port detection sends messages. Only used when health check type is PORT.",
+			},
+			"recv_context": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "UDP source server health check port detects received messages. Only used when the health check type is PORT.",
 			},
 			"client_ip_method": {
 				Type:         schema.TypeInt,
@@ -164,12 +210,10 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 	proxyId := d.Get("proxy_id").(string)
 	healthCheck := d.Get("health_check").(bool)
 
-	if protocol == "UDP" && healthCheck {
-		return errors.New("UDP listener can't use health check")
-	}
-
 	interval := d.Get("interval").(int)
 	connectTimeout := d.Get("connect_timeout").(int)
+	healthyThreshold := d.Get("healthy_threshold").(int)
+	unhealthyThreshold := d.Get("unhealthy_threshold").(int)
 
 	// only check for TCP listener
 	if protocol == "TCP" && connectTimeout >= interval {
@@ -206,13 +250,33 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 
 	switch protocol {
 	case "TCP":
-		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, interval, connectTimeout, clientIPMethod, healthCheck)
+		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, interval, connectTimeout, clientIPMethod, healthyThreshold, unhealthyThreshold, healthCheck)
 		if err != nil {
 			return err
 		}
 
 	case "UDP":
-		id, err = service.CreateUDPListener(ctx, name, scheduler, realserverType, proxyId, port)
+		optionalParams := make(map[string]interface{})
+		if v, ok := d.GetOk("check_type"); ok {
+			optionalParams["check_type"] = v.(string)
+		} else {
+			if healthCheck {
+				return errors.New("Must set check_type when enable health_check.")
+			}
+		}
+		if v, ok := d.GetOk("check_port"); ok {
+			optionalParams["check_port"] = v.(int)
+		}
+		if v, ok := d.GetOk("context_type"); ok {
+			optionalParams["context_type"] = v.(string)
+		}
+		if v, ok := d.GetOk("send_context"); ok {
+			optionalParams["send_context"] = v.(string)
+		}
+		if v, ok := d.GetOk("recv_context"); ok {
+			optionalParams["recv_context"] = v.(string)
+		}
+		id, err = service.CreateUDPListener(ctx, name, scheduler, realserverType, proxyId, port, interval, connectTimeout, healthyThreshold, unhealthyThreshold, healthCheck, optionalParams)
 		if err != nil {
 			return err
 		}
@@ -239,19 +303,26 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	id := d.Id()
 
 	var (
-		protocol       string
-		name           *string
-		port           *uint64
-		scheduler      *string
-		realServerType *string
-		healthCheck    *bool
-		interval       *uint64
-		connectTimeout *uint64
-		status         *uint64
-		createTime     string
-		realservers    []map[string]interface{}
-		clientIpMethod *uint64
-		proxyId        *string
+		protocol           string
+		name               *string
+		port               *uint64
+		scheduler          *string
+		realServerType     *string
+		healthCheck        *bool
+		interval           *uint64
+		connectTimeout     *uint64
+		status             *uint64
+		createTime         string
+		realservers        []map[string]interface{}
+		clientIpMethod     *uint64
+		proxyId            *string
+		healthyThreshold   *uint64
+		unhealthyThreshold *uint64
+		checkType          *string
+		checkPort          *int64
+		contextType        *string
+		sendContext        *string
+		recvContext        *string
 	)
 
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
@@ -285,6 +356,8 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 
 		interval = listener.DelayLoop
 		connectTimeout = listener.ConnectTimeout
+		healthyThreshold = listener.HealthyThreshold
+		unhealthyThreshold = listener.UnhealthyThreshold
 
 		if len(listener.RealServerSet) > 0 {
 			realservers = make([]map[string]interface{}, 0, len(listener.RealServerSet))
@@ -316,11 +389,16 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		realServerType = listener.RealServerType
 		proxyId = listener.ProxyId
 
-		healthCheck = helper.Bool(false)
-		connectTimeout = helper.IntUint64(2)
-		interval = helper.IntUint64(5)
-		clientIpMethod = helper.IntUint64(0)
-
+		healthCheck = helper.Bool(*listener.HealthCheck == 1)
+		connectTimeout = listener.ConnectTimeout
+		interval = listener.DelayLoop
+		healthyThreshold = listener.HealthyThreshold
+		unhealthyThreshold = listener.UnhealthyThreshold
+		checkType = listener.CheckType
+		checkPort = listener.CheckPort
+		contextType = listener.ContextType
+		sendContext = listener.SendContext
+		recvContext = listener.RecvContext
 		if len(listener.RealServerSet) > 0 {
 			realservers = make([]map[string]interface{}, 0, len(listener.RealServerSet))
 			for _, rs := range listener.RealServerSet {
@@ -353,12 +431,22 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	_ = d.Set("health_check", healthCheck)
 	_ = d.Set("interval", interval)
 	_ = d.Set("connect_timeout", connectTimeout)
-	_ = d.Set("client_ip_method", clientIpMethod)
 	_ = d.Set("realserver_bind_set", realservers)
 	_ = d.Set("status", status)
 	_ = d.Set("create_time", createTime)
 	_ = d.Set("proxy_id", proxyId)
-
+	_ = d.Set("healthy_threshold", healthyThreshold)
+	_ = d.Set("unhealthy_threshold", unhealthyThreshold)
+	if protocol == "TCP" {
+		_ = d.Set("client_ip_method", clientIpMethod)
+	}
+	if protocol == "UDP" {
+		_ = d.Set("check_type", checkType)
+		_ = d.Set("check_port", checkPort)
+		_ = d.Set("context_type", contextType)
+		_ = d.Set("send_context", sendContext)
+		_ = d.Set("recv_context", recvContext)
+	}
 	return nil
 }
 
@@ -374,12 +462,14 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 	protocol := d.Get("protocol").(string)
 	proxyId := d.Get("proxy_id").(string)
 	var (
-		name           *string
-		scheduler      *string
-		healthCheck    *bool
-		interval       int
-		connectTimeout int
-		attrChange     []string
+		name               *string
+		scheduler          *string
+		healthCheck        *bool
+		interval           int
+		connectTimeout     int
+		attrChange         []string
+		healthyThreshold   int
+		unhealthyThreshold int
 	)
 
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
@@ -388,21 +478,18 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 
 	if d.HasChange("name") {
 		attrChange = append(attrChange, "name")
-		name = helper.String(d.Get("name").(string))
 	}
+	name = helper.String(d.Get("name").(string))
 
 	if d.HasChange("scheduler") {
 		attrChange = append(attrChange, "scheduler")
-		scheduler = helper.String(d.Get("scheduler").(string))
 	}
+	scheduler = helper.String(d.Get("scheduler").(string))
 
 	if d.HasChange("health_check") {
 		attrChange = append(attrChange, "health_check")
-		healthCheck = helper.Bool(d.Get("health_check").(bool))
 	}
-	if protocol == "UDP" && healthCheck != nil && *healthCheck {
-		return errors.New("UDP listener can't enable health check")
-	}
+	healthCheck = helper.Bool(d.Get("health_check").(bool))
 
 	if d.HasChange("interval") {
 		attrChange = append(attrChange, "interval")
@@ -414,6 +501,47 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 	}
 	connectTimeout = d.Get("connect_timeout").(int)
 
+	if d.HasChange("healthy_threshold") {
+		attrChange = append(attrChange, "healthy_threshold")
+	}
+	healthyThreshold = d.Get("healthy_threshold").(int)
+
+	if d.HasChange("unhealthy_threshold") {
+		attrChange = append(attrChange, "unhealthy_threshold")
+	}
+	unhealthyThreshold = d.Get("unhealthy_threshold").(int)
+
+	optionalParams := make(map[string]interface{})
+	if d.HasChange("check_type") {
+		attrChange = append(attrChange, "check_type")
+	}
+	if d.HasChange("check_port") {
+		attrChange = append(attrChange, "check_port")
+	}
+	if d.HasChange("context_type") {
+		attrChange = append(attrChange, "context_type")
+	}
+	if d.HasChange("send_context") {
+		attrChange = append(attrChange, "send_context")
+	}
+	if d.HasChange("recv_context") {
+		attrChange = append(attrChange, "recv_context")
+	}
+	if v, ok := d.GetOk("check_type"); ok {
+		optionalParams["check_type"] = v.(string)
+	}
+	if v, ok := d.GetOk("check_port"); ok {
+		optionalParams["check_port"] = v.(int)
+	}
+	if v, ok := d.GetOk("context_type"); ok {
+		optionalParams["context_type"] = v.(string)
+	}
+	if v, ok := d.GetOk("send_context"); ok {
+		optionalParams["send_context"] = v.(string)
+	}
+	if v, ok := d.GetOk("recv_context"); ok {
+		optionalParams["recv_context"] = v.(string)
+	}
 	// only check for TCP listener
 	if protocol == "TCP" && connectTimeout >= interval {
 		return errors.New("connect_timeout must be less than interval")
@@ -422,12 +550,12 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 	if len(attrChange) > 0 {
 		switch protocol {
 		case "TCP":
-			if err := service.ModifyTCPListenerAttribute(ctx, proxyId, id, name, scheduler, healthCheck, interval, connectTimeout); err != nil {
+			if err := service.ModifyTCPListenerAttribute(ctx, proxyId, id, name, scheduler, healthCheck, interval, connectTimeout, healthyThreshold, unhealthyThreshold); err != nil {
 				return err
 			}
 
 		case "UDP":
-			if err := service.ModifyUDPListenerAttribute(ctx, proxyId, id, name, scheduler); err != nil {
+			if err := service.ModifyUDPListenerAttribute(ctx, proxyId, id, name, scheduler, connectTimeout, interval, healthyThreshold, unhealthyThreshold, healthCheck, optionalParams); err != nil {
 				return err
 			}
 		}
