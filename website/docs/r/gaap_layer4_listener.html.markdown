@@ -63,12 +63,19 @@ The following arguments are supported:
 * `protocol` - (Required, String, ForceNew) Protocol of the layer4 listener. Valid value: `TCP` and `UDP`.
 * `proxy_id` - (Required, String, ForceNew) ID of the GAAP proxy.
 * `realserver_type` - (Required, String, ForceNew) Type of the realserver. Valid value: `IP` and `DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.
+* `check_port` - (Optional, Int) UDP origin station health check probe port.
+* `check_type` - (Optional, String) UDP origin server health type. PORT means check port, and PING means PING.
 * `client_ip_method` - (Optional, Int, ForceNew) The way the listener gets the client IP, 0 for TOA, 1 for Proxy Protocol, default value is 0. NOTES: Only supports listeners of `TCP` protocol.
 * `connect_timeout` - (Optional, Int) Timeout of the health check response, should less than interval, default value is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.
-* `health_check` - (Optional, Bool) Indicates whether health check is enable, default value is `false`. NOTES: Only supports listeners of `TCP` protocol.
-* `interval` - (Optional, Int) Interval of the health check, default value is 5s. NOTES: Only supports listeners of `TCP` protocol.
+* `context_type` - (Optional, String) UDP source station health check port probe message type: TEXT represents text. Only used when the health check type is PORT.
+* `health_check` - (Optional, Bool) Indicates whether health check is enable, default value is `false`.
+* `healthy_threshold` - (Optional, Int) Health threshold, which indicates how many consecutive inspections are successful, the source station is determined to be healthy. Range from 1 to 10. Default value is 1.
+* `interval` - (Optional, Int) Interval of the health check, default value is 5s.
 * `realserver_bind_set` - (Optional, Set) An information list of GAAP realserver.
+* `recv_context` - (Optional, String) UDP source server health check port detects received messages. Only used when the health check type is PORT.
 * `scheduler` - (Optional, String) Scheduling policy of the layer4 listener, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.
+* `send_context` - (Optional, String) UDP source server health check port detection sends messages. Only used when health check type is PORT.
+* `unhealthy_threshold` - (Optional, Int) Unhealthy threshold, which indicates how many consecutive check failures the source station is considered unhealthy. Range from 1 to 10. Default value is 1.
 
 The `realserver_bind_set` object supports the following:
 
