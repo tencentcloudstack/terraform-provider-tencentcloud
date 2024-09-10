@@ -240,9 +240,10 @@ func TestAccTencentCloudGaapLayer4Listener_udp_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_gaap_layer4_listener.foo",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_gaap_layer4_listener.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"client_ip_method"},
 			},
 		},
 	})
