@@ -51,8 +51,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "Guangzhou"
-  realserver_region = "Beijing"
+  access_region     = "Thailand"
+  realserver_region = "Jakarta"
   network_type = "normal"
 }
 `
