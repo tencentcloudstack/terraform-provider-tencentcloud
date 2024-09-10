@@ -307,8 +307,14 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 		if _, ok := d.GetOk("cam_role_name"); ok || launchCfg.CamRoleName != nil {
 			launchConfig["cam_role_name"] = launchCfg.CamRoleName
 		}
-		if launchCfg.InstanceNameSettings != nil && launchCfg.InstanceNameSettings.InstanceName != nil {
-			launchConfig["instance_name"] = launchCfg.InstanceNameSettings.InstanceName
+		if launchCfg.InstanceNameSettings != nil {
+			if launchCfg.InstanceNameSettings.InstanceName != nil {
+				launchConfig["instance_name"] = launchCfg.InstanceNameSettings.InstanceName
+			}
+
+			if launchCfg.InstanceNameSettings.InstanceNameStyle != nil {
+				launchConfig["instance_name_style"] = launchCfg.InstanceNameSettings.InstanceNameStyle
+			}
 		}
 		if launchCfg.HostNameSettings != nil && launchCfg.HostNameSettings.HostName != nil {
 			launchConfig["host_name"] = launchCfg.HostNameSettings.HostName
@@ -1015,10 +1021,17 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 		request.CamRoleName = helper.String(v.(string))
 	}
 
+	tmpInstanceNameSettings := &as.InstanceNameSettings{}
 	if v, ok := dMap["instance_name"]; ok && v != "" {
-		request.InstanceNameSettings = &as.InstanceNameSettings{
-			InstanceName: helper.String(v.(string)),
-		}
+		tmpInstanceNameSettings.InstanceName = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["instance_name_style"]; ok && v != "" {
+		tmpInstanceNameSettings.InstanceNameStyle = helper.String(v.(string))
+	}
+
+	if tmpInstanceNameSettings.InstanceName != nil || tmpInstanceNameSettings.InstanceNameStyle != nil {
+		request.InstanceNameSettings = tmpInstanceNameSettings
 	}
 
 	if v, ok := dMap["host_name"]; ok && v != "" {
@@ -1169,10 +1182,17 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 		}
 	}
 
+	tmpInstanceNameSettings := &as.InstanceNameSettings{}
 	if v, ok := dMap["instance_name"]; ok && v != "" {
-		request.InstanceNameSettings = &as.InstanceNameSettings{
-			InstanceName: helper.String(v.(string)),
-		}
+		tmpInstanceNameSettings.InstanceName = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["instance_name_style"]; ok && v != "" {
+		tmpInstanceNameSettings.InstanceNameStyle = helper.String(v.(string))
+	}
+
+	if tmpInstanceNameSettings.InstanceName != nil || tmpInstanceNameSettings.InstanceNameStyle != nil {
+		request.InstanceNameSettings = tmpInstanceNameSettings
 	}
 
 	if v, ok := dMap["host_name"]; ok && v != "" {

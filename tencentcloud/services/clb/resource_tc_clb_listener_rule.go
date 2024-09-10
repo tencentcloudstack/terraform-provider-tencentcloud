@@ -39,9 +39,22 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Description: "ID of CLB instance.",
 			},
 			"domain": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Domain name of the listener rule.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"domains"},
+				ExactlyOneOf:  []string{"domain", "domains"},
+				Description:   "Domain name of the listener rule. Single domain rules are passed to `domain`, and multi domain rules are passed to `domains`.",
+			},
+			"domains": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				Computed:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"domain"},
+				ExactlyOneOf:  []string{"domain", "domains"},
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Description:   "Domain name list of the listener rule. Single domain rules are passed to `domain`, and multi domain rules are passed to `domains`.",
 			},
 			"url": {
 				Type:        schema.TypeString,
@@ -224,10 +237,28 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	request.ListenerId = helper.String(listenerId)
 
 	//rule set
-	var rule clb.RuleInput
+	var (
+		rule    clb.RuleInput
+		domain  string
+		domains []*string
+	)
 
-	domain := d.Get("domain").(string)
-	rule.Domain = helper.String(domain)
+	if v, ok := d.GetOk("domain"); ok {
+		rule.Domain = helper.String(v.(string))
+		domain = v.(string)
+	}
+
+	if v, ok := d.GetOk("domains"); ok {
+		tmpDomains := v.([]interface{})
+		domains = make([]*string, 0, len(tmpDomains))
+		for _, value := range tmpDomains {
+			tmpDomain := value.(string)
+			domains = append(domains, &tmpDomain)
+		}
+
+		rule.Domains = domains
+	}
+
 	url := d.Get("url").(string)
 	rule.Url = helper.String(url)
 	rule.TargetType = helper.String(d.Get("target_type").(string))
@@ -305,7 +336,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 
 	locationId := ""
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		ruleInstance, ruleErr := clbService.DescribeRuleByPara(ctx, clbId, listenerId, domain, url)
+		ruleInstance, ruleErr := clbService.DescribeRuleByPara(ctx, clbId, listenerId, domain, url, domains)
 		if ruleErr != nil {
 			return tccommon.RetryError(errors.WithStack(ruleErr))
 		}
@@ -327,7 +358,12 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		domainRequest.Http2 = &http2Switch
 		domainRequest.LoadBalancerId = &clbId
 		domainRequest.ListenerId = &listenerId
-		domainRequest.Domain = &domain
+		if domain != "" {
+			domainRequest.Domain = &domain
+		} else {
+			domainRequest.NewDomains = domains
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyDomainAttributes(domainRequest)
 			if e != nil {
@@ -408,7 +444,14 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	instance := instances[0]
 	_ = d.Set("clb_id", clbId)
 	_ = d.Set("listener_id", listenerId)
-	_ = d.Set("domain", instance.Domain)
+	if instance.Domain != nil {
+		_ = d.Set("domain", instance.Domain)
+	}
+
+	if instance.Domains != nil {
+		_ = d.Set("domains", helper.StringsInterfaces(instance.Domains))
+	}
+
 	_ = d.Set("rule_id", instance.LocationId)
 	_ = d.Set("url", instance.Url)
 	_ = d.Set("scheduler", instance.Scheduler)

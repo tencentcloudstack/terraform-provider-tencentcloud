@@ -187,6 +187,7 @@ Auto Scaling(AS)
     tencentcloud_as_scale_out_instances
     tencentcloud_as_execute_scaling_policy
     tencentcloud_as_complete_lifecycle
+    tencentcloud_as_start_instance_refresh
 
 Content Delivery Network(CDN)
   Data Source
@@ -785,6 +786,7 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_isolate_instance
     tencentcloud_mysql_dr_instance
     tencentcloud_mysql_ssl
+    tencentcloud_mysql_cls_log_attachment
 
 Cloud Monitor(Monitor)
   Data Source
@@ -871,6 +873,7 @@ TencentDB for PostgreSQL(PostgreSQL)
     tencentcloud_postgresql_regions
     tencentcloud_postgresql_db_instance_versions
     tencentcloud_postgresql_zones
+    tencentcloud_postgresql_account_privileges
 
   Resource
     tencentcloud_postgresql_instance
@@ -891,6 +894,7 @@ TencentDB for PostgreSQL(PostgreSQL)
     tencentcloud_postgresql_modify_switch_time_period_operation
     tencentcloud_postgresql_base_backup
     tencentcloud_postgresql_instance_ha_config
+    tencentcloud_postgresql_account
 
 TencentDB for Redis(crs)
   Data Source
@@ -1657,6 +1661,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_financial_by_month
     tencentcloud_organization_org_financial_by_product
     tencentcloud_organization_org_share_area
+    tencentcloud_organization_services
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node
@@ -1672,6 +1677,15 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_quit_organization_operation
     tencentcloud_organization_org_share_unit
     tencentcloud_organization_org_share_unit_member
+    tencentcloud_organization_service_assign
+    tencentcloud_identity_center_user
+    tencentcloud_identity_center_group
+    tencentcloud_identity_center_user_group_attachment
+    tencentcloud_identity_center_external_saml_identity_provider
+    tencentcloud_identity_center_role_configuration
+    tencentcloud_identity_center_role_configuration_permission_policy_attachment
+    tencentcloud_identity_center_user_sync_provisioning
+    tencentcloud_identity_center_role_assignment
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
@@ -2161,3 +2175,13 @@ CDC
     tencentcloud_cdc_site
     tencentcloud_cdc_dedicated_cluster
   
+CdwDoris
+  Data Source
+    tencentcloud_cdwdoris_instances
+  Resource
+    tencentcloud_cdwdoris_instance
+    tencentcloud_cdwdoris_workload_group
+
+ControlCenter
+  Resource
+    tencentcloud_batch_apply_account_baselines

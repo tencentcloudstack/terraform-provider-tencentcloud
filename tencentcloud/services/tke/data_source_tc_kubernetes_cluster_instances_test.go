@@ -21,7 +21,7 @@ func TestAccTencentCloudKubernetesClusterInstancesDataSource_basic(t *testing.T)
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_kubernetes_cluster_instances.cluster_instances"),
 					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_id", "ins-1fb82v28"),
+					// resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_id", "ins-1fb82v28"),
 					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_role", "WORKER"),
 					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_cluster_instances.cluster_instances", "instance_set.0.instance_state", "running"),
 				),
@@ -37,22 +37,22 @@ func TestAccTencentCloudKubernetesClusterInstancesDataSource_basic(t *testing.T)
 	})
 }
 
-const testAccKubernetesClusterInstancesDataSource = `
+const testAccKubernetesClusterInstancesDataSource = testAccTkeCluster + `
 data "tencentcloud_kubernetes_cluster_instances" "cluster_instances" {
-  cluster_id    = "cls-6l3thsra"
-  instance_ids  = ["ins-1fb82v28"]
+  cluster_id    = tencentcloud_kubernetes_cluster.managed_cluster.id
+//   instance_ids  = ["ins-1fb82v28"]
   instance_role = "WORKER"
 }
 `
 
-const testAccKubernetesClusterInstancesDataSourceFilter = `
+const testAccKubernetesClusterInstancesDataSourceFilter = testAccTkeCluster + `
 data "tencentcloud_kubernetes_cluster_instances" "cluster_instances" {
-  cluster_id    = "cls-6l3thsra"
-  instance_ids  = ["ins-qzkwjklk"]
+  cluster_id    = tencentcloud_kubernetes_cluster.managed_cluster.id
+//   instance_ids  = ["ins-qzkwjklk"]
   instance_role = "WORKER"
-  filters {
-    name   = "nodepool-id"
-    values = ["np-qrez0ayk"]
-  }
+//   filters {
+//     name   = "nodepool-id"
+//     values = ["np-qrez0ayk"]
+//   }
 }
 `

@@ -1,3 +1,67 @@
+## 1.81.120 (September 6 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_postgresql_account_privileges` ([#2807](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2807))
+* **New Resource:** `tencentcloud_batch_apply_account_baselines` ([#2803](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2803))
+* **New Resource:** `tencentcloud_postgresql_account` ([#2807](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2807))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_group: Support update `configuration_id` ([#2811](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2811))
+* resource/tencentcloud_cdn_domain: Add more origin type ([#2812](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2812))
+* resource/tencentcloud_clb_attachment: support `SRV` type ([#2806](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2806))
+* resource/tencentcloud_identity_center_role_configuration_permission_policy_attachment: support `role_policy_name` ([#2809](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2809))
+* resource/tencentcloud_identity_center_user: read add retry ([#2809](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2809))
+* resource/tencentcloud_private_dns_record: Optimize the logic for deleting resources ([#2810](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2810))
+* resource/tencentcloud_route_table_entry: fix creation failure ([#2808](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2808))
+
+## 1.81.119 (August 30 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cdwdoris_instances` ([#2799](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2799))
+* **New Data Source:** `tencentcloud_organization_services` ([#2792](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2792))
+* **New Resource:** `tencentcloud_cdwdoris_instance` ([#2799](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2799))
+* **New Resource:** `tencentcloud_cdwdoris_workload_group` ([#2799](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2799))
+* **New Resource:** `tencentcloud_identity_center_external_saml_identity_provider` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_identity_center_group` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_identity_center_role_assignment` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_identity_center_role_configuration` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_identity_center_role_configuration_permission_policy_attachment` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_identity_center_user` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_identity_center_user_group_attachment` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_identity_center_user_sync_provisioning` ([#2795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2795))
+* **New Resource:** `tencentcloud_organization_service_assign` ([#2792](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2792))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_ssl_certificates: Check overclocking support retry. ([#2801](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2801))
+* datasource/tencentcloud_ssl_describe_certificate: Check overclocking support retry. ([#2801](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2801))
+* resource/tencentcloud_clb_listener_rule: support `domains` ([#2789](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2789))
+* resource/tencentcloud_emr_cluster: add `auto_renew` param. ([#2798](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2798))
+* resource/tencentcloud_instance: support delete prepaid disk. ([#2794](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2794))
+* resource/tencentcloud_kubernetes_node_pool: support `instance_name_style` param ([#2791](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2791))
+* tencentcloud_mysql_readonly_instance: Read-only instance creation supports setting read-only groups. ([#2800](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2800))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_addon_attachment: support multiple resources scenario. ([#2797](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2797))
+
+## 1.81.118 (August 23 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mysql_cls_log_attachment` ([#2780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2780))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_as_scaling_configs: add `version_number`. ([#2786](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2786))
+* provider: support tke cam role auth ([#2785](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2785))
+* resource/tencentcloud_kubernetes_node_pool: add computed to field `tags`. ([#2781](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2781))
+* resource/tencentcloud_mysql_instance: Optimize code logic ([#2752](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2752))
+* resource/tencentcloud_mysql_instance: support mysql `engine_type`. ([#2779](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2779))
+
 ## 1.81.117 (August 16 , 2024)
 
 FEATURES:

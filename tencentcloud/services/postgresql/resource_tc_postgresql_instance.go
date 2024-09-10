@@ -322,13 +322,11 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_instance.create")()
 
-	var (
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		//internal version: replace clientCreate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		//internal version: replace clientCreate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	//internal version: replace clientCreate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	//internal version: replace clientCreate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 	var (
 		name      = d.Get("name").(string)

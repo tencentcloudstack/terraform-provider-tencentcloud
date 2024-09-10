@@ -30,7 +30,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.825
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.998
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.825
@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.984
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.970
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.984
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.998
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.960
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -69,8 +69,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.949
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.844
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.853
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.910
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.873
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.991
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.995
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.859
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.657
@@ -108,7 +108,9 @@ require (
 require (
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.0.993
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831

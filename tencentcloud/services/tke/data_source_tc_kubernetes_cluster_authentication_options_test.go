@@ -24,10 +24,10 @@ func TestAccTencentCloudKubernetesClusterAuthenticationOptionsDataSource_basic(t
 	})
 }
 
-const testAccKubernetesClusterAuthenticationOptionsDataSource = `
+const testAccKubernetesClusterAuthenticationOptionsDataSource = testAccTkeCluster + `
 
 data "tencentcloud_kubernetes_cluster_authentication_options" "cluster_authentication_options" {
-  cluster_id = "cls-kzilgv5m"
+	cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 }
 
 `

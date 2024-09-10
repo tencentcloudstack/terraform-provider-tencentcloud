@@ -60,6 +60,11 @@ func (me *EMRService) DeleteInstance(ctx context.Context, d *schema.ResourceData
 func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData) (id string, err error) {
 	logId := tccommon.GetLogId(ctx)
 	request := emr.NewCreateInstanceRequest()
+
+	if v, ok := d.GetOk("auto_renew"); ok {
+		request.AutoRenew = common.Uint64Ptr((uint64)(v.(int)))
+	}
+
 	if v, ok := d.GetOk("product_id"); ok {
 		request.ProductId = common.Uint64Ptr((uint64)(v.(int)))
 	}

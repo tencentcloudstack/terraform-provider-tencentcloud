@@ -226,6 +226,12 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
 			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.",
 		},
+		"engine_type": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Instance engine type. The default value is `InnoDB`. Supported values include `InnoDB` and `RocksDB`.",
+		},
 		"upgrade_subversion": {
 			Type:        schema.TypeInt,
 			Optional:    true,
@@ -488,6 +494,16 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 	} else {
 		requestByUse.EngineVersion = &engineVersion
 	}
+
+	if stringInterface, ok := d.GetOk("engine_type"); ok {
+		engineType := stringInterface.(string)
+		if okByMonth {
+			requestByMonth.EngineType = &engineType
+		} else {
+			requestByUse.EngineType = &engineType
+		}
+	}
+
 	if stringInterface, ok := d.GetOk("availability_zone"); ok {
 		str := stringInterface.(string)
 		if okByMonth {
@@ -873,6 +889,9 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		}
 		_ = d.Set("project_id", int(*mysqlInfo.ProjectId))
 		_ = d.Set("engine_version", mysqlInfo.EngineVersion)
+		if mysqlInfo.EngineType != nil {
+			_ = d.Set("engine_type", *mysqlInfo.EngineType)
+		}
 		if *mysqlInfo.WanStatus == 1 {
 			_ = d.Set("internet_service", 1)
 			_ = d.Set("internet_host", mysqlInfo.WanDomain)
@@ -1327,6 +1346,10 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 
 	if d.HasChange("availability_zone") {
 		return fmt.Errorf("argument `availability_zone` cannot be modified for now")
+	}
+
+	if d.HasChange("engine_version") {
+		return fmt.Errorf("argument `engine_version` cannot be modified for now")
 	}
 	return nil
 }

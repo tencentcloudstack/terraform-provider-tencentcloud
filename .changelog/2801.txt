@@ -1,0 +1,7 @@
+```release-note:enhancement
+datasource/tencentcloud_ssl_certificates: Check overclocking support retry.
+```
+
+```release-note:enhancement
+datasource/tencentcloud_ssl_describe_certificate: Check overclocking support retry.
+```

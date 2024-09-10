@@ -19,5 +19,5 @@ Import
 teo acceleration_domain can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_acceleration_domain.acceleration_domain acceleration_domain_id
+terraform import tencentcloud_teo_acceleration_domain.acceleration_domain zone_id#domain_name
 ```

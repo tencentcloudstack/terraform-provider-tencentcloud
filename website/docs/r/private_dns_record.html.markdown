@@ -14,11 +14,13 @@ Provide a resource to create a Private Dns Record.
 ## Example Usage
 
 ```hcl
+# create vpc
 resource "tencentcloud_vpc" "vpc" {
   name       = "vpc-example"
   cidr_block = "10.0.0.0/16"
 }
 
+# create private dns zone
 resource "tencentcloud_private_dns_zone" "example" {
   domain = "domain.com"
   remark = "remark."
@@ -36,6 +38,7 @@ resource "tencentcloud_private_dns_zone" "example" {
   }
 }
 
+# create private dns record
 resource "tencentcloud_private_dns_record" "example" {
   zone_id      = tencentcloud_private_dns_zone.example.id
   record_type  = "A"
@@ -51,9 +54,9 @@ resource "tencentcloud_private_dns_record" "example" {
 
 The following arguments are supported:
 
-* `record_type` - (Required, String) Record type. Valid values: "A", "AAAA", "CNAME", "MX", "TXT", "PTR".
+* `record_type` - (Required, String) Record type. Valid values: `A`, `AAAA`, `CNAME`, `MX`, `TXT`, `PTR`.
 * `record_value` - (Required, String) Record value, such as IP: 192.168.10.2, CNAME: cname.qcloud.com, and MX: mail.qcloud.com.
-* `sub_domain` - (Required, String) Subdomain, such as "www", "m", and "@".
+* `sub_domain` - (Required, String) Subdomain, such as `www`, `m`, and `@`.
 * `zone_id` - (Required, String, ForceNew) Private domain ID.
 * `mx` - (Optional, Int) MX priority, which is required when the record type is MX. Valid values: 5, 10, 15, 20, 30, 40, 50.
 * `ttl` - (Optional, Int) Record cache time. The smaller the value, the faster the record will take effect. Value range: 1~86400s.

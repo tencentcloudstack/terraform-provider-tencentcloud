@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -93,7 +93,7 @@ func dataSourceTencentCloudKubernetesClusterCommonNamesRead(d *schema.ResourceDa
 		paramMap["ClusterId"] = helper.String(v.(string))
 	}
 
-	var respData []*tke.CommonName
+	var respData []*tkev20180525.CommonName
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterCommonNamesByFilter(ctx, paramMap)
 		if e != nil {
@@ -106,17 +106,17 @@ func dataSourceTencentCloudKubernetesClusterCommonNamesRead(d *schema.ResourceDa
 		return err
 	}
 
-	cns := make([]string, 0, len(respData))
+	var cns []string
 	commonNamesList := make([]map[string]interface{}, 0, len(respData))
 	if respData != nil {
 		for _, commonNames := range respData {
 			commonNamesMap := map[string]interface{}{}
 
+			var cN string
 			if commonNames.SubaccountUin != nil {
 				commonNamesMap["subaccount_uin"] = commonNames.SubaccountUin
 			}
 
-			var cN string
 			if commonNames.CN != nil {
 				commonNamesMap["common_names"] = commonNames.CN
 				cN = *commonNames.CN

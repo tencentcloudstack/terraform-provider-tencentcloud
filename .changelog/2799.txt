@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cdwdoris_instance
+```
+
+```release-note:new-resource
+tencentcloud_cdwdoris_workload_group
+```
+
+```release-note:new-data-source
+tencentcloud_cdwdoris_instances
+```

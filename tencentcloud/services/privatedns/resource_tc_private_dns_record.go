@@ -24,7 +24,6 @@ func ResourceTencentCloudPrivateDnsRecord() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -35,12 +34,12 @@ func ResourceTencentCloudPrivateDnsRecord() *schema.Resource {
 			"record_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Record type. Valid values: \"A\", \"AAAA\", \"CNAME\", \"MX\", \"TXT\", \"PTR\".",
+				Description: "Record type. Valid values: `A`, `AAAA`, `CNAME`, `MX`, `TXT`, `PTR`.",
 			},
 			"sub_domain": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Subdomain, such as \"www\", \"m\", and \"@\".",
+				Description: "Subdomain, such as `www`, `m`, and `@`.",
 			},
 			"record_value": {
 				Type:        schema.TypeString,
@@ -252,7 +251,7 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 
 	var (
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = privatedns.NewDescribePrivateZoneRequest()
+		request = privatedns.NewDeletePrivateZoneRecordRequest()
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
@@ -263,54 +262,10 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
-	// unbind
-	var response *privatedns.DescribePrivateZoneResponse
 	request.ZoneId = helper.String(zoneId)
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DescribePrivateZone(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		response = result
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s read private dns failed, reason:%s\n", logId, err.Error())
-		return err
-	}
-
-	info := response.Response.PrivateZone
-	oldVpcSet := info.VpcSet
-	oldAccVpcSet := info.AccountVpcSet
-
-	unBindRequest := privatedns.NewModifyPrivateZoneVpcRequest()
-	unBindRequest.ZoneId = helper.String(zoneId)
-	unBindRequest.VpcSet = []*privatedns.VpcInfo{}
-	unBindRequest.AccountVpcSet = []*privatedns.AccountVpcInfo{}
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().ModifyPrivateZoneVpc(unBindRequest)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s unbind privateDns zone vpc failed, reason:%s\n", logId, err.Error())
-		return err
-	}
-
-	// delete
-	recordRequest := privatedns.NewDeletePrivateZoneRecordRequest()
-	recordRequest.ZoneId = helper.String(zoneId)
-	recordRequest.RecordId = helper.String(recordId)
-
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DeletePrivateZoneRecord(recordRequest)
+	request.RecordId = helper.String(recordId)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DeletePrivateZoneRecord(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -320,37 +275,6 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 
 	if err != nil {
 		log.Printf("[CRITAL]%s delete privateDns record failed, reason:%s\n", logId, err.Error())
-		return err
-	}
-
-	// rebind
-	unBindRequest = privatedns.NewModifyPrivateZoneVpcRequest()
-	unBindRequest.ZoneId = helper.String(zoneId)
-	unBindRequest.VpcSet = oldVpcSet
-
-	accountVpcSet := make([]*privatedns.AccountVpcInfo, 0, len(oldAccVpcSet))
-	for _, item := range oldAccVpcSet {
-		info := privatedns.AccountVpcInfo{
-			Uin:       item.Uin,
-			UniqVpcId: item.UniqVpcId,
-			Region:    item.Region,
-		}
-		accountVpcSet = append(accountVpcSet, &info)
-	}
-
-	unBindRequest.AccountVpcSet = accountVpcSet
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().ModifyPrivateZoneVpc(unBindRequest)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s rebind privateDns zone vpc failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

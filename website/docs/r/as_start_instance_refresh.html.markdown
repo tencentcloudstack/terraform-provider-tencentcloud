@@ -1,0 +1,55 @@
+---
+subcategory: "Auto Scaling(AS)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_as_start_instance_refresh"
+sidebar_current: "docs-tencentcloud-resource-as_start_instance_refresh"
+description: |-
+  Provides a resource to create as instance refresh
+---
+
+# tencentcloud_as_start_instance_refresh
+
+Provides a resource to create as instance refresh
+
+## Example Usage
+
+```hcl
+resource "tencentcloud_as_start_instance_refresh" "example" {
+  auto_scaling_group_id = "asg-9dn1a5y6"
+  refresh_mode          = "ROLLING_UPDATE_RESET"
+  refresh_settings {
+    check_instance_target_health = false
+    rolling_update_settings {
+      batch_number = 1
+      batch_pause  = "AUTOMATIC"
+    }
+  }
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `auto_scaling_group_id` - (Required, String, ForceNew) Scaling group ID.
+* `refresh_settings` - (Required, List, ForceNew) Refresh settings.
+* `refresh_mode` - (Optional, String, ForceNew) Refresh mode, currently, only rolling updates are supported, with the default value being ROLLING_UPDATE_RESET.
+
+The `refresh_settings` object supports the following:
+
+* `rolling_update_settings` - (Required, List) Rolling update settings parameters. RefreshMode is the rolling update. This parameter must be filled in.Note: This field may return null, indicating that no valid value can be obtained.
+* `check_instance_target_health` - (Optional, Bool) Backend service health check status for instances, defaults to FALSE. This setting takes effect only for scaling groups bound with application load balancers. When enabled, if an instance fails the check after being refreshed, its load balancer port weight remains 0 and is marked as a refresh failure. Valid values: <br><li>TRUE: Enable the check.</li> <li>FALSE: Do not enable the check.
+
+The `rolling_update_settings` object of `refresh_settings` supports the following:
+
+* `batch_number` - (Required, Int) Batch quantity. The batch quantity should be a positive integer greater than 0, but cannot exceed the total number of instances pending refresh.
+* `batch_pause` - (Optional, String) Pause policy between batches. Default value: Automatic. Valid values: <br><li>FIRST_BATCH_PAUSE: Pause after the first batch update completes.</li> <li>BATCH_INTERVAL_PAUSE: Pause between each batch update.</li> <li>AUTOMATIC: No pauses.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
+

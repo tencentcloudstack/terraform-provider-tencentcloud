@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -12,6 +13,7 @@ import (
 
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -1151,4 +1153,471 @@ func (me *OrganizationService) DeleteOrganizationOrgManagePolicyTargetById(ctx c
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+func (me *OrganizationService) DescribeOrganizationServiceAssignMemberById(ctx context.Context, serviceId string) (items []*organization.OrganizationServiceAssignMember, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListOrgServiceAssignMemberRequest()
+	serviceIdInt, _ := strconv.ParseUint(serviceId, 10, 64)
+	request.ServiceId = &serviceIdInt
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var offset uint64 = 0
+	var pageSize uint64 = 10
+	items = make([]*organization.OrganizationServiceAssignMember, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().ListOrgServiceAssignMember(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+
+		items = append(items, response.Response.Items...)
+		if len(response.Response.Items) < int(pageSize) {
+			break
+		}
+
+		offset += pageSize
+	}
+
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationServiceAssignMemberById(ctx context.Context, serviceId string, memberUinList []*int64) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeleteOrgServiceAssignRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	serviceIdInt, _ := strconv.ParseUint(serviceId, 10, 64)
+	for _, memberUin := range memberUinList {
+		ratelimit.Check(request.GetAction())
+		request.ServiceId = &serviceIdInt
+		request.MemberUin = memberUin
+		response, err := me.client.UseOrganizationClient().DeleteOrgServiceAssign(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationServicesByFilter(ctx context.Context, param map[string]interface{}) (members []*organization.OrganizationServiceAssign, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewListOrganizationServiceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 10
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().ListOrganizationService(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+
+		members = append(members, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterUserById(ctx context.Context, zoneId string, userId string) (ret *organization.UserInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetUserRequest()
+	request.UserId = helper.String(userId)
+	request.ZoneId = helper.String(zoneId)
+	response := organization.NewGetUserResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseOrganizationClient().GetUser(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		log.Printf("[CRITAL]%s update identity center user failed, reason:%+v", logId, err)
+		return
+	}
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.UserInfo
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterGroupById(ctx context.Context, zoneId string, groupId string) (ret *organization.GroupInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetGroupRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.GroupId = helper.String(groupId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().GetGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.GroupInfo
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterUserGroupAttachmentById(ctx context.Context, zoneId, groupId, userId string) (joinedGroup *organization.JoinedGroups, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListJoinedGroupsForUserRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.UserId = helper.String(userId)
+	request.MaxResults = helper.Int64(100)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().ListJoinedGroupsForUser(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		for _, v := range response.Response.JoinedGroups {
+			if *v.GroupId == groupId {
+				joinedGroup = v
+				return
+			}
+		}
+		if len(response.Response.JoinedGroups) < int(*request.MaxResults) {
+			break
+		} else {
+			request.NextToken = response.Response.NextToken
+		}
+	}
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterExternalSamlIdentityProviderById(ctx context.Context, zoneId string) (ret *organization.SAMLServiceProvider, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetZoneSAMLServiceProviderInfoRequest()
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().GetZoneSAMLServiceProviderInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.SAMLServiceProvider
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterExternalSamlIdentityProviderById1(ctx context.Context, zoneId string) (ret *organization.SAMLIdentityProviderConfiguration, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetExternalSAMLIdentityProviderRequest()
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().GetExternalSAMLIdentityProvider(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.SAMLIdentityProviderConfiguration
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterRoleConfigurationById(ctx context.Context, zoneId string, roleConfigurationId string) (ret *organization.RoleConfiguration, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetRoleConfigurationRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.RoleConfigurationId = helper.String(roleConfigurationId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().GetRoleConfiguration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.RoleConfigurationInfo
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterRoleConfigurationPermissionPolicyAttachmentById(ctx context.Context, zoneId, roleConfigurationId, rolePolicyType string) (ret *organization.ListPermissionPoliciesInRoleConfigurationResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListPermissionPoliciesInRoleConfigurationRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.RoleConfigurationId = helper.String(roleConfigurationId)
+	request.RolePolicyType = helper.String(rolePolicyType)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().ListPermissionPoliciesInRoleConfiguration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterUserSyncProvisioningById(ctx context.Context, zoneId, userProvisioningId string) (ret *organization.UserProvisioning, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetUserSyncProvisioningRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.UserProvisioningId = helper.String(userProvisioningId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().GetUserSyncProvisioning(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.UserProvisioning
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterRoleAssignmentById(ctx context.Context, roleAssignmentId string) (ret *organization.ListRoleAssignmentsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	idSplit := strings.Split(roleAssignmentId, tccommon.FILED_SP)
+	if len(idSplit) != 6 {
+		errRet = fmt.Errorf("roleAssignmentId is broken,%s", roleAssignmentId)
+		return
+	}
+
+	zoneId := idSplit[0]
+	roleConfigurationId := idSplit[1]
+	targetType := idSplit[2]
+	targetUinString := idSplit[3]
+	principalType := idSplit[4]
+	principalId := idSplit[5]
+
+	request := organization.NewListRoleAssignmentsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.RoleConfigurationId = helper.String(roleConfigurationId)
+	request.TargetType = helper.String(targetType)
+	targetUin, err := strconv.ParseInt(targetUinString, 10, 64)
+	if err != nil {
+		errRet = err
+		return
+	}
+	request.TargetUin = helper.Int64(targetUin)
+	request.PrincipalType = helper.String(principalType)
+	request.PrincipalId = helper.String(principalId)
+	request.MaxResults = helper.Int64(10)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().ListRoleAssignments(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *OrganizationService) GetAssignmentTaskStatus(ctx context.Context, zoneId, taskId string) (taskStatus *organization.TaskStatus, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetTaskStatusRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.TaskId = helper.String(taskId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, e := me.client.UseOrganizationClient().GetTaskStatus(request)
+	if e != nil {
+		errRet = e
+		return
+	}
+
+	if response.Response != nil {
+		taskStatus = response.Response.TaskStatus
+	}
+	return
+
+}
+func (me *OrganizationService) AssignmentTaskStatusStateRefreshFunc(zoneId, taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+
+		object, err := me.GetAssignmentTaskStatus(ctx, zoneId, taskId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, *object.Status, nil
+	}
 }

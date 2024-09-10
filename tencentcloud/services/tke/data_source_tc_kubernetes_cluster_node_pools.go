@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -455,10 +455,10 @@ func dataSourceTencentCloudKubernetesClusterNodePoolsRead(d *schema.ResourceData
 
 	if v, ok := d.GetOk("filters"); ok {
 		filtersSet := v.([]interface{})
-		tmpSet := make([]*tke.Filter, 0, len(filtersSet))
+		tmpSet := make([]*tkev20180525.Filter, 0, len(filtersSet))
 		for _, item := range filtersSet {
 			filtersMap := item.(map[string]interface{})
-			filter := tke.Filter{}
+			filter := tkev20180525.Filter{}
 			if v, ok := filtersMap["name"]; ok {
 				filter.Name = helper.String(v.(string))
 			}
@@ -474,7 +474,7 @@ func dataSourceTencentCloudKubernetesClusterNodePoolsRead(d *schema.ResourceData
 		paramMap["Filters"] = tmpSet
 	}
 
-	var respData []*tke.NodePool
+	var respData []*tkev20180525.NodePool
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterNodePoolsByFilter(ctx, paramMap)
 		if e != nil {
@@ -487,7 +487,7 @@ func dataSourceTencentCloudKubernetesClusterNodePoolsRead(d *schema.ResourceData
 		return err
 	}
 
-	ids := make([]string, 0, len(respData))
+	var ids []string
 	nodePoolSetList := make([]map[string]interface{}, 0, len(respData))
 	if respData != nil {
 		for _, nodePoolSet := range respData {

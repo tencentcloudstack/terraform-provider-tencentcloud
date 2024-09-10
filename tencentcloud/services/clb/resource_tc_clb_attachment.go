@@ -293,7 +293,8 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 			}
 
 			targets = append(targets, target)
-		} else if *onlineTarget.Type == CLB_BACKEND_TYPE_ENI || *onlineTarget.Type == CLB_BACKEND_TYPE_NAT || *onlineTarget.Type == CLB_BACKEND_TYPE_CCN {
+		} else if *onlineTarget.Type == CLB_BACKEND_TYPE_ENI || *onlineTarget.Type == CLB_BACKEND_TYPE_NAT ||
+			*onlineTarget.Type == CLB_BACKEND_TYPE_CCN || *onlineTarget.Type == CLB_BACKEND_TYPE_SRV {
 			target := map[string]interface{}{
 				"weight": int(*onlineTarget.Weight),
 				"port":   int(*onlineTarget.Port),
@@ -305,21 +306,6 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	}
 
 	_ = d.Set("targets", targets)
-
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := clbService.DescribeTargetsByPara(ctx, clbId, listenerId, locationId)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		instance = result
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s read CLB attachment tag failed, reason:%+v", logId, err)
-		return err
-	}
 
 	return nil
 }

@@ -2058,3 +2058,95 @@ func (me *PostgresqlService) DeletePostgresqlBaseBackupById(ctx context.Context,
 
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlAccountById(ctx context.Context, dBInstanceId string, userName string) (account *postgresql.AccountInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDescribeAccountsRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeAccounts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Details) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.Details {
+		if *item.UserName == userName {
+			account = item
+		}
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlAccountById(ctx context.Context, dBInstanceId string, userName string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDeleteAccountRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.UserName = &userName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteAccount(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresAccountPrivilegesById(ctx context.Context, dBInstanceId string, userName string) (accountPrivileges []*postgresql.DatabasePrivilege, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDescribeAccountPrivilegesRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.UserName = &userName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeAccountPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.PrivilegeSet) < 1 {
+		return
+	}
+
+	accountPrivileges = response.Response.PrivilegeSet
+	return
+}

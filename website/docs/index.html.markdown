@@ -272,6 +272,7 @@ In addition to generic provider arguments (e.g. alias and version), the followin
 * `profile` - (Optional) The profile name as set in the shared credentials. It can also be sourced from the `TENCENTCLOUD_PROFILE` environment variable. If not set, the default profile created with `tccli configure` will be used.
 * `assume_role` - (Optional, Available in 1.33.1+) An `assume_role` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role` block may be in the configuration.
 * `assume_role_with_saml` - (Optional, Available in 1.81.111+) An `assume_role_with_saml` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role_with_saml` block may be in the configuration.
+* `enable_pod_oidc` - (Optional, Available in 1.81.117+) Whether to enable pod oidc.
 * `assume_role_with_web_identity` - (Optional, Available in 1.81.111+) An `assume_role_with_web_identity` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role_with_web_identity` block may be in the configuration.
 * `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.
 * `domain` - (Optional, Available in 1.37.0+) The root domain of the API request, Default is `tencentcloudapi.com`. 
