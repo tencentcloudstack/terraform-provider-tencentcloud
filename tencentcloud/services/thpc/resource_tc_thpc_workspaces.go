@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 
+	svccbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -94,6 +96,11 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 				Description: "Workspace system disk information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"disk_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
+						},
 						"disk_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -111,13 +118,14 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 			"data_disks": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Workspace data disk information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disk_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Data disk type.",
+							Description: "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: LOCAL_BASIC: local disk, LOCAL_SSD: local SSD disk, LOCAL_NVME: local NVME disk, specified in the InstanceType, LOCAL_PRO: local HDD disk, specified in the InstanceType, CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD, CLOUD_BSSD: Balanced SSD.",
 						},
 						"disk_id": {
 							Type:        schema.TypeString,
@@ -214,6 +222,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 						"internet_max_bandwidth_out": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.",
 						},
 						"public_ip_assigned": {
@@ -259,6 +268,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 			"security_group_ids": {
 				Type:        schema.TypeSet,
 				Optional:    true,
+				Computed:    true,
 				Description: "Workspace Security Group.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
@@ -800,6 +810,10 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 	if cvmInfo.SystemDisk != nil {
 		tmpList := make([]interface{}, 0)
 		tmpMap := make(map[string]interface{})
+		if cvmInfo.SystemDisk.DiskId != nil {
+			tmpMap["disk_id"] = cvmInfo.SystemDisk.DiskId
+		}
+
 		if cvmInfo.SystemDisk.DiskType != nil {
 			tmpMap["disk_type"] = cvmInfo.SystemDisk.DiskType
 		}
@@ -812,8 +826,72 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("system_disk", tmpList)
 	}
 
-	if cvmInfo.DataDisks != nil {
-		tmpList := make([]interface{}, 0, len(cvmInfo.DataDisks))
+	tmpDiskList := make([]interface{}, 0)
+	if _, ok := d.GetOk("data_disks"); ok {
+		// wait dataDisks init
+		err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+			tmpCvmInfo, e := cvmService.DescribeInstanceById(ctx, cvmInstanceId)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if tmpCvmInfo.DataDisks != nil && len(tmpCvmInfo.DataDisks) > 0 {
+				for _, item := range tmpCvmInfo.DataDisks {
+					if *item.DiskType == "LOCAL_NVME" {
+						continue
+					}
+
+					tmpMap := make(map[string]interface{})
+					if item.DiskType != nil {
+						tmpMap["disk_type"] = item.DiskType
+					}
+
+					if item.DiskId != nil {
+						tmpMap["disk_id"] = item.DiskId
+					}
+
+					if item.DiskSize != nil {
+						tmpMap["disk_size"] = item.DiskSize
+					}
+
+					if item.DeleteWithInstance != nil {
+						tmpMap["delete_with_instance"] = item.DeleteWithInstance
+					}
+
+					if item.SnapshotId != nil {
+						tmpMap["snapshot_id"] = item.SnapshotId
+					}
+
+					if item.Encrypt != nil {
+						tmpMap["encrypt"] = item.Encrypt
+					}
+
+					if item.KmsKeyId != nil {
+						tmpMap["kms_key_id"] = item.KmsKeyId
+					}
+
+					if item.ThroughputPerformance != nil {
+						tmpMap["throughput_performance"] = item.ThroughputPerformance
+					}
+
+					if item.BurstPerformance != nil {
+						tmpMap["burst_performance"] = item.BurstPerformance
+					}
+
+					tmpDiskList = append(tmpDiskList, tmpMap)
+				}
+
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("wait cvm data disks"))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s get cvm data disks failed, reason:%+v", logId, err)
+			return err
+		}
+	} else {
 		for _, item := range cvmInfo.DataDisks {
 			if *item.DiskType == "LOCAL_NVME" {
 				continue
@@ -856,11 +934,11 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 				tmpMap["burst_performance"] = item.BurstPerformance
 			}
 
-			tmpList = append(tmpList, tmpMap)
+			tmpDiskList = append(tmpDiskList, tmpMap)
 		}
-
-		_ = d.Set("data_disks", tmpList)
 	}
+
+	_ = d.Set("data_disks", tmpDiskList)
 
 	if cvmInfo.VirtualPrivateCloud != nil {
 		tmpList := make([]interface{}, 0)
@@ -973,7 +1051,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 		spaceId = d.Id()
 	)
 
-	immutableArgs := []string{"client_token", "placement", "space_charge_prepaid", "space_charge_type", "space_type", "image_id", "system_disk", "data_disks", "virtual_private_cloud", "internet_accessible", "login_settings", "security_group_ids", "enhanced_service", "user_data", "disaster_recover_group_id", "tag_specification", "hpc_cluster_id", "cam_role_name", "host_name"}
+	immutableArgs := []string{"client_token", "placement", "space_charge_prepaid", "space_charge_type", "space_type", "image_id", "system_disk", "virtual_private_cloud", "internet_accessible", "login_settings", "security_group_ids", "enhanced_service", "user_data", "disaster_recover_group_id", "tag_specification", "hpc_cluster_id", "cam_role_name", "host_name"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -1002,6 +1080,33 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			log.Printf("[CRITAL]%s update thpc workspaces space name failed, reason:%+v", logId, err)
 			return err
+		}
+	}
+
+	if d.HasChange("data_disks") {
+		o, n := d.GetChange("data_disks")
+		ov := o.([]interface{})
+		nv := n.([]interface{})
+
+		if len(ov) != len(nv) {
+			return fmt.Errorf("error: data disk count has changed (%d -> %d) but doesn't support add or remove for now", len(ov), len(nv))
+		}
+
+		cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+
+		for i := range nv {
+			sizeKey := fmt.Sprintf("data_disks.%d.disk_size", i)
+			idKey := fmt.Sprintf("data_disks.%d.disk_id", i)
+			if !d.HasChange(sizeKey) {
+				continue
+			}
+
+			size := d.Get(sizeKey).(int)
+			diskId := d.Get(idKey).(string)
+			err := cbsService.ResizeDisk(ctx, diskId, size)
+			if err != nil {
+				return fmt.Errorf("an error occurred when modifying %s, reason: %s", sizeKey, err.Error())
+			}
 		}
 	}
 

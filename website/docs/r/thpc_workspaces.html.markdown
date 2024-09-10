@@ -247,7 +247,7 @@ The `data_disks` object supports the following:
 * `delete_with_instance` - (Optional, Bool) Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), Default is true.
 * `disk_id` - (Optional, String) Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
 * `disk_size` - (Optional, Int) Size of the data disk, and unit is GB.
-* `disk_type` - (Optional, String) Data disk type.
+* `disk_type` - (Optional, String) Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: LOCAL_BASIC: local disk, LOCAL_SSD: local SSD disk, LOCAL_NVME: local NVME disk, specified in the InstanceType, LOCAL_PRO: local HDD disk, specified in the InstanceType, CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD, CLOUD_BSSD: Balanced SSD.
 * `encrypt` - (Optional, Bool) Decides whether the disk is encrypted. Default is `false`.
 * `kms_key_id` - (Optional, String) Kms key ID.
 * `snapshot_id` - (Optional, String) Snapshot ID of the data disk. The selected data disk snapshot size must be smaller than the data disk size.
