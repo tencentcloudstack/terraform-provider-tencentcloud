@@ -303,23 +303,22 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("assistant_cidrs") {
 		old, now := d.GetChange("assistant_cidrs")
-		nowTmp := now.(*schema.Set).List()
-		oldTmp := old.(*schema.Set).List()
-
-		nowList := helper.InterfacesStrings(nowTmp)
-		oldList := helper.InterfacesStrings(oldTmp)
-		intersection := tccommon.GetArrayIntersect(nowList, oldList)
-		newNow := tccommon.RemoveArrayIntersect(nowList, intersection)
-		newOld := tccommon.RemoveArrayIntersect(oldList, intersection)
+		oldSet := old.(*schema.Set)
+		nowSet := now.(*schema.Set)
+		add := nowSet.Difference(oldSet).List()
+		remove := oldSet.Difference(nowSet).List()
+		addLen := len(add)
+		removeLen := len(remove)
 
 		request := vpc.NewModifyAssistantCidrRequest()
 		request.VpcId = &id
-		if len(newNow) > 0 {
-			request.NewCidrBlocks = helper.Strings(newNow)
+		if removeLen > 0 {
+			request.OldCidrBlocks = helper.InterfacesStringsPoint(remove)
 		}
 
-		if len(newOld) > 0 {
-			request.OldCidrBlocks = helper.Strings(newOld)
+		if addLen > 0 {
+			request.OldCidrBlocks = nil
+			request.NewCidrBlocks = helper.InterfacesStringsPoint(add)
 		}
 
 		if err := vpcService.ModifyAssistantCidr(ctx, request); err != nil {
