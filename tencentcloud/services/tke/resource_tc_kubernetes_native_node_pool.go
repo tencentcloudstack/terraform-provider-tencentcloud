@@ -1524,9 +1524,7 @@ func resourceKubernetesNativeNodePoolCreateStateRefreshFunc_0_0(ctx context.Cont
 			}
 			_ = d
 			req = tkev20220501.NewDescribeNodePoolsRequest()
-			if v, ok := d.GetOk("cluster_id"); ok {
-				req.ClusterId = helper.String(v.(string))
-			}
+			req.ClusterId = helper.String(clusterId)
 
 		}
 		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DescribeNodePoolsWithContext(ctx, req)
