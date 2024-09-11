@@ -1,3 +1,15 @@
+## 1.81.121 (September 6 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_as_start_instance_refresh` ([#2814](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2814))
+* **New Resource:** `tencentcloud_thpc_workspaces` ([#2813](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2813))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_gaap_layer4_listener: support udp listener enable `health_check` ([#2816](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2816))
+* resource/tencentcloud_vpc:  Fix the issue where field assistant_cidrs cannot be edited ([#2817](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2817))
+
 ## 1.81.120 (September 6 , 2024)
 
 FEATURES:
