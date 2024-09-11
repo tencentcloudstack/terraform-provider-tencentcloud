@@ -2185,3 +2185,7 @@ CdwDoris
 ControlCenter
   Resource
     tencentcloud_batch_apply_account_baselines
+
+THPC
+  Resource
+    tencentcloud_thpc_workspaces

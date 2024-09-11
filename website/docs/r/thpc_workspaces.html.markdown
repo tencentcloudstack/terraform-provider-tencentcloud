@@ -1,0 +1,331 @@
+---
+subcategory: "THPC"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_thpc_workspaces"
+sidebar_current: "docs-tencentcloud-resource-thpc_workspaces"
+description: |-
+  Provides a resource to create a THPC workspaces
+---
+
+# tencentcloud_thpc_workspaces
+
+Provides a resource to create a THPC workspaces
+
+-> **Note:** If space_charge_type is UNDERWRITE, Not currently supported for deletion.
+
+## Example Usage
+
+### Create a PREPAID THPC workspaces
+
+```hcl
+variable "availability_zone" {
+  default = "ap-nanjing-1"
+}
+
+data "tencentcloud_images" "images" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.1 (TK4) UEFI"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "172.16.0.0/16"
+}
+
+# create subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "172.16.0.0/24"
+  is_multicast      = false
+}
+
+# create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "security group desc."
+
+  tags = {
+    "createBy" = "Terraform"
+  }
+}
+
+# create thpc workspaces
+resource "tencentcloud_thpc_workspaces" "example" {
+  space_name         = "tf-example"
+  space_charge_type  = "PREPAID"
+  space_type         = "96A.96XLARGE2304"
+  hpc_cluster_id     = "hpc-l9anqcbl"
+  image_id           = data.tencentcloud_images.images.images.0.image_id
+  security_group_ids = [tencentcloud_security_group.example.id]
+  placement {
+    zone       = var.availability_zone
+    project_id = 0
+  }
+
+  space_charge_prepaid {
+    period     = 1
+    renew_flag = "NOTIFY_AND_AUTO_RENEW"
+  }
+
+  system_disk {
+    disk_size = 100
+    disk_type = "CLOUD_HSSD"
+  }
+
+  data_disk {
+    disk_size = 200
+    disk_type = "CLOUD_HSSD"
+    encrypt   = false
+  }
+
+  virtual_private_cloud {
+    vpc_id             = tencentcloud_vpc.vpc.id
+    subnet_id          = tencentcloud_subnet.subnet.id
+    as_vpc_gateway     = false
+    ipv6_address_count = 0
+  }
+
+  internet_accessible {
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 200
+    public_ip_assigned         = true
+  }
+
+  login_settings {
+    password = "Password@123"
+  }
+
+  enhanced_service {
+    security_service {
+      enabled = true
+    }
+
+    monitor_service {
+      enabled = true
+    }
+
+    automation_service {
+      enabled = true
+    }
+  }
+}
+```
+
+### Create a UNDERWRITE THPC workspaces
+
+```hcl
+variable "availability_zone" {
+  default = "ap-nanjing-1"
+}
+
+data "tencentcloud_images" "images" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.1 (TK4) UEFI"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "172.16.0.0/16"
+}
+
+# create subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "172.16.0.0/24"
+  is_multicast      = false
+}
+
+# create security group
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example"
+  description = "security group desc."
+
+  tags = {
+    "createBy" = "Terraform"
+  }
+}
+
+# create thpc workspaces
+resource "tencentcloud_thpc_workspaces" "example" {
+  space_name         = "tf-example"
+  space_charge_type  = "UNDERWRITE"
+  space_type         = "96A.96XLARGE2304"
+  hpc_cluster_id     = "hpc-l9anqcbl"
+  image_id           = data.tencentcloud_images.images.images.0.image_id
+  security_group_ids = [tencentcloud_security_group.example.id]
+  placement {
+    zone       = var.availability_zone
+    project_id = 0
+  }
+
+  space_charge_prepaid {
+    period     = 12
+    renew_flag = "NOTIFY_AND_AUTO_RENEW"
+  }
+
+  system_disk {
+    disk_size = 100
+    disk_type = "CLOUD_HSSD"
+  }
+
+  data_disks {
+    disk_size = 200
+    disk_type = "CLOUD_HSSD"
+    encrypt   = false
+  }
+
+  virtual_private_cloud {
+    vpc_id               = tencentcloud_vpc.vpc.id
+    subnet_id            = tencentcloud_subnet.subnet.id
+    as_vpc_gateway       = false
+    ipv6_address_count   = 0
+    private_ip_addresses = ["172.16.0.2"]
+  }
+
+  internet_accessible {
+    internet_charge_type       = "BANDWIDTH_PREPAID"
+    internet_max_bandwidth_out = 200
+    public_ip_assigned         = true
+  }
+
+  login_settings {
+    key_ids = ["skey-qxjpz7uj"]
+  }
+
+  enhanced_service {
+    security_service {
+      enabled = true
+    }
+
+    monitor_service {
+      enabled = true
+    }
+
+    automation_service {
+      enabled = true
+    }
+  }
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `cam_role_name` - (Optional, String) CAM role name authorized to access.
+* `client_token` - (Optional, String) A string used to ensure the idempotence of the request. This string is generated by the customer and must be unique across different requests, with a maximum length of 64 ASCII characters. If this parameter is not specified, the idempotence of the request cannot be guaranteed. Example value: system-f3827db9-c58a-49cc-bf10-33fc1923a34a.
+* `data_disks` - (Optional, List) Workspace data disk information.
+* `disaster_recover_group_id` - (Optional, String) Placement Group ID.
+* `enhanced_service` - (Optional, List) Enhanced Services.
+* `host_name` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.
+* `hpc_cluster_id` - (Optional, String) Hyper Computing Cluster ID.
+* `image_id` - (Optional, String) Image ID.
+* `internet_accessible` - (Optional, List) Public network bandwidth settings.
+* `login_settings` - (Optional, List) Workspace Login Settings.
+* `placement` - (Optional, List) The position of the instance. This parameter allows you to specify attributes such as the availability zone, project, and host machine (when creating a sub-instance on CDH) that the instance belongs to. Note: If you do not specify the LaunchTemplate parameter, Placement is a mandatory parameter. If both Placement and LaunchTemplate are passed, the values in Placement override the corresponding values in LaunchTemplate by default.
+* `security_group_ids` - (Optional, Set: [`String`]) Workspace Security Group.
+* `space_charge_prepaid` - (Optional, List) Prepaid mode: This refers to the parameters related to the annual and monthly subscription. By this parameter, you can specify the purchase duration of the prepaid instances, whether to set auto-renewal, and other attributes. If the instance's billing mode is prepaid, this parameter is required.
+* `space_charge_type` - (Optional, String) Workspace billing type.
+* `space_name` - (Optional, String) Workspace Display Name.
+* `space_type` - (Optional, String) Workspace specifications.
+* `system_disk` - (Optional, List) Workspace system disk information.
+* `tag_specification` - (Optional, List) Tag Description List.
+* `user_data` - (Optional, String) User Data for Workspace.
+* `virtual_private_cloud` - (Optional, List) VPC related information.
+
+The `automation_service` object of `enhanced_service` supports the following:
+
+* `enabled` - (Optional, Bool) Whether to enable.
+
+The `data_disks` object supports the following:
+
+* `burst_performance` - (Optional, Bool) Sudden performance. PS: During testing.
+* `delete_with_instance` - (Optional, Bool) Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), Default is true.
+* `disk_id` - (Optional, String) Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
+* `disk_size` - (Optional, Int) Size of the data disk, and unit is GB.
+* `disk_type` - (Optional, String) Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: LOCAL_BASIC: local disk, LOCAL_SSD: local SSD disk, LOCAL_NVME: local NVME disk, specified in the InstanceType, LOCAL_PRO: local HDD disk, specified in the InstanceType, CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD, CLOUD_BSSD: Balanced SSD.
+* `encrypt` - (Optional, Bool) Decides whether the disk is encrypted. Default is `false`.
+* `kms_key_id` - (Optional, String) Kms key ID.
+* `snapshot_id` - (Optional, String) Snapshot ID of the data disk. The selected data disk snapshot size must be smaller than the data disk size.
+* `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
+
+The `enhanced_service` object supports the following:
+
+* `automation_service` - (Optional, List) Enable the TencentCloud Automation Tools (TAT) service. If this parameter is not specified, the cloud automation tools service will be enabled by default.
+* `monitor_service` - (Optional, List) Activate Tencent Cloud Observable Platform service. If this parameter is not specified, the Tencent Cloud Observable Platform service will be enabled by default.
+* `security_service` - (Optional, List) Activate cloud security services. If this parameter is not specified, cloud security services will be enabled by default.
+
+The `internet_accessible` object supports the following:
+
+* `bandwidth_package_id` - (Optional, String) Bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
+* `internet_charge_type` - (Optional, String) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. If not set, internet charge type are consistent with the cvm charge type by default. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.
+* `internet_max_bandwidth_out` - (Optional, Int) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.
+* `public_ip_assigned` - (Optional, Bool) Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.
+
+The `login_settings` object supports the following:
+
+* `key_ids` - (Optional, Set) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.
+* `password` - (Optional, String) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifying will cause the instance reset.
+
+The `monitor_service` object of `enhanced_service` supports the following:
+
+* `enabled` - (Optional, Bool) Whether to enable.
+
+The `placement` object supports the following:
+
+* `zone` - (Required, String) The available zone for the CVM instance.
+* `project_id` - (Optional, Int) The project the instance belongs to, default to 0.
+
+The `security_service` object of `enhanced_service` supports the following:
+
+* `enabled` - (Optional, Bool) Whether to enable.
+
+The `space_charge_prepaid` object supports the following:
+
+* `period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`, `48`, `60`.
+* `renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
+
+The `system_disk` object supports the following:
+
+* `disk_size` - (Optional, Int) Size of the system disk. unit is GB, Default is 50GB.
+* `disk_type` - (Optional, String) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: cloud disk, `CLOUD_SSD`: cloud SSD disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD. NOTE: If modified, the instance may force stop.
+
+The `tag_specification` object supports the following:
+
+* `tags` - (Required, List) tags.
+
+The `tags` object of `tag_specification` supports the following:
+
+* `key` - (Required, String) Tag key.
+* `value` - (Required, String) Tag value.
+
+The `virtual_private_cloud` object supports the following:
+
+* `subnet_id` - (Required, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
+* `vpc_id` - (Required, String) The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.
+* `as_vpc_gateway` - (Optional, Bool) Is it used as a public network gateway.
+* `ipv6_address_count` - (Optional, Int) IPV6 address count.
+* `private_ip_addresses` - (Optional, Set) Array of private ip address.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+* `resource_id` - CVM instance ID.
+
+
+## Import
+
+thpc workspaces can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_thpc_workspaces.example wks-gwg3ygz1
+```
+

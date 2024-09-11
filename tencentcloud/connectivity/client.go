@@ -90,6 +90,7 @@ import (
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+	thpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc/v20230321"
 	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tkev20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
@@ -207,6 +208,7 @@ type TencentCloudClient struct {
 	cdcConn           *cdc.Client
 	cdwdorisConn      *cdwdoris.Client
 	controlcenterConn *controlcenter.Client
+	thpcConn          *thpc.Client
 	//omit nil client
 	omitNilConn *common.Client
 }
@@ -1712,4 +1714,17 @@ func (me *TencentCloudClient) UseControlcenterV20230110Client() *controlcenter.C
 	me.controlcenterConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.controlcenterConn
+}
+
+// UseThpcClient return THPC client for service
+func (me *TencentCloudClient) UseThpcV20230321Client() *thpc.Client {
+	if me.thpcConn != nil {
+		return me.thpcConn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.thpcConn, _ = thpc.NewClient(me.Credential, me.Region, cpf)
+	me.thpcConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.thpcConn
 }

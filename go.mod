@@ -115,6 +115,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc v1.0.998
 	github.com/wI2L/jsondiff v0.3.0
 	k8s.io/apimachinery v0.22.4
 )
