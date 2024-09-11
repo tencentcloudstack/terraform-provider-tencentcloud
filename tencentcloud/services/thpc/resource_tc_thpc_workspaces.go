@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"log"
 
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	svccbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
+	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -102,9 +104,10 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 							Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
 						},
 						"disk_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "System disk type.",
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(SYSTEM_DISK_TYPE),
+							Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: cloud disk, `CLOUD_SSD`: cloud SSD disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD. NOTE: If modified, the instance may force stop.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
@@ -259,7 +262,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 						"key_ids": {
 							Type:        schema.TypeSet,
 							Optional:    true,
-							Description: "The key pair to use for the instance.",
+							Description: "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 					},
@@ -373,12 +376,12 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 			"cam_role_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "CAM role name.",
+				Description: "CAM role name authorized to access.",
 			},
 			"host_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Instance hostname.",
+				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.",
 			},
 			// computed
 			"resource_id": {
@@ -720,7 +723,7 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 		logId         = tccommon.GetLogId(tccommon.ContextNil)
 		ctx           = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service       = ThpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		cvmService    = cvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		cvmService    = svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		spaceId       = d.Id()
 		cvmInstanceId string
 	)
@@ -750,7 +753,7 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	if cvmInfo == nil || *cvmInfo.InstanceState == cvm.CVM_STATUS_LAUNCH_FAILED {
+	if cvmInfo == nil || *cvmInfo.InstanceState == svccvm.CVM_STATUS_LAUNCH_FAILED {
 		log.Printf("[CRITAL]instance %s not exist or launch failed", cvmInstanceId)
 		return nil
 	}
@@ -837,7 +840,7 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 
 			if tmpCvmInfo.DataDisks != nil && len(tmpCvmInfo.DataDisks) > 0 {
 				for _, item := range tmpCvmInfo.DataDisks {
-					if *item.DiskType == "LOCAL_NVME" {
+					if *item.DiskType == CVM_DISK_TYPE_LOCAL_NVME {
 						continue
 					}
 
@@ -1051,7 +1054,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 		spaceId = d.Id()
 	)
 
-	immutableArgs := []string{"client_token", "placement", "space_charge_prepaid", "space_charge_type", "space_type", "image_id", "system_disk", "virtual_private_cloud", "internet_accessible", "login_settings", "security_group_ids", "enhanced_service", "user_data", "disaster_recover_group_id", "tag_specification", "hpc_cluster_id", "cam_role_name", "host_name"}
+	immutableArgs := []string{"client_token", "placement", "space_charge_prepaid", "space_charge_type", "space_type", "image_id", "virtual_private_cloud", "internet_accessible", "login_settings", "security_group_ids", "enhanced_service", "user_data", "disaster_recover_group_id", "tag_specification", "hpc_cluster_id", "cam_role_name", "host_name"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -1080,6 +1083,61 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			log.Printf("[CRITAL]%s update thpc workspaces space name failed, reason:%+v", logId, err)
 			return err
+		}
+	}
+
+	if d.HasChange("system_disk") {
+		sizeKey := fmt.Sprintf("system_disk.0.disk_size")
+		typeKey := fmt.Sprintf("system_disk.0.disk_type")
+		if d.HasChange(sizeKey) || d.HasChange(typeKey) {
+			instanceId := d.Get("resource_id").(string)
+			size := d.Get(sizeKey).(int)
+			diskType := d.Get(typeKey).(string)
+			req := cvm.NewResizeInstanceDisksRequest()
+			req.InstanceId = &instanceId
+			req.ForceStop = helper.Bool(true)
+			req.SystemDisk = &cvm.SystemDisk{
+				DiskSize: helper.IntInt64(size),
+				DiskType: &diskType,
+			}
+
+			// resize
+			cvmService := svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+			err := cvmService.ResizeInstanceDisks(ctx, req)
+			if err != nil {
+				return fmt.Errorf("an error occurred when modifying system_disk, reason: %s", err.Error())
+			}
+
+			// wait
+			err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+				instance, e := cvmService.DescribeInstanceById(ctx, instanceId)
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+
+				if instance != nil && instance.LatestOperationState != nil {
+					if *instance.InstanceState == CVM_INSTANCE_STATE_FAILED {
+						return resource.NonRetryableError(fmt.Errorf("instance operation failed"))
+					}
+
+					if *instance.InstanceState == CVM_INSTANCE_STATE_OPERATING {
+						return resource.RetryableError(fmt.Errorf("instance operating"))
+					}
+				}
+
+				if instance != nil && instance.SystemDisk != nil {
+					// wait until disk result as expected
+					if *instance.SystemDisk.DiskType != diskType || int(*instance.SystemDisk.DiskSize) != size {
+						return resource.RetryableError(fmt.Errorf("waiting for expanding success"))
+					}
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 
