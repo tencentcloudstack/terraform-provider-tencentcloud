@@ -3620,3 +3620,56 @@ func (me *TkeService) DescribeKubernetesAddonAttachmentById(ctx context.Context)
 	ret = response.Response
 	return
 }
+
+func (me *TkeService) DescribeKubernetesNativeNodePoolsById(ctx context.Context, clusterId string, nodePoolId string) (ret *tke2.NodePool, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke2.NewDescribeNodePoolsRequest()
+	request.ClusterId = helper.String(clusterId)
+	filter := &tke2.Filter{
+		Name:   helper.String("NodePoolsId"),
+		Values: []*string{helper.String(nodePoolId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	var instances []*tke2.NodePool
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTkeV20220501Client().DescribeNodePools(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NodePools) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.NodePools...)
+		if len(response.Response.NodePools) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	ret = instances[0]
+	return
+}
