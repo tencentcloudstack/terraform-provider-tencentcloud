@@ -4,13 +4,15 @@ package tke
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tkev20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
@@ -478,7 +480,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "creation time.",
+				Description: "Creation time.",
 			},
 		},
 	}
