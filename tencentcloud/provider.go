@@ -2126,7 +2126,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwdoris_workload_group":                                         cdwdoris.ResourceTencentCloudCdwdorisWorkloadGroup(),
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
 			"tencentcloud_batch_apply_account_baselines": controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
-			"tencentcloud_kubernetes_native_node_pools":  tke.ResourceTencentCloudKubernetesNativeNodePools()},
 
 		ConfigureFunc: providerConfigure,
 	}
