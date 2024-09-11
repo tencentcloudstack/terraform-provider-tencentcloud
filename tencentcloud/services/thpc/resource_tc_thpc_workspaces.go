@@ -4,8 +4,9 @@ package thpc
 import (
 	"context"
 	"fmt"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 	"log"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,6 +22,9 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 		Read:   resourceTencentCloudThpcWorkspacesRead,
 		Update: resourceTencentCloudThpcWorkspacesUpdate,
 		Delete: resourceTencentCloudThpcWorkspacesDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"client_token": {
 				Type:        schema.TypeString,
@@ -68,9 +72,10 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 				},
 			},
 			"space_charge_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Workspace billing type.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue(SPACE_CHARGE_TYPE),
+				Description:  "Workspace billing type.",
 			},
 			"space_type": {
 				Type:        schema.TypeString,
@@ -143,7 +148,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 						"kms_key_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Kms key ID",
+							Description: "Kms key ID.",
 						},
 						"throughput_performance": {
 							Type:        schema.TypeInt,
@@ -153,7 +158,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 						"burst_performance": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "Sudden performance. PS: During testing",
+							Description: "Sudden performance. PS: During testing.",
 						},
 					},
 				},
@@ -331,18 +336,18 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 						"tags": {
 							Type:        schema.TypeList,
 							Required:    true,
-							Description: "tags",
+							Description: "tags.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Tag key",
+										Description: "Tag key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Tag value",
+										Description: "Tag value.",
 									},
 								},
 							},
@@ -386,7 +391,7 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 
 	if placementMap, ok := helper.InterfacesHeadMap(d, "placement"); ok {
 		spacePlacement := thpcv20230321.SpacePlacement{}
-		if v, ok := placementMap["zone"]; ok {
+		if v, ok := placementMap["zone"]; ok && v != "" {
 			spacePlacement.Zone = helper.String(v.(string))
 		}
 
@@ -403,7 +408,7 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 			spaceChargePrepaid.Period = helper.IntInt64(v.(int))
 		}
 
-		if v, ok := spaceChargePrepaidMap["renew_flag"]; ok {
+		if v, ok := spaceChargePrepaidMap["renew_flag"]; ok && v != "" {
 			spaceChargePrepaid.RenewFlag = helper.String(v.(string))
 		}
 
@@ -424,11 +429,11 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 
 	if systemDiskMap, ok := helper.InterfacesHeadMap(d, "system_disk"); ok {
 		spaceSystemDisk := thpcv20230321.SpaceSystemDisk{}
-		if v, ok := systemDiskMap["disk_type"]; ok {
+		if v, ok := systemDiskMap["disk_type"]; ok && v != "" {
 			spaceSystemDisk.DiskType = helper.String(v.(string))
 		}
 
-		if v, ok := systemDiskMap["disk_size"]; ok {
+		if v, ok := systemDiskMap["disk_size"]; ok && v != "" {
 			spaceSystemDisk.DiskSize = helper.IntInt64(v.(int))
 		}
 
@@ -439,14 +444,12 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 		for _, item := range v.([]interface{}) {
 			dataDisksMap := item.(map[string]interface{})
 			spaceDataDisk := thpcv20230321.SpaceDataDisk{}
-			if v, ok := dataDisksMap["disk_type"]; ok {
+			if v, ok := dataDisksMap["disk_type"]; ok && v != "" {
 				spaceDataDisk.DiskType = helper.String(v.(string))
 			}
 
-			if v, ok := dataDisksMap["disk_id"]; ok {
-				if v != "" {
-					spaceDataDisk.DiskId = helper.String(v.(string))
-				}
+			if v, ok := dataDisksMap["disk_id"]; ok && v != "" {
+				spaceDataDisk.DiskId = helper.String(v.(string))
 			}
 
 			if v, ok := dataDisksMap["disk_size"]; ok {
@@ -457,10 +460,8 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 				spaceDataDisk.DeleteWithInstance = helper.Bool(v.(bool))
 			}
 
-			if v, ok := dataDisksMap["snapshot_id"]; ok {
-				if v != "" {
-					spaceDataDisk.SnapshotId = helper.String(v.(string))
-				}
+			if v, ok := dataDisksMap["snapshot_id"]; ok && v != "" {
+				spaceDataDisk.SnapshotId = helper.String(v.(string))
 			}
 
 			if v, ok := dataDisksMap["encrypt"]; ok {
@@ -485,11 +486,11 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 
 	if virtualPrivateCloudMap, ok := helper.InterfacesHeadMap(d, "virtual_private_cloud"); ok {
 		spaceVirtualPrivateCloud := thpcv20230321.SpaceVirtualPrivateCloud{}
-		if v, ok := virtualPrivateCloudMap["vpc_id"]; ok {
+		if v, ok := virtualPrivateCloudMap["vpc_id"]; ok && v != "" {
 			spaceVirtualPrivateCloud.VpcId = helper.String(v.(string))
 		}
 
-		if v, ok := virtualPrivateCloudMap["subnet_id"]; ok {
+		if v, ok := virtualPrivateCloudMap["subnet_id"]; ok && v != "" {
 			spaceVirtualPrivateCloud.SubnetId = helper.String(v.(string))
 		}
 
@@ -514,7 +515,7 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 
 	if internetAccessibleMap, ok := helper.InterfacesHeadMap(d, "internet_accessible"); ok {
 		spaceInternetAccessible := thpcv20230321.SpaceInternetAccessible{}
-		if v, ok := internetAccessibleMap["internet_charge_type"]; ok {
+		if v, ok := internetAccessibleMap["internet_charge_type"]; ok && v != "" {
 			spaceInternetAccessible.InternetChargeType = helper.String(v.(string))
 		}
 
@@ -526,10 +527,8 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 			spaceInternetAccessible.PublicIpAssigned = helper.Bool(v.(bool))
 		}
 
-		if v, ok := internetAccessibleMap["bandwidth_package_id"]; ok {
-			if v != "" {
-				spaceInternetAccessible.BandwidthPackageId = helper.String(v.(string))
-			}
+		if v, ok := internetAccessibleMap["bandwidth_package_id"]; ok && v != "" {
+			spaceInternetAccessible.BandwidthPackageId = helper.String(v.(string))
 		}
 
 		request.InternetAccessible = &spaceInternetAccessible
@@ -545,7 +544,7 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 
 	if loginSettingsMap, ok := helper.InterfacesHeadMap(d, "login_settings"); ok {
 		loginSettings := thpcv20230321.LoginSettings{}
-		if v, ok := loginSettingsMap["password"]; ok {
+		if v, ok := loginSettingsMap["password"]; ok && v != "" {
 			loginSettings.Password = helper.String(v.(string))
 		}
 
@@ -808,6 +807,10 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 	if cvmInfo.DataDisks != nil {
 		tmpList := make([]interface{}, 0, len(cvmInfo.DataDisks))
 		for _, item := range cvmInfo.DataDisks {
+			if *item.DiskType == "LOCAL_NVME" {
+				continue
+			}
+
 			tmpMap := make(map[string]interface{})
 			if item.DiskType != nil {
 				tmpMap["disk_type"] = item.DiskType
@@ -866,8 +869,13 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 			tmpMap["as_vpc_gateway"] = cvmInfo.VirtualPrivateCloud.AsVpcGateway
 		}
 
-		if cvmInfo.VirtualPrivateCloud.PrivateIpAddresses != nil {
-			tmpMap["private_ip_addresses"] = cvmInfo.VirtualPrivateCloud.PrivateIpAddresses
+		if cvmInfo.PrivateIpAddresses != nil {
+			privateIpAddresseList := make([]interface{}, 0, len(cvmInfo.PrivateIpAddresses))
+			for _, privateIpAddress := range cvmInfo.PrivateIpAddresses {
+				privateIpAddresseList = append(privateIpAddresseList, privateIpAddress)
+			}
+
+			tmpMap["private_ip_addresses"] = privateIpAddresseList
 		}
 
 		if cvmInfo.VirtualPrivateCloud.Ipv6AddressCount != nil {
@@ -889,8 +897,10 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 			tmpMap["internet_max_bandwidth_out"] = cvmInfo.InternetAccessible.InternetMaxBandwidthOut
 		}
 
-		if cvmInfo.InternetAccessible.PublicIpAssigned != nil {
-			tmpMap["public_ip_assigned"] = cvmInfo.InternetAccessible.PublicIpAssigned
+		if len(cvmInfo.PublicIpAddresses) > 0 {
+			tmpMap["public_ip_assigned"] = true
+		} else {
+			tmpMap["public_ip_assigned"] = false
 		}
 
 		if cvmInfo.InternetAccessible.BandwidthPackageId != nil {
@@ -898,7 +908,7 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 		}
 
 		tmpList = append(tmpList, tmpMap)
-		_ = d.Set("virtual_private_cloud", tmpList)
+		_ = d.Set("internet_accessible", tmpList)
 	}
 
 	if cvmInfo.LoginSettings != nil {
@@ -995,16 +1005,11 @@ func resourceTencentCloudThpcWorkspacesDelete(d *schema.ResourceData, meta inter
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = tccommon.GetLogId(tccommon.ContextNil)
-		ctx             = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request         = thpcv20230321.NewTerminateWorkspacesRequest()
-		spaceId         = d.Id()
-		spaceChargeType string
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = thpcv20230321.NewTerminateWorkspacesRequest()
+		spaceId = d.Id()
 	)
-
-	if v, ok := d.GetOk("space_charge_type"); ok {
-		spaceChargeType = v.(string)
-	}
 
 	request.SpaceIds = helper.Strings([]string{spaceId})
 	request.ReleasePrepaidDataDisks = helper.Bool(true)
@@ -1024,23 +1029,73 @@ func resourceTencentCloudThpcWorkspacesDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	// PREPAID delete again
-	if spaceChargeType == SPACE_CHARGE_TYPE_PREPAID {
-		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseThpcV20230321Client().TerminateWorkspacesWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s delete thpc workspaces failed, reason:%+v", logId, err)
-			return err
+	// wait status
+	waitRequest := thpcv20230321.NewDescribeWorkspacesRequest()
+	waitRequest.SpaceIds = helper.Strings([]string{spaceId})
+	err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseThpcV20230321Client().DescribeWorkspacesWithContext(ctx, waitRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil || len(result.Response.SpaceSet) != 1 || result.Response.SpaceSet[0].SpaceState == nil {
+			return resource.NonRetryableError(fmt.Errorf("delete thpc workspaces failed"))
+		}
+
+		if *result.Response.SpaceSet[0].SpaceState != SPACE_STATE_ARREARS {
+			return resource.RetryableError(fmt.Errorf("delete thpc workspaces status is %d, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete thpc workspaces failed, reason:%+v", logId, err)
+		return err
+	}
+
+	// delete again
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseThpcV20230321Client().TerminateWorkspacesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete thpc workspaces failed, reason:%+v", logId, err)
+		return err
+	}
+
+	// wait status
+	err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseThpcV20230321Client().DescribeWorkspacesWithContext(ctx, waitRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("delete thpc workspaces failed"))
+		}
+
+		if len(result.Response.SpaceSet) != 0 {
+			return resource.RetryableError(fmt.Errorf("delete thpc workspaces status is %d, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete thpc workspaces failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return nil

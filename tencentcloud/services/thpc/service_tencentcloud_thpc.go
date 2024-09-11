@@ -3,8 +3,9 @@ package thpc
 
 import (
 	"context"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	thpcv20230321 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc/v20230321"
 
@@ -43,7 +44,7 @@ func (me *ThpcService) DescribeThpcWorkspacesById(ctx context.Context, spaceId s
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil || len(response.Response.SpaceSet) != 1{
+	if response == nil || response.Response == nil || len(response.Response.SpaceSet) != 1 {
 		return
 	}
 

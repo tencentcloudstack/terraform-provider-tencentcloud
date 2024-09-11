@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/thpc"
 
 	"io/ioutil"
 	"net/url"
@@ -104,6 +103,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/thpc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tpulsar"
@@ -2126,11 +2126,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwdoris_instance":                                               cdwdoris.ResourceTencentCloudCdwdorisInstance(),
 			"tencentcloud_cdwdoris_workload_group":                                         cdwdoris.ResourceTencentCloudCdwdorisWorkloadGroup(),
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
-<<<<<<< HEAD
 			"tencentcloud_batch_apply_account_baselines": controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
-=======
-			"tencentcloud_thpc_workspaces": thpc.ResourceTencentCloudThpcWorkspaces(),
->>>>>>> 7f715aaa2 (add)
+			"tencentcloud_thpc_workspaces":               thpc.ResourceTencentCloudThpcWorkspaces(),
 		},
 
 		ConfigureFunc: providerConfigure,

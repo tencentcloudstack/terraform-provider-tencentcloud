@@ -204,17 +204,11 @@ type TencentCloudClient struct {
 	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-<<<<<<< HEAD
 	tkev20220501Conn  *tkev20220501.Client
 	cdcConn           *cdc.Client
 	cdwdorisConn      *cdwdoris.Client
 	controlcenterConn *controlcenter.Client
-=======
-	tkev20220501Conn *tkev20220501.Client
-	cdcConn          *cdc.Client
-	cdwdorisConn     *cdwdoris.Client
-	thpcConn         *thpc.Client
->>>>>>> 7f715aaa2 (add)
+	thpcConn          *thpc.Client
 	//omit nil client
 	omitNilConn *common.Client
 }
@@ -1709,7 +1703,6 @@ func (me *TencentCloudClient) UseCdwdorisV20211228Client() *cdwdoris.Client {
 	return me.cdwdorisConn
 }
 
-<<<<<<< HEAD
 // UseControlcenter return CONTROLCENTER client for service
 func (me *TencentCloudClient) UseControlcenterV20230110Client() *controlcenter.Client {
 	if me.controlcenterConn != nil {
@@ -1721,7 +1714,8 @@ func (me *TencentCloudClient) UseControlcenterV20230110Client() *controlcenter.C
 	me.controlcenterConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.controlcenterConn
-=======
+}
+
 // UseThpcClient return THPC client for service
 func (me *TencentCloudClient) UseThpcV20230321Client() *thpc.Client {
 	if me.thpcConn != nil {
@@ -1733,5 +1727,4 @@ func (me *TencentCloudClient) UseThpcV20230321Client() *thpc.Client {
 	me.thpcConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.thpcConn
->>>>>>> 7f715aaa2 (add)
 }
