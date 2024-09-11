@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a THPC workspaces
 
+-> **Note:** If space_charge_type is UNDERWRITE, Not currently supported for deletion.
+
 ## Example Usage
 
 ### Create a PREPAID THPC workspaces
