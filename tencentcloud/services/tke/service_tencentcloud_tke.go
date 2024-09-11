@@ -3506,10 +3506,10 @@ func (me *TkeService) DescribeKubernetesNativeNodePoolById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke2.NewDescribeNodePoolsRequest()
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 	filter := &tke2.Filter{
 		Name:   helper.String("NodePoolsId"),
-		Values: []*string{&nodePoolId},
+		Values: []*string{helper.String(nodePoolId)},
 	}
 	request.Filters = append(request.Filters, filter)
 
@@ -3523,13 +3523,13 @@ func (me *TkeService) DescribeKubernetesNativeNodePoolById(ctx context.Context, 
 
 	var (
 		offset int64 = 0
-		limit  int64 = 100
+		limit  int64 = 20
 	)
 	var instances []*tke2.NodePool
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTke2Client().DescribeNodePools(request)
+		response, err := me.client.UseTkeV20220501Client().DescribeNodePools(request)
 		if err != nil {
 			errRet = err
 			return
