@@ -13,6 +13,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -655,4 +656,63 @@ func GetAuthFromCAM(roleName string) (camResp *CAMResponse, err error) {
 	}
 
 	return
+}
+
+func GetArrayIntersect(sliceA, sliceB []string) []string {
+	intersection := make([]string, 0)
+	temp := make(map[string]bool)
+
+	for _, a := range sliceA {
+		temp[a] = true
+	}
+
+	for _, b := range sliceB {
+		if _, ok := temp[b]; ok {
+			intersection = append(intersection, b)
+			delete(temp, b)
+		}
+	}
+
+	return intersection
+}
+
+func RemoveArrayIntersect(sliceA, elementsToRemove []string) []string {
+	result := make([]string, 0)
+	temp := make(map[string]bool)
+
+	for _, e := range elementsToRemove {
+		temp[e] = true
+	}
+
+	for _, s := range sliceA {
+		if _, ok := temp[s]; !ok {
+			result = append(result, s)
+		}
+	}
+
+	return result
+
+}
+
+func EqualArrayIgnoreOrder(sliceA, sliceB []string) bool {
+	if len(sliceA) != len(sliceB) {
+		return false
+	}
+
+	sortedA := make([]string, len(sliceA))
+	sortedB := make([]string, len(sliceB))
+
+	copy(sortedA, sliceA)
+	copy(sortedB, sliceB)
+
+	sort.Strings(sortedA)
+	sort.Strings(sortedB)
+
+	for i := range sortedA {
+		if sortedA[i] != sortedB[i] {
+			return false
+		}
+	}
+
+	return true
 }
