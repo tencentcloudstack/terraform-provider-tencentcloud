@@ -81,7 +81,7 @@ func ResourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Optional:     true,
 				Default:      2,
 				ValidateFunc: tccommon.ValidateIntegerInRange(2, 60),
-				Description:  "Timeout of the health check response, should less than interval, default value is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.",
+				Description:  "Timeout of the health check response, should less than interval, default value is 2s. NOTES: Require less than `interval`.",
 			},
 			"healthy_threshold": {
 				Type:         schema.TypeInt,
@@ -215,8 +215,7 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 	healthyThreshold := d.Get("healthy_threshold").(int)
 	unhealthyThreshold := d.Get("unhealthy_threshold").(int)
 
-	// only check for TCP listener
-	if protocol == "TCP" && connectTimeout >= interval {
+	if connectTimeout >= interval {
 		return errors.New("connect_timeout must be less than interval")
 	}
 	clientIPMethod := d.Get("client_ip_method").(int)

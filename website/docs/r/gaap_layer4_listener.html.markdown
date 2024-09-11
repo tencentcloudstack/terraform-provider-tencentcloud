@@ -66,7 +66,7 @@ The following arguments are supported:
 * `check_port` - (Optional, Int) UDP origin station health check probe port.
 * `check_type` - (Optional, String) UDP origin server health type. PORT means check port, and PING means PING.
 * `client_ip_method` - (Optional, Int, ForceNew) The way the listener gets the client IP, 0 for TOA, 1 for Proxy Protocol, default value is 0. NOTES: Only supports listeners of `TCP` protocol.
-* `connect_timeout` - (Optional, Int) Timeout of the health check response, should less than interval, default value is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.
+* `connect_timeout` - (Optional, Int) Timeout of the health check response, should less than interval, default value is 2s. NOTES: Require less than `interval`.
 * `context_type` - (Optional, String) UDP source station health check port probe message type: TEXT represents text. Only used when the health check type is PORT.
 * `health_check` - (Optional, Bool) Indicates whether health check is enable, default value is `false`.
 * `healthy_threshold` - (Optional, Int) Health threshold, which indicates how many consecutive inspections are successful, the source station is determined to be healthy. Range from 1 to 10. Default value is 1.
