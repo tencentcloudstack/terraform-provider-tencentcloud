@@ -366,8 +366,15 @@ func (me *TencentCloudClient) UseVpcClient(iacExtInfo ...IacExtInfo) *vpc.Client
 func (me *TencentCloudClient) UseOmitNilClient(module string) *common.Client {
 	secretId := me.Credential.SecretId
 	secretKey := me.Credential.SecretKey
+	token := me.Credential.Token
 	region := me.Region
-	credential := common.NewCredential(secretId, secretKey)
+	var credential common.CredentialIface
+	if token != "" {
+		credential = common.NewTokenCredential(secretId, secretKey, token)
+	} else {
+		credential = common.NewCredential(secretId, secretKey)
+	}
+
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.Endpoint = fmt.Sprintf("%s.tencentcloudapi.com", module)
 	cpf.HttpProfile.ReqMethod = "POST"
