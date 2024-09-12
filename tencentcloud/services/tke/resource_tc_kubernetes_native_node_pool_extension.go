@@ -3,9 +3,13 @@ package tke
 import (
 	"context"
 	"encoding/base64"
+	"fmt"
+	"log"
+	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	v20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
-
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
@@ -64,6 +68,7 @@ func resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx c
 	// wait for delete ok
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -73,11 +78,11 @@ func resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx c
 	nodePoolId := idSplit[1]
 
 	var (
-		request  = tkev20220501.NewDeleteNodePoolRequest()
+		request  = v20220501.NewDeleteNodePoolRequest()
 	)
 
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		respData, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
 		if errRet != nil {
 			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
@@ -92,5 +97,8 @@ func resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx c
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
