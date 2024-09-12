@@ -14,7 +14,8 @@ func resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx con
 	respData := resp
 
 	if respData.Native != nil {
-		nativeMap := d.Get("native").([]interface{})
+		// nativeMap := d.Get("native").([]interface{})
+		nativeMap := d.Get("native").([]interface{})[0].(map[string]interface{})
 		lifecycleMap := map[string]interface{}{}
 		if respData.Native.Lifecycle != nil {
 			if respData.Native.Lifecycle.PreInit != nil {
@@ -27,7 +28,8 @@ func resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx con
 				//lifecycleMap["post_init"] = respData.Native.Lifecycle.PostInit
 			}
 
-			nativeMap[0].(map[string]interface{})["lifecycle"] = []interface{}{lifecycleMap}
+			// nativeMap[0].(map[string]interface{})["lifecycle"] = []interface{}{lifecycleMap}
+			nativeMap["lifecycle"] = []interface{}{lifecycleMap}
 			_ = d.Set("native", []interface{}{nativeMap})
 		}
 	}
@@ -56,4 +58,9 @@ func resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx con
 	}
 
 	return nil
+}
+
+func resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx context.Context, resp *v20220501.DeleteNodePoolResponse) error {
+	// TODO: implement me
+	panic("TODO: implement me")
 }

@@ -1465,55 +1465,14 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 	}
 
 	_ = response
-	if _, err := (&resource.StateChangeConf{
-		Delay:      10 * time.Second,
-		MinTimeout: 3 * time.Second,
-		Pending:    []string{"Deleting"},
-		Refresh:    resourceKubernetesNativeNodePoolDeleteStateRefreshFunc_0_0(ctx, clusterId, nodePoolId),
-		Target:     []string{},
-		Timeout:    600 * time.Second,
-	}).WaitForStateContext(ctx); err != nil {
+	if err := resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx, response); err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceKubernetesNativeNodePoolCreateStateRefreshFunc_0_0(ctx context.Context, clusterId string, nodePoolId string) resource.StateRefreshFunc {
-	var req *tkev20220501.DescribeNodePoolsRequest
-	return func() (interface{}, string, error) {
-		meta := tccommon.ProviderMetaFromContext(ctx)
-		if meta == nil {
-			return nil, "", fmt.Errorf("resource data can not be nil")
-		}
-		if req == nil {
-			d := tccommon.ResourceDataFromContext(ctx)
-			if d == nil {
-				return nil, "", fmt.Errorf("resource data can not be nil")
-			}
-			_ = d
-			req = tkev20220501.NewDescribeNodePoolsRequest()
-			req.ClusterId = helper.String(clusterId)
-
-			filter := tkev20220501.Filter{}
-			name := "NodePoolsId"
-			filter.Name = &name
-			filter.Values = []*string{helper.String(nodePoolId)}
-			req.Filters = []*tkev20220501.Filter{&filter}
-
-		}
-		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DescribeNodePoolsWithContext(ctx, req)
-		if err != nil {
-			return nil, "", err
-		}
-		if resp == nil || resp.Response == nil {
-			return nil, "", nil
-		}
-		state := fmt.Sprintf("%v", *resp.Response.NodePools[0].LifeState)
-		return resp.Response, state, nil
-	}
-}
-
-func resourceKubernetesNativeNodePoolDeleteStateRefreshFunc_0_0(ctx context.Context, clusterId string, nodePoolId string) resource.StateRefreshFunc {
 	var req *tkev20220501.DescribeNodePoolsRequest
 	return func() (interface{}, string, error) {
 		meta := tccommon.ProviderMetaFromContext(ctx)
