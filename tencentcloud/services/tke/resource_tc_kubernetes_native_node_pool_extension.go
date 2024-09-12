@@ -61,6 +61,36 @@ func resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx con
 }
 
 func resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx context.Context, resp *v20220501.DeleteNodePoolResponse) error {
-	// TODO: implement me
-	panic("TODO: implement me")
+	// wait for delete ok
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	d := tccommon.ResourceDataFromContext(ctx)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	clusterId := idSplit[0]
+	nodePoolId := idSplit[1]
+
+	var (
+		request  = tkev20220501.NewDeleteNodePoolRequest()
+	)
+
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		respData, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
+		if errRet != nil {
+			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
+			if strings.Contains(errCode, "InternalError") {
+				return nil
+			}
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+		if respData != nil && *respData.LifeState == "Deleting" {
+			log.Printf("[DEBUG]%s api[%s] native node pool %s still alive and status is %s", logId, request.GetAction(), nodePoolId, *respData.LifeState)
+			return resource.RetryableError(fmt.Errorf("native node pool %s still alive and status is %s", nodePoolId, *respData.LifeState))
+		}
+		return nil
+	})
+	return nil
 }
