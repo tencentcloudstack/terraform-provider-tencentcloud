@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	v20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	v20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
@@ -78,7 +78,7 @@ func resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx c
 	nodePoolId := idSplit[1]
 
 	var (
-		request  = v20220501.NewDeleteNodePoolRequest()
+		request = v20220501.NewDeleteNodePoolRequest()
 	)
 
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
