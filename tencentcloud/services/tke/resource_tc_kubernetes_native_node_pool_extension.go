@@ -18,7 +18,6 @@ func resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx con
 	respData := resp
 
 	if respData.Native != nil {
-		// nativeMap := d.Get("native").([]interface{})
 		nativeMap := d.Get("native").([]interface{})[0].(map[string]interface{})
 		lifecycleMap := map[string]interface{}{}
 		if respData.Native.Lifecycle != nil {
@@ -31,8 +30,6 @@ func resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx con
 				lifecycleMap["post_init"] = base64.StdEncoding.EncodeToString([]byte(*respData.Native.Lifecycle.PostInit))
 				//lifecycleMap["post_init"] = respData.Native.Lifecycle.PostInit
 			}
-
-			// nativeMap[0].(map[string]interface{})["lifecycle"] = []interface{}{lifecycleMap}
 			nativeMap["lifecycle"] = []interface{}{lifecycleMap}
 			_ = d.Set("native", []interface{}{nativeMap})
 		}
