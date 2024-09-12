@@ -1033,20 +1033,6 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 			nativeMap["kubelet_args"] = respData.Native.KubeletArgs
 		}
 
-		lifecycleMap := map[string]interface{}{}
-
-		if respData.Native.Lifecycle != nil {
-			if respData.Native.Lifecycle.PreInit != nil {
-				lifecycleMap["pre_init"] = respData.Native.Lifecycle.PreInit
-			}
-
-			if respData.Native.Lifecycle.PostInit != nil {
-				lifecycleMap["post_init"] = respData.Native.Lifecycle.PostInit
-			}
-
-			nativeMap["lifecycle"] = []interface{}{lifecycleMap}
-		}
-
 		if respData.Native.RuntimeRootDir != nil {
 			nativeMap["runtime_root_dir"] = respData.Native.RuntimeRootDir
 		}
