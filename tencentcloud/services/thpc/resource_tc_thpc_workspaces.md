@@ -64,7 +64,7 @@ resource "tencentcloud_thpc_workspaces" "example" {
     disk_type = "CLOUD_HSSD"
   }
 
-  data_disk {
+  data_disks {
     disk_size = 200
     disk_type = "CLOUD_HSSD"
     encrypt   = false
