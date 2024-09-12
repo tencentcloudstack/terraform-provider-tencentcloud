@@ -1334,9 +1334,6 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 				}
 				updateNativeNodePoolParam.Lifecycle = &lifecycleConfig
 			}
-			if v, ok := nativeMap["runtime_root_dir"]; ok {
-				updateNativeNodePoolParam.RuntimeRootDir = helper.String(v.(string))
-			}
 			if v, ok := nativeMap["enable_autoscaling"]; ok {
 				updateNativeNodePoolParam.EnableAutoscaling = helper.Bool(v.(bool))
 			}
