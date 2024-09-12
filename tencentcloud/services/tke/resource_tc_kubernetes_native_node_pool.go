@@ -1526,6 +1526,12 @@ func resourceKubernetesNativeNodePoolCreateStateRefreshFunc_0_0(ctx context.Cont
 			req = tkev20220501.NewDescribeNodePoolsRequest()
 			req.ClusterId = helper.String(clusterId)
 
+			filter := tkev20220501.Filter{}
+			name := "NodePoolsId"
+			filter.Name = &name
+			filter.Values = []*string{helper.String(nodePoolId)}
+			req.Filters = []*tkev20220501.Filter{&filter}
+
 		}
 		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DescribeNodePoolsWithContext(ctx, req)
 		if err != nil {
@@ -1554,6 +1560,12 @@ func resourceKubernetesNativeNodePoolDeleteStateRefreshFunc_0_0(ctx context.Cont
 			_ = d
 			req = tkev20220501.NewDescribeNodePoolsRequest()
 			req.ClusterId = helper.String(clusterId)
+
+			filter := tkev20220501.Filter{}
+			name := "NodePoolsId"
+			filter.Name = &name
+			filter.Values = []*string{helper.String(nodePoolId)}
+			req.Filters = []*tkev20220501.Filter{&filter}
 
 		}
 		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DescribeNodePoolsWithContext(ctx, req)
