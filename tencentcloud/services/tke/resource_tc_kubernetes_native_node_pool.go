@@ -1134,23 +1134,8 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 		_ = d.Set("native", []interface{}{nativeMap})
 	}
 
-	annotationsList := make([]map[string]interface{}, 0, len(respData.Annotations))
-	if respData.Annotations != nil {
-		for _, annotations := range respData.Annotations {
-			annotationsMap := map[string]interface{}{}
-
-			if annotations.Name != nil {
-				annotationsMap["name"] = annotations.Name
-			}
-
-			if annotations.Value != nil {
-				annotationsMap["value"] = annotations.Value
-			}
-
-			annotationsList = append(annotationsList, annotationsMap)
-		}
-
-		_ = d.Set("annotations", annotationsList)
+	if err := resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx, respData); err != nil {
+		return err
 	}
 
 	return nil
