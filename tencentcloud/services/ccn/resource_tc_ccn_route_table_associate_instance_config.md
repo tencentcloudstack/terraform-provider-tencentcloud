@@ -56,6 +56,7 @@ resource "tencentcloud_ccn_attachment" "attachment" {
 
 # route table associate instance
 resource "tencentcloud_ccn_route_table_associate_instance_config" "example" {
+  depends_on = [tencentcloud_ccn_attachment.attachment]
   ccn_id         = tencentcloud_ccn.example.id
   route_table_id = tencentcloud_ccn_route_table.example.id
   instances {
