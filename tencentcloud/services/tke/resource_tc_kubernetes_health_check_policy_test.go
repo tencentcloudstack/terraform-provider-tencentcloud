@@ -1,4 +1,4 @@
-package tke
+package tke_test
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ func TestAccTencentCloudKubernetesHealthCheckPolicyResource_basic(t *testing.T) 
 				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.auto_repair_enabled", "true"),
 				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.enabled", "true"),
 				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.auto_repair_enabled", "true"),
-				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.enabled", "true")
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.enabled", "true"),
 			),
 		}, {
 			ResourceName:      "tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy",
@@ -37,9 +37,9 @@ func TestAccTencentCloudKubernetesHealthCheckPolicyResource_basic(t *testing.T) 
 				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.auto_repair_enabled", "false"),
 				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.enabled", "true"),
 				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.auto_repair_enabled", "true"),
-				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.enabled", "false")
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.enabled", "false"),
 			),
-		}
+		},
 	},
 	})
 }
@@ -48,7 +48,7 @@ func TestAccTencentCloudKubernetesHealthCheckPolicyResource_basic(t *testing.T) 
 const testAccKubernetesHealthCheckPolicyCreate = testAccTkeCluster +`
 
 resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
-	cluster_id = tencentcloud_kubernetes_cluster.kubernetes_cluster.id
+	cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 	name = "example"
 	rules {
 		name = "OOMKilling"
@@ -66,7 +66,7 @@ resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_
 const testAccKubernetesHealthCheckPolicyUpdate = testAccTkeCluster +`
 
 resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
-	cluster_id = tencentcloud_kubernetes_cluster.kubernetes_cluster.id
+	cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 	name = "example"
 	rules {
 		name = "OOMKilling"
