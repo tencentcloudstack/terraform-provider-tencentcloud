@@ -46,10 +46,12 @@ In addition to all arguments above, the following attributes are exported:
   * `key` - Key of the SSL certificate.
   * `name` - Name of the SSL certificate.
   * `order_id` - Order ID returned.
+  * `owner_uin` - Account UIN.Note: This field may return NULL, indicating that the valid value cannot be obtained.
   * `product_zh_name` - Certificate authority.
   * `project_id` - Project ID of the SSL certificate.
   * `status` - Status of the SSL certificate.
   * `subject_names` - ALL domains included in the SSL certificate. Including the primary domain name.
   * `type` - Type of the SSL certificate.
+  * `validity_period` - Validity period: unit (month).Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
 
