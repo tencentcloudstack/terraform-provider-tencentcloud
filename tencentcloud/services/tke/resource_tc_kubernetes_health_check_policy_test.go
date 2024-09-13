@@ -16,20 +16,67 @@ func TestAccTencentCloudKubernetesHealthCheckPolicyResource_basic(t *testing.T) 
 		},
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{{
-			Config: testAccKubernetesHealthCheckPolicy,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "id")),
+			Config: testAccKubernetesHealthCheckPolicyCreate,
+			Check:  resource.ComposeTestCheckFunc(
+				resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "id"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "name", "example"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.auto_repair_enabled", "true"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.enabled", "true"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.auto_repair_enabled", "true"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.enabled", "true")
+			),
 		}, {
 			ResourceName:      "tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy",
 			ImportState:       true,
 			ImportStateVerify: true,
-		}},
+		}, {
+			Config: testAccKubernetesHealthCheckPolicyUpdate,
+			Check:  resource.ComposeTestCheckFunc(
+				resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "id"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "name", "example"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.auto_repair_enabled", "false"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.0.enabled", "true"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.auto_repair_enabled", "true"),
+				resource.TestCheckResourceAttr("tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy", "rules.1.enabled", "false")
+			),
+		}
+	},
 	})
 }
 
-const testAccKubernetesHealthCheckPolicy = `
+
+const testAccKubernetesHealthCheckPolicyCreate = testAccTkeCluster +`
 
 resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
-  rules = {
-  }
+	cluster_id = tencentcloud_kubernetes_cluster.kubernetes_cluster.id
+	name = "example"
+	rules {
+		name = "OOMKilling"
+		auto_repair_enabled = true
+		enabled	= true
+	}
+	rules {
+		name = "KubeletUnhealthy"
+		auto_repair_enabled = true
+		enabled	= true
+	}
+}
+`
+
+const testAccKubernetesHealthCheckPolicyUpdate = testAccTkeCluster +`
+
+resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
+	cluster_id = tencentcloud_kubernetes_cluster.kubernetes_cluster.id
+	name = "example"
+	rules {
+		name = "OOMKilling"
+		auto_repair_enabled = false
+		enabled	= true
+	}
+	rules {
+		name = "KubeletUnhealthy"
+		auto_repair_enabled = true
+		enabled	= false
+	}
 }
 `
