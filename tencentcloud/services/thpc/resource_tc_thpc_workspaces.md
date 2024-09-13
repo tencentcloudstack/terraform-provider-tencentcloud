@@ -205,7 +205,7 @@ resource "tencentcloud_thpc_workspaces" "example" {
 
 Import
 
-thpc workspaces can be imported using the id, e.g.
+THPC workspaces can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_thpc_workspaces.example wks-gwg3ygz1
