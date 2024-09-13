@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_cluster:  Support to update argument `cluster_level` and `auto_upgrade_cluster_level`
+```
