@@ -1578,22 +1578,6 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	// prepaid need delete again
-	//if instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
-	//	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-	//		errRet := cvmService.DeleteInstance(ctx, instanceId)
-	//		if errRet != nil {
-	//			return tccommon.RetryError(errRet)
-	//		}
-	//
-	//		return nil
-	//	})
-	//
-	//	if err != nil {
-	//		return err
-	//	}
-	//}
-
 	//check recycling
 	notExist := false
 
@@ -1636,11 +1620,11 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			dataDisks := v.([]interface{})
 			for _, d := range dataDisks {
 				value := d.(map[string]interface{})
-				diskId := value["data_disk_id"].(string)
 				deleteWithInstancePrepaid := value["delete_with_instance_prepaid"].(bool)
 				if deleteWithInstancePrepaid {
+					diskId := value["data_disk_id"].(string)
 					cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-					err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
+					err = resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 						diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
 						if e != nil {
 							return tccommon.RetryError(e, tccommon.InternalError)
@@ -1781,7 +1765,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			deleteWithInstance := value["delete_with_instance"].(bool)
 			if deleteWithInstance && instanceChargeType == CVM_CHARGE_TYPE_POSTPAID {
 				cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-				err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
+				err = resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
@@ -1866,7 +1850,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			deleteWithInstancePrepaid := value["delete_with_instance_prepaid"].(bool)
 			if deleteWithInstancePrepaid && instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
 				cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-				err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
+				err = resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
 					if e != nil {
 						return tccommon.RetryError(e, tccommon.InternalError)
