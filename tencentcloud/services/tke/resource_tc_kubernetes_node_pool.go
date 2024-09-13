@@ -7,6 +7,8 @@ import (
 	"log"
 	"strings"
 
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -870,7 +872,7 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 	}
 
 	needChange := false
-	mutableArgs := []string{"name", "max_size", "min_size", "taints", "enable_auto_scale", "deletion_protection"}
+	mutableArgs := []string{"name", "max_size", "min_size", "enable_auto_scale", "deletion_protection"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -897,23 +899,6 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 			request.MinNodesNum = helper.IntInt64(v.(int))
 		}
 
-		if v, ok := d.GetOk("taints"); ok {
-			for _, item := range v.([]interface{}) {
-				taintsMap := item.(map[string]interface{})
-				taint := tkev20180525.Taint{}
-				if v, ok := taintsMap["key"]; ok {
-					taint.Key = helper.String(v.(string))
-				}
-				if v, ok := taintsMap["value"]; ok {
-					taint.Value = helper.String(v.(string))
-				}
-				if v, ok := taintsMap["effect"]; ok {
-					taint.Effect = helper.String(v.(string))
-				}
-				request.Taints = append(request.Taints, &taint)
-			}
-		}
-
 		if v, ok := d.GetOkExists("enable_auto_scale"); ok {
 			request.EnableAutoscale = helper.Bool(v.(bool))
 		}
@@ -935,6 +920,75 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s update kubernetes node pool failed, reason:%+v", logId, err)
 			return err
 		}
+	}
+
+	if d.HasChange("taints") {
+		_, n := d.GetChange("taints")
+
+		// clean taints
+		if len(n.([]interface{})) == 0 {
+			body := map[string]interface{}{
+				"ClusterId":  clusterId,
+				"NodePoolId": nodePoolId,
+				"Taints":     []interface{}{},
+			}
+
+			client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOmitNilClient("tke")
+			request := tchttp.NewCommonRequest("tke", "2018-05-25", "ModifyClusterNodePool")
+			err := request.SetActionParameters(body)
+			if err != nil {
+				return err
+			}
+
+			response := tchttp.NewCommonResponse()
+			err = client.Send(request, response)
+			if err != nil {
+				fmt.Printf("update kubernetes node pool taints failed: %v \n", err)
+				return err
+			}
+		} else {
+			request := tkev20180525.NewModifyClusterNodePoolRequest()
+			request.ClusterId = helper.String(clusterId)
+			request.NodePoolId = helper.String(nodePoolId)
+
+			if v, ok := d.GetOk("taints"); ok {
+				for _, item := range v.([]interface{}) {
+					taintsMap := item.(map[string]interface{})
+					taint := tkev20180525.Taint{}
+					if v, ok := taintsMap["key"]; ok {
+						taint.Key = helper.String(v.(string))
+					}
+
+					if v, ok := taintsMap["value"]; ok {
+						taint.Value = helper.String(v.(string))
+					}
+
+					if v, ok := taintsMap["effect"]; ok {
+						taint.Effect = helper.String(v.(string))
+					}
+
+					request.Taints = append(request.Taints, &taint)
+				}
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterNodePoolWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update kubernetes node pool taints failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+
+		return nil
 	}
 
 	if err := resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx); err != nil {
