@@ -241,6 +241,7 @@ func NewAddExistedInstancesResponse() (response *AddExistedInstancesResponse) {
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_VERSIONNOTSUPPORTCGROUPV2 = "InvalidParameter.VersionNotSupportCgroupV2"
 //  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) AddExistedInstances(request *AddExistedInstancesRequest) (response *AddExistedInstancesResponse, err error) {
     return c.AddExistedInstancesWithContext(context.Background(), request)
@@ -269,6 +270,7 @@ func (c *Client) AddExistedInstances(request *AddExistedInstancesRequest) (respo
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_VERSIONNOTSUPPORTCGROUPV2 = "InvalidParameter.VersionNotSupportCgroupV2"
 //  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) AddExistedInstancesWithContext(ctx context.Context, request *AddExistedInstancesRequest) (response *AddExistedInstancesResponse, err error) {
     if request == nil {
@@ -362,6 +364,7 @@ func NewAddVpcCniSubnetsResponse() (response *AddVpcCniSubnetsResponse) {
 // 针对VPC-CNI模式的集群，增加集群容器网络可使用的子网
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ADDVPCCNISUBNETSFAILED = "FailedOperation.AddVpcCniSubnetsFailed"
 //  FAILEDOPERATION_VPCRECODRNOTFOUND = "FailedOperation.VpcRecodrNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
@@ -381,6 +384,7 @@ func (c *Client) AddVpcCniSubnets(request *AddVpcCniSubnetsRequest) (response *A
 // 针对VPC-CNI模式的集群，增加集群容器网络可使用的子网
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ADDVPCCNISUBNETSFAILED = "FailedOperation.AddVpcCniSubnetsFailed"
 //  FAILEDOPERATION_VPCRECODRNOTFOUND = "FailedOperation.VpcRecodrNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
@@ -1221,6 +1225,7 @@ func NewCreateClusterInstancesResponse() (response *CreateClusterInstancesRespon
 //  INTERNALERROR_VPCPEERNOTFOUND = "InternalError.VpcPeerNotFound"
 //  INTERNALERROR_VPCRECODRNOTFOUND = "InternalError.VpcRecodrNotFound"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_VERSIONNOTSUPPORTCGROUPV2 = "InvalidParameter.VersionNotSupportCgroupV2"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
@@ -1269,6 +1274,7 @@ func (c *Client) CreateClusterInstances(request *CreateClusterInstancesRequest) 
 //  INTERNALERROR_VPCPEERNOTFOUND = "InternalError.VpcPeerNotFound"
 //  INTERNALERROR_VPCRECODRNOTFOUND = "InternalError.VpcRecodrNotFound"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_VERSIONNOTSUPPORTCGROUPV2 = "InvalidParameter.VersionNotSupportCgroupV2"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
@@ -2387,7 +2393,7 @@ func NewCreatePrometheusConfigResponse() (response *CreatePrometheusConfigRespon
 }
 
 // CreatePrometheusConfig
-// 创建prometheus配置
+// 创建集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -2406,7 +2412,7 @@ func (c *Client) CreatePrometheusConfig(request *CreatePrometheusConfigRequest) 
 }
 
 // CreatePrometheusConfig
-// 创建prometheus配置
+// 创建集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -2574,7 +2580,7 @@ func NewCreatePrometheusRecordRuleYamlResponse() (response *CreatePrometheusReco
 }
 
 // CreatePrometheusRecordRuleYaml
-// 以Yaml的方式创建聚合规则
+// 创建聚合规则yaml方式
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
@@ -2592,7 +2598,7 @@ func (c *Client) CreatePrometheusRecordRuleYaml(request *CreatePrometheusRecordR
 }
 
 // CreatePrometheusRecordRuleYaml
-// 以Yaml的方式创建聚合规则
+// 创建聚合规则yaml方式
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
@@ -3363,6 +3369,7 @@ func NewDeleteClusterInstancesResponse() (response *DeleteClusterInstancesRespon
 //  FAILEDOPERATION_ASCOMMON = "FailedOperation.AsCommon"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_CVMDELETIONPROTECTION = "FailedOperation.CvmDeletionProtection"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
@@ -3387,6 +3394,7 @@ func (c *Client) DeleteClusterInstances(request *DeleteClusterInstancesRequest) 
 //  FAILEDOPERATION_ASCOMMON = "FailedOperation.AsCommon"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_CVMDELETIONPROTECTION = "FailedOperation.CvmDeletionProtection"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
@@ -3439,6 +3447,7 @@ func NewDeleteClusterNodePoolResponse() (response *DeleteClusterNodePoolResponse
 // 删除节点池
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CVMDELETIONPROTECTION = "FailedOperation.CvmDeletionProtection"
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -3453,6 +3462,7 @@ func (c *Client) DeleteClusterNodePool(request *DeleteClusterNodePoolRequest) (r
 // 删除节点池
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CVMDELETIONPROTECTION = "FailedOperation.CvmDeletionProtection"
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -4316,7 +4326,7 @@ func NewDeletePrometheusConfigResponse() (response *DeletePrometheusConfigRespon
 }
 
 // DeletePrometheusConfig
-// 删除Prometheus配置，如果目标不存在，将返回成功
+// 删除集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -4332,7 +4342,7 @@ func (c *Client) DeletePrometheusConfig(request *DeletePrometheusConfigRequest) 
 }
 
 // DeletePrometheusConfig
-// 删除Prometheus配置，如果目标不存在，将返回成功
+// 删除集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -4379,7 +4389,7 @@ func NewDeletePrometheusRecordRuleYamlResponse() (response *DeletePrometheusReco
 }
 
 // DeletePrometheusRecordRuleYaml
-// 删除聚合实例
+// 删除聚合规则
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -4392,7 +4402,7 @@ func (c *Client) DeletePrometheusRecordRuleYaml(request *DeletePrometheusRecordR
 }
 
 // DeletePrometheusRecordRuleYaml
-// 删除聚合实例
+// 删除聚合规则
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -8058,6 +8068,10 @@ func NewDescribeExternalClusterSpecResponse() (response *DescribeExternalCluster
 }
 
 // DescribeExternalClusterSpec
+// tdcc接口已迁移至tdcc产品下，tke下的接口下线
+//
+// 
+//
 // 获取导入第三方集群YAML定义
 //
 // 可能返回的错误码:
@@ -8081,6 +8095,10 @@ func (c *Client) DescribeExternalClusterSpec(request *DescribeExternalClusterSpe
 }
 
 // DescribeExternalClusterSpec
+// tdcc接口已迁移至tdcc产品下，tke下的接口下线
+//
+// 
+//
 // 获取导入第三方集群YAML定义
 //
 // 可能返回的错误码:
@@ -8428,6 +8446,57 @@ func (c *Client) DescribeLogSwitchesWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeLogSwitchesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePodChargeInfoRequest() (request *DescribePodChargeInfoRequest) {
+    request = &DescribePodChargeInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribePodChargeInfo")
+    
+    
+    return
+}
+
+func NewDescribePodChargeInfoResponse() (response *DescribePodChargeInfoResponse) {
+    response = &DescribePodChargeInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePodChargeInfo
+// 查询正在运行中Pod的计费信息。可以通过 Namespace 和 Name 来查询某个 Pod 的信息，也可以通过 Pod 的 Uid 批量查询。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribePodChargeInfo(request *DescribePodChargeInfoRequest) (response *DescribePodChargeInfoResponse, err error) {
+    return c.DescribePodChargeInfoWithContext(context.Background(), request)
+}
+
+// DescribePodChargeInfo
+// 查询正在运行中Pod的计费信息。可以通过 Namespace 和 Name 来查询某个 Pod 的信息，也可以通过 Pod 的 Uid 批量查询。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribePodChargeInfoWithContext(ctx context.Context, request *DescribePodChargeInfoRequest) (response *DescribePodChargeInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribePodChargeInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePodChargeInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePodChargeInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -8995,7 +9064,7 @@ func NewDescribePrometheusConfigResponse() (response *DescribePrometheusConfigRe
 }
 
 // DescribePrometheusConfig
-// 拉取Prometheus配置
+// 获取集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -9005,7 +9074,6 @@ func NewDescribePrometheusConfigResponse() (response *DescribePrometheusConfigRe
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
@@ -9017,7 +9085,7 @@ func (c *Client) DescribePrometheusConfig(request *DescribePrometheusConfigReque
 }
 
 // DescribePrometheusConfig
-// 拉取Prometheus配置
+// 获取集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -9027,7 +9095,6 @@ func (c *Client) DescribePrometheusConfig(request *DescribePrometheusConfigReque
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
@@ -9936,6 +10003,61 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     request.SetContext(ctx)
     
     response = NewDescribeRegionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeReservedInstanceUtilizationRateRequest() (request *DescribeReservedInstanceUtilizationRateRequest) {
+    request = &DescribeReservedInstanceUtilizationRateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeReservedInstanceUtilizationRate")
+    
+    
+    return
+}
+
+func NewDescribeReservedInstanceUtilizationRateResponse() (response *DescribeReservedInstanceUtilizationRateResponse) {
+    response = &DescribeReservedInstanceUtilizationRateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeReservedInstanceUtilizationRate
+// 查询各种规格类型的预留券使用率
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeReservedInstanceUtilizationRate(request *DescribeReservedInstanceUtilizationRateRequest) (response *DescribeReservedInstanceUtilizationRateResponse, err error) {
+    return c.DescribeReservedInstanceUtilizationRateWithContext(context.Background(), request)
+}
+
+// DescribeReservedInstanceUtilizationRate
+// 查询各种规格类型的预留券使用率
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeReservedInstanceUtilizationRateWithContext(ctx context.Context, request *DescribeReservedInstanceUtilizationRateRequest) (response *DescribeReservedInstanceUtilizationRateResponse, err error) {
+    if request == nil {
+        request = NewDescribeReservedInstanceUtilizationRateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeReservedInstanceUtilizationRate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeReservedInstanceUtilizationRateResponse()
     err = c.Send(request, response)
     return
 }
@@ -12976,7 +13098,7 @@ func NewModifyPrometheusConfigResponse() (response *ModifyPrometheusConfigRespon
 }
 
 // ModifyPrometheusConfig
-// 修改prometheus配置，如果配置项不存在，则会新增
+// 修改集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -12994,7 +13116,7 @@ func (c *Client) ModifyPrometheusConfig(request *ModifyPrometheusConfigRequest) 
 }
 
 // ModifyPrometheusConfig
-// 修改prometheus配置，如果配置项不存在，则会新增
+// 修改集群采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -13102,7 +13224,7 @@ func NewModifyPrometheusRecordRuleYamlResponse() (response *ModifyPrometheusReco
 }
 
 // ModifyPrometheusRecordRuleYaml
-// 通过yaml的方式修改Prometheus聚合实例
+// 修改聚合规则yaml方式
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -13119,7 +13241,7 @@ func (c *Client) ModifyPrometheusRecordRuleYaml(request *ModifyPrometheusRecordR
 }
 
 // ModifyPrometheusRecordRuleYaml
-// 通过yaml的方式修改Prometheus聚合实例
+// 修改聚合规则yaml方式
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -14330,7 +14452,7 @@ func NewUpdateEKSClusterResponse() (response *UpdateEKSClusterResponse) {
 }
 
 // UpdateEKSCluster
-// 修改弹性集群名称等属性 
+// 修改弹性集群名称等属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -14351,7 +14473,7 @@ func (c *Client) UpdateEKSCluster(request *UpdateEKSClusterRequest) (response *U
 }
 
 // UpdateEKSCluster
-// 修改弹性集群名称等属性 
+// 修改弹性集群名称等属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
