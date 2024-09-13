@@ -1779,7 +1779,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			value := d.(map[string]interface{})
 			diskId := value["data_disk_id"].(string)
 			deleteWithInstance := value["delete_with_instance"].(bool)
-			if deleteWithInstance {
+			if deleteWithInstance && instanceChargeType == CVM_CHARGE_TYPE_POSTPAID {
 				cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 				err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
@@ -1864,7 +1864,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			}
 
 			deleteWithInstancePrepaid := value["delete_with_instance_prepaid"].(bool)
-			if deleteWithInstancePrepaid {
+			if deleteWithInstancePrepaid && instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
 				cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 				err := resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
