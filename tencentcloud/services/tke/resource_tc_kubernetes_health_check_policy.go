@@ -21,6 +21,9 @@ func ResourceTencentCloudKubernetesHealthCheckPolicy() *schema.Resource {
 		Read:   resourceTencentCloudKubernetesHealthCheckPolicyRead,
 		Update: resourceTencentCloudKubernetesHealthCheckPolicyUpdate,
 		Delete: resourceTencentCloudKubernetesHealthCheckPolicyDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -28,41 +31,32 @@ func ResourceTencentCloudKubernetesHealthCheckPolicy() *schema.Resource {
 				Description: "ID of the cluster",
 			},
 
-			"health_check_policy": {
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Health Check Policy Name",
+			},
+
+			"rules": {
 				Type:        schema.TypeList,
 				Required:    true,
-				MaxItems:    1,
-				Description: "Health Check Policy",
+				Description: "Health check policy rule list",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"auto_repair_enabled": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Enable repair or not",
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Enable detection of this project or not.",
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Health Check Policy Name",
-						},
-						"rules": {
-							Type:        schema.TypeList,
-							Required:    true,
-							Description: "Health check policy rule list",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"auto_repair_enabled": {
-										Type:        schema.TypeBool,
-										Required:    true,
-										Description: "Enable repair or not",
-									},
-									"enabled": {
-										Type:        schema.TypeBool,
-										Required:    true,
-										Description: "Enable detection of this project or not.",
-									},
-									"name": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "Health check rule details",
-									},
-								},
-							},
+							Description: "Health check rule details",
 						},
 					},
 				},
@@ -91,12 +85,35 @@ func resourceTencentCloudKubernetesHealthCheckPolicyCreate(d *schema.ResourceDat
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
 	}
-
-	request.ClusterId = helper.String(clusterId)
-
-	if err := resourceTencentCloudKubernetesHealthCheckPolicyCreatePostFillRequest0(ctx, request); err != nil {
-		return err
+	if v, ok := d.GetOk("name"); ok {
+		name = v.(string)
 	}
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		request.ClusterId = helper.String(v.(string))
+	}
+
+	healthCheckPolicy := tkev20220501.HealthCheckPolicy{}
+	if v, ok := d.GetOk("name"); ok {
+		healthCheckPolicy.Name = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("rules"); ok {
+		for _, item := range v.([]interface{}) {
+			rulesMap := item.(map[string]interface{})
+			healthCheckPolicyRule := tkev20220501.HealthCheckPolicyRule{}
+			if v, ok := rulesMap["auto_repair_enabled"]; ok {
+				healthCheckPolicyRule.AutoRepairEnabled = helper.Bool(v.(bool))
+			}
+			if v, ok := rulesMap["enabled"]; ok {
+				healthCheckPolicyRule.Enabled = helper.Bool(v.(bool))
+			}
+			if v, ok := rulesMap["name"]; ok {
+				healthCheckPolicyRule.Name = helper.String(v.(string))
+			}
+			healthCheckPolicy.Rules = append(healthCheckPolicy.Rules, &healthCheckPolicyRule)
+		}
+	}
+	request.HealthCheckPolicy = &healthCheckPolicy
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().CreateHealthCheckPolicyWithContext(ctx, request)
@@ -138,6 +155,8 @@ func resourceTencentCloudKubernetesHealthCheckPolicyRead(d *schema.ResourceData,
 	name := idSplit[1]
 
 	_ = d.Set("cluster_id", clusterId)
+
+	_ = d.Set("name", name)
 
 	respData, err := service.DescribeKubernetesHealthCheckPolicyById(ctx, clusterId, name)
 	if err != nil {
@@ -188,7 +207,7 @@ func resourceTencentCloudKubernetesHealthCheckPolicyUpdate(d *schema.ResourceDat
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"cluster_id"}
+	immutableArgs := []string{"cluster_id", "name"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -202,7 +221,7 @@ func resourceTencentCloudKubernetesHealthCheckPolicyUpdate(d *schema.ResourceDat
 	name := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"health_check_policy"}
+	mutableArgs := []string{"rules"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -215,29 +234,25 @@ func resourceTencentCloudKubernetesHealthCheckPolicyUpdate(d *schema.ResourceDat
 
 		request.ClusterId = helper.String(clusterId)
 
-		if healthCheckPolicyMap, ok := helper.InterfacesHeadMap(d, "health_check_policy"); ok {
-			healthCheckPolicy := tkev20220501.HealthCheckPolicy{}
-			if v, ok := healthCheckPolicyMap["name"]; ok {
-				healthCheckPolicy.Name = helper.String(v.(string))
-			}
-			if v, ok := healthCheckPolicyMap["rules"]; ok {
-				for _, item := range v.([]interface{}) {
-					rulesMap := item.(map[string]interface{})
-					healthCheckPolicyRule := tkev20220501.HealthCheckPolicyRule{}
-					if v, ok := rulesMap["auto_repair_enabled"]; ok {
-						healthCheckPolicyRule.AutoRepairEnabled = helper.Bool(v.(bool))
-					}
-					if v, ok := rulesMap["enabled"]; ok {
-						healthCheckPolicyRule.Enabled = helper.Bool(v.(bool))
-					}
-					if v, ok := rulesMap["name"]; ok {
-						healthCheckPolicyRule.Name = helper.String(v.(string))
-					}
-					healthCheckPolicy.Rules = append(healthCheckPolicy.Rules, &healthCheckPolicyRule)
+		healthCheckPolicy := tkev20220501.HealthCheckPolicy{}
+		healthCheckPolicy.Name = helper.String(name)
+		if v, ok := d.GetOk("rules"); ok {
+			for _, item := range v.([]interface{}) {
+				rulesMap := item.(map[string]interface{})
+				healthCheckPolicyRule := tkev20220501.HealthCheckPolicyRule{}
+				if v, ok := rulesMap["auto_repair_enabled"]; ok {
+					healthCheckPolicyRule.AutoRepairEnabled = helper.Bool(v.(bool))
 				}
+				if v, ok := rulesMap["enabled"]; ok {
+					healthCheckPolicyRule.Enabled = helper.Bool(v.(bool))
+				}
+				if v, ok := rulesMap["name"]; ok {
+					healthCheckPolicyRule.Name = helper.String(v.(string))
+				}
+				healthCheckPolicy.Rules = append(healthCheckPolicy.Rules, &healthCheckPolicyRule)
 			}
-			request.HealthCheckPolicy = &healthCheckPolicy
 		}
+		request.HealthCheckPolicy = &healthCheckPolicy
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().ModifyHealthCheckPolicyWithContext(ctx, request)
@@ -254,7 +269,6 @@ func resourceTencentCloudKubernetesHealthCheckPolicyUpdate(d *schema.ResourceDat
 		}
 	}
 
-	_ = name
 	return resourceTencentCloudKubernetesHealthCheckPolicyRead(d, meta)
 }
 
@@ -279,9 +293,7 @@ func resourceTencentCloudKubernetesHealthCheckPolicyDelete(d *schema.ResourceDat
 
 	request.ClusterId = helper.String(clusterId)
 
-	if v, ok := d.GetOk("health_check_policy[0].name"); ok {
-		request.HealthCheckPolicyName = helper.String(v.(string))
-	}
+	request.HealthCheckPolicyName = helper.String(name)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DeleteHealthCheckPolicyWithContext(ctx, request)
@@ -299,6 +311,5 @@ func resourceTencentCloudKubernetesHealthCheckPolicyDelete(d *schema.ResourceDat
 	}
 
 	_ = response
-	_ = name
 	return nil
 }

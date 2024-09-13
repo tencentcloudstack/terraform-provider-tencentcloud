@@ -4,9 +4,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
-  health_check_policy = {
-    rules = {
-    }
+  rules = {
   }
 }
 ```
