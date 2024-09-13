@@ -815,7 +815,7 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 func (me *GaapService) CreateTCPListener(
 	ctx context.Context,
 	name, scheduler, realserverType, proxyId string,
-	port, interval, connectTimeout, clientIPMethod int,
+	port, interval, connectTimeout, clientIPMethod, healthyThreshold, unhealthyThreshold int,
 	healthCheck bool,
 ) (id string, err error) {
 	logId := tccommon.GetLogId(ctx)
@@ -835,6 +835,8 @@ func (me *GaapService) CreateTCPListener(
 	request.DelayLoop = helper.IntUint64(interval)
 	request.ConnectTimeout = helper.IntUint64(connectTimeout)
 	request.ClientIPMethod = helper.IntInt64(clientIPMethod)
+	request.HealthyThreshold = helper.IntUint64(healthyThreshold)
+	request.UnhealthyThreshold = helper.IntUint64(unhealthyThreshold)
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -870,7 +872,9 @@ func (me *GaapService) CreateTCPListener(
 func (me *GaapService) CreateUDPListener(
 	ctx context.Context,
 	name, scheduler, realserverType, proxyId string,
-	port int,
+	port, interval, connectTimeout, healthyThreshold, unhealthyThreshold int,
+	healthCheck bool,
+	optionalParams map[string]interface{},
 ) (id string, err error) {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -881,6 +885,30 @@ func (me *GaapService) CreateUDPListener(
 	request.RealServerType = &realserverType
 	request.ProxyId = &proxyId
 	request.Ports = []*uint64{helper.IntUint64(port)}
+	request.ConnectTimeout = helper.IntUint64(connectTimeout)
+	request.DelayLoop = helper.IntUint64(interval)
+	request.HealthyThreshold = helper.IntUint64(healthyThreshold)
+	request.UnhealthyThreshold = helper.IntUint64(unhealthyThreshold)
+	if healthCheck {
+		request.HealthCheck = helper.IntUint64(1)
+	} else {
+		request.HealthCheck = helper.IntUint64(0)
+	}
+	if v, ok := optionalParams["check_type"]; ok {
+		request.CheckType = helper.String(v.(string))
+	}
+	if v, ok := optionalParams["check_port"]; ok {
+		request.CheckPort = helper.IntInt64(v.(int))
+	}
+	if v, ok := optionalParams["context_type"]; ok {
+		request.ContextType = helper.String(v.(string))
+	}
+	if v, ok := optionalParams["send_context"]; ok {
+		request.SendContext = helper.String(v.(string))
+	}
+	if v, ok := optionalParams["recv_context"]; ok {
+		request.RecvContext = helper.String(v.(string))
+	}
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1078,7 +1106,7 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 	proxyId, id string,
 	name, scheduler *string,
 	healthCheck *bool,
-	interval, connectTimeout int,
+	interval, connectTimeout, healthyThreshold, unhealthyThreshold int,
 ) error {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -1097,6 +1125,8 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 	}
 	request.DelayLoop = helper.IntUint64(interval)
 	request.ConnectTimeout = helper.IntUint64(connectTimeout)
+	request.HealthyThreshold = helper.IntUint64(healthyThreshold)
+	request.UnhealthyThreshold = helper.IntUint64(unhealthyThreshold)
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1124,6 +1154,9 @@ func (me *GaapService) ModifyUDPListenerAttribute(
 	ctx context.Context,
 	proxyId, id string,
 	name, scheduler *string,
+	connectTimeout, interval, healthyThreshold, unhealthyThreshold int,
+	healthCheck *bool,
+	optionalParams map[string]interface{},
 ) error {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -1133,6 +1166,32 @@ func (me *GaapService) ModifyUDPListenerAttribute(
 	request.ListenerId = &id
 	request.ListenerName = name
 	request.Scheduler = scheduler
+	request.ConnectTimeout = helper.IntUint64(connectTimeout)
+	request.DelayLoop = helper.IntUint64(interval)
+	if healthCheck != nil {
+		if *healthCheck {
+			request.HealthCheck = helper.IntUint64(1)
+		} else {
+			request.HealthCheck = helper.IntUint64(0)
+		}
+	}
+	request.HealthyThreshold = helper.IntUint64(healthyThreshold)
+	request.UnhealthyThreshold = helper.IntUint64(unhealthyThreshold)
+	if v, ok := optionalParams["check_type"]; ok {
+		request.CheckType = helper.String(v.(string))
+	}
+	if v, ok := optionalParams["check_port"]; ok {
+		request.CheckPort = helper.IntInt64(v.(int))
+	}
+	if v, ok := optionalParams["context_type"]; ok {
+		request.ContextType = helper.String(v.(string))
+	}
+	if v, ok := optionalParams["send_context"]; ok {
+		request.SendContext = helper.String(v.(string))
+	}
+	if v, ok := optionalParams["recv_context"]; ok {
+		request.RecvContext = helper.String(v.(string))
+	}
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

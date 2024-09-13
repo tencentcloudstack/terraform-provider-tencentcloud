@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_vpc:  Fix the issue where field assistant_cidrs cannot be edited
+```

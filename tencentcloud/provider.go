@@ -103,6 +103,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/thpc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tpulsar"
@@ -2127,6 +2128,8 @@ func Provider() *schema.Provider {
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
 			"tencentcloud_batch_apply_account_baselines":  controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
 			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy()},
+			"tencentcloud_thpc_workspaces":               thpc.ResourceTencentCloudThpcWorkspaces(),
+		},
 
 		ConfigureFunc: providerConfigure,
 	}

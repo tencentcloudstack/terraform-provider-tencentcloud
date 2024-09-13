@@ -59,7 +59,7 @@ func ResourceTencentCloudVpcInstance() *schema.Resource {
 				Description: "Indicates whether VPC multicast is enabled. The default value is 'true'.",
 			},
 			"assistant_cidrs": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of Assistant CIDR, NOTE: Only `NORMAL` typed CIDRs included, check the Docker CIDR by readonly `assistant_docker_cidrs`.",
 				Computed:    true,
@@ -150,15 +150,22 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	d.SetId(vpcId)
 
 	if v, ok := d.GetOk("assistant_cidrs"); ok {
-		assistantCidrs := v.([]interface{})
+		assistantCidrs := v.(*schema.Set).List()
+		tmpList := make([]*string, 0, len(assistantCidrs))
+		for i := range assistantCidrs {
+			userIdSet := assistantCidrs[i].(string)
+			tmpList = append(tmpList, &userIdSet)
+		}
+
 		request := vpc.NewCreateAssistantCidrRequest()
 		request.VpcId = &vpcId
-		request.CidrBlocks = helper.InterfacesStringsPoint(assistantCidrs)
-		_, err := vpcService.CreateAssistantCidr(ctx, request)
+		request.CidrBlocks = tmpList
+		_, err = vpcService.CreateAssistantCidr(ctx, request)
 		if err != nil {
 			return err
 		}
 	}
+
 	// protected while tag is not ready, default is 1s
 	time.Sleep(tccommon.WaitReadTimeout)
 
@@ -296,17 +303,22 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("assistant_cidrs") {
 		old, now := d.GetChange("assistant_cidrs")
+		oldSet := old.(*schema.Set)
+		nowSet := now.(*schema.Set)
+		add := nowSet.Difference(oldSet).List()
+		remove := oldSet.Difference(nowSet).List()
+		addLen := len(add)
+		removeLen := len(remove)
+
 		request := vpc.NewModifyAssistantCidrRequest()
 		request.VpcId = &id
-
-		nowTmp, ok := now.([]interface{})
-		if ok && len(nowTmp) > 0 {
-			request.NewCidrBlocks = helper.InterfacesStringsPoint(nowTmp)
+		if removeLen > 0 {
+			request.OldCidrBlocks = helper.InterfacesStringsPoint(remove)
 		}
 
-		oldTmp, ok := old.([]interface{})
-		if ok && len(oldTmp) > 0 {
-			request.OldCidrBlocks = helper.InterfacesStringsPoint(oldTmp)
+		if addLen > 0 {
+			request.OldCidrBlocks = nil
+			request.NewCidrBlocks = helper.InterfacesStringsPoint(add)
 		}
 
 		if err := vpcService.ModifyAssistantCidr(ctx, request); err != nil {
