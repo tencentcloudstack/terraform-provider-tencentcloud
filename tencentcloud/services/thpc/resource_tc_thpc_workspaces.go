@@ -199,6 +199,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 						"private_ip_addresses": {
 							Type:        schema.TypeSet,
 							Optional:    true,
+							Computed:    true,
 							Description: "Array of private ip address.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
@@ -213,6 +214,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 			"internet_accessible": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Public network bandwidth settings.",
 				Elem: &schema.Resource{
@@ -231,6 +233,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 						"public_ip_assigned": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.",
 						},
 						"bandwidth_package_id": {
@@ -244,6 +247,7 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 			"space_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Workspace Display Name.",
 			},
 			"login_settings": {
@@ -896,7 +900,7 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 		}
 	} else {
 		for _, item := range cvmInfo.DataDisks {
-			if *item.DiskType == "LOCAL_NVME" {
+			if *item.DiskType == CVM_DISK_TYPE_LOCAL_NVME {
 				continue
 			}
 
@@ -1003,8 +1007,10 @@ func resourceTencentCloudThpcWorkspacesRead(d *schema.ResourceData, meta interfa
 	if cvmInfo.LoginSettings != nil {
 		tmpList := make([]interface{}, 0)
 		tmpMap := make(map[string]interface{})
-		if cvmInfo.LoginSettings.Password != nil {
-			tmpMap["password"] = cvmInfo.LoginSettings.Password
+		if loginSettingsMap, ok := helper.InterfacesHeadMap(d, "login_settings"); ok {
+			if v, ok := loginSettingsMap["password"]; ok && v != "" {
+				tmpMap["password"] = v.(string)
+			}
 		}
 
 		if cvmInfo.LoginSettings.KeyIds != nil {
@@ -1054,7 +1060,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 		spaceId = d.Id()
 	)
 
-	immutableArgs := []string{"client_token", "placement", "space_charge_prepaid", "space_charge_type", "space_type", "image_id", "virtual_private_cloud", "internet_accessible", "login_settings", "security_group_ids", "enhanced_service", "user_data", "disaster_recover_group_id", "tag_specification", "hpc_cluster_id", "cam_role_name", "host_name"}
+	immutableArgs := []string{"client_token", "placement", "space_charge_prepaid", "space_charge_type", "space_type", "image_id", "virtual_private_cloud", "internet_accessible", "security_group_ids", "enhanced_service", "user_data", "disaster_recover_group_id", "tag_specification", "hpc_cluster_id", "cam_role_name", "host_name"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -1164,6 +1170,122 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 			err := cbsService.ResizeDisk(ctx, diskId, size)
 			if err != nil {
 				return fmt.Errorf("an error occurred when modifying %s, reason: %s", sizeKey, err.Error())
+			}
+		}
+	}
+
+	if d.HasChange("login_settings") {
+		passwordKey := fmt.Sprintf("login_settings.0.password")
+		keyIdsKey := fmt.Sprintf("login_settings.0.key_ids")
+
+		instanceId := d.Get("resource_id").(string)
+		cvmService := svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		if d.HasChange(passwordKey) {
+			err := cvmService.ModifyPassword(ctx, instanceId, d.Get(passwordKey).(string))
+			if err != nil {
+				return err
+			}
+
+			// wait
+			err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+				instance, e := cvmService.DescribeInstanceById(ctx, instanceId)
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+
+				if instance.LatestOperationState == nil {
+					return resource.RetryableError(fmt.Errorf("wait for operation update"))
+				}
+
+				if *instance.LatestOperationState == svccvm.CVM_LATEST_OPERATION_STATE_OPERATING {
+					return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", instanceId))
+				}
+
+				if *instance.LatestOperationState == svccvm.CVM_LATEST_OPERATION_STATE_FAILED {
+					return resource.NonRetryableError(fmt.Errorf("failed operation"))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+
+		if d.HasChange(keyIdsKey) {
+			o, n := d.GetChange(keyIdsKey)
+			ov := o.(*schema.Set)
+			nv := n.(*schema.Set)
+			adds := nv.Difference(ov)
+			removes := ov.Difference(nv)
+			adds.Remove("")
+			removes.Remove("")
+
+			if removes.Len() > 0 {
+				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
+				if err != nil {
+					return err
+				}
+
+				// wait
+				err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+					instance, e := cvmService.DescribeInstanceById(ctx, instanceId)
+					if e != nil {
+						return resource.NonRetryableError(e)
+					}
+
+					if instance.LatestOperationState == nil {
+						return resource.RetryableError(fmt.Errorf("wait for operation update"))
+					}
+
+					if *instance.LatestOperationState == svccvm.CVM_LATEST_OPERATION_STATE_OPERATING {
+						return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", instanceId))
+					}
+
+					if *instance.LatestOperationState == svccvm.CVM_LATEST_OPERATION_STATE_FAILED {
+						return resource.NonRetryableError(fmt.Errorf("failed operation"))
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+
+			if adds.Len() > 0 {
+				err := cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
+				if err != nil {
+					return err
+				}
+
+				// wait
+				err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+					instance, e := cvmService.DescribeInstanceById(ctx, instanceId)
+					if e != nil {
+						return resource.NonRetryableError(e)
+					}
+
+					if instance.LatestOperationState == nil {
+						return resource.RetryableError(fmt.Errorf("wait for operation update"))
+					}
+
+					if *instance.LatestOperationState == svccvm.CVM_LATEST_OPERATION_STATE_OPERATING {
+						return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", instanceId))
+					}
+
+					if *instance.LatestOperationState == svccvm.CVM_LATEST_OPERATION_STATE_FAILED {
+						return resource.NonRetryableError(fmt.Errorf("failed operation"))
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
