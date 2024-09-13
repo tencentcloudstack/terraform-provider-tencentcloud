@@ -1688,7 +1688,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 	}
 
 	needChange := false
-	mutableArgs := []string{"project_id", "cluster_name", "cluster_desc"}
+	mutableArgs := []string{"project_id", "cluster_name", "cluster_desc", "cluster_level", "auto_upgrade_cluster_level"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
