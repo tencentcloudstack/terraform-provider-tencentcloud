@@ -2126,9 +2126,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwdoris_instance":                                               cdwdoris.ResourceTencentCloudCdwdorisInstance(),
 			"tencentcloud_cdwdoris_workload_group":                                         cdwdoris.ResourceTencentCloudCdwdorisWorkloadGroup(),
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
-			"tencentcloud_batch_apply_account_baselines": controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
-			"tencentcloud_thpc_workspaces":               thpc.ResourceTencentCloudThpcWorkspaces(),
-		},
+			"tencentcloud_batch_apply_account_baselines":  controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
+			"tencentcloud_thpc_workspaces":                thpc.ResourceTencentCloudThpcWorkspaces(),
+			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy()},
 
 		ConfigureFunc: providerConfigure,
 	}
