@@ -28,25 +28,25 @@ func ResourceTencentCloudKubernetesHealthCheckPolicy() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ID of the cluster",
+				Description: "ID of the cluster.",
 			},
 
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Health Check Policy Name",
+				Description: "Health Check Policy Name.",
 			},
 
 			"rules": {
 				Type:        schema.TypeList,
 				Required:    true,
-				Description: "Health check policy rule list",
+				Description: "Health check policy rule list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_repair_enabled": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							Description: "Enable repair or not",
+							Description: "Enable repair or not.",
 						},
 						"enabled": {
 							Type:        schema.TypeBool,
@@ -56,7 +56,7 @@ func ResourceTencentCloudKubernetesHealthCheckPolicy() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Health check rule details",
+							Description: "Health check rule details.",
 						},
 					},
 				},
