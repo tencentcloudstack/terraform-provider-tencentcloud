@@ -242,6 +242,26 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(ES_KIBANA_PUBLIC_ACCESS),
 				Description:  "Kibana public network access status. Valid values are `OPEN` and `CLOSE`.",
 			},
+			"cos_backup": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "COS automatic backup information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"is_auto_backup": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Whether to enable automatic backup of cos.",
+						},
+						"backup_time": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Automatic backup execution time (accurate to the hour), e.g. `22:00`.",
+						},
+					},
+				},
+			},
 			// computed
 			"elasticsearch_domain": {
 				Type:        schema.TypeString,
@@ -446,12 +466,44 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 	if isUpdate {
 		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, 0, nil, nil, &esAcl)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, 0, nil, nil, &esAcl, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
 			return nil
 		})
+		if err != nil {
+			return err
+		}
+
+		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+		if err != nil {
+			return err
+		}
+	}
+
+	if v, ok := d.GetOk("cos_backup"); ok {
+		cosBackup := es.CosBackup{}
+		for _, item := range v.([]interface{}) {
+			value := item.(map[string]interface{})
+			if v, ok := value["is_auto_backup"]; ok {
+				cosBackup.IsAutoBackup = helper.Bool(v.(bool))
+			}
+
+			if v, ok := value["backup_time"]; ok && v.(string) != "" {
+				cosBackup.BackupTime = helper.String(v.(string))
+			}
+		}
+
+		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nil, nil, nil, &cosBackup)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
@@ -568,6 +620,21 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 		_ = d.Set("es_acl", esAcls)
 	}
 
+	if instance.CosBackup != nil {
+		cosBackupList := make([]map[string]interface{}, 0, 1)
+		cosBackupMap := map[string]interface{}{}
+		if instance.CosBackup.IsAutoBackup != nil {
+			cosBackupMap["is_auto_backup"] = instance.CosBackup.IsAutoBackup
+		}
+
+		if instance.CosBackup.BackupTime != nil {
+			cosBackupMap["backup_time"] = instance.CosBackup.BackupTime
+		}
+
+		cosBackupList = append(cosBackupList, cosBackupMap)
+		_ = d.Set("cos_backup", cosBackupList)
+	}
+
 	if len(instance.TagList) > 0 {
 		tags := make(map[string]string)
 		for _, tag := range instance.TagList {
@@ -595,7 +662,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		instanceName := d.Get("instance_name").(string)
 		// Update operation support at most one item at the same time
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", "", 0, nil, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", "", 0, nil, nil, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -612,7 +679,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, "", 0, nil, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, "", 0, nil, nil, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -631,7 +698,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("kibana_public_access") {
 		if v, ok := d.GetOk("kibana_public_access"); ok {
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", v.(string), 0, nil, nil, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", v.(string), 0, nil, nil, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -690,7 +757,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		licenseType := d.Get("license_type").(string)
 		licenseTypeUpgrading := licenseType != "oss"
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", int64(basicSecurityType), nil, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", int64(basicSecurityType), nil, nil, nil, nil)
 			if errRet != nil {
 				err := errRet.(*sdkErrors.TencentCloudSDKError)
 				if err.Code == es.INVALIDPARAMETER && licenseTypeUpgrading {
@@ -721,7 +788,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				NodeType: helper.String(value["node_type"].(string)),
 			}
 			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nil, info, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nil, info, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -760,7 +827,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			nodeInfoList = append(nodeInfoList, &dataDisk)
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nodeInfoList, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nodeInfoList, nil, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -811,7 +878,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nil, nil, &esAcl)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nil, nil, &esAcl, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -823,6 +890,40 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
 		if err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("cos_backup") {
+		if v, ok := d.GetOk("cos_backup"); ok {
+			cosBackup := es.CosBackup{}
+			for _, item := range v.([]interface{}) {
+				value := item.(map[string]interface{})
+				if v, ok := value["is_auto_backup"]; ok {
+					cosBackup.IsAutoBackup = helper.Bool(v.(bool))
+				}
+
+				if v, ok := value["backup_time"]; ok && v.(string) != "" {
+					cosBackup.BackupTime = helper.String(v.(string))
+				}
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", 0, nil, nil, nil, &cosBackup)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

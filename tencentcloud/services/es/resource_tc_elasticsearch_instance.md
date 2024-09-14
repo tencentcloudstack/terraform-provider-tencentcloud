@@ -52,6 +52,11 @@ resource "tencentcloud_elasticsearch_instance" "example" {
     ]
   }
 
+  cos_backup {
+    is_auto_backup = true
+    backup_time    = "22:00"
+  }
+
   tags = {
     test = "test"
   }

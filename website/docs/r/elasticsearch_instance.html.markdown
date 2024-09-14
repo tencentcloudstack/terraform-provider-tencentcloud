@@ -63,6 +63,11 @@ resource "tencentcloud_elasticsearch_instance" "example" {
     ]
   }
 
+  cos_backup {
+    is_auto_backup = true
+    backup_time    = "22:00"
+  }
+
   tags = {
     test = "test"
   }
@@ -163,6 +168,7 @@ The following arguments are supported:
 * `basic_security_type` - (Optional, Int) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only take effect on `basic` license.
 * `charge_period` - (Optional, Int, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
+* `cos_backup` - (Optional, List) COS automatic backup information.
 * `deploy_mode` - (Optional, Int, ForceNew) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
 * `es_acl` - (Optional, List) Kibana Access Control Configuration.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
@@ -173,6 +179,11 @@ The following arguments are supported:
 * `subnet_id` - (Optional, String, ForceNew) The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted or `-`.
 * `tags` - (Optional, Map) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
 * `web_node_type_info` - (Optional, List) Visual node configuration.
+
+The `cos_backup` object supports the following:
+
+* `backup_time` - (Required, String) Automatic backup execution time (accurate to the hour), e.g. `22:00`.
+* `is_auto_backup` - (Required, Bool) Whether to enable automatic backup of cos.
 
 The `es_acl` object supports the following:
 
