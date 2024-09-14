@@ -28,11 +28,13 @@ func ResourceTencentCloudCcnRouteTableAssociateInstanceConfig() *schema.Resource
 			"ccn_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "ID of the CCN.",
 			},
 			"route_table_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Ccn instance route table ID.",
 			},
 			"instances": {

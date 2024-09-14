@@ -73,6 +73,8 @@ resource "tencentcloud_ccn_route_table_associate_instance_config" "example" {
     instance_id   = tencentcloud_vpc.vpc.id
     instance_type = "VPC"
   }
+
+  depends_on = [tencentcloud_ccn_attachment.attachment]
 }
 ```
 
@@ -80,9 +82,9 @@ resource "tencentcloud_ccn_route_table_associate_instance_config" "example" {
 
 The following arguments are supported:
 
-* `ccn_id` - (Required, String) ID of the CCN.
+* `ccn_id` - (Required, String, ForceNew) ID of the CCN.
 * `instances` - (Required, Set) Instances list.
-* `route_table_id` - (Required, String) Ccn instance route table ID.
+* `route_table_id` - (Required, String, ForceNew) Ccn instance route table ID.
 
 The `instances` object supports the following:
 
