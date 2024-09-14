@@ -106,6 +106,16 @@ func DataSourceTencentCloudSslCertificates() *schema.Resource {
 							Computed:    true,
 							Description: "Creation time of the SSL certificate.",
 						},
+						"owner_uin": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Account UIN.Note: This field may return NULL, indicating that the valid value cannot be obtained.",
+						},
+						"validity_period": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Validity period: unit (month).Note: This field may return NULL, indicating that the valid value cannot be obtained.",
+						},
 						"subject_names": {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeString},
@@ -214,6 +224,8 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 			"begin_time":      *certificate.CertBeginTime,
 			"end_time":        *certificate.CertEndTime,
 			"create_time":     *certificate.InsertTime,
+			"owner_uin":       *certificate.OwnerUin,
+			"validity_period": *certificate.ValidityPeriod,
 		}
 
 		if len(certificate.SubjectAltName) > 0 {
