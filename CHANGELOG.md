@@ -1,3 +1,28 @@
+## 1.81.123 (September 14 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_kubernetes_health_check_policy` ([#2826](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2826))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_ssl_certificates:  add `owner_uin` and `validity_period` params ([#2832](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2832))
+* resource/tencentcloud_ccn_route_table_associate_instance_config:  Update document ([#2829](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2829))
+* resource/tencentcloud_cos_bucket_inventory: Fix null pointer issue ([#2819](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2819))
+* resource/tencentcloud_elasticsearch_instance:  support `cos_backup` ([#2822](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2822))
+* resource/tencentcloud_instance:  Update and delete module code logic ([#2830](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2830))
+* resource/tencentcloud_thpc_workspaces:  Optimized code ([#2824](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2824))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_cluster:  Support to update argument `cluster_level` and `auto_upgrade_cluster_level` ([#2828](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2828))
+
+## 1.81.122 (September 13 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ccn_route_table_associate_instance_config:  Support assume role ([#2823](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2823))
+
 ## 1.81.121 (September 11 , 2024)
 
 FEATURES:
