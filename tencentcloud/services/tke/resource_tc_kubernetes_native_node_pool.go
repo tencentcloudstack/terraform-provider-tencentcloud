@@ -3,15 +3,14 @@ package tke
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
+	tkev20220501 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -209,22 +208,6 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 										ForceNew:    true,
 										Description: "Cloud disk size (G).",
 									},
-									//"auto_format_and_mount": {
-									//	Type:        schema.TypeBool,
-									//	Optional:    true,
-									//	Computed:    true,
-									//	Description: "Whether to automatically format the disk and mount it.",
-									//},
-									//"file_system": {
-									//	Type:        schema.TypeString,
-									//	Optional:    true,
-									//	Description: "File system.",
-									//},
-									//"mount_target": {
-									//	Type:        schema.TypeString,
-									//	Optional:    true,
-									//	Description: "Mount directory.",
-									//},
 								},
 							},
 						},
@@ -244,84 +227,6 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 								Type: schema.TypeString,
 							},
 						},
-						//"upgrade_settings": {
-						//	Type:        schema.TypeList,
-						//	Optional:    true,
-						//	Computed:    true,
-						//	MaxItems:    1,
-						//	Description: "Automatically upgrade configuration.",
-						//	Elem: &schema.Resource{
-						//		Schema: map[string]*schema.Schema{
-						//			"auto_upgrade": {
-						//				Type:        schema.TypeBool,
-						//				Optional:    true,
-						//				Computed:    true,
-						//				Description: "Whether to enable automatic upgrade.",
-						//			},
-						//			"upgrade_options": {
-						//				Type:        schema.TypeList,
-						//				Optional:    true,
-						//				MaxItems:    1,
-						//				Description: "Operation and maintenance window.",
-						//				Elem: &schema.Resource{
-						//					Schema: map[string]*schema.Schema{
-						//						"auto_upgrade_start_time": {
-						//							Type:        schema.TypeString,
-						//							Optional:    true,
-						//							Description: "Automatic upgrade start time.",
-						//						},
-						//						"duration": {
-						//							Type:        schema.TypeString,
-						//							Optional:    true,
-						//							Description: "Automatic upgrade duration.",
-						//						},
-						//						"weekly_period": {
-						//							Type:        schema.TypeList,
-						//							Optional:    true,
-						//							Description: "Operation and maintenance date.",
-						//							Elem: &schema.Schema{
-						//								Type: schema.TypeString,
-						//							},
-						//						},
-						//					},
-						//				},
-						//			},
-						//			"components": {
-						//				Type:        schema.TypeList,
-						//				Optional:    true,
-						//				Description: "Upgrade items.",
-						//				Elem: &schema.Schema{
-						//					Type: schema.TypeString,
-						//				},
-						//			},
-						//			"max_unavailable": {
-						//				Type:        schema.TypeList,
-						//				Optional:    true,
-						//				MaxItems:    1,
-						//				Description: "When upgrading, the maximum number of nodes that cannot be upgraded.",
-						//				Elem: &schema.Resource{
-						//					Schema: map[string]*schema.Schema{
-						//						"type": {
-						//							Type:        schema.TypeInt,
-						//							Required:    true,
-						//							Description: "Numeric type, 0 is int, 1 is string.",
-						//						},
-						//						"int_val": {
-						//							Type:        schema.TypeInt,
-						//							Optional:    true,
-						//							Description: "Integer.",
-						//						},
-						//						"str_val": {
-						//							Type:        schema.TypeString,
-						//							Optional:    true,
-						//							Description: "String.",
-						//						},
-						//					},
-						//				},
-						//			},
-						//		},
-						//	},
-						//},
 						"auto_repair": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -331,8 +236,8 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							Computed:    true,
-							MaxItems:    1,
 							ForceNew:    true,
+							MaxItems:    1,
 							Description: "Billing configuration for yearly and monthly models.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -595,15 +500,15 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		nodePoolId string
 	)
 	var (
-		request  = tke2.NewCreateNodePoolRequest()
-		response = tke2.NewCreateNodePoolResponse()
+		request  = tkev20220501.NewCreateNodePoolRequest()
+		response = tkev20220501.NewCreateNodePoolResponse()
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
 	}
 
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -616,7 +521,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("labels"); ok {
 		for _, item := range v.([]interface{}) {
 			labelsMap := item.(map[string]interface{})
-			label := tke2.Label{}
+			label := tkev20220501.Label{}
 			if v, ok := labelsMap["name"]; ok {
 				label.Name = helper.String(v.(string))
 			}
@@ -630,7 +535,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("taints"); ok {
 		for _, item := range v.([]interface{}) {
 			taintsMap := item.(map[string]interface{})
-			taint := tke2.Taint{}
+			taint := tkev20220501.Taint{}
 			if v, ok := taintsMap["key"]; ok {
 				taint.Key = helper.String(v.(string))
 			}
@@ -647,14 +552,14 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("tags"); ok {
 		for _, item := range v.([]interface{}) {
 			tagsMap := item.(map[string]interface{})
-			tagSpecification := tke2.TagSpecification{}
+			tagSpecification := tkev20220501.TagSpecification{}
 			if v, ok := tagsMap["resource_type"]; ok {
 				tagSpecification.ResourceType = helper.String(v.(string))
 			}
 			if v, ok := tagsMap["tags"]; ok {
 				for _, item := range v.([]interface{}) {
 					tagsMap := item.(map[string]interface{})
-					tag := tke2.Tag{}
+					tag := tkev20220501.Tag{}
 					if v, ok := tagsMap["key"]; ok {
 						tag.Key = helper.String(v.(string))
 					}
@@ -677,9 +582,9 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	}
 
 	if nativeMap, ok := helper.InterfacesHeadMap(d, "native"); ok {
-		createNativeNodePoolParam := tke2.CreateNativeNodePoolParam{}
+		createNativeNodePoolParam := tkev20220501.CreateNativeNodePoolParam{}
 		if scalingMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["scaling"]); ok {
-			machineSetScaling := tke2.MachineSetScaling{}
+			machineSetScaling := tkev20220501.MachineSetScaling{}
 			if v, ok := scalingMap["min_replicas"]; ok {
 				machineSetScaling.MinReplicas = helper.IntInt64(v.(int))
 			}
@@ -702,22 +607,13 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 			createNativeNodePoolParam.InstanceChargeType = helper.String(v.(string))
 		}
 		if systemDiskMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["system_disk"]); ok {
-			disk := tke2.Disk{}
+			disk := tkev20220501.Disk{}
 			if v, ok := systemDiskMap["disk_type"]; ok {
 				disk.DiskType = helper.String(v.(string))
 			}
 			if v, ok := systemDiskMap["disk_size"]; ok {
 				disk.DiskSize = helper.IntInt64(v.(int))
 			}
-			//if v, ok := systemDiskMap["auto_format_and_mount"]; ok {
-			//	disk.AutoFormatAndMount = helper.Bool(v.(bool))
-			//}
-			//if v, ok := systemDiskMap["file_system"]; ok {
-			//	disk.FileSystem = helper.String(v.(string))
-			//}
-			//if v, ok := systemDiskMap["mount_target"]; ok {
-			//	disk.MountTarget = helper.String(v.(string))
-			//}
 			createNativeNodePoolParam.SystemDisk = &disk
 		}
 		if v, ok := nativeMap["instance_types"]; ok {
@@ -734,55 +630,11 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 				createNativeNodePoolParam.SecurityGroupIds = append(createNativeNodePoolParam.SecurityGroupIds, helper.String(securityGroupIds))
 			}
 		}
-		//if upgradeSettingsMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["upgrade_settings"]); ok {
-		//	machineUpgradeSettings := tke2.MachineUpgradeSettings{}
-		//	if v, ok := upgradeSettingsMap["auto_upgrade"]; ok {
-		//		machineUpgradeSettings.AutoUpgrade = helper.Bool(v.(bool))
-		//	}
-		//	if upgradeOptionsMap, ok := helper.ConvertInterfacesHeadToMap(upgradeSettingsMap["upgrade_options"]); ok {
-		//		autoUpgradeOptions := tke2.AutoUpgradeOptions{}
-		//		if v, ok := upgradeOptionsMap["auto_upgrade_start_time"]; ok {
-		//			autoUpgradeOptions.AutoUpgradeStartTime = helper.String(v.(string))
-		//		}
-		//		if v, ok := upgradeOptionsMap["duration"]; ok {
-		//			autoUpgradeOptions.Duration = helper.String(v.(string))
-		//		}
-		//		if v, ok := upgradeOptionsMap["weekly_period"]; ok {
-		//			weeklyPeriodSet := v.([]interface{})
-		//			for i := range weeklyPeriodSet {
-		//				weeklyPeriod := weeklyPeriodSet[i].(string)
-		//				autoUpgradeOptions.WeeklyPeriod = append(autoUpgradeOptions.WeeklyPeriod, helper.String(weeklyPeriod))
-		//			}
-		//		}
-		//		machineUpgradeSettings.UpgradeOptions = &autoUpgradeOptions
-		//	}
-		//	if v, ok := upgradeSettingsMap["components"]; ok {
-		//		componentsSet := v.([]interface{})
-		//		for i := range componentsSet {
-		//			components := componentsSet[i].(string)
-		//			machineUpgradeSettings.Components = append(machineUpgradeSettings.Components, helper.String(components))
-		//		}
-		//	}
-		//	if maxUnavailableMap, ok := helper.ConvertInterfacesHeadToMap(upgradeSettingsMap["max_unavailable"]); ok {
-		//		intOrString := tke2.IntOrString{}
-		//		if v, ok := maxUnavailableMap["type"]; ok {
-		//			intOrString.Type = helper.IntInt64(v.(int))
-		//		}
-		//		if v, ok := maxUnavailableMap["int_val"]; ok {
-		//			intOrString.IntVal = helper.IntInt64(v.(int))
-		//		}
-		//		if v, ok := maxUnavailableMap["str_val"]; ok {
-		//			intOrString.StrVal = helper.String(v.(string))
-		//		}
-		//		machineUpgradeSettings.MaxUnavailable = &intOrString
-		//	}
-		//	createNativeNodePoolParam.UpgradeSettings = &machineUpgradeSettings
-		//}
 		if v, ok := nativeMap["auto_repair"]; ok {
 			createNativeNodePoolParam.AutoRepair = helper.Bool(v.(bool))
 		}
 		if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
-			instanceChargePrepaid := tke2.InstanceChargePrepaid{}
+			instanceChargePrepaid := tkev20220501.InstanceChargePrepaid{}
 			if v, ok := instanceChargePrepaidMap["period"]; ok {
 				instanceChargePrepaid.Period = helper.IntUint64(v.(int))
 			}
@@ -792,7 +644,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 			createNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 		}
 		if managementMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["management"]); ok {
-			managementConfig := tke2.ManagementConfig{}
+			managementConfig := tkev20220501.ManagementConfig{}
 			if v, ok := managementMap["nameservers"]; ok {
 				nameserversSet := v.([]interface{})
 				for i := range nameserversSet {
@@ -830,7 +682,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 			}
 		}
 		if lifecycleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["lifecycle"]); ok {
-			lifecycleConfig := tke2.LifecycleConfig{}
+			lifecycleConfig := tkev20220501.LifecycleConfig{}
 			if v, ok := lifecycleMap["pre_init"]; ok {
 				lifecycleConfig.PreInit = helper.String(v.(string))
 			}
@@ -849,7 +701,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 			createNativeNodePoolParam.Replicas = helper.IntInt64(v.(int))
 		}
 		if internetAccessibleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["internet_accessible"]); ok {
-			internetAccessible := tke2.InternetAccessible{}
+			internetAccessible := tkev20220501.InternetAccessible{}
 			if v, ok := internetAccessibleMap["max_bandwidth_out"]; ok {
 				internetAccessible.MaxBandwidthOut = helper.IntInt64(v.(int))
 			}
@@ -864,7 +716,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		if v, ok := nativeMap["data_disks"]; ok {
 			for _, item := range v.([]interface{}) {
 				dataDisksMap := item.(map[string]interface{})
-				dataDisk := tke2.DataDisk{}
+				dataDisk := tkev20220501.DataDisk{}
 				if v, ok := dataDisksMap["disk_type"]; ok {
 					dataDisk.DiskType = helper.String(v.(string))
 				}
@@ -911,7 +763,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("annotations"); ok {
 		for _, item := range v.(*schema.Set).List() {
 			annotationsMap := item.(map[string]interface{})
-			annotation := tke2.Annotation{}
+			annotation := tkev20220501.Annotation{}
 			if v, ok := annotationsMap["name"]; ok {
 				annotation.Name = helper.String(v.(string))
 			}
@@ -923,7 +775,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2Client().CreateNodePoolWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().CreateNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -937,25 +789,18 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		return err
 	}
 
-	// wait for status ok
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		nodePool, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
-		if errRet != nil {
-			return tccommon.RetryError(errRet, tccommon.InternalError)
-		}
-		if nodePool != nil && *nodePool.LifeState == "Running" {
-			return nil
-		}
-		log.Printf("[DEBUG]%s api[%s] native node pool status is %s, retry...", logId, request.GetAction(), *nodePool.LifeState)
-		return resource.RetryableError(fmt.Errorf("native node pool status is %s, retry...", *nodePool.LifeState))
-	})
-	if err != nil {
-		return err
-	}
-
 	nodePoolId = *response.Response.NodePoolId
 
+	if _, err := (&resource.StateChangeConf{
+		Delay:      10 * time.Second,
+		MinTimeout: 3 * time.Second,
+		Pending:    []string{},
+		Refresh:    resourceKubernetesNativeNodePoolCreateStateRefreshFunc_0_0(ctx, clusterId, nodePoolId),
+		Target:     []string{"Running"},
+		Timeout:    600 * time.Second,
+	}).WaitForStateContext(ctx); err != nil {
+		return err
+	}
 	d.SetId(strings.Join([]string{clusterId, nodePoolId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudKubernetesNativeNodePoolRead(d, meta)
@@ -990,7 +835,6 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 		log.Printf("[WARN]%s resource `kubernetes_native_node_pool` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
 	tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
 	if respData.Tags != nil {
 		for _, tags := range respData.Tags {
@@ -1119,56 +963,6 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 			nativeMap["security_group_ids"] = respData.Native.SecurityGroupIds
 		}
 
-		//upgradeSettingsMap := map[string]interface{}{}
-
-		//if respData.Native.UpgradeSettings != nil {
-		//	if respData.Native.UpgradeSettings.AutoUpgrade != nil {
-		//		upgradeSettingsMap["auto_upgrade"] = respData.Native.UpgradeSettings.AutoUpgrade
-		//	}
-		//
-		//	upgradeOptionsMap := map[string]interface{}{}
-		//
-		//	if respData.Native.UpgradeSettings.UpgradeOptions != nil {
-		//		if respData.Native.UpgradeSettings.UpgradeOptions.AutoUpgradeStartTime != nil {
-		//			upgradeOptionsMap["auto_upgrade_start_time"] = respData.Native.UpgradeSettings.UpgradeOptions.AutoUpgradeStartTime
-		//		}
-		//
-		//		if respData.Native.UpgradeSettings.UpgradeOptions.Duration != nil {
-		//			upgradeOptionsMap["duration"] = respData.Native.UpgradeSettings.UpgradeOptions.Duration
-		//		}
-		//
-		//		if respData.Native.UpgradeSettings.UpgradeOptions.WeeklyPeriod != nil {
-		//			upgradeOptionsMap["weekly_period"] = respData.Native.UpgradeSettings.UpgradeOptions.WeeklyPeriod
-		//		}
-		//
-		//		upgradeSettingsMap["upgrade_options"] = []interface{}{upgradeOptionsMap}
-		//	}
-		//
-		//	if respData.Native.UpgradeSettings.Components != nil {
-		//		upgradeSettingsMap["components"] = respData.Native.UpgradeSettings.Components
-		//	}
-		//
-		//	maxUnavailableMap := map[string]interface{}{}
-		//
-		//	if respData.Native.UpgradeSettings.MaxUnavailable != nil {
-		//		if respData.Native.UpgradeSettings.MaxUnavailable.Type != nil {
-		//			maxUnavailableMap["type"] = respData.Native.UpgradeSettings.MaxUnavailable.Type
-		//		}
-		//
-		//		if respData.Native.UpgradeSettings.MaxUnavailable.IntVal != nil {
-		//			maxUnavailableMap["int_val"] = respData.Native.UpgradeSettings.MaxUnavailable.IntVal
-		//		}
-		//
-		//		if respData.Native.UpgradeSettings.MaxUnavailable.StrVal != nil {
-		//			maxUnavailableMap["str_val"] = respData.Native.UpgradeSettings.MaxUnavailable.StrVal
-		//		}
-		//
-		//		upgradeSettingsMap["max_unavailable"] = []interface{}{maxUnavailableMap}
-		//	}
-		//
-		//	nativeMap["upgrade_settings"] = []interface{}{upgradeSettingsMap}
-		//}
-
 		if respData.Native.AutoRepair != nil {
 			nativeMap["auto_repair"] = respData.Native.AutoRepair
 		}
@@ -1201,18 +995,6 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 			if respData.Native.SystemDisk.DiskSize != nil {
 				systemDiskMap["disk_size"] = respData.Native.SystemDisk.DiskSize
 			}
-
-			//if respData.Native.SystemDisk.AutoFormatAndMount != nil {
-			//	systemDiskMap["auto_format_and_mount"] = respData.Native.SystemDisk.AutoFormatAndMount
-			//}
-			//
-			//if respData.Native.SystemDisk.FileSystem != nil {
-			//	systemDiskMap["file_system"] = respData.Native.SystemDisk.FileSystem
-			//}
-			//
-			//if respData.Native.SystemDisk.MountTarget != nil {
-			//	systemDiskMap["mount_target"] = respData.Native.SystemDisk.MountTarget
-			//}
 
 			nativeMap["system_disk"] = []interface{}{systemDiskMap}
 		}
@@ -1249,22 +1031,6 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 
 		if respData.Native.KubeletArgs != nil {
 			nativeMap["kubelet_args"] = respData.Native.KubeletArgs
-		}
-
-		lifecycleMap := map[string]interface{}{}
-
-		if respData.Native.Lifecycle != nil {
-			if respData.Native.Lifecycle.PreInit != nil {
-				lifecycleMap["pre_init"] = base64.StdEncoding.EncodeToString([]byte(*respData.Native.Lifecycle.PreInit))
-				//lifecycleMap["pre_init"] = respData.Native.Lifecycle.PreInit
-			}
-
-			if respData.Native.Lifecycle.PostInit != nil {
-				lifecycleMap["post_init"] = base64.StdEncoding.EncodeToString([]byte(*respData.Native.Lifecycle.PostInit))
-				//lifecycleMap["post_init"] = respData.Native.Lifecycle.PostInit
-			}
-
-			nativeMap["lifecycle"] = []interface{}{lifecycleMap}
 		}
 
 		if respData.Native.RuntimeRootDir != nil {
@@ -1354,27 +1120,8 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 		_ = d.Set("native", []interface{}{nativeMap})
 	}
 
-	annotationsList := make([]map[string]interface{}, 0, len(respData.Annotations))
-	if respData.Annotations != nil {
-		for _, annotations := range respData.Annotations {
-			annotationsMap := map[string]interface{}{}
-
-			if annotations.Name != nil && tkeNativeNodePoolAnnotationsMap[*annotations.Name] != "" {
-				continue
-			}
-
-			if annotations.Name != nil {
-				annotationsMap["name"] = annotations.Name
-			}
-
-			if annotations.Value != nil {
-				annotationsMap["value"] = annotations.Value
-			}
-
-			annotationsList = append(annotationsList, annotationsMap)
-		}
-
-		_ = d.Set("annotations", annotationsList)
+	if err := resourceTencentCloudKubernetesNativeNodePoolReadPostHandleResponse0(ctx, respData); err != nil {
+		return err
 	}
 
 	return nil
@@ -1411,11 +1158,11 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 	}
 
 	if needChange {
-		request := tke2.NewModifyNodePoolRequest()
+		request := tkev20220501.NewModifyNodePoolRequest()
 
-		request.ClusterId = &clusterId
+		request.ClusterId = helper.String(clusterId)
 
-		request.NodePoolId = &nodePoolId
+		request.NodePoolId = helper.String(nodePoolId)
 
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
@@ -1424,7 +1171,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		if v, ok := d.GetOk("labels"); ok {
 			for _, item := range v.([]interface{}) {
 				labelsMap := item.(map[string]interface{})
-				label := tke2.Label{}
+				label := tkev20220501.Label{}
 				if v, ok := labelsMap["name"]; ok {
 					label.Name = helper.String(v.(string))
 				}
@@ -1438,7 +1185,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		if v, ok := d.GetOk("taints"); ok {
 			for _, item := range v.([]interface{}) {
 				taintsMap := item.(map[string]interface{})
-				taint := tke2.Taint{}
+				taint := tkev20220501.Taint{}
 				if v, ok := taintsMap["key"]; ok {
 					taint.Key = helper.String(v.(string))
 				}
@@ -1455,14 +1202,14 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		if v, ok := d.GetOk("tags"); ok {
 			for _, item := range v.([]interface{}) {
 				tagsMap := item.(map[string]interface{})
-				tagSpecification := tke2.TagSpecification{}
+				tagSpecification := tkev20220501.TagSpecification{}
 				if v, ok := tagsMap["resource_type"]; ok {
 					tagSpecification.ResourceType = helper.String(v.(string))
 				}
 				if v, ok := tagsMap["tags"]; ok {
 					for _, item := range v.([]interface{}) {
 						tagsMap := item.(map[string]interface{})
-						tag := tke2.Tag{}
+						tag := tkev20220501.Tag{}
 						if v, ok := tagsMap["key"]; ok {
 							tag.Key = helper.String(v.(string))
 						}
@@ -1485,9 +1232,9 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		}
 
 		if nativeMap, ok := helper.InterfacesHeadMap(d, "native"); ok {
-			updateNativeNodePoolParam := tke2.UpdateNativeNodePoolParam{}
+			updateNativeNodePoolParam := tkev20220501.UpdateNativeNodePoolParam{}
 			if scalingMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["scaling"]); ok {
-				machineSetScaling := tke2.MachineSetScaling{}
+				machineSetScaling := tkev20220501.MachineSetScaling{}
 				if v, ok := scalingMap["min_replicas"]; ok {
 					machineSetScaling.MinReplicas = helper.IntInt64(v.(int))
 				}
@@ -1513,50 +1260,6 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 					updateNativeNodePoolParam.SecurityGroupIds = append(updateNativeNodePoolParam.SecurityGroupIds, helper.String(securityGroupIds))
 				}
 			}
-			//if upgradeSettingsMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["upgrade_settings"]); ok {
-			//	machineUpgradeSettings := tke2.MachineUpgradeSettings{}
-			//	if v, ok := upgradeSettingsMap["auto_upgrade"]; ok {
-			//		machineUpgradeSettings.AutoUpgrade = helper.Bool(v.(bool))
-			//	}
-			//	if upgradeOptionsMap, ok := helper.ConvertInterfacesHeadToMap(upgradeSettingsMap["upgrade_options"]); ok {
-			//		autoUpgradeOptions := tke2.AutoUpgradeOptions{}
-			//		if v, ok := upgradeOptionsMap["auto_upgrade_start_time"]; ok {
-			//			autoUpgradeOptions.AutoUpgradeStartTime = helper.String(v.(string))
-			//		}
-			//		if v, ok := upgradeOptionsMap["duration"]; ok {
-			//			autoUpgradeOptions.Duration = helper.String(v.(string))
-			//		}
-			//		if v, ok := upgradeOptionsMap["weekly_period"]; ok {
-			//			weeklyPeriodSet := v.([]interface{})
-			//			for i := range weeklyPeriodSet {
-			//				weeklyPeriod := weeklyPeriodSet[i].(string)
-			//				autoUpgradeOptions.WeeklyPeriod = append(autoUpgradeOptions.WeeklyPeriod, helper.String(weeklyPeriod))
-			//			}
-			//		}
-			//		machineUpgradeSettings.UpgradeOptions = &autoUpgradeOptions
-			//	}
-			//	if v, ok := upgradeSettingsMap["components"]; ok {
-			//		componentsSet := v.([]interface{})
-			//		for i := range componentsSet {
-			//			components := componentsSet[i].(string)
-			//			machineUpgradeSettings.Components = append(machineUpgradeSettings.Components, helper.String(components))
-			//		}
-			//	}
-			//	if maxUnavailableMap, ok := helper.ConvertInterfacesHeadToMap(upgradeSettingsMap["max_unavailable"]); ok {
-			//		intOrString := tke2.IntOrString{}
-			//		if v, ok := maxUnavailableMap["type"]; ok {
-			//			intOrString.Type = helper.IntInt64(v.(int))
-			//		}
-			//		if v, ok := maxUnavailableMap["int_val"]; ok {
-			//			intOrString.IntVal = helper.IntInt64(v.(int))
-			//		}
-			//		if v, ok := maxUnavailableMap["str_val"]; ok {
-			//			intOrString.StrVal = helper.String(v.(string))
-			//		}
-			//		machineUpgradeSettings.MaxUnavailable = &intOrString
-			//	}
-			//	updateNativeNodePoolParam.UpgradeSettings = &machineUpgradeSettings
-			//}
 			if v, ok := nativeMap["auto_repair"]; ok {
 				updateNativeNodePoolParam.AutoRepair = helper.Bool(v.(bool))
 			}
@@ -1564,7 +1267,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 				updateNativeNodePoolParam.InstanceChargeType = helper.String(v.(string))
 			}
 			if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
-				instanceChargePrepaid := tke2.InstanceChargePrepaid{}
+				instanceChargePrepaid := tkev20220501.InstanceChargePrepaid{}
 				if v, ok := instanceChargePrepaidMap["period"]; ok {
 					instanceChargePrepaid.Period = helper.IntUint64(v.(int))
 				}
@@ -1574,26 +1277,17 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 				updateNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 			}
 			if systemDiskMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["system_disk"]); ok {
-				disk := tke2.Disk{}
+				disk := tkev20220501.Disk{}
 				if v, ok := systemDiskMap["disk_type"]; ok {
 					disk.DiskType = helper.String(v.(string))
 				}
 				if v, ok := systemDiskMap["disk_size"]; ok {
 					disk.DiskSize = helper.IntInt64(v.(int))
 				}
-				//if v, ok := systemDiskMap["auto_format_and_mount"]; ok {
-				//	disk.AutoFormatAndMount = helper.Bool(v.(bool))
-				//}
-				//if v, ok := systemDiskMap["file_system"]; ok {
-				//	disk.FileSystem = helper.String(v.(string))
-				//}
-				//if v, ok := systemDiskMap["mount_target"]; ok {
-				//	disk.MountTarget = helper.String(v.(string))
-				//}
 				updateNativeNodePoolParam.SystemDisk = &disk
 			}
 			if managementMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["management"]); ok {
-				managementConfig := tke2.ManagementConfig{}
+				managementConfig := tkev20220501.ManagementConfig{}
 				if v, ok := managementMap["nameservers"]; ok {
 					nameserversSet := v.([]interface{})
 					for i := range nameserversSet {
@@ -1631,7 +1325,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 				}
 			}
 			if lifecycleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["lifecycle"]); ok {
-				lifecycleConfig := tke2.LifecycleConfig{}
+				lifecycleConfig := tkev20220501.LifecycleConfig{}
 				if v, ok := lifecycleMap["pre_init"]; ok {
 					lifecycleConfig.PreInit = helper.String(v.(string))
 				}
@@ -1656,7 +1350,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 			if v, ok := nativeMap["data_disks"]; ok {
 				for _, item := range v.([]interface{}) {
 					dataDisksMap := item.(map[string]interface{})
-					dataDisk := tke2.DataDisk{}
+					dataDisk := tkev20220501.DataDisk{}
 					if v, ok := dataDisksMap["disk_type"]; ok {
 						dataDisk.DiskType = helper.String(v.(string))
 					}
@@ -1703,7 +1397,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		if v, ok := d.GetOk("annotations"); ok {
 			for _, item := range v.(*schema.Set).List() {
 				annotationsMap := item.(map[string]interface{})
-				annotation := tke2.Annotation{}
+				annotation := tkev20220501.Annotation{}
 				if v, ok := annotationsMap["name"]; ok {
 					annotation.Name = helper.String(v.(string))
 				}
@@ -1715,7 +1409,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2Client().ModifyNodePoolWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().ModifyNodePoolWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -1747,16 +1441,16 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 	nodePoolId := idSplit[1]
 
 	var (
-		request  = tke2.NewDeleteNodePoolRequest()
-		response = tke2.NewDeleteNodePoolResponse()
+		request  = tkev20220501.NewDeleteNodePoolRequest()
+		response = tkev20220501.NewDeleteNodePoolResponse()
 	)
 
-	request.ClusterId = &clusterId
+	request.ClusterId = helper.String(clusterId)
 
-	request.NodePoolId = &nodePoolId
+	request.NodePoolId = helper.String(nodePoolId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2Client().DeleteNodePoolWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DeleteNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -1770,24 +1464,45 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 		return err
 	}
 
-	// wait for delete ok
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		respData, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
-		if errRet != nil {
-			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
-			if strings.Contains(errCode, "InternalError") {
-				return nil
-			}
-			return tccommon.RetryError(errRet, tccommon.InternalError)
-		}
-		if respData != nil && *respData.LifeState == "Deleting" {
-			log.Printf("[DEBUG]%s api[%s] native node pool %s still alive and status is %s", logId, request.GetAction(), nodePoolId, *respData.LifeState)
-			return resource.RetryableError(fmt.Errorf("native node pool %s still alive and status is %s", nodePoolId, *respData.LifeState))
-		}
-		return nil
-	})
-
 	_ = response
+	if err := resourceTencentCloudKubernetesNativeNodePoolDeletePostHandleResponse0(ctx, response); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func resourceKubernetesNativeNodePoolCreateStateRefreshFunc_0_0(ctx context.Context, clusterId string, nodePoolId string) resource.StateRefreshFunc {
+	var req *tkev20220501.DescribeNodePoolsRequest
+	return func() (interface{}, string, error) {
+		meta := tccommon.ProviderMetaFromContext(ctx)
+		if meta == nil {
+			return nil, "", fmt.Errorf("resource data can not be nil")
+		}
+		if req == nil {
+			d := tccommon.ResourceDataFromContext(ctx)
+			if d == nil {
+				return nil, "", fmt.Errorf("resource data can not be nil")
+			}
+			_ = d
+			req = tkev20220501.NewDescribeNodePoolsRequest()
+			req.ClusterId = helper.String(clusterId)
+
+			filter := tkev20220501.Filter{}
+			name := "NodePoolsId"
+			filter.Name = &name
+			filter.Values = []*string{helper.String(nodePoolId)}
+			req.Filters = []*tkev20220501.Filter{&filter}
+
+		}
+		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20220501Client().DescribeNodePoolsWithContext(ctx, req)
+		if err != nil {
+			return nil, "", err
+		}
+		if resp == nil || resp.Response == nil {
+			return nil, "", nil
+		}
+		state := fmt.Sprintf("%v", *resp.Response.NodePools[0].LifeState)
+		return resp.Response, state, nil
+	}
 }
