@@ -44,10 +44,12 @@ func TestAccTencentCloudKubernetesHealthCheckPolicyResource_basic(t *testing.T) 
 	})
 }
 
-const testAccKubernetesHealthCheckPolicyCreate = testAccTkeCluster + `
+// const testAccKubernetesHealthCheckPolicyCreate = testAccTkeCluster + `
+const testAccKubernetesHealthCheckPolicyCreate = `
 
 resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
-	cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+	cluster_id = "cls-eh0da110"
+
 	name = "example"
 	rules {
 		name = "OOMKilling"
@@ -62,10 +64,11 @@ resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_
 }
 `
 
-const testAccKubernetesHealthCheckPolicyUpdate = testAccTkeCluster + `
+// const testAccKubernetesHealthCheckPolicyUpdate = testAccTkeCluster + `
+const testAccKubernetesHealthCheckPolicyCreate = `
 
 resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
-	cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+	cluster_id = "cls-eh0da110"
 	name = "example"
 	rules {
 		name = "OOMKilling"
