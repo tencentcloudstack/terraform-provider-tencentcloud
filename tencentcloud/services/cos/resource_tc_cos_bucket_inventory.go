@@ -175,73 +175,96 @@ func resourceTencentCloudCosBucketInventoryCreate(d *schema.ResourceData, meta i
 	isEnabled := d.Get("is_enabled").(string)
 	includedObjectVersions := d.Get("included_object_versions").(string)
 
-	var filter cos.BucketInventoryFilter
-	if v, ok := d.GetOk("filter"); ok && len(v.([]interface{})) != 0 {
-		var period cos.BucketInventoryFilterPeriod
-		filterMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := filterMap["period"]; ok && len(v.([]interface{})) > 0 {
-			periodMap := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := periodMap["start_time"]; ok && v.(string) != "" {
-				vStr, err := strconv.ParseInt(v.(string), 10, 64)
-				if err != nil {
-					return err
-				}
-				period.StartTime = vStr
+	filter := cos.BucketInventoryFilter{}
+	if v, ok := d.GetOk("filter"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["prefix"]; ok {
+				filter.Prefix = v.(string)
 			}
-			if v, ok := periodMap["end_time"]; ok && v.(string) != "" {
-				vStr, err := strconv.ParseInt(v.(string), 10, 64)
-				if err != nil {
-					return err
+
+			if v, ok := dMap["period"]; ok {
+				for _, item := range v.([]interface{}) {
+					periodMap := item.(map[string]interface{})
+					period := cos.BucketInventoryFilterPeriod{}
+					if v, ok := periodMap["start_time"]; ok && v.(string) != "" {
+						vStr, err := strconv.ParseInt(v.(string), 10, 64)
+						if err != nil {
+							return err
+						}
+
+						period.StartTime = vStr
+					}
+
+					if v, ok := periodMap["end_time"]; ok && v.(string) != "" {
+						vStr, err := strconv.ParseInt(v.(string), 10, 64)
+						if err != nil {
+							return err
+						}
+
+						period.EndTime = vStr
+					}
+
+					filter.Period = &period
 				}
-				period.EndTime = vStr
 			}
-			filter.Period = &period
-		}
-		if v, ok := filterMap["prefix"]; ok {
-			filter.Prefix = v.(string)
 		}
 	}
-	var optionalFields cos.BucketInventoryOptionalFields
-	if v, ok := d.GetOk("optional_fields"); ok && len(v.([]interface{})) != 0 {
-		optionalFieldsMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := optionalFieldsMap["fields"]; ok {
-			optionalFields.BucketInventoryFields = make([]string, 0)
-			for _, field := range v.(*schema.Set).List() {
-				optionalFields.BucketInventoryFields = append(optionalFields.BucketInventoryFields, field.(string))
+
+	optionalFields := cos.BucketInventoryOptionalFields{}
+	if v, ok := d.GetOk("optional_fields"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["fields"]; ok {
+				fields := v.(*schema.Set).List()
+				for _, field := range fields {
+					optionalFields.BucketInventoryFields = append(optionalFields.BucketInventoryFields, field.(string))
+				}
 			}
 		}
 	}
 
-	var schedule cos.BucketInventorySchedule
-	if v, ok := d.GetOk("schedule"); ok && len(v.([]interface{})) != 0 {
-		scheduleMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := scheduleMap["frequency"]; ok {
-			schedule.Frequency = v.(string)
+	schedule := cos.BucketInventorySchedule{}
+	if v, ok := d.GetOk("schedule"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["frequency"]; ok {
+				schedule.Frequency = v.(string)
+			}
 		}
 	}
 
-	var destination cos.BucketInventoryDestination
-	if v, ok := d.GetOk("destination"); ok && len(v.([]interface{})) != 0 {
-		destinationMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := destinationMap["bucket"]; ok {
-			destination.Bucket = v.(string)
-		}
-		if v, ok := destinationMap["account_id"]; ok {
-			destination.AccountId = v.(string)
-		}
-		if v, ok := destinationMap["prefix"]; ok {
-			destination.Prefix = v.(string)
-		}
-		if v, ok := destinationMap["format"]; ok {
-			destination.Format = v.(string)
-		}
-		if v, ok := destinationMap["encryption"]; ok && len(v.([]interface{})) > 0 {
-			encryptionMap := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := encryptionMap["sse_cos"]; ok {
-				destination.Encryption = &cos.BucketInventoryEncryption{
-					SSECOS: v.(string),
-				}
+	destination := cos.BucketInventoryDestination{}
+	if v, ok := d.GetOk("destination"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["bucket"]; ok {
+				destination.Bucket = v.(string)
+			}
 
+			if v, ok := dMap["account_id"]; ok {
+				destination.AccountId = v.(string)
+			}
+
+			if v, ok := dMap["prefix"]; ok {
+				destination.Prefix = v.(string)
+			}
+
+			if v, ok := dMap["format"]; ok {
+				destination.Format = v.(string)
+			}
+
+			if v, ok := dMap["encryption"]; ok {
+				for _, item := range v.([]interface{}) {
+					if item != nil {
+						dMap := item.(map[string]interface{})
+						if v, ok := dMap["sse_cos"]; ok {
+							destination.Encryption = &cos.BucketInventoryEncryption{
+								SSECOS: v.(string),
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -364,73 +387,96 @@ func resourceTencentCloudCosBucketInventoryUpdate(d *schema.ResourceData, meta i
 	isEnabled := d.Get("is_enabled").(string)
 	includedObjectVersions := d.Get("included_object_versions").(string)
 
-	var filter cos.BucketInventoryFilter
-	if v, ok := d.GetOk("filter"); ok && len(v.([]interface{})) != 0 {
-		var period cos.BucketInventoryFilterPeriod
-		filterMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := filterMap["period"]; ok && len(v.([]interface{})) > 0 {
-			periodMap := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := periodMap["start_time"]; ok && v.(string) != "" {
-				vStr, err := strconv.ParseInt(v.(string), 10, 64)
-				if err != nil {
-					return err
-				}
-				period.StartTime = vStr
+	filter := cos.BucketInventoryFilter{}
+	if v, ok := d.GetOk("filter"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["prefix"]; ok {
+				filter.Prefix = v.(string)
 			}
-			if v, ok := periodMap["end_time"]; ok && v.(string) != "" {
-				vStr, err := strconv.ParseInt(v.(string), 10, 64)
-				if err != nil {
-					return err
+
+			if v, ok := dMap["period"]; ok {
+				for _, item := range v.([]interface{}) {
+					periodMap := item.(map[string]interface{})
+					period := cos.BucketInventoryFilterPeriod{}
+					if v, ok := periodMap["start_time"]; ok && v.(string) != "" {
+						vStr, err := strconv.ParseInt(v.(string), 10, 64)
+						if err != nil {
+							return err
+						}
+
+						period.StartTime = vStr
+					}
+
+					if v, ok := periodMap["end_time"]; ok && v.(string) != "" {
+						vStr, err := strconv.ParseInt(v.(string), 10, 64)
+						if err != nil {
+							return err
+						}
+
+						period.EndTime = vStr
+					}
+
+					filter.Period = &period
 				}
-				period.EndTime = vStr
 			}
-			filter.Period = &period
-		}
-		if v, ok := filterMap["prefix"]; ok {
-			filter.Prefix = v.(string)
 		}
 	}
-	var optionalFields cos.BucketInventoryOptionalFields
-	if v, ok := d.GetOk("optional_fields"); ok && len(v.([]interface{})) != 0 {
-		optionalFieldsMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := optionalFieldsMap["fields"]; ok {
-			optionalFields.BucketInventoryFields = make([]string, 0)
-			for _, field := range v.(*schema.Set).List() {
-				optionalFields.BucketInventoryFields = append(optionalFields.BucketInventoryFields, field.(string))
+
+	optionalFields := cos.BucketInventoryOptionalFields{}
+	if v, ok := d.GetOk("optional_fields"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["fields"]; ok {
+				fields := v.(*schema.Set).List()
+				for _, field := range fields {
+					optionalFields.BucketInventoryFields = append(optionalFields.BucketInventoryFields, field.(string))
+				}
 			}
 		}
 	}
 
-	var schedule cos.BucketInventorySchedule
-	if v, ok := d.GetOk("schedule"); ok && len(v.([]interface{})) != 0 {
-		scheduleMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := scheduleMap["frequency"]; ok {
-			schedule.Frequency = v.(string)
+	schedule := cos.BucketInventorySchedule{}
+	if v, ok := d.GetOk("schedule"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["frequency"]; ok {
+				schedule.Frequency = v.(string)
+			}
 		}
 	}
 
-	var destination cos.BucketInventoryDestination
-	if v, ok := d.GetOk("destination"); ok && len(v.([]interface{})) != 0 {
-		destinationMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := destinationMap["bucket"]; ok {
-			destination.Bucket = v.(string)
-		}
-		if v, ok := destinationMap["account_id"]; ok {
-			destination.AccountId = v.(string)
-		}
-		if v, ok := destinationMap["prefix"]; ok {
-			destination.Prefix = v.(string)
-		}
-		if v, ok := destinationMap["format"]; ok {
-			destination.Format = v.(string)
-		}
-		if v, ok := destinationMap["encryption"]; ok && len(v.([]interface{})) > 0 {
-			encryptionMap := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := encryptionMap["sse_cos"]; ok {
-				destination.Encryption = &cos.BucketInventoryEncryption{
-					SSECOS: v.(string),
-				}
+	destination := cos.BucketInventoryDestination{}
+	if v, ok := d.GetOk("destination"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["bucket"]; ok {
+				destination.Bucket = v.(string)
+			}
 
+			if v, ok := dMap["account_id"]; ok {
+				destination.AccountId = v.(string)
+			}
+
+			if v, ok := dMap["prefix"]; ok {
+				destination.Prefix = v.(string)
+			}
+
+			if v, ok := dMap["format"]; ok {
+				destination.Format = v.(string)
+			}
+
+			if v, ok := dMap["encryption"]; ok {
+				for _, item := range v.([]interface{}) {
+					if item != nil {
+						dMap := item.(map[string]interface{})
+						if v, ok := dMap["sse_cos"]; ok {
+							destination.Encryption = &cos.BucketInventoryEncryption{
+								SSECOS: v.(string),
+							}
+						}
+					}
+				}
 			}
 		}
 	}
