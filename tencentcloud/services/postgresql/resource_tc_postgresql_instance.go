@@ -970,14 +970,11 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_instance.update")()
 
-	var (
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		//internal version: replace clientUpdate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		//internal version: replace clientUpdate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	)
-
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	//internal version: replace clientUpdate begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	//internal version: replace clientUpdate end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	instanceId := d.Id()
 	d.Partial(true)
 
