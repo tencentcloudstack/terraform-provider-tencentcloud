@@ -6,6 +6,8 @@ import (
 	"log"
 	"strings"
 
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
@@ -616,45 +618,49 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnStart(ctx context.Context) er
 		"labels",
 		"tags",
 	) {
-		request := tke.NewModifyClusterNodePoolRequest()
-		request.ClusterId = &clusterId
-		request.NodePoolId = &nodePoolId
-
-		labels := GetTkeLabels(d, "labels")
-		tags := helper.GetTags(d, "tags")
-		if len(labels) > 0 {
-			request.Labels = labels
-		}
-		if len(tags) > 0 {
-			for k, v := range tags {
-				key := k
-				val := v
-				request.Tags = append(request.Tags, &tke.Tag{
-					Key:   &key,
-					Value: &val,
-				})
-			}
-		}
-
+		var body map[string]interface{}
 		nodeOs := d.Get("node_os").(string)
 		nodeOsType := d.Get("node_os_type").(string)
 		//自定镜像不能指定节点操作系统类型
 		if strings.Contains(nodeOs, "img-") {
 			nodeOsType = ""
 		}
-		request.OsName = &nodeOs
-		request.OsCustomizeType = &nodeOsType
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyClusterNodePool(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		labels := GetTkeLabels(d, "labels")
+		body = map[string]interface{}{
+			"ClusterId":       clusterId,
+			"NodePoolId":      nodePoolId,
+			"OsName":          nodeOs,
+			"OsCustomizeType": nodeOsType,
+			"Labels":          labels,
+		}
+
+		tags := helper.GetTags(d, "tags")
+		if len(tags) > 0 {
+			var tmpTags []*tke.Tag
+			for k, v := range tags {
+				key := k
+				val := v
+				tmpTags = append(tmpTags, &tke.Tag{
+					Key:   &key,
+					Value: &val,
+				})
 			}
-			return nil
-		})
+
+			body["Tags"] = tmpTags
+		}
+
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOmitNilClient("tke")
+		request := tchttp.NewCommonRequest("tke", "2018-05-25", "ModifyClusterNodePool")
+		err := request.SetActionParameters(body)
 		if err != nil {
-			log.Printf("[CRITAL]%s update kubernetes node pool failed, reason:%+v", logId, err)
+			return err
+		}
+
+		response := tchttp.NewCommonResponse()
+		err = client.Send(request, response)
+		if err != nil {
+			fmt.Printf("update kubernetes node pool taints failed: %v \n", err)
 			return err
 		}
 
@@ -1242,4 +1248,87 @@ func desiredCapacityOutRange(d *schema.ResourceData) bool {
 	minSize := d.Get("min_size").(int)
 	maxSize := d.Get("max_size").(int)
 	return capacity > maxSize || capacity < minSize
+}
+
+func resourceTencentCloudKubernetesNodePoolUpdatePostHandleResponse0(ctx context.Context, resp *tke.ModifyClusterNodePoolResponse) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	clusterId := idSplit[0]
+	nodePoolId := idSplit[1]
+
+	if d.HasChange("taints") {
+		_, n := d.GetChange("taints")
+
+		// clean taints
+		if len(n.([]interface{})) == 0 {
+			body := map[string]interface{}{
+				"ClusterId":  clusterId,
+				"NodePoolId": nodePoolId,
+				"Taints":     []interface{}{},
+			}
+
+			client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOmitNilClient("tke")
+			request := tchttp.NewCommonRequest("tke", "2018-05-25", "ModifyClusterNodePool")
+			err := request.SetActionParameters(body)
+			if err != nil {
+				return err
+			}
+
+			response := tchttp.NewCommonResponse()
+			err = client.Send(request, response)
+			if err != nil {
+				fmt.Printf("update kubernetes node pool taints failed: %v \n", err)
+				return err
+			}
+		} else {
+			request := tke.NewModifyClusterNodePoolRequest()
+			request.ClusterId = helper.String(clusterId)
+			request.NodePoolId = helper.String(nodePoolId)
+
+			if v, ok := d.GetOk("taints"); ok {
+				for _, item := range v.([]interface{}) {
+					taintsMap := item.(map[string]interface{})
+					taint := tke.Taint{}
+					if v, ok := taintsMap["key"]; ok {
+						taint.Key = helper.String(v.(string))
+					}
+
+					if v, ok := taintsMap["value"]; ok {
+						taint.Value = helper.String(v.(string))
+					}
+
+					if v, ok := taintsMap["effect"]; ok {
+						taint.Effect = helper.String(v.(string))
+					}
+
+					request.Taints = append(request.Taints, &taint)
+				}
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterNodePoolWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update kubernetes node pool taints failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+
+		return nil
+	}
+	return nil
 }

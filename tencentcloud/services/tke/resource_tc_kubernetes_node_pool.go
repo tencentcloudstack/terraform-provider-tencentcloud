@@ -13,8 +13,8 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
+	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
 )
 
 func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
@@ -870,7 +870,7 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 	}
 
 	needChange := false
-	mutableArgs := []string{"name", "max_size", "min_size", "taints", "enable_auto_scale", "deletion_protection"}
+	mutableArgs := []string{"name", "max_size", "min_size", "enable_auto_scale", "deletion_protection"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -880,6 +880,8 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 
 	if needChange {
 		request := tkev20180525.NewModifyClusterNodePoolRequest()
+
+		response := tkev20180525.NewModifyClusterNodePoolResponse()
 
 		request.ClusterId = helper.String(clusterId)
 
@@ -895,23 +897,6 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 
 		if v, ok := d.GetOkExists("min_size"); ok {
 			request.MinNodesNum = helper.IntInt64(v.(int))
-		}
-
-		if v, ok := d.GetOk("taints"); ok {
-			for _, item := range v.([]interface{}) {
-				taintsMap := item.(map[string]interface{})
-				taint := tkev20180525.Taint{}
-				if v, ok := taintsMap["key"]; ok {
-					taint.Key = helper.String(v.(string))
-				}
-				if v, ok := taintsMap["value"]; ok {
-					taint.Value = helper.String(v.(string))
-				}
-				if v, ok := taintsMap["effect"]; ok {
-					taint.Effect = helper.String(v.(string))
-				}
-				request.Taints = append(request.Taints, &taint)
-			}
 		}
 
 		if v, ok := d.GetOkExists("enable_auto_scale"); ok {
@@ -935,6 +920,10 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s update kubernetes node pool failed, reason:%+v", logId, err)
 			return err
 		}
+		if err := resourceTencentCloudKubernetesNodePoolUpdatePostHandleResponse0(ctx, response); err != nil {
+			return err
+		}
+
 	}
 
 	if err := resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx); err != nil {
