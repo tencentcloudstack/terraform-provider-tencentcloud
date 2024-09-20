@@ -208,7 +208,7 @@ func dataSourceTencentCloudLiteHbaseInstancesRead(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("data_source.tencentcloud_lite_hbase_instances.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(nil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}

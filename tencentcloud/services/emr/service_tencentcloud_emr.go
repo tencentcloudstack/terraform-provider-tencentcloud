@@ -562,7 +562,6 @@ func (me *EMRService) SLInstanceStateRefreshFunc(instanceId string, failStates [
 				if e.GetCode() == "UnauthorizedOperation" {
 					return &emr.SLInstanceInfo{}, "-2", nil
 				}
-			} else {
 			}
 			return nil, "", err
 		}
