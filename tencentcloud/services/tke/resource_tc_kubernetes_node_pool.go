@@ -13,8 +13,8 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 )
 
 func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
