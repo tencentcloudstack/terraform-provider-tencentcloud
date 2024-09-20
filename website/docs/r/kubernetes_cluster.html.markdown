@@ -798,6 +798,7 @@ The following arguments are supported:
 * `auth_options` - (Optional, List) Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.
 * `auto_upgrade_cluster_level` - (Optional, Bool) Whether the cluster level auto upgraded, valid for managed cluster.
 * `base_pod_num` - (Optional, Int, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
+* `cdc_id` - (Optional, String) CDC ID.
 * `claim_expired_seconds` - (Optional, Int) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
 * `cluster_audit` - (Optional, List) Specify Cluster Audit config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `cluster_cidr` - (Optional, String, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
