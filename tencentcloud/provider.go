@@ -510,6 +510,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_instance_zone_info":                     crs.DataSourceTencentCloudRedisInstanceZoneInfo(),
 			"tencentcloud_redis_instance_task_list":                     crs.DataSourceTencentCloudRedisInstanceTaskList(),
 			"tencentcloud_redis_instance_node_info":                     crs.DataSourceTencentCloudRedisInstanceNodeInfo(),
+			"tencentcloud_redis_clusters":                               crs.DataSourceTencentCloudRedisClusters(),
 			"tencentcloud_as_scaling_configs":                           as.DataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                            as.DataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                          as.DataSourceTencentCloudAsScalingPolicies(),

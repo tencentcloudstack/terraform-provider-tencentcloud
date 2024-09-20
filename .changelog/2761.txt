@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_redis_instance: support cdc
+```
+
+```release-note:new-data-source
+tencentcloud_redis_clusters
+```
