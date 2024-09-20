@@ -223,6 +223,46 @@ resource "tencentcloud_redis_instance" "example" {
 }
 ```
 
+Create a CDC scenario instance
+
+```hcl
+variable "cdc_id" {
+  default = "cluster-xxxx"
+}
+
+data "tencentcloud_redis_clusters" "clusters" {
+  dedicated_cluster_id = var.cdc_id
+}
+
+output "name" {
+  value = data.tencentcloud_redis_clusters.clusters.resources[0].redis_cluster_id
+}
+
+data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 7
+  region  = "ap-guangzhou"
+}
+
+data "tencentcloud_vpc_subnets" "subnets" {
+  cdc_id = var.cdc_id
+}
+
+resource "tencentcloud_redis_instance" "example" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
+  password           = "Password@123"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
+  name               = "tf-cdc-example-modify"
+  port               = 6379
+  vpc_id             = data.tencentcloud_vpc_subnets.subnets.instance_list[0].vpc_id
+  subnet_id          = data.tencentcloud_vpc_subnets.subnets.instance_list[0].subnet_id
+  product_version    = "cdc"
+  redis_cluster_id   = data.tencentcloud_redis_clusters.clusters.resources[0].redis_cluster_id
+}
+```
+
 Import
 
 Redis instance can be imported, e.g.
