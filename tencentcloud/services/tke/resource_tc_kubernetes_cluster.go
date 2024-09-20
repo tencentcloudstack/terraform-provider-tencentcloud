@@ -3,6 +3,7 @@ package tke
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -1287,6 +1288,12 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC ID.",
+			},
 		},
 	}
 }
@@ -1306,6 +1313,10 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 		request  = tkev20180525.NewCreateClusterRequest()
 		response = tkev20180525.NewCreateClusterResponse()
 	)
+
+	if v, ok := d.GetOk("cdc_id"); ok {
+		request.CdcId = helper.String(v.(string))
+	}
 
 	clusterCIDRSettings := tkev20180525.ClusterCIDRSettings{}
 	if v, ok := d.GetOk("cluster_cidr"); ok {
@@ -1496,6 +1507,10 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		log.Printf("[WARN]%s resource `kubernetes_cluster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+	if respData.CdcId != nil {
+		_ = d.Set("cdc_id", respData.CdcId)
+	}
+
 	if respData.ClusterName != nil {
 		_ = d.Set("cluster_name", respData.ClusterName)
 	}
@@ -1681,6 +1696,12 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
+	immutableArgs := []string{"cdc_id"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 	clusterId := d.Id()
 
 	if err := resourceTencentCloudKubernetesClusterUpdateOnStart(ctx); err != nil {
