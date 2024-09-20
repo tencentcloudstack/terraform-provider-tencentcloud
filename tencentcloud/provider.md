@@ -1301,10 +1301,12 @@ MapReduce(EMR)
     tencentcloud_emr_auto_scale_records
     tencentcloud_emr_nodes
     tencentcloud_emr_cvm_quota
+    tencentcloud_lite_hbase_instances
 
   Resource
     tencentcloud_emr_cluster
     tencentcloud_emr_user_manager
+    tencentcloud_lite_hbase_instance
 
 DNSPOD
   Resource

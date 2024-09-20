@@ -1,0 +1,8 @@
+
+```release-note:new-resource
+tencentcloud_lite_hbase_instance
+```
+
+```release-note:new-data-source
+tencentcloud_lite_hbase_instances
+```
