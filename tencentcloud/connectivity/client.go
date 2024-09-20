@@ -210,7 +210,8 @@ type TencentCloudClient struct {
 	controlcenterConn *controlcenter.Client
 	thpcConn          *thpc.Client
 	//omit nil client
-	omitNilConn *common.Client
+	omitNilConn      *common.Client
+	emrv20190103Conn *emr.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1734,4 +1735,17 @@ func (me *TencentCloudClient) UseThpcV20230321Client() *thpc.Client {
 	me.thpcConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.thpcConn
+}
+
+// UseEmrV20190103Client return EMR client for service
+func (me *TencentCloudClient) UseEmrV20190103Client() *emr.Client {
+	if me.emrv20190103Conn != nil {
+		return me.emrv20190103Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.emrv20190103Conn, _ = emr.NewClient(me.Credential, me.Region, cpf)
+	me.emrv20190103Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.emrv20190103Conn
 }

@@ -1108,7 +1108,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdc_dedicated_cluster_instance_types":         cdc.DataSourceTencentCloudCdcDedicatedClusterInstanceTypes(),
 			"tencentcloud_cdc_dedicated_cluster_orders":                 cdc.DataSourceTencentCloudCdcDedicatedClusterOrders(),
 			"tencentcloud_cdwdoris_instances":                           cdwdoris.DataSourceTencentCloudCdwdorisInstances(),
-		},
+			"tencentcloud_lite_hbase_instances":                         emr.DataSourceTencentCloudLiteHbaseInstances()},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                                         project.ResourceTencentCloudProject(),
@@ -2128,7 +2128,8 @@ func Provider() *schema.Provider {
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
 			"tencentcloud_batch_apply_account_baselines":  controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
 			"tencentcloud_thpc_workspaces":                thpc.ResourceTencentCloudThpcWorkspaces(),
-			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy()},
+			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy(),
+			"tencentcloud_lite_hbase_instance":            emr.ResourceTencentCloudLiteHbaseInstance()},
 
 		ConfigureFunc: providerConfigure,
 	}
