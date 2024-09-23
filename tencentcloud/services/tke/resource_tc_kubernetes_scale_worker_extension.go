@@ -483,7 +483,7 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 			if stop == len(instanceIds) && flag {
 				return nil
 			} else if stop == len(instanceIds) && !flag {
-				return resource.NonRetryableError(fmt.Errorf("cluster all instances state is failed"))
+				return resource.NonRetryableError(fmt.Errorf("The instances being created have all failed."))
 			} else {
 				e = fmt.Errorf("cluster instances is still initializing.")
 				return resource.RetryableError(e)
