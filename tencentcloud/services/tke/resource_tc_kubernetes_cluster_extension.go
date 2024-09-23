@@ -267,7 +267,7 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 	}
 
 	if preStartUserScript, ok := d.GetOk("pre_start_user_script"); ok {
-		iAdvanced.DockerGraphPath = preStartUserScript.(string)
+		iAdvanced.PreStartUserScript = preStartUserScript.(string)
 	}
 
 	// ExistedInstancesForNode
