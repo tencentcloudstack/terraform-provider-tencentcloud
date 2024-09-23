@@ -1,3 +1,25 @@
+## 1.81.125 (September 23 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_invite_organization_member_operation` ([#2838](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2838))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: support `cdc_id` params ([#2805](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2805))
+
+## 1.81.124 (September 20 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_lite_hbase_instances` ([#2836](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2836))
+* **New Data Source:** `tencentcloud_redis_clusters` ([#2761](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2761))
+* **New Resource:** `tencentcloud_lite_hbase_instance` ([#2836](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2836))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_redis_instance: support cdc ([#2761](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2761))
+
 ## 1.81.123 (September 14 , 2024)
 
 FEATURES:

@@ -36,14 +36,14 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_redis_instance" "foo" {
+resource "tencentcloud_redis_instance" "example" {
   availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
   type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
-  password           = "test12345789"
+  password           = "Password@123"
   mem_size           = 8192
   redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
   redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
-  name               = "terrform_test"
+  name               = "tf-example"
   port               = 6379
   vpc_id             = tencentcloud_vpc.vpc.id
   subnet_id          = tencentcloud_subnet.subnet.id
@@ -77,12 +77,12 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_security_group" "foo" {
+resource "tencentcloud_security_group" "security_group" {
   name = "tf-redis-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "foo" {
-  security_group_id = tencentcloud_security_group.foo.id
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.security_group.id
 
   ingress = [
     "ACCEPT#192.168.1.0/24#80#TCP",
@@ -97,18 +97,18 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
   ]
 }
 
-resource "tencentcloud_redis_instance" "red1" {
+resource "tencentcloud_redis_instance" "example" {
   availability_zone  = data.tencentcloud_availability_zones_by_product.az.zones[0].name
   type_id            = var.redis_type_id
   charge_type        = "POSTPAID"
   mem_size           = 1024
-  name               = "test-redis"
+  name               = "tf-example"
   port               = 6379
   project_id         = 0
   vpc_id             = tencentcloud_vpc.vpc.id
   subnet_id          = tencentcloud_subnet.subnet.id
-  password           = "a12121312334"
-  security_groups    = [tencentcloud_security_group.foo.id]
+  password           = "Password@123"
+  security_groups    = [tencentcloud_security_group.security_group.id]
   redis_replicas_num = var.redis_replicas_num
   redis_shard_num    = 1
   replica_zone_ids = [
@@ -137,12 +137,12 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_security_group" "foo" {
+resource "tencentcloud_security_group" "security_group" {
   name = "tf-redis-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "foo" {
-  security_group_id = tencentcloud_security_group.foo.id
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.security_group.id
 
   ingress = [
     "ACCEPT#192.168.1.0/24#80#TCP",
@@ -157,18 +157,18 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
   ]
 }
 
-resource "tencentcloud_redis_instance" "foo" {
+resource "tencentcloud_redis_instance" "example" {
   availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
   type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
-  password           = "test12345789"
+  password           = "Password@123"
   mem_size           = 8192
   redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
   redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
-  name               = "terrform_test"
+  name               = "tf-example"
   port               = 6379
   vpc_id             = tencentcloud_vpc.vpc.id
   subnet_id          = tencentcloud_subnet.subnet.id
-  security_groups    = [tencentcloud_security_group.foo.id]
+  security_groups    = [tencentcloud_security_group.security_group.id]
   charge_type        = "PREPAID"
   prepaid_period     = 1
 }
@@ -198,12 +198,12 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_security_group" "foo" {
+resource "tencentcloud_security_group" "security_group" {
   name = "tf-redis-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "foo" {
-  security_group_id = tencentcloud_security_group.foo.id
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.security_group.id
 
   ingress = [
     "ACCEPT#192.168.1.0/24#80#TCP",
@@ -218,19 +218,59 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
   ]
 }
 
-resource "tencentcloud_redis_instance" "foo" {
+resource "tencentcloud_redis_instance" "example" {
   availability_zone  = data.tencentcloud_redis_zone_config.zone.list[2].zone
   type_id            = data.tencentcloud_redis_zone_config.zone.list[2].type_id
-  password           = "test12345789"
+  password           = "Password@123"
   mem_size           = 8192
   redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[2].redis_shard_nums[0]
   redis_replicas_num = 2
   replica_zone_ids   = var.replica_zone_ids
-  name               = "terrform_test"
+  name               = "tf-example"
   port               = 6379
   vpc_id             = tencentcloud_vpc.vpc.id
   subnet_id          = tencentcloud_subnet.subnet.id
-  security_groups    = [tencentcloud_security_group.foo.id]
+  security_groups    = [tencentcloud_security_group.security_group.id]
+}
+```
+
+### Create a CDC scenario instance
+
+```hcl
+variable "cdc_id" {
+  default = "cluster-xxxx"
+}
+
+data "tencentcloud_redis_clusters" "clusters" {
+  dedicated_cluster_id = var.cdc_id
+}
+
+output "name" {
+  value = data.tencentcloud_redis_clusters.clusters.resources[0].redis_cluster_id
+}
+
+data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 7
+  region  = "ap-guangzhou"
+}
+
+data "tencentcloud_vpc_subnets" "subnets" {
+  cdc_id = var.cdc_id
+}
+
+resource "tencentcloud_redis_instance" "example" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
+  password           = "Password@123"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
+  name               = "tf-cdc-example-modify"
+  port               = 6379
+  vpc_id             = data.tencentcloud_vpc_subnets.subnets.instance_list[0].vpc_id
+  subnet_id          = data.tencentcloud_vpc_subnets.subnets.instance_list[0].subnet_id
+  product_version    = "cdc"
+  redis_cluster_id   = data.tencentcloud_redis_clusters.clusters.resources[0].redis_cluster_id
 }
 ```
 
@@ -251,8 +291,10 @@ The following arguments are supported:
 * `password` - (Optional, String) Password for a Redis user, which should be 8 to 16 characters. NOTE: Only `no_auth=true` specified can make password empty.
 * `port` - (Optional, Int) The port used to access a redis instance. The default value is 6379. When the `operation_network` is `changeVPort` or `changeVip`, this parameter needs to be configured.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `product_version` - (Optional, String) Specify the product version of the instance. `local`: Local disk version, `cloud`: Cloud disk version, `cdc`: Exclusive cluster version. Default is `local`.
 * `project_id` - (Optional, Int) Specifies which project the instance should belong to.
 * `recycle` - (Optional, Int) Original intranet IPv4 address retention time: unit: day, value range: `0`, `1`, `2`, `3`, `7`, `15`.
+* `redis_cluster_id` - (Optional, String) Exclusive cluster ID. When the `product_version` is set to `cdc`, this parameter must be set.
 * `redis_replicas_num` - (Optional, Int) The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`, Non-multi-AZ does not require `replica_zone_ids`; Redis memory version 4.0, 5.0, 6.2 standard architecture and cluster architecture support the number of copies in the range [1, 2, 3, 4, 5]; Redis 2.8 standard version and CKV standard version only support 1 copy.
 * `redis_shard_num` - (Optional, Int) The number of instance shards; this parameter does not need to be configured for standard version instances; for cluster version instances, the number of shards ranges from: [`1`, `3`, `5`, `8`, `12`, `16`, `24 `, `32`, `40`, `48`, `64`, `80`, `96`, `128`].
 * `replica_zone_ids` - (Optional, List: [`Int`]) ID of replica nodes available zone. This is not required for standalone and master slave versions. NOTE: Removing some of the same zone of replicas (e.g. removing 100001 of [100001, 100001, 100002]) will pick the first hit to remove.
@@ -271,6 +313,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - The time when the instance was created.
+* `dedicated_cluster_id` - Dedicated Cluster ID.
 * `node_info` - Readonly Primary/Replica nodes.
   * `id` - ID of the master or replica node.
   * `master` - Indicates whether the node is master.
@@ -283,6 +326,6 @@ In addition to all arguments above, the following attributes are exported:
 Redis instance can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_redis_instance.redislab redis-id
+$ terraform import tencentcloud_redis_instance.example crs-iu22tdrf
 ```
 

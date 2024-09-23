@@ -59,7 +59,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.811
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1004
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
@@ -69,11 +69,11 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.949
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.844
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.853
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.991
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.1008
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.995
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.859
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.657
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.976
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.807
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748

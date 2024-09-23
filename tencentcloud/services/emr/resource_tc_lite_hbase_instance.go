@@ -1,0 +1,448 @@
+package emr
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+)
+
+func ResourceTencentCloudLiteHbaseInstance() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceTencentCloudLiteHbaseInstanceCreate,
+		Read:   resourceTencentCloudLiteHbaseInstanceRead,
+		Update: resourceTencentCloudLiteHbaseInstanceUpdate,
+		Delete: resourceTencentCloudLiteHbaseInstanceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+		Schema: map[string]*schema.Schema{
+			"instance_name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Instance name. Length limit is 6-36 characters. Only Chinese characters, letters, numbers, -, and _ are allowed.",
+			},
+
+			"pay_mode": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Instance pay mode. Value range: 0: indicates post pay mode, that is, pay-as-you-go.",
+			},
+
+			"disk_type": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Instance disk type, fill in CLOUD_HSSD to indicate performance cloud storage.",
+			},
+
+			"disk_size": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Instance single-node disk capacity, in GB. The single-node disk capacity must be greater than or equal to 100 and less than or equal to 10000, with an adjustment step size of 20.",
+			},
+
+			"node_type": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Instance node type, can be filled in as 4C16G, 8C32G, 16C64G, 32C128G, case insensitive.",
+			},
+
+			"zone_settings": {
+				Type:        schema.TypeList,
+				Required:    true,
+				Description: "Detailed configuration of the instance availability zone, currently supports multiple availability zones, the number of availability zones can only be 1 or 3, including zone name, VPC information, and number of nodes. The total number of nodes across all zones must be greater than or equal to 3 and less than or equal to 50.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"zone": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The availability zone to which the instance belongs, such as ap-guangzhou-1.",
+						},
+						"vpc_settings": {
+							Type:        schema.TypeList,
+							Required:    true,
+							MaxItems:    1,
+							Description: "Private network related information configuration. This parameter can be used to specify the ID of the private network, subnet ID, and other information.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"vpc_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "VPC ID.",
+									},
+									"subnet_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Subnet ID.",
+									},
+								},
+							},
+						},
+						"node_num": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Number of nodes.",
+						},
+					},
+				},
+			},
+
+			"tags": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List of tags to bind to the instance.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func resourceTencentCloudLiteHbaseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	var (
+		request  = emr.NewCreateSLInstanceRequest()
+		response = emr.NewCreateSLInstanceResponse()
+	)
+
+	if v, ok := d.GetOk("instance_name"); ok {
+		request.InstanceName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("pay_mode"); ok {
+		request.PayMode = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("disk_type"); ok {
+		request.DiskType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("disk_size"); ok {
+		request.DiskSize = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("node_type"); ok {
+		request.NodeType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("zone_settings"); ok {
+		for _, item := range v.([]interface{}) {
+			zoneSettingsMap := item.(map[string]interface{})
+			zoneSetting := emr.ZoneSetting{}
+			if v, ok := zoneSettingsMap["zone"]; ok {
+				zoneSetting.Zone = helper.String(v.(string))
+			}
+			if vPCSettingsMap, ok := helper.ConvertInterfacesHeadToMap(zoneSettingsMap["vpc_settings"]); ok {
+				vPCSettings := emr.VPCSettings{}
+				if v, ok := vPCSettingsMap["vpc_id"]; ok {
+					vPCSettings.VpcId = helper.String(v.(string))
+				}
+				if v, ok := vPCSettingsMap["subnet_id"]; ok {
+					vPCSettings.SubnetId = helper.String(v.(string))
+				}
+				zoneSetting.VPCSettings = &vPCSettings
+			}
+			if v, ok := zoneSettingsMap["node_num"]; ok {
+				zoneSetting.NodeNum = helper.IntInt64(v.(int))
+			}
+			request.ZoneSettings = append(request.ZoneSettings, &zoneSetting)
+		}
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		for _, item := range v.([]interface{}) {
+			tagsMap := item.(map[string]interface{})
+			tag := emr.Tag{}
+			if v, ok := tagsMap["tag_key"]; ok {
+				tag.TagKey = helper.String(v.(string))
+			}
+			if v, ok := tagsMap["tag_value"]; ok {
+				tag.TagValue = helper.String(v.(string))
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().CreateSLInstanceWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create lite hbase instance failed, reason:%+v", logId, err)
+		return err
+	}
+
+	instanceId := *response.Response.InstanceId
+	d.SetId(instanceId)
+
+	emrService := EMRService{
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+	}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	return resourceTencentCloudLiteHbaseInstanceRead(d, meta)
+}
+
+func resourceTencentCloudLiteHbaseInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	instanceId := d.Id()
+
+	request := emr.NewDescribeSLInstanceRequest()
+	response := emr.NewDescribeSLInstanceResponse()
+	request.InstanceId = helper.String(instanceId)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().DescribeSLInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update lite hbase instance failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if response.Response == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `lite_hbase_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+	respData := response.Response
+	if respData.InstanceName != nil {
+		_ = d.Set("instance_name", respData.InstanceName)
+	}
+
+	if respData.PayMode != nil {
+		_ = d.Set("pay_mode", respData.PayMode)
+	}
+
+	if respData.DiskType != nil {
+		_ = d.Set("disk_type", respData.DiskType)
+	}
+
+	if respData.DiskSize != nil {
+		_ = d.Set("disk_size", respData.DiskSize)
+	}
+
+	if respData.NodeType != nil {
+		_ = d.Set("node_type", respData.NodeType)
+	}
+
+	zoneSettingsList := make([]map[string]interface{}, 0, len(respData.ZoneSettings))
+	if respData.ZoneSettings != nil {
+		for _, zoneSettings := range respData.ZoneSettings {
+			zoneSettingsMap := map[string]interface{}{}
+
+			if zoneSettings.Zone != nil {
+				zoneSettingsMap["zone"] = zoneSettings.Zone
+			}
+
+			vPCSettingsMap := map[string]interface{}{}
+
+			if zoneSettings.VPCSettings != nil {
+				if zoneSettings.VPCSettings.VpcId != nil {
+					vPCSettingsMap["vpc_id"] = zoneSettings.VPCSettings.VpcId
+				}
+
+				if zoneSettings.VPCSettings.SubnetId != nil {
+					vPCSettingsMap["subnet_id"] = zoneSettings.VPCSettings.SubnetId
+				}
+
+				zoneSettingsMap["vpc_settings"] = []interface{}{vPCSettingsMap}
+			}
+
+			if zoneSettings.NodeNum != nil {
+				zoneSettingsMap["node_num"] = zoneSettings.NodeNum
+			}
+
+			zoneSettingsList = append(zoneSettingsList, zoneSettingsMap)
+		}
+
+		_ = d.Set("zone_settings", zoneSettingsList)
+	}
+
+	tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
+	if respData.Tags != nil {
+		for _, tags := range respData.Tags {
+			tagsMap := map[string]interface{}{}
+
+			if tags.TagKey != nil {
+				tagsMap["tag_key"] = tags.TagKey
+			}
+
+			if tags.TagValue != nil {
+				tagsMap["tag_value"] = tags.TagValue
+			}
+
+			tagsList = append(tagsList, tagsMap)
+		}
+
+		_ = d.Set("tags", tagsList)
+	}
+
+	_ = instanceId
+	return nil
+}
+
+func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	immutableArgs := []string{"instance_name", "pay_mode", "disk_type", "disk_size", "node_type", "tags"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	instanceId := d.Id()
+
+	needChange := false
+	if d.HasChange("zone_settings") {
+		for idx, zoneSetting := range d.Get("zone_settings").([]interface{}) {
+			for k := range zoneSetting.(map[string]interface{}) {
+				param := fmt.Sprintf("zone_settings.%d.%s", idx, k)
+				if d.HasChange(param) {
+					if k == "node_num" {
+						needChange = true
+					} else {
+						return fmt.Errorf("argument `%s` cannot be changed", param)
+					}
+				}
+			}
+		}
+	}
+	if needChange {
+		for idx, zoneSetting := range d.Get("zone_settings").([]interface{}) {
+			param := fmt.Sprintf("zone_settings.%d.node_num", idx)
+			if !d.HasChange(param) {
+				continue
+			}
+			zoneSettingMap := zoneSetting.(map[string]interface{})
+			request := emr.NewModifySLInstanceRequest()
+
+			request.InstanceId = helper.String(instanceId)
+
+			if v, ok := zoneSettingMap["zone"]; ok {
+				request.Zone = helper.String(v.(string))
+			}
+
+			if v, ok := zoneSettingMap["node_num"]; ok {
+				request.NodeNum = helper.IntInt64(v.(int))
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifySLInstanceWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update lite hbase instance failed, reason:%+v", logId, err)
+				return err
+			}
+			emrService := EMRService{
+				client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+			}
+			conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		}
+	}
+
+	_ = instanceId
+	return resourceTencentCloudLiteHbaseInstanceRead(d, meta)
+}
+
+func resourceTencentCloudLiteHbaseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	instanceId := d.Id()
+
+	var (
+		request  = emr.NewTerminateSLInstanceRequest()
+		response = emr.NewTerminateSLInstanceResponse()
+	)
+
+	request.InstanceId = helper.String(instanceId)
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().TerminateSLInstanceWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s delete lite hbase instance failed, reason:%+v", logId, err)
+		return err
+	}
+	emrService := EMRService{
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+	}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"-2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	_ = response
+	_ = instanceId
+	return nil
+}

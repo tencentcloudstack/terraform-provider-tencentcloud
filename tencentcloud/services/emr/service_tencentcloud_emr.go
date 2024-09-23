@@ -14,6 +14,8 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -512,6 +514,125 @@ func (me *EMRService) DescribeEmrAutoScaleRecordsByFilter(ctx context.Context, p
 			break
 		}
 
+		offset += limit
+	}
+
+	return
+}
+
+func (me *EMRService) GetSLInstanceStatus(ctx context.Context, instanceId string) (instanceInfo *emr.SLInstanceInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := emr.NewDescribeSLInstanceListRequest()
+	filter := &emr.Filters{
+		Name:   helper.String("ClusterId"),
+		Values: []*string{&instanceId},
+	}
+	request.Filters = []*emr.Filters{filter}
+	request.DisplayStrategy = helper.String("clusterList")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, e := me.client.UseEmrClient().DescribeSLInstanceList(request)
+	if e != nil {
+		errRet = e
+		return
+	}
+
+	if response.Response != nil && len(response.Response.InstancesList) > 0 {
+		instanceInfo = response.Response.InstancesList[0]
+	}
+	return
+
+}
+
+func (me *EMRService) SLInstanceStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+
+		object, err := me.GetSLInstanceStatus(ctx, instanceId)
+
+		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if e.GetCode() == "UnauthorizedOperation" {
+					return &emr.SLInstanceInfo{}, "-2", nil
+				}
+			}
+			return nil, "", err
+		}
+
+		if object == nil {
+			return nil, "-2", nil
+		}
+
+		return object, helper.UInt64ToStr(*object.Status), nil
+	}
+}
+
+func (me *EMRService) DescribeLiteHbaseInstancesByFilter(ctx context.Context, param map[string]interface{}) (instances []*emr.SLInstanceInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = emr.NewDescribeSLInstanceListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DisplayStrategy" {
+			request.DisplayStrategy = v.(*string)
+		}
+		if k == "OrderField" {
+			request.OrderField = v.(*string)
+		}
+		if k == "Asc" {
+			request.Asc = v.(*int64)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*emr.Filters)
+		}
+	}
+
+	var (
+		offset   int64 = 0
+		limit    int64 = 100
+		response *emr.DescribeSLInstanceListResponse
+		innerErr error
+	)
+
+	for {
+		request.Offset = helper.Int64(offset)
+		request.Limit = helper.Int64(limit)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, innerErr = me.client.UseEmrV20190103Client().DescribeSLInstanceList(request)
+			if innerErr != nil {
+				return tccommon.RetryError(innerErr)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+			if response != nil && response.Response != nil && len(response.Response.InstancesList) > 0 {
+				instances = append(instances, response.Response.InstancesList...)
+			}
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.InstancesList) < int(limit) {
+			break
+		}
 		offset += limit
 	}
 
