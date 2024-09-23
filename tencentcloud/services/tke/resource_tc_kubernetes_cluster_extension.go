@@ -305,6 +305,7 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 	req.ClusterAdvancedSettings.VpcCniType = &advanced.VpcCniType
 
 	req.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
+	req.InstanceAdvancedSettings.PreStartUserScript = &iAdvanced.PreStartUserScript
 	req.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 
 	if len(iAdvanced.DataDisks) > 0 {
