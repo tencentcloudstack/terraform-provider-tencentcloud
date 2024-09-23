@@ -1,3 +1,13 @@
+## 1.81.125 (September 23 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_invite_organization_member_operation` ([#2838](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2838))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: support `cdc_id` params ([#2805](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2805))
+
 ## 1.81.124 (September 20 , 2024)
 
 FEATURES:
