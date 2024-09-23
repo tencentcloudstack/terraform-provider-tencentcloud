@@ -1802,6 +1802,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_identity_center_role_configuration_permission_policy_attachment": tco.ResourceTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachment(),
 			"tencentcloud_identity_center_user_sync_provisioning":                          tco.ResourceTencentCloudIdentityCenterUserSyncProvisioning(),
 			"tencentcloud_identity_center_role_assignment":                                 tco.ResourceTencentCloudIdentityCenterRoleAssignment(),
+			"tencentcloud_invite_organization_member_operation":                            tco.ResourceTencentCloudInviteOrganizationMemberOperation(),
 			"tencentcloud_dbbrain_sql_filter":                                              dbbrain.ResourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":                          dbbrain.ResourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                                     dbbrain.ResourceTencentCloudDbbrainDbDiagReportTask(),
