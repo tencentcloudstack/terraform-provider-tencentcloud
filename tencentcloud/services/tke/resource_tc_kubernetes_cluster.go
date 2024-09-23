@@ -1216,6 +1216,12 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				DiffSuppressFunc: dockerGraphPathDiffSuppressFunc,
 			},
 
+			"pre_start_user_script": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
+			},
+
 			"extra_args": {
 				Type:        schema.TypeList,
 				Optional:    true,
