@@ -2279,7 +2279,7 @@ func (me *CvmService) DescribeImageByFilter(ctx context.Context, param map[strin
 	return
 }
 
-func (me *CvmService) DescribeImagesByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeImagesResponseParams, errRet error) {
+func (me *CvmService) DescribeImagesByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.Image, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeImagesRequest()
@@ -2314,10 +2314,10 @@ func (me *CvmService) DescribeImagesByFilter(ctx context.Context, param map[stri
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil {
+		if response == nil || len(response.Response.ImageSet) < 1 {
 			break
 		}
-		ret = response.Response
+		ret = append(ret, response.Response.ImageSet...)
 		if len(response.Response.ImageSet) < int(limit) {
 			break
 		}
@@ -2328,7 +2328,7 @@ func (me *CvmService) DescribeImagesByFilter(ctx context.Context, param map[stri
 	return
 }
 
-func (me *CvmService) DescribeInstancesSetByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeInstancesResponseParams, errRet error) {
+func (me *CvmService) DescribeInstancesSetByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.Instance, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeInstancesRequest()
@@ -2362,10 +2362,10 @@ func (me *CvmService) DescribeInstancesSetByFilter(ctx context.Context, param ma
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil {
+		if response == nil || len(response.Response.InstanceSet) < 1 {
 			break
 		}
-		ret = response.Response
+		ret = append(ret, response.Response.InstanceSet...)
 		if len(response.Response.InstanceSet) < int(limit) {
 			break
 		}
@@ -2376,7 +2376,7 @@ func (me *CvmService) DescribeInstancesSetByFilter(ctx context.Context, param ma
 	return
 }
 
-func (me *CvmService) DescribeKeyPairsByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeKeyPairsResponseParams, errRet error) {
+func (me *CvmService) DescribeKeyPairsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.KeyPair, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeKeyPairsRequest()
@@ -2408,10 +2408,10 @@ func (me *CvmService) DescribeKeyPairsByFilter(ctx context.Context, param map[st
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil {
+		if response == nil || len(response.Response.KeyPairSet) < 1 {
 			break
 		}
-		ret = response.Response
+		ret = append(ret, response.Response.KeyPairSet...)
 		if len(response.Response.KeyPairSet) < int(limit) {
 			break
 		}
@@ -2422,7 +2422,7 @@ func (me *CvmService) DescribeKeyPairsByFilter(ctx context.Context, param map[st
 	return
 }
 
-func (me *CvmService) DescribePlacementGroupsByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeDisasterRecoverGroupsResponseParams, errRet error) {
+func (me *CvmService) DescribePlacementGroupsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cvm.DisasterRecoverGroup, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cvm.NewDescribeDisasterRecoverGroupsRequest()
@@ -2459,10 +2459,10 @@ func (me *CvmService) DescribePlacementGroupsByFilter(ctx context.Context, param
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil {
+		if response == nil || len(response.Response.DisasterRecoverGroupSet) < 1 {
 			break
 		}
-		ret = response.Response
+		ret = append(ret, response.Response.DisasterRecoverGroupSet...)
 		if len(response.Response.DisasterRecoverGroupSet) < int(limit) {
 			break
 		}
