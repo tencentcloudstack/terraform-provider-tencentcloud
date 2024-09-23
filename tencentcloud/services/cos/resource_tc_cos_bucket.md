@@ -11,9 +11,27 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "private_sbucket" {
+resource "tencentcloud_cos_bucket" "private_bucket" {
   bucket = "private-bucket-${local.app_id}"
   acl    = "private"
+}
+```
+
+Private Bucket with CDC cluster
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "private_bucket" {
+  bucket            = "private-bucket-${local.app_id}"
+  cdc_id            = "cluster-262n63e8"
+  acl               = "private"
+  versioning_enable = true
+  force_clean       = true
 }
 ```
 
@@ -27,9 +45,9 @@ locals {
 }
 
 resource "tencentcloud_cos_bucket" "multi_zone_bucket" {
-  bucket   = "multi-zone-bucket-${local.app_id}"
-  acl      = "private"
-  multi_az = true
+  bucket            = "multi-zone-bucket-${local.app_id}"
+  acl               = "private"
+  multi_az          = true
   versioning_enable = true
   force_clean       = true
 }
@@ -158,6 +176,29 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
 }
 ```
 
+Using CORS with CDC
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_cors" {
+  bucket = "bucket-with-cors-${local.app_id}"
+  cdc_id = "cluster-262n63e8"
+
+  cors_rules {
+    allowed_origins = ["http://*.abc.com"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_headers = ["*"]
+    max_age_seconds = 300
+    expose_headers = ["Etag"]
+  }
+}
+```
+
 Using object lifecycle
 
 ```hcl
@@ -186,32 +227,57 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
 }
 ```
 
-Using replication
+Using object lifecycle with CDC
+
 ```hcl
 data "tencentcloud_user_info" "info" {}
 
 locals {
   app_id = data.tencentcloud_user_info.info.app_id
-  uin = data.tencentcloud_user_info.info.uin
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
+  bucket = "bucket-with-lifecycle-${local.app_id}"
+  cdc_id = "cluster-262n63e8"
+  acl    = "private"
+
+  lifecycle_rules {
+    filter_prefix = "path1/"
+
+    expiration {
+      days = 90
+    }
+  }
+}
+```
+
+Using replication
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id    = data.tencentcloud_user_info.info.app_id
+  uin       = data.tencentcloud_user_info.info.uin
   owner_uin = data.tencentcloud_user_info.info.owner_uin
-  region = "ap-guangzhou"
+  region    = "ap-guangzhou"
 }
 
 resource "tencentcloud_cos_bucket" "bucket_replicate" {
-  bucket = "bucket-replicate-${local.app_id}"
-  acl    = "private"
+  bucket            = "bucket-replicate-${local.app_id}"
+  acl               = "private"
   versioning_enable = true
 }
 
 resource "tencentcloud_cos_bucket" "bucket_with_replication" {
-  bucket = "bucket-with-replication-${local.app_id}"
-  acl    = "private"
+  bucket            = "bucket-with-replication-${local.app_id}"
+  acl               = "private"
   versioning_enable = true
-  replica_role = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
+  replica_role      = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
-    id = "test-rep1"
-    status = "Enabled"
-    prefix = "dist"
+    id                 = "test-rep1"
+    status             = "Enabled"
+    prefix             = "dist"
     destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
   }
 }
