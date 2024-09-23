@@ -73,14 +73,15 @@ type RunInstancesForNode struct {
 }
 
 type InstanceAdvancedSettings struct {
-	MountTarget     string
-	DockerGraphPath string
-	UserScript      string
-	Unschedulable   int64
-	DesiredPodNum   int64
-	Labels          []*tke.Label
-	DataDisks       []*tke.DataDisk
-	ExtraArgs       tke.InstanceExtraArgs
+	MountTarget        string
+	DockerGraphPath    string
+	PreStartUserScript string
+	UserScript         string
+	Unschedulable      int64
+	DesiredPodNum      int64
+	Labels             []*tke.Label
+	DataDisks          []*tke.DataDisk
+	ExtraArgs          tke.InstanceExtraArgs
 }
 
 type ClusterCidrSettings struct {
