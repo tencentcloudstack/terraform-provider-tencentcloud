@@ -789,7 +789,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-### Create a CDC scenario cluster with
+### Create a CDC scenario cluster
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
