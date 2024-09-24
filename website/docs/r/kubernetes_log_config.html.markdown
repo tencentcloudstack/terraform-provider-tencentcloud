@@ -1,8 +1,19 @@
+---
+subcategory: "Tencent Kubernetes Engine(TKE)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_kubernetes_log_config"
+sidebar_current: "docs-tencentcloud-resource-kubernetes_log_config"
+description: |-
+  Provides a resource to create a tke kubernetes_log_config
+---
+
+# tencentcloud_kubernetes_log_config
+
 Provides a resource to create a tke kubernetes_log_config
 
-Example Usage
+## Example Usage
 
-Create a cls log config
+### Create a cls log config
 
 ```hcl
 locals {
@@ -110,7 +121,7 @@ resource "tencentcloud_kubernetes_log_config" "kubernetes_log_config_cls" {
 }
 ```
 
-Create a ckafka log config
+### Create a ckafka log config
 
 ```hcl
 locals {
@@ -197,4 +208,22 @@ resource "tencentcloud_kubernetes_log_config" "kubernetes_log_config_ckafka" {
   })
 }
 ```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
+* `log_config_name` - (Required, String, ForceNew) Log config name.
+* `log_config` - (Required, String, ForceNew) JSON expression of log collection configuration.
+* `cluster_type` - (Optional, String, ForceNew) The current cluster type supports tke and eks, default is tke.
+* `logset_id` - (Optional, String, ForceNew) CLS log set ID.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

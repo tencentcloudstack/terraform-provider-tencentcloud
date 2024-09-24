@@ -25,28 +25,28 @@ func ResourceTencentCloudKubernetesLogConfig() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "JSON expression of log collection configuration",
+				Description: "JSON expression of log collection configuration.",
 			},
 
 			"log_config_name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Log config name",
+				Description: "Log config name.",
 			},
 
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Cluster ID",
+				Description: "Cluster ID.",
 			},
 
 			"logset_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "CLS log set ID",
+				Description: "CLS log set ID.",
 			},
 
 			"cluster_type": {
@@ -54,7 +54,7 @@ func ResourceTencentCloudKubernetesLogConfig() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     "tke",
-				Description: "The current cluster type supports tke and eks, default is tke",
+				Description: "The current cluster type supports tke and eks, default is tke.",
 			},
 		},
 	}
@@ -78,13 +78,18 @@ func resourceTencentCloudKubernetesLogConfigCreate(d *schema.ResourceData, meta 
 		response = tkev20180525.NewCreateCLSLogConfigResponse()
 	)
 
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
+	}
 	if v, ok := d.GetOk("log_config_name"); ok {
 		logConfigName = v.(string)
+	}
+	if v, ok := d.GetOk("cluster_type"); ok {
+		clusterType = v.(string)
 	}
 
 	if v, ok := d.GetOk("cluster_id"); ok {
 		request.ClusterId = helper.String(v.(string))
-		clusterId =  v.(string)
 	}
 
 	if v, ok := d.GetOk("log_config"); ok {
@@ -97,7 +102,6 @@ func resourceTencentCloudKubernetesLogConfigCreate(d *schema.ResourceData, meta 
 
 	if v, ok := d.GetOk("cluster_type"); ok {
 		request.ClusterType = helper.String(v.(string))
-		clusterType =  v.(string)
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -139,6 +143,12 @@ func resourceTencentCloudKubernetesLogConfigRead(d *schema.ResourceData, meta in
 	clusterId := idSplit[0]
 	logConfigName := idSplit[1]
 	clusterType := idSplit[2]
+
+	_ = d.Set("cluster_id", clusterId)
+
+	_ = d.Set("log_config_name", logConfigName)
+
+	_ = d.Set("cluster_type", clusterType)
 
 	var respData *tkev20180525.DescribeLogConfigsResponseParams
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
