@@ -118,6 +118,7 @@ type TencentCloudClient struct {
 	Region     string
 	Protocol   string
 	Domain     string
+	CosDomain  string
 
 	cosConn            *s3.S3
 	tencentCosConn     *cos.Client
@@ -266,8 +267,12 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 
 	resolver := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
 		if service == endpoints.S3ServiceID {
+			cosUrl := fmt.Sprintf("https://cos.%s.myqcloud.com", region)
+			if me.CosDomain != "" {
+				cosUrl = me.CosDomain
+			}
 			return endpoints.ResolvedEndpoint{
-				URL:           fmt.Sprintf("https://cos.%s.myqcloud.com", region),
+				URL:           cosUrl,
 				SigningRegion: region,
 			}, nil
 		}
@@ -317,7 +322,14 @@ func (me *TencentCloudClient) UseTencentCosClientNew(bucket string, cdcId ...str
 
 // UseTencentCosClient tencent cloud own client for service instead of aws
 func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
-	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region))
+	cosUrl := fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region)
+	if me.CosDomain != "" {
+		parsedURL, _ := url.Parse(me.CosDomain)
+		parsedURL.Host = bucket + "." + parsedURL.Host
+		cosUrl = parsedURL.String()
+	}
+
+	u, _ := url.Parse(cosUrl)
 
 	if me.tencentCosConn != nil && me.tencentCosConn.BaseURL.BucketURL == u {
 		return me.tencentCosConn
@@ -1319,7 +1331,12 @@ func (me *TencentCloudClient) UseDtsClient() *dts.Client {
 
 // UseCosBatchClient returns ci client for service
 func (me *TencentCloudClient) UseCosBatchClient(uin string) *cos.Client {
-	u, _ := url.Parse(fmt.Sprintf("https://%s.cos-control.%s.myqcloud.com", uin, me.Region))
+	cosUrl := fmt.Sprintf("https://%s.cos-control.%s.myqcloud.com", uin, me.Region)
+	if me.CosDomain != "" {
+		cosUrl = me.CosDomain
+	}
+
+	u, _ := url.Parse(cosUrl)
 
 	if me.cosBatchConn != nil && me.cosBatchConn.BaseURL.BatchURL == u {
 		return me.cosBatchConn
