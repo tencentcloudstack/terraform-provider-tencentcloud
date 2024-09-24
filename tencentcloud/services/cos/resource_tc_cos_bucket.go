@@ -656,7 +656,8 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting cors_rules error: %v", err)
 	}
 
-	if cdcId == "" || cosService.client.CosDomain == "" {
+	cosDomain := meta.(tccommon.ProviderMeta).GetAPIV3Conn().CosDomain
+	if cdcId == "" || cosDomain == "" {
 		originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket)
 		if err != nil {
 			return err
