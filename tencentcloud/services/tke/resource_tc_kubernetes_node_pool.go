@@ -870,7 +870,7 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 	}
 
 	needChange := false
-	mutableArgs := []string{"name", "max_size", "min_size", "enable_auto_scale", "deletion_protection"}
+	mutableArgs := []string{"name", "max_size", "min_size", "taints", "enable_auto_scale", "deletion_protection"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
