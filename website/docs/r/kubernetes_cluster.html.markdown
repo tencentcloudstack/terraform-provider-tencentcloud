@@ -789,6 +789,35 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
+### Create a CDC scenario cluster with
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
+  cdc_id                  = "cluster-xxxxx"
+  vpc_id                  = "vpc-xxxxx"
+  cluster_cidr            = "192.168.0.0/16"
+  cluster_max_pod_num     = 64
+  cluster_name            = "test-cdc"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 1024
+  cluster_version         = "1.30.0"
+
+  cluster_os          = "tlinux3.1x86_64"
+  cluster_level       = "L20"
+  cluster_deploy_type = "INDEPENDENT_CLUSTER"
+
+  container_runtime     = "containerd"
+  runtime_version       = "1.6.9"
+  pre_start_user_script = "aXB0YWJsZXMgLUEgSU5QVVQgLXAgdGNwIC1zIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAppcHRhYmxlcyAtQSBPVVRQVVQgLXAgdGNwIC1kIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAoKZWNobyAnCmlwdGFibGVzIC1BIElOUFVUIC1wIHRjcCAtcyAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKaXB0YWJsZXMgLUEgT1VUUFVUIC1wIHRjcCAtZCAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKJyA+PiAvZXRjL3JjLmQvcmMubG9jYWw="
+  exist_instance {
+    node_role = "MASTER_ETCD"
+    instances_para {
+      instance_ids = ["ins-eeijdk16", "ins-84ku5rba", "ins-8oa3im2s"]
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
