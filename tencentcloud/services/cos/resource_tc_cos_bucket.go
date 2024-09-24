@@ -657,8 +657,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	cosDomain := meta.(tccommon.ProviderMeta).GetAPIV3Conn().CosDomain
-	log.Printf("[DEBUG] cos_domain: %s", cosDomain)
-	if cdcId == "" || cosDomain == "" {
+	if cdcId == "" && cosDomain == "" {
 		originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket)
 		if err != nil {
 			return err
