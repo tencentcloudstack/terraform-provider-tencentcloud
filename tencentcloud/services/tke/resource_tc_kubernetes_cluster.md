@@ -779,7 +779,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-Create cluster with cdc_id
+Create a CDC scenario cluster with
 ```
 resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
   cdc_id = "cluster-xxxxx"
