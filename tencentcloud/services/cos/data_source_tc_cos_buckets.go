@@ -362,7 +362,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 			continue
 		}
 
-		respTags, err := cosService.GetBucketTags(ctx, *v.Name)
+		respTags, err := cosService.GetBucketTags(ctx, *v.Name, "")
 		if err != nil {
 			return err
 		}
@@ -382,7 +382,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 
 		bucket["bucket"] = *v.Name
 
-		corsRules, err := cosService.GetBucketCors(ctx, *v.Name)
+		corsRules, err := cosService.GetBucketCors(ctx, *v.Name, "")
 		if err != nil {
 			return err
 		}
@@ -394,7 +394,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 		}
 		bucket["lifecycle_rules"] = lifecycleRules
 
-		website, err := cosService.GetBucketWebsite(ctx, *v.Name)
+		website, err := cosService.GetBucketWebsite(ctx, *v.Name, "")
 		if err != nil {
 			return err
 		}
@@ -411,7 +411,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 			bucket["origin_domain_rules"] = domainRules
 		}
 
-		aclBody, err := cosService.GetBucketACL(ctx, *v.Name)
+		aclBody, err := cosService.GetBucketACL(ctx, *v.Name, "")
 
 		if err != nil {
 			return err

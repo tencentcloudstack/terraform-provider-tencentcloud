@@ -22,9 +22,27 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
 }
 
-resource "tencentcloud_cos_bucket" "private_sbucket" {
+resource "tencentcloud_cos_bucket" "private_bucket" {
   bucket = "private-bucket-${local.app_id}"
   acl    = "private"
+}
+```
+
+### Private Bucket with CDC cluster
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "private_bucket" {
+  bucket            = "private-bucket-${local.app_id}"
+  cdc_id            = "cluster-262n63e8"
+  acl               = "private"
+  versioning_enable = true
+  force_clean       = true
 }
 ```
 
@@ -169,6 +187,29 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
 }
 ```
 
+### Using CORS with CDC
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_cors" {
+  bucket = "bucket-with-cors-${local.app_id}"
+  cdc_id = "cluster-262n63e8"
+
+  cors_rules {
+    allowed_origins = ["http://*.abc.com"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_headers = ["*"]
+    max_age_seconds = 300
+    expose_headers  = ["Etag"]
+  }
+}
+```
+
 ### Using object lifecycle
 
 ```hcl
@@ -189,6 +230,30 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
       days          = 30
       storage_class = "STANDARD_IA"
     }
+
+    expiration {
+      days = 90
+    }
+  }
+}
+```
+
+### Using object lifecycle with CDC
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
+  bucket = "bucket-with-lifecycle-${local.app_id}"
+  cdc_id = "cluster-262n63e8"
+  acl    = "private"
+
+  lifecycle_rules {
+    filter_prefix = "path1/"
 
     expiration {
       days = 90
@@ -237,6 +302,7 @@ The following arguments are supported:
 * `acceleration_enable` - (Optional, Bool) Enable bucket acceleration.
 * `acl_body` - (Optional, String) ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.
 * `acl` - (Optional, String) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
+* `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
 * `enable_intelligent_tiering` - (Optional, Bool) Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.
 * `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid value is `AES256`.

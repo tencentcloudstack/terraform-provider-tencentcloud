@@ -510,6 +510,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_instance_zone_info":                     crs.DataSourceTencentCloudRedisInstanceZoneInfo(),
 			"tencentcloud_redis_instance_task_list":                     crs.DataSourceTencentCloudRedisInstanceTaskList(),
 			"tencentcloud_redis_instance_node_info":                     crs.DataSourceTencentCloudRedisInstanceNodeInfo(),
+			"tencentcloud_redis_clusters":                               crs.DataSourceTencentCloudRedisClusters(),
 			"tencentcloud_as_scaling_configs":                           as.DataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                            as.DataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                          as.DataSourceTencentCloudAsScalingPolicies(),
@@ -1108,7 +1109,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdc_dedicated_cluster_instance_types":         cdc.DataSourceTencentCloudCdcDedicatedClusterInstanceTypes(),
 			"tencentcloud_cdc_dedicated_cluster_orders":                 cdc.DataSourceTencentCloudCdcDedicatedClusterOrders(),
 			"tencentcloud_cdwdoris_instances":                           cdwdoris.DataSourceTencentCloudCdwdorisInstances(),
-		},
+			"tencentcloud_lite_hbase_instances":                         emr.DataSourceTencentCloudLiteHbaseInstances()},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                                         project.ResourceTencentCloudProject(),
@@ -1801,6 +1802,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_identity_center_role_configuration_permission_policy_attachment": tco.ResourceTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachment(),
 			"tencentcloud_identity_center_user_sync_provisioning":                          tco.ResourceTencentCloudIdentityCenterUserSyncProvisioning(),
 			"tencentcloud_identity_center_role_assignment":                                 tco.ResourceTencentCloudIdentityCenterRoleAssignment(),
+			"tencentcloud_invite_organization_member_operation":                            tco.ResourceTencentCloudInviteOrganizationMemberOperation(),
 			"tencentcloud_dbbrain_sql_filter":                                              dbbrain.ResourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":                          dbbrain.ResourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                                     dbbrain.ResourceTencentCloudDbbrainDbDiagReportTask(),
@@ -2128,7 +2130,8 @@ func Provider() *schema.Provider {
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),
 			"tencentcloud_batch_apply_account_baselines":  controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
 			"tencentcloud_thpc_workspaces":                thpc.ResourceTencentCloudThpcWorkspaces(),
-			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy()},
+			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy(),
+			"tencentcloud_lite_hbase_instance":            emr.ResourceTencentCloudLiteHbaseInstance()},
 
 		ConfigureFunc: providerConfigure,
 	}

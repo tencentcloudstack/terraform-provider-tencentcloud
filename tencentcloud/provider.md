@@ -908,6 +908,7 @@ TencentDB for Redis(crs)
     tencentcloud_redis_instance_zone_info
     tencentcloud_redis_instance_task_list
     tencentcloud_redis_instance_node_info
+    tencentcloud_redis_clusters
 
   Resource
     tencentcloud_redis_instance
@@ -1301,10 +1302,12 @@ MapReduce(EMR)
     tencentcloud_emr_auto_scale_records
     tencentcloud_emr_nodes
     tencentcloud_emr_cvm_quota
+    tencentcloud_lite_hbase_instances
 
   Resource
     tencentcloud_emr_cluster
     tencentcloud_emr_user_manager
+    tencentcloud_lite_hbase_instance
 
 DNSPOD
   Resource
@@ -1687,6 +1690,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_identity_center_role_configuration_permission_policy_attachment
     tencentcloud_identity_center_user_sync_provisioning
     tencentcloud_identity_center_role_assignment
+    tencentcloud_invite_organization_member_operation
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source

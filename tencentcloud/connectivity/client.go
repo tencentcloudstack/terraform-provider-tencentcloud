@@ -210,7 +210,8 @@ type TencentCloudClient struct {
 	controlcenterConn *controlcenter.Client
 	thpcConn          *thpc.Client
 	//omit nil client
-	omitNilConn *common.Client
+	omitNilConn      *common.Client
+	emrv20190103Conn *emr.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -249,6 +250,14 @@ func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.Cli
 	return cpf
 }
 
+func (me *TencentCloudClient) UseCosClientNew(cdcId ...string) *s3.S3 {
+	if cdcId[0] == "" {
+		return me.UseCosClient()
+	} else {
+		return me.UseCosCdcClient(cdcId[0])
+	}
+}
+
 // UseCosClient returns cos client for service
 func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 	if me.cosConn != nil {
@@ -275,9 +284,65 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 	return s3.New(sess)
 }
 
+// UseCosClient returns cos client for service with CDC
+func (me *TencentCloudClient) UseCosCdcClient(cdcId string) *s3.S3 {
+	resolver := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
+		if service == endpoints.S3ServiceID {
+			endpointUrl := fmt.Sprintf("https://%s.cos-cdc.%s.myqcloud.com", cdcId, region)
+			return endpoints.ResolvedEndpoint{
+				URL:           endpointUrl,
+				SigningRegion: region,
+			}, nil
+		}
+		return endpoints.DefaultResolver().EndpointFor(service, region, optFns...)
+	}
+
+	creds := credentials.NewStaticCredentials(me.Credential.SecretId, me.Credential.SecretKey, me.Credential.Token)
+	sess := session.Must(session.NewSession(&aws.Config{
+		Credentials:      creds,
+		Region:           aws.String(me.Region),
+		EndpointResolver: endpoints.ResolverFunc(resolver),
+	}))
+
+	return s3.New(sess)
+}
+
+func (me *TencentCloudClient) UseTencentCosClientNew(bucket string, cdcId ...string) *cos.Client {
+	if cdcId[0] == "" {
+		return me.UseTencentCosClient(bucket)
+	} else {
+		return me.UseTencentCosCdcClient(bucket, cdcId[0])
+	}
+}
+
 // UseTencentCosClient tencent cloud own client for service instead of aws
 func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region))
+
+	if me.tencentCosConn != nil && me.tencentCosConn.BaseURL.BucketURL == u {
+		return me.tencentCosConn
+	}
+
+	baseUrl := &cos.BaseURL{
+		BucketURL: u,
+	}
+
+	me.tencentCosConn = cos.NewClient(baseUrl, &http.Client{
+		Timeout: 100 * time.Second,
+		Transport: &cos.AuthorizationTransport{
+			SecretID:     me.Credential.SecretId,
+			SecretKey:    me.Credential.SecretKey,
+			SessionToken: me.Credential.Token,
+		},
+	})
+
+	return me.tencentCosConn
+}
+
+// UseTencentCosClient tencent cloud own client for service instead of aws with CDC
+func (me *TencentCloudClient) UseTencentCosCdcClient(bucket string, cdcId string) *cos.Client {
+	var u *url.URL
+	u, _ = url.Parse(fmt.Sprintf("https://%s.%s.cos-cdc.%s.myqcloud.com", bucket, cdcId, me.Region))
 
 	if me.tencentCosConn != nil && me.tencentCosConn.BaseURL.BucketURL == u {
 		return me.tencentCosConn
@@ -1734,4 +1799,17 @@ func (me *TencentCloudClient) UseThpcV20230321Client() *thpc.Client {
 	me.thpcConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.thpcConn
+}
+
+// UseEmrV20190103Client return EMR client for service
+func (me *TencentCloudClient) UseEmrV20190103Client() *emr.Client {
+	if me.emrv20190103Conn != nil {
+		return me.emrv20190103Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.emrv20190103Conn, _ = emr.NewClient(me.Credential, me.Region, cpf)
+	me.emrv20190103Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.emrv20190103Conn
 }
