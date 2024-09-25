@@ -73,14 +73,15 @@ type RunInstancesForNode struct {
 }
 
 type InstanceAdvancedSettings struct {
-	MountTarget     string
-	DockerGraphPath string
-	UserScript      string
-	Unschedulable   int64
-	DesiredPodNum   int64
-	Labels          []*tke.Label
-	DataDisks       []*tke.DataDisk
-	ExtraArgs       tke.InstanceExtraArgs
+	MountTarget        string
+	DockerGraphPath    string
+	PreStartUserScript string
+	UserScript         string
+	Unschedulable      int64
+	DesiredPodNum      int64
+	Labels             []*tke.Label
+	DataDisks          []*tke.DataDisk
+	ExtraArgs          tke.InstanceExtraArgs
 }
 
 type ClusterCidrSettings struct {
@@ -3671,5 +3672,32 @@ func (me *TkeService) DescribeKubernetesHealthCheckPolicyById(ctx context.Contex
 	}
 
 	ret = instances[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesLogConfigById(ctx context.Context, clusterId string, logConfigName string, clusterType string) (ret *tke.DescribeLogConfigsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeLogConfigsRequest()
+	request.ClusterId = helper.String(clusterId)
+	request.ClusterType = helper.String(clusterType)
+	request.LogConfigNames = helper.String(logConfigName)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeV20180525Client().DescribeLogConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }

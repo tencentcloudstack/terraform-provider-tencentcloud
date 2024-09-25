@@ -789,6 +789,35 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
+### Create a CDC scenario cluster
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
+  cdc_id                  = "cluster-xxxxx"
+  vpc_id                  = "vpc-xxxxx"
+  cluster_cidr            = "192.168.0.0/16"
+  cluster_max_pod_num     = 64
+  cluster_name            = "test-cdc"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 1024
+  cluster_version         = "1.30.0"
+
+  cluster_os          = "tlinux3.1x86_64"
+  cluster_level       = "L20"
+  cluster_deploy_type = "INDEPENDENT_CLUSTER"
+
+  container_runtime     = "containerd"
+  runtime_version       = "1.6.9"
+  pre_start_user_script = "aXB0YWJsZXMgLUEgSU5QVVQgLXAgdGNwIC1zIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAppcHRhYmxlcyAtQSBPVVRQVVQgLXAgdGNwIC1kIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAoKZWNobyAnCmlwdGFibGVzIC1BIElOUFVUIC1wIHRjcCAtcyAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKaXB0YWJsZXMgLUEgT1VUUFVUIC1wIHRjcCAtZCAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKJyA+PiAvZXRjL3JjLmQvcmMubG9jYWw="
+  exist_instance {
+    node_role = "MASTER_ETCD"
+    instances_para {
+      instance_ids = ["ins-eeijdk16", "ins-84ku5rba", "ins-8oa3im2s"]
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -798,6 +827,7 @@ The following arguments are supported:
 * `auth_options` - (Optional, List) Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.
 * `auto_upgrade_cluster_level` - (Optional, Bool) Whether the cluster level auto upgraded, valid for managed cluster.
 * `base_pod_num` - (Optional, Int, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
+* `cdc_id` - (Optional, String) CDC ID.
 * `claim_expired_seconds` - (Optional, Int) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
 * `cluster_audit` - (Optional, List) Specify Cluster Audit config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `cluster_cidr` - (Optional, String, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
@@ -841,6 +871,7 @@ The following arguments are supported:
 * `network_type` - (Optional, String, ForceNew) Cluster network type, the available values include: 'GR' and 'VPC-CNI' and 'CiliumOverlay'. Default is GR.
 * `node_name_type` - (Optional, String, ForceNew) Node name type of Cluster, the available values include: 'lan-ip' and 'hostname', Default is 'lan-ip'.
 * `node_pool_global_config` - (Optional, List) Global config effective for all node pools.
+* `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
 * `runtime_version` - (Optional, String) Container Runtime version.
 * `service_cidr` - (Optional, String, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.

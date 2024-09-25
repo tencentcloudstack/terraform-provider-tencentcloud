@@ -149,34 +149,39 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 		Master: make([]tke.InstanceAdvancedSettings, 0),
 		Work:   make([]tke.InstanceAdvancedSettings, 0),
 	}
-	if masters, ok := d.GetOk("master_config"); ok {
-		if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
-			return fmt.Errorf("if `cluster_deploy_type` is `MANAGED_CLUSTER` , You don't need define the master yourself")
-		}
-		var masterCount int64 = 0
-		masterList := masters.([]interface{})
-		for index := range masterList {
-			master := masterList[index].(map[string]interface{})
-			paraJson, count, err := tkeGetCvmRunInstancesPara(master, meta, vpcId, basic.ProjectId)
-			if err != nil {
-				return err
+
+	cdc_id := d.Get("cdc_id").(string)
+
+	if cdc_id == "" {
+		if masters, ok := d.GetOk("master_config"); ok {
+			if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
+				return fmt.Errorf("if `cluster_deploy_type` is `MANAGED_CLUSTER` , You don't need define the master yourself")
 			}
+			var masterCount int64 = 0
+			masterList := masters.([]interface{})
+			for index := range masterList {
+				master := masterList[index].(map[string]interface{})
+				paraJson, count, err := tkeGetCvmRunInstancesPara(master, meta, vpcId, basic.ProjectId)
+				if err != nil {
+					return err
+				}
 
-			cvms.Master = append(cvms.Master, paraJson)
-			masterCount += count
+				cvms.Master = append(cvms.Master, paraJson)
+				masterCount += count
 
-			if v, ok := master["desired_pod_num"]; ok {
-				dpNum := int64(v.(int))
-				if dpNum != DefaultDesiredPodNum {
-					overrideSettings.Master = append(overrideSettings.Master, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
+				if v, ok := master["desired_pod_num"]; ok {
+					dpNum := int64(v.(int))
+					if dpNum != DefaultDesiredPodNum {
+						overrideSettings.Master = append(overrideSettings.Master, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
+					}
 				}
 			}
+			if masterCount < 3 {
+				return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should >=3")
+			}
+		} else if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
+			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` , You need define the master yourself")
 		}
-		if masterCount < 3 {
-			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should >=3")
-		}
-	} else if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
-		return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` , You need define the master yourself")
 	}
 
 	if workers, ok := d.GetOk("worker_config"); ok {
@@ -261,6 +266,10 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 		iAdvanced.DockerGraphPath = "/var/lib/docker"
 	}
 
+	if preStartUserScript, ok := d.GetOk("pre_start_user_script"); ok {
+		iAdvanced.PreStartUserScript = preStartUserScript.(string)
+	}
+
 	// ExistedInstancesForNode
 	existInstances := make([]*tke.ExistedInstancesForNode, 0)
 	if instances, ok := d.GetOk("exist_instance"); ok {
@@ -296,6 +305,7 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 	req.ClusterAdvancedSettings.VpcCniType = &advanced.VpcCniType
 
 	req.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
+	req.InstanceAdvancedSettings.PreStartUserScript = &iAdvanced.PreStartUserScript
 	req.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 
 	if len(iAdvanced.DataDisks) > 0 {
@@ -311,7 +321,9 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 
 	req.RunInstancesForNode = []*tke.RunInstancesForNode{}
 
-	if len(cvms.Master) != 0 {
+	if cdc_id != "" {
+		req.ClusterType = helper.String(clusterDeployType)
+	} else if len(cvms.Master) != 0 {
 
 		var node tke.RunInstancesForNode
 		node.NodeRole = helper.String(TKE_ROLE_MASTER_ETCD)
