@@ -1,0 +1,4 @@
+
+```release-note:new-resource
+tencentcloud_identity_center_role_configuration_permission_custom_policy_attachment
+```

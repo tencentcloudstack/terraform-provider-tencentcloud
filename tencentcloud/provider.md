@@ -1689,6 +1689,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_identity_center_external_saml_identity_provider
     tencentcloud_identity_center_role_configuration
     tencentcloud_identity_center_role_configuration_permission_policy_attachment
+    tencentcloud_identity_center_role_configuration_permission_custom_policy_attachment
     tencentcloud_identity_center_user_sync_provisioning
     tencentcloud_identity_center_role_assignment
     tencentcloud_invite_organization_member_operation
