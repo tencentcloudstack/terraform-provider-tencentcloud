@@ -243,11 +243,16 @@ You can set the cos domain by setting the environment variable `TENCENTCLOUD_COS
 -> **Note:** Please note that not all cos resources are supported. Please pay attention to the prompts for each resource.
 
 ```hcl
+locals {
+  region = "ap-guangzhou"
+  cdc_id = "cluster_xxx"
+}
+
 provider "tencentcloud" {
-  secret_id  = "my-secret-id"
-  secret_key = "my-secret-key"
-  region     = "ap-guangzhou"
-  cos_domain = "https://cluster-xxxxxx.cos-cdc.ap-guangzhou.myqcloud.com/"
+  region     = local.region
+  secret_id  = "xxxxxx"
+  secret_key = "xxxxxx"
+  cos_domain = "https://${local.cdc_id}.cos-cdc.${local.region}.myqcloud.com/"
 }
 ```
 
