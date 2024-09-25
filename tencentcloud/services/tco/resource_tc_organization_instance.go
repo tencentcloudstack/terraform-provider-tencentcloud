@@ -17,6 +17,7 @@ func ResourceTencentCloudOrganizationOrganization() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudOrganizationOrganizationCreate,
 		Read:   resourceTencentCloudOrganizationOrganizationRead,
+		Update: resourceTencentCloudOrganizationOrganizationUpdate,
 		Delete: resourceTencentCloudOrganizationOrganizationDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -26,6 +27,13 @@ func ResourceTencentCloudOrganizationOrganization() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Enterprise organization ID.Note: This field may return NULL, indicating that the valid value cannot be obtained.",
+			},
+
+			"root_node_name": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Root node name.",
 			},
 
 			"host_uin": {
@@ -140,6 +148,7 @@ func resourceTencentCloudOrganizationOrganizationCreate(d *schema.ResourceData, 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
 		request  = organization.NewCreateOrganizationRequest()
@@ -162,6 +171,15 @@ func resourceTencentCloudOrganizationOrganizationCreate(d *schema.ResourceData, 
 	}
 
 	orgId = *response.Response.OrgId
+
+	if v, ok := d.GetOk("root_node_name"); ok {
+		service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		innerErr := service.UpdateOrganizationRootNodeName(ctx, orgId, v.(string))
+		if innerErr != nil {
+			return innerErr
+		}
+	}
+
 	d.SetId(helper.UInt64ToStr(orgId))
 
 	return resourceTencentCloudOrganizationOrganizationRead(d, meta)
@@ -268,7 +286,35 @@ func resourceTencentCloudOrganizationOrganizationRead(d *schema.ResourceData, me
 		_ = d.Set("is_auth_manager", organization.IsAuthManager)
 	}
 
+	if organization.RootNodeId != nil {
+		orgNode, err := service.DescribeOrganizationOrgNode(ctx, helper.Int64ToStr(*organization.RootNodeId))
+		if err != nil {
+			return err
+		}
+		_ = d.Set("root_node_name", orgNode.Name)
+	}
 	return nil
+}
+
+func resourceTencentCloudOrganizationOrganizationUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	orgIdString := d.Id()
+	orgId := helper.StrToUInt64(orgIdString)
+	if d.HasChange("root_node_name") {
+		if v, ok := d.GetOk("root_node_name"); ok {
+			service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			innerErr := service.UpdateOrganizationRootNodeName(ctx, orgId, v.(string))
+			if innerErr != nil {
+				return innerErr
+			}
+		}
+	}
+
+	return resourceTencentCloudOrganizationOrganizationRead(d, meta)
 }
 
 func resourceTencentCloudOrganizationOrganizationDelete(d *schema.ResourceData, meta interface{}) error {

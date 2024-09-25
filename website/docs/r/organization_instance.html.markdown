@@ -22,7 +22,7 @@ resource "tencentcloud_organization_instance" "organization" {
 
 The following arguments are supported:
 
-
+* `root_node_name` - (Optional, String) Root node name.
 
 ## Attributes Reference
 
