@@ -164,6 +164,61 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
+### Create a multi available zone postgresql instance of CDC
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create postgresql
+resource "tencentcloud_postgresql_instance" "example" {
+  name              = "tf-example"
+  availability_zone = var.availability_zone
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  db_major_version  = "10"
+  root_user         = "root123"
+  root_password     = "Root123$"
+  charset           = "UTF8"
+  project_id        = 0
+  memory            = 2
+  cpu               = 1
+  storage           = 10
+
+  db_node_set {
+    role                 = "Primary"
+    zone                 = var.availability_zone
+    dedicated_cluster_id = "cluster-262n63e8"
+  }
+
+  db_node_set {
+    zone                 = var.availability_zone
+    dedicated_cluster_id = "cluster-262n63e8"
+  }
+
+  tags = {
+    CreateBy = "terraform"
+  }
+}
+```
+
 ### Create pgsql with kms key
 
 ```hcl
@@ -285,6 +340,7 @@ The `backup_plan` object supports the following:
 The `db_node_set` object supports the following:
 
 * `zone` - (Required, String) Indicates the node available zone.
+* `dedicated_cluster_id` - (Optional, String) Dedicated cluster ID.
 * `role` - (Optional, String) Indicates node type, available values:`Primary`, `Standby`. Default: `Standby`.
 
 ## Attributes Reference

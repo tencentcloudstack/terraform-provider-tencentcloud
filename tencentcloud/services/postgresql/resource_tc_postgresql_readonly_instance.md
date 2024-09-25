@@ -29,7 +29,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "10.4"
+  db_major_version  = "10"
   root_user         = "root123"
   root_password     = "Root123$"
   charset           = "UTF8"
@@ -73,7 +73,7 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   zone                  = var.availability_zone
   name                  = "example"
   auto_renew_flag       = 0
-  db_version            = "10.4"
+  db_version            = "10.23"
   instance_charge_type  = "POSTPAID_BY_HOUR"
   memory                = 4
   cpu                   = 2

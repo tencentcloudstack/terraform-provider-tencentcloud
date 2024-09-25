@@ -40,7 +40,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "10.4"
+  db_major_version  = "10"
   root_user         = "root123"
   root_password     = "Root123$"
   charset           = "UTF8"
@@ -84,7 +84,7 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   zone                  = var.availability_zone
   name                  = "example"
   auto_renew_flag       = 0
-  db_version            = "10.4"
+  db_version            = "10.23"
   instance_charge_type  = "POSTPAID_BY_HOUR"
   memory                = 4
   cpu                   = 2
@@ -116,6 +116,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
 * `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
 * `cpu` - (Optional, Int) Number of CPU cores. Allowed value must be equal `cpu` that data source `tencentcloud_postgresql_specinfos` provides.
+* `dedicated_cluster_id` - (Optional, String) Dedicated cluster ID.
 * `instance_charge_type` - (Optional, String, ForceNew) instance billing mode. Valid values: PREPAID (monthly subscription), POSTPAID_BY_HOUR (pay-as-you-go).
 * `need_support_ipv6` - (Optional, Int, ForceNew) Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).
 * `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.

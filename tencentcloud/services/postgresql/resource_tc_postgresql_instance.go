@@ -275,6 +275,11 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 							Required:    true,
 							Description: "Indicates the node available zone.",
 						},
+						"dedicated_cluster_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Dedicated cluster ID.",
+						},
 					},
 				},
 			},
@@ -479,14 +484,25 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	if len(nodeSet) > 0 {
 		for i := range nodeSet {
 			var (
-				item = nodeSet[i].(map[string]interface{})
-				role = item["role"].(string)
-				zone = item["zone"].(string)
+				item               = nodeSet[i].(map[string]interface{})
+				role               = item["role"].(string)
+				zone               = item["zone"].(string)
+				dedicatedClusterId = item["dedicated_cluster_id"].(string)
+				node               *postgresql.DBNode
+			)
+
+			if dedicatedClusterId != "" {
+				node = &postgresql.DBNode{
+					Role:               &role,
+					Zone:               &zone,
+					DedicatedClusterId: &dedicatedClusterId,
+				}
+			} else {
 				node = &postgresql.DBNode{
 					Role: &role,
 					Zone: &zone,
 				}
-			)
+			}
 
 			dbNodeSet = append(dbNodeSet, node)
 		}
@@ -816,8 +832,9 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		for i := range nodeSet {
 			item := nodeSet[i]
 			node := map[string]interface{}{
-				"role": item.Role,
-				"zone": item.Zone,
+				"role":                 item.Role,
+				"zone":                 item.Zone,
+				"dedicated_cluster_id": item.DedicatedClusterId,
 			}
 
 			zoneSet.Add(*item.Zone)
@@ -1351,15 +1368,24 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		request.SwitchTag = helper.Int64(0)
 		for i := range nodeSet {
 			var (
-				node = nodeSet[i].(map[string]interface{})
-				role = node["role"].(string)
-				zone = node["zone"].(string)
+				node               = nodeSet[i].(map[string]interface{})
+				role               = node["role"].(string)
+				zone               = node["zone"].(string)
+				dedicatedClusterId = node["dedicated_cluster_id"].(string)
 			)
 
-			request.DBNodeSet = append(request.DBNodeSet, &postgresql.DBNode{
-				Role: &role,
-				Zone: &zone,
-			})
+			if dedicatedClusterId != "" {
+				request.DBNodeSet = append(request.DBNodeSet, &postgresql.DBNode{
+					Role:               &role,
+					Zone:               &zone,
+					DedicatedClusterId: &dedicatedClusterId,
+				})
+			} else {
+				request.DBNodeSet = append(request.DBNodeSet, &postgresql.DBNode{
+					Role: &role,
+					Zone: &zone,
+				})
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

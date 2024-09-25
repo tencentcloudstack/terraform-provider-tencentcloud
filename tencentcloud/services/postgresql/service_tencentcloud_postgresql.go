@@ -2150,3 +2150,39 @@ func (me *PostgresqlService) DescribePostgresAccountPrivilegesById(ctx context.C
 	accountPrivileges = response.Response.PrivilegeSet
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlDedicatedClustersByFilter(ctx context.Context, param map[string]interface{}) (ret []*postgresql.DedicatedCluster, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = postgresql.NewDescribeDedicatedClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDedicatedClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DedicatedClusterSet) < 1 {
+		return
+	}
+
+	ret = response.Response.DedicatedClusterSet
+	return
+}

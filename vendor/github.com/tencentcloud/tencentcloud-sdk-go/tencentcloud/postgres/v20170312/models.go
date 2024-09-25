@@ -1051,6 +1051,95 @@ func (r *CreateDBInstancesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateDatabaseRequestParams struct {
+	// 实例ID，形如postgres-6fego161
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// 创建的数据库名
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据库的所有者
+	DatabaseOwner *string `json:"DatabaseOwner,omitnil,omitempty" name:"DatabaseOwner"`
+
+	// 数据库的字符编码
+	Encoding *string `json:"Encoding,omitnil,omitempty" name:"Encoding"`
+
+	// 数据库的排序规则
+	Collate *string `json:"Collate,omitnil,omitempty" name:"Collate"`
+
+	// 数据库的字符分类
+	Ctype *string `json:"Ctype,omitnil,omitempty" name:"Ctype"`
+}
+
+type CreateDatabaseRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID，形如postgres-6fego161
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// 创建的数据库名
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据库的所有者
+	DatabaseOwner *string `json:"DatabaseOwner,omitnil,omitempty" name:"DatabaseOwner"`
+
+	// 数据库的字符编码
+	Encoding *string `json:"Encoding,omitnil,omitempty" name:"Encoding"`
+
+	// 数据库的排序规则
+	Collate *string `json:"Collate,omitnil,omitempty" name:"Collate"`
+
+	// 数据库的字符分类
+	Ctype *string `json:"Ctype,omitnil,omitempty" name:"Ctype"`
+}
+
+func (r *CreateDatabaseRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDatabaseRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "DatabaseName")
+	delete(f, "DatabaseOwner")
+	delete(f, "Encoding")
+	delete(f, "Collate")
+	delete(f, "Ctype")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDatabaseRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDatabaseResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateDatabaseResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDatabaseResponseParams `json:"Response"`
+}
+
+func (r *CreateDatabaseResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDatabaseResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateInstancesRequestParams struct {
 	// 实例所属主可用区， 如：ap-guangzhou-3；若需要支持多可用区，在DBNodeSet.N字段中进行添加主可用区和备可用区信息；
 	// 可用区信息可以通过调用 [DescribeZones](https://cloud.tencent.com/document/api/409/16769) 接口的返回值中的Zone字段来获取。
@@ -1513,25 +1602,25 @@ type CreateReadOnlyDBInstanceRequestParams struct {
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
 	// 购买时长，单位：月。
-	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36
-	// <li>后付费：只支持1
+	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li>
+	// <li>后付费：只支持1</li>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 私有网络ID，形如vpc-xxxxxxxx。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
+	// 私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络子网ID，形如subnet-xxxxxxxx。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
+	// 私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 实例计费类型，目前支持：
-	// <li>PREPAID：预付费，即包年包月。
-	// <li>POSTPAID_BY_HOUR：后付费，即按量计费。
+	// <li>PREPAID：预付费，即包年包月。</li>
+	// <li>POSTPAID_BY_HOUR：后付费，即按量计费。</li>
 	// 默认值：PREPAID。如果主实例为后付费，只读实例必须也为后付费。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
 	// 是否自动使用代金券：
-	// <li>0：否
-	// <li>1：是
+	// <li>0：否</li>
+	// <li>1：是</li>
 	// 默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
@@ -1539,8 +1628,8 @@ type CreateReadOnlyDBInstanceRequestParams struct {
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
 	// 续费标记：
-	// <li>0：手动续费
-	// <li>1：自动续费
+	// <li>0：手动续费</li>
+	// <li>1：自动续费</li>
 	// 默认值：0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
@@ -1560,8 +1649,8 @@ type CreateReadOnlyDBInstanceRequestParams struct {
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 是否需要支持Ipv6：
-	// <li>0：否
-	// <li>1：是
+	// <li>0：否</li>
+	// <li>1：是</li>
 	// 默认值：0
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitnil,omitempty" name:"NeedSupportIpv6"`
 
@@ -1570,6 +1659,9 @@ type CreateReadOnlyDBInstanceRequestParams struct {
 
 	// 【废弃】不再需要指定，内核版本号与主实例保持一致
 	DBVersion *string `json:"DBVersion,omitnil,omitempty" name:"DBVersion"`
+
+	// 专属集群ID
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 }
 
 type CreateReadOnlyDBInstanceRequest struct {
@@ -1592,25 +1684,25 @@ type CreateReadOnlyDBInstanceRequest struct {
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
 	// 购买时长，单位：月。
-	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36
-	// <li>后付费：只支持1
+	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li>
+	// <li>后付费：只支持1</li>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 私有网络ID，形如vpc-xxxxxxxx。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
+	// 私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络子网ID，形如subnet-xxxxxxxx。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
+	// 私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 实例计费类型，目前支持：
-	// <li>PREPAID：预付费，即包年包月。
-	// <li>POSTPAID_BY_HOUR：后付费，即按量计费。
+	// <li>PREPAID：预付费，即包年包月。</li>
+	// <li>POSTPAID_BY_HOUR：后付费，即按量计费。</li>
 	// 默认值：PREPAID。如果主实例为后付费，只读实例必须也为后付费。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
 	// 是否自动使用代金券：
-	// <li>0：否
-	// <li>1：是
+	// <li>0：否</li>
+	// <li>1：是</li>
 	// 默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
@@ -1618,8 +1710,8 @@ type CreateReadOnlyDBInstanceRequest struct {
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
 	// 续费标记：
-	// <li>0：手动续费
-	// <li>1：自动续费
+	// <li>0：手动续费</li>
+	// <li>1：自动续费</li>
 	// 默认值：0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
@@ -1639,8 +1731,8 @@ type CreateReadOnlyDBInstanceRequest struct {
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 是否需要支持Ipv6：
-	// <li>0：否
-	// <li>1：是
+	// <li>0：否</li>
+	// <li>1：是</li>
 	// 默认值：0
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitnil,omitempty" name:"NeedSupportIpv6"`
 
@@ -1649,6 +1741,9 @@ type CreateReadOnlyDBInstanceRequest struct {
 
 	// 【废弃】不再需要指定，内核版本号与主实例保持一致
 	DBVersion *string `json:"DBVersion,omitnil,omitempty" name:"DBVersion"`
+
+	// 专属集群ID
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 }
 
 func (r *CreateReadOnlyDBInstanceRequest) ToJsonString() string {
@@ -1683,6 +1778,7 @@ func (r *CreateReadOnlyDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "NeedSupportIpv6")
 	delete(f, "Name")
 	delete(f, "DBVersion")
+	delete(f, "DedicatedClusterId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateReadOnlyDBInstanceRequest has unknown keys!", "")
 	}
@@ -2278,6 +2374,44 @@ type DBNode struct {
 
 	// 节点所在可用区，例如 ap-guangzhou-1。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 专属集群ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+}
+
+type Database struct {
+	// 数据库名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据库所有者
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DatabaseOwner *string `json:"DatabaseOwner,omitnil,omitempty" name:"DatabaseOwner"`
+
+	// 数据库字符编码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Encoding *string `json:"Encoding,omitnil,omitempty" name:"Encoding"`
+
+	// 数据库排序规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Collate *string `json:"Collate,omitnil,omitempty" name:"Collate"`
+
+	// 数据库字符分类
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ctype *string `json:"Ctype,omitnil,omitempty" name:"Ctype"`
+
+	// 数据库是否允许连接
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AllowConn *bool `json:"AllowConn,omitnil,omitempty" name:"AllowConn"`
+
+	// 数据库最大连接数，-1表示无限制
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConnLimit *int64 `json:"ConnLimit,omitnil,omitempty" name:"ConnLimit"`
+
+	// 数据库权限列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Privileges *string `json:"Privileges,omitnil,omitempty" name:"Privileges"`
 }
 
 type DatabaseObject struct {
@@ -2310,6 +2444,52 @@ type DatabasePrivilege struct {
 	// 指定账号对数据库对象拥有的权限列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PrivilegeSet []*string `json:"PrivilegeSet,omitnil,omitempty" name:"PrivilegeSet"`
+}
+
+type DedicatedCluster struct {
+	// 专属集群ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
+	// 专属集群名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 专属集群所在可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 灾备集群
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StandbyDedicatedClusterSet []*string `json:"StandbyDedicatedClusterSet,omitnil,omitempty" name:"StandbyDedicatedClusterSet"`
+
+	// 实例数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+
+	// Cpu总量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CpuTotal *int64 `json:"CpuTotal,omitnil,omitempty" name:"CpuTotal"`
+
+	// Cpu可用数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CpuAvailable *int64 `json:"CpuAvailable,omitnil,omitempty" name:"CpuAvailable"`
+
+	// 内存总量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MemTotal *int64 `json:"MemTotal,omitnil,omitempty" name:"MemTotal"`
+
+	// 内存可用量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MemAvailable *int64 `json:"MemAvailable,omitnil,omitempty" name:"MemAvailable"`
+
+	// 磁盘总量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiskTotal *int64 `json:"DiskTotal,omitnil,omitempty" name:"DiskTotal"`
+
+	// 磁盘可用量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiskAvailable *int64 `json:"DiskAvailable,omitnil,omitempty" name:"DiskAvailable"`
 }
 
 // Predefined struct for user
@@ -4166,6 +4346,7 @@ type DescribeDBInstancesRequestParams struct {
 	// db-tag-key：按照标签键过滤，类型为string
 	// db-private-ip： 按照实例私有网络IP过滤，类型为string
 	// db-public-address： 按照实例外网地址过滤，类型为string
+	// db-dedicated-cluster-id: 按照私有集群Id过滤，类型为string
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 每页显示数量，取值范围为1-100，默认为返回10条。
@@ -4192,6 +4373,7 @@ type DescribeDBInstancesRequest struct {
 	// db-tag-key：按照标签键过滤，类型为string
 	// db-private-ip： 按照实例私有网络IP过滤，类型为string
 	// db-public-address： 按照实例外网地址过滤，类型为string
+	// db-dedicated-cluster-id: 按照私有集群Id过滤，类型为string
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 每页显示数量，取值范围为1-100，默认为返回10条。
@@ -4674,6 +4856,9 @@ type DescribeDatabasesResponseParams struct {
 	// 数据库总数
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
+	// 数据库详情列表
+	Databases []*Database `json:"Databases,omitnil,omitempty" name:"Databases"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -4691,6 +4876,65 @@ func (r *DescribeDatabasesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDatabasesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDedicatedClustersRequestParams struct {
+	// 按照一个或者多个过滤条件进行查询，目前支持的过滤条件有：
+	// dedicated-cluster-id: 按照专属集群ID筛选，类型为string
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeDedicatedClustersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 按照一个或者多个过滤条件进行查询，目前支持的过滤条件有：
+	// dedicated-cluster-id: 按照专属集群ID筛选，类型为string
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeDedicatedClustersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDedicatedClustersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDedicatedClustersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDedicatedClustersResponseParams struct {
+	// 专属集群信息
+	DedicatedClusterSet []*DedicatedCluster `json:"DedicatedClusterSet,omitnil,omitempty" name:"DedicatedClusterSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDedicatedClustersResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDedicatedClustersResponseParams `json:"Response"`
+}
+
+func (r *DescribeDedicatedClustersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDedicatedClustersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7731,6 +7975,74 @@ func (r *ModifyDBInstancesProjectResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstancesProjectResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDatabaseOwnerRequestParams struct {
+	// 实例ID
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// 数据库名称
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据库新所有者
+	DatabaseOwner *string `json:"DatabaseOwner,omitnil,omitempty" name:"DatabaseOwner"`
+}
+
+type ModifyDatabaseOwnerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// 数据库名称
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据库新所有者
+	DatabaseOwner *string `json:"DatabaseOwner,omitnil,omitempty" name:"DatabaseOwner"`
+}
+
+func (r *ModifyDatabaseOwnerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDatabaseOwnerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "DatabaseName")
+	delete(f, "DatabaseOwner")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDatabaseOwnerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDatabaseOwnerResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyDatabaseOwnerResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDatabaseOwnerResponseParams `json:"Response"`
+}
+
+func (r *ModifyDatabaseOwnerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDatabaseOwnerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

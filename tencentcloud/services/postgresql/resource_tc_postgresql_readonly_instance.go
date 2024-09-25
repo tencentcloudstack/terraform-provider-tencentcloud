@@ -142,6 +142,11 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				Optional:    true,
 				Description: "RO group ID.",
 			},
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Dedicated cluster ID.",
+			},
 			// Computed values
 			"create_time": {
 				Type:        schema.TypeString,
@@ -237,6 +242,9 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 		for _, item := range securityGroupsIds {
 			request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(item.(string)))
 		}
+	}
+	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
+		request.DedicatedClusterId = helper.String(v.(string))
 	}
 	//if tags := helper.GetTags(d, "tag_list"); len(tags) > 0 {
 	//	for k, v := range tags {
@@ -371,6 +379,16 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("need_support_ipv6", instance.SupportIpv6)
+	nodeSet := instance.DBNodeSet
+	if nodeCount := len(nodeSet); nodeCount > 0 {
+		for i := range nodeSet {
+			item := nodeSet[i]
+			if item.DedicatedClusterId != nil {
+				_ = d.Set("dedicated_cluster_id", item.DedicatedClusterId)
+			}
+		}
+	}
+
 	// read only group
 	masterDBInstanceId := instance.MasterDBInstanceId
 	readOnlyGroupId, err := postgresqlService.DescribeReadOnlyGroupsById(ctx, *masterDBInstanceId, d.Id())
@@ -430,6 +448,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		"auto_renew_flag",
 		"auto_voucher",
 		"voucher_ids",
+		"dedicated_cluster_id",
 	); err != nil {
 		return err
 	}
