@@ -1,5 +1,7 @@
 Provides a resource to restore object
 
+~> **NOTE:** The current resource does not support cdc.
+
 Example Usage
 
 ```hcl

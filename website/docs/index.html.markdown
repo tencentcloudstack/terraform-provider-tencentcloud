@@ -236,6 +236,38 @@ $ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN="my-web-identity-token"
 $ terraform plan
 ```
 
+### CDC cos usage
+
+You can set the cos domain by setting the environment variable `TENCENTCLOUD_COS_DOMAIN`, and configure the cdc scenario as follows:
+
+-> **Note:** Please note that not all cos resources are supported. Please pay attention to the prompts for each resource.
+
+```hcl
+locals {
+  region = "ap-guangzhou"
+  cdc_id = "cluster_xxx"
+}
+
+provider "tencentcloud" {
+  region     = local.region
+  secret_id  = "xxxxxx"
+  secret_key = "xxxxxx"
+  cos_domain = "https://${local.cdc_id}.cos-cdc.${local.region}.myqcloud.com/"
+}
+```
+
+The `cos_domain` can also provided via `TENCENTCLOUD_COS_DOMAIN` environment variables.
+
+Usage:
+
+```shell
+$ export TENCENTCLOUD_SECRET_ID="my-secret-id"
+$ export TENCENTCLOUD_SECRET_KEY="my-secret-key"
+$ export TENCENTCLOUD_REGION="ap-guangzhou"
+$ export TENCENTCLOUD_COS_DOMAIN="https://cluster-xxxxxx.cos-cdc.ap-guangzhou.myqcloud.com/"
+$ terraform plan
+```
+
 ### Shared credentials
 
 You can use [Tencent Cloud credentials](https://www.tencentcloud.com/document/product/1013/33464) to specify your credentials. The default location is `$HOME/.tccli` on Linux and macOS, And `"%USERPROFILE%\.tccli"` on Windows. You can optionally specify a different location in the Terraform configuration by providing the `shared_credentials_dir` argument or using the `TENCENTCLOUD_SHARED_CREDENTIALS_DIR` environment variable. This method also supports a `profile` configuration and matching `TENCENTCLOUD_PROFILE` environment variable:

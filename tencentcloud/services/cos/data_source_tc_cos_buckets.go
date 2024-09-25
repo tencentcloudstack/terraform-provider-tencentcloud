@@ -400,15 +400,18 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 		}
 		bucket["website"] = website
 
-		originRules, err := cosService.GetBucketPullOrigin(ctx, *v.Name)
-		if err != nil {
-			return err
-		}
-		bucket["origin_pull_rules"] = originRules
+		cosDomain := meta.(tccommon.ProviderMeta).GetAPIV3Conn().CosDomain
+		if cosDomain == "" {
+			originRules, err := cosService.GetBucketPullOrigin(ctx, *v.Name)
+			if err != nil {
+				return err
+			}
+			bucket["origin_pull_rules"] = originRules
 
-		domainRules, err := cosService.GetBucketOriginDomain(ctx, *v.Name)
-		if err == nil {
-			bucket["origin_domain_rules"] = domainRules
+			domainRules, err := cosService.GetBucketOriginDomain(ctx, *v.Name)
+			if err == nil {
+				bucket["origin_domain_rules"] = domainRules
+			}
 		}
 
 		aclBody, err := cosService.GetBucketACL(ctx, *v.Name, "")

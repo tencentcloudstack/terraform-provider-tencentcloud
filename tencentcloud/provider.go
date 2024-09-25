@@ -125,6 +125,7 @@ const (
 	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
 	PROVIDER_PROTOCOL       = "TENCENTCLOUD_PROTOCOL"
 	PROVIDER_DOMAIN         = "TENCENTCLOUD_DOMAIN"
+	PROVIDER_COS_DOMAIN     = "TENCENTCLOUD_COS_DOMAIN"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	PROVIDER_ASSUME_ROLE_ARN                = "TENCENTCLOUD_ASSUME_ROLE_ARN"
@@ -203,6 +204,12 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
+			},
+			"cos_domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_COS_DOMAIN, nil),
+				Description: "The cos domain of the API request, Default is `https://cos.{region}.myqcloud.com`, Other Examples: `https://cluster-123456.cos-cdc.ap-guangzhou.myqcloud.com`.",
 			},
 			//internal version: replace enableBpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			//internal version: replace enableBpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -2156,6 +2163,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		region        string
 		protocol      string
 		domain        string
+		cosDomain     string
 		camRoleName   string
 	)
 
@@ -2195,6 +2203,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		domain = v.(string)
 	}
 
+	if v, ok := d.GetOk("cos_domain"); ok {
+		cosDomain = v.(string)
+	}
+
 	if v, ok := d.GetOk("cam_role_name"); ok {
 		camRoleName = v.(string)
 	}
@@ -2207,9 +2219,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			secretKey,
 			securityToken,
 		),
-		Region:   region,
-		Protocol: protocol,
-		Domain:   domain,
+		Region:    region,
+		Protocol:  protocol,
+		Domain:    domain,
+		CosDomain: cosDomain,
 	}
 
 	// get auth from CAM role name

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/url"
 	"strings"
 	"time"
 
@@ -616,9 +617,14 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("multi_az", true)
 	}
 
+	cosDomain := meta.(tccommon.ProviderMeta).GetAPIV3Conn().CosDomain
 	var cosBucketUrl string
-	if cdcId == "" {
+	if cdcId == "" && cosDomain == "" {
 		cosBucketUrl = fmt.Sprintf("%s.cos.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
+	} else if cosDomain != "" {
+		parsedURL, _ := url.Parse(cosDomain)
+		parsedURL.Host = bucket + "." + parsedURL.Host
+		cosBucketUrl = parsedURL.String()
 	} else {
 		cosBucketUrl = fmt.Sprintf("https://%s.%s.cos-cdc.%s.myqcloud.com", bucket, cdcId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
 	}
@@ -656,7 +662,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting cors_rules error: %v", err)
 	}
 
-	if cdcId == "" {
+	if cdcId == "" && cosDomain == "" {
 		originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket)
 		if err != nil {
 			return err
@@ -702,7 +708,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return err
 	}
-	if len(website) > 0 {
+	if len(website) > 0 && cosDomain == "" {
 		// {bucket}.cos-website.{region}.myqcloud.com
 		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
 		website[0]["endpoint"] = endPointUrl

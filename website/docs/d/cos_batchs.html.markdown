@@ -11,6 +11,8 @@ description: |-
 
 Use this data source to query the COS batch.
 
+~> **NOTE:** The current resource does not support `cos_domain`.
+
 ## Example Usage
 
 ```hcl
