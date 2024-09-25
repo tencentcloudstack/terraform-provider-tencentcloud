@@ -1,5 +1,7 @@
 Provides a resource to create a cos bucket_referer
 
+~> **NOTE:** The current resource does not support `cos_domain`.
+
 Example Usage
 
 ```hcl

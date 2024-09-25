@@ -1,5 +1,7 @@
 Provides a resource to generate a cos bucket inventory immediately
 
+~> **NOTE:** The current resource does not support `cos_domain`.
+
 Example Usage
 
 ```hcl
