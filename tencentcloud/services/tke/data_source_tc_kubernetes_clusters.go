@@ -63,6 +63,11 @@ func DataSourceTencentCloudKubernetesClusters() *schema.Resource {
 							Computed:    true,
 							Description: "Description of the cluster.",
 						},
+						"cdc_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CDC ID.",
+						},
 						"cluster_os": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -355,6 +360,10 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 
 			if clusters.ClusterDescription != nil {
 				clustersMap["cluster_desc"] = clusters.ClusterDescription
+			}
+
+			if clusters.CdcId != nil {
+				clustersMap["cdc_id"] = clusters.CdcId
 			}
 
 			if clusters.ClusterOs != nil {
