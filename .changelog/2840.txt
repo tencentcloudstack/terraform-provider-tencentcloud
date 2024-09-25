@@ -1,0 +1,4 @@
+
+```release-note:new-resource
+tencentcloud_kubernetes_log_config
+```

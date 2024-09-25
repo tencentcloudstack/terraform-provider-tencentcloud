@@ -2131,7 +2131,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_batch_apply_account_baselines":  controlcenter.ResourceTencentCloudBatchApplyAccountBaselines(),
 			"tencentcloud_thpc_workspaces":                thpc.ResourceTencentCloudThpcWorkspaces(),
 			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy(),
-			"tencentcloud_lite_hbase_instance":            emr.ResourceTencentCloudLiteHbaseInstance()},
+			"tencentcloud_lite_hbase_instance":            emr.ResourceTencentCloudLiteHbaseInstance(),
+			"tencentcloud_kubernetes_log_config":          tke.ResourceTencentCloudKubernetesLogConfig()},
 
 		ConfigureFunc: providerConfigure,
 	}

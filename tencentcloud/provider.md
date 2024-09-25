@@ -681,6 +681,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_addon_config
     tencentcloud_kubernetes_native_node_pool
     tencentcloud_kubernetes_health_check_policy
+    tencentcloud_kubernetes_log_config
 
 TDMQ for Pulsar(tpulsar)
   Data Source
