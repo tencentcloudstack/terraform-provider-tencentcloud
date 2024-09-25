@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a cos bucket inventory
 
+~> **NOTE:** The current resource does not support cdc.
+
 ## Example Usage
 
 ```hcl
