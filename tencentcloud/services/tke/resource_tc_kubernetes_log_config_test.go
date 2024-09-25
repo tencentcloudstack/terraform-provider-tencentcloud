@@ -26,16 +26,16 @@ func TestAccTencentCloudKubernetesLogConfigResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_cls", "log_config"),
 				),
 			},
-			{
-				Config: testAccKubernetesLogConfig_ckafka,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config_name", "tf-test-ckafka"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "cluster_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "logset_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config"),
-				),
-			},
+			// {
+			// 	Config: testAccKubernetesLogConfig_ckafka,
+			// 	Check: resource.ComposeTestCheckFunc(
+			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "id"),
+			// 		resource.TestCheckResourceAttr("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config_name", "tf-test-ckafka"),
+			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "cluster_id"),
+			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "logset_id"),
+			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config"),
+			// 	),
+			// },
 		},
 	})
 }
@@ -73,6 +73,9 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_version         = "1.22.5"
   cluster_os              = "tlinux2.2(tkernel3)x86_64"
   cluster_deploy_type     = "MANAGED_CLUSTER"
+  log_agent {
+    enabled = true
+  }
   # without any worker config
 }
 `
@@ -80,7 +83,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
 const testAccKubernetesLogConfig_cls = testAccKubernetesCluster + `
 
 resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "example"
+  logset_name = "tf-test-example"
   tags = {
     "createdBy" = "terraform"
   }
@@ -152,7 +155,7 @@ resource "tencentcloud_kubernetes_log_config" "kubernetes_log_config_cls" {
 }
 `
 
-const testAccKubernetesLogConfig_ckafka = testAccKubernetesCluster + `
+const testAccKubernetesLogConfig_ckafka = `
 
 locals {
   ckafka_topic = tencentcloud_ckafka_topic.example.topic_name

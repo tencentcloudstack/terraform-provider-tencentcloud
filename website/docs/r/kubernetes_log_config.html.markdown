@@ -47,11 +47,14 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_version         = "1.22.5"
   cluster_os              = "tlinux2.2(tkernel3)x86_64"
   cluster_deploy_type     = "MANAGED_CLUSTER"
+  log_agent {
+    enabled = true
+  }
   # without any worker config
 }
 
 resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "example"
+  logset_name = "tf-test-example"
   tags = {
     "createdBy" = "terraform"
   }
@@ -126,8 +129,6 @@ resource "tencentcloud_kubernetes_log_config" "kubernetes_log_config_cls" {
 ```hcl
 locals {
   ckafka_topic = tencentcloud_ckafka_topic.example.topic_name
-  kafka_ip     = tencentcloud_ckafka_instance.example.vip
-  kafka_port   = tencentcloud_ckafka_instance.example.vport
 }
 
 resource "tencentcloud_ckafka_instance" "example" {
@@ -186,7 +187,7 @@ resource "tencentcloud_kubernetes_log_config" "kubernetes_log_config_ckafka" {
         "type" : "container_stdout"
       },
       "kafkaDetail" : {
-        "brokers" : "${local.kafka_ip}:${local.kafka_port}",
+        "brokers" : "172.16.0.30:9092", # your ckafka brokers
         "extractRule" : {},
         "instanceId" : "",
         "kafkaType" : "SelfBuildKafka",
