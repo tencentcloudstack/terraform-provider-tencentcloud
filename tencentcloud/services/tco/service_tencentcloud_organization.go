@@ -1621,3 +1621,37 @@ func (me *OrganizationService) AssignmentTaskStatusStateRefreshFunc(zoneId, task
 		return object, *object.Status, nil
 	}
 }
+
+func (me *OrganizationService) UpdateOrganizationRootNodeName(ctx context.Context, orgId uint64, name string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	organizationResponseParams, err := me.DescribeOrganizationOrganizationById(ctx)
+	if err != nil {
+		return err
+	}
+	if organizationResponseParams == nil {
+		return fmt.Errorf("organization is nil")
+	}
+	rootNodeId := organizationResponseParams.RootNodeId
+
+	request := organization.NewUpdateOrganizationNodeRequest()
+	request.NodeId = helper.Int64Uint64(*rootNodeId)
+	request.Name = &name
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseOrganizationClient().UpdateOrganizationNode(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s update organization orgNode name failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return nil
+}

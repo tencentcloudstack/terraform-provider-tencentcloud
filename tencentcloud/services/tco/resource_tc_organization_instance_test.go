@@ -9,7 +9,6 @@ import (
 )
 
 func TestAccTencentCloudOrganizationOrganizationResource_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			tcacctest.AccPreCheck(t)
@@ -29,9 +28,51 @@ func TestAccTencentCloudOrganizationOrganizationResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudOrganizationOrganizationResource_rootNodeName(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccOrganizationOrganizationWithRootNodeName,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_instance.organization", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_organization_instance.organization", "root_node_name", "root_node_name"),
+				),
+			},
+			{
+				Config: testAccOrganizationOrganizationWithRootNodeNameUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_instance.organization", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_organization_instance.organization", "root_node_name", "root_node_name_update"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_organization_instance.organization",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 const testAccOrganizationOrganization = `
 
 resource "tencentcloud_organization_instance" "organization" {
 }
 
+`
+
+const testAccOrganizationOrganizationWithRootNodeName = `
+resource "tencentcloud_organization_instance" "organization" {
+	root_node_name = "root_node_name"
+}
+`
+
+const testAccOrganizationOrganizationWithRootNodeNameUpdate = `
+resource "tencentcloud_organization_instance" "organization" {
+	root_node_name = "root_node_name_update"
+}
 `
