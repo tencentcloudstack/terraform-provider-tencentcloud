@@ -1,3 +1,21 @@
+## 1.81.126 (September 25 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_postgresql_dedicated_clusters` ([#2845](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2845))
+* **New Resource:** `tencentcloud_identity_center_role_configuration_permission_custom_policy_attachment` ([#2842](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2842))
+* **New Resource:** `tencentcloud_kubernetes_log_config` ([#2840](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2840))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: support `cdc_id` params ([#2841](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2841))
+* datasource/tencentcloud_kubernetes_scale_worker: adjust the message when creating instances all failed ([#2839](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2839))
+* resource/tencentcloud_kubernetes_cluster: support `cdc_id` and `pre_start_user_script` parameter ([#2835](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2835))
+* datasource/tencentcloud_kubernetes_clusters: support `cdc_id` parameter ([#2835](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2835))
+* resource/tencentcloud_organization_instance: support param `root_node_name`. ([#2844](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2844))
+* resource/tencentcloud_postgresql_instance: support `dedicated_cluster_id` params ([#2845](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2845))
+* resource/tencentcloud_postgresql_readonly_instance: support `dedicated_cluster_id` params ([#2845](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2845))
+
 ## 1.81.125 (September 23 , 2024)
 
 FEATURES:
