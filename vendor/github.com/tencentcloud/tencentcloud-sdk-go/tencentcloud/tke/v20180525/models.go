@@ -903,6 +903,10 @@ type Cluster struct {
 	// 集群当前etcd数量
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterEtcdNodeNum *uint64 `json:"ClusterEtcdNodeNum,omitnil,omitempty" name:"ClusterEtcdNodeNum"`
+
+	// 本地专用集群Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 }
 
 type ClusterAdvancedSettings struct {
@@ -5507,6 +5511,78 @@ func (r *DeleteImageCachesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteLogConfigsRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 待删除采集规则名称，多个采集规则使用","分隔
+	LogConfigNames *string `json:"LogConfigNames,omitnil,omitempty" name:"LogConfigNames"`
+
+	// 集群集群类型, tke/eks 默认为 tke 集群
+	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+}
+
+type DeleteLogConfigsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 待删除采集规则名称，多个采集规则使用","分隔
+	LogConfigNames *string `json:"LogConfigNames,omitnil,omitempty" name:"LogConfigNames"`
+
+	// 集群集群类型, tke/eks 默认为 tke 集群
+	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+}
+
+func (r *DeleteLogConfigsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteLogConfigsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "LogConfigNames")
+	delete(f, "ClusterType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteLogConfigsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteLogConfigsResponseParams struct {
+	// 删除采集规则遇到错误时返回错误原因
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteLogConfigsResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteLogConfigsResponseParams `json:"Response"`
+}
+
+func (r *DeleteLogConfigsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteLogConfigsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeletePrometheusAlertPolicyRequestParams struct {
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -9898,8 +9974,12 @@ type DescribeExternalNodeSupportConfigResponseParams struct {
 	// 是否开启第三方节点公网连接支持
 	EnabledPublicConnect *bool `json:"EnabledPublicConnect,omitnil,omitempty" name:"EnabledPublicConnect"`
 
-	// 公网连接地址
+	// 注册节点公网版公网连接地址
 	PublicConnectUrl *string `json:"PublicConnectUrl,omitnil,omitempty" name:"PublicConnectUrl"`
+
+	// 注册节点公网版自定义域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PublicCustomDomain *string `json:"PublicCustomDomain,omitnil,omitempty" name:"PublicCustomDomain"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -10160,6 +10240,100 @@ func (r *DescribeImagesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeLogConfigsRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 当前集群类型支持tke、eks。默认为tke
+	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+
+	// 按照采集规则名称查找，多个采集规则使用 "," 分隔。
+	LogConfigNames *string `json:"LogConfigNames,omitnil,omitempty" name:"LogConfigNames"`
+
+	// 偏移量,默认0
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 最大输出条数，默认20，最大为100
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeLogConfigsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 当前集群类型支持tke、eks。默认为tke
+	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+
+	// 按照采集规则名称查找，多个采集规则使用 "," 分隔。
+	LogConfigNames *string `json:"LogConfigNames,omitnil,omitempty" name:"LogConfigNames"`
+
+	// 偏移量,默认0
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 最大输出条数，默认20，最大为100
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeLogConfigsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogConfigsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "ClusterType")
+	delete(f, "LogConfigNames")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLogConfigsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogConfigsResponseParams struct {
+	// 分页查找时返回采集规则总数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 指定采集规则名称查找，部分失败时返回失败采集规则名称及最后一个失败原因
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// 采集规则查询结果
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogConfigs *string `json:"LogConfigs,omitnil,omitempty" name:"LogConfigs"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeLogConfigsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeLogConfigsResponseParams `json:"Response"`
+}
+
+func (r *DescribeLogConfigsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogConfigsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeLogSwitchesRequestParams struct {
 	// 集群ID列表
 	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
@@ -10221,6 +10395,71 @@ func (r *DescribeLogSwitchesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeLogSwitchesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOpenPolicyListRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 策略分类 基线：baseline 优选：priority 可选：optional
+	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
+}
+
+type DescribeOpenPolicyListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 策略分类 基线：baseline 优选：priority 可选：optional
+	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
+}
+
+func (r *DescribeOpenPolicyListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOpenPolicyListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "Category")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOpenPolicyListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOpenPolicyListResponseParams struct {
+	// 策略信息列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OpenPolicyInfoList []*OpenPolicyInfo `json:"OpenPolicyInfoList,omitnil,omitempty" name:"OpenPolicyInfoList"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeOpenPolicyListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOpenPolicyListResponseParams `json:"Response"`
+}
+
+func (r *DescribeOpenPolicyListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOpenPolicyListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -16644,6 +16883,74 @@ func (r *ModifyNodePoolInstanceTypesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyOpenPolicyListRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 修改的策略列表，目前仅支持修改EnforcementAction字段
+	OpenPolicyInfoList []*OpenPolicySwitch `json:"OpenPolicyInfoList,omitnil,omitempty" name:"OpenPolicyInfoList"`
+
+	// 策略分类 基线：baseline 优选：priority 可选：optional
+	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
+}
+
+type ModifyOpenPolicyListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 修改的策略列表，目前仅支持修改EnforcementAction字段
+	OpenPolicyInfoList []*OpenPolicySwitch `json:"OpenPolicyInfoList,omitnil,omitempty" name:"OpenPolicyInfoList"`
+
+	// 策略分类 基线：baseline 优选：priority 可选：optional
+	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
+}
+
+func (r *ModifyOpenPolicyListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyOpenPolicyListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "OpenPolicyInfoList")
+	delete(f, "Category")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyOpenPolicyListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyOpenPolicyListResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyOpenPolicyListResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyOpenPolicyListResponseParams `json:"Response"`
+}
+
+func (r *ModifyOpenPolicyListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyOpenPolicyListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyPrometheusAgentExternalLabelsRequestParams struct {
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -17412,6 +17719,79 @@ type OIDCConfigAuthenticationOptions struct {
 	AutoInstallPodIdentityWebhookAddon *bool `json:"AutoInstallPodIdentityWebhookAddon,omitnil,omitempty" name:"AutoInstallPodIdentityWebhookAddon"`
 }
 
+type OpenConstraintInfo struct {
+	// 策略实例名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 策略实例关联事件数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventNums *uint64 `json:"EventNums,omitnil,omitempty" name:"EventNums"`
+
+	// 实例yaml详情base64编码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	YamlDetail *string `json:"YamlDetail,omitnil,omitempty" name:"YamlDetail"`
+}
+
+type OpenPolicyInfo struct {
+	// 策略分类：cluster集群策略、node节点策略、namespace命名空间策略、configuration配置相关策略、compute计算资源策略、storage存储资源策略、network网络资源策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PolicyCategory *string `json:"PolicyCategory,omitnil,omitempty" name:"PolicyCategory"`
+
+	// 策略中文名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
+
+	// 策略描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PolicyDesc *string `json:"PolicyDesc,omitnil,omitempty" name:"PolicyDesc"`
+
+	// 策略运行模式：dryrun空跑不生效，deny拦截生效
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnforcementAction *string `json:"EnforcementAction,omitnil,omitempty" name:"EnforcementAction"`
+
+	// 关联的事件数量(最近7d)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventNums *uint64 `json:"EventNums,omitnil,omitempty" name:"EventNums"`
+
+	// 策略英文名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 策略模版类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
+
+	// 策略开关状态：open打开，close关闭
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnabledStatus *string `json:"EnabledStatus,omitnil,omitempty" name:"EnabledStatus"`
+
+	// 策略的实例的yaml示例base64编码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConstraintYamlExample *string `json:"ConstraintYamlExample,omitnil,omitempty" name:"ConstraintYamlExample"`
+
+	// 策略关联的实例列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OpenConstraintInfoList []*OpenConstraintInfo `json:"OpenConstraintInfoList,omitnil,omitempty" name:"OpenConstraintInfoList"`
+}
+
+type OpenPolicySwitch struct {
+	// 策略运行模式：dryrun空跑不生效，deny拦截生效
+	EnforcementAction *string `json:"EnforcementAction,omitnil,omitempty" name:"EnforcementAction"`
+
+	// 策略英文名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 策略模版类型
+	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
+
+	// 策略开关状态：open打开，close关闭
+	EnabledStatus *string `json:"EnabledStatus,omitnil,omitempty" name:"EnabledStatus"`
+
+	// 策略关联的实例列表
+	OpenConstraintInfoList []*OpenConstraintInfo `json:"OpenConstraintInfoList,omitnil,omitempty" name:"OpenConstraintInfoList"`
+}
+
 type OptionalRuntimes struct {
 	// 运行时类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -17447,7 +17827,7 @@ type PendingRelease struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 
-	// 应用状态
+	// 应用状态(参考helm的发布状态： unknown, deployed, uninstalled, superseded, failed, uninstalling, pending-install, pending-upgrade 或 pending-rollback)
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 

@@ -4121,6 +4121,65 @@ func (c *Client) DeleteImageCachesWithContext(ctx context.Context, request *Dele
     return
 }
 
+func NewDeleteLogConfigsRequest() (request *DeleteLogConfigsRequest) {
+    request = &DeleteLogConfigsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteLogConfigs")
+    
+    
+    return
+}
+
+func NewDeleteLogConfigsResponse() (response *DeleteLogConfigsResponse) {
+    response = &DeleteLogConfigsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteLogConfigs
+// 删除集群内采集规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_K8SCLIENTBUILDERROR = "FailedOperation.K8sClientBuildError"
+//  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_KUBERNETESRESOURCENOTFOUND = "FailedOperation.KubernetesResourceNotFound"
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+func (c *Client) DeleteLogConfigs(request *DeleteLogConfigsRequest) (response *DeleteLogConfigsResponse, err error) {
+    return c.DeleteLogConfigsWithContext(context.Background(), request)
+}
+
+// DeleteLogConfigs
+// 删除集群内采集规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_K8SCLIENTBUILDERROR = "FailedOperation.K8sClientBuildError"
+//  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_KUBERNETESRESOURCENOTFOUND = "FailedOperation.KubernetesResourceNotFound"
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+func (c *Client) DeleteLogConfigsWithContext(ctx context.Context, request *DeleteLogConfigsRequest) (response *DeleteLogConfigsResponse, err error) {
+    if request == nil {
+        request = NewDeleteLogConfigsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLogConfigs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLogConfigsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeletePrometheusAlertPolicyRequest() (request *DeletePrometheusAlertPolicyRequest) {
     request = &DeletePrometheusAlertPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8383,6 +8442,65 @@ func (c *Client) DescribeImagesWithContext(ctx context.Context, request *Describ
     return
 }
 
+func NewDescribeLogConfigsRequest() (request *DescribeLogConfigsRequest) {
+    request = &DescribeLogConfigsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeLogConfigs")
+    
+    
+    return
+}
+
+func NewDescribeLogConfigsResponse() (response *DescribeLogConfigsResponse) {
+    response = &DescribeLogConfigsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLogConfigs
+// 查询日志采集规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_KUBERNETESRESOURCENOTFOUND = "FailedOperation.KubernetesResourceNotFound"
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeLogConfigs(request *DescribeLogConfigsRequest) (response *DescribeLogConfigsResponse, err error) {
+    return c.DescribeLogConfigsWithContext(context.Background(), request)
+}
+
+// DescribeLogConfigs
+// 查询日志采集规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_KUBERNETESRESOURCENOTFOUND = "FailedOperation.KubernetesResourceNotFound"
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeLogConfigsWithContext(ctx context.Context, request *DescribeLogConfigsRequest) (response *DescribeLogConfigsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogConfigsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogConfigs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogConfigsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeLogSwitchesRequest() (request *DescribeLogSwitchesRequest) {
     request = &DescribeLogSwitchesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8446,6 +8564,73 @@ func (c *Client) DescribeLogSwitchesWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeLogSwitchesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOpenPolicyListRequest() (request *DescribeOpenPolicyListRequest) {
+    request = &DescribeOpenPolicyListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeOpenPolicyList")
+    
+    
+    return
+}
+
+func NewDescribeOpenPolicyListResponse() (response *DescribeOpenPolicyListResponse) {
+    response = &DescribeOpenPolicyListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOpenPolicyList
+// 查询opa策略列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeOpenPolicyList(request *DescribeOpenPolicyListRequest) (response *DescribeOpenPolicyListResponse, err error) {
+    return c.DescribeOpenPolicyListWithContext(context.Background(), request)
+}
+
+// DescribeOpenPolicyList
+// 查询opa策略列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeOpenPolicyListWithContext(ctx context.Context, request *DescribeOpenPolicyListRequest) (response *DescribeOpenPolicyListResponse, err error) {
+    if request == nil {
+        request = NewDescribeOpenPolicyListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOpenPolicyList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOpenPolicyListResponse()
     err = c.Send(request, response)
     return
 }
@@ -12879,6 +13064,77 @@ func (c *Client) ModifyNodePoolInstanceTypesWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewModifyNodePoolInstanceTypesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyOpenPolicyListRequest() (request *ModifyOpenPolicyListRequest) {
+    request = &ModifyOpenPolicyListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "ModifyOpenPolicyList")
+    
+    
+    return
+}
+
+func NewModifyOpenPolicyListResponse() (response *ModifyOpenPolicyListResponse) {
+    response = &ModifyOpenPolicyListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyOpenPolicyList
+// 批量修改opa策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
+//  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyOpenPolicyList(request *ModifyOpenPolicyListRequest) (response *ModifyOpenPolicyListResponse, err error) {
+    return c.ModifyOpenPolicyListWithContext(context.Background(), request)
+}
+
+// ModifyOpenPolicyList
+// 批量修改opa策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
+//  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyOpenPolicyListWithContext(ctx context.Context, request *ModifyOpenPolicyListRequest) (response *ModifyOpenPolicyListResponse, err error) {
+    if request == nil {
+        request = NewModifyOpenPolicyListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyOpenPolicyList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyOpenPolicyListResponse()
     err = c.Send(request, response)
     return
 }

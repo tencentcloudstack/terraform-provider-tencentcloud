@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: support `cdc_id` and `pre_start_user_script` parameter
+datasource/tencentcloud_kubernetes_clusters: support `cdc_id` parameter
+```

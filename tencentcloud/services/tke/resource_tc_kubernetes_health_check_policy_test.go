@@ -65,7 +65,7 @@ resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_
 `
 
 // const testAccKubernetesHealthCheckPolicyUpdate = testAccTkeCluster + `
-const testAccKubernetesHealthCheckPolicyCreate = `
+const testAccKubernetesHealthCheckPolicyUpdate = `
 
 resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
 	cluster_id = "cls-eh0da110"

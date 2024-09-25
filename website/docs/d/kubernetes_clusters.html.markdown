@@ -38,6 +38,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - An information list of kubernetes clusters. Each element contains the following attributes:
+  * `cdc_id` - CDC ID.
   * `certification_authority` - The certificate used for access.
   * `claim_expired_seconds` - The expired seconds to recycle ENI.
   * `cluster_as_enabled` - Indicates whether to enable cluster node auto scaler.
