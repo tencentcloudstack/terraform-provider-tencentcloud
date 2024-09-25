@@ -26,16 +26,16 @@ func TestAccTencentCloudKubernetesLogConfigResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_cls", "log_config"),
 				),
 			},
-			// {
-			// 	Config: testAccKubernetesLogConfig_ckafka,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "id"),
-			// 		resource.TestCheckResourceAttr("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config_name", "tf-test-ckafka"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "cluster_id"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "logset_id"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config"),
-			// 	),
-			// },
+			{
+				Config: testAccKubernetesLogConfig_ckafka,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config_name", "tf-test-ckafka"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "cluster_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "logset_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_log_config.kubernetes_log_config_ckafka", "log_config"),
+				),
+			},
 		},
 	})
 }
