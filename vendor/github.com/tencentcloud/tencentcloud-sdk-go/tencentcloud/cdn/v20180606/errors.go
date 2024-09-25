@@ -86,6 +86,9 @@ const (
 	// 标签内部错误，请重试或联系客服人员解决。
 	INTERNALERROR_TAGSYSTEMERROR = "InternalError.TagSystemError"
 
+	// 内部服务错误，请联系腾讯云工程师进一步排查。
+	INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
@@ -314,6 +317,12 @@ const (
 	// 域名操作过于频繁。
 	LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
 
+	// 刷新的Url数量超过每批提交的限制。
+	LIMITEXCEEDED_CDNPURGEEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeExceedBatchLimit"
+
+	// 刷新的Url数量超过每日限额。
+	LIMITEXCEEDED_CDNPURGEEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgeExceedDayLimit"
+
 	// 刷新的目录数量超过限制。
 	LIMITEXCEEDED_CDNPURGEPATHEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgePathExceedBatchLimit"
 
@@ -355,6 +364,9 @@ const (
 
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
+
+	// 所选目标域名与当前域名平台不一致，请重新选择或联系腾讯云技术支持
+	OPERATIONDENIED_SHARECACHEAREADNSNOTMATCH = "OperationDenied.ShareCacheAreaDnsNotMatch"
 
 	// 请求的次数超过了频率限制。
 	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"

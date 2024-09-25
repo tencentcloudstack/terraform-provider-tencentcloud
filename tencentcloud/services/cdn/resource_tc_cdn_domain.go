@@ -1521,6 +1521,43 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 					},
 				},
 			},
+			"others_private_access": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Object storage back-to-source authentication of other vendors.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"access_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Access ID.",
+							Sensitive:   true,
+						},
+						"secret_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Key.",
+							Sensitive:   true,
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Region.",
+						},
+						"bucket": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Bucket.",
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -2389,6 +2426,24 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			request.QnPrivateAccess.SecretKey = &v
 		}
 	}
+	if v, ok := helper.InterfacesHeadMap(d, "others_private_access"); ok {
+		vSwitch := v["switch"].(string)
+		request.OthersPrivateAccess = &cdn.OthersPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.OthersPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.OthersPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["region"].(string); ok && v != "" {
+			request.OthersPrivateAccess.Region = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.OthersPrivateAccess.Bucket = &v
+		}
+	}
 
 	if v := d.Get("explicit_using_dry_run").(bool); v {
 		d.SetId(domain)
@@ -3025,6 +3080,15 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			"switch":     dc.QnPrivateAccess.Switch,
 			"access_key": dc.QnPrivateAccess.AccessKey,
 			"secret_key": dc.QnPrivateAccess.SecretKey,
+		})
+	}
+	if ok := checkCdnInfoWritable(d, "others_private_access", dc.OthersPrivateAccess); ok {
+		_ = helper.SetMapInterfaces(d, "others_private_access", map[string]interface{}{
+			"switch":     dc.OthersPrivateAccess.Switch,
+			"access_key": dc.OthersPrivateAccess.AccessKey,
+			"secret_key": dc.OthersPrivateAccess.SecretKey,
+			"bucket":     dc.OthersPrivateAccess.Bucket,
+			"region":     dc.OthersPrivateAccess.Region,
 		})
 	}
 
@@ -3881,6 +3945,24 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		if v, ok := v["secret_key"].(string); ok && v != "" {
 			request.QnPrivateAccess.SecretKey = &v
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "others_private_access"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.OthersPrivateAccess = &cdn.OthersPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.OthersPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.OthersPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["region"].(string); ok && v != "" {
+			request.OthersPrivateAccess.Region = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.OthersPrivateAccess.Bucket = &v
 		}
 	}
 

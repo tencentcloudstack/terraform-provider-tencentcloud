@@ -59,8 +59,9 @@ func NewAddCLSTopicDomainsRequest() (request *AddCLSTopicDomainsRequest) {
 func NewAddCLSTopicDomainsResponse() (response *AddCLSTopicDomainsResponse) {
     response = &AddCLSTopicDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddCLSTopicDomains
@@ -177,8 +178,9 @@ func NewAddCdnDomainRequest() (request *AddCdnDomainRequest) {
 func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
     response = &AddCdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddCdnDomain
@@ -189,6 +191,7 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CAMRESOURCEBELONGTODIFFERENTUSER = "InvalidParameter.CamResourceBelongToDifferentUser"
 //  INVALIDPARAMETER_CAMRESOURCESIXSTAGEERROR = "InvalidParameter.CamResourceSixStageError"
 //  INVALIDPARAMETER_CAMTAGKEYALREADYATTACHED = "InvalidParameter.CamTagKeyAlreadyAttached"
@@ -203,7 +206,9 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  INVALIDPARAMETER_CDNHOSTISCOSDEFAULTACCESS = "InvalidParameter.CdnHostIsCosDefaultAccess"
 //  INVALIDPARAMETER_CDNHOSTTOOLONGHOST = "InvalidParameter.CdnHostTooLongHost"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
+//  INVALIDPARAMETER_CDNKEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.CdnKeyRulesInvalidQueryStringValue"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  INVALIDPARAMETER_CDNSTATTOOMANYDOMAINS = "InvalidParameter.CdnStatTooManyDomains"
 //  LIMITEXCEEDED_CAMRESOURCEARRAYTOOLONG = "LimitExceeded.CamResourceArrayTooLong"
 //  LIMITEXCEEDED_CAMRESOURCETOOMANYTAGKEY = "LimitExceeded.CamResourceTooManyTagKey"
 //  LIMITEXCEEDED_CAMTAGKEYTOOLONG = "LimitExceeded.CamTagKeyTooLong"
@@ -217,6 +222,7 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CAMTAGKEYNOTEXIST = "ResourceNotFound.CamTagKeyNotExist"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCEUNAVAILABLE_CDNHOSTEXISTSINDSA = "ResourceUnavailable.CdnHostExistsInDsa"
 //  RESOURCEUNAVAILABLE_CDNHOSTEXISTSINTCB = "ResourceUnavailable.CdnHostExistsInTcb"
@@ -251,6 +257,7 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CAMRESOURCEBELONGTODIFFERENTUSER = "InvalidParameter.CamResourceBelongToDifferentUser"
 //  INVALIDPARAMETER_CAMRESOURCESIXSTAGEERROR = "InvalidParameter.CamResourceSixStageError"
 //  INVALIDPARAMETER_CAMTAGKEYALREADYATTACHED = "InvalidParameter.CamTagKeyAlreadyAttached"
@@ -265,7 +272,9 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  INVALIDPARAMETER_CDNHOSTISCOSDEFAULTACCESS = "InvalidParameter.CdnHostIsCosDefaultAccess"
 //  INVALIDPARAMETER_CDNHOSTTOOLONGHOST = "InvalidParameter.CdnHostTooLongHost"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
+//  INVALIDPARAMETER_CDNKEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.CdnKeyRulesInvalidQueryStringValue"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  INVALIDPARAMETER_CDNSTATTOOMANYDOMAINS = "InvalidParameter.CdnStatTooManyDomains"
 //  LIMITEXCEEDED_CAMRESOURCEARRAYTOOLONG = "LimitExceeded.CamResourceArrayTooLong"
 //  LIMITEXCEEDED_CAMRESOURCETOOMANYTAGKEY = "LimitExceeded.CamResourceTooManyTagKey"
 //  LIMITEXCEEDED_CAMTAGKEYTOOLONG = "LimitExceeded.CamTagKeyTooLong"
@@ -279,6 +288,7 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CAMTAGKEYNOTEXIST = "ResourceNotFound.CamTagKeyNotExist"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCEUNAVAILABLE_CDNHOSTEXISTSINDSA = "ResourceUnavailable.CdnHostExistsInDsa"
 //  RESOURCEUNAVAILABLE_CDNHOSTEXISTSINTCB = "ResourceUnavailable.CdnHostExistsInTcb"
@@ -331,8 +341,9 @@ func NewCreateClsLogTopicRequest() (request *CreateClsLogTopicRequest) {
 func NewCreateClsLogTopicResponse() (response *CreateClsLogTopicResponse) {
     response = &CreateClsLogTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClsLogTopic
@@ -447,12 +458,15 @@ func NewCreateDiagnoseUrlRequest() (request *CreateDiagnoseUrlRequest) {
 func NewCreateDiagnoseUrlResponse() (response *CreateDiagnoseUrlResponse) {
     response = &CreateDiagnoseUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDiagnoseUrl
-// CreateDiagnoseUrl 用于添加域名诊断任务URL
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// CreateDiagnoseUrl 用于添加域名诊断任务URL。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
@@ -475,7 +489,9 @@ func (c *Client) CreateDiagnoseUrl(request *CreateDiagnoseUrlRequest) (response 
 }
 
 // CreateDiagnoseUrl
-// CreateDiagnoseUrl 用于添加域名诊断任务URL
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// CreateDiagnoseUrl 用于添加域名诊断任务URL。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
@@ -523,8 +539,9 @@ func NewCreateEdgePackTaskRequest() (request *CreateEdgePackTaskRequest) {
 func NewCreateEdgePackTaskResponse() (response *CreateEdgePackTaskResponse) {
     response = &CreateEdgePackTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEdgePackTask
@@ -540,6 +557,7 @@ func NewCreateEdgePackTaskResponse() (response *CreateEdgePackTaskResponse) {
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) CreateEdgePackTask(request *CreateEdgePackTaskRequest) (response *CreateEdgePackTaskResponse, err error) {
     return c.CreateEdgePackTaskWithContext(context.Background(), request)
 }
@@ -557,6 +575,7 @@ func (c *Client) CreateEdgePackTask(request *CreateEdgePackTaskRequest) (respons
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) CreateEdgePackTaskWithContext(ctx context.Context, request *CreateEdgePackTaskRequest) (response *CreateEdgePackTaskResponse, err error) {
     if request == nil {
         request = NewCreateEdgePackTaskRequest()
@@ -587,8 +606,9 @@ func NewCreateScdnDomainRequest() (request *CreateScdnDomainRequest) {
 func NewCreateScdnDomainResponse() (response *CreateScdnDomainResponse) {
     response = &CreateScdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateScdnDomain
@@ -599,9 +619,11 @@ func NewCreateScdnDomainResponse() (response *CreateScdnDomainResponse) {
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
 //  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
 //  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
+//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -616,8 +638,10 @@ func NewCreateScdnDomainResponse() (response *CreateScdnDomainResponse) {
 //  RESOURCEUNAVAILABLE_SCDNUSERSUSPEND = "ResourceUnavailable.ScdnUserSuspend"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) CreateScdnDomain(request *CreateScdnDomainRequest) (response *CreateScdnDomainResponse, err error) {
     return c.CreateScdnDomainWithContext(context.Background(), request)
 }
@@ -630,9 +654,11 @@ func (c *Client) CreateScdnDomain(request *CreateScdnDomainRequest) (response *C
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
 //  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
 //  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
+//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -647,8 +673,10 @@ func (c *Client) CreateScdnDomain(request *CreateScdnDomainRequest) (response *C
 //  RESOURCEUNAVAILABLE_SCDNUSERSUSPEND = "ResourceUnavailable.ScdnUserSuspend"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) CreateScdnDomainWithContext(ctx context.Context, request *CreateScdnDomainRequest) (response *CreateScdnDomainResponse, err error) {
     if request == nil {
         request = NewCreateScdnDomainRequest()
@@ -679,8 +707,9 @@ func NewCreateScdnFailedLogTaskRequest() (request *CreateScdnFailedLogTaskReques
 func NewCreateScdnFailedLogTaskResponse() (response *CreateScdnFailedLogTaskResponse) {
     response = &CreateScdnFailedLogTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateScdnFailedLogTask
@@ -747,8 +776,9 @@ func NewCreateScdnLogTaskRequest() (request *CreateScdnLogTaskRequest) {
 func NewCreateScdnLogTaskResponse() (response *CreateScdnLogTaskResponse) {
     response = &CreateScdnLogTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateScdnLogTask
@@ -823,20 +853,30 @@ func NewCreateVerifyRecordRequest() (request *CreateVerifyRecordRequest) {
 func NewCreateVerifyRecordResponse() (response *CreateVerifyRecordResponse) {
     response = &CreateVerifyRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateVerifyRecord
-// 生成一条子域名解析，提示客户添加到域名解析上，用于泛域名及域名取回校验归属权
+// CreateVerifyRecord 用于生成一条子域名解析，提示客户添加到域名解析上，用于泛域名及域名取回校验归属权。
+//
+// 生成的解析记录可通过 [VerifyDomainRecord](https://cloud.tencent.com/document/product/228/48117) 完成归属权校验。
+//
+// 注意：生成的解析记录有效期为24小时，超过24小时后，需重新生成。
+//
+// 具体流程可参考：[使用API接口进行域名归属校验](https://cloud.tencent.com/document/product/228/61702#.E6.96.B9.E6.B3.95.E4.B8.89.EF.BC.9Aapi-.E6.8E.A5.E5.8F.A3.E6.93.8D.E4.BD.9C)
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) CreateVerifyRecord(request *CreateVerifyRecordRequest) (response *CreateVerifyRecordResponse, err error) {
@@ -844,15 +884,24 @@ func (c *Client) CreateVerifyRecord(request *CreateVerifyRecordRequest) (respons
 }
 
 // CreateVerifyRecord
-// 生成一条子域名解析，提示客户添加到域名解析上，用于泛域名及域名取回校验归属权
+// CreateVerifyRecord 用于生成一条子域名解析，提示客户添加到域名解析上，用于泛域名及域名取回校验归属权。
+//
+// 生成的解析记录可通过 [VerifyDomainRecord](https://cloud.tencent.com/document/product/228/48117) 完成归属权校验。
+//
+// 注意：生成的解析记录有效期为24小时，超过24小时后，需重新生成。
+//
+// 具体流程可参考：[使用API接口进行域名归属校验](https://cloud.tencent.com/document/product/228/61702#.E6.96.B9.E6.B3.95.E4.B8.89.EF.BC.9Aapi-.E6.8E.A5.E5.8F.A3.E6.93.8D.E4.BD.9C)
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) CreateVerifyRecordWithContext(ctx context.Context, request *CreateVerifyRecordRequest) (response *CreateVerifyRecordResponse, err error) {
@@ -885,8 +934,9 @@ func NewDeleteCdnDomainRequest() (request *DeleteCdnDomainRequest) {
 func NewDeleteCdnDomainResponse() (response *DeleteCdnDomainResponse) {
     response = &DeleteCdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCdnDomain
@@ -912,6 +962,7 @@ func NewDeleteCdnDomainResponse() (response *DeleteCdnDomainResponse) {
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
 //  UNAUTHORIZEDOPERATION_OPNOAUTH = "UnauthorizedOperation.OpNoAuth"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 //  UNSUPPORTEDOPERATION_OPNOAUTH = "UnsupportedOperation.OpNoAuth"
 func (c *Client) DeleteCdnDomain(request *DeleteCdnDomainRequest) (response *DeleteCdnDomainResponse, err error) {
     return c.DeleteCdnDomainWithContext(context.Background(), request)
@@ -940,6 +991,7 @@ func (c *Client) DeleteCdnDomain(request *DeleteCdnDomainRequest) (response *Del
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
 //  UNAUTHORIZEDOPERATION_OPNOAUTH = "UnauthorizedOperation.OpNoAuth"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 //  UNSUPPORTEDOPERATION_OPNOAUTH = "UnsupportedOperation.OpNoAuth"
 func (c *Client) DeleteCdnDomainWithContext(ctx context.Context, request *DeleteCdnDomainRequest) (response *DeleteCdnDomainResponse, err error) {
     if request == nil {
@@ -971,8 +1023,9 @@ func NewDeleteClsLogTopicRequest() (request *DeleteClsLogTopicRequest) {
 func NewDeleteClsLogTopicResponse() (response *DeleteClsLogTopicResponse) {
     response = &DeleteClsLogTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClsLogTopic
@@ -1073,8 +1126,9 @@ func NewDeleteScdnDomainRequest() (request *DeleteScdnDomainRequest) {
 func NewDeleteScdnDomainResponse() (response *DeleteScdnDomainResponse) {
     response = &DeleteScdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteScdnDomain
@@ -1151,8 +1205,9 @@ func NewDescribeBillingDataRequest() (request *DescribeBillingDataRequest) {
 func NewDescribeBillingDataResponse() (response *DescribeBillingDataResponse) {
     response = &DescribeBillingDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBillingData
@@ -1253,8 +1308,9 @@ func NewDescribeCcDataRequest() (request *DescribeCcDataRequest) {
 func NewDescribeCcDataResponse() (response *DescribeCcDataResponse) {
     response = &DescribeCcDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCcData
@@ -1266,6 +1322,7 @@ func NewDescribeCcDataResponse() (response *DescribeCcDataResponse) {
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeCcData(request *DescribeCcDataRequest) (response *DescribeCcDataResponse, err error) {
     return c.DescribeCcDataWithContext(context.Background(), request)
 }
@@ -1279,6 +1336,7 @@ func (c *Client) DescribeCcData(request *DescribeCcDataRequest) (response *Descr
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeCcDataWithContext(ctx context.Context, request *DescribeCcDataRequest) (response *DescribeCcDataResponse, err error) {
     if request == nil {
         request = NewDescribeCcDataRequest()
@@ -1309,8 +1367,9 @@ func NewDescribeCdnDataRequest() (request *DescribeCdnDataRequest) {
 func NewDescribeCdnDataResponse() (response *DescribeCdnDataResponse) {
     response = &DescribeCdnDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCdnData
@@ -1475,8 +1534,9 @@ func NewDescribeCdnDomainLogsRequest() (request *DescribeCdnDomainLogsRequest) {
 func NewDescribeCdnDomainLogsResponse() (response *DescribeCdnDomainLogsResponse) {
     response = &DescribeCdnDomainLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCdnDomainLogs
@@ -1567,14 +1627,15 @@ func NewDescribeCdnIpRequest() (request *DescribeCdnIpRequest) {
 func NewDescribeCdnIpResponse() (response *DescribeCdnIpResponse) {
     response = &DescribeCdnIpResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCdnIp
 // DescribeCdnIp 用于查询 CDN IP 归属。
 //
-// （注意：此接口请求频率限制以 CDN 侧限制为准：200次/10分钟）  
+// （注意：此接口请求频率限制以 CDN 侧限制为准：200次/10分钟）
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -1588,6 +1649,7 @@ func NewDescribeCdnIpResponse() (response *DescribeCdnIpResponse) {
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
 //  UNAUTHORIZEDOPERATION_OPNOAUTH = "UnauthorizedOperation.OpNoAuth"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) DescribeCdnIp(request *DescribeCdnIpRequest) (response *DescribeCdnIpResponse, err error) {
     return c.DescribeCdnIpWithContext(context.Background(), request)
 }
@@ -1595,7 +1657,7 @@ func (c *Client) DescribeCdnIp(request *DescribeCdnIpRequest) (response *Describ
 // DescribeCdnIp
 // DescribeCdnIp 用于查询 CDN IP 归属。
 //
-// （注意：此接口请求频率限制以 CDN 侧限制为准：200次/10分钟）  
+// （注意：此接口请求频率限制以 CDN 侧限制为准：200次/10分钟）
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -1609,6 +1671,7 @@ func (c *Client) DescribeCdnIp(request *DescribeCdnIpRequest) (response *Describ
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
 //  UNAUTHORIZEDOPERATION_OPNOAUTH = "UnauthorizedOperation.OpNoAuth"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) DescribeCdnIpWithContext(ctx context.Context, request *DescribeCdnIpRequest) (response *DescribeCdnIpResponse, err error) {
     if request == nil {
         request = NewDescribeCdnIpRequest()
@@ -1639,12 +1702,15 @@ func NewDescribeCdnOriginIpRequest() (request *DescribeCdnOriginIpRequest) {
 func NewDescribeCdnOriginIpResponse() (response *DescribeCdnOriginIpResponse) {
     response = &DescribeCdnOriginIpResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCdnOriginIp
-// 本接口（DescribeCdnOriginIp）用于查询 CDN 回源节点的IP信息。（注：此接口即将下线，不再进行维护，请通过DescribeIpStatus 接口进行查询）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// 本接口（DescribeCdnOriginIp）用于查询 CDN 回源节点的IP信息。（注：替换接口为DescribeIpStatus）
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -1663,7 +1729,9 @@ func (c *Client) DescribeCdnOriginIp(request *DescribeCdnOriginIpRequest) (respo
 }
 
 // DescribeCdnOriginIp
-// 本接口（DescribeCdnOriginIp）用于查询 CDN 回源节点的IP信息。（注：此接口即将下线，不再进行维护，请通过DescribeIpStatus 接口进行查询）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// 本接口（DescribeCdnOriginIp）用于查询 CDN 回源节点的IP信息。（注：替换接口为DescribeIpStatus）
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -1707,8 +1775,9 @@ func NewDescribeCertDomainsRequest() (request *DescribeCertDomainsRequest) {
 func NewDescribeCertDomainsResponse() (response *DescribeCertDomainsResponse) {
     response = &DescribeCertDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCertDomains
@@ -1791,8 +1860,9 @@ func NewDescribeDDoSDataRequest() (request *DescribeDDoSDataRequest) {
 func NewDescribeDDoSDataResponse() (response *DescribeDDoSDataResponse) {
     response = &DescribeDDoSDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDDoSData
@@ -1865,12 +1935,15 @@ func NewDescribeDiagnoseReportRequest() (request *DescribeDiagnoseReportRequest)
 func NewDescribeDiagnoseReportResponse() (response *DescribeDiagnoseReportResponse) {
     response = &DescribeDiagnoseReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiagnoseReport
-// DescribeDiagnoseReport 用于获取指定报告id的内容
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// DescribeDiagnoseReport 用于获取指定报告id的内容。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -1883,7 +1956,9 @@ func (c *Client) DescribeDiagnoseReport(request *DescribeDiagnoseReportRequest) 
 }
 
 // DescribeDiagnoseReport
-// DescribeDiagnoseReport 用于获取指定报告id的内容
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// DescribeDiagnoseReport 用于获取指定报告id的内容。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -1921,14 +1996,15 @@ func NewDescribeDistrictIspDataRequest() (request *DescribeDistrictIspDataReques
 func NewDescribeDistrictIspDataResponse() (response *DescribeDistrictIspDataResponse) {
     response = &DescribeDistrictIspDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDistrictIspData
 // 查询指定域名的区域、运营商明细数据
 //
-// 注意事项：接口尚未全量开放，未在内测名单中的账号不支持调用
+// 注意事项：接口尚未全面开放，未在内测名单中的账号不支持调用
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
@@ -1938,6 +2014,7 @@ func NewDescribeDistrictIspDataResponse() (response *DescribeDistrictIspDataResp
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER_CDNINVALIDPARAMINTERVAL = "InvalidParameter.CdnInvalidParamInterval"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
@@ -1954,7 +2031,7 @@ func (c *Client) DescribeDistrictIspData(request *DescribeDistrictIspDataRequest
 // DescribeDistrictIspData
 // 查询指定域名的区域、运营商明细数据
 //
-// 注意事项：接口尚未全量开放，未在内测名单中的账号不支持调用
+// 注意事项：接口尚未全面开放，未在内测名单中的账号不支持调用
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
@@ -1964,6 +2041,7 @@ func (c *Client) DescribeDistrictIspData(request *DescribeDistrictIspDataRequest
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER_CDNINVALIDPARAMINTERVAL = "InvalidParameter.CdnInvalidParamInterval"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
@@ -2003,8 +2081,9 @@ func NewDescribeDomainsRequest() (request *DescribeDomainsRequest) {
 func NewDescribeDomainsResponse() (response *DescribeDomainsResponse) {
     response = &DescribeDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomains
@@ -2097,8 +2176,9 @@ func NewDescribeDomainsConfigRequest() (request *DescribeDomainsConfigRequest) {
 func NewDescribeDomainsConfigResponse() (response *DescribeDomainsConfigResponse) {
     response = &DescribeDomainsConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainsConfig
@@ -2179,6 +2259,63 @@ func (c *Client) DescribeDomainsConfigWithContext(ctx context.Context, request *
     return
 }
 
+func NewDescribeEdgePackTaskStatusRequest() (request *DescribeEdgePackTaskStatusRequest) {
+    request = &DescribeEdgePackTaskStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeEdgePackTaskStatus")
+    
+    
+    return
+}
+
+func NewDescribeEdgePackTaskStatusResponse() (response *DescribeEdgePackTaskStatusResponse) {
+    response = &DescribeEdgePackTaskStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeEdgePackTaskStatus
+// DescribeEdgePackTaskStatus 用于查询动态打包任务状态列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+func (c *Client) DescribeEdgePackTaskStatus(request *DescribeEdgePackTaskStatusRequest) (response *DescribeEdgePackTaskStatusResponse, err error) {
+    return c.DescribeEdgePackTaskStatusWithContext(context.Background(), request)
+}
+
+// DescribeEdgePackTaskStatus
+// DescribeEdgePackTaskStatus 用于查询动态打包任务状态列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+func (c *Client) DescribeEdgePackTaskStatusWithContext(ctx context.Context, request *DescribeEdgePackTaskStatusRequest) (response *DescribeEdgePackTaskStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeEdgePackTaskStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeEdgePackTaskStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeEdgePackTaskStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeEventLogDataRequest() (request *DescribeEventLogDataRequest) {
     request = &DescribeEventLogDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2193,8 +2330,9 @@ func NewDescribeEventLogDataRequest() (request *DescribeEventLogDataRequest) {
 func NewDescribeEventLogDataResponse() (response *DescribeEventLogDataResponse) {
     response = &DescribeEventLogDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEventLogData
@@ -2202,6 +2340,7 @@ func NewDescribeEventLogDataResponse() (response *DescribeEventLogDataResponse) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -2215,6 +2354,7 @@ func (c *Client) DescribeEventLogData(request *DescribeEventLogDataRequest) (res
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -2235,6 +2375,71 @@ func (c *Client) DescribeEventLogDataWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeHttpsPackagesRequest() (request *DescribeHttpsPackagesRequest) {
+    request = &DescribeHttpsPackagesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeHttpsPackages")
+    
+    
+    return
+}
+
+func NewDescribeHttpsPackagesResponse() (response *DescribeHttpsPackagesResponse) {
+    response = &DescribeHttpsPackagesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeHttpsPackages
+// DescribeHttpsPackages 用于查询 CDN HTTPS请求包详情。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
+//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
+func (c *Client) DescribeHttpsPackages(request *DescribeHttpsPackagesRequest) (response *DescribeHttpsPackagesResponse, err error) {
+    return c.DescribeHttpsPackagesWithContext(context.Background(), request)
+}
+
+// DescribeHttpsPackages
+// DescribeHttpsPackages 用于查询 CDN HTTPS请求包详情。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
+//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
+func (c *Client) DescribeHttpsPackagesWithContext(ctx context.Context, request *DescribeHttpsPackagesRequest) (response *DescribeHttpsPackagesResponse, err error) {
+    if request == nil {
+        request = NewDescribeHttpsPackagesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeHttpsPackages require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeHttpsPackagesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeImageConfigRequest() (request *DescribeImageConfigRequest) {
     request = &DescribeImageConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2249,8 +2454,9 @@ func NewDescribeImageConfigRequest() (request *DescribeImageConfigRequest) {
 func NewDescribeImageConfigResponse() (response *DescribeImageConfigResponse) {
     response = &DescribeImageConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageConfig
@@ -2258,6 +2464,7 @@ func NewDescribeImageConfigResponse() (response *DescribeImageConfigResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
+//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -2266,6 +2473,7 @@ func NewDescribeImageConfigResponse() (response *DescribeImageConfigResponse) {
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNPROJECTUNAUTHORIZED = "UnauthorizedOperation.CdnProjectUnauthorized"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) DescribeImageConfig(request *DescribeImageConfigRequest) (response *DescribeImageConfigResponse, err error) {
     return c.DescribeImageConfigWithContext(context.Background(), request)
 }
@@ -2275,6 +2483,7 @@ func (c *Client) DescribeImageConfig(request *DescribeImageConfigRequest) (respo
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
+//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -2283,6 +2492,7 @@ func (c *Client) DescribeImageConfig(request *DescribeImageConfigRequest) (respo
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNPROJECTUNAUTHORIZED = "UnauthorizedOperation.CdnProjectUnauthorized"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) DescribeImageConfigWithContext(ctx context.Context, request *DescribeImageConfigRequest) (response *DescribeImageConfigResponse, err error) {
     if request == nil {
         request = NewDescribeImageConfigRequest()
@@ -2313,22 +2523,26 @@ func NewDescribeIpStatusRequest() (request *DescribeIpStatusRequest) {
 func NewDescribeIpStatusResponse() (response *DescribeIpStatusResponse) {
     response = &DescribeIpStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIpStatus
-// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：暂不支持查询边缘节点信息。
+// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：暂不支持查询边缘节点信息并且数据会存在一定延迟。
 //
 // 
 //
 // >?  若您的业务已迁移至 CDN 控制台，请参考<a href="https://cloud.tencent.com/document/api/228/41954"> CDN 接口文档</a>，使用  CDN 相关API 进行操作。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
@@ -2342,17 +2556,20 @@ func (c *Client) DescribeIpStatus(request *DescribeIpStatusRequest) (response *D
 }
 
 // DescribeIpStatus
-// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：暂不支持查询边缘节点信息。
+// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：暂不支持查询边缘节点信息并且数据会存在一定延迟。
 //
 // 
 //
 // >?  若您的业务已迁移至 CDN 控制台，请参考<a href="https://cloud.tencent.com/document/api/228/41954"> CDN 接口文档</a>，使用  CDN 相关API 进行操作。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
@@ -2391,8 +2608,9 @@ func NewDescribeIpVisitRequest() (request *DescribeIpVisitRequest) {
 func NewDescribeIpVisitResponse() (response *DescribeIpVisitResponse) {
     response = &DescribeIpVisitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIpVisit
@@ -2405,8 +2623,10 @@ func NewDescribeIpVisitResponse() (response *DescribeIpVisitResponse) {
 // + 日活跃用户数：根据日志中客户端 IP，按天粒度去重统计
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
@@ -2441,8 +2661,10 @@ func (c *Client) DescribeIpVisit(request *DescribeIpVisitRequest) (response *Des
 // + 日活跃用户数：根据日志中客户端 IP，按天粒度去重统计
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
@@ -2493,8 +2715,9 @@ func NewDescribeMapInfoRequest() (request *DescribeMapInfoRequest) {
 func NewDescribeMapInfoResponse() (response *DescribeMapInfoResponse) {
     response = &DescribeMapInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMapInfo
@@ -2511,6 +2734,7 @@ func NewDescribeMapInfoResponse() (response *DescribeMapInfoResponse) {
 //  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
@@ -2532,6 +2756,7 @@ func (c *Client) DescribeMapInfo(request *DescribeMapInfoRequest) (response *Des
 //  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
@@ -2565,8 +2790,9 @@ func NewDescribeOriginDataRequest() (request *DescribeOriginDataRequest) {
 func NewDescribeOriginDataResponse() (response *DescribeOriginDataResponse) {
     response = &DescribeOriginDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOriginData
@@ -2715,8 +2941,9 @@ func NewDescribePayTypeRequest() (request *DescribePayTypeRequest) {
 func NewDescribePayTypeResponse() (response *DescribePayTypeResponse) {
     response = &DescribePayTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePayType
@@ -2726,10 +2953,12 @@ func NewDescribePayTypeResponse() (response *DescribePayTypeResponse) {
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) DescribePayType(request *DescribePayTypeRequest) (response *DescribePayTypeResponse, err error) {
@@ -2743,10 +2972,12 @@ func (c *Client) DescribePayType(request *DescribePayTypeRequest) (response *Des
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 func (c *Client) DescribePayTypeWithContext(ctx context.Context, request *DescribePayTypeRequest) (response *DescribePayTypeResponse, err error) {
@@ -2779,8 +3010,9 @@ func NewDescribePurgeQuotaRequest() (request *DescribePurgeQuotaRequest) {
 func NewDescribePurgeQuotaResponse() (response *DescribePurgeQuotaResponse) {
     response = &DescribePurgeQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePurgeQuota
@@ -2837,8 +3069,9 @@ func NewDescribePurgeTasksRequest() (request *DescribePurgeTasksRequest) {
 func NewDescribePurgeTasksResponse() (response *DescribePurgeTasksResponse) {
     response = &DescribePurgeTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePurgeTasks
@@ -2851,6 +3084,8 @@ func NewDescribePurgeTasksResponse() (response *DescribePurgeTasksResponse) {
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -2870,6 +3105,8 @@ func (c *Client) DescribePurgeTasks(request *DescribePurgeTasksRequest) (respons
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -2905,8 +3142,9 @@ func NewDescribePushQuotaRequest() (request *DescribePushQuotaRequest) {
 func NewDescribePushQuotaResponse() (response *DescribePushQuotaResponse) {
     response = &DescribePushQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePushQuota
@@ -2965,8 +3203,9 @@ func NewDescribePushTasksRequest() (request *DescribePushTasksRequest) {
 func NewDescribePushTasksResponse() (response *DescribePushTasksResponse) {
     response = &DescribePushTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePushTasks
@@ -3059,8 +3298,9 @@ func NewDescribeReportDataRequest() (request *DescribeReportDataRequest) {
 func NewDescribeReportDataResponse() (response *DescribeReportDataResponse) {
     response = &DescribeReportDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReportData
@@ -3125,8 +3365,9 @@ func NewDescribeScdnBotDataRequest() (request *DescribeScdnBotDataRequest) {
 func NewDescribeScdnBotDataResponse() (response *DescribeScdnBotDataResponse) {
     response = &DescribeScdnBotDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScdnBotData
@@ -3144,6 +3385,7 @@ func NewDescribeScdnBotDataResponse() (response *DescribeScdnBotDataResponse) {
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeScdnBotData(request *DescribeScdnBotDataRequest) (response *DescribeScdnBotDataResponse, err error) {
     return c.DescribeScdnBotDataWithContext(context.Background(), request)
 }
@@ -3163,6 +3405,7 @@ func (c *Client) DescribeScdnBotData(request *DescribeScdnBotDataRequest) (respo
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeScdnBotDataWithContext(ctx context.Context, request *DescribeScdnBotDataRequest) (response *DescribeScdnBotDataResponse, err error) {
     if request == nil {
         request = NewDescribeScdnBotDataRequest()
@@ -3193,8 +3436,9 @@ func NewDescribeScdnBotRecordsRequest() (request *DescribeScdnBotRecordsRequest)
 func NewDescribeScdnBotRecordsResponse() (response *DescribeScdnBotRecordsResponse) {
     response = &DescribeScdnBotRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScdnBotRecords
@@ -3251,8 +3495,9 @@ func NewDescribeScdnConfigRequest() (request *DescribeScdnConfigRequest) {
 func NewDescribeScdnConfigResponse() (response *DescribeScdnConfigResponse) {
     response = &DescribeScdnConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScdnConfig
@@ -3315,8 +3560,9 @@ func NewDescribeScdnIpStrategyRequest() (request *DescribeScdnIpStrategyRequest)
 func NewDescribeScdnIpStrategyResponse() (response *DescribeScdnIpStrategyResponse) {
     response = &DescribeScdnIpStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScdnIpStrategy
@@ -3373,8 +3619,9 @@ func NewDescribeScdnTopDataRequest() (request *DescribeScdnTopDataRequest) {
 func NewDescribeScdnTopDataResponse() (response *DescribeScdnTopDataResponse) {
     response = &DescribeScdnTopDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScdnTopData
@@ -3443,8 +3690,9 @@ func NewDescribeTopDataRequest() (request *DescribeTopDataRequest) {
 func NewDescribeTopDataResponse() (response *DescribeTopDataResponse) {
     response = &DescribeTopDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopData
@@ -3587,16 +3835,20 @@ func NewDescribeTrafficPackagesRequest() (request *DescribeTrafficPackagesReques
 func NewDescribeTrafficPackagesResponse() (response *DescribeTrafficPackagesResponse) {
     response = &DescribeTrafficPackagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTrafficPackages
 // DescribeTrafficPackages 用于查询 CDN 流量包详情。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -3609,8 +3861,11 @@ func (c *Client) DescribeTrafficPackages(request *DescribeTrafficPackagesRequest
 // DescribeTrafficPackages 用于查询 CDN 流量包详情。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -3645,8 +3900,9 @@ func NewDescribeUrlViolationsRequest() (request *DescribeUrlViolationsRequest) {
 func NewDescribeUrlViolationsResponse() (response *DescribeUrlViolationsResponse) {
     response = &DescribeUrlViolationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUrlViolations
@@ -3713,8 +3969,9 @@ func NewDescribeWafDataRequest() (request *DescribeWafDataRequest) {
 func NewDescribeWafDataResponse() (response *DescribeWafDataResponse) {
     response = &DescribeWafDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWafData
@@ -3740,6 +3997,7 @@ func NewDescribeWafDataResponse() (response *DescribeWafDataResponse) {
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeWafData(request *DescribeWafDataRequest) (response *DescribeWafDataResponse, err error) {
     return c.DescribeWafDataWithContext(context.Background(), request)
 }
@@ -3767,6 +4025,7 @@ func (c *Client) DescribeWafData(request *DescribeWafDataRequest) (response *Des
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeWafDataWithContext(ctx context.Context, request *DescribeWafDataRequest) (response *DescribeWafDataResponse, err error) {
     if request == nil {
         request = NewDescribeWafDataRequest()
@@ -3797,12 +4056,15 @@ func NewDisableCachesRequest() (request *DisableCachesRequest) {
 func NewDisableCachesResponse() (response *DisableCachesResponse) {
     response = &DisableCachesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableCaches
-// DisableCaches 用于禁用 CDN 上指定 URL 的访问，禁用完成后，中国境内访问会直接返回 403。（注：接口尚在内测中，暂未全量开放；封禁URL并非无限期永久封禁）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// DisableCaches 用于禁用 CDN 上指定 URL 的访问，禁用完成后，中国境内访问会直接返回 403。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -3831,7 +4093,9 @@ func (c *Client) DisableCaches(request *DisableCachesRequest) (response *Disable
 }
 
 // DisableCaches
-// DisableCaches 用于禁用 CDN 上指定 URL 的访问，禁用完成后，中国境内访问会直接返回 403。（注：接口尚在内测中，暂未全量开放；封禁URL并非无限期永久封禁）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// DisableCaches 用于禁用 CDN 上指定 URL 的访问，禁用完成后，中国境内访问会直接返回 403。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -3885,8 +4149,9 @@ func NewDisableClsLogTopicRequest() (request *DisableClsLogTopicRequest) {
 func NewDisableClsLogTopicResponse() (response *DisableClsLogTopicResponse) {
     response = &DisableClsLogTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableClsLogTopic
@@ -3991,8 +4256,9 @@ func NewDuplicateDomainConfigRequest() (request *DuplicateDomainConfigRequest) {
 func NewDuplicateDomainConfigResponse() (response *DuplicateDomainConfigResponse) {
     response = &DuplicateDomainConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DuplicateDomainConfig
@@ -4127,12 +4393,15 @@ func NewEnableCachesRequest() (request *EnableCachesRequest) {
 func NewEnableCachesResponse() (response *EnableCachesResponse) {
     response = &EnableCachesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableCaches
-// EnableCaches 用于解禁手工封禁的 URL，解禁成功后，全网生效时间约 5~10 分钟。（接口尚在内测中，暂未全量开放使用）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// EnableCaches 用于解禁手工封禁的 URL，解禁成功后，全网生效时间约 5~10 分钟。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -4157,7 +4426,9 @@ func (c *Client) EnableCaches(request *EnableCachesRequest) (response *EnableCac
 }
 
 // EnableCaches
-// EnableCaches 用于解禁手工封禁的 URL，解禁成功后，全网生效时间约 5~10 分钟。（接口尚在内测中，暂未全量开放使用）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// EnableCaches 用于解禁手工封禁的 URL，解禁成功后，全网生效时间约 5~10 分钟。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -4207,8 +4478,9 @@ func NewEnableClsLogTopicRequest() (request *EnableClsLogTopicRequest) {
 func NewEnableClsLogTopicResponse() (response *EnableClsLogTopicResponse) {
     response = &EnableClsLogTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableClsLogTopic
@@ -4313,12 +4585,15 @@ func NewGetDisableRecordsRequest() (request *GetDisableRecordsRequest) {
 func NewGetDisableRecordsResponse() (response *GetDisableRecordsResponse) {
     response = &GetDisableRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetDisableRecords
-// GetDisableRecords 用于查询资源禁用历史，及 URL 当前状态。（接口尚在内测中，暂未全量开放使用）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// GetDisableRecords 用于查询资源禁用历史，及 URL 当前状态。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -4343,7 +4618,9 @@ func (c *Client) GetDisableRecords(request *GetDisableRecordsRequest) (response 
 }
 
 // GetDisableRecords
-// GetDisableRecords 用于查询资源禁用历史，及 URL 当前状态。（接口尚在内测中，暂未全量开放使用）
+// ### <font color=red>**该接口已废弃** </font><br>
+//
+// GetDisableRecords 用于查询资源禁用历史，及 URL 当前状态。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -4393,8 +4670,9 @@ func NewListClsLogTopicsRequest() (request *ListClsLogTopicsRequest) {
 func NewListClsLogTopicsResponse() (response *ListClsLogTopicsResponse) {
     response = &ListClsLogTopicsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListClsLogTopics
@@ -4405,6 +4683,8 @@ func NewListClsLogTopicsResponse() (response *ListClsLogTopicsResponse) {
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
+//  INTERNALERROR_INVALIDERRORCODE = "InternalError.InvalidErrorCode"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNCLSDUPLICATETOPIC = "InvalidParameter.CdnClsDuplicateTopic"
 //  INVALIDPARAMETER_CDNCLSTOPICNOTEXIST = "InvalidParameter.CdnClsTopicNotExist"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -4447,6 +4727,8 @@ func (c *Client) ListClsLogTopics(request *ListClsLogTopicsRequest) (response *L
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
+//  INTERNALERROR_INVALIDERRORCODE = "InternalError.InvalidErrorCode"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNCLSDUPLICATETOPIC = "InvalidParameter.CdnClsDuplicateTopic"
 //  INVALIDPARAMETER_CDNCLSTOPICNOTEXIST = "InvalidParameter.CdnClsTopicNotExist"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -4507,14 +4789,16 @@ func NewListClsTopicDomainsRequest() (request *ListClsTopicDomainsRequest) {
 func NewListClsTopicDomainsResponse() (response *ListClsTopicDomainsResponse) {
     response = &ListClsTopicDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListClsTopicDomains
 // ListClsTopicDomains 用于获取某日志主题下绑定的域名列表。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
@@ -4554,6 +4838,7 @@ func (c *Client) ListClsTopicDomains(request *ListClsTopicDomainsRequest) (respo
 // ListClsTopicDomains 用于获取某日志主题下绑定的域名列表。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
@@ -4615,11 +4900,14 @@ func NewListDiagnoseReportRequest() (request *ListDiagnoseReportRequest) {
 func NewListDiagnoseReportResponse() (response *ListDiagnoseReportResponse) {
     response = &ListDiagnoseReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListDiagnoseReport
+// ### <font color=red>**该接口已废弃** </font><br>
+//
 // ListDiagnoseReport 用于获取用户诊断URL访问后各个子任务的简要详情。
 //
 // 可能返回的错误码:
@@ -4634,6 +4922,8 @@ func (c *Client) ListDiagnoseReport(request *ListDiagnoseReportRequest) (respons
 }
 
 // ListDiagnoseReport
+// ### <font color=red>**该接口已废弃** </font><br>
+//
 // ListDiagnoseReport 用于获取用户诊断URL访问后各个子任务的简要详情。
 //
 // 可能返回的错误码:
@@ -4673,8 +4963,9 @@ func NewListScdnDomainsRequest() (request *ListScdnDomainsRequest) {
 func NewListScdnDomainsResponse() (response *ListScdnDomainsResponse) {
     response = &ListScdnDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListScdnDomains
@@ -4683,9 +4974,11 @@ func NewListScdnDomainsResponse() (response *ListScdnDomainsResponse) {
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_ERROR = "InternalError.Error"
 //  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 func (c *Client) ListScdnDomains(request *ListScdnDomainsRequest) (response *ListScdnDomainsResponse, err error) {
@@ -4698,9 +4991,11 @@ func (c *Client) ListScdnDomains(request *ListScdnDomainsRequest) (response *Lis
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_ERROR = "InternalError.Error"
 //  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 func (c *Client) ListScdnDomainsWithContext(ctx context.Context, request *ListScdnDomainsRequest) (response *ListScdnDomainsResponse, err error) {
@@ -4733,8 +5028,9 @@ func NewListScdnLogTasksRequest() (request *ListScdnLogTasksRequest) {
 func NewListScdnLogTasksResponse() (response *ListScdnLogTasksResponse) {
     response = &ListScdnLogTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListScdnLogTasks
@@ -4797,8 +5093,9 @@ func NewListScdnTopBotDataRequest() (request *ListScdnTopBotDataRequest) {
 func NewListScdnTopBotDataResponse() (response *ListScdnTopBotDataResponse) {
     response = &ListScdnTopBotDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListScdnTopBotData
@@ -4806,11 +5103,13 @@ func NewListScdnTopBotDataResponse() (response *ListScdnTopBotDataResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ERROR = "InternalError.Error"
+//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
 //  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
 //  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) ListScdnTopBotData(request *ListScdnTopBotDataRequest) (response *ListScdnTopBotDataResponse, err error) {
     return c.ListScdnTopBotDataWithContext(context.Background(), request)
 }
@@ -4820,11 +5119,13 @@ func (c *Client) ListScdnTopBotData(request *ListScdnTopBotDataRequest) (respons
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ERROR = "InternalError.Error"
+//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
 //  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
 //  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) ListScdnTopBotDataWithContext(ctx context.Context, request *ListScdnTopBotDataRequest) (response *ListScdnTopBotDataResponse, err error) {
     if request == nil {
         request = NewListScdnTopBotDataRequest()
@@ -4855,8 +5156,9 @@ func NewListTopBotDataRequest() (request *ListTopBotDataRequest) {
 func NewListTopBotDataResponse() (response *ListTopBotDataResponse) {
     response = &ListTopBotDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListTopBotData
@@ -4913,8 +5215,9 @@ func NewListTopCcDataRequest() (request *ListTopCcDataRequest) {
 func NewListTopCcDataResponse() (response *ListTopCcDataResponse) {
     response = &ListTopCcDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListTopCcData
@@ -4926,6 +5229,7 @@ func NewListTopCcDataResponse() (response *ListTopCcDataResponse) {
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) ListTopCcData(request *ListTopCcDataRequest) (response *ListTopCcDataResponse, err error) {
     return c.ListTopCcDataWithContext(context.Background(), request)
@@ -4940,6 +5244,7 @@ func (c *Client) ListTopCcData(request *ListTopCcDataRequest) (response *ListTop
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) ListTopCcDataWithContext(ctx context.Context, request *ListTopCcDataRequest) (response *ListTopCcDataResponse, err error) {
     if request == nil {
@@ -4971,8 +5276,9 @@ func NewListTopClsLogDataRequest() (request *ListTopClsLogDataRequest) {
 func NewListTopClsLogDataResponse() (response *ListTopClsLogDataResponse) {
     response = &ListTopClsLogDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListTopClsLogData
@@ -4981,11 +5287,13 @@ func NewListTopClsLogDataResponse() (response *ListTopClsLogDataResponse) {
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNCLSTOPICNOTEXIST = "InvalidParameter.CdnClsTopicNotExist"
+//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CLSINDEXCONFLICT = "InvalidParameter.ClsIndexConflict"
 //  INVALIDPARAMETER_CLSINDEXRULEEMPTY = "InvalidParameter.ClsIndexRuleEmpty"
 //  INVALIDPARAMETER_CLSINVALIDCONTENT = "InvalidParameter.ClsInvalidContent"
@@ -5022,11 +5330,13 @@ func (c *Client) ListTopClsLogData(request *ListTopClsLogDataRequest) (response 
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_CDNCLSTOPICNOTEXIST = "InvalidParameter.CdnClsTopicNotExist"
+//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CLSINDEXCONFLICT = "InvalidParameter.ClsIndexConflict"
 //  INVALIDPARAMETER_CLSINDEXRULEEMPTY = "InvalidParameter.ClsIndexRuleEmpty"
 //  INVALIDPARAMETER_CLSINVALIDCONTENT = "InvalidParameter.ClsInvalidContent"
@@ -5083,8 +5393,9 @@ func NewListTopDDoSDataRequest() (request *ListTopDDoSDataRequest) {
 func NewListTopDDoSDataResponse() (response *ListTopDDoSDataResponse) {
     response = &ListTopDDoSDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListTopDDoSData
@@ -5101,6 +5412,7 @@ func NewListTopDDoSDataResponse() (response *ListTopDDoSDataResponse) {
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ListTopDDoSData(request *ListTopDDoSDataRequest) (response *ListTopDDoSDataResponse, err error) {
@@ -5121,6 +5433,7 @@ func (c *Client) ListTopDDoSData(request *ListTopDDoSDataRequest) (response *Lis
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ListTopDDoSDataWithContext(ctx context.Context, request *ListTopDDoSDataRequest) (response *ListTopDDoSDataResponse, err error) {
@@ -5153,8 +5466,9 @@ func NewListTopDataRequest() (request *ListTopDataRequest) {
 func NewListTopDataResponse() (response *ListTopDataResponse) {
     response = &ListTopDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListTopData
@@ -5291,8 +5605,9 @@ func NewListTopWafDataRequest() (request *ListTopWafDataRequest) {
 func NewListTopWafDataResponse() (response *ListTopWafDataResponse) {
     response = &ListTopWafDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListTopWafData
@@ -5315,6 +5630,7 @@ func NewListTopWafDataResponse() (response *ListTopWafDataResponse) {
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) ListTopWafData(request *ListTopWafDataRequest) (response *ListTopWafDataResponse, err error) {
     return c.ListTopWafDataWithContext(context.Background(), request)
 }
@@ -5339,6 +5655,7 @@ func (c *Client) ListTopWafData(request *ListTopWafDataRequest) (response *ListT
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) ListTopWafDataWithContext(ctx context.Context, request *ListTopWafDataRequest) (response *ListTopWafDataResponse, err error) {
     if request == nil {
         request = NewListTopWafDataRequest()
@@ -5369,8 +5686,9 @@ func NewManageClsTopicDomainsRequest() (request *ManageClsTopicDomainsRequest) {
 func NewManageClsTopicDomainsResponse() (response *ManageClsTopicDomainsResponse) {
     response = &ManageClsTopicDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageClsTopicDomains
@@ -5463,6 +5781,171 @@ func (c *Client) ManageClsTopicDomainsWithContext(ctx context.Context, request *
     return
 }
 
+func NewModifyDomainConfigRequest() (request *ModifyDomainConfigRequest) {
+    request = &ModifyDomainConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdn", APIVersion, "ModifyDomainConfig")
+    
+    
+    return
+}
+
+func NewModifyDomainConfigResponse() (response *ModifyDomainConfigResponse) {
+    response = &ModifyDomainConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDomainConfig
+// ModifyDomainConfig 用于修改内容分发网络加速域名配置信息
+//
+// 注意：
+//
+// Route 字段，使用点分隔，最后一段称为叶子节点，非叶子节点配置保持不变；
+//
+// Value 字段，使用 json 进行序列化，其中固定 update 作为 key，配置路径值参考 https://cloud.tencent.com/document/product/228/41116 接口各配置项复杂类型，为配置路径对应复杂类型下的节点。
+//
+// 操作审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到操作审计。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
+//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
+//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_ERROR = "InternalError.Error"
+//  INTERNALERROR_INVALIDERRORCODE = "InternalError.InvalidErrorCode"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
+//  INVALIDPARAMETER_BANDLIMITREQUIREDMAINLAND = "InvalidParameter.BandLimitRequiredMainland"
+//  INVALIDPARAMETER_BANDWIDTHALERTCOUNTERMEASURECONFLICTORIGINTYPE = "InvalidParameter.BandwidthAlertCounterMeasureConflictOriginType"
+//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
+//  INVALIDPARAMETER_CDNCERTINFONOTFOUND = "InvalidParameter.CdnCertInfoNotFound"
+//  INVALIDPARAMETER_CDNCONFIGINVALIDCACHE = "InvalidParameter.CdnConfigInvalidCache"
+//  INVALIDPARAMETER_CDNHOSTINVALIDMIDDLECONFIG = "InvalidParameter.CdnHostInvalidMiddleConfig"
+//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
+//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
+//  INVALIDPARAMETER_CDNINVALIDPARAMSERVICETYPE = "InvalidParameter.CdnInvalidParamServiceType"
+//  INVALIDPARAMETER_CDNKEYRULESEXCLUDECUSTOMREQUIRESFULLLEGO = "InvalidParameter.CdnKeyRulesExcludeCustomRequiresFullLego"
+//  INVALIDPARAMETER_CDNKEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.CdnKeyRulesInvalidQueryStringValue"
+//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
+//  INVALIDPARAMETER_CDNSTATTOOMANYDOMAINS = "InvalidParameter.CdnStatTooManyDomains"
+//  INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
+//  INVALIDPARAMETER_REMOTEAUTHINVALIDPLATFORM = "InvalidParameter.RemoteAuthInvalidPlatform"
+//  INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
+//  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
+//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
+//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
+//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  RESOURCENOTFOUND_ECDNDOMAINNOTEXISTS = "ResourceNotFound.EcdnDomainNotExists"
+//  RESOURCEUNAVAILABLE_CDNHOSTBELONGSTOOTHERSINMAINLAND = "ResourceUnavailable.CdnHostBelongsToOthersInMainland"
+//  RESOURCEUNAVAILABLE_CDNHOSTBELONGSTOOTHERSINOVERSEAS = "ResourceUnavailable.CdnHostBelongsToOthersInOverseas"
+//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
+//  RESOURCEUNAVAILABLE_CDNHOSTISNOTOFFLINE = "ResourceUnavailable.CdnHostIsNotOffline"
+//  RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNHOSTINICPBLACKLIST = "UnauthorizedOperation.CdnHostInIcpBlacklist"
+//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNPROJECTUNAUTHORIZED = "UnauthorizedOperation.CdnProjectUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNTAGUNAUTHORIZED = "UnauthorizedOperation.CdnTagUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
+//  UNAUTHORIZEDOPERATION_CDNUSERISISOLATED = "UnauthorizedOperation.CdnUserIsIsolated"
+//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
+//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
+//  UNAUTHORIZEDOPERATION_OPNOAUTH = "UnauthorizedOperation.OpNoAuth"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
+func (c *Client) ModifyDomainConfig(request *ModifyDomainConfigRequest) (response *ModifyDomainConfigResponse, err error) {
+    return c.ModifyDomainConfigWithContext(context.Background(), request)
+}
+
+// ModifyDomainConfig
+// ModifyDomainConfig 用于修改内容分发网络加速域名配置信息
+//
+// 注意：
+//
+// Route 字段，使用点分隔，最后一段称为叶子节点，非叶子节点配置保持不变；
+//
+// Value 字段，使用 json 进行序列化，其中固定 update 作为 key，配置路径值参考 https://cloud.tencent.com/document/product/228/41116 接口各配置项复杂类型，为配置路径对应复杂类型下的节点。
+//
+// 操作审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到操作审计。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
+//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
+//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
+//  INTERNALERROR_ERROR = "InternalError.Error"
+//  INTERNALERROR_INVALIDERRORCODE = "InternalError.InvalidErrorCode"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
+//  INVALIDPARAMETER_BANDLIMITREQUIREDMAINLAND = "InvalidParameter.BandLimitRequiredMainland"
+//  INVALIDPARAMETER_BANDWIDTHALERTCOUNTERMEASURECONFLICTORIGINTYPE = "InvalidParameter.BandwidthAlertCounterMeasureConflictOriginType"
+//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
+//  INVALIDPARAMETER_CDNCERTINFONOTFOUND = "InvalidParameter.CdnCertInfoNotFound"
+//  INVALIDPARAMETER_CDNCONFIGINVALIDCACHE = "InvalidParameter.CdnConfigInvalidCache"
+//  INVALIDPARAMETER_CDNHOSTINVALIDMIDDLECONFIG = "InvalidParameter.CdnHostInvalidMiddleConfig"
+//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
+//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
+//  INVALIDPARAMETER_CDNINVALIDPARAMSERVICETYPE = "InvalidParameter.CdnInvalidParamServiceType"
+//  INVALIDPARAMETER_CDNKEYRULESEXCLUDECUSTOMREQUIRESFULLLEGO = "InvalidParameter.CdnKeyRulesExcludeCustomRequiresFullLego"
+//  INVALIDPARAMETER_CDNKEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.CdnKeyRulesInvalidQueryStringValue"
+//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
+//  INVALIDPARAMETER_CDNSTATTOOMANYDOMAINS = "InvalidParameter.CdnStatTooManyDomains"
+//  INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
+//  INVALIDPARAMETER_REMOTEAUTHINVALIDPLATFORM = "InvalidParameter.RemoteAuthInvalidPlatform"
+//  INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
+//  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
+//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
+//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
+//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
+//  RESOURCENOTFOUND_ECDNDOMAINNOTEXISTS = "ResourceNotFound.EcdnDomainNotExists"
+//  RESOURCEUNAVAILABLE_CDNHOSTBELONGSTOOTHERSINMAINLAND = "ResourceUnavailable.CdnHostBelongsToOthersInMainland"
+//  RESOURCEUNAVAILABLE_CDNHOSTBELONGSTOOTHERSINOVERSEAS = "ResourceUnavailable.CdnHostBelongsToOthersInOverseas"
+//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
+//  RESOURCEUNAVAILABLE_CDNHOSTISNOTOFFLINE = "ResourceUnavailable.CdnHostIsNotOffline"
+//  RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
+//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNHOSTINICPBLACKLIST = "UnauthorizedOperation.CdnHostInIcpBlacklist"
+//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNPROJECTUNAUTHORIZED = "UnauthorizedOperation.CdnProjectUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNTAGUNAUTHORIZED = "UnauthorizedOperation.CdnTagUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
+//  UNAUTHORIZEDOPERATION_CDNUSERISISOLATED = "UnauthorizedOperation.CdnUserIsIsolated"
+//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
+//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
+//  UNAUTHORIZEDOPERATION_OPNOAUTH = "UnauthorizedOperation.OpNoAuth"
+//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
+func (c *Client) ModifyDomainConfigWithContext(ctx context.Context, request *ModifyDomainConfigRequest) (response *ModifyDomainConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyDomainConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDomainConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDomainConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyPurgeFetchTaskStatusRequest() (request *ModifyPurgeFetchTaskStatusRequest) {
     request = &ModifyPurgeFetchTaskStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5477,8 +5960,9 @@ func NewModifyPurgeFetchTaskStatusRequest() (request *ModifyPurgeFetchTaskStatus
 func NewModifyPurgeFetchTaskStatusResponse() (response *ModifyPurgeFetchTaskStatusResponse) {
     response = &ModifyPurgeFetchTaskStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPurgeFetchTaskStatus
@@ -5535,8 +6019,9 @@ func NewPurgePathCacheRequest() (request *PurgePathCacheRequest) {
 func NewPurgePathCacheResponse() (response *PurgePathCacheResponse) {
     response = &PurgePathCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PurgePathCache
@@ -5560,6 +6045,8 @@ func NewPurgePathCacheResponse() (response *PurgePathCacheResponse) {
 //  INVALIDPARAMETER_CDNPURGEWILDCARDNOTALLOWED = "InvalidParameter.CdnPurgeWildcardNotAllowed"
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
 //  INVALIDPARAMETER_CDNURLEXCEEDLENGTH = "InvalidParameter.CdnUrlExceedLength"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeExceedBatchLimit"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgeExceedDayLimit"
 //  LIMITEXCEEDED_CDNPURGEPATHEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgePathExceedBatchLimit"
 //  LIMITEXCEEDED_CDNPURGEPATHEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgePathExceedDayLimit"
 //  LIMITEXCEEDED_CDNPURGEURLEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeUrlExceedBatchLimit"
@@ -5597,6 +6084,8 @@ func (c *Client) PurgePathCache(request *PurgePathCacheRequest) (response *Purge
 //  INVALIDPARAMETER_CDNPURGEWILDCARDNOTALLOWED = "InvalidParameter.CdnPurgeWildcardNotAllowed"
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
 //  INVALIDPARAMETER_CDNURLEXCEEDLENGTH = "InvalidParameter.CdnUrlExceedLength"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeExceedBatchLimit"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgeExceedDayLimit"
 //  LIMITEXCEEDED_CDNPURGEPATHEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgePathExceedBatchLimit"
 //  LIMITEXCEEDED_CDNPURGEPATHEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgePathExceedDayLimit"
 //  LIMITEXCEEDED_CDNPURGEURLEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeUrlExceedBatchLimit"
@@ -5639,8 +6128,9 @@ func NewPurgeUrlsCacheRequest() (request *PurgeUrlsCacheRequest) {
 func NewPurgeUrlsCacheResponse() (response *PurgeUrlsCacheResponse) {
     response = &PurgeUrlsCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PurgeUrlsCache
@@ -5658,12 +6148,16 @@ func NewPurgeUrlsCacheResponse() (response *PurgeUrlsCacheResponse) {
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CDNPURGEWILDCARDNOTALLOWED = "InvalidParameter.CdnPurgeWildcardNotAllowed"
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
 //  INVALIDPARAMETER_CDNURLEXCEEDLENGTH = "InvalidParameter.CdnUrlExceedLength"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeExceedBatchLimit"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgeExceedDayLimit"
 //  LIMITEXCEEDED_CDNPURGEURLEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeUrlExceedBatchLimit"
 //  LIMITEXCEEDED_CDNPURGEURLEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgeUrlExceedDayLimit"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
@@ -5696,12 +6190,16 @@ func (c *Client) PurgeUrlsCache(request *PurgeUrlsCacheRequest) (response *Purge
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CDNPURGEWILDCARDNOTALLOWED = "InvalidParameter.CdnPurgeWildcardNotAllowed"
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
 //  INVALIDPARAMETER_CDNURLEXCEEDLENGTH = "InvalidParameter.CdnUrlExceedLength"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeExceedBatchLimit"
+//  LIMITEXCEEDED_CDNPURGEEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgeExceedDayLimit"
 //  LIMITEXCEEDED_CDNPURGEURLEXCEEDBATCHLIMIT = "LimitExceeded.CdnPurgeUrlExceedBatchLimit"
 //  LIMITEXCEEDED_CDNPURGEURLEXCEEDDAYLIMIT = "LimitExceeded.CdnPurgeUrlExceedDayLimit"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
@@ -5745,14 +6243,15 @@ func NewPushUrlsCacheRequest() (request *PushUrlsCacheRequest) {
 func NewPushUrlsCacheResponse() (response *PushUrlsCacheResponse) {
     response = &PushUrlsCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PushUrlsCache
 // PushUrlsCache 用于将指定 URL 资源列表加载至 CDN 节点，支持指定加速区域预热。
 //
-// 默认情况下境内、境外每日预热 URL 限额为各 1000 条，每次最多可提交 500 条。注意：中国境外区域预热，资源默认加载至中国境外边缘节点，所产生的边缘层流量会计入计费流量。
+// 默认情况下境内、境外每日预热 URL 限额为各 1000 条，每次最多可提交 500 条 URL，每次提交的数量会消耗配额总数。如：1次提交500条URL全球预热，此时境内、境外预热 URL 各剩余 500条。注意：中国境外区域预热，资源默认加载至中国境外边缘节点。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
@@ -5795,7 +6294,7 @@ func (c *Client) PushUrlsCache(request *PushUrlsCacheRequest) (response *PushUrl
 // PushUrlsCache
 // PushUrlsCache 用于将指定 URL 资源列表加载至 CDN 节点，支持指定加速区域预热。
 //
-// 默认情况下境内、境外每日预热 URL 限额为各 1000 条，每次最多可提交 500 条。注意：中国境外区域预热，资源默认加载至中国境外边缘节点，所产生的边缘层流量会计入计费流量。
+// 默认情况下境内、境外每日预热 URL 限额为各 1000 条，每次最多可提交 500 条 URL，每次提交的数量会消耗配额总数。如：1次提交500条URL全球预热，此时境内、境外预热 URL 各剩余 500条。注意：中国境外区域预热，资源默认加载至中国境外边缘节点。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
@@ -5861,8 +6360,9 @@ func NewSearchClsLogRequest() (request *SearchClsLogRequest) {
 func NewSearchClsLogResponse() (response *SearchClsLogResponse) {
     response = &SearchClsLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SearchClsLog
@@ -5973,8 +6473,9 @@ func NewStartCdnDomainRequest() (request *StartCdnDomainRequest) {
 func NewStartCdnDomainResponse() (response *StartCdnDomainResponse) {
     response = &StartCdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartCdnDomain
@@ -6071,8 +6572,9 @@ func NewStartScdnDomainRequest() (request *StartScdnDomainRequest) {
 func NewStartScdnDomainResponse() (response *StartScdnDomainResponse) {
     response = &StartScdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartScdnDomain
@@ -6155,8 +6657,9 @@ func NewStopCdnDomainRequest() (request *StopCdnDomainRequest) {
 func NewStopCdnDomainResponse() (response *StopCdnDomainResponse) {
     response = &StopCdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopCdnDomain
@@ -6249,8 +6752,9 @@ func NewStopScdnDomainRequest() (request *StopScdnDomainRequest) {
 func NewStopScdnDomainResponse() (response *StopScdnDomainResponse) {
     response = &StopScdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopScdnDomain
@@ -6273,6 +6777,7 @@ func NewStopScdnDomainResponse() (response *StopScdnDomainResponse) {
 //  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
 //  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 func (c *Client) StopScdnDomain(request *StopScdnDomainRequest) (response *StopScdnDomainResponse, err error) {
@@ -6299,6 +6804,7 @@ func (c *Client) StopScdnDomain(request *StopScdnDomainRequest) (response *StopS
 //  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
 //  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 func (c *Client) StopScdnDomainWithContext(ctx context.Context, request *StopScdnDomainRequest) (response *StopScdnDomainResponse, err error) {
@@ -6331,25 +6837,28 @@ func NewUpdateDomainConfigRequest() (request *UpdateDomainConfigRequest) {
 func NewUpdateDomainConfigResponse() (response *UpdateDomainConfigResponse) {
     response = &UpdateDomainConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateDomainConfig
-// UpdateDomainConfig 用于修改内容分发网络加速域名配置信息
+// UpdateDomainConfig 用于修改内容分发网络加速域名配置信息。
 //
-// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口。Https配置由于证书的特殊性，更新时不用传递证书和密钥字段。
+// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口。
 //
-// 云审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到云审计。
+// 操作审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到操作审计。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_INVALIDERRORCODE = "InternalError.InvalidErrorCode"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
 //  INVALIDPARAMETER_BANDLIMITREQUIREDMAINLAND = "InvalidParameter.BandLimitRequiredMainland"
 //  INVALIDPARAMETER_BANDWIDTHALERTCOUNTERMEASURECONFLICTORIGINTYPE = "InvalidParameter.BandwidthAlertCounterMeasureConflictOriginType"
@@ -6364,11 +6873,13 @@ func NewUpdateDomainConfigResponse() (response *UpdateDomainConfigResponse) {
 //  INVALIDPARAMETER_CDNKEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.CdnKeyRulesInvalidQueryStringValue"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
+//  INVALIDPARAMETER_CDNSTATTOOMANYDOMAINS = "InvalidParameter.CdnStatTooManyDomains"
 //  INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPLATFORM = "InvalidParameter.RemoteAuthInvalidPlatform"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  OPERATIONDENIED_SHARECACHEAREADNSNOTMATCH = "OperationDenied.ShareCacheAreaDnsNotMatch"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
@@ -6396,20 +6907,22 @@ func (c *Client) UpdateDomainConfig(request *UpdateDomainConfigRequest) (respons
 }
 
 // UpdateDomainConfig
-// UpdateDomainConfig 用于修改内容分发网络加速域名配置信息
+// UpdateDomainConfig 用于修改内容分发网络加速域名配置信息。
 //
-// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口。Https配置由于证书的特殊性，更新时不用传递证书和密钥字段。
+// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口。
 //
-// 云审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到云审计。
+// 操作审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到操作审计。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
 //  INTERNALERROR_INVALIDERRORCODE = "InternalError.InvalidErrorCode"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
 //  INVALIDPARAMETER_BANDLIMITREQUIREDMAINLAND = "InvalidParameter.BandLimitRequiredMainland"
 //  INVALIDPARAMETER_BANDWIDTHALERTCOUNTERMEASURECONFLICTORIGINTYPE = "InvalidParameter.BandwidthAlertCounterMeasureConflictOriginType"
@@ -6424,11 +6937,13 @@ func (c *Client) UpdateDomainConfig(request *UpdateDomainConfigRequest) (respons
 //  INVALIDPARAMETER_CDNKEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.CdnKeyRulesInvalidQueryStringValue"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
+//  INVALIDPARAMETER_CDNSTATTOOMANYDOMAINS = "InvalidParameter.CdnStatTooManyDomains"
 //  INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPLATFORM = "InvalidParameter.RemoteAuthInvalidPlatform"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  OPERATIONDENIED_SHARECACHEAREADNSNOTMATCH = "OperationDenied.ShareCacheAreaDnsNotMatch"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
@@ -6481,8 +6996,9 @@ func NewUpdateImageConfigRequest() (request *UpdateImageConfigRequest) {
 func NewUpdateImageConfigResponse() (response *UpdateImageConfigResponse) {
     response = &UpdateImageConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateImageConfig
@@ -6500,6 +7016,7 @@ func NewUpdateImageConfigResponse() (response *UpdateImageConfigResponse) {
 //  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
 //  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
@@ -6522,6 +7039,7 @@ func (c *Client) UpdateImageConfig(request *UpdateImageConfigRequest) (response 
 //  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
 //  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
@@ -6555,8 +7073,9 @@ func NewUpdatePayTypeRequest() (request *UpdatePayTypeRequest) {
 func NewUpdatePayTypeResponse() (response *UpdatePayTypeResponse) {
     response = &UpdatePayTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdatePayType
@@ -6619,8 +7138,9 @@ func NewUpdateScdnDomainRequest() (request *UpdateScdnDomainRequest) {
 func NewUpdateScdnDomainResponse() (response *UpdateScdnDomainResponse) {
     response = &UpdateScdnDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateScdnDomain
@@ -6633,7 +7153,9 @@ func NewUpdateScdnDomainResponse() (response *UpdateScdnDomainResponse) {
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
 //  INTERNALERROR_SCDNUSERSUSPEND = "InternalError.ScdnUserSuspend"
+//  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
 //  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
+//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -6661,7 +7183,9 @@ func (c *Client) UpdateScdnDomain(request *UpdateScdnDomainRequest) (response *U
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
 //  INTERNALERROR_SCDNUSERSUSPEND = "InternalError.ScdnUserSuspend"
+//  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
 //  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
+//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
@@ -6705,14 +7229,20 @@ func NewVerifyDomainRecordRequest() (request *VerifyDomainRecordRequest) {
 func NewVerifyDomainRecordResponse() (response *VerifyDomainRecordResponse) {
     response = &VerifyDomainRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // VerifyDomainRecord
-// 验证域名解析值
+// VerifyDomainRecord 用于验证域名解析值。
+//
+// 验证域名解析记录值前，您需要通过 [CreateVerifyRecord](https://cloud.tencent.com/document/product/228/48118) 生成校验解析值，验证通过后，24小时有效。
+//
+// 具体流程可参考：[使用API接口进行域名归属校验](https://cloud.tencent.com/document/product/228/61702#.E6.96.B9.E6.B3.95.E4.B8.89.EF.BC.9Aapi-.E6.8E.A5.E5.8F.A3.E6.93.8D.E4.BD.9C)
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
@@ -6723,9 +7253,14 @@ func (c *Client) VerifyDomainRecord(request *VerifyDomainRecordRequest) (respons
 }
 
 // VerifyDomainRecord
-// 验证域名解析值
+// VerifyDomainRecord 用于验证域名解析值。
+//
+// 验证域名解析记录值前，您需要通过 [CreateVerifyRecord](https://cloud.tencent.com/document/product/228/48118) 生成校验解析值，验证通过后，24小时有效。
+//
+// 具体流程可参考：[使用API接口进行域名归属校验](https://cloud.tencent.com/document/product/228/61702#.E6.96.B9.E6.B3.95.E4.B8.89.EF.BC.9Aapi-.E6.8E.A5.E5.8F.A3.E6.93.8D.E4.BD.9C)
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"

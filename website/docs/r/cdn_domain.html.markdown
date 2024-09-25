@@ -170,6 +170,7 @@ The following arguments are supported:
 * `origin_pull_optimization` - (Optional, List) Cross-border linkage optimization configuration. (This feature is in beta and not generally available yet).
 * `origin_pull_timeout` - (Optional, List) Cross-border linkage optimization configuration.
 * `oss_private_access` - (Optional, List) Access authentication for OSS origin.
+* `others_private_access` - (Optional, List) Object storage back-to-source authentication of other vendors.
 * `post_max_size` - (Optional, List) Maximum post size configuration.
 * `project_id` - (Optional, Int) The project CDN belongs to, default to 0.
 * `qn_private_access` - (Optional, List) Access authentication for OBS origin.
@@ -365,6 +366,14 @@ The `origin` object supports the following:
 * `server_name` - (Optional, String) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
 The `oss_private_access` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `access_key` - (Optional, String) Access ID.
+* `bucket` - (Optional, String) Bucket.
+* `region` - (Optional, String) Region.
+* `secret_key` - (Optional, String) Key.
+
+The `others_private_access` object supports the following:
 
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `access_key` - (Optional, String) Access ID.
