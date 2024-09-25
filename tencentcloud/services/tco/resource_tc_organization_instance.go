@@ -31,6 +31,7 @@ func ResourceTencentCloudOrganizationOrganization() *schema.Resource {
 
 			"root_node_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Root node name.",
 			},
