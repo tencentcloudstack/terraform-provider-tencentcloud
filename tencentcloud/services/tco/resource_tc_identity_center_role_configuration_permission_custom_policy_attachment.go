@@ -165,7 +165,7 @@ func resourceTencentCloudIdentityCenterRoleConfigurationPermissionCustomPolicyAt
 	if respData.RolePolicies != nil {
 		var rolePolicie *organization.RolePolicie
 		for _, r := range respData.RolePolicies {
-			if rolePolicyName == rolePolicyName {
+			if *r.RolePolicyName == rolePolicyName {
 				rolePolicie = r
 				break
 			}
