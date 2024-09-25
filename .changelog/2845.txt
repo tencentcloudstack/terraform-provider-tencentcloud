@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: support `dedicated_cluster_id` params
+```
+
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_instance: support `dedicated_cluster_id` params
+```
+
+```release-note:new-data-source
+tencentcloud_postgresql_dedicated_clusters
+```
