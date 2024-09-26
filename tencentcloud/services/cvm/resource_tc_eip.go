@@ -261,6 +261,9 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
+		if eip == nil {
+			return resource.NonRetryableError(errors.New("eip is nil"))
+		}
 		if eip != nil && *eip.AddressStatus == svcvpc.EIP_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("eip is still creating"))
 		}
