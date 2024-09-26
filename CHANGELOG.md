@@ -1,3 +1,10 @@
+## 1.81.127 (September 26 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_eip: support `cdc_id` params ([#2849](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2849))
+* resource/tencentcloud_teo_certificate_config: update teo_certificate_config doc ([#2847](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2847))
+
 ## 1.81.126 (September 25 , 2024)
 
 FEATURES:
