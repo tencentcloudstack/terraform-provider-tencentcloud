@@ -2372,6 +2372,10 @@ func (me *VpcService) DescribeEipById(ctx context.Context, eipId, cdcId string) 
 			Name:   helper.String("dedicated-cluster-id"),
 			Values: []*string{&cdcId},
 		})
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   helper.String("business-type"),
+			Values: []*string{helper.String("CDC")},
+		})
 	}
 
 	ratelimit.Check(request.GetAction())
