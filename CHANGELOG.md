@@ -8,7 +8,8 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* resource/tencentcloud_cos_bucket: support `cdc_id` params ([#2841](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2841))
+* resource/tencentcloud_cdn_domain: Add more origin type ([#2843](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2843))
+* resource/tencentcloud_cos_bucket: COS supports CDC scenarios ([#2841](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2841))
 * datasource/tencentcloud_kubernetes_scale_worker: adjust the message when creating instances all failed ([#2839](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2839))
 * resource/tencentcloud_kubernetes_cluster: support `cdc_id` and `pre_start_user_script` parameter ([#2835](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2835))
 * datasource/tencentcloud_kubernetes_clusters: support `cdc_id` parameter ([#2835](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2835))
