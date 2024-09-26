@@ -263,7 +263,7 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("network_interface_id", association.NetworkInterfaceId)
 	_ = d.Set("private_ip", association.PrivateIp)
 	if eipAddress.DedicatedClusterId != nil {
-		_ = d.Set("cdc_ip", eipAddress.DedicatedClusterId)
+		_ = d.Set("cdc_id", eipAddress.DedicatedClusterId)
 	}
 	return nil
 }
