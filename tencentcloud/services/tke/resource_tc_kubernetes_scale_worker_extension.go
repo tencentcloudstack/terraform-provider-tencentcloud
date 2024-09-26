@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -445,25 +447,47 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 	waitRequest := tke.NewDescribeClusterInstancesRequest()
 	waitRequest.ClusterId = &clusterId
 	waitRequest.InstanceIds = helper.Strings(instanceIds)
-	waitRequest.Offset = helper.Int64(0)
-	waitRequest.Limit = helper.Int64(100)
 	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClusterInstances(waitRequest)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
+		var (
+			offset         int64 = 0
+			limit          int64 = 100
+			tmpInstanceSet []*tke.Instance
+		)
+
+		// get all instances
+		for {
+			waitRequest.Limit = &limit
+			waitRequest.Offset = &offset
+			ratelimit.Check(waitRequest.GetAction())
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClusterInstances(waitRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || len(result.Response.InstanceSet) == 0 {
+				break
+			}
+
+			tmpInstanceSet = append(tmpInstanceSet, result.Response.InstanceSet...)
+
+			if len(result.Response.InstanceSet) < int(limit) {
+				break
+			}
+
+			offset += limit
 		}
 
 		// check instances status
-		tmpInstanceSet := result.Response.InstanceSet
-		if tmpInstanceSet == nil {
+		if len(tmpInstanceSet) == 0 {
 			return resource.NonRetryableError(fmt.Errorf("there is no instances in set"))
 		} else {
 			var (
 				stop int
 				flag bool
 			)
+
 			for _, v := range instanceIds {
 				for _, instance := range tmpInstanceSet {
 					if v == *instance.InstanceId {
@@ -472,7 +496,7 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 							flag = true
 						} else if *instance.InstanceState == "failed" {
 							stop += 1
-							log.Printf("instance:%s status is failed.", v)
+							log.Printf("instance: %s status is failed.", v)
 						} else {
 							continue
 						}
@@ -485,8 +509,7 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 			} else if stop == len(instanceIds) && !flag {
 				return resource.NonRetryableError(fmt.Errorf("The instances being created have all failed."))
 			} else {
-				e = fmt.Errorf("cluster instances is still initializing.")
-				return resource.RetryableError(e)
+				return resource.RetryableError(fmt.Errorf("cluster instances is still initializing."))
 			}
 		}
 	})
