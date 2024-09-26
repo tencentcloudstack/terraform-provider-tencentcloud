@@ -29,5 +29,5 @@ Import
 teo certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_certificate_config.certificate zone_id#host#cert_id
+terraform import tencentcloud_teo_certificate_config.certificate zone_id#host
 ```
