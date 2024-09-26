@@ -2,8 +2,10 @@ package cvm
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"strconv"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -108,6 +110,12 @@ func ResourceTencentCloudEip() *schema.Resource {
 				Computed:    true,
 				Description: "ID of anti DDos package, it must set when `type` is `AntiDDoSEIP`.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC Unique ID.",
+			},
+
 			// computed
 			"public_ip": {
 				Type:        schema.TypeString,
@@ -131,8 +139,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	vpcService := svcvpc.NewVpcService(client)
-	tagService := svctag.NewTagService(client)
-	region := client.Region
 
 	var internetChargeType string
 
@@ -184,8 +190,12 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
 		request.AntiDDoSPackageId = helper.String(v.(string))
 	}
+	if v, ok := d.GetOk("cdc_id"); ok {
+		request.DedicatedClusterId = helper.String(v.(string))
+	}
 
 	eipId := ""
+	taskId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := client.UseVpcClient().AllocateAddresses(request)
@@ -201,6 +211,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 			return resource.RetryableError(fmt.Errorf("eip id is nil"))
 		}
 		eipId = *response.Response.AddressSet[0]
+		taskId = *response.Response.TaskId
 		return nil
 	})
 	if err != nil {
@@ -208,19 +219,38 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(eipId)
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := tccommon.BuildTagResourceName(svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, eipId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			log.Printf("[CRITAL]%s set eip tags failed: %+v", logId, err)
-			return err
+	// wait for status
+	taskIdUint64, err := strconv.ParseUint(taskId, 10, 64)
+	if err != nil {
+		return err
+	}
+	taskRequest := vpc.NewDescribeTaskResultRequest()
+	taskRequest.TaskId = &taskIdUint64
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(taskRequest.GetAction())
+		taskResponse, err := client.UseVpcClient().DescribeTaskResult(taskRequest)
+		if err != nil {
+			return tccommon.RetryError(err)
 		}
+		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_RUNNING {
+			return resource.RetryableError(errors.New("eip task is running"))
+		}
+		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_FAILED {
+			return resource.NonRetryableError(errors.New("eip task is failed"))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
 	}
 
-	// wait for status
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
+		}
+		if eip == nil {
+			return resource.NonRetryableError(errors.New("eip is nil"))
 		}
 		if eip != nil && *eip.AddressStatus == svcvpc.EIP_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("eip is still creating"))
@@ -292,6 +322,10 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 
 	if eip.AntiDDoSPackageId != nil {
 		_ = d.Set("anti_ddos_package_id", eip.AntiDDoSPackageId)
+	}
+
+	if eip.DedicatedClusterId != nil {
+		_ = d.Set("cdc_id", eip.DedicatedClusterId)
 	}
 
 	if bgp != nil {

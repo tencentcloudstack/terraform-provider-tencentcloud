@@ -471,6 +471,14 @@ type Address struct {
 	// 当前公网IP所关联的带宽包ID，如果该公网IP未使用带宽包计费，则返回为空
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
+
+	// 传统弹性公网IPv6所属vpc唯一ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnVpcId *string `json:"UnVpcId,omitnil,omitempty" name:"UnVpcId"`
+
+	// CDC唯一ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 }
 
 type AddressChargePrepaid struct {
@@ -505,6 +513,10 @@ type AddressTemplate struct {
 
 	// 带备注的IP地址信息。
 	AddressExtraSet []*AddressInfo `json:"AddressExtraSet,omitnil,omitempty" name:"AddressExtraSet"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type AddressTemplateGroup struct {
@@ -522,6 +534,10 @@ type AddressTemplateGroup struct {
 
 	// IP地址模板实例。
 	AddressTemplateSet []*AddressTemplateItem `json:"AddressTemplateSet,omitnil,omitempty" name:"AddressTemplateSet"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type AddressTemplateItem struct {
@@ -673,6 +689,9 @@ type AllocateAddressesRequestParams struct {
 	// EIP名称，用于申请EIP时用户自定义该EIP的个性化名称，默认值：未命名
 	AddressName *string `json:"AddressName,omitnil,omitempty" name:"AddressName"`
 
+	// CDC唯一ID
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
 	// 网络出口，当前仅支持精品BGP、静态单线，这2种IP 地址类型的指定出口传入，默认值：center_egress1，其它可选值：center_egress2、center_egress3
 	Egress *string `json:"Egress,omitnil,omitempty" name:"Egress"`
 
@@ -739,6 +758,9 @@ type AllocateAddressesRequest struct {
 	// EIP名称，用于申请EIP时用户自定义该EIP的个性化名称，默认值：未命名
 	AddressName *string `json:"AddressName,omitnil,omitempty" name:"AddressName"`
 
+	// CDC唯一ID
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
 	// 网络出口，当前仅支持精品BGP、静态单线，这2种IP 地址类型的指定出口传入，默认值：center_egress1，其它可选值：center_egress2、center_egress3
 	Egress *string `json:"Egress,omitnil,omitempty" name:"Egress"`
 
@@ -772,6 +794,7 @@ func (r *AllocateAddressesRequest) FromJsonString(s string) error {
 	delete(f, "Tags")
 	delete(f, "BandwidthPackageId")
 	delete(f, "AddressName")
+	delete(f, "DedicatedClusterId")
 	delete(f, "Egress")
 	delete(f, "AntiDDoSPackageId")
 	delete(f, "ClientToken")
@@ -1637,7 +1660,7 @@ func (r *AssociateNetworkAclSubnetsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssociateNetworkInterfaceSecurityGroupsRequestParams struct {
-	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。本接口不支持主网卡绑定安全组。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
 	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
@@ -1647,7 +1670,7 @@ type AssociateNetworkInterfaceSecurityGroupsRequestParams struct {
 type AssociateNetworkInterfaceSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。本接口不支持主网卡绑定安全组。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
 	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
@@ -2194,6 +2217,18 @@ type CCN struct {
 	// 是否开启二层云联网通道。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DirectConnectAccelerateChannelFlag *bool `json:"DirectConnectAccelerateChannelFlag,omitnil,omitempty" name:"DirectConnectAccelerateChannelFlag"`
+
+	// 是否支持ipv6路由表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ipv6Flag *string `json:"Ipv6Flag,omitnil,omitempty" name:"Ipv6Flag"`
+
+	// 是否支持路由表聚合策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MrtbAggregatePolicyFlag *bool `json:"MrtbAggregatePolicyFlag,omitnil,omitempty" name:"MrtbAggregatePolicyFlag"`
+
+	// 是否支持策略值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MrtbPolicyValueFlag *bool `json:"MrtbPolicyValueFlag,omitnil,omitempty" name:"MrtbPolicyValueFlag"`
 }
 
 type CcnAttachedInstance struct {
@@ -2475,6 +2510,14 @@ type CcnRoute struct {
 
 	// 下一跳扩展名称（关联实例的扩展名称）
 	InstanceExtraName *string `json:"InstanceExtraName,omitnil,omitempty" name:"InstanceExtraName"`
+
+	// 实例类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AliasType *string `json:"AliasType,omitnil,omitempty" name:"AliasType"`
+
+	// 实例id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AliasInstanceId *string `json:"AliasInstanceId,omitnil,omitempty" name:"AliasInstanceId"`
 }
 
 type CcnRouteBroadcastPolicyRouteCondition struct {
@@ -2520,6 +2563,22 @@ type CcnRouteTableBroadcastPolicy struct {
 
 	// 策略描述
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// as-path操作
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OperateAsPath *string `json:"OperateAsPath,omitnil,omitempty" name:"OperateAsPath"`
+
+	// as-path操作模式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsPathOperateMode *string `json:"AsPathOperateMode,omitnil,omitempty" name:"AsPathOperateMode"`
+
+	// community操作
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OperateCommunitySet []*string `json:"OperateCommunitySet,omitnil,omitempty" name:"OperateCommunitySet"`
+
+	// community操作模式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CommunityOperateMode *string `json:"CommunityOperateMode,omitnil,omitempty" name:"CommunityOperateMode"`
 }
 
 type CcnRouteTableBroadcastPolicys struct {
@@ -2542,6 +2601,14 @@ type CcnRouteTableInputPolicy struct {
 
 	// 策略描述。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// as-path操作
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OperateAsPath *string `json:"OperateAsPath,omitnil,omitempty" name:"OperateAsPath"`
+
+	// as-path操作模式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsPathOperateMode *string `json:"AsPathOperateMode,omitnil,omitempty" name:"AsPathOperateMode"`
 }
 
 type CcnRouteTableInputPolicys struct {
@@ -5769,6 +5836,9 @@ type CreateSecurityGroupWithPoliciesRequestParams struct {
 
 	// 安全组规则集合。
 	SecurityGroupPolicySet *SecurityGroupPolicySet `json:"SecurityGroupPolicySet,omitnil,omitempty" name:"SecurityGroupPolicySet"`
+
+	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateSecurityGroupWithPoliciesRequest struct {
@@ -5785,6 +5855,9 @@ type CreateSecurityGroupWithPoliciesRequest struct {
 
 	// 安全组规则集合。
 	SecurityGroupPolicySet *SecurityGroupPolicySet `json:"SecurityGroupPolicySet,omitnil,omitempty" name:"SecurityGroupPolicySet"`
+
+	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateSecurityGroupWithPoliciesRequest) ToJsonString() string {
@@ -5803,6 +5876,7 @@ func (r *CreateSecurityGroupWithPoliciesRequest) FromJsonString(s string) error 
 	delete(f, "GroupDescription")
 	delete(f, "ProjectId")
 	delete(f, "SecurityGroupPolicySet")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSecurityGroupWithPoliciesRequest has unknown keys!", "")
 	}
@@ -6307,6 +6381,9 @@ type CreateVpcEndPointRequestParams struct {
 
 	// 安全组ID。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
+
+	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateVpcEndPointRequest struct {
@@ -6329,6 +6406,9 @@ type CreateVpcEndPointRequest struct {
 
 	// 安全组ID。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
+
+	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateVpcEndPointRequest) ToJsonString() string {
@@ -6349,6 +6429,7 @@ func (r *CreateVpcEndPointRequest) FromJsonString(s string) error {
 	delete(f, "EndPointServiceId")
 	delete(f, "EndPointVip")
 	delete(f, "SecurityGroupId")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpcEndPointRequest has unknown keys!", "")
 	}
@@ -7140,6 +7221,9 @@ type CreateVpnGatewaySslClientRequestParams struct {
 
 	// SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。
 	SslVpnClientNames []*string `json:"SslVpnClientNames,omitnil,omitempty" name:"SslVpnClientNames"`
+
+	// 指定绑定的标签列表
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateVpnGatewaySslClientRequest struct {
@@ -7153,6 +7237,9 @@ type CreateVpnGatewaySslClientRequest struct {
 
 	// SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。
 	SslVpnClientNames []*string `json:"SslVpnClientNames,omitnil,omitempty" name:"SslVpnClientNames"`
+
+	// 指定绑定的标签列表
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateVpnGatewaySslClientRequest) ToJsonString() string {
@@ -7170,6 +7257,7 @@ func (r *CreateVpnGatewaySslClientRequest) FromJsonString(s string) error {
 	delete(f, "SslVpnServerId")
 	delete(f, "SslVpnClientName")
 	delete(f, "SslVpnClientNames")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewaySslClientRequest has unknown keys!", "")
 	}
@@ -7241,6 +7329,9 @@ type CreateVpnGatewaySslServerRequestParams struct {
 
 	// SAML-DATA，开启SSO时传。
 	SamlData *string `json:"SamlData,omitnil,omitempty" name:"SamlData"`
+
+	// 指定绑定的标签列表
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateVpnGatewaySslServerRequest struct {
@@ -7281,6 +7372,9 @@ type CreateVpnGatewaySslServerRequest struct {
 
 	// SAML-DATA，开启SSO时传。
 	SamlData *string `json:"SamlData,omitnil,omitempty" name:"SamlData"`
+
+	// 指定绑定的标签列表
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateVpnGatewaySslServerRequest) ToJsonString() string {
@@ -7307,6 +7401,7 @@ func (r *CreateVpnGatewaySslServerRequest) FromJsonString(s string) error {
 	delete(f, "SsoEnabled")
 	delete(f, "AccessPolicyEnabled")
 	delete(f, "SamlData")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewaySslServerRequest has unknown keys!", "")
 	}
@@ -19803,10 +19898,10 @@ type EnableRoutesRequestParams struct {
 	// 路由表唯一ID。
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 
-	// 路由策略ID。不能和RouteItemIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
+	// 路由策略ID。不能和RouteItemIds同时使用，但至少输入一个。单次处理上限100个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteIds []*uint64 `json:"RouteIds,omitnil,omitempty" name:"RouteIds"`
 
-	// 路由策略唯一ID。不能和RouteIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
+	// 路由策略唯一ID。不能和RouteIds同时使用，但至少输入一个。单次处理上限100个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteItemIds []*string `json:"RouteItemIds,omitnil,omitempty" name:"RouteItemIds"`
 }
 
@@ -19816,10 +19911,10 @@ type EnableRoutesRequest struct {
 	// 路由表唯一ID。
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 
-	// 路由策略ID。不能和RouteItemIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
+	// 路由策略ID。不能和RouteItemIds同时使用，但至少输入一个。单次处理上限100个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteIds []*uint64 `json:"RouteIds,omitnil,omitempty" name:"RouteIds"`
 
-	// 路由策略唯一ID。不能和RouteIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
+	// 路由策略唯一ID。不能和RouteIds同时使用，但至少输入一个。单次处理上限100个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteItemIds []*string `json:"RouteItemIds,omitnil,omitempty" name:"RouteItemIds"`
 }
 
@@ -20094,6 +20189,10 @@ type EndPoint struct {
 	// 终端节点服务名称。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type EndPointService struct {
@@ -20139,6 +20238,10 @@ type EndPointService struct {
 	// 服务IP类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BusinessIpType *int64 `json:"BusinessIpType,omitnil,omitempty" name:"BusinessIpType"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type Filter struct {
@@ -20461,6 +20564,10 @@ type HaVip struct {
 	// HAVIP 刷新时间。该参数只作为出参数。以下场景会触发 FlushTime 被刷新：1）子机发出免费 ARP 触发 HAVIP 漂移；2）手动HAVIP解绑网卡; 没有更新时默认值：0000-00-00 00:00:00
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FlushedTime *string `json:"FlushedTime,omitnil,omitempty" name:"FlushedTime"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 // Predefined struct for user
@@ -21237,7 +21344,7 @@ type LocalGateway struct {
 	// VPC实例ID
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 本地网关实例ID
+	// 本地网关实例ID（计划弃用）
 	UniqLocalGwId *string `json:"UniqLocalGwId,omitnil,omitempty" name:"UniqLocalGwId"`
 
 	// 本地网关名称
@@ -21248,6 +21355,13 @@ type LocalGateway struct {
 
 	// 本地网关创建时间
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
+
+	// 本地网关实例ID（计划起用）
+	LocalGatewayId *string `json:"LocalGatewayId,omitnil,omitempty" name:"LocalGatewayId"`
 }
 
 // Predefined struct for user
@@ -25781,6 +25895,10 @@ type NetDetect struct {
 	// 创建时间。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type NetDetectIpState struct {
@@ -26307,7 +26425,13 @@ type ProductQuota struct {
 }
 
 type Quota struct {
-	// 配额名称，取值范围：<br><li>`TOTAL_EIP_QUOTA`：用户当前地域下EIP的配额数；<br><li>`DAILY_EIP_APPLY`：用户当前地域下今日申购次数；<br><li>`DAILY_PUBLIC_IP_ASSIGN`：用户当前地域下，重新分配公网 IP次数。
+	// 配额名称，取值范围：
+	// - `TOTAL_EIP_QUOTA`：用户当前地域下EIP的配额数；
+	// - `DAILY_EIP_APPLY`：用户当前地域下今日申购次数；
+	// - `DAILY_PUBLIC_IP_ASSIGN`：用户当前地域下，重新分配公网 IP次数；
+	// - `TOTAL_EIP6_QUOTA`：用户当前地域下，传统弹性公网IPv6的配额数；
+	// - `BGP_EIPv6_QUOTA`：用户当前地域下，可申请的 BGP 弹性公网IPv6 的配额数；
+	// - `SINGLEISP_EIPv6_QUOTA`：用户当前地域下，可申请的静态单线弹性公网IPv6 的配额数；
 	QuotaId *string `json:"QuotaId,omitnil,omitempty" name:"QuotaId"`
 
 	// 当前数量
@@ -26315,6 +26439,10 @@ type Quota struct {
 
 	// 配额数量
 	QuotaLimit *int64 `json:"QuotaLimit,omitnil,omitempty" name:"QuotaLimit"`
+
+	// 配额所属的网络组
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QuotaGroup *string `json:"QuotaGroup,omitnil,omitempty" name:"QuotaGroup"`
 }
 
 type ReferredSecurityGroup struct {
@@ -27950,7 +28078,7 @@ func (r *ReturnNormalAddressesResponse) FromJsonString(s string) error {
 }
 
 type Route struct {
-	// 目的网段，取值不能在私有网络网段内，例如：112.20.51.0/24。
+	// 创建IPv4目的网段，取值不能在私有网络网段内，例如：112.20.51.0/24。
 	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
 
 	// 下一跳类型，目前我们支持的类型有：
@@ -27959,10 +28087,12 @@ type Route struct {
 	// DIRECTCONNECT：专线网关；
 	// PEERCONNECTION：对等连接；
 	// HAVIP：高可用虚拟IP；
-	// NAT：NAT网关; 
+	// NAT：公网NAT网关; 
 	// NORMAL_CVM：普通云服务器；
 	// EIP：云服务器的公网IP；
-	// LOCAL_GATEWAY：本地网关。
+	// LOCAL_GATEWAY：CDC本地网关；
+	// INTRANAT：私网NAT网关；
+	// USER_CCN；云联网（自定义路由）。
 	GatewayType *string `json:"GatewayType,omitnil,omitempty" name:"GatewayType"`
 
 	// 下一跳地址，这里只需要指定不同下一跳类型的网关ID，系统会自动匹配到下一跳地址。
@@ -27991,14 +28121,14 @@ type Route struct {
 	// 路由表实例ID，例如：rtb-azd4dt1c。
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 
-	// 目的IPv6网段，取值不能在私有网络网段内，例如：2402:4e00:1000:810b::/64。
+	// 创建IPv6目的网段，取值不能在私有网络网段内，例如：2402:4e00:1000:810b::/64。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DestinationIpv6CidrBlock *string `json:"DestinationIpv6CidrBlock,omitnil,omitempty" name:"DestinationIpv6CidrBlock"`
 
 	// 路由唯一策略ID。
 	RouteItemId *string `json:"RouteItemId,omitnil,omitempty" name:"RouteItemId"`
 
-	// 路由策略是否发布到云联网。
+	// 路由策略是否发布到云联网。该字段仅做出参使用，作为入参字段时此参数不生效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PublishedToVbc *bool `json:"PublishedToVbc,omitnil,omitempty" name:"PublishedToVbc"`
 
@@ -28254,6 +28384,10 @@ type ServiceTemplate struct {
 
 	// 带备注的协议端口信息。
 	ServiceExtraSet []*ServicesInfo `json:"ServiceExtraSet,omitnil,omitempty" name:"ServiceExtraSet"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type ServiceTemplateGroup struct {
@@ -28271,6 +28405,10 @@ type ServiceTemplateGroup struct {
 
 	// 协议端口模板实例信息。
 	ServiceTemplateSet []*ServiceTemplate `json:"ServiceTemplateSet,omitnil,omitempty" name:"ServiceTemplateSet"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type ServiceTemplateSpecification struct {
@@ -28495,10 +28633,14 @@ type SnapshotPolicy struct {
 	// 创建时间。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 标签键值对。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type SourceIpTranslationNatRule struct {
-	// 资源ID，如果ResourceType为USERDEFINED，可以为空
+	// 资源ID，如果ResourceType为USERDEFINED，可以为空字符串
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 资源类型，目前包含SUBNET、NETWORKINTERFACE、USERDEFINED

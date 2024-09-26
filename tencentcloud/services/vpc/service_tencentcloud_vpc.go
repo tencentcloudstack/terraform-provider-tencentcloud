@@ -2383,6 +2383,37 @@ func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *v
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.AddressSet) < 1 {
+		return me.DescribeEipByIdCdc(ctx, eipId)
+	}
+	eip = response.Response.AddressSet[0]
+	return
+}
+
+func (me *VpcService) DescribeEipByIdCdc(ctx context.Context, eipId string) (eip *vpc.Address, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vpc.NewDescribeAddressesRequest()
+	request.AddressIds = []*string{&eipId}
+	request.Filters = append(request.Filters, &vpc.Filter{
+		Name:   helper.String("business-type"),
+		Values: []*string{helper.String("CDC")},
+	})
+
+	ratelimit.Check(request.GetAction())
+
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = eipId
+
+	response, err := me.client.UseVpcClient(specArgs).DescribeAddresses(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AddressSet) < 1 {
 		return
 	}
 	eip = response.Response.AddressSet[0]

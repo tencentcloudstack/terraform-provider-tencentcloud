@@ -219,6 +219,7 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		vpcService = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		id         = d.Id()
+		eipAddress *vpc.Address
 	)
 
 	association, err := ParseEipAssociationId(id)
@@ -235,6 +236,7 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 		if eip == nil {
 			d.SetId("")
 		}
+		eipAddress = eip
 
 		return nil
 	})
@@ -252,6 +254,9 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 
 	_ = d.Set("network_interface_id", association.NetworkInterfaceId)
 	_ = d.Set("private_ip", association.PrivateIp)
+	if eipAddress.DedicatedClusterId != nil {
+		_ = d.Set("cdc_id", eipAddress.DedicatedClusterId)
+	}
 	return nil
 }
 
