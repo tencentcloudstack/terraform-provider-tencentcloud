@@ -2,8 +2,10 @@ package cvm
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"strconv"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -197,6 +199,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	eipId := ""
+	taskId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := client.UseVpcClient().AllocateAddresses(request)
@@ -212,6 +215,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 			return resource.RetryableError(fmt.Errorf("eip id is nil"))
 		}
 		eipId = *response.Response.AddressSet[0]
+		taskId = *response.Response.TaskId
 		return nil
 	})
 	if err != nil {
@@ -228,6 +232,27 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// wait for status
+	taskIdUint64, err := strconv.ParseUint(taskId, 10, 64)
+	if err != nil {
+		return err
+	}
+	taskRequest := vpc.NewDescribeTaskResultRequest()
+	taskRequest.TaskId = &taskIdUint64
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(taskRequest.GetAction())
+		taskResponse, err := client.UseVpcClient().DescribeTaskResult(taskRequest)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == "RUNNING" {
+			return resource.RetryableError(errors.New("eip task is running"))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		eip, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
 		if errRet != nil {
