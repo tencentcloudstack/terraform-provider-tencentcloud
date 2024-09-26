@@ -713,6 +713,12 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx context.Context) err
 	clusterId := items[0]
 	nodePoolId := items[1]
 
+
+	err := resourceTencentCloudKubernetesNodePoolUpdateTaints(ctx, clusterId, nodePoolId)
+	if err != nil {
+		return err
+	}
+
 	// ModifyScalingGroup
 	if d.HasChange("scaling_group_name") ||
 		d.HasChange("zones") ||
@@ -1250,17 +1256,10 @@ func desiredCapacityOutRange(d *schema.ResourceData) bool {
 	return capacity > maxSize || capacity < minSize
 }
 
-func resourceTencentCloudKubernetesNodePoolUpdatePostHandleResponse0(ctx context.Context, resp *tke.ModifyClusterNodePoolResponse) error {
+func resourceTencentCloudKubernetesNodePoolUpdateTaints(ctx context.Context, clusterId string, nodePoolId string) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	clusterId := idSplit[0]
-	nodePoolId := idSplit[1]
 
 	if d.HasChange("taints") {
 		_, n := d.GetChange("taints")

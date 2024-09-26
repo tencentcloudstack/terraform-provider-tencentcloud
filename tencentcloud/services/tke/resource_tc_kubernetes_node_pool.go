@@ -882,8 +882,6 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 	if needChange {
 		request := tkev20180525.NewModifyClusterNodePoolRequest()
 
-		response := tkev20180525.NewModifyClusterNodePoolResponse()
-
 		request.ClusterId = helper.String(clusterId)
 
 		request.NodePoolId = helper.String(nodePoolId)
@@ -921,10 +919,6 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s update kubernetes node pool failed, reason:%+v", logId, err)
 			return err
 		}
-		if err := resourceTencentCloudKubernetesNodePoolUpdatePostHandleResponse0(ctx, response); err != nil {
-			return err
-		}
-
 		if _, err := (&resource.StateChangeConf{
 			Delay:      10 * time.Second,
 			MinTimeout: 3 * time.Second,
