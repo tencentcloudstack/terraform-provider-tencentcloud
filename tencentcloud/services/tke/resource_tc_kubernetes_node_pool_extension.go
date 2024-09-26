@@ -1328,6 +1328,22 @@ func resourceTencentCloudKubernetesNodePoolUpdatePostHandleResponse0(ctx context
 			}
 		}
 
+		service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			nodePool, _, errRet := service.DescribeNodePool(ctx, clusterId, nodePoolId)
+			if errRet != nil {
+				return tccommon.RetryError(errRet, tccommon.InternalError)
+			}
+			if nodePool != nil && *nodePool.LifeState == "normal" {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("node pool status is %s, retry...", *nodePool.LifeState))
+		})
+
+		if err != nil {
+			return err
+		}
+
 		return nil
 	}
 	return nil
