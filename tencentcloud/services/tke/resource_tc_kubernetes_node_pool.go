@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -920,25 +921,20 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s update kubernetes node pool failed, reason:%+v", logId, err)
 			return err
 		}
-
-		service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			nodePool, _, errRet := service.DescribeNodePool(ctx, clusterId, nodePoolId)
-			if errRet != nil {
-				return tccommon.RetryError(errRet, tccommon.InternalError)
-			}
-			if nodePool != nil && *nodePool.LifeState == "normal" {
-				return nil
-			}
-			return resource.RetryableError(fmt.Errorf("node pool status is %s, retry...", *nodePool.LifeState))
-		})
-		if err != nil {
-			return err
-		}
 		if err := resourceTencentCloudKubernetesNodePoolUpdatePostHandleResponse0(ctx, response); err != nil {
 			return err
 		}
 
+		if _, err := (&resource.StateChangeConf{
+			Delay:      10 * time.Second,
+			MinTimeout: 3 * time.Second,
+			Pending:    []string{},
+			Refresh:    resourceKubernetesNodePoolUpdateStateRefreshFunc_0_0(ctx, clusterId, nodePoolId),
+			Target:     []string{"normal"},
+			Timeout:    600 * time.Second,
+		}).WaitForStateContext(ctx); err != nil {
+			return err
+		}
 	}
 
 	if err := resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx); err != nil {
@@ -1003,4 +999,35 @@ func resourceTencentCloudKubernetesNodePoolDelete(d *schema.ResourceData, meta i
 	}
 
 	return nil
+}
+
+func resourceKubernetesNodePoolUpdateStateRefreshFunc_0_0(ctx context.Context, clusterId string, nodePoolId string) resource.StateRefreshFunc {
+	var req *tkev20180525.DescribeClusterNodePoolDetailRequest
+	return func() (interface{}, string, error) {
+		meta := tccommon.ProviderMetaFromContext(ctx)
+		if meta == nil {
+			return nil, "", fmt.Errorf("resource data can not be nil")
+		}
+		if req == nil {
+			d := tccommon.ResourceDataFromContext(ctx)
+			if d == nil {
+				return nil, "", fmt.Errorf("resource data can not be nil")
+			}
+			_ = d
+			req = tkev20180525.NewDescribeClusterNodePoolDetailRequest()
+			req.ClusterId = helper.String(clusterId)
+
+			req.NodePoolId = helper.String(nodePoolId)
+
+		}
+		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClusterNodePoolDetailWithContext(ctx, req)
+		if err != nil {
+			return nil, "", err
+		}
+		if resp == nil || resp.Response == nil {
+			return nil, "", nil
+		}
+		state := fmt.Sprintf("%v", *resp.Response.NodePool.LifeState)
+		return resp.Response, state, nil
+	}
 }
