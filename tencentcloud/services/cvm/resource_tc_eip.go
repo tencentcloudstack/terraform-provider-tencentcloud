@@ -244,8 +244,11 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
-		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == "RUNNING" {
+		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_RUNNING {
 			return resource.RetryableError(errors.New("eip task is running"))
+		}
+		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_FAILED {
+			return resource.NonRetryableError(errors.New("eip task is failed"))
 		}
 		return nil
 	})
