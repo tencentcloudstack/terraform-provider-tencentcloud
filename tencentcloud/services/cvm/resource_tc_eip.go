@@ -223,14 +223,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(eipId)
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := tccommon.BuildTagResourceName(svcvpc.VPC_SERVICE_TYPE, svcvpc.EIP_RESOURCE_TYPE, region, eipId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			log.Printf("[CRITAL]%s set eip tags failed: %+v", logId, err)
-			return err
-		}
-	}
-
 	// wait for status
 	taskIdUint64, err := strconv.ParseUint(taskId, 10, 64)
 	if err != nil {
