@@ -306,6 +306,10 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("anti_ddos_package_id", eip.AntiDDoSPackageId)
 	}
 
+	if eip.DedicatedClusterId != nil {
+		_ = d.Set("cdc_id", eip.DedicatedClusterId)
+	}
+
 	if bgp != nil {
 		_ = d.Set("bandwidth_package_id", bgp.BandwidthPackageId)
 	}
