@@ -66,12 +66,6 @@ func ResourceTencentCloudEipAssociation() *schema.Resource {
 				},
 				Description: "Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.",
 			},
-			"cdc_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:     true,
-				Description: "CDC Unique ID.",
-			},
 		},
 	}
 }
@@ -88,9 +82,8 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 	)
 
 	eipId := d.Get("eip_id").(string)
-	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet = vpcService.DescribeEipById(ctx, eipId, cdcId)
+		eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
@@ -127,7 +120,7 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 
 		associationId := fmt.Sprintf("%v::%v", eipId, instanceId)
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			eip, errRet = vpcService.DescribeEipById(ctx, eipId, cdcId)
+			eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -190,7 +183,7 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 		id := fmt.Sprintf("%v::%v::%v", eipId, networkId, privateIp)
 
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			eip, errRet = vpcService.DescribeEipById(ctx, eipId, cdcId)
+			eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -234,9 +227,8 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	cdcId := d.Get("cdc_id").(string)
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet := vpcService.DescribeEipById(ctx, association.EipId, cdcId)
+		eip, errRet := vpcService.DescribeEipById(ctx, association.EipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}

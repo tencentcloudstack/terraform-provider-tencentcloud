@@ -139,11 +139,8 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	vpcService := svcvpc.NewVpcService(client)
-	tagService := svctag.NewTagService(client)
-	region := client.Region
 
 	var internetChargeType string
-	var cdcId string
 
 	request := vpc.NewAllocateAddressesRequest()
 	if v, ok := d.GetOk("type"); ok {
@@ -194,7 +191,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		request.AntiDDoSPackageId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("cdc_id"); ok {
-		cdcId = v.(string)
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
 
@@ -249,7 +245,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
+		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -281,10 +277,9 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	region := client.Region
 
 	eipId := d.Id()
-	cdcId := d.Get("cdc_id").(string)
 	var eip *vpc.Address
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		instance, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
+		instance, errRet := vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -472,7 +467,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
 		// isolated
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			eip, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
+			eip, errRet := vpcService.DescribeEipById(ctx, eipId)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -499,7 +494,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	}
 
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
+		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
