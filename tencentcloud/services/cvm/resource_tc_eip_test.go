@@ -271,10 +271,10 @@ func testAccCheckEipExists(n string) resource.TestCheckFunc {
 		}
 
 		vpcService := svcvpc.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
-		eip, err := vpcService.DescribeEipById(ctx, rs.Primary.ID)
+		eip, err := vpcService.DescribeEipById(ctx, rs.Primary.ID, "")
 		if err != nil {
 			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				eip, err = vpcService.DescribeEipById(ctx, rs.Primary.ID)
+				eip, err = vpcService.DescribeEipById(ctx, rs.Primary.ID, "")
 				if err != nil {
 					return tccommon.RetryError(err)
 				}
@@ -300,10 +300,10 @@ func testAccCheckEipDestroy(s *terraform.State) error {
 			continue
 		}
 
-		eip, err := vpcService.DescribeEipById(ctx, rs.Primary.ID)
+		eip, err := vpcService.DescribeEipById(ctx, rs.Primary.ID, "")
 		if err != nil {
 			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				eip, err = vpcService.DescribeEipById(ctx, rs.Primary.ID)
+				eip, err = vpcService.DescribeEipById(ctx, rs.Primary.ID, "")
 				if err != nil {
 					return tccommon.RetryError(err)
 				}

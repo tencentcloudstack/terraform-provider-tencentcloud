@@ -108,6 +108,12 @@ func ResourceTencentCloudEip() *schema.Resource {
 				Computed:    true,
 				Description: "ID of anti DDos package, it must set when `type` is `AntiDDoSEIP`.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDC Unique ID.",
+			},
+
 			// computed
 			"public_ip": {
 				Type:        schema.TypeString,
@@ -135,6 +141,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	region := client.Region
 
 	var internetChargeType string
+	var cdcId string
 
 	request := vpc.NewAllocateAddressesRequest()
 	if v, ok := d.GetOk("type"); ok {
@@ -184,6 +191,10 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
 		request.AntiDDoSPackageId = helper.String(v.(string))
 	}
+	if v, ok := d.GetOk("cdc_id"); ok {
+		cdcId = v.(string)
+		request.DedicatedClusterId = helper.String(v.(string))
+	}
 
 	eipId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -218,7 +229,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 	// wait for status
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
+		eip, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -247,9 +258,10 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	region := client.Region
 
 	eipId := d.Id()
+	cdcId := d.Get("cdc_id").(string)
 	var eip *vpc.Address
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		instance, errRet := vpcService.DescribeEipById(ctx, eipId)
+		instance, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -402,8 +414,9 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	vpcService := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	eipId := d.Id()
+	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		errRet := vpcService.UnattachEip(ctx, eipId)
+		errRet := vpcService.UnattachEip(ctx, eipId, cdcId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, "DesOperation.MutexTaskRunning")
 		}
@@ -432,7 +445,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
 		// isolated
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			eip, errRet := vpcService.DescribeEipById(ctx, eipId)
+			eip, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -459,7 +472,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	}
 
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
+		eip, errRet := vpcService.DescribeEipById(ctx, eipId, cdcId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}

@@ -83,7 +83,7 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 
 	eipId := d.Get("eip_id").(string)
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet = vpcService.DescribeEipById(ctx, eipId)
+		eip, errRet = vpcService.DescribeEipById(ctx, eipId, "")
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
@@ -120,7 +120,7 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 
 		associationId := fmt.Sprintf("%v::%v", eipId, instanceId)
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			eip, errRet = vpcService.DescribeEipById(ctx, eipId)
+			eip, errRet = vpcService.DescribeEipById(ctx, eipId, "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -183,7 +183,7 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 		id := fmt.Sprintf("%v::%v::%v", eipId, networkId, privateIp)
 
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			eip, errRet = vpcService.DescribeEipById(ctx, eipId)
+			eip, errRet = vpcService.DescribeEipById(ctx, eipId, "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -227,7 +227,7 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 	}
 
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		eip, errRet := vpcService.DescribeEipById(ctx, association.EipId)
+		eip, errRet := vpcService.DescribeEipById(ctx, association.EipId, "")
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -271,7 +271,7 @@ func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta inter
 	}
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		e := vpcService.UnattachEip(ctx, association.EipId)
+		e := vpcService.UnattachEip(ctx, association.EipId, "")
 		if e != nil {
 			return tccommon.RetryError(e, "DesOperation.MutexTaskRunning")
 		}

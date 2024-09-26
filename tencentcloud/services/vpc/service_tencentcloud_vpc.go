@@ -2363,10 +2363,17 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 /*
 EIP
 */
-func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *vpc.Address, errRet error) {
+func (me *VpcService) DescribeEipById(ctx context.Context, eipId, cdcId string) (eip *vpc.Address, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()
 	request.AddressIds = []*string{&eipId}
+	if cdcId != "" {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   helper.String("dedicated-cluster-id"),
+			Values: []*string{&cdcId},
+		})
+	}
+
 	ratelimit.Check(request.GetAction())
 
 	var specArgs connectivity.IacExtInfo
@@ -2696,12 +2703,12 @@ func (me *VpcService) DisassociateNatGatewayAddress(ctx context.Context, request
 	return
 }
 
-func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
+func (me *VpcService) UnattachEip(ctx context.Context, eipId, cdcId string) error {
 	eipUnattachLocker.Lock()
 	defer eipUnattachLocker.Unlock()
 
 	logId := tccommon.GetLogId(ctx)
-	eip, err := me.DescribeEipById(ctx, eipId)
+	eip, err := me.DescribeEipById(ctx, eipId, cdcId)
 	if err != nil {
 		return err
 	}
@@ -2720,7 +2727,7 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 		}
 
 		outErr := resource.Retry(tccommon.ReadRetryTimeout*3, func() *resource.RetryError {
-			eip, err := me.DescribeEipById(ctx, eipId)
+			eip, err := me.DescribeEipById(ctx, eipId, cdcId)
 			if err != nil {
 				return tccommon.RetryError(err)
 			}

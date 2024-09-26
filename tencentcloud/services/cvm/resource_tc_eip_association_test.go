@@ -88,10 +88,10 @@ func testAccCheckEipAssociationDestroy(s *terraform.State) error {
 			return err
 		}
 
-		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId)
+		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId, "")
 		if err != nil {
 			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				eip, err = vpcService.DescribeEipById(ctx, associationId.EipId)
+				eip, err = vpcService.DescribeEipById(ctx, associationId.EipId, "")
 				if err != nil {
 					return tccommon.RetryError(err)
 				}
@@ -129,10 +129,10 @@ func testAccCheckEipAssociationExists(n string) resource.TestCheckFunc {
 		if err != nil {
 			return err
 		}
-		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId)
+		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId, "")
 		if err != nil {
 			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				eip, err = vpcService.DescribeEipById(ctx, associationId.EipId)
+				eip, err = vpcService.DescribeEipById(ctx, associationId.EipId, "")
 				if err != nil {
 					return tccommon.RetryError(err)
 				}
