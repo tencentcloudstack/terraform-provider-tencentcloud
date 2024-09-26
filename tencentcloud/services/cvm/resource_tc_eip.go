@@ -436,9 +436,8 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	vpcService := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	eipId := d.Id()
-	cdcId := d.Get("cdc_id").(string)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		errRet := vpcService.UnattachEip(ctx, eipId, cdcId)
+		errRet := vpcService.UnattachEip(ctx, eipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, "DesOperation.MutexTaskRunning")
 		}

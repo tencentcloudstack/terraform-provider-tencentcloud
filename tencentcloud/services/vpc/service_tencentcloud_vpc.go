@@ -2727,12 +2727,12 @@ func (me *VpcService) DisassociateNatGatewayAddress(ctx context.Context, request
 	return
 }
 
-func (me *VpcService) UnattachEip(ctx context.Context, eipId, cdcId string) error {
+func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 	eipUnattachLocker.Lock()
 	defer eipUnattachLocker.Unlock()
 
 	logId := tccommon.GetLogId(ctx)
-	eip, err := me.DescribeEipById(ctx, eipId, cdcId)
+	eip, err := me.DescribeEipById(ctx, eipId)
 	if err != nil {
 		return err
 	}
@@ -2751,7 +2751,7 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId, cdcId string) erro
 		}
 
 		outErr := resource.Retry(tccommon.ReadRetryTimeout*3, func() *resource.RetryError {
-			eip, err := me.DescribeEipById(ctx, eipId, cdcId)
+			eip, err := me.DescribeEipById(ctx, eipId)
 			if err != nil {
 				return tccommon.RetryError(err)
 			}

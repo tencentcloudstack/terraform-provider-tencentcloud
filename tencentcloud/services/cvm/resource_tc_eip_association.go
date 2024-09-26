@@ -275,9 +275,8 @@ func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	cdcId := d.Get("cdc_id").(string)
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		e := vpcService.UnattachEip(ctx, association.EipId, cdcId)
+		e := vpcService.UnattachEip(ctx, association.EipId)
 		if e != nil {
 			return tccommon.RetryError(e, "DesOperation.MutexTaskRunning")
 		}
