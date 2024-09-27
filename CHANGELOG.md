@@ -1,3 +1,24 @@
+## 1.81.128 (September 27 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_audit_events` ([#2857](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2857))
+* **New Resource:** `tencentcloud_redis_log_delivery` ([#2853](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2853))
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_enis: support `cdc_id` params ([#2855](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2855))
+* data_source/tencentcloud_vpc_subnets: support `cdc_id` params ([#2855](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2855))
+* resource/tencentcloud_cos_bucket: support SSE-KMS encryption ([#2848](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2848))
+* resource/tencentcloud_eip: support `cdc_id` params ([#2855](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2855))
+* resource/tencentcloud_kubernetes_node_pool:  support delete `taints` and `labels` params ([#2837](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2837))
+* resource/tencentcloud_kubernetes_scale_worker: Lift the upper limit of 100 ([#2850](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2850))
+* resource/tencentcloud_monitor_binding_object: update monitor region map ([#2856](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2856))
+* resource/tencentcloud_organization_org_member: support `tags` params ([#2852](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2852))
+* resource/tencentcloud_organization_org_node: support `tags` params ([#2852](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2852))
+* resource/tencentcloud_vpc_end_point: support `cdc_id` params ([#2855](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2855))
+* resource/tencentcloud_vpc_end_point_service: support `cdc_id` params ([#2855](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2855))
+
 ## 1.81.127 (September 26 , 2024)
 
 ENHANCEMENTS:
