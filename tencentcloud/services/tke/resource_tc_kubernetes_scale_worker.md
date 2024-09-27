@@ -19,13 +19,15 @@ variable "scale_instance_type" {
   default = "S2.LARGE16"
 }
 
-resource tencentcloud_kubernetes_scale_worker test_scale {
-  cluster_id = "cls-godovr32"
+resource "tencentcloud_kubernetes_scale_worker" "example" {
+  cluster_id      = "cls-godovr32"
   desired_pod_num = 16
+
   labels = {
     "test1" = "test1",
     "test2" = "test2",
   }
+
   worker_config {
     count                      = 3
     availability_zone          = var.availability_zone
@@ -65,14 +67,14 @@ variable "scale_instance_type" {
   default = "S2.LARGE16"
 }
 
-resource tencentcloud_kubernetes_scale_worker test_scale {
+resource "tencentcloud_kubernetes_scale_worker" "example" {
   cluster_id = "cls-godovr32"
 
   extra_args = [
- 	"root-dir=/var/lib/kubelet"
+    "root-dir=/var/lib/kubelet"
   ]
 
-   labels = {
+  labels = {
     "test1" = "test1",
     "test2" = "test2",
   }
@@ -106,5 +108,5 @@ Import
 tke scale worker can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_scale_worker.test cls-xxx#ins-xxx
+$ terraform import tencentcloud_kubernetes_scale_worker.example cls-mij6c2pq#ins-n6esjkdi,ins-9h3rdxt8,ins-qretqeas
 ```
