@@ -35,6 +35,37 @@ resource "tencentcloud_cos_bucket" "private_bucket" {
 }
 ```
 
+Enable SSE-KMS encryption 
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key"
+  description          = "example of kms key"
+  key_rotation_enabled = false
+  is_enabled           = true
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_cos_bucket" "bucket_basic" {
+  bucket               = "tf-bucket-cdc-${local.app_id}"
+  acl                  = "private"
+  encryption_algorithm = "KMS" #cos/kms for cdc cos
+  kms_id               = tencentcloud_kms_key.example.id
+  versioning_enable    = true
+  acceleration_enable  = true
+  force_clean          = true
+}
+```
+
 Creation of multiple available zone bucket
 
 ```hcl

@@ -188,7 +188,12 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The server-side encryption algorithm to use. Valid value is `AES256`.",
+				Description: "The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `cos/kms`, `cos/kms` is for cdc cos scenario.",
+			},
+			"kms_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS or cos/kms. Set kms id to the specified value. If not specified, the default kms id is used.",
 			},
 			"versioning_enable": {
 				Type:        schema.TypeBool,
@@ -718,12 +723,15 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	// read the encryption algorithm
-	encryption, err := cosService.GetBucketEncryption(ctx, bucket, cdcId)
+	encryption, kmsId, err := cosService.GetBucketEncryption(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
 	if err = d.Set("encryption_algorithm", encryption); err != nil {
 		return fmt.Errorf("setting encryption error: %v", err)
+	}
+	if err = d.Set("kms_id", kmsId); err != nil {
+		return fmt.Errorf("setting kms_id error: %v", err)
 	}
 
 	// read the versioning
@@ -894,12 +902,11 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 
 	}
 
-	if d.HasChange("encryption_algorithm") {
+	if d.HasChange("encryption_algorithm") || d.HasChange("kms_id") {
 		err := resourceTencentCloudCosBucketEncryptionUpdate(ctx, meta, d)
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("versioning_enable") {
@@ -1005,6 +1012,7 @@ func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, meta int
 
 	bucket := d.Get("bucket").(string)
 	encryption := d.Get("encryption_algorithm").(string)
+	kmsId := d.Get("kms_id").(string)
 	cdcId := d.Get("cdc_id").(string)
 	if encryption == "" {
 		request := s3.DeleteBucketEncryptionInput{
@@ -1029,7 +1037,8 @@ func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, meta int
 	request.ServerSideEncryptionConfiguration = &s3.ServerSideEncryptionConfiguration{}
 	rules := make([]*s3.ServerSideEncryptionRule, 0)
 	defaultRule := &s3.ServerSideEncryptionByDefault{
-		SSEAlgorithm: aws.String(encryption),
+		SSEAlgorithm:   aws.String(encryption),
+		KMSMasterKeyID: aws.String(kmsId),
 	}
 	rule := &s3.ServerSideEncryptionRule{
 		ApplyServerSideEncryptionByDefault: defaultRule,

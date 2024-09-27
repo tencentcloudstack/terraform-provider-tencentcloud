@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket: support SSE-KMS encryption
+```
+

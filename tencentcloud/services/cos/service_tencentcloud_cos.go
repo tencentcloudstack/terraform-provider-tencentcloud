@@ -732,7 +732,7 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string, cdcId
 	return
 }
 
-func (me *CosService) GetBucketEncryption(ctx context.Context, bucket string, cdcId string) (encryption string, errRet error) {
+func (me *CosService) GetBucketEncryption(ctx context.Context, bucket string, cdcId string) (encryption string, kmsId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := s3.GetBucketEncryptionInput{
@@ -757,6 +757,10 @@ func (me *CosService) GetBucketEncryption(ctx context.Context, bucket string, cd
 
 	if len(response.ServerSideEncryptionConfiguration.Rules) > 0 {
 		encryption = *response.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm
+		kMSMasterKeyID := response.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID
+		if kMSMasterKeyID != nil {
+			kmsId = *kMSMasterKeyID
+		}
 	}
 	return
 }
