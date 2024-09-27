@@ -39,6 +39,7 @@ The following arguments are supported:
 * `pay_uin` - (Optional, String) The uin which is payment account on behalf.When `PermissionIds` contains 7, is required.
 * `record_id` - (Optional, Int) Create member record ID.When create failed and needs to be recreated, is required.
 * `remark` - (Optional, String) Notes.
+* `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
 

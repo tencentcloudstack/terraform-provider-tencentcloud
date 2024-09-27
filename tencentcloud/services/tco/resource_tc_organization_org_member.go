@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -130,6 +131,11 @@ func ResourceTencentCloudOrganizationOrgMember() *schema.Resource {
 				Computed:    true,
 				Description: "The member name which is payment account on behalf.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -177,6 +183,17 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 
 	if v, ok := d.GetOk("pay_uin"); ok {
 		request.PayUin = helper.String(v.(string))
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			tmpKey := k
+			tmpValue := v
+			request.Tags = append(request.Tags, &organization.Tag{
+				TagKey:   &tmpKey,
+				TagValue: &tmpValue,
+			})
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -298,6 +315,14 @@ func resourceTencentCloudOrganizationOrgMemberRead(d *schema.ResourceData, meta 
 		_ = d.Set("pay_name", orgMember.PayName)
 	}
 
+	if len(orgMember.Tags) != 0 {
+		tags := make(map[string]string, len(orgMember.Tags))
+		for _, tag := range orgMember.Tags {
+			tags[*tag.TagKey] = *tag.TagValue
+		}
+		_ = d.Set("tags", tags)
+	}
+
 	return nil
 }
 
@@ -306,6 +331,7 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := organization.NewMoveOrganizationNodeMembersRequest()
 	updateRequest := organization.NewUpdateOrganizationMemberRequest()
@@ -401,6 +427,17 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 	if UpdateErr != nil {
 		log.Printf("[CRITAL]%s update organization orgMember failed, reason:%+v", logId, UpdateErr)
 		return UpdateErr
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("organization", "member", tcClient.Region, orgMemberId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 	return resourceTencentCloudOrganizationOrgMemberRead(d, meta)
 }

@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -53,6 +54,11 @@ func ResourceTencentCloudOrganizationOrgNode() *schema.Resource {
 				Computed:    true,
 				Description: "Node update time.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -83,6 +89,16 @@ func resourceTencentCloudOrganizationOrgNodeCreate(d *schema.ResourceData, meta 
 		request.Remark = helper.String(v.(string))
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			tmpKey := k
+			tmpValue := v
+			request.Tags = append(request.Tags, &organization.Tag{
+				TagKey:   &tmpKey,
+				TagValue: &tmpValue,
+			})
+		}
+	}
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().AddOrganizationNode(request)
 		if e != nil {
@@ -148,6 +164,14 @@ func resourceTencentCloudOrganizationOrgNodeRead(d *schema.ResourceData, meta in
 		_ = d.Set("update_time", orgNode.UpdateTime)
 	}
 
+	if len(orgNode.Tags) != 0 {
+		tags := make(map[string]string, len(orgNode.Tags))
+		for _, tag := range orgNode.Tags {
+			tags[*tag.TagKey] = *tag.TagValue
+		}
+		_ = d.Set("tags", tags)
+	}
+
 	return nil
 }
 
@@ -156,12 +180,14 @@ func resourceTencentCloudOrganizationOrgNodeUpdate(d *schema.ResourceData, meta 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	request := organization.NewUpdateOrganizationNodeRequest()
 
 	orgNodeId := d.Id()
 
 	request.NodeId = helper.StrToUint64Point(orgNodeId)
 
+	hasChange := false
 	if d.HasChange("parent_node_id") {
 		return fmt.Errorf("`parent_node_id` do not support change now.")
 	}
@@ -169,31 +195,45 @@ func resourceTencentCloudOrganizationOrgNodeUpdate(d *schema.ResourceData, meta 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
+			hasChange = true
 		}
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
+			hasChange = true
 		}
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().UpdateOrganizationNode(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
+	if hasChange {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().UpdateOrganizationNode(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s create organization orgNode failed, reason:%+v", logId, err)
-		return err
+		if err != nil {
+			log.Printf("[CRITAL]%s create organization orgNode failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("organization", "node", tcClient.Region, orgNodeId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
 	return resourceTencentCloudOrganizationOrgNodeRead(d, meta)
 }
 

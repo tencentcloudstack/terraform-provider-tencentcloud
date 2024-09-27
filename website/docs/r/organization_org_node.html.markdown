@@ -28,6 +28,7 @@ The following arguments are supported:
 * `name` - (Required, String) Node name.
 * `parent_node_id` - (Required, Int) Parent node ID.
 * `remark` - (Optional, String) Notes.
+* `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
 
