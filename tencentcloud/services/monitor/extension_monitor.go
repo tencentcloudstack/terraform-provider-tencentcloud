@@ -52,6 +52,7 @@ var monitorReceiveLanguages = []string{
 }
 
 /*regions in monitor*/
+// https://tapd.woa.com/qcloud_api/markdown_wikis/show/#1210161711000430909
 var MonitorRegionMap = map[string]string{
 	"ap-guangzhou":       "gz",
 	"ap-shenzhen-fsi":    "szjr",
@@ -83,4 +84,9 @@ var MonitorRegionMap = map[string]string{
 	"na-toronto":         "ca",
 	"eu-frankfurt":       "de",
 	"eu-moscow":          "ru",
+	"ap-qingyuan":        "qy",
+	"ap-xibei-ec":        "xbec",
+	"ap-hefei-ec":        "hfeec",
+	"ap-jakarta":         "jkt",
+	"sa-saopaulo":        "sao",
 }
