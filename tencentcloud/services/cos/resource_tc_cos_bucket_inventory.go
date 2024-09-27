@@ -83,9 +83,9 @@ func ResourceTencentCloudCosBucketInventory() *schema.Resource {
 				},
 			},
 			"optional_fields": {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
 				Description: "Analysis items to include in the inventory result	.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
