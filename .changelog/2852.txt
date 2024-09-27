@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_organization_org_node: support `tags` params
+```
+
+```release-note:enhancement
+resource/tencentcloud_organization_org_member: support `tags` params
+```
