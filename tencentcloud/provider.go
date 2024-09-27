@@ -1333,6 +1333,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_replicate_attachment":                                             crs.ResourceTencentCloudRedisReplicateAttachment(),
 			"tencentcloud_redis_backup_operation":                                                 crs.ResourceTencentCloudRedisBackupOperation(),
 			"tencentcloud_redis_security_group_attachment":                                        crs.ResourceTencentCloudRedisSecurityGroupAttachment(),
+			"tencentcloud_redis_log_delivery":                                                     crs.ResourceTencentCloudRedisLogDelivery(),
 			"tencentcloud_as_load_balancer":                                                       as.ResourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                                                      as.ResourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                                                       as.ResourceTencentCloudAsScalingGroup(),
