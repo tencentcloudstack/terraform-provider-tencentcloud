@@ -38,6 +38,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `cdc_id` - CDC instance ID.
 * `create_time` - Create Time.
 * `end_point_count` - Count of end point.
 * `service_owner` - APPID.

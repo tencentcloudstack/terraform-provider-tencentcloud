@@ -170,6 +170,11 @@ func DataSourceTencentCloudEnis() *schema.Resource {
 							Computed:    true,
 							Description: "Creation time of the ENI.",
 						},
+						"cdc_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CDC instance ID.",
+						},
 					},
 				},
 			},
@@ -275,6 +280,7 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 			"ipv4s":           ipv4s,
 			"security_groups": sgs,
 			"tags":            respTags,
+			"cdc_id":          eni.CdcId,
 		}
 
 		if eni.Attachment != nil {

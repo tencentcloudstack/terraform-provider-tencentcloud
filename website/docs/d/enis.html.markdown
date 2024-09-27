@@ -39,6 +39,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `enis` - An information list of ENIs. Each element contains the following attributes:
+  * `cdc_id` - CDC instance ID.
   * `create_time` - Creation time of the ENI.
   * `description` - Description of the ENI.
   * `id` - ID of the ENI.

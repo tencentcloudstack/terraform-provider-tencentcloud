@@ -88,6 +88,7 @@ The `ipv4s` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `cdc_id` - CDC instance ID.
 * `create_time` - Creation time of the ENI.
 * `ipv4_info` - An information list of IPv4s. Each element contains the following attributes:
   * `description` - Description of the IP.
