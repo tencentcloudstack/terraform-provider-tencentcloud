@@ -713,7 +713,6 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx context.Context) err
 	clusterId := items[0]
 	nodePoolId := items[1]
 
-
 	err := resourceTencentCloudKubernetesNodePoolUpdateTaints(ctx, clusterId, nodePoolId)
 	if err != nil {
 		return err
