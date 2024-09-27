@@ -149,6 +149,11 @@ func ResourceTencentCloudEni() *schema.Resource {
 				Computed:    true,
 				Description: "An information list of IPv4s. Each element contains the following attributes:",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "CDC instance ID.",
+			},
 		},
 	}
 }
@@ -370,6 +375,10 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 	if !manually && !count {
 		// import mode
 		_ = d.Set("ipv4_count", len(ipv4s))
+	}
+
+	if eni.CdcId != nil {
+		_ = d.Set("cdc_id", eni.CdcId)
 	}
 
 	tags := make(map[string]string, len(eni.TagSet))

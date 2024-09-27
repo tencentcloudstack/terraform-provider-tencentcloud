@@ -242,6 +242,7 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		infoMap["subnet_id"] = item.subnetId
 		infoMap["name"] = item.name
 		infoMap["cidr_block"] = item.cidr
+		infoMap["cdc_id"] = item.cdcId
 		infoMap["is_default"] = item.isDefault
 		infoMap["is_multicast"] = item.isMulticast
 		infoMap["route_table_id"] = item.routeTableId

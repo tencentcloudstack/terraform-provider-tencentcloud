@@ -1,0 +1,19 @@
+```release-note:enhancement
+resource/tencentcloud_eip: support `cdc_id` params
+```
+
+```release-note:enhancement
+data_source/tencentcloud_enis: support `cdc_id` params
+```
+
+```release-note:enhancement
+data_source/tencentcloud_vpc_subnets: support `cdc_id` params
+```
+
+```release-note:enhancement
+resource/tencentcloud_vpc_end_point: support `cdc_id` params
+```
+
+```release-note:enhancement
+resource/tencentcloud_vpc_end_point_service: support `cdc_id` params
+```

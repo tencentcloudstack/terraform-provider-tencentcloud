@@ -80,6 +80,12 @@ func ResourceTencentCloudVpcEndPoint() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Create Time.",
 			},
+
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "CDC instance ID.",
+			},
 		},
 	}
 }
@@ -211,6 +217,10 @@ func resourceTencentCloudVpcEndPointRead(d *schema.ResourceData, meta interface{
 
 	if endPoint.GroupSet != nil {
 		_ = d.Set("security_groups_ids", endPoint.GroupSet)
+	}
+
+	if endPoint.CdcId != nil {
+		_ = d.Set("cdc_id", endPoint.CdcId)
 	}
 
 	return nil
