@@ -724,6 +724,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_audit_cos_regions":                            audit.DataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                              audit.DataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                       audit.DataSourceTencentCloudAudits(),
+			"tencentcloud_audit_events":                                 audit.DataSourceTencentCloudAuditEvents(),
 			"tencentcloud_cynosdb_clusters":                             cynosdb.DataSourceTencentCloudCynosdbClusters(),
 			"tencentcloud_cynosdb_instances":                            cynosdb.DataSourceTencentCloudCynosdbInstances(),
 			"tencentcloud_cynosdb_zone_config":                          cynosdb.DataSourceTencentCloudCynosdbZoneConfig(),

@@ -175,3 +175,54 @@ func (me *AuditService) DeleteAuditTrackById(ctx context.Context, trackId string
 
 	return
 }
+
+func (me *AuditService) DescribeAuditEventByFilter(ctx context.Context, param map[string]interface{}) (ret []*audit.Event, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = audit.NewDescribeEventsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MaxResults" {
+			request.MaxResults = v.(*uint64)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*uint64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*uint64)
+		}
+		if k == "LookupAttributes" {
+			request.LookupAttributes = v.([]*audit.LookupAttribute)
+		}
+		if k == "IsReturnLocation" {
+			request.IsReturnLocation = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	for {
+		response, err := me.client.UseAuditClient().DescribeEvents(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		ret = append(ret, response.Response.Events...)
+		if *response.Response.ListOver == true {
+			break
+		}
+
+		request.NextToken = response.Response.NextToken
+	}
+
+	return
+}
