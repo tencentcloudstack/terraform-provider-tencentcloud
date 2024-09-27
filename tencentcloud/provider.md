@@ -155,6 +155,7 @@ Cloud Audit(Audit)
     tencentcloud_audit_cos_regions
     tencentcloud_audit_key_alias
     tencentcloud_audits
+    tencentcloud_audit_events
 
   Resource
     tencentcloud_audit
