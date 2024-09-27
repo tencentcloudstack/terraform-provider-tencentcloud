@@ -95,8 +95,8 @@ func DataSourceTencentCloudApiGatewayApiAppApi() *schema.Resource {
 							Description: "API authentication type. Possible values are SECRET (key pair authentication), NONE (authentication-free), and OAUTH.",
 						},
 						"api_business_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
 							Description: "Type of OAUTH API. Possible values are NORMAL (Business API), OAUTH (Authorization API).",
 						},
 						"auth_relation_api_id": {

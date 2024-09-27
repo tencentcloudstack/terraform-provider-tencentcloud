@@ -2092,6 +2092,57 @@ func (c *Client) DescribeInstanceEventsWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeInstanceLogDeliveryRequest() (request *DescribeInstanceLogDeliveryRequest) {
+    request = &DescribeInstanceLogDeliveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeInstanceLogDelivery")
+    
+    
+    return
+}
+
+func NewDescribeInstanceLogDeliveryResponse() (response *DescribeInstanceLogDeliveryResponse) {
+    response = &DescribeInstanceLogDeliveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceLogDelivery
+// 本接口（DescribeInstanceLogDelivery）用于查询实例的日志投递配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstanceLogDelivery(request *DescribeInstanceLogDeliveryRequest) (response *DescribeInstanceLogDeliveryResponse, err error) {
+    return c.DescribeInstanceLogDeliveryWithContext(context.Background(), request)
+}
+
+// DescribeInstanceLogDelivery
+// 本接口（DescribeInstanceLogDelivery）用于查询实例的日志投递配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstanceLogDeliveryWithContext(ctx context.Context, request *DescribeInstanceLogDeliveryRequest) (response *DescribeInstanceLogDeliveryResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceLogDeliveryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceLogDelivery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceLogDeliveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceMonitorBigKeyRequest() (request *DescribeInstanceMonitorBigKeyRequest) {
     request = &DescribeInstanceMonitorBigKeyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2508,6 +2559,7 @@ func NewDescribeInstanceNodeInfoResponse() (response *DescribeInstanceNodeInfoRe
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
@@ -2520,6 +2572,7 @@ func (c *Client) DescribeInstanceNodeInfo(request *DescribeInstanceNodeInfoReque
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
@@ -5186,6 +5239,61 @@ func (c *Client) ModifyInstanceEventWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyInstanceLogDeliveryRequest() (request *ModifyInstanceLogDeliveryRequest) {
+    request = &ModifyInstanceLogDeliveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstanceLogDelivery")
+    
+    
+    return
+}
+
+func NewModifyInstanceLogDeliveryResponse() (response *ModifyInstanceLogDeliveryResponse) {
+    response = &ModifyInstanceLogDeliveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceLogDelivery
+// 本接口（ModifyInstanceLogDelivery）用于开启或关闭投递实例日志到CLS。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) ModifyInstanceLogDelivery(request *ModifyInstanceLogDeliveryRequest) (response *ModifyInstanceLogDeliveryResponse, err error) {
+    return c.ModifyInstanceLogDeliveryWithContext(context.Background(), request)
+}
+
+// ModifyInstanceLogDelivery
+// 本接口（ModifyInstanceLogDelivery）用于开启或关闭投递实例日志到CLS。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) ModifyInstanceLogDeliveryWithContext(ctx context.Context, request *ModifyInstanceLogDeliveryRequest) (response *ModifyInstanceLogDeliveryResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceLogDeliveryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceLogDelivery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceLogDeliveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyInstanceParamsRequest() (request *ModifyInstanceParamsRequest) {
     request = &ModifyInstanceParamsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6230,7 +6338,7 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 }
 
 // UpgradeInstance
-// 变更实例配置
+// 本接口（UpgradeInstance）用于变更实例的配置规格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
@@ -6255,7 +6363,7 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 }
 
 // UpgradeInstance
-// 变更实例配置
+// 本接口（UpgradeInstance）用于变更实例的配置规格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"

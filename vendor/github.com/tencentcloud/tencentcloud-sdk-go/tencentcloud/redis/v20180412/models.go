@@ -2272,7 +2272,7 @@ type DescribeCommonDBInstancesRequestParams struct {
 	// 计费类型过滤列表；0表示包年包月，1表示按量计费
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 实例ID过滤信息列表
+	// 实例ID过滤信息列表，数组最大长度限制为100
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 实例名称过滤信息列表
@@ -2315,7 +2315,7 @@ type DescribeCommonDBInstancesRequest struct {
 	// 计费类型过滤列表；0表示包年包月，1表示按量计费
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 实例ID过滤信息列表
+	// 实例ID过滤信息列表，数组最大长度限制为100
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 实例名称过滤信息列表
@@ -2806,49 +2806,49 @@ func (r *DescribeInstanceDTSInfoResponse) FromJsonString(s string) error {
 }
 
 type DescribeInstanceDTSInstanceInfo struct {
-	// 地域ID
+	// 地域 ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
-	// 实例ID
+	// 实例 ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 仓库ID
+	// 仓库ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetId *int64 `json:"SetId,omitnil,omitempty" name:"SetId"`
 
-	// 可用区ID
+	// 可用区ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 实例类型
+	// 实例类型。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 实例名称
+	// 实例名称。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例访问地址
+	// 实例访问地址。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 状态
+	// 状态。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 // Predefined struct for user
 type DescribeInstanceDealDetailRequestParams struct {
-	// 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。
+	// 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。数组最大长度限制为10
 	DealIds []*string `json:"DealIds,omitnil,omitempty" name:"DealIds"`
 }
 
 type DescribeInstanceDealDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。
+	// 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。数组最大长度限制为10
 	DealIds []*string `json:"DealIds,omitnil,omitempty" name:"DealIds"`
 }
 
@@ -3018,6 +3018,63 @@ func (r *DescribeInstanceEventsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeInstanceEventsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeInstanceLogDeliveryRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeInstanceLogDeliveryRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeInstanceLogDeliveryRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstanceLogDeliveryRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceLogDeliveryRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeInstanceLogDeliveryResponseParams struct {
+	// 实例慢日志投递信息。
+	SlowLog *LogDeliveryInfo `json:"SlowLog,omitnil,omitempty" name:"SlowLog"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeInstanceLogDeliveryResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeInstanceLogDeliveryResponseParams `json:"Response"`
+}
+
+func (r *DescribeInstanceLogDeliveryResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstanceLogDeliveryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4542,16 +4599,18 @@ type DescribeParamTemplateInfoResponseParams struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 产品类型。
-	// - 2：Redis 2.8内存版（标准架构）。
-	// - 3：CKV 3.2内存版（标准架构）。
-	// - 4：CKV 3.2内存版（集群架构）。
-	// - 5：Redis 2.8内存版（单机）。
-	// - 6：Redis 4.0内存版（标准架构）。
-	// - 7：Redis 4.0内存版（集群架构）。
-	// - 8：Redis 5.0内存版（标准架构）。
-	// - 9：Redis 5.0内存版（集群架构）。
-	// - 15：Redis 6.2内存版（标准架构）。
-	// - 16：Redis 6.2内存版（集群架构）。
+	// - 2：Redis 2.8 内存版（标准架构）。
+	// - 3：CKV 3.2 内存版（标准架构）。
+	// - 4：CKV 3.2 内存版（集群架构）。
+	// - 5：Redis 2.8 内存版（单机）。
+	// - 6：Redis 4.0 内存版（标准架构）。
+	// - 7：Redis 4.0 内存版（集群架构）。
+	// - 8：Redis 5.0 内存版（标准架构）。
+	// - 9：Redis 5.0 内存版（集群架构）。
+	// - 15：Redis 6.2 内存版（标准架构）。
+	// - 16：Redis 6.2 内存版（集群架构）。
+	// - 17：Redis 7.0 内存版（标准架构）。
+	// - 18：Redis 7.0 内存版（集群架构）。
 	ProductType *uint64 `json:"ProductType,omitnil,omitempty" name:"ProductType"`
 
 	// 参数模板描述。
@@ -4592,12 +4651,14 @@ type DescribeParamTemplatesRequestParams struct {
 	// - 9：Redis 5.0 内存版（集群架构）。
 	// - 15：Redis 6.2 内存版（标准架构）。
 	// - 16：Redis 6.2 内存版（集群架构）。
+	// - 17：Redis 7.0 内存版（标准架构）。
+	// - 18：Redis 7.0 内存版（集群架构）。
 	ProductTypes []*int64 `json:"ProductTypes,omitnil,omitempty" name:"ProductTypes"`
 
-	// 模板名称数组。
+	// 模板名称数组。数组最大长度限制为50
 	TemplateNames []*string `json:"TemplateNames,omitnil,omitempty" name:"TemplateNames"`
 
-	// 模板ID数组。
+	// 模板ID数组。数组最大长度限制为50
 	TemplateIds []*string `json:"TemplateIds,omitnil,omitempty" name:"TemplateIds"`
 }
 
@@ -4614,12 +4675,14 @@ type DescribeParamTemplatesRequest struct {
 	// - 9：Redis 5.0 内存版（集群架构）。
 	// - 15：Redis 6.2 内存版（标准架构）。
 	// - 16：Redis 6.2 内存版（集群架构）。
+	// - 17：Redis 7.0 内存版（标准架构）。
+	// - 18：Redis 7.0 内存版（集群架构）。
 	ProductTypes []*int64 `json:"ProductTypes,omitnil,omitempty" name:"ProductTypes"`
 
-	// 模板名称数组。
+	// 模板名称数组。数组最大长度限制为50
 	TemplateNames []*string `json:"TemplateNames,omitnil,omitempty" name:"TemplateNames"`
 
-	// 模板ID数组。
+	// 模板ID数组。数组最大长度限制为50
 	TemplateIds []*string `json:"TemplateIds,omitnil,omitempty" name:"TemplateIds"`
 }
 
@@ -7289,6 +7352,24 @@ func (r *KillMasterGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type LogDeliveryInfo struct {
+	// 日志投递开启状态，开启：true，关闭：false
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 日志集ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// 日志主题ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// 日志集所在地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
+}
+
 // Predefined struct for user
 type ManualBackupInstanceRequestParams struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
@@ -8042,6 +8123,127 @@ func (r *ModifyInstanceEventResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyInstanceLogDeliveryRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 日志类型。当前仅支持设置为slowlog，指慢查询日志。
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 日志投递开启状态。
+	// - true：开启。
+	// - false：关闭。
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 投递的日志集ID。
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// 投递的日志主题ID。
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// 日志集名称。若**LogsetId**未指定具体的日志集ID，请配置该参数，设置日志集名称，系统会以设置的日志集名称自动创建新的日志集。
+	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
+
+	// 日志主题名称，TopicId为空时必传，会自动创建新的日志主题。
+	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
+
+	// 日志集所在地域，不传默认使用实例所在地域。
+	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
+
+	// 日志存储时间，默认为30天，可选范围1-3600天。
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// 创建日志主题时，是否创建索引。
+	CreateIndex *bool `json:"CreateIndex,omitnil,omitempty" name:"CreateIndex"`
+}
+
+type ModifyInstanceLogDeliveryRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 日志类型。当前仅支持设置为slowlog，指慢查询日志。
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 日志投递开启状态。
+	// - true：开启。
+	// - false：关闭。
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 投递的日志集ID。
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// 投递的日志主题ID。
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// 日志集名称。若**LogsetId**未指定具体的日志集ID，请配置该参数，设置日志集名称，系统会以设置的日志集名称自动创建新的日志集。
+	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
+
+	// 日志主题名称，TopicId为空时必传，会自动创建新的日志主题。
+	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
+
+	// 日志集所在地域，不传默认使用实例所在地域。
+	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
+
+	// 日志存储时间，默认为30天，可选范围1-3600天。
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// 创建日志主题时，是否创建索引。
+	CreateIndex *bool `json:"CreateIndex,omitnil,omitempty" name:"CreateIndex"`
+}
+
+func (r *ModifyInstanceLogDeliveryRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceLogDeliveryRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LogType")
+	delete(f, "Enabled")
+	delete(f, "LogsetId")
+	delete(f, "TopicId")
+	delete(f, "LogsetName")
+	delete(f, "TopicName")
+	delete(f, "LogRegion")
+	delete(f, "Period")
+	delete(f, "CreateIndex")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceLogDeliveryRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceLogDeliveryResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyInstanceLogDeliveryResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceLogDeliveryResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceLogDeliveryResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceLogDeliveryResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyInstanceParamsRequestParams struct {
 	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -8082,7 +8284,7 @@ func (r *ModifyInstanceParamsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceParamsResponseParams struct {
-	// 说明修改参数配置是否成功。<br><li>true：指修改成功；<br><li>false：指修改失败。<br>
+	// 说明修改参数配置是否成功。<br><li>true：指修改成功；</li><li>false：指修改失败。</li>
 	Changed *bool `json:"Changed,omitnil,omitempty" name:"Changed"`
 
 	// 任务ID。
@@ -8177,7 +8379,7 @@ type ModifyInstanceRequestParams struct {
 	// 修改实例操作，如填写：rename-表示实例重命名；modifyProject-修改实例所属项目；modifyAutoRenew-修改实例续费标记
 	Operation *string `json:"Operation,omitnil,omitempty" name:"Operation"`
 
-	// 实例Id
+	// 实例Id，每次请求的实例的上限为10。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 实例的新名称
@@ -8205,7 +8407,7 @@ type ModifyInstanceRequest struct {
 	// 修改实例操作，如填写：rename-表示实例重命名；modifyProject-修改实例所属项目；modifyAutoRenew-修改实例续费标记
 	Operation *string `json:"Operation,omitnil,omitempty" name:"Operation"`
 
-	// 实例Id
+	// 实例Id，每次请求的实例的上限为10。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 实例的新名称
@@ -9561,7 +9763,7 @@ func (r *StartupInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type StartupInstanceResponseParams struct {
-	// 任务id
+	// 该字段已废弃，请通过查询实例接口获取到的状态来判断实例是否已解隔离
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9964,7 +10166,7 @@ type UpgradeInstanceRequestParams struct {
 	// 指实例变更后的副本数量。<ul><li>每次只能修改参数RedisReplicasNum、MemSize和RedisShardNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>多AZ实例修改副本时必须要传入NodeSet。</li></ul>
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
-	// 多AZ实例，增加副本时的附带信息，包括副本的可用区和副本的类型（NodeType为1）。非多AZ实例不需要配置该参数。
+	// 多AZ实例，增加副本时的节点信息，包括副本的 ID 编号及可用区信息。非多AZ实例不需要配置该参数。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
 }
 
@@ -9983,7 +10185,7 @@ type UpgradeInstanceRequest struct {
 	// 指实例变更后的副本数量。<ul><li>每次只能修改参数RedisReplicasNum、MemSize和RedisShardNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>多AZ实例修改副本时必须要传入NodeSet。</li></ul>
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
-	// 多AZ实例，增加副本时的附带信息，包括副本的可用区和副本的类型（NodeType为1）。非多AZ实例不需要配置该参数。
+	// 多AZ实例，增加副本时的节点信息，包括副本的 ID 编号及可用区信息。非多AZ实例不需要配置该参数。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
 }
 

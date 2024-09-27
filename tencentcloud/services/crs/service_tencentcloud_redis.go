@@ -2000,3 +2000,32 @@ func (me *RedisService) DescribeRedisClustersByFilter(ctx context.Context, param
 	Clusters = response.Response.Resources
 	return
 }
+
+func (me *RedisService) DescribeRedisLogDeliveryById(ctx context.Context, instanceId string) (ret *redis.LogDeliveryInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := redis.NewDescribeInstanceLogDeliveryRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeInstanceLogDelivery(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.SlowLog
+	return
+}
