@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_binding_object: update monitor region map
+```
