@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -41,7 +40,6 @@ func resourceTencentCloudRedisStartupInstanceOperationCreate(d *schema.ResourceD
 
 	var (
 		request    = redis.NewStartupInstanceRequest()
-		response   = redis.NewStartupInstanceResponse()
 		instanceId string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -56,7 +54,6 @@ func resourceTencentCloudRedisStartupInstanceOperationCreate(d *schema.ResourceD
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -67,21 +64,19 @@ func resourceTencentCloudRedisStartupInstanceOperationCreate(d *schema.ResourceD
 	d.SetId(instanceId)
 
 	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	taskId := *response.Response.TaskId
 	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
+		instance, err := service.DescribeRedisInstanceById(ctx, d.Id())
 		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
-		if ok {
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("redis instance is nil, retry..."))
+		}
+		if *instance.Status == REDIS_STATUS_ONLINE {
 			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("startup instance is processing"))
 		}
+		log.Printf("[DEBUG]%s api[%s] redis instance status is %v[%s], need 2[online], retry...", logId, request.GetAction(), *instance.Status, REDIS_STATUS[*instance.Status])
+		return resource.RetryableError(fmt.Errorf("redis instance is %v, need 2, retry...", *instance.Status))
 	})
 
 	if err != nil {
