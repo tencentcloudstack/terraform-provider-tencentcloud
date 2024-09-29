@@ -34,25 +34,30 @@ func ResourceTencentCloudTeoFunctionRuntimeEnvironment() *schema.Resource {
 
 			"function_id": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
+				ForceNew:    true,
 				Description: "ID of the Function.",
 			},
 
 			"environment_variables": {
 				Type:        schema.TypeList,
+				Required:    true,
 				Description: "The environment variable list. The function runtime environment supports a maximum of 64 variables. This field is required when the operation type is set to \"setEnvironmentVariable\", \"deleteEnvironmentVariable\", or \"resetEnvironmentVariable\".",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
+							Required:    true,
 							Description: "The name of the variable, which is limited to alphanumeric characters and the special characters \"@\", \".\", \"-\", and \"_\". It can have a maximum of 64 bytes and should not be duplicated.",
 						},
 						"value": {
 							Type:        schema.TypeString,
+							Required:    true,
 							Description: "The value of the variable, which is limited to a maximum of 5000 bytes. The default value is empty.",
 						},
 						"type": {
 							Type:        schema.TypeString,
+							Required:    true,
 							Description: "The type of the variable can have the following values:\n  - string: Represents a string type.\n  - json: Represents a JSON object type.\nThe default value is \"string\".",
 						},
 					},
@@ -66,20 +71,71 @@ func resourceTencentCloudTeoFunctionRuntimeEnvironmentCreate(d *schema.ResourceD
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_function_runtime_environment.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
 	var (
 		zoneId     string
 		functionId string
 	)
+	var (
+		request  = teov20220901.NewHandleFunctionRuntimeEnvironmentRequest()
+		response = teov20220901.NewHandleFunctionRuntimeEnvironmentResponse()
+	)
+
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
 	}
-	if v, ok := d.GetOk("zone_id"); ok {
+	if v, ok := d.GetOk("function_id"); ok {
 		functionId = v.(string)
 	}
 
+	request.ZoneId = helper.String(zoneId)
+
+	request.FunctionId = helper.String(functionId)
+
+	if v, ok := d.GetOk("environment_variables"); ok {
+		for _, item := range v.([]interface{}) {
+			environmentVariablesMap := item.(map[string]interface{})
+			functionEnvironmentVariable := teov20220901.FunctionEnvironmentVariable{}
+			if v, ok := environmentVariablesMap["key"]; ok {
+				functionEnvironmentVariable.Key = helper.String(v.(string))
+			}
+			if v, ok := environmentVariablesMap["value"]; ok {
+				functionEnvironmentVariable.Value = helper.String(v.(string))
+			}
+			if v, ok := environmentVariablesMap["type"]; ok {
+				functionEnvironmentVariable.Type = helper.String(v.(string))
+			}
+			request.EnvironmentVariables = append(request.EnvironmentVariables, &functionEnvironmentVariable)
+		}
+	}
+
+	if err := resourceTencentCloudTeoFunctionRuntimeEnvironmentCreatePostFillRequest0(ctx, request); err != nil {
+		return err
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().HandleFunctionRuntimeEnvironmentWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create teo function runtime environment failed, reason:%+v", logId, err)
+		return err
+	}
+
+	_ = response
+
 	d.SetId(strings.Join([]string{zoneId, functionId}, tccommon.FILED_SP))
 
-	return resourceTencentCloudTeoFunctionRuntimeEnvironmentUpdate(d, meta)
+	return resourceTencentCloudTeoFunctionRuntimeEnvironmentRead(d, meta)
 }
 
 func resourceTencentCloudTeoFunctionRuntimeEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
@@ -101,7 +157,7 @@ func resourceTencentCloudTeoFunctionRuntimeEnvironmentRead(d *schema.ResourceDat
 
 	_ = d.Set("zone_id", zoneId)
 
-	_ = d.Set("zone_id", functionId)
+	_ = d.Set("function_id", functionId)
 
 	respData, err := service.DescribeTeoFunctionRuntimeEnvironmentById(ctx, zoneId, functionId)
 	if err != nil {
