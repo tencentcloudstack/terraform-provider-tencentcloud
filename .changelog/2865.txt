@@ -1,0 +1,15 @@
+```release-note:enhancement
+tencentcloud_teo_function
+```
+
+```release-note:enhancement
+tencentcloud_teo_function_rule
+```
+
+```release-note:enhancement
+tencentcloud_teo_function_rule_priority
+```
+
+```release-note:enhancement
+tencentcloud_teo_function_runtime_environment
+```
