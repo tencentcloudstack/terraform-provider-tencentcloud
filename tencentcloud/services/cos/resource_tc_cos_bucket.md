@@ -20,6 +20,16 @@ resource "tencentcloud_cos_bucket" "private_bucket" {
 Private Bucket with CDC cluster
 
 ```hcl
+provider "tencentcloud" {
+  cos_domain = "https://${local.cdc_id}.cos-cdc.${local.region}.myqcloud.com/"
+  region     = local.region
+}
+
+locals {
+  region = "ap-guangzhou"
+  cdc_id = "cluster-262n63e8"
+}
+
 data "tencentcloud_user_info" "info" {}
 
 locals {
@@ -28,7 +38,6 @@ locals {
 
 resource "tencentcloud_cos_bucket" "private_bucket" {
   bucket            = "private-bucket-${local.app_id}"
-  cdc_id            = "cluster-262n63e8"
   acl               = "private"
   versioning_enable = true
   force_clean       = true
@@ -161,6 +170,55 @@ EOF
 }
 ```
 
+Using verbose acl with CDC cluster
+
+```hcl
+provider "tencentcloud" {
+  cos_domain = "https://${local.cdc_id}.cos-cdc.${local.region}.myqcloud.com/"
+  region     = local.region
+}
+
+locals {
+  region = "ap-guangzhou"
+  cdc_id = "cluster-262n63e8"
+}
+
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_acl" {
+  bucket   = "private-bucket-${local.app_id}"
+  acl      = "private"
+  acl_body = <<EOF
+<AccessControlPolicy>
+    <Owner>
+        <ID>qcs::cam::uin/100023201586:uin/100023201586</ID>
+        <DisplayName>qcs::cam::uin/100023201586:uin/100023201586</DisplayName>
+    </Owner>
+    <AccessControlList>
+        <Grant>
+            <Grantee type="CanonicalUser">
+                <ID>qcs::cam::uin/100015006748:uin/100015006748</ID>
+                <DisplayName>qcs::cam::uin/100015006748:uin/100015006748</DisplayName>
+            </Grantee>
+            <Permission>WRITE</Permission>
+        </Grant>
+        <Grant>
+            <Grantee type="CanonicalUser">
+                <ID>qcs::cam::uin/100023201586:uin/100023201586</ID>
+                <DisplayName>qcs::cam::uin/100023201586:uin/100023201586</DisplayName>
+            </Grantee>
+            <Permission>FULL_CONTROL</Permission>
+        </Grant>
+    </AccessControlList>
+</AccessControlPolicy>
+EOF
+}
+```
+
 Static Website
 
 ```hcl
@@ -210,6 +268,16 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
 Using CORS with CDC
 
 ```hcl
+provider "tencentcloud" {
+  cos_domain = "https://${local.cdc_id}.cos-cdc.${local.region}.myqcloud.com/"
+  region     = local.region
+}
+
+locals {
+  region = "ap-guangzhou"
+  cdc_id = "cluster-262n63e8"
+}
+
 data "tencentcloud_user_info" "info" {}
 
 locals {
@@ -218,7 +286,6 @@ locals {
 
 resource "tencentcloud_cos_bucket" "bucket_with_cors" {
   bucket = "bucket-with-cors-${local.app_id}"
-  cdc_id = "cluster-262n63e8"
 
   cors_rules {
     allowed_origins = ["http://*.abc.com"]
@@ -261,6 +328,16 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
 Using object lifecycle with CDC
 
 ```hcl
+provider "tencentcloud" {
+  cos_domain = "https://${local.cdc_id}.cos-cdc.${local.region}.myqcloud.com/"
+  region     = local.region
+}
+
+locals {
+  region = "ap-guangzhou"
+  cdc_id = "cluster-262n63e8"
+}
+
 data "tencentcloud_user_info" "info" {}
 
 locals {
@@ -269,7 +346,6 @@ locals {
 
 resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
   bucket = "bucket-with-lifecycle-${local.app_id}"
-  cdc_id = "cluster-262n63e8"
   acl    = "private"
 
   lifecycle_rules {
