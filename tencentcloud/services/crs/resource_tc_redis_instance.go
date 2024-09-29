@@ -237,7 +237,7 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 			"force_delete": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance.",
+				Description: "Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.",
 			},
 			"auto_renew_flag": {
 				Type:         schema.TypeInt,
@@ -1093,7 +1093,6 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 
 	forceDelete := d.Get("force_delete").(bool)
 	if chargeType == REDIS_CHARGE_TYPE_POSTPAID {
-		forceDelete = true
 		taskId, err := service.DestroyPostpaidInstance(ctx, d.Id())
 		if err != nil {
 			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPostpaidInstance", err.Error())
