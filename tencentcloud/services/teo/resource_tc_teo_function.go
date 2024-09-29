@@ -2,10 +2,13 @@
 package teo
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -133,9 +136,9 @@ func resourceTencentCloudTeoFunctionCreate(d *schema.ResourceData, meta interfac
 	if _, err := (&resource.StateChangeConf{
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
-		Pending:    []string{},
+		Pending:    []string{"false"},
 		Refresh:    resourceTeoFunctionCreateStateRefreshFunc_0_0(ctx, zoneId, functionId),
-		Target:     []string{""},
+		Target:     []string{"true"},
 		Timeout:    600 * time.Second,
 	}).WaitForStateContext(ctx); err != nil {
 		return err
@@ -313,6 +316,8 @@ func resourceTencentCloudTeoFunctionDelete(d *schema.ResourceData, meta interfac
 
 func resourceTeoFunctionCreateStateRefreshFunc_0_0(ctx context.Context, zoneId string, functionId string) resource.StateRefreshFunc {
 	var req *teov20220901.DescribeFunctionsRequest
+	t := template.New("gotpl")
+	var tplObj *template.Template
 	return func() (interface{}, string, error) {
 		meta := tccommon.ProviderMetaFromContext(ctx)
 		if meta == nil {
@@ -337,7 +342,22 @@ func resourceTeoFunctionCreateStateRefreshFunc_0_0(ctx context.Context, zoneId s
 		if resp == nil || resp.Response == nil {
 			return nil, "", nil
 		}
-		state := fmt.Sprintf("%v", *resp.Response.Functions[0].Domain)
+		if tplObj == nil {
+			tplObj, err = t.Parse("{{ if .Functions }}{{ $firstFunction := index .Functions 0 }}{{ if $firstFunction.Domain }}{{ true }}{{ else }}{{ false }}{{ end }}{{ end }}")
+			if err != nil {
+				return resp.Response, "", fmt.Errorf("parse state go-template error: %w", err)
+			}
+		}
+		stream := new(bytes.Buffer)
+		if err := tplObj.Execute(stream, resp.Response); err != nil {
+			return resp.Response, "", err
+		}
+		stateBytes, err := io.ReadAll(stream)
+		if err != nil {
+			return resp.Response, "", err
+		}
+		state := string(stateBytes)
+		log.Printf("[CRITAL] teo function domain, domain:%+v", state)
 		return resp.Response, state, nil
 	}
 }
