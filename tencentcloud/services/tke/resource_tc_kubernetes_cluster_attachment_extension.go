@@ -496,6 +496,30 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 		setting.PreStartUserScript = helper.String(v.(string))
 	}
 
+	if v, ok := dMap["taints"]; ok {
+		taints := v.([]interface{})
+		setting.Taints = make([]*tke.Taint, len(taints))
+		for i, d := range taints {
+			taint := d.(map[string]interface{})
+			var value, key, effect string
+			if v, ok := taint["key"].(string); ok {
+				key = v
+			}
+			if v, ok := taint["value"].(string); ok {
+				value = v
+			}
+			if v, ok := taint["effect"].(string); ok {
+				effect = v
+			}
+			taintItem := &tke.Taint{
+				Key:  	&key,
+				Value:  &value,
+				Effect: &effect,
+			}
+			setting.Taints[i] = taintItem
+		}
+	}
+
 	if v, ok := dMap["docker_graph_path"]; ok {
 		setting.DockerGraphPath = helper.String(v.(string))
 	}

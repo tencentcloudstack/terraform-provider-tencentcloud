@@ -395,6 +395,23 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 		iAdvanced.PreStartUserScript = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("taints"); ok {
+		for _, item := range v.([]interface{}) {
+			taintsMap := item.(map[string]interface{})
+			taint := tke.Taint{}
+			if v, ok := taintsMap["key"]; ok {
+				taint.Key = helper.String(v.(string))
+			}
+			if v, ok := taintsMap["value"]; ok {
+				taint.Value = helper.String(v.(string))
+			}
+			if v, ok := taintsMap["effect"]; ok {
+				taint.Effect = helper.String(v.(string))
+			}
+			iAdvanced.Taints = append(iAdvanced.Taints, &taint)
+		}
+	}
+
 	if v, ok := d.GetOk("user_script"); ok {
 		iAdvanced.UserScript = helper.String(v.(string))
 	}
