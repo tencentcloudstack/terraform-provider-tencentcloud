@@ -938,6 +938,8 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		return err
 	}
 
+	nodePoolId = *response.Response.NodePoolId
+
 	// wait for status ok
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -954,8 +956,6 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	if err != nil {
 		return err
 	}
-
-	nodePoolId = *response.Response.NodePoolId
 
 	d.SetId(strings.Join([]string{clusterId, nodePoolId}, tccommon.FILED_SP))
 

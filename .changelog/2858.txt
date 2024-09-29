@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_native_node_pool: fix node pool creating timeout
+```
