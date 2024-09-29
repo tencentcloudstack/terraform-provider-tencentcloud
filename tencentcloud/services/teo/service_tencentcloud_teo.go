@@ -1168,3 +1168,36 @@ func (me *TeoService) DescribeTeoFunctionById(ctx context.Context, zoneId string
 	ret = response.Response.Functions[0]
 	return
 }
+
+func (me *TeoService) DescribeTeoFunctionRuleById(ctx context.Context, functionId string, ruleId string) (ret *teo.FunctionRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeFunctionRulesRequest()
+	filter := &teo.Filter{
+		Name:   helper.String("function-id"),
+		Values: []*string{helper.String(functionId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeFunctionRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.FunctionRules) < 1 {
+		return
+	}
+
+	ret = response.Response.FunctionRules[0]
+	return
+}
