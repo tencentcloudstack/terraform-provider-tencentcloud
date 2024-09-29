@@ -1,3 +1,16 @@
+## 1.81.129 (September 29 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: support acl for cdc ([#2860](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2860))
+* resource/tencentcloud_redis_instance: support force_delete to postpaid instance ([#2861](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2861))
+* resource/tencentcloud_redis_startup_instance_operation: adjust startup status logic ([#2862](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2862))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_native_node_pool: fix node pool creating timeout ([#2858](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2858))
+* resource/tencentcloud_security_group_rule: fix delete rule failed ([#2863](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2863))
+
 ## 1.81.128 (September 27 , 2024)
 
 FEATURES:
