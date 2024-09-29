@@ -3406,7 +3406,7 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById(ctx context.Context, clu
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTkeClient().DescribeClusters(request)
+	response, err := me.client.UseTkeV20180525Client().DescribeClusters(request)
 	if err != nil {
 		errRet = err
 		return
@@ -3427,47 +3427,26 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context, cl
 	request := tke.NewDescribeClusterInstancesRequest()
 	request.ClusterId = helper.String(clusterId)
 
-	ret = &tke.DescribeClusterInstancesResponseParams{
-		InstanceSet: make([]*tke.Instance, 0),
-		TotalCount:  new(uint64),
-	}
-
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	var offset int64 = 0
-	var pageSize int64 = 100
-	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
-		ratelimit.Check(request.GetAction())
+	ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
-		if err != nil {
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx, request, response); err != nil {
-			return nil, err
-		}
-
-		if response == nil || len(response.Response.InstanceSet) < 1 {
-			break
-		}
-		count := len(response.Response.InstanceSet)
-		ret.InstanceSet = append(ret.InstanceSet, response.Response.InstanceSet...)
-		*ret.TotalCount += *helper.IntUint64(count)
-
-		if count < int(pageSize) {
-			break
-		}
-		offset += pageSize
+	response, err := me.client.UseTkeV20180525Client().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx, request, response); err != nil {
+		return nil, err
+	}
+
+	ret = response.Response
 	return
 }
 
@@ -3488,7 +3467,7 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById2(ctx context.Context) (r
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	response, err := me.client.UseCvmV20170312Client().DescribeInstances(request)
 	if err != nil {
 		errRet = err
 		return

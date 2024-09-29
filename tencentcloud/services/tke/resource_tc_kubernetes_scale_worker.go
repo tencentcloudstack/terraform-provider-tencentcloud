@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -564,14 +564,14 @@ func resourceTencentCloudKubernetesScaleWorkerDelete(d *schema.ResourceData, met
 	instanceIdSet := idSplit[1]
 
 	var (
-		request  = tke.NewDescribeClustersRequest()
-		response = tke.NewDescribeClustersResponse()
+		request  = tkev20180525.NewDescribeClustersRequest()
+		response = tkev20180525.NewDescribeClustersResponse()
 	)
 
 	request.ClusterIds = []*string{helper.String(clusterId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClustersWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClustersWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
