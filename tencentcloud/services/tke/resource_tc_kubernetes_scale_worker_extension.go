@@ -129,7 +129,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 
 	return nil
 }
-func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Context, req *cvm.DescribeInstancesRequest, resp *cvm.DescribeInstancesResponse) error {
+func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Context, req *tke.DescribeClusterInstancesRequest, resp *tke.DescribeClusterInstancesResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	var has = map[string]bool{}
 
@@ -610,6 +610,53 @@ func resourceTencentCloudKubernetesScaleWorkerDeleteOnExit(ctx context.Context) 
 }
 
 func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
-	// TODO: implement me
-	panic("TODO: implement me")
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	logId := tccommon.GetLogId(ctx)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	clusterId := idSplit[0]
+
+	request := tke.NewDescribeClusterInstancesRequest()
+	request.ClusterId = helper.String(clusterId)
+
+	instanceSet := make([]*tke.Instance, 0)
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClusterInstances(request)
+		if err != nil {
+			return err
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx, request, response); err != nil {
+			return err
+		}
+
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
+		count := len(response.Response.InstanceSet)
+		instanceSet = append(instanceSet, response.Response.InstanceSet...)
+
+		if count < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	if instanceSet == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+	return nil
 }
