@@ -32,7 +32,7 @@ func ResourceTencentCloudCosObjectCopyOperation() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Object key.",
+				Description: "Source url. In the CDC scenario, the CDC source url is used.",
 			},
 		},
 	}

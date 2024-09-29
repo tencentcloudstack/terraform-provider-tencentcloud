@@ -27,7 +27,7 @@ The following arguments are supported:
 
 * `bucket` - (Required, String, ForceNew) Bucket.
 * `key` - (Required, String, ForceNew) Object key.
-* `source_url` - (Required, String, ForceNew) Object key.
+* `source_url` - (Required, String, ForceNew) Source url. In the CDC scenario, the CDC source url is used.
 
 ## Attributes Reference
 

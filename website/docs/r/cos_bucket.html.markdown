@@ -11,6 +11,8 @@ description: |-
 
 Provides a COS resource to create a COS bucket and set its attributes.
 
+~> **NOTE:** The following capabilities do not support cdc scenarios: `multi_az`, `website`, and bucket replication `replica_role`.
+
 ## Example Usage
 
 ### Private Bucket
