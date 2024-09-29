@@ -21,6 +21,9 @@ func ResourceTencentCloudTeoFunctionRulePriority() *schema.Resource {
 		Read:   resourceTencentCloudTeoFunctionRulePriorityRead,
 		Update: resourceTencentCloudTeoFunctionRulePriorityUpdate,
 		Delete: resourceTencentCloudTeoFunctionRulePriorityDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -38,6 +41,7 @@ func ResourceTencentCloudTeoFunctionRulePriority() *schema.Resource {
 
 			"rule_ids": {
 				Type:        schema.TypeList,
+				Required:    true,
 				Description: "he list of rule IDs. It is required to include all rule IDs after adjusting their priorities. The execution order of multiple rules follows a top-down sequence. If not specified, the original priority order will be maintained.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -102,20 +106,20 @@ func resourceTencentCloudTeoFunctionRulePriorityRead(d *schema.ResourceData, met
 		return err
 	}
 
-	functionRulesList := make([]map[string]interface{}, 0, len(respData.FunctionRules))
-	if respData.FunctionRules != nil {
-		for _, functionRules := range respData.FunctionRules {
-			functionRulesMap := map[string]interface{}{}
+	// functionRulesList := make([]map[string]interface{}, 0, len(respData.FunctionRules))
+	// if respData.FunctionRules != nil {
+	// 	for _, functionRules := range respData.FunctionRules {
+	// 		functionRulesMap := map[string]interface{}{}
 
-			if functionRules.RuleId != nil {
-				functionRulesMap["rule_id"] = functionRules.RuleId
-			}
+	// 		if functionRules.RuleId != nil {
+	// 			functionRulesMap["rule_id"] = functionRules.RuleId
+	// 		}
 
-			functionRulesList = append(functionRulesList, functionRulesMap)
-		}
+	// 		functionRulesList = append(functionRulesList, functionRulesMap)
+	// 	}
 
-		_ = d.Set("rule_ids", functionRulesList)
-	}
+	// 	_ = d.Set("rule_ids", functionRulesList)
+	// }
 
 	return nil
 }

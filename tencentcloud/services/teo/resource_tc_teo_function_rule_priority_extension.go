@@ -12,12 +12,14 @@ func resourceTencentCloudTeoFunctionRulePriorityReadPreHandleResponse0(ctx conte
 
 	rulesList := []string{}
 	if resp.FunctionRules != nil {
-		for _, functionRules := range respData.FunctionRules {
+		for _, functionRules := range resp.FunctionRules {
 			if functionRules.RuleId != nil {
-				rulesList = append(rulesList, functionRules.RuleId)
+				rulesList = append(rulesList, *functionRules.RuleId)
 			}
 		}
 
 		_ = d.Set("rule_ids", rulesList)
 	}
+
+	return nil
 }
