@@ -213,6 +213,7 @@ type TencentCloudClient struct {
 	//omit nil client
 	omitNilConn      *common.Client
 	emrv20190103Conn *emr.Client
+	teov20220901Conn *teo.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1829,4 +1830,17 @@ func (me *TencentCloudClient) UseEmrV20190103Client() *emr.Client {
 	me.emrv20190103Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.emrv20190103Conn
+}
+
+// UseTeoV20220901Client return TEO client for service
+func (me *TencentCloudClient) UseTeoV20220901Client() *teo.Client {
+	if me.teov20220901Conn != nil {
+		return me.teov20220901Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.teov20220901Conn, _ = teo.NewClient(me.Credential, me.Region, cpf)
+	me.teov20220901Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.teov20220901Conn
 }

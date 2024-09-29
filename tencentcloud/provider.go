@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/mitchellh/go-homedir"
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	commonJson "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 	sdksts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
@@ -1702,6 +1701,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_application_proxy":                                                  teo.ResourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                                             teo.ResourceTencentCloudTeoApplicationProxyRule(),
 			"tencentcloud_teo_realtime_log_delivery":                                              teo.ResourceTencentCloudTeoRealtimeLogDelivery(),
+			"tencentcloud_teo_security_ip_group":                                                  teo.ResourceTencentCloudTeoSecurityIpGroup(),
 			"tencentcloud_tcm_mesh":                                                               tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                 tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                              tcm.ResourceTencentCloudTcmPrometheusAttachment(),
