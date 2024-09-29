@@ -1139,11 +1139,12 @@ func (me *TeoService) DescribeTeoRealtimeLogDeliveryById(ctx context.Context, zo
 	return
 }
 
-func (me *TeoService) DescribeTeoSecurityIpGroupById(ctx context.Context) (ret *teo.DescribeSecurityIPGroupResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoSecurityIpGroupById(ctx context.Context, zoneId string, groupId string) (ret *teo.DescribeSecurityIPGroupResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeSecurityIPGroupRequest()
-	request.GroupIds = helper.StrToInt64Point(originGroupId)
+	request.ZoneId = helper.String(zoneId)
+	request.GroupIds = []*int64{helper.StrToInt64Point(groupId)}
 
 	defer func() {
 		if errRet != nil {

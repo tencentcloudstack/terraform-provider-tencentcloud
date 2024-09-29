@@ -21,6 +21,9 @@ func ResourceTencentCloudTeoSecurityIpGroup() *schema.Resource {
 		Read:   resourceTencentCloudTeoSecurityIpGroupRead,
 		Update: resourceTencentCloudTeoSecurityIpGroupUpdate,
 		Delete: resourceTencentCloudTeoSecurityIpGroupDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -32,13 +35,13 @@ func ResourceTencentCloudTeoSecurityIpGroup() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "IP group information.",
+				Description: "IP group information, replace all when modifying.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"group_id": {
 							Type:        schema.TypeInt,
-							Required:    true,
-							Description: "Group ID. Enter `0`.",
+							Computed:    true,
+							Description: "Group ID.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -101,6 +104,10 @@ func resourceTencentCloudTeoSecurityIpGroupCreate(d *schema.ResourceData, meta i
 		request.IPGroup = &iPGroup
 	}
 
+	if err := resourceTencentCloudTeoSecurityIpGroupCreatePostFillRequest0(ctx, request); err != nil {
+		return err
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateSecurityIPGroupWithContext(ctx, request)
 		if e != nil {
@@ -142,7 +149,7 @@ func resourceTencentCloudTeoSecurityIpGroupRead(d *schema.ResourceData, meta int
 
 	_ = d.Set("zone_id", zoneId)
 
-	respData, err := service.DescribeTeoSecurityIpGroupById(ctx)
+	respData, err := service.DescribeTeoSecurityIpGroupById(ctx, zoneId, groupId)
 	if err != nil {
 		return err
 	}
@@ -172,11 +179,9 @@ func resourceTencentCloudTeoSecurityIpGroupRead(d *schema.ResourceData, meta int
 			iPGroupsList = append(iPGroupsList, iPGroupsMap)
 		}
 
-		_ = d.Set("ip_groups", iPGroupsList)
+		_ = d.Set("ip_group", iPGroupsList)
 	}
 
-	_ = zoneId
-	_ = groupId
 	return nil
 }
 
@@ -202,7 +207,7 @@ func resourceTencentCloudTeoSecurityIpGroupUpdate(d *schema.ResourceData, meta i
 	groupId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"ip_group", "mode"}
+	mutableArgs := []string{"ip_group"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -231,8 +236,8 @@ func resourceTencentCloudTeoSecurityIpGroupUpdate(d *schema.ResourceData, meta i
 			request.IPGroup = &iPGroup
 		}
 
-		if v, ok := d.GetOk("mode"); ok {
-			request.Mode = helper.String(v.(string))
+		if err := resourceTencentCloudTeoSecurityIpGroupUpdatePostFillRequest0(ctx, request); err != nil {
+			return err
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

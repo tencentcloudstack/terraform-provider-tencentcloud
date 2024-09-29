@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/mitchellh/go-homedir"
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	commonJson "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 	sdksts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
