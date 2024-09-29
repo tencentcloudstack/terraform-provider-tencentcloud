@@ -39,6 +39,45 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudSecurityGroupRule_multi(t *testing.T) {
+	t.Parallel()
+	var sgrId string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckSecurityGroupRuleDestroy(&sgrId),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecurityGroupRuleConfigMulti,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.http-in1", &sgrId),
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.http-in2", &sgrId),
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.http-in3", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "cidr_ip", "1.1.1.1"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "ip_protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "description", ""),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "type", "ingress"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "policy_index", "0"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.http-in1", "source_sgid"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in2", "cidr_ip", "2.2.2.2"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in2", "ip_protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in2", "description", ""),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in2", "type", "ingress"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in2", "policy_index", "0"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.http-in2", "source_sgid"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in3", "cidr_ip", "3.3.3.3"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in3", "ip_protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in3", "description", ""),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in3", "type", "ingress"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in3", "policy_index", "0"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.http-in3", "source_sgid"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudSecurityGroupRule_ssh(t *testing.T) {
 	t.Parallel()
 	var sgrId string
@@ -257,6 +296,43 @@ resource "tencentcloud_security_group_rule" "http-in" {
   security_group_id = tencentcloud_security_group.foo.id
   type              = "ingress"
   cidr_ip           = "1.1.1.1"
+  ip_protocol       = "tcp"
+  port_range        = "80,8080"
+  policy            = "accept"
+  policy_index      = 0
+}
+`
+
+const testAccSecurityGroupRuleConfigMulti = `
+resource "tencentcloud_security_group" "foo" {
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
+}
+
+resource "tencentcloud_security_group_rule" "http-in1" {
+  security_group_id = tencentcloud_security_group.foo.id
+  type              = "ingress"
+  cidr_ip           = "1.1.1.1"
+  ip_protocol       = "tcp"
+  port_range        = "80,8080"
+  policy            = "accept"
+  policy_index      = 0
+}
+
+resource "tencentcloud_security_group_rule" "http-in2" {
+  security_group_id = tencentcloud_security_group.foo.id
+  type              = "ingress"
+  cidr_ip           = "2.2.2.2"
+  ip_protocol       = "tcp"
+  port_range        = "80,8080"
+  policy            = "accept"
+  policy_index      = 0
+}
+
+resource "tencentcloud_security_group_rule" "http-in3" {
+  security_group_id = tencentcloud_security_group.foo.id
+  type              = "ingress"
+  cidr_ip           = "3.3.3.3"
   ip_protocol       = "tcp"
   port_range        = "80,8080"
   policy            = "accept"

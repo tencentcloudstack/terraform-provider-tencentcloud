@@ -395,7 +395,7 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 	service := VpcService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	ruleId := d.Id()
-	sgId, policyType, policy, err := service.DescribeSecurityGroupPolicy(ctx, ruleId)
+	_, _, policy, err := service.DescribeSecurityGroupPolicy(ctx, ruleId)
 	if err != nil {
 		log.Printf("[CRITAL]%s security group rule query failed: %s\n ", logId, err.Error())
 		return err
@@ -404,30 +404,12 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 		return fmt.Errorf("The security group policy(ruleId: %s) is nil.", ruleId)
 	}
 
-	index := *policy.PolicyIndex
-
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		e := service.DeleteSecurityGroupPolicyByPolicyIndex(ctx, index, sgId, policyType)
+		e := service.DeleteSecurityGroupPolicy(ctx, ruleId)
 		if e != nil {
 			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if ee.GetCode() == "ResourceNotFound" {
 					return nil
-				}
-
-				if ee.GetCode() == "InvalidParameterValue.Range" {
-					sgId, policyType, policy, err = service.DescribeSecurityGroupPolicy(ctx, ruleId)
-					if err != nil {
-						log.Printf("[CRITAL]%s security group rule query failed: %s\n ", logId, err.Error())
-						return tccommon.RetryError(err)
-					}
-
-					if policy == nil {
-						log.Printf("Security Group policy(ruleId: %s) is nil in the delete process, exit... \n", ruleId)
-						return nil
-					}
-					//update index
-					index = *policy.PolicyIndex
-					return resource.RetryableError(fmt.Errorf("The policy index has been updated, retry..."))
 				}
 			}
 			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))
