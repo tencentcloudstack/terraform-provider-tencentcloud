@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 
@@ -39,7 +39,7 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudSecurityGroupRule_multi(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_multi(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 
@@ -78,7 +78,7 @@ func TestAccTencentCloudSecurityGroupRule_multi(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudSecurityGroupRule_ssh(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_ssh(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 
@@ -102,7 +102,7 @@ func TestAccTencentCloudSecurityGroupRule_ssh(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudSecurityGroupRule_egress(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_egress(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 
@@ -127,7 +127,7 @@ func TestAccTencentCloudSecurityGroupRule_egress(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_sourcesgid(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 
@@ -151,7 +151,7 @@ func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudSecurityGroupRule_allDrop(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_allDrop(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 
@@ -175,7 +175,7 @@ func TestAccTencentCloudSecurityGroupRule_allDrop(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudSecurityGroupRule_addressTemplate(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_addressTemplate(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 	resource.Test(t, resource.TestCase{
@@ -206,7 +206,7 @@ func TestAccTencentCloudSecurityGroupRule_addressTemplate(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudSecurityGroupRule_protocolTemplate(t *testing.T) {
+func TestAccTencentCloudSecurityGroupRuleResource_protocolTemplate(t *testing.T) {
 	t.Parallel()
 	var sgrId string
 	resource.Test(t, resource.TestCase{
