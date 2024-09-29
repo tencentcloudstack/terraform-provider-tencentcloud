@@ -25,7 +25,8 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "content", `addEventListener('fetch', e => {
   const response = new Response('Hello World!!');
   e.respondWith(response);
-});`),
+});
+`),
 				),
 			},
 			{
@@ -42,7 +43,8 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "content", `addEventListener('fetch', e => {
   const response = new Response('Hello World');
   e.respondWith(response);
-});`),
+});
+`),
 				),
 			},
 		},

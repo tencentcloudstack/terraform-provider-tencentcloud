@@ -143,7 +143,7 @@ func resourceTencentCloudTeoFunctionRuleCreate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOk("function_rule_conditions"); ok {
 		for _, item := range v.([]interface{}) {
 			functionRuleConditionsMap := item.(map[string]interface{})
-			originRecord := teov20220901.OriginRecord{}
+			functionRuleCondition := teov20220901.FunctionRuleCondition{}
 			if v, ok := functionRuleConditionsMap["rule_conditions"]; ok {
 				for _, item := range v.([]interface{}) {
 					ruleConditionsMap := item.(map[string]interface{})
@@ -167,10 +167,10 @@ func resourceTencentCloudTeoFunctionRuleCreate(d *schema.ResourceData, meta inte
 					if v, ok := ruleConditionsMap["name"]; ok {
 						ruleCondition.Name = helper.String(v.(string))
 					}
-					originRecord.RuleConditions = append(originRecord.RuleConditions, &ruleCondition)
+					functionRuleCondition.RuleConditions = append(functionRuleCondition.RuleConditions, &ruleCondition)
 				}
 			}
-			request.FunctionRuleConditions = append(request.FunctionRuleConditions, &originRecord)
+			request.FunctionRuleConditions = append(request.FunctionRuleConditions, &functionRuleCondition)
 		}
 	}
 
@@ -224,7 +224,7 @@ func resourceTencentCloudTeoFunctionRuleRead(d *schema.ResourceData, meta interf
 
 	_ = d.Set("function_id", functionId)
 
-	respData, err := service.DescribeTeoFunctionRuleById(ctx, functionId, ruleId)
+	respData, err := service.DescribeTeoFunctionRuleById(ctx, zoneId, functionId, ruleId)
 	if err != nil {
 		return err
 	}
@@ -296,15 +296,6 @@ func resourceTencentCloudTeoFunctionRuleRead(d *schema.ResourceData, meta interf
 		_ = d.Set("function_rule_conditions", functionRuleConditionsList)
 	}
 
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", respData.CreateTime)
-	}
-
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", respData.UpdateTime)
-	}
-
-	_ = zoneId
 	return nil
 }
 
@@ -343,7 +334,7 @@ func resourceTencentCloudTeoFunctionRuleUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOk("function_rule_conditions"); ok {
 			for _, item := range v.([]interface{}) {
 				functionRuleConditionsMap := item.(map[string]interface{})
-				originRecord := teov20220901.OriginRecord{}
+				functionRuleCondition := teov20220901.FunctionRuleCondition{}
 				if v, ok := functionRuleConditionsMap["rule_conditions"]; ok {
 					for _, item := range v.([]interface{}) {
 						ruleConditionsMap := item.(map[string]interface{})
@@ -367,10 +358,10 @@ func resourceTencentCloudTeoFunctionRuleUpdate(d *schema.ResourceData, meta inte
 						if v, ok := ruleConditionsMap["name"]; ok {
 							ruleCondition.Name = helper.String(v.(string))
 						}
-						originRecord.RuleConditions = append(originRecord.RuleConditions, &ruleCondition)
+						functionRuleCondition.RuleConditions = append(functionRuleCondition.RuleConditions, &ruleCondition)
 					}
 				}
-				request.FunctionRuleConditions = append(request.FunctionRuleConditions, &originRecord)
+				request.FunctionRuleConditions = append(request.FunctionRuleConditions, &functionRuleCondition)
 			}
 		}
 

@@ -357,7 +357,6 @@ func resourceTeoFunctionCreateStateRefreshFunc_0_0(ctx context.Context, zoneId s
 			return resp.Response, "", err
 		}
 		state := string(stateBytes)
-		log.Printf("[CRITAL] teo function domain, domain:%+v", state)
 		return resp.Response, state, nil
 	}
 }

@@ -1169,15 +1169,22 @@ func (me *TeoService) DescribeTeoFunctionById(ctx context.Context, zoneId string
 	return
 }
 
-func (me *TeoService) DescribeTeoFunctionRuleById(ctx context.Context, functionId string, ruleId string) (ret *teo.FunctionRule, errRet error) {
+func (me *TeoService) DescribeTeoFunctionRuleById(ctx context.Context, zoneId string, functionId string, ruleId string) (ret *teo.FunctionRule, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeFunctionRulesRequest()
+	request.ZoneId = helper.String(zoneId)
 	filter := &teo.Filter{
 		Name:   helper.String("function-id"),
 		Values: []*string{helper.String(functionId)},
 	}
 	request.Filters = append(request.Filters, filter)
+
+	filterRule := &teo.Filter{
+		Name:   helper.String("rule-id"),
+		Values: []*string{helper.String(ruleId)},
+	}
+	request.Filters = append(request.Filters, filterRule)
 
 	defer func() {
 		if errRet != nil {
