@@ -3421,11 +3421,14 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById(ctx context.Context, clu
 	return
 }
 
-func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context, clusterId string) (ret *tke.DescribeClusterInstancesResponseParams, errRet error) {
+func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context) (ret *cvm.DescribeInstancesResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := tke.NewDescribeClusterInstancesRequest()
-	request.ClusterId = helper.String(clusterId)
+	request := cvm.NewDescribeInstancesRequest()
+
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx, request); err != nil {
+		return nil, err
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -3435,7 +3438,7 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context, cl
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTkeV20180525Client().DescribeClusterInstances(request)
+	response, err := me.client.UseCvmV20170312Client().DescribeInstances(request)
 	if err != nil {
 		errRet = err
 		return

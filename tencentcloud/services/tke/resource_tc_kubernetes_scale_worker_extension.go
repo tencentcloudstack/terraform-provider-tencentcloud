@@ -46,7 +46,7 @@ func customScaleWorkerResourceImporter(ctx context.Context, d *schema.ResourceDa
 	return []*schema.ResourceData{d}, nil
 }
 
-func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Context, req *tke.DescribeClusterInstancesRequest, resp *tke.DescribeClusterInstancesResponse) error {
+func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest, resp *cvm.DescribeInstancesResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	var has = map[string]bool{}
 
@@ -608,4 +608,9 @@ func resourceTencentCloudKubernetesScaleWorkerDeleteOnExit(ctx context.Context) 
 		})
 	}
 	return nil
+}
+
+func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
+	// TODO: implement me
+	panic("TODO: implement me")
 }
