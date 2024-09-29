@@ -48,6 +48,89 @@ func customScaleWorkerResourceImporter(ctx context.Context, d *schema.ResourceDa
 
 func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest, resp *cvm.DescribeInstancesResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
+
+	instances := make([]*cvm.Instance, 0)
+	instances = append(instances, resp.Response.InstanceSet...)
+
+	instanceList := make([]interface{}, 0, len(instances))
+	for _, instance := range instances {
+		mapping := map[string]interface{}{
+			"count":                               1,
+			"instance_charge_type_prepaid_period": 1,
+			"instance_type":                       helper.PString(instance.InstanceType),
+			"subnet_id":                           helper.PString(instance.VirtualPrivateCloud.SubnetId),
+			"availability_zone":                   helper.PString(instance.Placement.Zone),
+			"instance_name":                       helper.PString(instance.InstanceName),
+			"instance_charge_type":                helper.PString(instance.InstanceChargeType),
+			"system_disk_type":                    helper.PString(instance.SystemDisk.DiskType),
+			"system_disk_size":                    helper.PInt64(instance.SystemDisk.DiskSize),
+			"internet_charge_type":                helper.PString(instance.InternetAccessible.InternetChargeType),
+			"bandwidth_package_id":                helper.PString(instance.InternetAccessible.BandwidthPackageId),
+			"internet_max_bandwidth_out":          helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut),
+			"security_group_ids":                  helper.StringsInterfaces(instance.SecurityGroupIds),
+			"img_id":                              helper.PString(instance.ImageId),
+		}
+
+		if instance.RenewFlag != nil && helper.PString(instance.InstanceChargeType) == "PREPAID" {
+			mapping["instance_charge_type_prepaid_renew_flag"] = helper.PString(instance.RenewFlag)
+		} else {
+			mapping["instance_charge_type_prepaid_renew_flag"] = ""
+		}
+		if helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut) > 0 {
+			mapping["public_ip_assigned"] = true
+		}
+
+		if instance.CamRoleName != nil {
+			mapping["cam_role_name"] = instance.CamRoleName
+		}
+		if instance.LoginSettings != nil {
+			if instance.LoginSettings.KeyIds != nil && len(instance.LoginSettings.KeyIds) > 0 {
+				mapping["key_ids"] = helper.StringsInterfaces(instance.LoginSettings.KeyIds)
+			}
+			if instance.LoginSettings.Password != nil {
+				mapping["password"] = helper.PString(instance.LoginSettings.Password)
+			}
+		}
+		if instance.DisasterRecoverGroupId != nil && helper.PString(instance.DisasterRecoverGroupId) != "" {
+			mapping["disaster_recover_group_ids"] = []string{helper.PString(instance.DisasterRecoverGroupId)}
+		}
+		if instance.HpcClusterId != nil {
+			mapping["hpc_cluster_id"] = helper.PString(instance.HpcClusterId)
+		}
+
+		dataDisks := make([]interface{}, 0, len(instance.DataDisks))
+		for _, v := range instance.DataDisks {
+			dataDisk := map[string]interface{}{
+				"disk_type":   helper.PString(v.DiskType),
+				"disk_size":   helper.PInt64(v.DiskSize),
+				"snapshot_id": helper.PString(v.DiskId),
+				"encrypt":     helper.PBool(v.Encrypt),
+				"kms_key_id":  helper.PString(v.KmsKeyId),
+			}
+			dataDisks = append(dataDisks, dataDisk)
+		}
+
+		mapping["data_disk"] = dataDisks // worker_config.data_disk
+		instanceList = append(instanceList, mapping)
+	}
+	if importFlag1 {
+		_ = d.Set("worker_config", instanceList)
+	}
+
+	// The machines I generated was deleted by others.
+	if len(WorkersNewWorkerInstancesList) == 0 {
+		d.SetId("")
+		return nil
+	}
+
+	_ = d.Set("cluster_id", GlobalClusterId)
+	_ = d.Set("labels", WorkersLabelsMap)
+	_ = d.Set("worker_instances_list", WorkersNewWorkerInstancesList)
+
+	return nil
+}
+func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Context, req *cvm.DescribeInstancesRequest, resp *cvm.DescribeInstancesResponse) error {
+	d := tccommon.ResourceDataFromContext(ctx)
 	var has = map[string]bool{}
 
 	workerInstancesList := d.Get("worker_instances_list").([]interface{})
@@ -195,90 +278,6 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 			}
 		}
 	}
-	return nil
-}
-
-func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Context, req *cvm.DescribeInstancesRequest, resp *cvm.DescribeInstancesResponse) error {
-	d := tccommon.ResourceDataFromContext(ctx)
-
-	instances := make([]*cvm.Instance, 0)
-	instances = append(instances, resp.Response.InstanceSet...)
-
-	instanceList := make([]interface{}, 0, len(instances))
-	for _, instance := range instances {
-		mapping := map[string]interface{}{
-			"count":                               1,
-			"instance_charge_type_prepaid_period": 1,
-			"instance_type":                       helper.PString(instance.InstanceType),
-			"subnet_id":                           helper.PString(instance.VirtualPrivateCloud.SubnetId),
-			"availability_zone":                   helper.PString(instance.Placement.Zone),
-			"instance_name":                       helper.PString(instance.InstanceName),
-			"instance_charge_type":                helper.PString(instance.InstanceChargeType),
-			"system_disk_type":                    helper.PString(instance.SystemDisk.DiskType),
-			"system_disk_size":                    helper.PInt64(instance.SystemDisk.DiskSize),
-			"internet_charge_type":                helper.PString(instance.InternetAccessible.InternetChargeType),
-			"bandwidth_package_id":                helper.PString(instance.InternetAccessible.BandwidthPackageId),
-			"internet_max_bandwidth_out":          helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut),
-			"security_group_ids":                  helper.StringsInterfaces(instance.SecurityGroupIds),
-			"img_id":                              helper.PString(instance.ImageId),
-		}
-
-		if instance.RenewFlag != nil && helper.PString(instance.InstanceChargeType) == "PREPAID" {
-			mapping["instance_charge_type_prepaid_renew_flag"] = helper.PString(instance.RenewFlag)
-		} else {
-			mapping["instance_charge_type_prepaid_renew_flag"] = ""
-		}
-		if helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut) > 0 {
-			mapping["public_ip_assigned"] = true
-		}
-
-		if instance.CamRoleName != nil {
-			mapping["cam_role_name"] = instance.CamRoleName
-		}
-		if instance.LoginSettings != nil {
-			if instance.LoginSettings.KeyIds != nil && len(instance.LoginSettings.KeyIds) > 0 {
-				mapping["key_ids"] = helper.StringsInterfaces(instance.LoginSettings.KeyIds)
-			}
-			if instance.LoginSettings.Password != nil {
-				mapping["password"] = helper.PString(instance.LoginSettings.Password)
-			}
-		}
-		if instance.DisasterRecoverGroupId != nil && helper.PString(instance.DisasterRecoverGroupId) != "" {
-			mapping["disaster_recover_group_ids"] = []string{helper.PString(instance.DisasterRecoverGroupId)}
-		}
-		if instance.HpcClusterId != nil {
-			mapping["hpc_cluster_id"] = helper.PString(instance.HpcClusterId)
-		}
-
-		dataDisks := make([]interface{}, 0, len(instance.DataDisks))
-		for _, v := range instance.DataDisks {
-			dataDisk := map[string]interface{}{
-				"disk_type":   helper.PString(v.DiskType),
-				"disk_size":   helper.PInt64(v.DiskSize),
-				"snapshot_id": helper.PString(v.DiskId),
-				"encrypt":     helper.PBool(v.Encrypt),
-				"kms_key_id":  helper.PString(v.KmsKeyId),
-			}
-			dataDisks = append(dataDisks, dataDisk)
-		}
-
-		mapping["data_disk"] = dataDisks // worker_config.data_disk
-		instanceList = append(instanceList, mapping)
-	}
-	if importFlag1 {
-		_ = d.Set("worker_config", instanceList)
-	}
-
-	// The machines I generated was deleted by others.
-	if len(WorkersNewWorkerInstancesList) == 0 {
-		d.SetId("")
-		return nil
-	}
-
-	_ = d.Set("cluster_id", GlobalClusterId)
-	_ = d.Set("labels", WorkersLabelsMap)
-	_ = d.Set("worker_instances_list", WorkersNewWorkerInstancesList)
-
 	return nil
 }
 

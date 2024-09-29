@@ -3453,38 +3453,6 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context) (r
 	return
 }
 
-func (me *TkeService) DescribeKubernetesScaleWorkerById2(ctx context.Context) (ret *cvm.DescribeInstancesResponseParams, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := cvm.NewDescribeInstancesRequest()
-
-	if err := resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest2(ctx, request); err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCvmV20170312Client().DescribeInstances(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx, request, response); err != nil {
-		return nil, err
-	}
-
-	ret = response.Response
-	return
-}
-
 func (me *TkeService) DescribeKubernetesNativeNodePoolById(ctx context.Context, clusterId string, nodePoolId string) (ret *tke2.NodePool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
