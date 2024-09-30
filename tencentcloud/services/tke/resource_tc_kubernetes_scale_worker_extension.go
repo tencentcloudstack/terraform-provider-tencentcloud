@@ -378,7 +378,7 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 
 	dMap := make(map[string]interface{}, 5)
 	//mount_target, docker_graph_path, data_disk, extra_args, desired_pod_num
-	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num", "gpu_args"}
+	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num", "gpu_args", "taints"}
 	for _, k := range iAdvancedParas {
 		if v, ok := d.GetOk(k); ok {
 			dMap[k] = v
@@ -630,6 +630,8 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
 	logId := tccommon.GetLogId(ctx)
+
+	req.InstanceIds = WorkersInstanceIds
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
