@@ -165,6 +165,34 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							ForceNew:    true,
 							Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
 						},
+						"taints": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Node taint.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "Key of the taint.",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "Value of the taint.",
+									},
+									"effect": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "Effect of the taint.",
+									},
+								},
+							},
+						},
 						"is_schedule": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -489,6 +517,22 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 		}
 		if v, ok := instanceAdvancedSettingsMap["pre_start_user_script"]; ok {
 			instanceAdvancedSettings.PreStartUserScript = helper.String(v.(string))
+		}
+		if v, ok := instanceAdvancedSettingsMap["taints"]; ok {
+			for _, item := range v.([]interface{}) {
+				taintsMap := item.(map[string]interface{})
+				taint := tke.Taint{}
+				if v, ok := taintsMap["key"]; ok {
+					taint.Key = helper.String(v.(string))
+				}
+				if v, ok := taintsMap["value"]; ok {
+					taint.Value = helper.String(v.(string))
+				}
+				if v, ok := taintsMap["effect"]; ok {
+					taint.Effect = helper.String(v.(string))
+				}
+				instanceAdvancedSettings.Taints = append(instanceAdvancedSettings.Taints, &taint)
+			}
 		}
 		if v, ok := instanceAdvancedSettingsMap["docker_graph_path"]; ok {
 			instanceAdvancedSettings.DockerGraphPath = helper.String(v.(string))
