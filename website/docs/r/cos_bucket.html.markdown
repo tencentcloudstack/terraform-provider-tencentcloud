@@ -83,7 +83,7 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
   encryption_algorithm = "KMS" #cos/kms for cdc cos
   kms_id               = tencentcloud_kms_key.example.id
   versioning_enable    = true
-  acceleration_enable  = true
+  acceleration_enable  = false
   force_clean          = true
 }
 ```
