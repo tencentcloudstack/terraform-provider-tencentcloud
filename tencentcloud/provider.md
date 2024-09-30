@@ -429,6 +429,7 @@ Cloud Object Storage(COS)
 Cloud Virtual Machine(CVM)
   Data Source
     tencentcloud_image
+    tencentcloud_image_from_family
     tencentcloud_images
     tencentcloud_instance_types
     tencentcloud_instances
