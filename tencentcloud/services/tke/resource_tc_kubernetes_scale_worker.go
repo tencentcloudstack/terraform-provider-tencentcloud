@@ -437,22 +437,26 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 
 			"taints": {
 				Type:        schema.TypeList,
+				ForceNew:    true,
 				Description: "Node taint.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Key of the taint.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Value of the taint.",
 						},
 						"effect": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Effect of the taint.",
 						},
 					},
