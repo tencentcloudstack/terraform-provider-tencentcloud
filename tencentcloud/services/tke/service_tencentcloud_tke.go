@@ -3406,6 +3406,10 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById(ctx context.Context, clu
 
 	ratelimit.Check(request.GetAction())
 
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
 	response, err := me.client.UseTkeV20180525Client().DescribeClusters(request)
 	if err != nil {
 		errRet = err

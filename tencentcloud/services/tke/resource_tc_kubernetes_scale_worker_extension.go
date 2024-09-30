@@ -129,7 +129,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 
 	return nil
 }
-func resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx context.Context, req *tke.DescribeClusterInstancesRequest, resp *tke.DescribeClusterInstancesResponse) error {
+func clusterInstanceParamHandle(ctx context.Context, req *tke.DescribeClusterInstancesRequest, resp *tke.DescribeClusterInstancesResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	var has = map[string]bool{}
 
@@ -631,8 +631,6 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 	meta := tccommon.ProviderMetaFromContext(ctx)
 	logId := tccommon.GetLogId(ctx)
 
-	req.InstanceIds = WorkersInstanceIds
-
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -657,7 +655,7 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest2(ctx, request, response); err != nil {
+		if err := clusterInstanceParamHandle(ctx, request, response); err != nil {
 			return err
 		}
 
@@ -678,4 +676,8 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 		return nil
 	}
 	return nil
+}
+
+func resourceTencentCloudKubernetesScaleWorkerReadPreRequest0(ctx context.Context, req *tke.DescribeClustersRequest) error {
+	req.InstanceIds = WorkersInstanceIds
 }
