@@ -42,13 +42,13 @@ func ResourceTencentCloudTeoFunctionRuntimeEnvironment() *schema.Resource {
 			"environment_variables": {
 				Type:        schema.TypeList,
 				Required:    true,
-				Description: "The environment variable list. The function runtime environment supports a maximum of 64 variables. This field is required when the operation type is set to \"setEnvironmentVariable\", \"deleteEnvironmentVariable\", or \"resetEnvironmentVariable\".",
+				Description: "The environment variable list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The name of the variable, which is limited to alphanumeric characters and the special characters \"@\", \".\", \"-\", and \"_\". It can have a maximum of 64 bytes and should not be duplicated.",
+							Description: "The name of the variable, which is limited to alphanumeric characters and the special characters `@`, `.`, `-`, and `_`. It can have a maximum of 64 bytes and should not be duplicated.",
 						},
 						"value": {
 							Type:        schema.TypeString,
@@ -58,7 +58,7 @@ func ResourceTencentCloudTeoFunctionRuntimeEnvironment() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The type of the variable can have the following values:\n  - string: Represents a string type.\n  - json: Represents a JSON object type.\nThe default value is \"string\".",
+							Description: "The type of the variable can have the following values:  - `string`: Represents a string type.  - `json`: Represents a JSON object type.",
 						},
 					},
 				},

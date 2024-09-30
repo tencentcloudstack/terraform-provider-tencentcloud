@@ -35,17 +35,14 @@ resource "tencentcloud_teo_function_runtime_environment" "teo_function_runtime_e
 
 The following arguments are supported:
 
-* `environment_variables` - (Required, List) The environment variable list. The function runtime environment supports a maximum of 64 variables. This field is required when the operation type is set to "setEnvironmentVariable", "deleteEnvironmentVariable", or "resetEnvironmentVariable".
+* `environment_variables` - (Required, List) The environment variable list.
 * `function_id` - (Required, String, ForceNew) ID of the Function.
 * `zone_id` - (Required, String, ForceNew) ID of the site.
 
 The `environment_variables` object supports the following:
 
-* `key` - (Required, String) The name of the variable, which is limited to alphanumeric characters and the special characters "@", ".", "-", and "_". It can have a maximum of 64 bytes and should not be duplicated.
-* `type` - (Required, String) The type of the variable can have the following values:
-  - string: Represents a string type.
-  - json: Represents a JSON object type.
-The default value is "string".
+* `key` - (Required, String) The name of the variable, which is limited to alphanumeric characters and the special characters `@`, `.`, `-`, and `_`. It can have a maximum of 64 bytes and should not be duplicated.
+* `type` - (Required, String) The type of the variable can have the following values:  - `string`: Represents a string type.  - `json`: Represents a JSON object type.
 * `value` - (Required, String) The value of the variable, which is limited to a maximum of 5000 bytes. The default value is empty.
 
 ## Attributes Reference
