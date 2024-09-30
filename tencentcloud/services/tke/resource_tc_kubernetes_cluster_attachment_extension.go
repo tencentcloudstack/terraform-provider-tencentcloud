@@ -512,7 +512,7 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 				effect = v
 			}
 			taintItem := &tke.Taint{
-				Key:  	&key,
+				Key:    &key,
 				Value:  &value,
 				Effect: &effect,
 			}
