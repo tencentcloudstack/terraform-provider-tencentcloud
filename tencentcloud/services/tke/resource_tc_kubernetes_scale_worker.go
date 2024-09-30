@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -435,6 +435,35 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 				Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
 			},
 
+			"taints": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Node taint.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Key of the taint.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Value of the taint.",
+						},
+						"effect": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Effect of the taint.",
+						},
+					},
+				},
+			},
+
 			"user_script": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -525,22 +554,12 @@ func resourceTencentCloudKubernetesScaleWorkerRead(d *schema.ResourceData, meta 
 		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	respData1, err := service.DescribeKubernetesScaleWorkerById1(ctx, clusterId)
+	respData1, err := service.DescribeKubernetesScaleWorkerById1(ctx)
 	if err != nil {
 		return err
 	}
 
 	if respData1 == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-	respData2, err := service.DescribeKubernetesScaleWorkerById2(ctx)
-	if err != nil {
-		return err
-	}
-
-	if respData2 == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
@@ -564,14 +583,14 @@ func resourceTencentCloudKubernetesScaleWorkerDelete(d *schema.ResourceData, met
 	instanceIdSet := idSplit[1]
 
 	var (
-		request  = tke.NewDescribeClustersRequest()
-		response = tke.NewDescribeClustersResponse()
+		request  = tkev20180525.NewDescribeClustersRequest()
+		response = tkev20180525.NewDescribeClustersResponse()
 	)
 
 	request.ClusterIds = []*string{helper.String(clusterId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeClustersWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClustersWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
