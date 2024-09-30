@@ -4,6 +4,11 @@ FEATURES:
 
 * **New Data Source:** `tencentcloud_image_from_family` ([#2869](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2869))
 * **New Resource:** `tencentcloud_postgresql_apply_parameter_template_operation` ([#2867](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2867))
+* **New Resource:** `tencentcloud_teo_security_ip_group` ([#2867](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2864))
+* **New Resource:** `tencentcloud_teo_function` ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
+* **New Resource:** `tencentcloud_teo_function_rule` ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
+* **New Resource:** `tencentcloud_teo_function_rule_priority` ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
+* **New Resource:** `tencentcloud_teo_function_runtime_environment` ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
 
 ENHANCEMENTS:
 
@@ -13,10 +18,6 @@ ENHANCEMENTS:
 * resource/tencentcloud_kubernetes_cluster_attachment: support param `security_groups` ([#2866](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2866))
 * resource/tencentcloud_kubernetes_cluster_attachment: support param `taints` of worker_config ([#2866](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2866))
 * resource/tencentcloud_kubernetes_scale_worker:  support `taints` parameter ([#2859](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2859))
-* tencentcloud_teo_function ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
-* tencentcloud_teo_function_rule ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
-* tencentcloud_teo_function_rule_priority ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
-* tencentcloud_teo_function_runtime_environment ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
 
 ## 1.81.129 (September 29 , 2024)
 
