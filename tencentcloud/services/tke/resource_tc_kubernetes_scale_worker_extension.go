@@ -678,6 +678,8 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 	return nil
 }
 
-func resourceTencentCloudKubernetesScaleWorkerReadPreRequest0(ctx context.Context, req *tke.DescribeClustersRequest) error {
+func resourceTencentCloudKubernetesScaleWorkerReadPreRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
 	req.InstanceIds = WorkersInstanceIds
+
+	return nil
 }
