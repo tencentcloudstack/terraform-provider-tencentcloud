@@ -1029,12 +1029,13 @@ func sortImages(images cvmImages) cvmImages {
 	return sortedImages
 }
 
-func (me *CvmService) ModifyImage(ctx context.Context, instanceId, imageName, imageDesc string) (errRet error) {
+func (me *CvmService) ModifyImage(ctx context.Context, instanceId, imageName, imageDesc, imageFamily string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	var request = cvm.NewModifyImageAttributeRequest()
 	request.ImageId = helper.String(instanceId)
 	request.ImageName = helper.String(imageName)
 	request.ImageDescription = helper.String(imageDesc)
+	request.ImageFamily = helper.String(imageFamily)
 
 	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1774,5 +1775,40 @@ func (me *CvmService) ModifyImageSharePermission(ctx context.Context, imageId, p
 		log.Printf("[CRITAL]%s cvm ModifyImageSharePermission failed, reason:%+v", logId, err)
 		return err
 	}
+	return
+}
+
+func (me *CvmService) DescribeImageFromFamilyByFilter(ctx context.Context, param map[string]interface{}) (ret *cvm.DescribeImageFromFamilyResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeImageFromFamilyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ImageFamily" {
+			request.ImageFamily = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmV20170312Client().DescribeImageFromFamily(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }

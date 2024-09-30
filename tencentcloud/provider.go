@@ -381,6 +381,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_key_pairs":                                    cvm.DataSourceTencentCloudKeyPairs(),
 			"tencentcloud_image":                                        cvm.DataSourceTencentCloudImage(),
 			"tencentcloud_images":                                       cvm.DataSourceTencentCloudImages(),
+			"tencentcloud_image_from_family":                            cvm.DataSourceTencentCloudImageFromFamily(),
 			"tencentcloud_instance_types":                               cvm.DataSourceTencentCloudInstanceTypes(),
 			"tencentcloud_reserved_instance_configs":                    cvm.DataSourceTencentCloudReservedInstanceConfigs(),
 			"tencentcloud_vpc_instances":                                vpc.DataSourceTencentCloudVpcInstances(),

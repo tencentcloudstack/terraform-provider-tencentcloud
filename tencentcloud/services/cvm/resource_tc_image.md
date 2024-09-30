@@ -11,6 +11,20 @@ resource "tencentcloud_image" "image_snap" {
 }
 ```
 
+Use image family
+
+```hcl
+resource "tencentcloud_image" "image_family" {
+  image_description = "create image with snapshot 12323"
+  image_family      = "business-daily-update"
+  image_name        = "image-family-test123"
+  data_disk_ids     = []
+  snapshot_ids      = [
+    "snap-7uuvrcoj",
+  ]
+}
+```
+
 Import
 
 image instance can be imported using the id, e.g.

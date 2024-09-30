@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_image: support `image_family` params
+```
+
+```release-note:enhancement
+resource/tencentcloud_as_scaling_config: support `image_family` params
+```
+
+```release-note:new-data-source
+tencentcloud_image_from_family
+```

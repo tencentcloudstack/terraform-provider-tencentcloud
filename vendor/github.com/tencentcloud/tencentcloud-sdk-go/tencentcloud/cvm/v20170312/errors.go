@@ -38,6 +38,9 @@ const (
 	// 未找到指定的容灾组
 	FAILEDOPERATION_DISASTERRECOVERGROUPNOTFOUND = "FailedOperation.DisasterRecoverGroupNotFound"
 
+	// 获取实例的自动化助手状态失败
+	FAILEDOPERATION_GETINSTANCETATAGENTSTATUSFAILED = "FailedOperation.GetInstanceTATAgentStatusFailed"
+
 	// 标签键存在不合法字符
 	FAILEDOPERATION_ILLEGALTAGKEY = "FailedOperation.IllegalTagKey"
 
@@ -224,6 +227,9 @@ const (
 	// 最多指定一个参数。
 	INVALIDPARAMETER_ATMOSTONE = "InvalidParameter.AtMostOne"
 
+	// 不支持自动制作快照。
+	INVALIDPARAMETER_AUTOSNAPSHOTNOTSUPPORTED = "InvalidParameter.AutoSnapshotNotSupported"
+
 	// 不支持参数CdcId。
 	INVALIDPARAMETER_CDCNOTSUPPORTED = "InvalidParameter.CdcNotSupported"
 
@@ -239,6 +245,15 @@ const (
 	// 边缘可用区指定三网外网IP参数需要先指定主ip外网IP参数。
 	INVALIDPARAMETER_EDGEZONEMISSINTERNETACCESSIBLE = "InvalidParameter.EdgeZoneMissInternetAccessible"
 
+	// 指定的CDH母机不支持自定义类型的子机规格
+	INVALIDPARAMETER_HOSTIDCUSTOMIZEDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdCustomizedInstanceTypeNotSupport"
+
+	// 指定的CDH母机不支持该子机机型规格
+	INVALIDPARAMETER_HOSTIDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdInstanceTypeNotSupport"
+
+	// 指定的CDH母机不支持标准类型的子机规格
+	INVALIDPARAMETER_HOSTIDSTANDARDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdStandardInstanceTypeNotSupport"
+
 	// 该主机当前状态不支持该操作。
 	INVALIDPARAMETER_HOSTIDSTATUSNOTSUPPORT = "InvalidParameter.HostIdStatusNotSupport"
 
@@ -250,6 +265,9 @@ const (
 
 	// 当前接口不支持实例镜像。
 	INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
+
+	// 不存在支持指定子机规格的CDH母机
+	INVALIDPARAMETER_INSTANCETYPESUPPORTEDHOSTNOTFOUND = "InvalidParameter.InstanceTypeSupportedHostNotFound"
 
 	// 不支持设置公网带宽相关信息。
 	INVALIDPARAMETER_INTERNETACCESSIBLENOTSUPPORTED = "InvalidParameter.InternetAccessibleNotSupported"
@@ -271,6 +289,9 @@ const (
 
 	// 错误的url地址。
 	INVALIDPARAMETER_INVALIDPARAMETERURLERROR = "InvalidParameter.InvalidParameterUrlError"
+
+	// 输入的 TargetOSType 非法
+	INVALIDPARAMETER_INVALIDTARGETOSTYPE = "InvalidParameter.InvalidTargetOSType"
 
 	// CoreCount和ThreadPerCore必须同时提供。
 	INVALIDPARAMETER_LACKCORECOUNTORTHREADPERCORE = "InvalidParameter.LackCoreCountOrThreadPerCore"
@@ -425,6 +446,9 @@ const (
 	// 不支持转为非GPU或其他类型GPU实例。
 	INVALIDPARAMETERVALUE_INVALIDGPUFAMILYCHANGE = "InvalidParameterValue.InvalidGPUFamilyChange"
 
+	// 错误格式的镜像族名称
+	INVALIDPARAMETERVALUE_INVALIDIMAGEFAMILY = "InvalidParameterValue.InvalidImageFamily"
+
 	// 镜像ID不支持指定的实例机型。
 	INVALIDPARAMETERVALUE_INVALIDIMAGEFORGIVENINSTANCETYPE = "InvalidParameterValue.InvalidImageForGivenInstanceType"
 
@@ -500,7 +524,7 @@ const (
 	// 不支持删除默认启动模板版本。
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEDEFAULTVERSION = "InvalidParameterValue.LaunchTemplateDefaultVersion"
 
-	// 实例启动模板ID格式错误。
+	// 实例启动模板ID格式错误，请提供规范的实例启动模板ID，类似lt-xxxxxxxx，字母x代表小写字符或者数字。
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDMALFORMED = "InvalidParameterValue.LaunchTemplateIdMalformed"
 
 	// 实例启动模板ID不存在。
@@ -836,6 +860,9 @@ const (
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
+	// 该操作暂不支持Arm机器。
+	UNSUPPORTEDOPERATION_ARMARCHITECTURE = "UnsupportedOperation.ArmArchitecture"
+
 	// 指定的实例付费模式或者网络付费模式不支持共享带宽包
 	UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 
@@ -878,6 +905,9 @@ const (
 	// 中心可用区和边缘可用区实例不能混用批量操作。
 	UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
 
+	// 指定实例不支持操作系统转换。
+	UNSUPPORTEDOPERATION_INSTANCEOSCONVERTOSNOTSUPPORT = "UnsupportedOperation.InstanceOsConvertOsNotSupport"
+
 	// 请求不支持操作系统为`Xserver windows2012cndatacenterx86_64`的实例`ins-xxxxxx` 。
 	UNSUPPORTEDOPERATION_INSTANCEOSWINDOWS = "UnsupportedOperation.InstanceOsWindows"
 
@@ -911,6 +941,9 @@ const (
 	// 不支持操作创建失败的实例。
 	UNSUPPORTEDOPERATION_INSTANCESTATELAUNCHFAILED = "UnsupportedOperation.InstanceStateLaunchFailed"
 
+	// 指定操作不支持非运行中状态的实例。
+	UNSUPPORTEDOPERATION_INSTANCESTATENOTRUNNING = "UnsupportedOperation.InstanceStateNotRunning"
+
 	// 请求不支持创建未完成的实例
 	UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 
@@ -943,6 +976,12 @@ const (
 
 	// 请求不支持正在销毁的实例
 	UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+
+	// 实例类型不支持设置`EnableJumboFrame` 状态
+	UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
+
+	// 不支持不重启情况下修改Jumbo Frame状态
+	UNSUPPORTEDOPERATION_INSTANCESENABLEJUMBOWITHOUTREBOOT = "UnsupportedOperation.InstancesEnableJumboWithoutReboot"
 
 	// 不支持已启用销毁保护的实例，请先到设置实例销毁保护，关闭实例销毁保护，然后重试。
 	UNSUPPORTEDOPERATION_INSTANCESPROTECTED = "UnsupportedOperation.InstancesProtected"
@@ -994,6 +1033,9 @@ const (
 
 	// 此请求不支持该区域镜像,请更换其他镜像。
 	UNSUPPORTEDOPERATION_LOCATIONIMAGENOTSUPPORTED = "UnsupportedOperation.LocationImageNotSupported"
+
+	// 市场镜像实例不支持操作系统转换
+	UNSUPPORTEDOPERATION_MARKETIMAGECONVERTOSUNSUPPORTED = "UnsupportedOperation.MarketImageConvertOSUnsupported"
 
 	// 从市场镜像创建的自定义镜像不支持导出。
 	UNSUPPORTEDOPERATION_MARKETIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.MarketImageExportUnsupported"
@@ -1076,6 +1118,9 @@ const (
 	// 请求不支持该类型系统盘。
 	UNSUPPORTEDOPERATION_SYSTEMDISKTYPE = "UnsupportedOperation.SystemDiskType"
 
+	// 自动化助手不在线情况下，不支持该操作。
+	UNSUPPORTEDOPERATION_TATAGENTNOTONLINE = "UnsupportedOperation.TatAgentNotOnline"
+
 	// 包月转包销，不支持包销折扣高于现有包年包月折扣。
 	UNSUPPORTEDOPERATION_UNDERWRITEDISCOUNTGREATERTHANPREPAIDDISCOUNT = "UnsupportedOperation.UnderwriteDiscountGreaterThanPrepaidDiscount"
 
@@ -1099,6 +1144,9 @@ const (
 
 	// 指定的Pool非法。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDPOOL = "UnsupportedOperation.UnsupportedPool"
+
+	// 指定用户不支持执行操作系统转换。
+	UNSUPPORTEDOPERATION_USERCONVERTOSNOTSUPPORT = "UnsupportedOperation.UserConvertOsNotSupport"
 
 	// 用户限额操作的配额不足。
 	UNSUPPORTEDOPERATION_USERLIMITOPERATIONEXCEEDQUOTA = "UnsupportedOperation.UserLimitOperationExceedQuota"

@@ -75,6 +75,11 @@ func ResourceTencentCloudImage() *schema.Resource {
 				},
 				Description: "Cloud disk ID list, When creating a whole machine image based on an instance, specify the data disk ID contained in the image.",
 			},
+			"image_family": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Set image family. Example value: `business-daily-update`.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -135,6 +140,10 @@ func resourceTencentCloudImageCreate(d *schema.ResourceData, meta interface{}) e
 	if len(request.SnapshotIds) > 0 && len(request.DataDiskIds) > 0 {
 		return fmt.Errorf("`%s` and `%s` Can't appear in the profile China at the same time,The parameter `%s` depends on the pre_parameter `%s`",
 			"snapshot_ids", "data_disk_ids", "data_disk_ids", "instance_id")
+	}
+
+	if v, ok := d.GetOk("image_family"); ok {
+		request.ImageFamily = helper.String(v.(string))
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -219,6 +228,10 @@ func resourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) err
 		_ = d.Set("image_description", image.ImageDescription)
 	}
 
+	if image.ImageFamily != nil {
+		_ = d.Set("image_family", image.ImageFamily)
+	}
+
 	// Use the resource value when the instance_id in the resource is not empty.
 	// the instance ID is not returned in the query response body.
 	instanceId := ""
@@ -259,11 +272,12 @@ func resourceTencentCloudImageUpdate(d *schema.ResourceData, meta interface{}) e
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	if d.HasChange("image_name") || d.HasChange("image_description") {
+	if d.HasChange("image_name") || d.HasChange("image_description") || d.HasChange("image_family") {
 		imageName := d.Get("image_name").(string)
 		imageDesc := d.Get("image_description").(string)
+		imageFamily := d.Get("image_family").(string)
 
-		if err := cvmService.ModifyImage(ctx, instanceId, imageName, imageDesc); nil != err {
+		if err := cvmService.ModifyImage(ctx, instanceId, imageName, imageDesc, imageFamily); nil != err {
 			return err
 		}
 	}
