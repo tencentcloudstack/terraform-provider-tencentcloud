@@ -1,3 +1,23 @@
+## 1.81.130 (September 30 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_image_from_family` ([#2869](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2869))
+* **New Resource:** `tencentcloud_postgresql_apply_parameter_template_operation` ([#2867](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2867))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_config: support `image_family` params ([#2869](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2869))
+* resource/tencentcloud_cos_bucket: fix the issue where acl_body a cannot be modified ([#2868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2868))
+* resource/tencentcloud_image: support `image_family` params ([#2869](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2869))
+* resource/tencentcloud_kubernetes_cluster_attachment: support param `security_groups` ([#2866](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2866))
+* resource/tencentcloud_kubernetes_cluster_attachment: support param `taints` of worker_config ([#2866](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2866))
+* resource/tencentcloud_kubernetes_scale_worker:  support `taints` parameter ([#2859](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2859))
+* tencentcloud_teo_function ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
+* tencentcloud_teo_function_rule ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
+* tencentcloud_teo_function_rule_priority ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
+* tencentcloud_teo_function_runtime_environment ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
+
 ## 1.81.129 (September 29 , 2024)
 
 ENHANCEMENTS:
