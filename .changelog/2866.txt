@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_attachment: support param `taints` of worker_config
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_attachment: support param `security_groups`
+```

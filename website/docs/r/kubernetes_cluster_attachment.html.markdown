@@ -117,6 +117,7 @@ The following arguments are supported:
 * `key_ids` - (Optional, List: [`String`], ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
 * `labels` - (Optional, Map, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
+* `security_groups` - (Optional, List: [`String`], ForceNew) A list of security group IDs after attach to cluster.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is `0`, which means it participates in scheduling. Non-zero(eg: `1`) number means it does not participate in scheduling.
 * `worker_config_overrides` - (Optional, List, ForceNew) Override variable worker_config, commonly used to attach existing instances.
 * `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
@@ -155,6 +156,12 @@ The `gpu_args` object of `worker_config` supports the following:
 * `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
 * `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
+The `taints` object of `worker_config` supports the following:
+
+* `effect` - (Optional, String, ForceNew) Effect of the taint.
+* `key` - (Optional, String, ForceNew) Key of the taint.
+* `value` - (Optional, String, ForceNew) Value of the taint.
+
 The `worker_config_overrides` object supports the following:
 
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
@@ -177,6 +184,7 @@ The `worker_config` object supports the following:
 * `is_schedule` - (Optional, Bool, ForceNew, **Deprecated**) This argument was deprecated, use `unschedulable` instead. Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
+* `taints` - (Optional, List, ForceNew) Node taint.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference
@@ -184,7 +192,6 @@ The `worker_config` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `security_groups` - A list of security group IDs after attach to cluster.
 * `state` - State of the node.
 
 

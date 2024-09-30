@@ -170,6 +170,7 @@ func resourceTencentCloudKubernetesClusterAttachmentReadRequestOnError2(ctx cont
 }
 
 func resourceTencentCloudKubernetesClusterAttachmentReadRequestOnSuccess2(ctx context.Context, resp *tke.Instance) *resource.RetryError {
+	// d := tccommon.ResourceDataFromContext(ctx)
 	if resp == nil {
 		return nil
 	}
@@ -195,6 +196,33 @@ func resourceTencentCloudKubernetesClusterAttachmentReadRequestOnSuccess2(ctx co
 			insID, insState,
 		))
 	}
+
+	// api cannot return Taints
+	// if resp.InstanceAdvancedSettings.Taints != nil {
+	// 	iAdvanced := resp.InstanceAdvancedSettings
+	// 	taintsList := make([]map[string]interface{}, 0, len(iAdvanced.Taints))
+	// 	if iAdvanced.Taints != nil {
+	// 		for _, taints := range iAdvanced.Taints {
+	// 			taintsMap := map[string]interface{}{}
+
+	// 			if taints.Key != nil {
+	// 				taintsMap["key"] = taints.Key
+	// 			}
+
+	// 			if taints.Value != nil {
+	// 				taintsMap["value"] = taints.Value
+	// 			}
+
+	// 			if taints.Effect != nil {
+	// 				taintsMap["effect"] = taints.Effect
+	// 			}
+
+	// 			taintsList = append(taintsList, taintsMap)
+	// 		}
+
+	// 		_ = d.Set("taints", taintsList)
+	// 	}
+	// }
 
 	return nil
 }
