@@ -155,6 +155,12 @@ The `gpu_args` object of `worker_config` supports the following:
 * `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
 * `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
+The `taints` object of `worker_config` supports the following:
+
+* `effect` - (Optional, String, ForceNew) Effect of the taint.
+* `key` - (Optional, String, ForceNew) Key of the taint.
+* `value` - (Optional, String, ForceNew) Value of the taint.
+
 The `worker_config_overrides` object supports the following:
 
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
@@ -177,6 +183,7 @@ The `worker_config` object supports the following:
 * `is_schedule` - (Optional, Bool, ForceNew, **Deprecated**) This argument was deprecated, use `unschedulable` instead. Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
+* `taints` - (Optional, List, ForceNew) Node taint.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference
