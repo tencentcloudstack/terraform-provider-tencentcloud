@@ -1887,7 +1887,14 @@ func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) (result bool) {
 	}
 
 	// diff: ACL element
-	for _, oldGrantee := range oldRoot.FindElements("//Grantee") {
+	oldGrantees := oldRoot.FindElements("//Grantee")
+	newGrantees := newRoot.FindElements("//Grantee")
+	// check count
+	if len(oldGrantees) != len(newGrantees) {
+		return false
+	}
+	// check content
+	for _, oldGrantee := range oldGrantees {
 		for _, attr := range oldGrantee.Attr {
 			if attr.Key != "type" {
 				// only need to handle the type attribute
@@ -1959,7 +1966,9 @@ func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) (result bool) {
 					uid = oldGranteeURI.Text()
 				}
 				log.Printf("[DEBUG] diff verification passed for grantee:[%s:%s]\n", oldGranteeType, uid)
-				break
+			}
+			if !result {
+				return false
 			}
 		}
 	}
