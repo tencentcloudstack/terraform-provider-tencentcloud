@@ -57,6 +57,10 @@ func resourceTencentCloudPostgresqlApplyParameterTemplateOperationCreate(d *sche
 		return nil
 	})
 
+	if err != nil {
+		return err
+	}
+
 	templateId := d.Get("template_id").(string)
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		templateAttributes, innerErr = service.DescribePostgresqlParameterTemplateById(ctx, templateId)
