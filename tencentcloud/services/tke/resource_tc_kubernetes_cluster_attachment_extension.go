@@ -443,3 +443,145 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 		},
 	}
 }
+
+func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (setting tke.InstanceAdvancedSettings) {
+	setting = tke.InstanceAdvancedSettings{}
+	if v, ok := dMap["mount_target"]; ok {
+		setting.MountTarget = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["data_disk"]; ok {
+		dataDisks := v.([]interface{})
+		setting.DataDisks = make([]*tke.DataDisk, len(dataDisks))
+		for i, d := range dataDisks {
+			value := d.(map[string]interface{})
+			var diskType, fileSystem, mountTarget, diskPartition string
+			if v, ok := value["disk_type"].(string); ok {
+				diskType = v
+			}
+			if v, ok := value["file_system"].(string); ok {
+				fileSystem = v
+			}
+			if v, ok := value["mount_target"].(string); ok {
+				mountTarget = v
+			}
+			if v, ok := value["disk_partition"].(string); ok {
+				diskPartition = v
+			}
+
+			diskSize := int64(value["disk_size"].(int))
+			autoFormatAndMount := value["auto_format_and_mount"].(bool)
+			dataDisk := &tke.DataDisk{
+				DiskType:           &diskType,
+				FileSystem:         &fileSystem,
+				AutoFormatAndMount: &autoFormatAndMount,
+				MountTarget:        &mountTarget,
+				DiskPartition:      &diskPartition,
+			}
+			if diskSize > 0 {
+				dataDisk.DiskSize = &diskSize
+			}
+			setting.DataDisks[i] = dataDisk
+		}
+	}
+	if v, ok := dMap["is_schedule"]; ok {
+		setting.Unschedulable = helper.BoolToInt64Ptr(!v.(bool))
+	}
+
+	if v, ok := dMap["user_data"]; ok {
+		setting.UserScript = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["pre_start_user_script"]; ok {
+		setting.PreStartUserScript = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["taints"]; ok {
+		taints := v.([]interface{})
+		setting.Taints = make([]*tke.Taint, len(taints))
+		for i, d := range taints {
+			taint := d.(map[string]interface{})
+			var value, key, effect string
+			if v, ok := taint["key"].(string); ok {
+				key = v
+			}
+			if v, ok := taint["value"].(string); ok {
+				value = v
+			}
+			if v, ok := taint["effect"].(string); ok {
+				effect = v
+			}
+			taintItem := &tke.Taint{
+				Key:    &key,
+				Value:  &value,
+				Effect: &effect,
+			}
+			setting.Taints[i] = taintItem
+		}
+	}
+
+	if v, ok := dMap["docker_graph_path"]; ok {
+		setting.DockerGraphPath = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["desired_pod_num"]; ok {
+		setting.DesiredPodNumber = helper.Int64(int64(v.(int)))
+	}
+
+	if temp, ok := dMap["extra_args"]; ok {
+		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
+		clusterExtraArgs := tke.InstanceExtraArgs{}
+		clusterExtraArgs.Kubelet = make([]*string, 0)
+		for i := range extraArgs {
+			clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArgs[i])
+		}
+		setting.ExtraArgs = &clusterExtraArgs
+	}
+
+	// get gpu_args
+	if v, ok := dMap["gpu_args"]; ok && len(v.([]interface{})) > 0 {
+		gpuArgs := v.([]interface{})[0].(map[string]interface{})
+
+		var (
+			migEnable    = gpuArgs["mig_enable"].(bool)
+			driver       = gpuArgs["driver"].(map[string]interface{})
+			cuda         = gpuArgs["cuda"].(map[string]interface{})
+			cudnn        = gpuArgs["cudnn"].(map[string]interface{})
+			customDriver = gpuArgs["custom_driver"].(map[string]interface{})
+		)
+		tkeGpuArgs := tke.GPUArgs{}
+		tkeGpuArgs.MIGEnable = &migEnable
+		if len(driver) > 0 {
+			tkeGpuArgs.Driver = &tke.DriverVersion{
+				Version: helper.String(driver["version"].(string)),
+				Name:    helper.String(driver["name"].(string)),
+			}
+		}
+		if len(cuda) > 0 {
+			tkeGpuArgs.CUDA = &tke.DriverVersion{
+				Version: helper.String(cuda["version"].(string)),
+				Name:    helper.String(cuda["name"].(string)),
+			}
+		}
+		if len(cudnn) > 0 {
+			tkeGpuArgs.CUDNN = &tke.CUDNN{
+				Version: helper.String(cudnn["version"].(string)),
+				Name:    helper.String(cudnn["name"].(string)),
+			}
+			if cudnn["doc_name"] != nil {
+				tkeGpuArgs.CUDNN.DocName = helper.String(cudnn["doc_name"].(string))
+			}
+			if cudnn["dev_name"] != nil {
+				tkeGpuArgs.CUDNN.DevName = helper.String(cudnn["dev_name"].(string))
+			}
+		}
+		if len(customDriver) > 0 {
+			tkeGpuArgs.CustomDriver = &tke.CustomDriver{
+				Address: helper.String(customDriver["address"].(string)),
+			}
+		}
+		setting.GPUArgs = &tkeGpuArgs
+	}
+
+	return setting
+}
