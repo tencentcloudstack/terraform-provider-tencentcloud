@@ -106,21 +106,6 @@ func resourceTencentCloudTeoFunctionRulePriorityRead(d *schema.ResourceData, met
 		return err
 	}
 
-	// functionRulesList := make([]map[string]interface{}, 0, len(respData.FunctionRules))
-	// if respData.FunctionRules != nil {
-	// 	for _, functionRules := range respData.FunctionRules {
-	// 		functionRulesMap := map[string]interface{}{}
-
-	// 		if functionRules.RuleId != nil {
-	// 			functionRulesMap["rule_id"] = functionRules.RuleId
-	// 		}
-
-	// 		functionRulesList = append(functionRulesList, functionRulesMap)
-	// 	}
-
-	// 	_ = d.Set("rule_ids", functionRulesList)
-	// }
-
 	return nil
 }
 
