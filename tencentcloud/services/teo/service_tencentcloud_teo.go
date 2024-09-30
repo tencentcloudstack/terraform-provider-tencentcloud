@@ -1200,17 +1200,13 @@ func (me *TeoService) DescribeTeoFunctionRuleById(ctx context.Context, zoneId st
 
 	request := teo.NewDescribeFunctionRulesRequest()
 	request.ZoneId = helper.String(zoneId)
-	filter := &teo.Filter{
+	request.Filters = []*teo.Filter{{
 		Name:   helper.String("function-id"),
 		Values: []*string{helper.String(functionId)},
-	}
-	request.Filters = append(request.Filters, filter)
-
-	filterRule := &teo.Filter{
+	}, {
 		Name:   helper.String("rule-id"),
 		Values: []*string{helper.String(ruleId)},
-	}
-	request.Filters = append(request.Filters, filterRule)
+	}}
 
 	defer func() {
 		if errRet != nil {
