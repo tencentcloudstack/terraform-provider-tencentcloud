@@ -128,6 +128,7 @@ The following arguments are supported:
 * `labels` - (Optional, Map, ForceNew) Labels of kubernetes scale worker created nodes.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
+* `taints` - (Optional, List, ForceNew) Node taint.
 * `unschedulable` - (Optional, Int, ForceNew) Set whether the added node participates in scheduling. The default value is 0, which means participating in scheduling; non-0 means not participating in scheduling. After the node initialization is completed, you can execute kubectl uncordon nodename to join the node in scheduling.
 * `user_script` - (Optional, String, ForceNew) Base64 encoded user script, this script will be executed after the k8s component is run. The user needs to ensure that the script is reentrant and retry logic. The script and its generated log files can be viewed in the /data/ccs_userscript/ path of the node, if required. The node needs to be initialized before it can be added to the schedule. It can be used with the unschedulable parameter. After the final initialization of userScript is completed, add the kubectl uncordon nodename --kubeconfig=/root/.kube/config command to add the node to the schedule.
 
@@ -159,6 +160,12 @@ The `gpu_args` object supports the following:
 * `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
 * `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
 * `mig_enable` - (Optional, Bool) Whether to enable MIG.
+
+The `taints` object supports the following:
+
+* `effect` - (Optional, String, ForceNew) Effect of the taint.
+* `key` - (Optional, String, ForceNew) Key of the taint.
+* `value` - (Optional, String, ForceNew) Value of the taint.
 
 The `worker_config` object supports the following:
 
