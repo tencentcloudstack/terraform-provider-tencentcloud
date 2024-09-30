@@ -65,6 +65,9 @@ const (
 	// 创建自定义推送任务认证失败, 请检查推送地址是否正确。
 	FAILEDOPERATION_CREATELOGTOPICTASKAUTHFAILURE = "FailedOperation.CreateLogTopicTaskAuthFailure"
 
+	// 有其他任务正在部署中，请稍后重试。
+	FAILEDOPERATION_FUNCTIONDEPLOYING = "FailedOperation.FunctionDeploying"
+
 	// 账户余额不足。
 	FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
 
@@ -83,6 +86,9 @@ const (
 	// 实时日志推送任务不存在
 	FAILEDOPERATION_REALTIMELOGNOTFOUND = "FailedOperation.RealtimeLogNotFound"
 
+	// 该站点下函数规则操作冲突。
+	FAILEDOPERATION_RULEOPERATIONCONFLICT = "FailedOperation.RuleOperationConflict"
+
 	// 未知的配置组类型。
 	FAILEDOPERATION_UNKNOWNCONFIGGROUPTYPE = "FailedOperation.UnknownConfigGroupType"
 
@@ -100,6 +106,9 @@ const (
 
 	// 获取配置失败。
 	INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
+
+	// 调用 DNSPod 失败，请稍后重试，若无法解决，请联系智能客服或提交工单。
+	INTERNALERROR_FAILEDTOCALLDNSPOD = "InternalError.FailedToCallDNSPod"
 
 	// 上传链接生成失败。
 	INTERNALERROR_FAILEDTOGENERATEURL = "InternalError.FailedToGenerateUrl"
@@ -134,6 +143,12 @@ const (
 	// 别称域名不支持配置国密证书。
 	INVALIDPARAMETER_ALIASDOMAINNOTSUPPORTSMCERT = "InvalidParameter.AliasDomainNotSupportSMCert"
 
+	// 函数内容存在语法错误。
+	INVALIDPARAMETER_BADCONTENT = "InvalidParameter.BadContent"
+
+	// 函数名称不符合命名规范。
+	INVALIDPARAMETER_BADFUNCTIONNAME = "InvalidParameter.BadFunctionName"
+
 	// 无效的查询字符串。
 	INVALIDPARAMETER_CACHEKEYQUERYSTRINGREQUIRESFULLURLCACHEOFF = "InvalidParameter.CacheKeyQueryStringRequiresFullUrlCacheOff"
 
@@ -163,6 +178,9 @@ const (
 
 	// 源站不能和域名一致。
 	INVALIDPARAMETER_CONFLICTHOSTORIGIN = "InvalidParameter.ConflictHostOrigin"
+
+	// 函数内容超过大小限制。
+	INVALIDPARAMETER_CONTENTEXCEEDSLIMIT = "InvalidParameter.ContentExceedsLimit"
 
 	// 域名不存在或不属于该账号。
 	INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
@@ -259,6 +277,9 @@ const (
 
 	// 条件为空。
 	INVALIDPARAMETER_ERRNILCONDITION = "InvalidParameter.ErrNilCondition"
+
+	// 函数名称和本账号下其他函数冲突。
+	INVALIDPARAMETER_FUNCTIONNAMECONFLICT = "InvalidParameter.FunctionNameConflict"
 
 	// 开启 Grpc 协议支持需要同时开启 HTTP/2 协议支持。
 	INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
@@ -367,6 +388,9 @@ const (
 
 	// 无效的自定义错误页面。
 	INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
+
+	// 不合法的过滤字段。
+	INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
 
 	// 无效的强制HTTPS跳转。
 	INVALIDPARAMETER_INVALIDFORCEREDIRECTTYPE = "InvalidParameter.InvalidForceRedirectType"
@@ -536,6 +560,9 @@ const (
 	// 修改源站操作中负载均衡实例Id必填。
 	INVALIDPARAMETER_LOADBALANCEINSTANCEIDISREQUIRED = "InvalidParameter.LoadBalanceInstanceIdIsRequired"
 
+	// 修改参数缺失。
+	INVALIDPARAMETER_MODIFYPARAMETERSMISSING = "InvalidParameter.ModifyParametersMissing"
+
 	// 不支持智能路由
 	INVALIDPARAMETER_MULTIPLYLAYERNOTSUPPORTSMARTROUTING = "InvalidParameter.MultiplyLayerNotSupportSmartRouting"
 
@@ -653,6 +680,9 @@ const (
 	// 过滤值过多。
 	INVALIDPARAMETER_TOOMANYFILTERVALUES = "InvalidParameter.TooManyFilterValues"
 
+	// 过滤项过多。
+	INVALIDPARAMETER_TOOMANYFILTERS = "InvalidParameter.TooManyFilters"
+
 	// 文件上传链接存在问题。
 	INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
 
@@ -677,6 +707,15 @@ const (
 	// 该站点域名已被禁用。
 	INVALIDPARAMETERVALUE_ACCESSBLACKLIST = "InvalidParameterValue.AccessBlacklist"
 
+	// 边缘双向认证配置中的客户端证书必须是CA证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYCLIENTMUSTCA = "InvalidParameterValue.CertificateVerifyClientMustCa"
+
+	// 边缘双向认证配置至少需要配置一本证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYCLIENTNEEDCERT = "InvalidParameterValue.CertificateVerifyClientNeedCert"
+
+	// 边缘双向认证配置中的客户端 CA 证书最多允许配置20本。
+	INVALIDPARAMETERVALUE_CLIENTCERTINFOQUOTALIMIT = "InvalidParameterValue.ClientCertInfoQuotaLimit"
+
 	// 与已经添加的记录冲突。
 	INVALIDPARAMETERVALUE_CONFLICTRECORD = "InvalidParameterValue.ConflictRecord"
 
@@ -689,8 +728,20 @@ const (
 	// 主机记录与记录值不能取值相同。
 	INVALIDPARAMETERVALUE_CONTENTSAMEASNAME = "InvalidParameterValue.ContentSameAsName"
 
+	// 页面内容与Content-Type不匹配。
+	INVALIDPARAMETERVALUE_CONTENTTYPENOTMATCH = "InvalidParameterValue.ContentTypeNotMatch"
+
 	// 入参中的域名与站点参数不匹配，请更正后重试。
 	INVALIDPARAMETERVALUE_DOMAINNOTMATCHZONE = "InvalidParameterValue.DomainNotMatchZone"
+
+	// 格式不匹配。
+	INVALIDPARAMETERVALUE_FORMATMISMATCH = "InvalidParameterValue.FormatMismatch"
+
+	// 配置参数格式不匹配。
+	INVALIDPARAMETERVALUE_GENERALMISMATCH = "InvalidParameterValue.GeneralMismatch"
+
+	// 包含无效的值。
+	INVALIDPARAMETERVALUE_INCLUDEINVALIDVALUE = "InvalidParameterValue.IncludeInvalidValue"
 
 	// 别称域名名称不合法，别称域名应该由数字、英文字母、连词符组成，且连词符不能位于开头和结尾处。
 	INVALIDPARAMETERVALUE_INVALIDALIASDOMAINNAME = "InvalidParameterValue.InvalidAliasDomainName"
@@ -716,17 +767,41 @@ const (
 	// 标签值存在不合法字符。
 	INVALIDPARAMETERVALUE_INVALIDTAGVALUE = "InvalidParameterValue.InvalidTagValue"
 
+	// 缺少必要配置参数。
+	INVALIDPARAMETERVALUE_MISSINGNECESSARYPARAM = "InvalidParameterValue.MissingNecessaryParam"
+
 	// 不支持接入泛域名 CNAME
 	INVALIDPARAMETERVALUE_NOTALLOWEDWILDCARDSHAREDCNAME = "InvalidParameterValue.NotAllowedWildcardSharedCNAME"
 
+	// 值不在要求的集合内。
+	INVALIDPARAMETERVALUE_NOTINENUMERATION = "InvalidParameterValue.NotInEnumeration"
+
+	// 值不在指定范围。
+	INVALIDPARAMETERVALUE_NOTWITHINRANGE = "InvalidParameterValue.NotWithinRange"
+
 	// 指定的源站组不存在。
 	INVALIDPARAMETERVALUE_ORIGINGROUPNOTEXISTS = "InvalidParameterValue.OriginGroupNotExists"
+
+	// 页面名称已存在。
+	INVALIDPARAMETERVALUE_PAGENAMEALREADYEXIST = "InvalidParameterValue.PageNameAlreadyExist"
+
+	// 不符合指定的正则表达式。
+	INVALIDPARAMETERVALUE_REGEXMISMATCH = "InvalidParameterValue.RegExMismatch"
+
+	// 已开启双向认证，客户端使用 RSA 或者 ECC 算法证书时，HTTPS 证书必须也配置有相同算法证书。
+	INVALIDPARAMETERVALUE_SERVERCERTINFONEEDCONTAINRSAORECC = "InvalidParameterValue.ServerCertInfoNeedContainRSAorECC"
+
+	// 已开启双向认证，客户端使用国密算法 CA 证书时，HTTPS 证书必须也配置有国密证书。
+	INVALIDPARAMETERVALUE_SERVERCERTINFONEEDCONTAINSM2 = "InvalidParameterValue.ServerCertInfoNeedContainSM2"
 
 	// 请输入合法的共享 CNAME 前缀，最大支持50个字符。
 	INVALIDPARAMETERVALUE_SHAREDCNAMEPREFIXNOTMATCH = "InvalidParameterValue.SharedCNAMEPrefixNotMatch"
 
 	// 暂不支持当前域名后缀接入，如您需要使用请联系我们。
 	INVALIDPARAMETERVALUE_TOPLEVELDOMAINNOTSUPPORT = "InvalidParameterValue.TopLevelDomainNotSupport"
+
+	// 配置项错误。
+	INVALIDPARAMETERVALUE_UNRECOGNIZABLEVALUE = "InvalidParameterValue.UnrecognizableValue"
 
 	// 站点名称格式不正确，请输入正确的域名格式。
 	INVALIDPARAMETERVALUE_ZONENAMEINVALID = "InvalidParameterValue.ZoneNameInvalid"
@@ -746,8 +821,14 @@ const (
 	// 本次提交的资源数超过上限。
 	LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
 
+	// 实时日志自定义字段正则类型字段数量超过限制
+	LIMITEXCEEDED_CUSTOMLOGFIELDREGEXLIMITEXCEEDED = "LimitExceeded.CustomLogFieldRegexLimitExceeded"
+
 	// 当天提交的资源数超过上限。
 	LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+
+	// 函数数量达到限制。
+	LIMITEXCEEDED_FUNCTIONLIMITEXCEEDED = "LimitExceeded.FunctionLimitExceeded"
 
 	// 计费套餐不支持。
 	LIMITEXCEEDED_PACKNOTALLOW = "LimitExceeded.PackNotAllow"
@@ -791,8 +872,14 @@ const (
 	// 引用源站组的7层域名服务正在部署中，请稍后再编辑。
 	OPERATIONDENIED_ACCELERATIONDOMAINSTATUSNOTINONLINE = "OperationDenied.AccelerationDomainStatusNotInOnline"
 
+	// 合规封禁中。
+	OPERATIONDENIED_COMPLIANCEFORBIDDEN = "OperationDenied.ComplianceForbidden"
+
 	// 配置已被锁定，请解除配置锁定之后在重试。
 	OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+
+	// TEO_QCSLinkedRoleInDnspodAccessEO 角色未进行授权，请授权后重试。
+	OPERATIONDENIED_DNSPODUNAUTHORIZEDROLEOPERATION = "OperationDenied.DNSPodUnauthorizedRoleOperation"
 
 	// 删除站点时预检查未通过。
 	OPERATIONDENIED_DELETEZONEPRECHECKFAILED = "OperationDenied.DeleteZonePreCheckFailed"
@@ -836,6 +923,12 @@ const (
 	// 开启高防必须保证站点加速区域是国内。
 	OPERATIONDENIED_INVALIDADVANCEDDEFENSEZONEAREA = "OperationDenied.InvalidAdvancedDefenseZoneArea"
 
+	// 独立DDoS防护与IPv6冲突，不能同时配置。
+	OPERATIONDENIED_IPV6ADVANCEDCONFLICT = "OperationDenied.Ipv6AdvancedConflict"
+
+	// ipv6功能和固定ip无法同时开启。
+	OPERATIONDENIED_IPV6STATICIPCONFLICT = "OperationDenied.Ipv6StaticIpConflict"
+
 	// 四层实例资源售卖火爆，已售罄，正在加紧补货中，当前无法新增四层代理，请您耐心等待。
 	OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
 
@@ -868,6 +961,9 @@ const (
 
 	// 站点状态不支持操作负载均衡。
 	OPERATIONDENIED_LOADBALANCINGZONEISNOTACTIVE = "OperationDenied.LoadBalancingZoneIsNotActive"
+
+	// 非海外独立防护，不能开启ipv6。
+	OPERATIONDENIED_MSGIPV6ADVANCEDCONFLICT = "OperationDenied.MsgIpv6AdvancedConflict"
 
 	// 已存在多个Cname接入站点，不允许切换至NS。
 	OPERATIONDENIED_MULTIPLECNAMEZONE = "OperationDenied.MultipleCnameZone"
@@ -934,6 +1030,9 @@ const (
 
 	// 绑定在共享 CNAME 中的域名不允许变更 IPv6 访问，如果您需要单独变更，请先将域名从共享 CNAME 中解绑。
 	OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDIPV6 = "OperationDenied.SharedCNAMEUnsupportedIPv6"
+
+	// 该实例地域无法开启固定IP。
+	OPERATIONDENIED_STATICIPAREACONFLICT = "OperationDenied.StaticIpAreaConflict"
 
 	// 存在使用中的测试版本，请将测试版本发布现网或者回滚测试版本再重试。
 	OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
@@ -1013,6 +1112,9 @@ const (
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
+	// DNSPod 未正常接入该域名，请在 DNSPod 接入后重试。
+	RESOURCENOTFOUND_DNSPODDOMAINNOTINACCOUNT = "ResourceNotFound.DNSPodDomainNotInAccount"
+
 	// 最大上传大小额度未配置
 	RESOURCENOTFOUND_POSTMAXSIZEQUOTANOTFOUND = "ResourceNotFound.PostMaxSizeQuotaNotFound"
 
@@ -1036,6 +1138,9 @@ const (
 
 	// 域名不存在或未开启代理。
 	RESOURCEUNAVAILABLE_HOSTNOTFOUND = "ResourceUnavailable.HostNotFound"
+
+	// 规则不存在或不属于该账号。
+	RESOURCEUNAVAILABLE_RULENOTFOUND = "ResourceUnavailable.RuleNotFound"
 
 	// 该共享 CNAME 已被占用，请重新输入。
 	RESOURCEUNAVAILABLE_SHAREDCNAMEALREADYEXISTS = "ResourceUnavailable.SharedCNAMEAlreadyExists"
