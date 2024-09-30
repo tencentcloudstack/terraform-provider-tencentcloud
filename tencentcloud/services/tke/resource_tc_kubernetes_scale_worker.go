@@ -437,6 +437,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 
 			"taints": {
 				Type:        schema.TypeList,
+				Optional:    true,
 				ForceNew:    true,
 				Description: "Node taint.",
 				Elem: &schema.Resource{
