@@ -1434,6 +1434,10 @@ TencentCloud EdgeOne(TEO)
     tencentcloud_teo_acceleration_domain
     tencentcloud_teo_l4_proxy
     tencentcloud_teo_realtime_log_delivery
+    tencentcloud_teo_function
+    tencentcloud_teo_function_rule
+    tencentcloud_teo_function_rule_priority
+    tencentcloud_teo_function_runtime_environment
 
 TencentCloud ServiceMesh(TCM)
   Data Source
