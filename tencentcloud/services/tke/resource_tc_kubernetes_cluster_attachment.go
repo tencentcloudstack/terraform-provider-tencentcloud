@@ -425,8 +425,10 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 			},
 
 			"security_groups": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "A list of security group IDs after attach to cluster.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -552,6 +554,14 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 
 	if v, ok := d.GetOk("hostname"); ok {
 		request.HostName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("security_groups"); ok {
+		securityGroupIdsSet := v.([]interface{})
+		for i := range securityGroupIdsSet {
+			securityGroupIds := securityGroupIdsSet[i].(string)
+			request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(securityGroupIds))
+		}
 	}
 
 	if v, ok := d.GetOk("worker_config_overrides"); ok {
