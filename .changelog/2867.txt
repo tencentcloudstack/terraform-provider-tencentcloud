@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_postgresql_apply_parameter_template_operation
+```

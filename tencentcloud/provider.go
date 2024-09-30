@@ -1504,6 +1504,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_instance_ha_config":                                          postgresql.ResourceTencentCloudPostgresqlInstanceHAConfig(),
 			"tencentcloud_postgresql_account":                                                     postgresql.ResourceTencentCloudPostgresqlAccount(),
 			"tencentcloud_postgresql_account_privileges_operation":                                postgresql.ResourceTencentCloudPostgresqlAccountPrivilegesOperation(),
+			"tencentcloud_postgresql_apply_parameter_template_operation":                          postgresql.ResourceTencentCloudPostgresqlApplyParameterTemplateOperation(),
 			"tencentcloud_sqlserver_instance":                                                     sqlserver.ResourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                                           sqlserver.ResourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                                                      sqlserver.ResourceTencentCloudSqlserverAccount(),
