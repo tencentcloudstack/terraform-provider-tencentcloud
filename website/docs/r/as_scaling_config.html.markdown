@@ -71,12 +71,37 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
+### Using image family
+
+```hcl
+resource "tencentcloud_as_scaling_config" "example" {
+  image_family              = "business-daily-update"
+  configuration_name        = "as-test-config"
+  disk_type_policy          = "ORIGINAL"
+  enhanced_monitor_service  = false
+  enhanced_security_service = false
+  instance_tags             = {}
+  instance_types = [
+    "S5.SMALL2",
+  ]
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 0
+  key_ids                    = []
+  project_id                 = 0
+  public_ip_assigned         = false
+  security_group_ids = [
+    "sg-5275dorp",
+  ]
+  system_disk_size = 50
+  system_disk_type = "CLOUD_BSSD"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `configuration_name` - (Required, String) Name of a launch configuration.
-* `image_id` - (Required, String) An available image ID for a cvm instance.
 * `instance_types` - (Required, List: [`String`]) Specified types of CVM instances.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
@@ -84,6 +109,8 @@ The following arguments are supported:
 * `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
 * `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is `TRUE`.
 * `host_name_settings` - (Optional, List) Related settings of the cloud server hostname (HostName).
+* `image_family` - (Optional, String) Image Family Name. Either Image ID or Image Family Name must be provided, but not both.
+* `image_id` - (Optional, String) An available image ID for a cvm instance.
 * `instance_charge_type_prepaid_period` - (Optional, Int) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.

@@ -1029,12 +1029,13 @@ func sortImages(images cvmImages) cvmImages {
 	return sortedImages
 }
 
-func (me *CvmService) ModifyImage(ctx context.Context, instanceId, imageName, imageDesc string) (errRet error) {
+func (me *CvmService) ModifyImage(ctx context.Context, instanceId, imageName, imageDesc, imageFamily string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	var request = cvm.NewModifyImageAttributeRequest()
 	request.ImageId = helper.String(instanceId)
 	request.ImageName = helper.String(imageName)
 	request.ImageDescription = helper.String(imageDesc)
+	request.ImageFamily = helper.String(imageFamily)
 
 	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
