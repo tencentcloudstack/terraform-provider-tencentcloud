@@ -1,8 +1,14 @@
+## 1.81.131 (October 1 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_security_group_rule: Supports setting the `ip_protocol` parameter to `ALL`. ([#2870](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2870))
+
 ## 1.81.130 (September 30 , 2024)
 
 FEATURES:
 
-* **New Data Source:** `tencentcloud_image_from_family` ([#2869](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2869))
+* **New Data Source:** `tencentcloud_Fimage_from_family` ([#2869](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2869))
 * **New Resource:** `tencentcloud_postgresql_apply_parameter_template_operation` ([#2867](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2867))
 * **New Resource:** `tencentcloud_teo_security_ip_group` ([#2867](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2864))
 * **New Resource:** `tencentcloud_teo_function` ([#2865](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2865))
