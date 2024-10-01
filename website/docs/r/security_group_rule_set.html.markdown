@@ -117,7 +117,7 @@ The `egress` object supports the following:
 * `description` - (Optional, String) Description of the security group rule.
 * `ipv6_cidr_block` - (Optional, String) An IPV6 address network or CIDR segment, and conflict with `source_security_id` and `address_template_*`.
 * `port` - (Optional, String) Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and conflicts with `service_template_*`.
-* `protocol` - (Optional, String) Type of IP protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `service_template_*`.
+* `protocol` - (Optional, String) Type of IP protocol. Valid values: `TCP`, `UDP`, `ICMP`, `ICMPv6` and `ALL`. Default to all types protocol, and conflicts with `service_template_*`.
 * `service_template_group` - (Optional, String) Specify Group ID of Protocol template ID like `ppmg-xxxxxxxx`, conflict with `cidr_block` and `port`.
 * `service_template_id` - (Optional, String) Specify Protocol template ID like `ppm-xxxxxxxx`, conflict with `cidr_block` and `port`.
 * `source_security_id` - (Optional, String) ID of the nested security group, and conflicts with `cidr_block` and `address_template_*`.
@@ -131,7 +131,7 @@ The `ingress` object supports the following:
 * `description` - (Optional, String) Description of the security group rule.
 * `ipv6_cidr_block` - (Optional, String) An IPV6 address network or CIDR segment, and conflict with `source_security_id` and `address_template_*`.
 * `port` - (Optional, String) Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and conflicts with `service_template_*`.
-* `protocol` - (Optional, String) Type of IP protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `service_template_*`.
+* `protocol` - (Optional, String) Type of IP protocol. Valid values: `TCP`, `UDP`, `ICMP`, `ICMPv6` and `ALL`. Default to all types protocol, and conflicts with `service_template_*`.
 * `service_template_group` - (Optional, String) Specify Group ID of Protocol template ID like `ppmg-xxxxxxxx`, conflict with `cidr_block` and `port`.
 * `service_template_id` - (Optional, String) Specify Protocol template ID like `ppm-xxxxxxxx`, conflict with `cidr_block` and `port`.
 * `source_security_id` - (Optional, String) ID of the nested security group, and conflicts with `cidr_block` and `address_template_*`.
