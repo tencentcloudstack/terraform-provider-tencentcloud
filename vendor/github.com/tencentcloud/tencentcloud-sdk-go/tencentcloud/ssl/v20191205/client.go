@@ -305,6 +305,63 @@ func (c *Client) CheckCertificateChainWithContext(ctx context.Context, request *
     return
 }
 
+func NewCheckCertificateDomainVerificationRequest() (request *CheckCertificateDomainVerificationRequest) {
+    request = &CheckCertificateDomainVerificationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ssl", APIVersion, "CheckCertificateDomainVerification")
+    
+    
+    return
+}
+
+func NewCheckCertificateDomainVerificationResponse() (response *CheckCertificateDomainVerificationResponse) {
+    response = &CheckCertificateDomainVerificationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CheckCertificateDomainVerification
+// 检查证书域名验证
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
+//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWVERIFY = "FailedOperation.CertificateStatusNotAllowVerify"
+//  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
+func (c *Client) CheckCertificateDomainVerification(request *CheckCertificateDomainVerificationRequest) (response *CheckCertificateDomainVerificationResponse, err error) {
+    return c.CheckCertificateDomainVerificationWithContext(context.Background(), request)
+}
+
+// CheckCertificateDomainVerification
+// 检查证书域名验证
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
+//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWVERIFY = "FailedOperation.CertificateStatusNotAllowVerify"
+//  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
+func (c *Client) CheckCertificateDomainVerificationWithContext(ctx context.Context, request *CheckCertificateDomainVerificationRequest) (response *CheckCertificateDomainVerificationResponse, err error) {
+    if request == nil {
+        request = NewCheckCertificateDomainVerificationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CheckCertificateDomainVerification require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCheckCertificateDomainVerificationResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCommitCertificateInformationRequest() (request *CommitCertificateInformationRequest) {
     request = &CommitCertificateInformationRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -508,7 +565,7 @@ func NewCreateCertificateBindResourceSyncTaskResponse() (response *CreateCertifi
 }
 
 // CreateCertificateBindResourceSyncTask
-// 创建证书绑定关联云资源异步任务， 该接口用于查询证书关联云资源。 若证书ID已存在查询云资源任务，则结果返回该任务ID。关联云资源类型，支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）。查询关联云资源结果使用DescribeCertificateBindResourceTaskResult接口
+// 创建证书绑定关联云资源异步任务， 该接口用于查询证书关联云资源。 若证书ID已存在查询云资源任务，则结果返回该任务ID。关联云资源类型，支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos。查询关联云资源结果使用DescribeCertificateBindResourceTaskResult接口
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCEINNERINTERRUPT = "FailedOperation.CertificateHostResourceInnerInterrupt"
@@ -518,7 +575,7 @@ func (c *Client) CreateCertificateBindResourceSyncTask(request *CreateCertificat
 }
 
 // CreateCertificateBindResourceSyncTask
-// 创建证书绑定关联云资源异步任务， 该接口用于查询证书关联云资源。 若证书ID已存在查询云资源任务，则结果返回该任务ID。关联云资源类型，支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）。查询关联云资源结果使用DescribeCertificateBindResourceTaskResult接口
+// 创建证书绑定关联云资源异步任务， 该接口用于查询证书关联云资源。 若证书ID已存在查询云资源任务，则结果返回该任务ID。关联云资源类型，支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos。查询关联云资源结果使用DescribeCertificateBindResourceTaskResult接口
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCEINNERINTERRUPT = "FailedOperation.CertificateHostResourceInnerInterrupt"
@@ -631,22 +688,22 @@ func NewDeleteCertificateResponse() (response *DeleteCertificateResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
+//  FAILEDOPERATION_BOUNDRESOURCES = "FailedOperation.BoundResources"
 //  FAILEDOPERATION_CANCELORDERFAILED = "FailedOperation.CancelOrderFailed"
 //  FAILEDOPERATION_CANNOTBEDELETEDISSUED = "FailedOperation.CannotBeDeletedIssued"
 //  FAILEDOPERATION_CANNOTBEDELETEDWITHINHOUR = "FailedOperation.CannotBeDeletedWithinHour"
 //  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
-//  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
-//  FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_DELETEFAILEDTIMENOTUP = "FailedOperation.DeleteFailedTimeNotUp"
 //  FAILEDOPERATION_DELETERESOURCEFAILED = "FailedOperation.DeleteResourceFailed"
-//  FAILEDOPERATION_EXCEEDSFREELIMIT = "FailedOperation.ExceedsFreeLimit"
 //  FAILEDOPERATION_INVALIDCERTIFICATESTATUSCODE = "FailedOperation.InvalidCertificateStatusCode"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NETWORKERROR = "FailedOperation.NetworkError"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
 //  FAILEDOPERATION_NOREALNAMEAUTH = "FailedOperation.NoRealNameAuth"
 //  FAILEDOPERATION_ORDERALREADYREPLACED = "FailedOperation.OrderAlreadyReplaced"
-//  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
+//  FAILEDOPERATION_RENEWNOTISSUED = "FailedOperation.RenewNotIssued"
+//  FAILEDOPERATION_ROLENOTFOUNDAUTHORIZATION = "FailedOperation.RoleNotFoundAuthorization"
 //  INTERNALERROR = "InternalError"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 func (c *Client) DeleteCertificate(request *DeleteCertificateRequest) (response *DeleteCertificateResponse, err error) {
@@ -659,22 +716,22 @@ func (c *Client) DeleteCertificate(request *DeleteCertificateRequest) (response 
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
+//  FAILEDOPERATION_BOUNDRESOURCES = "FailedOperation.BoundResources"
 //  FAILEDOPERATION_CANCELORDERFAILED = "FailedOperation.CancelOrderFailed"
 //  FAILEDOPERATION_CANNOTBEDELETEDISSUED = "FailedOperation.CannotBeDeletedIssued"
 //  FAILEDOPERATION_CANNOTBEDELETEDWITHINHOUR = "FailedOperation.CannotBeDeletedWithinHour"
 //  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
-//  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
-//  FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_DELETEFAILEDTIMENOTUP = "FailedOperation.DeleteFailedTimeNotUp"
 //  FAILEDOPERATION_DELETERESOURCEFAILED = "FailedOperation.DeleteResourceFailed"
-//  FAILEDOPERATION_EXCEEDSFREELIMIT = "FailedOperation.ExceedsFreeLimit"
 //  FAILEDOPERATION_INVALIDCERTIFICATESTATUSCODE = "FailedOperation.InvalidCertificateStatusCode"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NETWORKERROR = "FailedOperation.NetworkError"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
 //  FAILEDOPERATION_NOREALNAMEAUTH = "FailedOperation.NoRealNameAuth"
 //  FAILEDOPERATION_ORDERALREADYREPLACED = "FailedOperation.OrderAlreadyReplaced"
-//  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
+//  FAILEDOPERATION_RENEWNOTISSUED = "FailedOperation.RenewNotIssued"
+//  FAILEDOPERATION_ROLENOTFOUNDAUTHORIZATION = "FailedOperation.RoleNotFoundAuthorization"
 //  INTERNALERROR = "InternalError"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 func (c *Client) DeleteCertificateWithContext(ctx context.Context, request *DeleteCertificateRequest) (response *DeleteCertificateResponse, err error) {
@@ -689,6 +746,61 @@ func (c *Client) DeleteCertificateWithContext(ctx context.Context, request *Dele
     request.SetContext(ctx)
     
     response = NewDeleteCertificateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCertificatesRequest() (request *DeleteCertificatesRequest) {
+    request = &DeleteCertificatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ssl", APIVersion, "DeleteCertificates")
+    
+    
+    return
+}
+
+func NewDeleteCertificatesResponse() (response *DeleteCertificatesResponse) {
+    response = &DeleteCertificatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCertificates
+// 批量删除证书，删除证书前支持查询证书是否关联了腾讯云云资源 （需自定义配置参数，参数名称：IsSync）
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_CAMAUTHORIZEDFAIL = "FailedOperation.CAMAuthorizedFail"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_WITHDETAILREASON = "InvalidParameter.WithDetailReason"
+func (c *Client) DeleteCertificates(request *DeleteCertificatesRequest) (response *DeleteCertificatesResponse, err error) {
+    return c.DeleteCertificatesWithContext(context.Background(), request)
+}
+
+// DeleteCertificates
+// 批量删除证书，删除证书前支持查询证书是否关联了腾讯云云资源 （需自定义配置参数，参数名称：IsSync）
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_CAMAUTHORIZEDFAIL = "FailedOperation.CAMAuthorizedFail"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_WITHDETAILREASON = "InvalidParameter.WithDetailReason"
+func (c *Client) DeleteCertificatesWithContext(ctx context.Context, request *DeleteCertificatesRequest) (response *DeleteCertificatesResponse, err error) {
+    if request == nil {
+        request = NewDeleteCertificatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCertificates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCertificatesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1078,20 +1190,22 @@ func NewDescribeCertificateBindResourceTaskDetailResponse() (response *DescribeC
 }
 
 // DescribeCertificateBindResourceTaskDetail
-// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）
+// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATESYNCTASKIDINVALID = "FailedOperation.CertificateSyncTaskIdInvalid"
 //  FAILEDOPERATION_ROLENOTFOUNDAUTHORIZATION = "FailedOperation.RoleNotFoundAuthorization"
 func (c *Client) DescribeCertificateBindResourceTaskDetail(request *DescribeCertificateBindResourceTaskDetailRequest) (response *DescribeCertificateBindResourceTaskDetailResponse, err error) {
     return c.DescribeCertificateBindResourceTaskDetailWithContext(context.Background(), request)
 }
 
 // DescribeCertificateBindResourceTaskDetail
-// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）
+// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATESYNCTASKIDINVALID = "FailedOperation.CertificateSyncTaskIdInvalid"
 //  FAILEDOPERATION_ROLENOTFOUNDAUTHORIZATION = "FailedOperation.RoleNotFoundAuthorization"
 func (c *Client) DescribeCertificateBindResourceTaskDetailWithContext(ctx context.Context, request *DescribeCertificateBindResourceTaskDetailRequest) (response *DescribeCertificateBindResourceTaskDetailResponse, err error) {
     if request == nil {
@@ -1129,19 +1243,21 @@ func NewDescribeCertificateBindResourceTaskResultResponse() (response *DescribeC
 }
 
 // DescribeCertificateBindResourceTaskResult
-// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）
+// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATESYNCTASKIDINVALID = "FailedOperation.CertificateSyncTaskIdInvalid"
 func (c *Client) DescribeCertificateBindResourceTaskResult(request *DescribeCertificateBindResourceTaskResultRequest) (response *DescribeCertificateBindResourceTaskResultResponse, err error) {
     return c.DescribeCertificateBindResourceTaskResultWithContext(context.Background(), request)
 }
 
 // DescribeCertificateBindResourceTaskResult
-// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）
+// 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATESYNCTASKIDINVALID = "FailedOperation.CertificateSyncTaskIdInvalid"
 func (c *Client) DescribeCertificateBindResourceTaskResultWithContext(ctx context.Context, request *DescribeCertificateBindResourceTaskResultRequest) (response *DescribeCertificateBindResourceTaskResultResponse, err error) {
     if request == nil {
         request = NewDescribeCertificateBindResourceTaskResultRequest()
@@ -1184,6 +1300,7 @@ func NewDescribeCertificateDetailResponse() (response *DescribeCertificateDetail
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
 //  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
+//  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
@@ -1203,6 +1320,7 @@ func (c *Client) DescribeCertificateDetail(request *DescribeCertificateDetailReq
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
 //  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
+//  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
@@ -1430,6 +1548,55 @@ func (c *Client) DescribeCompaniesWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeDeleteCertificatesTaskResultRequest() (request *DescribeDeleteCertificatesTaskResultRequest) {
+    request = &DescribeDeleteCertificatesTaskResultRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ssl", APIVersion, "DescribeDeleteCertificatesTaskResult")
+    
+    
+    return
+}
+
+func NewDescribeDeleteCertificatesTaskResultResponse() (response *DescribeDeleteCertificatesTaskResultResponse) {
+    response = &DescribeDeleteCertificatesTaskResultResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDeleteCertificatesTaskResult
+// 查询批量删除任务结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDeleteCertificatesTaskResult(request *DescribeDeleteCertificatesTaskResultRequest) (response *DescribeDeleteCertificatesTaskResultResponse, err error) {
+    return c.DescribeDeleteCertificatesTaskResultWithContext(context.Background(), request)
+}
+
+// DescribeDeleteCertificatesTaskResult
+// 查询批量删除任务结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDeleteCertificatesTaskResultWithContext(ctx context.Context, request *DescribeDeleteCertificatesTaskResultRequest) (response *DescribeDeleteCertificatesTaskResultResponse, err error) {
+    if request == nil {
+        request = NewDescribeDeleteCertificatesTaskResultRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDeleteCertificatesTaskResult require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDeleteCertificatesTaskResultResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDeployedResourcesRequest() (request *DescribeDeployedResourcesRequest) {
     request = &DescribeDeployedResourcesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1493,6 +1660,63 @@ func (c *Client) DescribeDeployedResourcesWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeDeployedResourcesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDownloadCertificateUrlRequest() (request *DescribeDownloadCertificateUrlRequest) {
+    request = &DescribeDownloadCertificateUrlRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ssl", APIVersion, "DescribeDownloadCertificateUrl")
+    
+    
+    return
+}
+
+func NewDescribeDownloadCertificateUrlResponse() (response *DescribeDownloadCertificateUrlResponse) {
+    response = &DescribeDownloadCertificateUrlResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDownloadCertificateUrl
+// 获取下载证书链接
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATEDOWNLOADSERVICETYPENOTSUPPORT = "FailedOperation.CertificateDownloadServiceTypeNotSupport"
+//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWDOWNLOAD = "FailedOperation.CertificateStatusNotAllowDownload"
+//  FAILEDOPERATION_CERTIFICATETYPEINFONOTFOUND = "FailedOperation.CertificateTypeInfoNotFound"
+func (c *Client) DescribeDownloadCertificateUrl(request *DescribeDownloadCertificateUrlRequest) (response *DescribeDownloadCertificateUrlResponse, err error) {
+    return c.DescribeDownloadCertificateUrlWithContext(context.Background(), request)
+}
+
+// DescribeDownloadCertificateUrl
+// 获取下载证书链接
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATEDOWNLOADSERVICETYPENOTSUPPORT = "FailedOperation.CertificateDownloadServiceTypeNotSupport"
+//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWDOWNLOAD = "FailedOperation.CertificateStatusNotAllowDownload"
+//  FAILEDOPERATION_CERTIFICATETYPEINFONOTFOUND = "FailedOperation.CertificateTypeInfoNotFound"
+func (c *Client) DescribeDownloadCertificateUrlWithContext(ctx context.Context, request *DescribeDownloadCertificateUrlRequest) (response *DescribeDownloadCertificateUrlResponse, err error) {
+    if request == nil {
+        request = NewDescribeDownloadCertificateUrlRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDownloadCertificateUrl require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDownloadCertificateUrlResponse()
     err = c.Send(request, response)
     return
 }
@@ -2786,77 +3010,6 @@ func (c *Client) DownloadCertificateWithContext(ctx context.Context, request *Do
     return
 }
 
-func NewHostCertificateRequest() (request *HostCertificateRequest) {
-    request = &HostCertificateRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ssl", APIVersion, "HostCertificate")
-    
-    
-    return
-}
-
-func NewHostCertificateResponse() (response *HostCertificateResponse) {
-    response = &HostCertificateResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// HostCertificate
-// 证书托管接口已重构， 旧接口预下线， 近30天无请求
-//
-// 
-//
-// 云资源托管
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CERTIFICATEHASRENEWED = "FailedOperation.CertificateHasRenewed"
-//  FAILEDOPERATION_CERTIFICATEHOSTDEPLOYCANNOTALLOW = "FailedOperation.CertificateHostDeployCanNotAllow"
-//  FAILEDOPERATION_CERTIFICATEHOSTINGTYPENUMBERLIMIT = "FailedOperation.CertificateHostingTypeNumberLimit"
-//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-func (c *Client) HostCertificate(request *HostCertificateRequest) (response *HostCertificateResponse, err error) {
-    return c.HostCertificateWithContext(context.Background(), request)
-}
-
-// HostCertificate
-// 证书托管接口已重构， 旧接口预下线， 近30天无请求
-//
-// 
-//
-// 云资源托管
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CERTIFICATEHASRENEWED = "FailedOperation.CertificateHasRenewed"
-//  FAILEDOPERATION_CERTIFICATEHOSTDEPLOYCANNOTALLOW = "FailedOperation.CertificateHostDeployCanNotAllow"
-//  FAILEDOPERATION_CERTIFICATEHOSTINGTYPENUMBERLIMIT = "FailedOperation.CertificateHostingTypeNumberLimit"
-//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-func (c *Client) HostCertificateWithContext(ctx context.Context, request *HostCertificateRequest) (response *HostCertificateResponse, err error) {
-    if request == nil {
-        request = NewHostCertificateRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("HostCertificate require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewHostCertificateResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewModifyCertificateAliasRequest() (request *ModifyCertificateAliasRequest) {
     request = &ModifyCertificateAliasRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3385,7 +3538,7 @@ func NewUpdateCertificateInstanceResponse() (response *UpdateCertificateInstance
 }
 
 // UpdateCertificateInstance
-// 一键更新旧证书资源，本接口为异步接口， 调用之后DeployRecordId为0表示任务进行中， 当返回DeployRecordId大于0则表示任务创建成功。 未创建成功则会抛出异常
+// 一键更新旧证书资源，本接口为异步接口， 调用之后DeployRecordId为0表示任务进行中， 重复请求这个接口， 当返回DeployRecordId大于0则表示任务创建成功。 未创建成功则会抛出异常
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3415,7 +3568,7 @@ func (c *Client) UpdateCertificateInstance(request *UpdateCertificateInstanceReq
 }
 
 // UpdateCertificateInstance
-// 一键更新旧证书资源，本接口为异步接口， 调用之后DeployRecordId为0表示任务进行中， 当返回DeployRecordId大于0则表示任务创建成功。 未创建成功则会抛出异常
+// 一键更新旧证书资源，本接口为异步接口， 调用之后DeployRecordId为0表示任务进行中， 重复请求这个接口， 当返回DeployRecordId大于0则表示任务创建成功。 未创建成功则会抛出异常
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"

@@ -29,6 +29,9 @@ const (
 	// 请检查是否有权限。
 	FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
 
+	// 有未解绑的云资源，不能被删除。
+	FAILEDOPERATION_BOUNDRESOURCES = "FailedOperation.BoundResources"
+
 	// CAM鉴权出现错误。
 	FAILEDOPERATION_CAMAUTHORIZEDFAIL = "FailedOperation.CAMAuthorizedFail"
 
@@ -65,14 +68,14 @@ const (
 	// 必须有部署成功的记录才可以回滚。
 	FAILEDOPERATION_CERTIFICATEDEPLOYROLLBACKSTATUSINVALID = "FailedOperation.CertificateDeployRollbackStatusInvalid"
 
+	// 证书下载服务类型不支持。
+	FAILEDOPERATION_CERTIFICATEDOWNLOADSERVICETYPENOTSUPPORT = "FailedOperation.CertificateDownloadServiceTypeNotSupport"
+
 	// 证书内容疑似国密证书，与所选证书标准不符，请您核对选择的证书标准和证书内容是否有误
 	FAILEDOPERATION_CERTIFICATEENCRYPTINVALID = "FailedOperation.CertificateEncryptInvalid"
 
 	// 证书已存在。
 	FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
-
-	// 已替换证书，无法进行托管。
-	FAILEDOPERATION_CERTIFICATEHASRENEWED = "FailedOperation.CertificateHasRenewed"
 
 	// 当前证书不允许使用一键更新的功能。
 	FAILEDOPERATION_CERTIFICATEHOSTDEPLOYCANNOTALLOW = "FailedOperation.CertificateHostDeployCanNotAllow"
@@ -85,9 +88,6 @@ const (
 
 	// 云资源类型无效。
 	FAILEDOPERATION_CERTIFICATEHOSTRESOURCETYPEINVALID = "FailedOperation.CertificateHostResourceTypeInvalid"
-
-	// 证书资源托管数量超过限制。
-	FAILEDOPERATION_CERTIFICATEHOSTINGTYPENUMBERLIMIT = "FailedOperation.CertificateHostingTypeNumberLimit"
 
 	// 证书不符合标准。
 	FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
@@ -113,14 +113,29 @@ const (
 	// 解析失败，请检查证书是否符合标准，请留意是否有多余的空格
 	FAILEDOPERATION_CERTIFICATEPARSEERROR = "FailedOperation.CertificateParseError"
 
+	// 当前证书状态不允许下载。
+	FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWDOWNLOAD = "FailedOperation.CertificateStatusNotAllowDownload"
+
 	// 证书状态不允许重新申请。
 	FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWRESUBMIT = "FailedOperation.CertificateStatusNotAllowResubmit"
+
+	// 证书当前状态不允许进行域名验证。
+	FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWVERIFY = "FailedOperation.CertificateStatusNotAllowVerify"
+
+	// 证书关联云资源查询任务ID无效
+	FAILEDOPERATION_CERTIFICATESYNCTASKIDINVALID = "FailedOperation.CertificateSyncTaskIdInvalid"
+
+	// 无法查到当前证书类型详情。
+	FAILEDOPERATION_CERTIFICATETYPEINFONOTFOUND = "FailedOperation.CertificateTypeInfoNotFound"
 
 	// 证书确认函文件过大（需小于1.4M）。
 	FAILEDOPERATION_CONFIRMLETTERTOOLARGE = "FailedOperation.ConfirmLetterTooLarge"
 
 	// 证书确认函文件过小（需大于1KB）。
 	FAILEDOPERATION_CONFIRMLETTERTOOSMALL = "FailedOperation.ConfirmLetterTooSmall"
+
+	// 免费证书申请时间未超过1小时，不能被删除。
+	FAILEDOPERATION_DELETEFAILEDTIMENOTUP = "FailedOperation.DeleteFailedTimeNotUp"
 
 	// 证书已关联云资源，无法删除。
 	FAILEDOPERATION_DELETERESOURCEFAILED = "FailedOperation.DeleteResourceFailed"
@@ -187,6 +202,9 @@ const (
 
 	// 权益包不存在。
 	FAILEDOPERATION_PACKAGENOTFOUND = "FailedOperation.PackageNotFound"
+
+	// 续费证书未颁发，无法执行删除操作。
+	FAILEDOPERATION_RENEWNOTISSUED = "FailedOperation.RenewNotIssued"
 
 	// 证书吊销失败。
 	FAILEDOPERATION_REVOKEFAILED = "FailedOperation.RevokeFailed"
