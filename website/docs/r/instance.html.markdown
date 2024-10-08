@@ -225,6 +225,7 @@ The following arguments are supported:
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disable_api_termination` - (Optional, Bool) Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.
+* `disable_automation_service` - (Optional, Bool) Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.
 * `disable_security_service` - (Optional, Bool) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
