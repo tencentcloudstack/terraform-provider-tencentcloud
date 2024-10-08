@@ -100,6 +100,8 @@ The following methods are supported, in this order, and explained below:
 - Assume role with SAML
 - Assume role with OIDC
 - Shared credentials
+- Enable pod OIDC
+- Cam role name
 
 ### Static credentials
 
@@ -236,7 +238,7 @@ $ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN="my-web-identity-token"
 $ terraform plan
 ```
 
-### Enable pod oidc
+### Enable pod OIDC
 
 Configure the TencentCloud Provider with TKE OIDC.
 
