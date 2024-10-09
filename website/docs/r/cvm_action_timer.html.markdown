@@ -82,21 +82,8 @@ The following arguments are supported:
 
 The `action_timer` object supports the following:
 
-* `action_time` - (Optional, String) Execution time, expressed according to ISO8601 standard and using UTC time. The format is YYYY-MM-DDThh:mm:ssZ. For example, 2018-05-29T11:26:40Z, the execution time must be 5 minutes longer than the current time.
-* `externals` - (Optional, List) Extended data.
-* `timer_action` - (Optional, String) Timer action, currently only supports destroying one value: TerminateInstances.
-
-The `externals` object of `action_timer` supports the following:
-
-* `release_address` - (Optional, Bool) Whether to release address of this instance.
-* `storage_block_attr` - (Optional, List) HDD local storage properties.
-* `unsupport_networks` - (Optional, Set) Unsupported network type, Value range: BASIC - Basic Network; VPC1.0 - Private Network VPC1.0.
-
-The `storage_block_attr` object of `externals` supports the following:
-
-* `max_size` - (Optional, Int) Maximum capacity of HDD local storage.
-* `min_size` - (Optional, Int) Minimum capacity for HDD local storage.
-* `type` - (Optional, String) HDD local storage type, Value is: LOCAL_PRO.
+* `action_time` - (Optional, String, ForceNew) Execution time, expressed according to ISO8601 standard and using UTC time. The format is YYYY-MM-DDThh:mm:ssZ. For example, 2018-05-29T11:26:40Z, the execution time must be 5 minutes longer than the current time.
+* `timer_action` - (Optional, String, ForceNew) Timer action, currently only supports destroying one value: TerminateInstances.
 
 ## Attributes Reference
 
