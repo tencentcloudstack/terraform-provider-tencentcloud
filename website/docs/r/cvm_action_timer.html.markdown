@@ -83,7 +83,12 @@ The following arguments are supported:
 The `action_timer` object supports the following:
 
 * `action_time` - (Optional, String, ForceNew) Execution time, expressed according to ISO8601 standard and using UTC time. The format is YYYY-MM-DDThh:mm:ssZ. For example, 2018-05-29T11:26:40Z, the execution time must be 5 minutes longer than the current time.
+* `externals` - (Optional, List, ForceNew) Extended data.
 * `timer_action` - (Optional, String, ForceNew) Timer action, currently only supports destroying one value: TerminateInstances.
+
+The `externals` object of `action_timer` supports the following:
+
+* `release_address` - (Optional, Bool, ForceNew) Whether to release address of this instance.
 
 ## Attributes Reference
 
