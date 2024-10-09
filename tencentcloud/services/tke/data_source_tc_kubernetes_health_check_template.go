@@ -19,7 +19,6 @@ func DataSourceTencentCloudKubernetesHealthCheckTemplate() *schema.Resource {
 			"health_check_template": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "health check template",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
