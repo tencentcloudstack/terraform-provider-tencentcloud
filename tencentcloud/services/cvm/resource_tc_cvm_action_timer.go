@@ -3,12 +3,13 @@ package cvm
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func ResourceTencentCloudCvmActionTimer() *schema.Resource {
@@ -38,59 +39,61 @@ func ResourceTencentCloudCvmActionTimer() *schema.Resource {
 						"timer_action": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Timer action, currently only supports destroying one value: TerminateInstances.",
 						},
 						"action_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Execution time, expressed according to ISO8601 standard and using UTC time. The format is YYYY-MM-DDThh:mm:ssZ. For example, 2018-05-29T11:26:40Z, the execution time must be 5 minutes longer than the current time.",
 						},
-						"externals": {
-							Type:        schema.TypeList,
-							MaxItems:    1,
-							Optional:    true,
-							Description: "Extended data.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"release_address": {
-										Type:        schema.TypeBool,
-										Optional:    true,
-										Description: "Whether to release address of this instance.",
-									},
-									"unsupport_networks": {
-										Type:        schema.TypeSet,
-										Elem:        &schema.Schema{Type: schema.TypeString},
-										Optional:    true,
-										Description: "Unsupported network type, Value range: BASIC - Basic Network; VPC1.0 - Private Network VPC1.0.",
-									},
-									"storage_block_attr": {
-										Type:        schema.TypeList,
-										MaxItems:    1,
-										Optional:    true,
-										Description: "HDD local storage properties.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"type": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "HDD local storage type, Value is: LOCAL_PRO.",
-												},
-												"min_size": {
-													Type:        schema.TypeInt,
-													Optional:    true,
-													Description: "Minimum capacity for HDD local storage.",
-												},
-												"max_size": {
-													Type:        schema.TypeInt,
-													Optional:    true,
-													Description: "Maximum capacity of HDD local storage.",
-												},
-											},
-										},
-									},
-								},
-							},
-						},
+						//"externals": {
+						//	Type:        schema.TypeList,
+						//	MaxItems:    1,
+						//	Optional:    true,
+						//	Description: "Extended data.",
+						//	Elem: &schema.Resource{
+						//		Schema: map[string]*schema.Schema{
+						//			"release_address": {
+						//				Type:        schema.TypeBool,
+						//				Optional:    true,
+						//				Description: "Whether to release address of this instance.",
+						//			},
+						//			"unsupport_networks": {
+						//				Type:        schema.TypeSet,
+						//				Elem:        &schema.Schema{Type: schema.TypeString},
+						//				Optional:    true,
+						//				Description: "Unsupported network type, Value range: BASIC - Basic Network; VPC1.0 - Private Network VPC1.0.",
+						//			},
+						//			"storage_block_attr": {
+						//				Type:        schema.TypeList,
+						//				MaxItems:    1,
+						//				Optional:    true,
+						//				Description: "HDD local storage properties.",
+						//				Elem: &schema.Resource{
+						//					Schema: map[string]*schema.Schema{
+						//						"type": {
+						//							Type:        schema.TypeString,
+						//							Optional:    true,
+						//							Description: "HDD local storage type, Value is: LOCAL_PRO.",
+						//						},
+						//						"min_size": {
+						//							Type:        schema.TypeInt,
+						//							Optional:    true,
+						//							Description: "Minimum capacity for HDD local storage.",
+						//						},
+						//						"max_size": {
+						//							Type:        schema.TypeInt,
+						//							Optional:    true,
+						//							Description: "Maximum capacity of HDD local storage.",
+						//						},
+						//					},
+						//				},
+						//			},
+						//		},
+						//	},
+						//},
 					},
 				},
 			},
@@ -122,41 +125,41 @@ func resourceTencentCloudCvmActionTimerCreate(d *schema.ResourceData, meta inter
 			actionTimer.ActionTime = helper.String(v.(string))
 		}
 
-		if externalsMap, ok := helper.InterfaceToMap(dMap, "externals"); ok {
-			externals := cvm.Externals{}
-			if v, ok := externalsMap["release_address"]; ok {
-				externals.ReleaseAddress = helper.Bool(v.(bool))
-			}
-
-			if v, ok := externalsMap["unsupport_networks"]; ok {
-				unsupportNetworksSet := v.(*schema.Set).List()
-				for i := range unsupportNetworksSet {
-					if unsupportNetworksSet[i] != nil {
-						unsupportNetworks := unsupportNetworksSet[i].(string)
-						externals.UnsupportNetworks = append(externals.UnsupportNetworks, &unsupportNetworks)
-					}
-				}
-			}
-
-			if storageBlockAttrMap, ok := helper.InterfaceToMap(externalsMap, "storage_block_attr"); ok {
-				storageBlock := cvm.StorageBlock{}
-				if v, ok := storageBlockAttrMap["type"]; ok {
-					storageBlock.Type = helper.String(v.(string))
-				}
-
-				if v, ok := storageBlockAttrMap["min_size"]; ok {
-					storageBlock.MinSize = helper.IntInt64(v.(int))
-				}
-
-				if v, ok := storageBlockAttrMap["max_size"]; ok {
-					storageBlock.MaxSize = helper.IntInt64(v.(int))
-				}
-
-				externals.StorageBlockAttr = &storageBlock
-			}
-
-			actionTimer.Externals = &externals
-		}
+		//if externalsMap, ok := helper.InterfaceToMap(dMap, "externals"); ok {
+		//	externals := cvm.Externals{}
+		//	if v, ok := externalsMap["release_address"]; ok {
+		//		externals.ReleaseAddress = helper.Bool(v.(bool))
+		//	}
+		//
+		//	if v, ok := externalsMap["unsupport_networks"]; ok {
+		//		unsupportNetworksSet := v.(*schema.Set).List()
+		//		for i := range unsupportNetworksSet {
+		//			if unsupportNetworksSet[i] != nil {
+		//				unsupportNetworks := unsupportNetworksSet[i].(string)
+		//				externals.UnsupportNetworks = append(externals.UnsupportNetworks, &unsupportNetworks)
+		//			}
+		//		}
+		//	}
+		//
+		//	if storageBlockAttrMap, ok := helper.InterfaceToMap(externalsMap, "storage_block_attr"); ok {
+		//		storageBlock := cvm.StorageBlock{}
+		//		if v, ok := storageBlockAttrMap["type"]; ok {
+		//			storageBlock.Type = helper.String(v.(string))
+		//		}
+		//
+		//		if v, ok := storageBlockAttrMap["min_size"]; ok {
+		//			storageBlock.MinSize = helper.IntInt64(v.(int))
+		//		}
+		//
+		//		if v, ok := storageBlockAttrMap["max_size"]; ok {
+		//			storageBlock.MaxSize = helper.IntInt64(v.(int))
+		//		}
+		//
+		//		externals.StorageBlockAttr = &storageBlock
+		//	}
+		//
+		//	actionTimer.Externals = &externals
+		//}
 
 		request.ActionTimer = &actionTimer
 	}
@@ -219,36 +222,36 @@ func resourceTencentCloudCvmActionTimerRead(d *schema.ResourceData, meta interfa
 		actionTimerMap["action_time"] = InstanceActionTimer.ActionTime
 	}
 
-	actionTimerMap["externals"] = []interface{}{}
-	if InstanceActionTimer.Externals != nil {
-		externalsMap := map[string]interface{}{}
-		if InstanceActionTimer.Externals.ReleaseAddress != nil {
-			externalsMap["release_address"] = InstanceActionTimer.Externals.ReleaseAddress
-		}
-
-		if InstanceActionTimer.Externals.UnsupportNetworks != nil {
-			externalsMap["unsupport_networks"] = InstanceActionTimer.Externals.UnsupportNetworks
-		}
-
-		if InstanceActionTimer.Externals.StorageBlockAttr != nil {
-			storageBlockAttrMap := map[string]interface{}{}
-			if InstanceActionTimer.Externals.StorageBlockAttr.Type != nil {
-				storageBlockAttrMap["type"] = InstanceActionTimer.Externals.StorageBlockAttr.Type
-			}
-
-			if InstanceActionTimer.Externals.StorageBlockAttr.MinSize != nil {
-				storageBlockAttrMap["min_size"] = InstanceActionTimer.Externals.StorageBlockAttr.MinSize
-			}
-
-			if InstanceActionTimer.Externals.StorageBlockAttr.MaxSize != nil {
-				storageBlockAttrMap["max_size"] = InstanceActionTimer.Externals.StorageBlockAttr.MaxSize
-			}
-
-			externalsMap["storage_block_attr"] = []interface{}{storageBlockAttrMap}
-		}
-
-		actionTimerMap["externals"] = []interface{}{externalsMap}
-	}
+	//actionTimerMap["externals"] = []interface{}{}
+	//if InstanceActionTimer.Externals != nil {
+	//	externalsMap := map[string]interface{}{}
+	//	if InstanceActionTimer.Externals.ReleaseAddress != nil {
+	//		externalsMap["release_address"] = InstanceActionTimer.Externals.ReleaseAddress
+	//	}
+	//
+	//	if InstanceActionTimer.Externals.UnsupportNetworks != nil {
+	//		externalsMap["unsupport_networks"] = InstanceActionTimer.Externals.UnsupportNetworks
+	//	}
+	//
+	//	if InstanceActionTimer.Externals.StorageBlockAttr != nil {
+	//		storageBlockAttrMap := map[string]interface{}{}
+	//		if InstanceActionTimer.Externals.StorageBlockAttr.Type != nil {
+	//			storageBlockAttrMap["type"] = InstanceActionTimer.Externals.StorageBlockAttr.Type
+	//		}
+	//
+	//		if InstanceActionTimer.Externals.StorageBlockAttr.MinSize != nil {
+	//			storageBlockAttrMap["min_size"] = InstanceActionTimer.Externals.StorageBlockAttr.MinSize
+	//		}
+	//
+	//		if InstanceActionTimer.Externals.StorageBlockAttr.MaxSize != nil {
+	//			storageBlockAttrMap["max_size"] = InstanceActionTimer.Externals.StorageBlockAttr.MaxSize
+	//		}
+	//
+	//		externalsMap["storage_block_attr"] = []interface{}{storageBlockAttrMap}
+	//	}
+	//
+	//	actionTimerMap["externals"] = []interface{}{externalsMap}
+	//}
 
 	_ = d.Set("action_timer", []interface{}{actionTimerMap})
 
