@@ -1,4 +1,4 @@
-package cvm
+package cvm_test
 
 import (
 	"testing"
