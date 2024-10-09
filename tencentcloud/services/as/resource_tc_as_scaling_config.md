@@ -13,7 +13,7 @@ data "tencentcloud_images" "example" {
 resource "tencentcloud_as_scaling_config" "example" {
   configuration_name = "example-launch-configuration"
   image_id           = data.tencentcloud_images.example.images.0.image_id
-  instance_types = ["SA1.SMALL1"]
+  instance_types     = ["SA1.SMALL1"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
@@ -45,7 +45,7 @@ resource "tencentcloud_as_scaling_config" "example" {
 
 Using `SPOTPAID` charge type
 
-```
+```hcl
 data "tencentcloud_images" "example" {
   image_type = ["PUBLIC_IMAGE"]
   os_name    = "TencentOS Server 3.2 (Final)"
