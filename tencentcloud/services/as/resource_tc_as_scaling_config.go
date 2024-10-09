@@ -193,6 +193,12 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Default:     true,
 				Description: "To specify whether to enable cloud monitor service. Default is `TRUE`.",
 			},
+			"enhanced_automation_tools_service": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "To specify whether to enable cloud automation tools service. Default is `TRUE`.",
+			},
 			"user_data": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -383,6 +389,12 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 			Enabled: &monitorService,
 		}
 	}
+	if v, ok := d.GetOkExists("enhanced_automation_tools_service"); ok {
+		automationToolsService := v.(bool)
+		request.EnhancedService.AutomationToolsService = &as.RunAutomationServiceEnabled{
+			Enabled: &automationToolsService,
+		}
+	}
 
 	if v, ok := d.GetOk("user_data"); ok {
 		request.UserData = helper.String(v.(string))
@@ -532,6 +544,7 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("security_group_ids", helper.StringsInterfaces(config.SecurityGroupIds))
 		_ = d.Set("enhanced_security_service", *config.EnhancedService.SecurityService.Enabled)
 		_ = d.Set("enhanced_monitor_service", *config.EnhancedService.MonitorService.Enabled)
+		_ = d.Set("enhanced_automation_tools_service", *config.EnhancedService.AutomationToolsService.Enabled)
 		_ = d.Set("user_data", helper.PString(config.UserData))
 		_ = d.Set("instance_tags", flattenInstanceTagsMapping(config.InstanceTags))
 		_ = d.Set("disk_type_policy", *config.DiskTypePolicy)
@@ -687,7 +700,7 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if d.HasChange("enhanced_security_service") || d.HasChange("enhanced_monitor_service") {
+	if d.HasChange("enhanced_security_service") || d.HasChange("enhanced_monitor_service") || d.HasChange("enhanced_automation_tools_service") {
 		request.EnhancedService = &as.EnhancedService{}
 
 		if v, ok := d.GetOkExists("enhanced_security_service"); ok {
@@ -700,6 +713,12 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 			monitorService := v.(bool)
 			request.EnhancedService.MonitorService = &as.RunMonitorServiceEnabled{
 				Enabled: &monitorService,
+			}
+		}
+		if v, ok := d.GetOkExists("enhanced_automation_tools_service"); ok {
+			automationToolsService := v.(bool)
+			request.EnhancedService.AutomationToolsService = &as.RunAutomationServiceEnabled{
+				Enabled: &automationToolsService,
 			}
 		}
 	}

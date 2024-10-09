@@ -13,7 +13,7 @@ data "tencentcloud_images" "example" {
 resource "tencentcloud_as_scaling_config" "example" {
   configuration_name = "example-launch-configuration"
   image_id           = data.tencentcloud_images.example.images.0.image_id
-  instance_types     = ["SA1.SMALL1"]
+  instance_types = ["SA1.SMALL1"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
@@ -23,17 +23,18 @@ resource "tencentcloud_as_scaling_config" "example" {
     disk_size = 50
   }
 
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-  internet_max_bandwidth_out = 10
-  public_ip_assigned         = true
-  password                   = "Test@123#"
-  enhanced_security_service  = false
-  enhanced_monitor_service   = false
-  user_data                  = "dGVzdA=="
+  internet_charge_type              = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out        = 10
+  public_ip_assigned                = true
+  password                          = "Test@123#"
+  enhanced_security_service         = false
+  enhanced_monitor_service          = false
+  enhanced_automation_tools_service = false
+  user_data                         = "dGVzdA=="
 
   host_name_settings {
-	host_name       = "host-name-test"
-	host_name_style = "UNIQUE"
+    host_name       = "host-name-test"
+    host_name_style = "UNIQUE"
   }
 
   instance_tags = {
@@ -62,13 +63,14 @@ resource "tencentcloud_as_scaling_config" "example" {
 
 Using image family
 
-```
+```hcl
 resource "tencentcloud_as_scaling_config" "example" {
-  image_family              = "business-daily-update"
-  configuration_name        = "as-test-config"
-  disk_type_policy          = "ORIGINAL"
-  enhanced_monitor_service  = false
-  enhanced_security_service = false
+  image_family                      = "business-daily-update"
+  configuration_name                = "as-test-config"
+  disk_type_policy                  = "ORIGINAL"
+  enhanced_monitor_service          = false
+  enhanced_security_service         = false
+  enhanced_automation_tools_service = false
   instance_tags             = {}
   instance_types            = [
     "S5.SMALL2",
