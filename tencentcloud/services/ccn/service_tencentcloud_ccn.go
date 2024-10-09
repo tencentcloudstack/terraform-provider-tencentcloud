@@ -1260,7 +1260,12 @@ func (me *VpcService) DescribeVpcCcnRoutesById(ctx context.Context, ccnId string
 
 	request := vpc.NewDescribeCcnRoutesRequest()
 	request.CcnId = &ccnId
-
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   helper.String("route-id"),
+			Values: []*string{helper.String(routeId)},
+		},
+	}
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
