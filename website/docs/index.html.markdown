@@ -256,6 +256,8 @@ provider "tencentcloud" {
 
 If provided with a Cam role name, Terraform will just access the metadata URL: http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/<cam_role_name> to obtain the STS credential. The CVM Instance Role also can be set using the TENCENTCLOUD_CAM_ROLE_NAME environment variables.
 
+-> **Note:** Cam-role-name is used to grant the role entity the permissions to access services and resources and perform operations in Tencent Cloud. You can associate the CAM role with a CVM instance to call other Tencent Cloud APIs from the instance using the periodically updated temporary Security Token Service (STS) key.
+
 -> **Note:** Cam-role-name is a no-AK auth type, and there is no need setting secret_id and secret_key while using it.
 
 Usage:
