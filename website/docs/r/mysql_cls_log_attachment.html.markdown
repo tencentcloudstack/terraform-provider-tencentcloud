@@ -115,11 +115,3 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Log Status.
 
 
-## Import
-
-mysql log to cls can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_cls_log_attachment.example cdb-8fk7id2l#slowlog
-```
-

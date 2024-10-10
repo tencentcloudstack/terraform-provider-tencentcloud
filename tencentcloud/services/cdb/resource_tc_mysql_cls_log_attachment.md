@@ -79,11 +79,3 @@ resource "tencentcloud_mysql_cls_log_attachment" "example" {
   log_topic   = "140d4d39-4307-45a8-9655-290f679b063d"
 }
 ```
-
-Import
-
-mysql log to cls can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_cls_log_attachment.example cdb-8fk7id2l#slowlog
-```
