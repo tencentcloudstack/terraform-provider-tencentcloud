@@ -34,13 +34,14 @@ resource "tencentcloud_as_scaling_config" "example" {
     disk_size = 50
   }
 
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-  internet_max_bandwidth_out = 10
-  public_ip_assigned         = true
-  password                   = "Test@123#"
-  enhanced_security_service  = false
-  enhanced_monitor_service   = false
-  user_data                  = "dGVzdA=="
+  internet_charge_type              = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out        = 10
+  public_ip_assigned                = true
+  password                          = "Test@123#"
+  enhanced_security_service         = false
+  enhanced_monitor_service          = false
+  enhanced_automation_tools_service = false
+  user_data                         = "dGVzdA=="
 
   host_name_settings {
     host_name       = "host-name-test"
@@ -75,12 +76,13 @@ resource "tencentcloud_as_scaling_config" "example" {
 
 ```hcl
 resource "tencentcloud_as_scaling_config" "example" {
-  image_family              = "business-daily-update"
-  configuration_name        = "as-test-config"
-  disk_type_policy          = "ORIGINAL"
-  enhanced_monitor_service  = false
-  enhanced_security_service = false
-  instance_tags             = {}
+  image_family                      = "business-daily-update"
+  configuration_name                = "as-test-config"
+  disk_type_policy                  = "ORIGINAL"
+  enhanced_monitor_service          = false
+  enhanced_security_service         = false
+  enhanced_automation_tools_service = false
+  instance_tags                     = {}
   instance_types = [
     "S5.SMALL2",
   ]
@@ -106,6 +108,7 @@ The following arguments are supported:
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
+* `enhanced_automation_tools_service` - (Optional, Bool) To specify whether to enable cloud automation tools service. Default is `TRUE`.
 * `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
 * `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is `TRUE`.
 * `host_name_settings` - (Optional, List) Related settings of the cloud server hostname (HostName).
