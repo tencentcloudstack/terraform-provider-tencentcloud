@@ -1069,6 +1069,7 @@ SSL Certificates(ssl)
     tencentcloud_ssl_deploy_certificate_record_retry_operation
     tencentcloud_ssl_deploy_certificate_record_rollback_operation
     tencentcloud_ssl_download_certificate_operation
+    tencentcloud_ssl_check_certificate_domain_verification_operation
 
 Secrets Manager(SSM)
   Data Source

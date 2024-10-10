@@ -214,6 +214,7 @@ type TencentCloudClient struct {
 	omitNilConn      *common.Client
 	emrv20190103Conn *emr.Client
 	teov20220901Conn *teo.Client
+	sslv20191205Conn *sslCertificate.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1843,4 +1844,17 @@ func (me *TencentCloudClient) UseTeoV20220901Client() *teo.Client {
 	me.teov20220901Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.teov20220901Conn
+}
+
+// UseSslV20191205Client return SSL client for service
+func (me *TencentCloudClient) UseSslV20191205Client() *sslCertificate.Client {
+	if me.sslv20191205Conn != nil {
+		return me.sslv20191205Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.sslv20191205Conn, _ = sslCertificate.NewClient(me.Credential, me.Region, cpf)
+	me.sslv20191205Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.sslv20191205Conn
 }

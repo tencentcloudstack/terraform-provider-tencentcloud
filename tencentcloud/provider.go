@@ -2113,6 +2113,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_deploy_certificate_record_retry_operation":                          ssl.ResourceTencentCloudSslDeployCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_deploy_certificate_record_rollback_operation":                       ssl.ResourceTencentCloudSslDeployCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_download_certificate_operation":                                     ssl.ResourceTencentCloudSslDownloadCertificateOperation(),
+			"tencentcloud_ssl_check_certificate_domain_verification_operation":                    ssl.ResourceTencentCloudSslCheckCertificateDomainVerificationOperation(),
 			"tencentcloud_cwp_license_order":                                                      cwp.ResourceTencentCloudCwpLicenseOrder(),
 			"tencentcloud_cwp_license_bind_attachment":                                            cwp.ResourceTencentCloudCwpLicenseBindAttachment(),
 			"tencentcloud_ssl_replace_certificate_operation":                                      ssl.ResourceTencentCloudSslReplaceCertificateOperation(),
