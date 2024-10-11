@@ -1281,13 +1281,6 @@ func (me *VpcService) DescribeVpcCcnRoutesById(ctx context.Context, ccnId string
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	for _, route := range response.Response.RouteSet {
-		if *route.RouteId == routeId {
-			ccnRoutes = route
-			return
-		}
-	}
-
 	return
 }
 
