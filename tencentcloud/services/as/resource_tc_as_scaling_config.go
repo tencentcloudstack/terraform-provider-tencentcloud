@@ -196,8 +196,7 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 			"enhanced_automation_tools_service": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
-				Description: "To specify whether to enable cloud automation tools service. Default is `TRUE`.",
+				Description: "To specify whether to enable cloud automation tools service.",
 			},
 			"user_data": {
 				Type:        schema.TypeString,
@@ -544,7 +543,9 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("security_group_ids", helper.StringsInterfaces(config.SecurityGroupIds))
 		_ = d.Set("enhanced_security_service", *config.EnhancedService.SecurityService.Enabled)
 		_ = d.Set("enhanced_monitor_service", *config.EnhancedService.MonitorService.Enabled)
-		_ = d.Set("enhanced_automation_tools_service", *config.EnhancedService.AutomationToolsService.Enabled)
+		if config.EnhancedService.AutomationToolsService.Enabled != nil {
+			_ = d.Set("enhanced_automation_tools_service", *config.EnhancedService.AutomationToolsService.Enabled)
+		}
 		_ = d.Set("user_data", helper.PString(config.UserData))
 		_ = d.Set("instance_tags", flattenInstanceTagsMapping(config.InstanceTags))
 		_ = d.Set("disk_type_policy", *config.DiskTypePolicy)
