@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cdn_domain: Support origin_company field and add computed to the message field.
+```
