@@ -141,7 +141,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"origin_company": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values ​​include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw-oss`.",
+							Description: "Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.",
 						},
 					},
 				},
