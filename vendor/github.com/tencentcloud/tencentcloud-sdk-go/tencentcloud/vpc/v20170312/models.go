@@ -2220,7 +2220,7 @@ type CCN struct {
 
 	// 是否支持ipv6路由表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Ipv6Flag *string `json:"Ipv6Flag,omitnil,omitempty" name:"Ipv6Flag"`
+	Ipv6Flag *bool `json:"Ipv6Flag,omitnil,omitempty" name:"Ipv6Flag"`
 
 	// 是否支持路由表聚合策略
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -6886,6 +6886,9 @@ type CreateVpcPeeringConnectionRequestParams struct {
 
 	// 服务分级：PT、AU、AG。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
+
+	// 标签键值对
+	Tags []*Tags `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateVpcPeeringConnectionRequest struct {
@@ -6917,6 +6920,9 @@ type CreateVpcPeeringConnectionRequest struct {
 
 	// 服务分级：PT、AU、AG。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
+
+	// 标签键值对
+	Tags []*Tags `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateVpcPeeringConnectionRequest) ToJsonString() string {
@@ -6940,6 +6946,7 @@ func (r *CreateVpcPeeringConnectionRequest) FromJsonString(s string) error {
 	delete(f, "Type")
 	delete(f, "ChargeType")
 	delete(f, "QosLevel")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpcPeeringConnectionRequest has unknown keys!", "")
 	}
@@ -11024,7 +11031,7 @@ type DescribeAddressesRequestParams struct {
 	// <li> private-ip-address - String - 是否必填：否 - （过滤条件）按照 EIP 绑定的内网 IP 过滤。</li>
 	// <li> network-interface-id - String - 是否必填：否 - （过滤条件）按照 EIP 绑定的弹性网卡 ID 过滤。弹性网卡 ID 形如：eni-11112222。</li>
 	// <li> is-arrears - String - 是否必填：否 - （过滤条件）按照 EIP 是否欠费进行过滤。（TRUE：EIP 处于欠费状态|FALSE：EIP 费用状态正常）</li>
-	// <li> address-type - String - 是否必填：否 - （过滤条件）按照 IP类型 进行过滤。可选值：'WanIP', 'EIP'，'AnycastEIP'，'HighQualityEIP'。默认值是'EIP'。</li>
+	// <li> address-type - String - 是否必填：否 - （过滤条件）按照 IP类型 进行过滤。可选值：'WanIP', 'EIP'，'AnycastEIP'，'HighQualityEIP'， 'AntiDDoSEIP'。默认值是'EIP'。</li>
 	// <li> address-isp - String - 是否必填：否 - （过滤条件）按照 运营商类型 进行过滤。可选值：'BGP'，'CMCC'，'CUCC', 'CTCC'</li>
 	// <li> dedicated-cluster-id - String - 是否必填：否 - （过滤条件）按照 CDC 的唯一 ID 过滤。CDC 唯一 ID 形如：cluster-11112222。</li>
 	// <li> tag-key - String - 是否必填：否 - （过滤条件）按照标签键进行过滤。</li>
@@ -11054,7 +11061,7 @@ type DescribeAddressesRequest struct {
 	// <li> private-ip-address - String - 是否必填：否 - （过滤条件）按照 EIP 绑定的内网 IP 过滤。</li>
 	// <li> network-interface-id - String - 是否必填：否 - （过滤条件）按照 EIP 绑定的弹性网卡 ID 过滤。弹性网卡 ID 形如：eni-11112222。</li>
 	// <li> is-arrears - String - 是否必填：否 - （过滤条件）按照 EIP 是否欠费进行过滤。（TRUE：EIP 处于欠费状态|FALSE：EIP 费用状态正常）</li>
-	// <li> address-type - String - 是否必填：否 - （过滤条件）按照 IP类型 进行过滤。可选值：'WanIP', 'EIP'，'AnycastEIP'，'HighQualityEIP'。默认值是'EIP'。</li>
+	// <li> address-type - String - 是否必填：否 - （过滤条件）按照 IP类型 进行过滤。可选值：'WanIP', 'EIP'，'AnycastEIP'，'HighQualityEIP'， 'AntiDDoSEIP'。默认值是'EIP'。</li>
 	// <li> address-isp - String - 是否必填：否 - （过滤条件）按照 运营商类型 进行过滤。可选值：'BGP'，'CMCC'，'CUCC', 'CTCC'</li>
 	// <li> dedicated-cluster-id - String - 是否必填：否 - （过滤条件）按照 CDC 的唯一 ID 过滤。CDC 唯一 ID 形如：cluster-11112222。</li>
 	// <li> tag-key - String - 是否必填：否 - （过滤条件）按照标签键进行过滤。</li>
@@ -20022,7 +20029,7 @@ type DisassociateAddressRequestParams struct {
 	// 标识 EIP 的唯一 ID。EIP 唯一 ID 形如：`eip-11112222`。
 	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
 
-	// 表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<br><li>TRUE：表示解绑 EIP 之后分配普通公网 IP。<br><li>FALSE：表示解绑 EIP 之后不分配普通公网 IP。<br>默认取值：FALSE。<br><br>只有满足以下条件时才能指定该参数：<br><li> 只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。<br><li>解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 [DescribeAddressQuota](https://cloud.tencent.com/document/api/213/1378) 接口获取。
+	// 表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<br><li />TRUE：表示解绑 EIP 之后分配普通公网 IP。<br><li />FALSE：表示解绑 EIP 之后不分配普通公网 IP。<br>默认取值：FALSE。<br><br>只有满足以下条件时才能指定该参数：<br><li /> 只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。<br><li />解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 [DescribeAddressQuota](https://cloud.tencent.com/document/api/213/1378) 接口获取。
 	ReallocateNormalPublicIp *bool `json:"ReallocateNormalPublicIp,omitnil,omitempty" name:"ReallocateNormalPublicIp"`
 }
 
@@ -20032,7 +20039,7 @@ type DisassociateAddressRequest struct {
 	// 标识 EIP 的唯一 ID。EIP 唯一 ID 形如：`eip-11112222`。
 	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
 
-	// 表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<br><li>TRUE：表示解绑 EIP 之后分配普通公网 IP。<br><li>FALSE：表示解绑 EIP 之后不分配普通公网 IP。<br>默认取值：FALSE。<br><br>只有满足以下条件时才能指定该参数：<br><li> 只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。<br><li>解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 [DescribeAddressQuota](https://cloud.tencent.com/document/api/213/1378) 接口获取。
+	// 表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<br><li />TRUE：表示解绑 EIP 之后分配普通公网 IP。<br><li />FALSE：表示解绑 EIP 之后不分配普通公网 IP。<br>默认取值：FALSE。<br><br>只有满足以下条件时才能指定该参数：<br><li /> 只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。<br><li />解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 [DescribeAddressQuota](https://cloud.tencent.com/document/api/213/1378) 接口获取。
 	ReallocateNormalPublicIp *bool `json:"ReallocateNormalPublicIp,omitnil,omitempty" name:"ReallocateNormalPublicIp"`
 }
 
@@ -30344,6 +30351,16 @@ type SubnetInput struct {
 }
 
 type Tag struct {
+	// 标签键
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 标签值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type Tags struct {
 	// 标签键
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
