@@ -108,7 +108,7 @@ The following arguments are supported:
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
-* `enhanced_automation_tools_service` - (Optional, Bool) To specify whether to enable cloud automation tools service. Default is `TRUE`.
+* `enhanced_automation_tools_service` - (Optional, Bool) To specify whether to enable cloud automation tools service.
 * `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
 * `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is `TRUE`.
 * `host_name_settings` - (Optional, List) Related settings of the cloud server hostname (HostName).
