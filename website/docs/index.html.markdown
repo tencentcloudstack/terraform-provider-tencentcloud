@@ -100,6 +100,8 @@ The following methods are supported, in this order, and explained below:
 - Assume role with SAML
 - Assume role with OIDC
 - Shared credentials
+- Enable pod OIDC
+- Cam role name
 
 ### Static credentials
 
@@ -236,6 +238,36 @@ $ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN="my-web-identity-token"
 $ terraform plan
 ```
 
+### Enable pod OIDC
+
+Configure the TencentCloud Provider with TKE OIDC.
+
+-> **Note:** Must ensure CAM OIDC provider and WEBHOOK component are created successfully.
+
+Usage:
+
+```hcl
+provider "tencentcloud" {
+  enable_pod_oidc = true
+}
+```
+
+### Cam role name
+
+If provided with a Cam role name, Terraform will just access the metadata URL: http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/<cam_role_name> to obtain the STS credential. The CVM Instance Role also can be set using the TENCENTCLOUD_CAM_ROLE_NAME environment variables.
+
+-> **Note:** Cam-role-name is used to grant the role entity the permissions to access services and resources and perform operations in Tencent Cloud. You can associate the CAM role with a CVM instance to call other Tencent Cloud APIs from the instance using the periodically updated temporary Security Token Service (STS) key.
+
+-> **Note:** Cam-role-name is a no-AK auth type, and there is no need setting secret_id and secret_key while using it.
+
+Usage:
+
+```hcl
+provider "tencentcloud" {
+  cam_role_name = "my-cam-role-name"
+}
+```
+
 ### CDC cos usage
 
 You can set the cos domain by setting the environment variable `TENCENTCLOUD_COS_DOMAIN`, and configure the cdc scenario as follows:
@@ -308,6 +340,7 @@ In addition to generic provider arguments (e.g. alias and version), the followin
 * `assume_role_with_web_identity` - (Optional, Available in 1.81.111+) An `assume_role_with_web_identity` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role_with_web_identity` block may be in the configuration.
 * `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.
 * `domain` - (Optional, Available in 1.37.0+) The root domain of the API request, Default is `tencentcloudapi.com`. 
+* `cam_role_name` - (Optional, Available in 1.81.117+) The name of the CVM instance CAM role. It can be sourced from the `TENCENTCLOUD_CAM_ROLE_NAME` environment variable. 
 
 The nested `assume_role` block supports the following:
 * `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.
