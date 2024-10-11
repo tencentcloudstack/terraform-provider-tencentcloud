@@ -1812,3 +1812,57 @@ func (me *CvmService) DescribeImageFromFamilyByFilter(ctx context.Context, param
 	ret = response.Response
 	return
 }
+
+func (me *CvmService) DescribeCvmInstanceActionTimerById(ctx context.Context, actionTimerId string) (actionTimer *cvm.ActionTimer, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cvm.NewDescribeInstancesActionTimerRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	request.ActionTimerIds = []*string{&actionTimerId}
+	response, err := me.client.UseCvmClient().DescribeInstancesActionTimer(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	actionTimer = response.Response.ActionTimers[0]
+	return
+}
+
+func (me *CvmService) DeleteCvmInstanceActionTimerById(ctx context.Context, actionTimerId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDeleteInstancesActionTimerRequest()
+	request.ActionTimerIds = []*string{&actionTimerId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DeleteInstancesActionTimer(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
