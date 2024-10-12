@@ -15,6 +15,8 @@ Provide a resource to increase instance to cluster
 
 ~> **NOTE:** Import Node: Currently, only one node can be imported at a time.
 
+~> **NOTE:** If you need to view error messages during instance creation, you can use parameter `create_result_output_file` to set the file save path
+
 ## Example Usage
 
 ```hcl
@@ -60,6 +62,8 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
     user_data                 = "dGVzdA=="
     password                  = "AABBccdd1122"
   }
+
+  create_result_output_file = "my_output_file_path"
 }
 ```
 
@@ -120,6 +124,7 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster.
 * `worker_config` - (Required, List, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
+* `create_result_output_file` - (Optional, String, ForceNew) Used to save results of CVMs creation error messages.
 * `data_disk` - (Optional, List, ForceNew) Configurations of tke data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
