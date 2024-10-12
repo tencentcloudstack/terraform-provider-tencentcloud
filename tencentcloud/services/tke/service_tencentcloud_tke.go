@@ -3655,3 +3655,32 @@ func (me *TkeService) DescribeKubernetesLogConfigById(ctx context.Context, clust
 	ret = response.Response
 	return
 }
+
+func (me *TkeService) DescribeKubernetesHealthCheckTemplateByFilter(ctx context.Context, param map[string]interface{}) (ret *tke2.DescribeHealthCheckTemplateResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tke2.NewDescribeHealthCheckTemplateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeV20220501Client().DescribeHealthCheckTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
