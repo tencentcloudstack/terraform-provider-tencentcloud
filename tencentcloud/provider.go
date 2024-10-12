@@ -2194,8 +2194,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if v, ok := d.GetOk("security_token"); ok {
 		securityToken = v.(string)
-	} else {
-		securityToken = getProviderConfig("token")
+	// } else {
+	// 	securityToken = getProviderConfig("token")
 	}
 
 	if v, ok := d.GetOk("region"); ok {
