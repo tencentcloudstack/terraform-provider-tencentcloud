@@ -32,27 +32,27 @@ func ResourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 		"cidr_block": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "An IP address network or CIDR segment. NOTE: `cidr_block`, `ipv6_cidr_block`, `source_security_id` and `address_template_*` are exclusive and cannot be set in the same time.",
+			Description: "An IP address network or CIDR segment. NOTE: `cidr_block`, `ipv6_cidr_block`, `source_security_id` and `address_template_*` are exclusive and cannot be set in the same time; One of `cidr_block`, `ipv6_cidr_block`, `source_security_id` and `address_template_*` must be set.",
 		},
 		"ipv6_cidr_block": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "An IPV6 address network or CIDR segment, and conflict with `source_security_id` and `address_template_*`.",
+			Description: "An IPV6 address network or CIDR segment, and conflict with `source_security_id` and `address_template_*`. NOTE: One of `cidr_block`, `ipv6_cidr_block`, `source_security_id` and `address_template_*` must be set.",
 		},
 		"source_security_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "ID of the nested security group, and conflicts with `cidr_block` and `address_template_*`.",
+			Description: "ID of the nested security group, and conflicts with `cidr_block` and `address_template_*`. NOTE: One of `cidr_block`, `ipv6_cidr_block`, `source_security_id` and `address_template_*` must be set.",
 		},
 		"address_template_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Specify Address template ID like `ipm-xxxxxxxx`, conflict with `source_security_id` and `cidr_block`.",
+			Description: "Specify Address template ID like `ipm-xxxxxxxx`, conflict with `source_security_id` and `cidr_block`. NOTE: One of `cidr_block`, `ipv6_cidr_block`, `source_security_id` and `address_template_*` must be set.",
 		},
 		"address_template_group": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Specify Group ID of Address template like `ipmg-xxxxxxxx`, conflict with `source_security_id` and `cidr_block`.",
+			Description: "Specify Group ID of Address template like `ipmg-xxxxxxxx`, conflict with `source_security_id` and `cidr_block`. NOTE: One of `cidr_block`, `ipv6_cidr_block`, `source_security_id` and `address_template_*` must be set.",
 		},
 		"service_template_id": {
 			Type:        schema.TypeString,
