@@ -1,3 +1,16 @@
+## 1.81.133 (October 14 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_postgresql_clone_db_instance` ([#2888](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2888))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: Support origin_company field and add computed to the message field. ([#2883](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2883))
+* resource/tencentcloud_kubernetes_scale_worker: add params `create_result_output_file` ([#2885](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2885))
+* resource/tencentcloud_lite_hbase_instance: fix delete state refresh ([#2889](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2889))
+* resource/tencentcloud_security_group_rule_set: update doc ([#2890](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2890))
+
 ## 1.81.132 (October 11 , 2024)
 
 FEATURES:
