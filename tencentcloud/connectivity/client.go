@@ -211,10 +211,11 @@ type TencentCloudClient struct {
 	controlcenterConn *controlcenter.Client
 	thpcConn          *thpc.Client
 	//omit nil client
-	omitNilConn      *common.Client
-	emrv20190103Conn *emr.Client
-	teov20220901Conn *teo.Client
-	sslv20191205Conn *sslCertificate.Client
+	omitNilConn           *common.Client
+	emrv20190103Conn      *emr.Client
+	teov20220901Conn      *teo.Client
+	sslv20191205Conn      *sslCertificate.Client
+	postgresv20170312Conn *postgre.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1857,4 +1858,17 @@ func (me *TencentCloudClient) UseSslV20191205Client() *sslCertificate.Client {
 	me.sslv20191205Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.sslv20191205Conn
+}
+
+// UsePostgresV20170312Client return POSTGRES client for service
+func (me *TencentCloudClient) UsePostgresV20170312Client() *postgre.Client {
+	if me.postgresv20170312Conn != nil {
+		return me.postgresv20170312Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.postgresv20170312Conn, _ = postgre.NewClient(me.Credential, me.Region, cpf)
+	me.postgresv20170312Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.postgresv20170312Conn
 }
