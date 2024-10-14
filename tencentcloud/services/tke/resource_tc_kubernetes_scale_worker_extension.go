@@ -463,11 +463,13 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 	waitRequest := tke.NewDescribeClusterInstancesRequest()
 	waitRequest.ClusterId = &clusterId
 	waitRequest.InstanceIds = helper.Strings(instanceIds)
+	tmpList := []*tke.Instance{}
 	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		var (
-			offset         int64 = 0
-			limit          int64 = 100
-			tmpInstanceSet []*tke.Instance
+			offset          int64 = 0
+			limit           int64 = 100
+			tmpInstanceSet  []*tke.Instance
+			createErrorList []*tke.Instance
 		)
 
 		// get all instances
@@ -512,14 +514,17 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 							flag = true
 						} else if *instance.InstanceState == "failed" {
 							stop += 1
+							createErrorList = append(createErrorList, instance)
 							log.Printf("instance: %s status is failed.", v)
 						} else {
+							createErrorList = append(createErrorList, instance)
 							continue
 						}
 					}
 				}
 			}
 
+			tmpList = createErrorList
 			if stop == len(instanceIds) && flag {
 				return nil
 			} else if stop == len(instanceIds) && !flag {
@@ -529,6 +534,13 @@ func resourceTencentCloudKubernetesScaleWorkerCreateOnStart(ctx context.Context)
 			}
 		}
 	})
+
+	output, ok := d.GetOk("create_result_output_file")
+	if ok && output.(string) != "" {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
+			return e
+		}
+	}
 
 	if err != nil {
 		log.Printf("[CRITAL] kubernetes scale worker instances status error, reason:%+v", err)

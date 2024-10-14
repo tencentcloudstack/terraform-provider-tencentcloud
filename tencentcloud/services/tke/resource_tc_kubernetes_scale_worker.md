@@ -4,6 +4,8 @@ Provide a resource to increase instance to cluster
 
 ~> **NOTE:** Import Node: Currently, only one node can be imported at a time.
 
+~> **NOTE:** If you need to view error messages during instance creation, you can use parameter `create_result_output_file` to set the file save path
+
 Example Usage
 
 ```hcl
@@ -49,6 +51,8 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
     user_data                 = "dGVzdA=="
     password                  = "AABBccdd1122"
   }
+
+  create_result_output_file = "my_output_file_path"
 }
 ```
 
