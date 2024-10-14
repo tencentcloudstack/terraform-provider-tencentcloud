@@ -41,6 +41,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				"cache_key": []interface{}{map[string]interface{}{
 					"full_url_cache": "on",
 				}},
+				"full_url_cache": true,
 			}),
 		},
 
@@ -137,6 +138,11 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:    true,
 							Description: "Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.",
 						},
+						"origin_company": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.",
+						},
 					},
 				},
 			},
@@ -212,6 +218,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"message": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Certificate remarks.",
 									},
 									"deploy_time": {
@@ -1861,6 +1868,9 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			request.Origin.BackupOrigins = append(request.Origin.BackupOrigins, helper.String(item.(string)))
 		}
 	}
+	if v := origin["origin_company"]; v.(string) != "" {
+		request.Origin.OriginCompany = helper.String(v.(string))
+	}
 
 	// https config
 	if v, ok := d.GetOk("https_config"); ok {
@@ -2564,6 +2574,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	origin["backup_origin_type"] = domainConfig.Origin.BackupOriginType
 	origin["backup_origin_list"] = domainConfig.Origin.BackupOrigins
 	origin["backup_server_name"] = domainConfig.Origin.BackupServerName
+	origin["origin_company"] = domainConfig.Origin.OriginCompany
 	origins = append(origins, origin)
 	_ = d.Set("origin", origins)
 
@@ -3177,6 +3188,9 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			for _, item := range backupOriginList {
 				request.Origin.BackupOrigins = append(request.Origin.BackupOrigins, helper.String(item.(string)))
 			}
+		}
+		if v := origin["origin_company"]; v.(string) != "" {
+			request.Origin.OriginCompany = helper.String(v.(string))
 		}
 	}
 	if d.HasChange("request_header") {
