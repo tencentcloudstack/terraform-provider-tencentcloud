@@ -567,7 +567,7 @@ func (me *EMRService) SLInstanceStateRefreshFunc(instanceId string, failStates [
 		}
 
 		if object == nil {
-			return nil, "-2", nil
+			return &emr.SLInstanceInfo{}, "-2", nil
 		}
 
 		return object, helper.UInt64ToStr(*object.Status), nil
