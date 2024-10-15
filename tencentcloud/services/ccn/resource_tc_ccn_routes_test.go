@@ -39,8 +39,8 @@ func TestAccTencentCloudCcnRoutesResource_basic(t *testing.T) {
 const testAccVpcCcnRoutes = `
 
 resource "tencentcloud_ccn_routes" "ccn_routes" {
-  ccn_id = "ccn-39lqkygf"
-  route_id = "ccnr-3o0dfyuw"
+  ccn_id = "ccn-0bbkedsb"
+  route_id = "ccnr-9sqye2qg"
   switch = "off"
 }
 
@@ -49,8 +49,8 @@ resource "tencentcloud_ccn_routes" "ccn_routes" {
 const testAccVpcCcnRoutesUpdate = `
 
 resource "tencentcloud_ccn_routes" "ccn_routes" {
-  ccn_id = "ccn-39lqkygf"
-  route_id = "ccnr-3o0dfyuw"
+  ccn_id = "ccn-0bbkedsb"
+  route_id = "ccnr-9sqye2qg"
   switch = "on"
 }
 

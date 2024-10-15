@@ -1260,7 +1260,12 @@ func (me *VpcService) DescribeVpcCcnRoutesById(ctx context.Context, ccnId string
 
 	request := vpc.NewDescribeCcnRoutesRequest()
 	request.CcnId = &ccnId
-
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   helper.String("route-id"),
+			Values: []*string{helper.String(routeId)},
+		},
+	}
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
@@ -1276,11 +1281,8 @@ func (me *VpcService) DescribeVpcCcnRoutesById(ctx context.Context, ccnId string
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	for _, route := range response.Response.RouteSet {
-		if *route.RouteId == routeId {
-			ccnRoutes = route
-			return
-		}
+	if response != nil && response.Response != nil && len(response.Response.RouteSet) > 0 {
+		ccnRoutes = response.Response.RouteSet[0]
 	}
 
 	return

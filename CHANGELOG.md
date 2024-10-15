@@ -1,3 +1,30 @@
+## 1.81.133 (October 14 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_postgresql_clone_db_instance` ([#2888](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2888))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: Support origin_company field and add computed to the message field. ([#2883](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2883))
+* resource/tencentcloud_kubernetes_scale_worker: add params `create_result_output_file` ([#2885](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2885))
+* resource/tencentcloud_lite_hbase_instance: fix delete state refresh ([#2889](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2889))
+* resource/tencentcloud_security_group_rule_set: update doc ([#2890](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2890))
+
+## 1.81.132 (October 11 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ssl_check_certificate_domain_verification_operation` ([#2871](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2871))
+
+ENHANCEMENTS:
+
+* ccn/Update sdk version ([#2882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2882))
+* resource/tencentcloud_as_scaling_config: Supports `enhanced_automation_tools_service` params. ([#2875](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2875))
+* resource/tencentcloud_ccn_routes: fix ccn routes read ([#2877](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2877))
+* resource/tencentcloud_instance: support `disable_automation_service` params ([#2873](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2873))
+* resource/tencentcloud_mysql_cls_log_attachment: Update md doc ([#2879](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2879))
+
 ## 1.81.131 (October 1 , 2024)
 
 ENHANCEMENTS:
