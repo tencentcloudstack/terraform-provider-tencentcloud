@@ -216,7 +216,7 @@ type TencentCloudClient struct {
 	teov20220901Conn      *teo.Client
 	sslv20191205Conn      *sslCertificate.Client
 	postgresv20170312Conn *postgre.Client
-	cfwv20190904Conn *cfw.Client
+	cfwv20190904Conn      *cfw.Client
 }
 
 // NewClientProfile returns a new ClientProfile
