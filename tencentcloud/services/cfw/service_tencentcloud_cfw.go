@@ -866,6 +866,10 @@ func (me *CfwService) DescribeSgRuleById(ctx context.Context, ruleUuid string) (
 	}
 	request.SearchFilters = append(request.SearchFilters, commonFilter)
 
+	if err := resourceTencentCloudSgRuleReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
