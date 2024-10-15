@@ -12,6 +12,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -847,5 +848,43 @@ func (me *CfwService) DescribeCfwEdgeFirewallSwitchById(ctx context.Context, pub
 	}
 
 	edgeFirewallSwitch = response.Response.Data[0]
+	return
+}
+
+func NewCfwService(client *connectivity.TencentCloudClient) CfwService {
+	return CfwService{client: client}
+}
+
+func (me *CfwService) DescribeSgRuleById(ctx context.Context, ruleUuid string) (ret *cfw.DescribeEnterpriseSecurityGroupRuleListResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeEnterpriseSecurityGroupRuleListRequest()
+	commonFilter := &cfw.CommonFilter{
+		Name:         helper.String("RuleUuid"),
+		OperatorType: helper.Int64(9),
+		Values:       []*string{helper.String(ruleUuid)},
+	}
+	request.SearchFilters = append(request.SearchFilters, commonFilter)
+
+	if err := resourceTencentCloudSgRuleReadPostFillRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwV20190904Client().DescribeEnterpriseSecurityGroupRuleList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }
