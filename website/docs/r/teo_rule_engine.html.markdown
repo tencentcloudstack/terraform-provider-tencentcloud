@@ -310,6 +310,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `rule_id` - Rule ID.
+* `rule_priority` - Rule priority, the larger the value, the higher the priority, the minimum is 1.
 
 
 ## Import
