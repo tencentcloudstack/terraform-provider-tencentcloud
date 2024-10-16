@@ -141,7 +141,7 @@ $ terraform plan
 
 ### Assume role
 
-If provided with an assume role, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration` and `policy`(optional) in-line in the tencentcloud provider block:
+If provided with an assume role, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration`, `policy`(optional) and `external_id`(optional) in-line in the tencentcloud provider block:
 
 Usage:
 
@@ -160,7 +160,7 @@ provider "tencentcloud" {
 }
 ```
 
-The `role_arn`, `session_name`, `session_duration` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` and `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variables.
+The `role_arn`, `session_name`, `session_duration` and `external_id` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` and `TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID` environment variables.
 
 Usage:
 
@@ -254,7 +254,7 @@ provider "tencentcloud" {
 
 ### Cam role name
 
-If provided with a Cam role name, Terraform will just access the metadata URL: http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/<cam_role_name> to obtain the STS credential. The CVM Instance Role also can be set using the TENCENTCLOUD_CAM_ROLE_NAME environment variables.
+If provided with a Cam role name, Terraform will just access the metadata URL: `http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/<cam_role_name>` to obtain the STS credential. The CVM Instance Role also can be set using the `TENCENTCLOUD_CAM_ROLE_NAME` environment variables.
 
 -> **Note:** Cam-role-name is used to grant the role entity the permissions to access services and resources and perform operations in Tencent Cloud. You can associate the CAM role with a CVM instance to call other Tencent Cloud APIs from the instance using the periodically updated temporary Security Token Service (STS) key.
 
@@ -265,6 +265,24 @@ Usage:
 ```hcl
 provider "tencentcloud" {
   cam_role_name = "my-cam-role-name"
+}
+```
+
+It can also be authenticated together with method Assume role. Authentication process: Perform CAM authentication first, then proceed with Assume role authentication.
+
+Usage:
+
+```hcl
+provider "tencentcloud" {
+  cam_role_name = "my-cam-role-name"
+
+  assume_role {
+    role_arn         = "my-role-arn"
+    session_name     = "my-session-name"
+    policy           = "my-role-policy"
+    session_duration = 3600
+    external_id      = "my-external-id"
+  }
 }
 ```
 
@@ -347,6 +365,7 @@ The nested `assume_role` block supports the following:
 * `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
 * `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
 * `policy` - (Optional) A more restrictive policy to apply to the temporary credentials. This gives you a way to further restrict the permissions for the resulting temporary security credentials. You cannot use the passed policy to grant permissions that are in excess of those allowed by the access policy of the role that is being assumed.
+* `external_id` - (Optional) External role ID, which can be obtained by clicking the role name in the CAM console. It can contain 2-128 letters, digits, and symbols (=,.@\:/-). Regex: [\\w+=,.@\:/-]*. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID`.
 
 The nested `assume_role_with_saml` block supports the following:
 * `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.
