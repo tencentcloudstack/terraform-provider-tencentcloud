@@ -105,7 +105,7 @@ func dataSourceTencentCloudIdentityCenterRoleConfigurationsRead(d *schema.Resour
 	defer tccommon.LogElapsed("data_source.tencentcloud_identity_center_role_configurations.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(nil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
