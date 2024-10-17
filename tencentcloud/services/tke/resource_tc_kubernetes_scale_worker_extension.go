@@ -22,20 +22,6 @@ import (
 
 var importFlag1 = false
 
-var GlobalClusterId string
-var CreateClusterInstancesVpcId string
-var CreateClusterInstancesProjectId int64
-var WorkersInstanceIds []*string
-var WorkersNewWorkerInstancesList []map[string]interface{}
-var WorkersLabelsMap map[string]string
-
-func init() {
-	// need to support append by multiple calls when the paging occurred
-	WorkersNewWorkerInstancesList = make([]map[string]interface{}, 0)
-	WorkersLabelsMap = make(map[string]string)
-	WorkersInstanceIds = make([]*string, 0)
-}
-
 func customScaleWorkerResourceImporter(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	importFlag1 = true
 	err := resourceTencentCloudKubernetesScaleWorkerRead(d, m)
@@ -48,6 +34,7 @@ func customScaleWorkerResourceImporter(ctx context.Context, d *schema.ResourceDa
 
 func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest, resp *cvm.DescribeInstancesResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
+	ctxData := tccommon.DataFromContext(ctx)
 
 	instances := make([]*cvm.Instance, 0)
 	instances = append(instances, resp.Response.InstanceSet...)
@@ -117,73 +104,34 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 		_ = d.Set("worker_config", instanceList)
 	}
 
+	clusterId := ctxData.Get("clusterId").(string)
+	newWorkerInstancesList := ctxData.Get("newWorkerInstancesList").([]map[string]interface{})
+	labelsMap := ctxData.Get("labelsMap").(map[string]string)
 	// The machines I generated was deleted by others.
-	if len(WorkersNewWorkerInstancesList) == 0 {
+	if len(newWorkerInstancesList) == 0 {
 		d.SetId("")
 		return nil
 	}
 
-	_ = d.Set("cluster_id", GlobalClusterId)
-	_ = d.Set("labels", WorkersLabelsMap)
-	_ = d.Set("worker_instances_list", WorkersNewWorkerInstancesList)
+	_ = d.Set("cluster_id", clusterId)
+	_ = d.Set("labels", labelsMap)
+	_ = d.Set("worker_instances_list", newWorkerInstancesList)
 
 	return nil
 }
-func clusterInstanceParamHandle(ctx context.Context, req *tke.DescribeClusterInstancesRequest, resp *tke.DescribeClusterInstancesResponse) error {
+func clusterInstanceParamHandle(ctx context.Context, workers []InstanceInfo) error {
 	d := tccommon.ResourceDataFromContext(ctx)
-	var has = map[string]bool{}
+	ctxData := tccommon.DataFromContext(ctx)
 
-	workerInstancesList := d.Get("worker_instances_list").([]interface{})
-	instanceMap := make(map[string]bool)
-	for _, v := range workerInstancesList {
-		infoMap, ok := v.(map[string]interface{})
-		if !ok || infoMap["instance_id"] == nil {
-			return fmt.Errorf("worker_instances_list is broken.")
-		}
-
-		instanceId, ok := infoMap["instance_id"].(string)
-		if !ok || instanceId == "" {
-			return fmt.Errorf("worker_instances_list.instance_id is broken.")
-		}
-
-		if instanceMap[instanceId] {
-			log.Printf("[WARN]The same instance id exists in the list")
-		}
-
-		instanceMap[instanceId] = true
-	}
-	workers := make([]InstanceInfo, 0, 100)
-	for _, item := range resp.Response.InstanceSet {
-		if has[*item.InstanceId] {
-			return fmt.Errorf("get repeated instance_id[%s] when doing DescribeClusterInstances", *item.InstanceId)
-		}
-		has[*item.InstanceId] = true
-		instanceInfo := InstanceInfo{
-			InstanceId:               *item.InstanceId,
-			InstanceRole:             *item.InstanceRole,
-			InstanceState:            *item.InstanceState,
-			FailedReason:             *item.FailedReason,
-			InstanceAdvancedSettings: item.InstanceAdvancedSettings,
-		}
-		if item.CreatedTime != nil {
-			instanceInfo.CreatedTime = *item.CreatedTime
-		}
-		if item.NodePoolId != nil {
-			instanceInfo.NodePoolId = *item.NodePoolId
-		}
-		if item.LanIP != nil {
-			instanceInfo.LanIp = *item.LanIP
-		}
-		if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
-			workers = append(workers, instanceInfo)
-		}
-	}
-
+	newWorkerInstancesList := make([]map[string]interface{}, 0, len(workers))
+	labelsMap := make(map[string]string)
+	instanceIds := make([]*string, 0)
+	instanceMap := ctxData.Get("instanceMap").(map[string]bool)
 	for sub, cvmInfo := range workers {
 		if _, ok := instanceMap[cvmInfo.InstanceId]; !ok {
 			continue
 		}
-		WorkersInstanceIds = append(WorkersInstanceIds, &workers[sub].InstanceId)
+		instanceIds = append(instanceIds, &workers[sub].InstanceId)
 		tempMap := make(map[string]interface{})
 		tempMap["instance_id"] = cvmInfo.InstanceId
 		tempMap["instance_role"] = cvmInfo.InstanceRole
@@ -191,11 +139,11 @@ func clusterInstanceParamHandle(ctx context.Context, req *tke.DescribeClusterIns
 		tempMap["failed_reason"] = cvmInfo.FailedReason
 		tempMap["lan_ip"] = cvmInfo.LanIp
 
-		WorkersNewWorkerInstancesList = append(WorkersNewWorkerInstancesList, tempMap)
+		newWorkerInstancesList = append(newWorkerInstancesList, tempMap)
 		if cvmInfo.InstanceAdvancedSettings != nil {
 			if cvmInfo.InstanceAdvancedSettings.Labels != nil {
 				for _, v := range cvmInfo.InstanceAdvancedSettings.Labels {
-					WorkersLabelsMap[helper.PString(v.Name)] = helper.PString(v.Value)
+					labelsMap[helper.PString(v.Name)] = helper.PString(v.Value)
 				}
 			}
 
@@ -278,6 +226,10 @@ func clusterInstanceParamHandle(ctx context.Context, req *tke.DescribeClusterIns
 			}
 		}
 	}
+
+	ctxData.Set("newWorkerInstancesList", newWorkerInstancesList)
+	ctxData.Set("labelsMap", labelsMap)
+	ctxData.Set("instanceIds", instanceIds)
 	return nil
 }
 
@@ -290,12 +242,14 @@ func resourceTencentCloudKubernetesScaleWorkerDeletePostRequest0(ctx context.Con
 
 func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest0(ctx context.Context, req *tke.DescribeClustersRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
+	ctxData := tccommon.DataFromContext(ctx)
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 
 	instanceMap := make(map[string]bool)
 	oldWorkerInstancesList := d.Get("worker_instances_list").([]interface{})
+	clusterId := ""
 	if importFlag1 {
-		GlobalClusterId = items[0]
+		clusterId = items[0]
 		if len(items[1:]) >= 2 {
 			return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
 				"so should be 1")
@@ -305,12 +259,14 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest0(ctx context.C
 		}
 		oldWorkerInstancesList = append(oldWorkerInstancesList, infoMap)
 	} else {
-		GlobalClusterId = d.Get("cluster_id").(string)
+		clusterId = d.Get("cluster_id").(string)
 	}
 
-	if GlobalClusterId == "" {
+	if clusterId == "" {
 		return fmt.Errorf("tke.`cluster_id` is empty.")
 	}
+
+	ctxData.Set("clusterId", clusterId)
 
 	for _, v := range oldWorkerInstancesList {
 		infoMap, ok := v.(map[string]interface{})
@@ -327,6 +283,8 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest0(ctx context.C
 		instanceMap[instanceId] = true
 	}
 
+	ctxData.Set("instanceMap", instanceMap)
+
 	return nil
 }
 
@@ -338,7 +296,9 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest0(ctx context.Conte
 }
 
 func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest2(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
-	req.InstanceIds = WorkersInstanceIds
+	ctxData := tccommon.DataFromContext(ctx)
+	instanceIds := ctxData.Get("instanceIds").([]*string)
+	req.InstanceIds = instanceIds
 	return nil
 }
 
@@ -666,11 +626,6 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 			return err
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if err := clusterInstanceParamHandle(ctx, request, response); err != nil {
-			return err
-		}
-
 		if response == nil || len(response.Response.InstanceSet) < 1 {
 			break
 		}
@@ -687,11 +642,45 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	has := map[string]bool{}
+	workers := make([]InstanceInfo, 0, len(instanceSet))
+	for _, item := range instanceSet {
+		if has[*item.InstanceId] {
+			return fmt.Errorf("get repeated instance_id[%s] when doing DescribeClusterInstances", *item.InstanceId)
+		}
+		has[*item.InstanceId] = true
+		instanceInfo := InstanceInfo{
+			InstanceId:               *item.InstanceId,
+			InstanceRole:             *item.InstanceRole,
+			InstanceState:            *item.InstanceState,
+			FailedReason:             *item.FailedReason,
+			InstanceAdvancedSettings: item.InstanceAdvancedSettings,
+		}
+		if item.CreatedTime != nil {
+			instanceInfo.CreatedTime = *item.CreatedTime
+		}
+		if item.NodePoolId != nil {
+			instanceInfo.NodePoolId = *item.NodePoolId
+		}
+		if item.LanIP != nil {
+			instanceInfo.LanIp = *item.LanIP
+		}
+		if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
+			workers = append(workers, instanceInfo)
+		}
+	}
+
+	if err := clusterInstanceParamHandle(ctx, workers); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func resourceTencentCloudKubernetesScaleWorkerReadPreRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
-	req.InstanceIds = WorkersInstanceIds
-
+	ctxData := tccommon.DataFromContext(ctx)
+	instanceIds := ctxData.Get("instanceIds").([]*string)
+	req.InstanceIds = instanceIds
 	return nil
 }
