@@ -2270,7 +2270,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
 		assumeRoleSessionDuration = 7200
-		assumeRolePolicy = ""
 		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
 	}
 
@@ -2328,7 +2327,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleExternalId = assumeRole["external_id"].(string)
 
 			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
-			needSecret = true
+			if camRoleName != "" {
+				needSecret = false
+			} else {
+				needSecret = true
+			}
 		}
 	}
 
@@ -2379,10 +2382,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		} else {
 			return nil, fmt.Errorf("Can not get `TKE_REGION`, `TKE_WEB_IDENTITY_TOKEN_FILE`, `TKE_PROVIDER_ID`, `TKE_ROLE_ARN`. Must config serviceAccountName for pod.\n")
 		}
-	}
-
-	if camRoleName != "" && assumeRoleExternalId != "" {
-		needSecret = false
 	}
 
 	if needSecret && (secretId == "" || secretKey == "") {
