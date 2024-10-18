@@ -155,6 +155,40 @@ func DataSourceTencentCloudEnis() *schema.Resource {
 								},
 							},
 						},
+						"ipv6s": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "A set of intranet IPv6s.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"address": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "`IPv6` address, such as `3402:4e00:20:100:0:8cd9:2a67:71f3`.",
+									},
+									"primary": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Whether it is a primary `IP`.",
+									},
+									"address_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The `ID` of the `EIP` instance, such as `eip-hxlqja90`.",
+									},
+									"description": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Message description.",
+									},
+									"is_wan_ip_blocked": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Whether the public IP is blocked.",
+									},
+								},
+							},
+						},
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -255,6 +289,18 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 			})
 		}
 
+		ipv6s := make([]map[string]interface{}, 0, len(eni.Ipv6AddressSet))
+
+		for _, ipv6 := range eni.Ipv6AddressSet {
+			ipv6s = append(ipv6s, map[string]interface{}{
+				"address":           ipv6.Address,
+				"primary":           ipv6.Primary,
+				"address_id":        ipv6.AddressId,
+				"description":       ipv6.Description,
+				"is_wan_ip_blocked": ipv6.IsWanIpBlocked,
+			})
+		}
+
 		sgs := make([]string, 0, len(eni.GroupSet))
 		for _, sg := range eni.GroupSet {
 			sgs = append(sgs, *sg)
@@ -278,6 +324,7 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 			"state":           eni.State,
 			"create_time":     eni.CreatedTime,
 			"ipv4s":           ipv4s,
+			"ipv6s":           ipv6s,
 			"security_groups": sgs,
 			"tags":            respTags,
 			"cdc_id":          eni.CdcId,
