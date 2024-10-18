@@ -385,6 +385,7 @@ Cloud Load Balancer(CLB)
     tencentcloud_clb_instance
     tencentcloud_clb_listener
     tencentcloud_clb_listener_rule
+    tencentcloud_clb_listener_default_domain
     tencentcloud_clb_attachment
     tencentcloud_clb_redirection
     tencentcloud_lb
