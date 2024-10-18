@@ -131,6 +131,7 @@ const (
 	PROVIDER_ASSUME_ROLE_ARN                = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME       = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION   = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	PROVIDER_ASSUME_ROLE_EXTERNAL_ID        = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
 	PROVIDER_ASSUME_ROLE_SAML_ASSERTION     = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
 	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN      = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
 	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
@@ -248,6 +249,12 @@ func Provider() *schema.Provider {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "A more restrictive policy when making the AssumeRole call. Its content must not contains `principal` elements. Notice: more syntax references, please refer to: [policies syntax logic](https://intl.cloud.tencent.com/document/product/598/10603).",
+						},
+						"external_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_EXTERNAL_ID, nil),
+							Description: "External role ID, which can be obtained by clicking the role name in the CAM console. It can contain 2-128 letters, digits, and symbols (=,.@:/-). Regex: [\\w+=,.@:/-]*. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID`.",
 						},
 					},
 				},
@@ -2253,6 +2260,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		assumeRoleSessionName     string
 		assumeRoleSessionDuration int
 		assumeRolePolicy          string
+		assumeRoleExternalId      string
 	)
 
 	// get assume role from credential
@@ -2266,8 +2274,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
 		assumeRoleSessionDuration = 7200
-		assumeRolePolicy = ""
-		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
+		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
 	}
 
 	// get assume role from env
@@ -2286,6 +2293,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionDuration = 7200
 		}
 
+		assumeRoleExternalId = os.Getenv(PROVIDER_ASSUME_ROLE_EXTERNAL_ID)
+
 		// get assume role with saml from env
 		envSamlAssertion := os.Getenv(PROVIDER_ASSUME_ROLE_SAML_ASSERTION)
 		envPrincipalArn := os.Getenv(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN)
@@ -2294,7 +2303,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
 			// use assume role
-			_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+			_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "", assumeRoleExternalId)
 		} else if envSamlAssertion != "" && envPrincipalArn != "" && envWebIdentityToken != "" {
 			return nil, fmt.Errorf("can not set `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`, `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` at the same time.\n")
 		} else if envSamlAssertion != "" && envPrincipalArn != "" {
@@ -2319,9 +2328,14 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionName = assumeRole["session_name"].(string)
 			assumeRoleSessionDuration = assumeRole["session_duration"].(int)
 			assumeRolePolicy = assumeRole["policy"].(string)
+			assumeRoleExternalId = assumeRole["external_id"].(string)
 
-			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
-			needSecret = true
+			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
+			if camRoleName != "" {
+				needSecret = false
+			} else {
+				needSecret = true
+			}
 		}
 	}
 
@@ -2397,7 +2411,7 @@ func genClientWithCAM(tcClient *TencentCloudClient, roleName string) error {
 	return nil
 }
 
-func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {
+func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string, assumeRoleExternalId string) error {
 	// applying STS credentials
 	request := sdksts.NewAssumeRoleRequest()
 	request.RoleArn = helper.String(assumeRoleArn)
@@ -2405,6 +2419,10 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 	request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
 	if assumeRolePolicy != "" {
 		request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
+	}
+
+	if assumeRoleExternalId != "" {
+		request.ExternalId = helper.String(assumeRoleExternalId)
 	}
 
 	ratelimit.Check(request.GetAction())
