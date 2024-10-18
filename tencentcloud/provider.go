@@ -1243,6 +1243,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_instance":                                                           clb.ResourceTencentCloudClbInstance(),
 			"tencentcloud_clb_listener":                                                           clb.ResourceTencentCloudClbListener(),
 			"tencentcloud_clb_listener_rule":                                                      clb.ResourceTencentCloudClbListenerRule(),
+			"tencentcloud_clb_listener_default_domain":                                            clb.ResourceTencentCloudClbListenerDefaultDomain(),
 			"tencentcloud_clb_attachment":                                                         clb.ResourceTencentCloudClbServerAttachment(),
 			"tencentcloud_clb_redirection":                                                        clb.ResourceTencentCloudClbRedirection(),
 			"tencentcloud_clb_target_group":                                                       clb.ResourceTencentCloudClbTargetGroup(),

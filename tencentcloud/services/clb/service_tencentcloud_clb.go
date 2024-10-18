@@ -2429,3 +2429,34 @@ func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context,
 func IsHealthCheckEnable(healthSwitch int64) bool {
 	return healthSwitch == int64(1)
 }
+
+func waitTaskReady(ctx context.Context, client *clb.Client, reqeustId string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	describeRequest := clb.NewDescribeTaskStatusRequest()
+	describeRequest.TaskId = helper.String(reqeustId)
+
+	err := resource.Retry(2*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+		response, err := client.DescribeTaskStatus(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return tccommon.RetryError(err)
+		}
+		// 任务状态：RUNNING，FAIL，SUCCESS
+		status := *response.Response.Status
+		if status == 0 {
+			return nil
+		} else if status == 1 {
+			return resource.NonRetryableError(fmt.Errorf("Task[%s] failed", reqeustId))
+		} else {
+			return resource.RetryableError(fmt.Errorf("Task[%s] status: %s", reqeustId, status))
+		}
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s task failed, reason: %v", logId, err)
+		return err
+	}
+	return nil
+}
