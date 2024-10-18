@@ -112,5 +112,5 @@ Import
 tke scale worker can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_scale_worker.example cls-mij6c2pq#ins-n6esjkdi,ins-9h3rdxt8,ins-qretqeas
+$ terraform import tencentcloud_kubernetes_scale_worker.example cls-mij6c2pq#ins-n6esjkdi
 ```
