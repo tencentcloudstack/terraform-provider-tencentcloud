@@ -1,3 +1,22 @@
+## 1.81.134 (October 18 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_identity_center_groups` ([#2894](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2894))
+* **New Data Source:** `tencentcloud_identity_center_role_configurations` ([#2894](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2894))
+* **New Data Source:** `tencentcloud_identity_center_users` ([#2894](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2894))
+* **New Resource:** `tencentcloud_clb_listener_default_domain` ([#2899](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2899))
+* **New Resource:** `tencentcloud_sg_rule` ([#2886](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2886))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_enis: add `ipv6s` ([#2898](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2898))
+* provider: add new auth for `cam_role_name` ([#2892](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2892))
+* resource/tencentcloud_cos_bucket: `website` add new `redirect_all_requests_to` params ([#2897](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2897))
+* resource/tencentcloud_kubernetes_scale_worker: Fix import function ([#2891](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2891))
+* resource/tencentcloud_nat_gateway: adapt to scenarios where `nat_product_version` is 2 ([#2895](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2895))
+* resource/tencentcloud_teo_rule_engine: support rule_priority field. ([#2893](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2893))
+
 ## 1.81.133 (October 14 , 2024)
 
 FEATURES:
