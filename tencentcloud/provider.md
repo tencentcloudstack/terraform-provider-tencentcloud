@@ -1678,6 +1678,9 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_financial_by_product
     tencentcloud_organization_org_share_area
     tencentcloud_organization_services
+    tencentcloud_identity_center_groups
+    tencentcloud_identity_center_role_configurations
+    tencentcloud_identity_center_users
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node

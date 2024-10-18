@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_identity_center_groups
+```
+
+```release-note:new-data-source
+tencentcloud_identity_center_role_configurations
+```
+
+```release-note:new-data-source
+tencentcloud_identity_center_users
+```

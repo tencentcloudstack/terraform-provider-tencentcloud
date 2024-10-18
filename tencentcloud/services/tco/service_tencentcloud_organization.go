@@ -1655,3 +1655,195 @@ func (me *OrganizationService) UpdateOrganizationRootNodeName(ctx context.Contex
 
 	return nil
 }
+
+func (me *OrganizationService) DescribeIdentityCenterUsersByFilter(ctx context.Context, param map[string]interface{}) (users []*organization.UserInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewListUsersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "UserStatus" {
+			request.UserStatus = v.(*string)
+		}
+		if k == "UserType" {
+			request.UserType = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.(*string)
+		}
+		if k == "FilterGroups" {
+			request.FilterGroups = v.([]*string)
+		}
+		if k == "SortField" {
+			request.SortField = v.(*string)
+		}
+		if k == "SortType" {
+			request.SortType = v.(*string)
+		}
+	}
+
+	users = make([]*organization.UserInfo, 0)
+	for {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseOrganizationClient().ListUsers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return
+		}
+
+		users = append(users, response.Response.Users...)
+
+		if response.Response.IsTruncated != nil {
+			if *response.Response.IsTruncated {
+				request.NextToken = response.Response.NextToken
+			} else {
+				break
+			}
+		} else {
+			errRet = fmt.Errorf("ListUsers IsTruncated is nil")
+			return
+		}
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterGroupsByFilter(ctx context.Context, param map[string]interface{}) (groups []*organization.GroupInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewListGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.(*string)
+		}
+		if k == "GroupType" {
+			request.GroupType = v.(*string)
+		}
+		if k == "FilterUsers" {
+			request.FilterUsers = v.([]*string)
+		}
+		if k == "SortField" {
+			request.SortField = v.(*string)
+		}
+		if k == "SortType" {
+			request.SortType = v.(*string)
+		}
+	}
+
+	groups = make([]*organization.GroupInfo, 0)
+	for {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseOrganizationClient().ListGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return
+		}
+
+		groups = append(groups, response.Response.Groups...)
+
+		if response.Response.IsTruncated != nil {
+			if *response.Response.IsTruncated {
+				request.NextToken = response.Response.NextToken
+			} else {
+				break
+			}
+		} else {
+			errRet = fmt.Errorf("ListGroups IsTruncated is nil")
+			return
+		}
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterRoleConfigurationsByFilter(ctx context.Context, param map[string]interface{}) (roleConfigurations []*organization.RoleConfiguration, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewListRoleConfigurationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.(*string)
+		}
+		if k == "FilterTargets" {
+			request.FilterTargets = v.([]*int64)
+		}
+		if k == "PrincipalId" {
+			request.PrincipalId = v.(*string)
+		}
+	}
+
+	roleConfigurations = make([]*organization.RoleConfiguration, 0)
+	for {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseOrganizationClient().ListRoleConfigurations(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return
+		}
+
+		roleConfigurations = append(roleConfigurations, response.Response.RoleConfigurations...)
+
+		if response.Response.IsTruncated != nil {
+			if *response.Response.IsTruncated {
+				request.NextToken = response.Response.NextToken
+			} else {
+				break
+			}
+		} else {
+			errRet = fmt.Errorf("ListRoleConfigurations IsTruncated is nil")
+			return
+		}
+	}
+
+	return
+}
