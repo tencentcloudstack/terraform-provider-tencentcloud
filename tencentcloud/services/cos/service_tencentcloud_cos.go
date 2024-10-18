@@ -777,6 +777,9 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string, cdcId
 	if response.ErrorDocument != nil {
 		website["error_document"] = *response.ErrorDocument.Key
 	}
+	if response.RedirectAllRequestsTo != nil {
+		website["redirect_all_requests_to"] = *response.RedirectAllRequestsTo.Protocol
+	}
 	if len(website) > 0 {
 		websites = append(websites, website)
 	}

@@ -245,8 +245,9 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
   bucket = "bucket-with-static-website-${local.app_id}"
 
   website {
-    index_document = "index.html"
-    error_document = "error.html"
+    index_document           = "index.html"
+    error_document           = "error.html"
+    redirect_all_requests_to = "https"
   }
 }
 
@@ -505,6 +506,7 @@ The `website` object supports the following:
 
 * `error_document` - (Optional, String) An absolute path to the document to return in case of a 4XX error.
 * `index_document` - (Optional, String) COS returns this index document when requests are made to the root domain or any of the subfolders.
+* `redirect_all_requests_to` - (Optional, String) Redirects all request configurations. Valid values: http, https. Default is `http`.
 
 ## Attributes Reference
 
