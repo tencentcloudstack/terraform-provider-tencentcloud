@@ -5170,6 +5170,55 @@ func (c *Client) DescribeBackupStorageLocationsWithContext(ctx context.Context, 
     return
 }
 
+func NewDescribeBatchModifyTagsStatusRequest() (request *DescribeBatchModifyTagsStatusRequest) {
+    request = &DescribeBatchModifyTagsStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeBatchModifyTagsStatus")
+    
+    
+    return
+}
+
+func NewDescribeBatchModifyTagsStatusResponse() (response *DescribeBatchModifyTagsStatusResponse) {
+    response = &DescribeBatchModifyTagsStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBatchModifyTagsStatus
+// 查询批量修改标签状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TASKNOTFOUND = "FailedOperation.TaskNotFound"
+func (c *Client) DescribeBatchModifyTagsStatus(request *DescribeBatchModifyTagsStatusRequest) (response *DescribeBatchModifyTagsStatusResponse, err error) {
+    return c.DescribeBatchModifyTagsStatusWithContext(context.Background(), request)
+}
+
+// DescribeBatchModifyTagsStatus
+// 查询批量修改标签状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TASKNOTFOUND = "FailedOperation.TaskNotFound"
+func (c *Client) DescribeBatchModifyTagsStatusWithContext(ctx context.Context, request *DescribeBatchModifyTagsStatusRequest) (response *DescribeBatchModifyTagsStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeBatchModifyTagsStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBatchModifyTagsStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBatchModifyTagsStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterAsGroupOptionRequest() (request *DescribeClusterAsGroupOptionRequest) {
     request = &DescribeClusterAsGroupOptionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8103,91 +8152,6 @@ func (c *Client) DescribeExistedInstancesWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeExistedInstancesResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeExternalClusterSpecRequest() (request *DescribeExternalClusterSpecRequest) {
-    request = &DescribeExternalClusterSpecRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tke", APIVersion, "DescribeExternalClusterSpec")
-    
-    
-    return
-}
-
-func NewDescribeExternalClusterSpecResponse() (response *DescribeExternalClusterSpecResponse) {
-    response = &DescribeExternalClusterSpecResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeExternalClusterSpec
-// tdcc接口已迁移至tdcc产品下，tke下的接口下线
-//
-// 
-//
-// 获取导入第三方集群YAML定义
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
-//  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
-//  INTERNALERROR_KUBERNETESCREATEOPERATIONERROR = "InternalError.KubernetesCreateOperationError"
-//  INTERNALERROR_KUBERNETESDELETEOPERATIONERROR = "InternalError.KubernetesDeleteOperationError"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
-//  INTERNALERROR_WHITELISTUNEXPECTEDERROR = "InternalError.WhitelistUnexpectedError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
-//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
-//  RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
-//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
-//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
-func (c *Client) DescribeExternalClusterSpec(request *DescribeExternalClusterSpecRequest) (response *DescribeExternalClusterSpecResponse, err error) {
-    return c.DescribeExternalClusterSpecWithContext(context.Background(), request)
-}
-
-// DescribeExternalClusterSpec
-// tdcc接口已迁移至tdcc产品下，tke下的接口下线
-//
-// 
-//
-// 获取导入第三方集群YAML定义
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
-//  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
-//  INTERNALERROR_KUBERNETESCREATEOPERATIONERROR = "InternalError.KubernetesCreateOperationError"
-//  INTERNALERROR_KUBERNETESDELETEOPERATIONERROR = "InternalError.KubernetesDeleteOperationError"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
-//  INTERNALERROR_WHITELISTUNEXPECTEDERROR = "InternalError.WhitelistUnexpectedError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
-//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
-//  RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
-//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
-//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
-func (c *Client) DescribeExternalClusterSpecWithContext(ctx context.Context, request *DescribeExternalClusterSpecRequest) (response *DescribeExternalClusterSpecResponse, err error) {
-    if request == nil {
-        request = NewDescribeExternalClusterSpecRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeExternalClusterSpec require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeExternalClusterSpecResponse()
     err = c.Send(request, response)
     return
 }
@@ -12865,6 +12829,65 @@ func (c *Client) ModifyClusterRuntimeConfigWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewModifyClusterRuntimeConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyClusterTagsRequest() (request *ModifyClusterTagsRequest) {
+    request = &ModifyClusterTagsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "ModifyClusterTags")
+    
+    
+    return
+}
+
+func NewModifyClusterTagsResponse() (response *ModifyClusterTagsResponse) {
+    response = &ModifyClusterTagsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyClusterTags
+// 修改集群标签
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TASKNOTFOUND = "FailedOperation.TaskNotFound"
+//  FAILEDOPERATION_TRADECOMMON = "FailedOperation.TradeCommon"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TASKCREATEFAILED = "InternalError.TaskCreateFailed"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ModifyClusterTags(request *ModifyClusterTagsRequest) (response *ModifyClusterTagsResponse, err error) {
+    return c.ModifyClusterTagsWithContext(context.Background(), request)
+}
+
+// ModifyClusterTags
+// 修改集群标签
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TASKNOTFOUND = "FailedOperation.TaskNotFound"
+//  FAILEDOPERATION_TRADECOMMON = "FailedOperation.TradeCommon"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TASKCREATEFAILED = "InternalError.TaskCreateFailed"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ModifyClusterTagsWithContext(ctx context.Context, request *ModifyClusterTagsRequest) (response *ModifyClusterTagsResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterTagsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterTags require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyClusterTagsResponse()
     err = c.Send(request, response)
     return
 }
