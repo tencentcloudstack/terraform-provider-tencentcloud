@@ -9,8 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
-
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -48,6 +47,12 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Rule status. Values:\n  - `enable`: Enabled.\n  - `disable`: Disabled.",
+			},
+
+			"rule_priority": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Rule priority, the larger the value, the higher the priority, the minimum is 1.",
 			},
 
 			"tags": {
@@ -463,8 +468,8 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 		ruleId string
 	)
 	var (
-		request  = teo.NewCreateRuleRequest()
-		response = teo.NewCreateRuleResponse()
+		request  = teov20220901.NewCreateRuleRequest()
+		response = teov20220901.NewCreateRuleResponse()
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -492,15 +497,15 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("rules"); ok {
 		for _, item := range v.([]interface{}) {
 			rulesMap := item.(map[string]interface{})
-			rule := teo.Rule{}
+			rule := teov20220901.Rule{}
 			if v, ok := rulesMap["or"]; ok {
 				for _, item := range v.([]interface{}) {
 					conditionsMap := item.(map[string]interface{})
-					ruleAndConditions := teo.RuleAndConditions{}
+					ruleAndConditions := teov20220901.RuleAndConditions{}
 					if v, ok := conditionsMap["and"]; ok {
 						for _, item := range v.([]interface{}) {
 							conditionsMap := item.(map[string]interface{})
-							ruleCondition := teo.RuleCondition{}
+							ruleCondition := teov20220901.RuleCondition{}
 							if v, ok := conditionsMap["operator"]; ok {
 								ruleCondition.Operator = helper.String(v.(string))
 							}
@@ -529,16 +534,16 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 			if v, ok := rulesMap["actions"]; ok {
 				for _, item := range v.([]interface{}) {
 					actionsMap := item.(map[string]interface{})
-					action := teo.Action{}
+					action := teov20220901.Action{}
 					if normalActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["normal_action"]); ok {
-						normalAction := teo.NormalAction{}
+						normalAction := teov20220901.NormalAction{}
 						if v, ok := normalActionMap["action"]; ok {
 							normalAction.Action = helper.String(v.(string))
 						}
 						if v, ok := normalActionMap["parameters"]; ok {
 							for _, item := range v.([]interface{}) {
 								parametersMap := item.(map[string]interface{})
-								ruleNormalActionParams := teo.RuleNormalActionParams{}
+								ruleNormalActionParams := teov20220901.RuleNormalActionParams{}
 								if v, ok := parametersMap["name"]; ok {
 									ruleNormalActionParams.Name = helper.String(v.(string))
 								}
@@ -555,14 +560,14 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 						action.NormalAction = &normalAction
 					}
 					if rewriteActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["rewrite_action"]); ok {
-						rewriteAction := teo.RewriteAction{}
+						rewriteAction := teov20220901.RewriteAction{}
 						if v, ok := rewriteActionMap["action"]; ok {
 							rewriteAction.Action = helper.String(v.(string))
 						}
 						if v, ok := rewriteActionMap["parameters"]; ok {
 							for _, item := range v.([]interface{}) {
 								parametersMap := item.(map[string]interface{})
-								ruleRewriteActionParams := teo.RuleRewriteActionParams{}
+								ruleRewriteActionParams := teov20220901.RuleRewriteActionParams{}
 								if v, ok := parametersMap["action"]; ok {
 									ruleRewriteActionParams.Action = helper.String(v.(string))
 								}
@@ -582,14 +587,14 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 						action.RewriteAction = &rewriteAction
 					}
 					if codeActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["code_action"]); ok {
-						codeAction := teo.CodeAction{}
+						codeAction := teov20220901.CodeAction{}
 						if v, ok := codeActionMap["action"]; ok {
 							codeAction.Action = helper.String(v.(string))
 						}
 						if v, ok := codeActionMap["parameters"]; ok {
 							for _, item := range v.([]interface{}) {
 								parametersMap := item.(map[string]interface{})
-								ruleCodeActionParams := teo.RuleCodeActionParams{}
+								ruleCodeActionParams := teov20220901.RuleCodeActionParams{}
 								if v, ok := parametersMap["status_code"]; ok {
 									ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
 								}
@@ -614,19 +619,19 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 			if v, ok := rulesMap["sub_rules"]; ok {
 				for _, item := range v.([]interface{}) {
 					subRulesMap := item.(map[string]interface{})
-					subRuleItem := teo.SubRuleItem{}
+					subRuleItem := teov20220901.SubRuleItem{}
 					if v, ok := subRulesMap["rules"]; ok {
 						for _, item := range v.([]interface{}) {
 							rulesMap := item.(map[string]interface{})
-							subRule := teo.SubRule{}
+							subRule := teov20220901.SubRule{}
 							if v, ok := rulesMap["or"]; ok {
 								for _, item := range v.([]interface{}) {
 									conditionsMap := item.(map[string]interface{})
-									ruleAndConditions := teo.RuleAndConditions{}
+									ruleAndConditions := teov20220901.RuleAndConditions{}
 									if v, ok := conditionsMap["and"]; ok {
 										for _, item := range v.([]interface{}) {
 											conditionsMap := item.(map[string]interface{})
-											ruleCondition := teo.RuleCondition{}
+											ruleCondition := teov20220901.RuleCondition{}
 											if v, ok := conditionsMap["operator"]; ok {
 												ruleCondition.Operator = helper.String(v.(string))
 											}
@@ -655,16 +660,16 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 							if v, ok := rulesMap["actions"]; ok {
 								for _, item := range v.([]interface{}) {
 									actionsMap := item.(map[string]interface{})
-									action := teo.Action{}
+									action := teov20220901.Action{}
 									if normalActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["normal_action"]); ok {
-										normalAction2 := teo.NormalAction{}
+										normalAction2 := teov20220901.NormalAction{}
 										if v, ok := normalActionMap["action"]; ok {
 											normalAction2.Action = helper.String(v.(string))
 										}
 										if v, ok := normalActionMap["parameters"]; ok {
 											for _, item := range v.([]interface{}) {
 												parametersMap := item.(map[string]interface{})
-												ruleNormalActionParams := teo.RuleNormalActionParams{}
+												ruleNormalActionParams := teov20220901.RuleNormalActionParams{}
 												if v, ok := parametersMap["name"]; ok {
 													ruleNormalActionParams.Name = helper.String(v.(string))
 												}
@@ -681,14 +686,14 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 										action.NormalAction = &normalAction2
 									}
 									if rewriteActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["rewrite_action"]); ok {
-										rewriteAction2 := teo.RewriteAction{}
+										rewriteAction2 := teov20220901.RewriteAction{}
 										if v, ok := rewriteActionMap["action"]; ok {
 											rewriteAction2.Action = helper.String(v.(string))
 										}
 										if v, ok := rewriteActionMap["parameters"]; ok {
 											for _, item := range v.([]interface{}) {
 												parametersMap := item.(map[string]interface{})
-												ruleRewriteActionParams := teo.RuleRewriteActionParams{}
+												ruleRewriteActionParams := teov20220901.RuleRewriteActionParams{}
 												if v, ok := parametersMap["action"]; ok {
 													ruleRewriteActionParams.Action = helper.String(v.(string))
 												}
@@ -708,14 +713,14 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 										action.RewriteAction = &rewriteAction2
 									}
 									if codeActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["code_action"]); ok {
-										codeAction2 := teo.CodeAction{}
+										codeAction2 := teov20220901.CodeAction{}
 										if v, ok := codeActionMap["action"]; ok {
 											codeAction2.Action = helper.String(v.(string))
 										}
 										if v, ok := codeActionMap["parameters"]; ok {
 											for _, item := range v.([]interface{}) {
 												parametersMap := item.(map[string]interface{})
-												ruleCodeActionParams := teo.RuleCodeActionParams{}
+												ruleCodeActionParams := teov20220901.RuleCodeActionParams{}
 												if v, ok := parametersMap["status_code"]; ok {
 													ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
 												}
@@ -755,7 +760,7 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateRuleWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateRuleWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -816,6 +821,10 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 
 	if respData.Status != nil {
 		_ = d.Set("status", respData.Status)
+	}
+
+	if respData.RulePriority != nil {
+		_ = d.Set("rule_priority", respData.RulePriority)
 	}
 
 	if respData.Tags != nil {
@@ -1169,7 +1178,7 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 	}
 
 	if needChange {
-		request := teo.NewModifyRuleRequest()
+		request := teov20220901.NewModifyRuleRequest()
 
 		request.ZoneId = helper.String(zoneId)
 
@@ -1194,20 +1203,20 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 		if v, ok := d.GetOk("rules"); ok {
 			for _, item := range v.([]interface{}) {
 				rulesMap := item.(map[string]interface{})
-				rule := teo.Rule{}
+				rule := teov20220901.Rule{}
 				if v, ok := rulesMap["actions"]; ok {
 					for _, item := range v.([]interface{}) {
 						actionsMap := item.(map[string]interface{})
-						action := teo.Action{}
+						action := teov20220901.Action{}
 						if normalActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["normal_action"]); ok {
-							normalAction := teo.NormalAction{}
+							normalAction := teov20220901.NormalAction{}
 							if v, ok := normalActionMap["action"]; ok {
 								normalAction.Action = helper.String(v.(string))
 							}
 							if v, ok := normalActionMap["parameters"]; ok {
 								for _, item := range v.([]interface{}) {
 									parametersMap := item.(map[string]interface{})
-									ruleNormalActionParams := teo.RuleNormalActionParams{}
+									ruleNormalActionParams := teov20220901.RuleNormalActionParams{}
 									if v, ok := parametersMap["name"]; ok {
 										ruleNormalActionParams.Name = helper.String(v.(string))
 									}
@@ -1224,14 +1233,14 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 							action.NormalAction = &normalAction
 						}
 						if rewriteActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["rewrite_action"]); ok {
-							rewriteAction := teo.RewriteAction{}
+							rewriteAction := teov20220901.RewriteAction{}
 							if v, ok := rewriteActionMap["action"]; ok {
 								rewriteAction.Action = helper.String(v.(string))
 							}
 							if v, ok := rewriteActionMap["parameters"]; ok {
 								for _, item := range v.([]interface{}) {
 									parametersMap := item.(map[string]interface{})
-									ruleRewriteActionParams := teo.RuleRewriteActionParams{}
+									ruleRewriteActionParams := teov20220901.RuleRewriteActionParams{}
 									if v, ok := parametersMap["action"]; ok {
 										ruleRewriteActionParams.Action = helper.String(v.(string))
 									}
@@ -1251,14 +1260,14 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 							action.RewriteAction = &rewriteAction
 						}
 						if codeActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["code_action"]); ok {
-							codeAction := teo.CodeAction{}
+							codeAction := teov20220901.CodeAction{}
 							if v, ok := codeActionMap["action"]; ok {
 								codeAction.Action = helper.String(v.(string))
 							}
 							if v, ok := codeActionMap["parameters"]; ok {
 								for _, item := range v.([]interface{}) {
 									parametersMap := item.(map[string]interface{})
-									ruleCodeActionParams := teo.RuleCodeActionParams{}
+									ruleCodeActionParams := teov20220901.RuleCodeActionParams{}
 									if v, ok := parametersMap["status_code"]; ok {
 										ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
 									}
@@ -1283,11 +1292,11 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 				if v, ok := rulesMap["or"]; ok {
 					for _, item := range v.([]interface{}) {
 						conditionsMap := item.(map[string]interface{})
-						ruleAndConditions := teo.RuleAndConditions{}
+						ruleAndConditions := teov20220901.RuleAndConditions{}
 						if v, ok := conditionsMap["and"]; ok {
 							for _, item := range v.([]interface{}) {
 								conditionsMap := item.(map[string]interface{})
-								ruleCondition := teo.RuleCondition{}
+								ruleCondition := teov20220901.RuleCondition{}
 								if v, ok := conditionsMap["operator"]; ok {
 									ruleCondition.Operator = helper.String(v.(string))
 								}
@@ -1316,19 +1325,19 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 				if v, ok := rulesMap["sub_rules"]; ok {
 					for _, item := range v.([]interface{}) {
 						subRulesMap := item.(map[string]interface{})
-						subRuleItem := teo.SubRuleItem{}
+						subRuleItem := teov20220901.SubRuleItem{}
 						if v, ok := subRulesMap["rules"]; ok {
 							for _, item := range v.([]interface{}) {
 								rulesMap := item.(map[string]interface{})
-								subRule := teo.SubRule{}
+								subRule := teov20220901.SubRule{}
 								if v, ok := rulesMap["or"]; ok {
 									for _, item := range v.([]interface{}) {
 										conditionsMap := item.(map[string]interface{})
-										ruleAndConditions := teo.RuleAndConditions{}
+										ruleAndConditions := teov20220901.RuleAndConditions{}
 										if v, ok := conditionsMap["and"]; ok {
 											for _, item := range v.([]interface{}) {
 												conditionsMap := item.(map[string]interface{})
-												ruleCondition := teo.RuleCondition{}
+												ruleCondition := teov20220901.RuleCondition{}
 												if v, ok := conditionsMap["operator"]; ok {
 													ruleCondition.Operator = helper.String(v.(string))
 												}
@@ -1357,16 +1366,16 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 								if v, ok := rulesMap["actions"]; ok {
 									for _, item := range v.([]interface{}) {
 										actionsMap := item.(map[string]interface{})
-										action := teo.Action{}
+										action := teov20220901.Action{}
 										if normalActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["normal_action"]); ok {
-											normalAction2 := teo.NormalAction{}
+											normalAction2 := teov20220901.NormalAction{}
 											if v, ok := normalActionMap["action"]; ok {
 												normalAction2.Action = helper.String(v.(string))
 											}
 											if v, ok := normalActionMap["parameters"]; ok {
 												for _, item := range v.([]interface{}) {
 													parametersMap := item.(map[string]interface{})
-													ruleNormalActionParams := teo.RuleNormalActionParams{}
+													ruleNormalActionParams := teov20220901.RuleNormalActionParams{}
 													if v, ok := parametersMap["name"]; ok {
 														ruleNormalActionParams.Name = helper.String(v.(string))
 													}
@@ -1383,14 +1392,14 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 											action.NormalAction = &normalAction2
 										}
 										if rewriteActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["rewrite_action"]); ok {
-											rewriteAction2 := teo.RewriteAction{}
+											rewriteAction2 := teov20220901.RewriteAction{}
 											if v, ok := rewriteActionMap["action"]; ok {
 												rewriteAction2.Action = helper.String(v.(string))
 											}
 											if v, ok := rewriteActionMap["parameters"]; ok {
 												for _, item := range v.([]interface{}) {
 													parametersMap := item.(map[string]interface{})
-													ruleRewriteActionParams := teo.RuleRewriteActionParams{}
+													ruleRewriteActionParams := teov20220901.RuleRewriteActionParams{}
 													if v, ok := parametersMap["action"]; ok {
 														ruleRewriteActionParams.Action = helper.String(v.(string))
 													}
@@ -1410,14 +1419,14 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 											action.RewriteAction = &rewriteAction2
 										}
 										if codeActionMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["code_action"]); ok {
-											codeAction2 := teo.CodeAction{}
+											codeAction2 := teov20220901.CodeAction{}
 											if v, ok := codeActionMap["action"]; ok {
 												codeAction2.Action = helper.String(v.(string))
 											}
 											if v, ok := codeActionMap["parameters"]; ok {
 												for _, item := range v.([]interface{}) {
 													parametersMap := item.(map[string]interface{})
-													ruleCodeActionParams := teo.RuleCodeActionParams{}
+													ruleCodeActionParams := teov20220901.RuleCodeActionParams{}
 													if v, ok := parametersMap["status_code"]; ok {
 														ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
 													}
@@ -1457,7 +1466,7 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyRuleWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyRuleWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -1489,8 +1498,8 @@ func resourceTencentCloudTeoRuleEngineDelete(d *schema.ResourceData, meta interf
 	ruleId := idSplit[1]
 
 	var (
-		request  = teo.NewDeleteRulesRequest()
-		response = teo.NewDeleteRulesResponse()
+		request  = teov20220901.NewDeleteRulesRequest()
+		response = teov20220901.NewDeleteRulesResponse()
 	)
 
 	request.ZoneId = helper.String(zoneId)
@@ -1498,7 +1507,7 @@ func resourceTencentCloudTeoRuleEngineDelete(d *schema.ResourceData, meta interf
 	request.RuleIds = []*string{helper.String(ruleId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteRulesWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteRulesWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
