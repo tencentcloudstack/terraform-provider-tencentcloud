@@ -477,6 +477,13 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Optional:    true,
 							Description: "An absolute path to the document to return in case of a 4XX error.",
 						},
+						"redirect_all_requests_to": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Computed:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"http", "https"}),
+							Description:  "Redirects all request configurations. Valid values: http, https. Default is `http`.",
+						},
 						"endpoint": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -1406,6 +1413,10 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, "delete bucket website", request.String(), response.String())
 	} else {
+		if cdcId != "" {
+			return fmt.Errorf("cdc cos not support set website.\n")
+		}
+
 		var w map[string]interface{}
 		if website[0] != nil {
 			w = website[0].(map[string]interface{})
@@ -1413,12 +1424,17 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 			w = make(map[string]interface{})
 		}
 		var indexDocument, errorDocument string
+		var redirectAllRequestsTo = "http"
 		if v, ok := w["index_document"]; ok {
 			indexDocument = v.(string)
 		}
 		if v, ok := w["error_document"]; ok {
 			errorDocument = v.(string)
 		}
+		if v, ok := w["redirect_all_requests_to"]; ok && v != "" {
+			redirectAllRequestsTo = v.(string)
+		}
+		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
 		request := s3.PutBucketWebsiteInput{
 			Bucket: aws.String(bucket),
 			WebsiteConfiguration: &s3.WebsiteConfiguration{
@@ -1427,6 +1443,10 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 				},
 				ErrorDocument: &s3.ErrorDocument{
 					Key: aws.String(errorDocument),
+				},
+				RedirectAllRequestsTo: &s3.RedirectAllRequestsTo{
+					HostName: aws.String(endPointUrl),
+					Protocol: aws.String(redirectAllRequestsTo),
 				},
 			},
 		}

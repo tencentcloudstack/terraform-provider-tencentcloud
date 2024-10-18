@@ -234,8 +234,9 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
   bucket = "bucket-with-static-website-${local.app_id}"
 
   website {
-    index_document = "index.html"
-    error_document = "error.html"
+    index_document           = "index.html"
+    error_document           = "error.html"
+    redirect_all_requests_to = "https"
   }
 }
 
