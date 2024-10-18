@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a NAT gateway.
 
+~> **NOTE:** If `nat_product_version` is `1`, `max_concurrent` valid values is `1000000`, `3000000`, `10000000`.
+
 ## Example Usage
 
 ### Create a traditional NAT gateway.
@@ -30,16 +32,17 @@ resource "tencentcloud_eip" "eip_example2" {
 }
 
 resource "tencentcloud_nat_gateway" "example" {
-  name           = "tf_example_nat_gateway"
-  vpc_id         = tencentcloud_vpc.vpc.id
-  bandwidth      = 100
-  max_concurrent = 1000000
+  name                = "tf_example_nat_gateway"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  nat_product_version = 1
+  bandwidth           = 100
+  max_concurrent      = 1000000
   assigned_eip_set = [
     tencentcloud_eip.eip_example1.public_ip,
     tencentcloud_eip.eip_example2.public_ip,
   ]
   tags = {
-    tf_tag_key = "tf_tag_value"
+    createBy = "terraform"
   }
 }
 ```
@@ -61,22 +64,15 @@ resource "tencentcloud_eip" "eip_example2" {
 }
 
 resource "tencentcloud_nat_gateway" "example" {
-  name   = "tf_example_nat_gateway"
-  vpc_id = tencentcloud_vpc.vpc.id
+  name                = "tf_example_nat_gateway"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  nat_product_version = 2
   assigned_eip_set = [
     tencentcloud_eip.eip_example1.public_ip,
     tencentcloud_eip.eip_example2.public_ip,
   ]
-  nat_product_version = 2
   tags = {
-    tf_tag_key = "tf_tag_value"
-  }
-  lifecycle {
-    ignore_changes = [
-      // standard nat will set default values for bandwidth and max_concurrent
-      bandwidth,
-      max_concurrent,
-    ]
+    createBy = "terraform"
   }
 }
 ```
@@ -88,8 +84,8 @@ The following arguments are supported:
 * `assigned_eip_set` - (Required, Set: [`String`]) EIP IP address set bound to the gateway. The value of at least 1 and at most 10.
 * `name` - (Required, String) Name of the NAT gateway.
 * `vpc_id` - (Required, String, ForceNew) ID of the vpc.
-* `bandwidth` - (Optional, Int) The maximum public network output bandwidth of NAT gateway (unit: Mbps). Valid values: `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`. Default is 100.
-* `max_concurrent` - (Optional, Int) The upper limit of concurrent connection of NAT gateway. Valid values: `1000000`, `3000000`, `10000000`. Default is `1000000`.
+* `bandwidth` - (Optional, Int) The maximum public network output bandwidth of NAT gateway (unit: Mbps). Valid values: `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`. Default is `100`. When the value of parameter `nat_product_version` is 2, which is the standard NAT type, this parameter does not need to be filled in and defaults to `5000`.
+* `max_concurrent` - (Optional, Int) The upper limit of concurrent connection of NAT gateway. Valid values: `1000000`, `3000000`, `10000000`. Default is `1000000`. When the value of parameter `nat_product_version` is 2, which is the standard NAT type, this parameter does not need to be filled in and defaults to `2000000`.
 * `nat_product_version` - (Optional, Int, ForceNew) 1: traditional NAT, 2: standard NAT, default value is 1.
 * `subnet_id` - (Optional, String, ForceNew) Subnet of NAT.
 * `tags` - (Optional, Map) The available tags within this NAT gateway.
@@ -108,6 +104,6 @@ In addition to all arguments above, the following attributes are exported:
 NAT gateway can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_nat_gateway.foo nat-1asg3t63
+$ terraform import tencentcloud_nat_gateway.example nat-1asg3t63
 ```
 
