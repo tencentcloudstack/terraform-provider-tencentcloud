@@ -1,0 +1,3 @@
+```release-note:enhancement
+datasource/tencentcloud_enis: add `ipv6s`
+```
