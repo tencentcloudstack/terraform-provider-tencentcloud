@@ -2097,6 +2097,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                                                cfw.ResourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                                                cfw.ResourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                                               cfw.ResourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_sg_rule":                                                                cfw.ResourceTencentCloudSgRule(),
 			"tencentcloud_dasb_acl":                                                               bh.ResourceTencentCloudDasbAcl(),
 			"tencentcloud_dasb_cmd_template":                                                      bh.ResourceTencentCloudDasbCmdTemplate(),
 			"tencentcloud_dasb_device_group":                                                      bh.ResourceTencentCloudDasbDeviceGroup(),

@@ -2138,6 +2138,7 @@ Cloud Firewall(CFW)
     tencentcloud_cfw_nat_firewall_switch
     tencentcloud_cfw_vpc_firewall_switch
     tencentcloud_cfw_edge_firewall_switch
+    tencentcloud_sg_rule
 
 Bastion Host(BH)
   Resource
