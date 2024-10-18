@@ -1,5 +1,7 @@
 Provides a resource to create a NAT gateway.
 
+~> **NOTE:** If `nat_product_version` is `1`, `max_concurrent` valid values is `1000000`, `3000000`, `10000000`.
+
 Example Usage
 
 Create a traditional NAT gateway.
@@ -19,16 +21,17 @@ resource "tencentcloud_eip" "eip_example2" {
 }
 
 resource "tencentcloud_nat_gateway" "example" {
-  name             = "tf_example_nat_gateway"
-  vpc_id           = tencentcloud_vpc.vpc.id
-  bandwidth        = 100
-  max_concurrent   = 1000000
+  name                = "tf_example_nat_gateway"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  nat_product_version = 1
+  bandwidth           = 100
+  max_concurrent      = 1000000
   assigned_eip_set = [
     tencentcloud_eip.eip_example1.public_ip,
     tencentcloud_eip.eip_example2.public_ip,
   ]
   tags = {
-    tf_tag_key = "tf_tag_value"
+    createBy = "terraform"
   }
 }
 ```
@@ -50,22 +53,15 @@ resource "tencentcloud_eip" "eip_example2" {
 }
 
 resource "tencentcloud_nat_gateway" "example" {
-  name             = "tf_example_nat_gateway"
-  vpc_id           = tencentcloud_vpc.vpc.id
+  name                = "tf_example_nat_gateway"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  nat_product_version = 2
   assigned_eip_set = [
     tencentcloud_eip.eip_example1.public_ip,
     tencentcloud_eip.eip_example2.public_ip,
   ]
-  nat_product_version = 2
-  tags                = {
-    tf_tag_key = "tf_tag_value"
-  }
-  lifecycle {
-    ignore_changes = [
-      // standard nat will set default values for bandwidth and max_concurrent
-      bandwidth,
-      max_concurrent,
-    ]
+  tags = {
+    createBy = "terraform"
   }
 }
 ```
@@ -75,5 +71,5 @@ Import
 NAT gateway can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_nat_gateway.foo nat-1asg3t63
+$ terraform import tencentcloud_nat_gateway.example nat-1asg3t63
 ```
