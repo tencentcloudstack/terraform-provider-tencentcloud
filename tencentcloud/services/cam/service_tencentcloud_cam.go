@@ -1207,20 +1207,20 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 		//multi value case in elemant `resource`, `action`: input:""/[""], output: [""]
 		if state.Resource != nil {
 			if reflect.TypeOf(state.Resource) == reflect.TypeOf("string") {
-				return fmt.Errorf("The format of `resource` in policy document is invalid, its type must be array")
+				return fmt.Errorf("The format of `resource` in policy document is invalid, its type must be array.")
 			}
 		}
 
 		if state.Action != nil {
 			if reflect.TypeOf(state.Action) == reflect.TypeOf("string") {
-				return fmt.Errorf("The format of `resource` in policy document is invalid, its type must be array")
+				return fmt.Errorf("The format of `action` in policy document is invalid, its type must be array.")
 			}
 
 		}
 		//multi value case in elemant `principal.qcs`:input :root/[uin of the user], output:[uin of the user]
 		for _, qcs := range state.Principal.Qcs {
 			if strings.Contains(qcs, "root") {
-				return fmt.Errorf("`root` format is not supported, please replace it with uin")
+				return fmt.Errorf("`root` format is not supported, please replace it with uin.")
 			}
 		}
 	}
