@@ -14,8 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudCcnAttachmentResource(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudCcnAttachmentResource_basic(t *testing.T) {
 	keyName := "tencentcloud_ccn_attachment.attachment"
 	keyNameVpngw := "tencentcloud_ccn_attachment.vpngw_ccn_attachment"
 	resource.Test(t, resource.TestCase{
@@ -48,6 +47,31 @@ func TestAccTencentCloudCcnAttachmentResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "attached_time"),
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "cidr_block.#"),
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "route_ids.#"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCcnAttachmentResource_withCcnUin(t *testing.T) {
+	keyName := "tencentcloud_ccn_attachment.attachment_ccnuin"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCcnAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCcnAttachmentConfigWithCcnUin,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCcnAttachmentExists(keyName),
+					resource.TestCheckResourceAttrSet(keyName, "ccn_id"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_type"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_region"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_id"),
+					resource.TestCheckResourceAttrSet(keyName, "state"),
+					resource.TestCheckResourceAttrSet(keyName, "attached_time"),
+					resource.TestCheckResourceAttrSet(keyName, "cidr_block.#"),
+					resource.TestCheckResourceAttrSet(keyName, "route_ids.#"),
 				),
 			},
 		},
@@ -130,6 +154,35 @@ resource tencentcloud_ccn main {
 
 resource tencentcloud_ccn_attachment attachment {
   ccn_id          = tencentcloud_ccn.main.id
+  instance_type   = "VPC"
+  instance_id     = tencentcloud_vpc.vpc.id
+  instance_region = var.region
+}
+`
+
+const testAccCcnAttachmentConfigWithCcnUin = `
+variable "region" {
+  default = "ap-guangzhou"
+}
+
+resource tencentcloud_vpc vpc {
+  name         = "ci-temp-test-vpc"
+  cidr_block   = "10.0.0.0/16"
+  dns_servers  = ["119.29.29.29", "8.8.8.8"]
+  is_multicast = false
+}
+
+resource tencentcloud_ccn main {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
+  charge_type = "PREPAID"
+  bandwidth_limit_type = "INTER_REGION_LIMIT"
+}
+
+resource tencentcloud_ccn_attachment attachment_ccnuin {
+  ccn_id          = tencentcloud_ccn.main.id
+  ccn_uin         = "100022770164"
   instance_type   = "VPC"
   instance_id     = tencentcloud_vpc.vpc.id
   instance_region = var.region
