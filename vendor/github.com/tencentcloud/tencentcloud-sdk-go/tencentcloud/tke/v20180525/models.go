@@ -6599,12 +6599,15 @@ func (r *DescribeBackupStorageLocationsResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeBatchModifyTagsStatusRequestParams struct {
-
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 type DescribeBatchModifyTagsStatusRequest struct {
 	*tchttp.BaseRequest
 	
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeBatchModifyTagsStatusRequest) ToJsonString() string {
@@ -6619,7 +6622,7 @@ func (r *DescribeBatchModifyTagsStatusRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "ClusterId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBatchModifyTagsStatusRequest has unknown keys!", "")
 	}
@@ -6632,7 +6635,10 @@ type DescribeBatchModifyTagsStatusResponseParams struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FailedResources []*FailedResource `json:"FailedResources,omitnil,omitempty" name:"FailedResources"`
 
-	// 任务状态
+	// 任务状态：
+	// - running 运行中
+	// - failed 失败
+	// - done 成功
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 

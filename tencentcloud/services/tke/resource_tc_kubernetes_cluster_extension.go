@@ -1187,21 +1187,22 @@ func resourceTencentCloudKubernetesClusterUpdateOnStart(ctx context.Context) err
 		}
 
 		// wait for tags ok
-		// err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		// 	request := tke.NewDescribeBatchModifyTagsStatusRequest()
-		// 	resp, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeBatchModifyTagsStatus(request)
-		// 	if errRet != nil {
-		// 		return tccommon.RetryError(errRet, tccommon.InternalError)
-		// 	}
-		// 	// TaskFailed = "failed"; TaskRunning = "running"; TaskDone = "done"
-		// 	if resp != nil && *resp.Response.Status == "done" {
-		// 		return nil
-		// 	}
-		// 	return resource.RetryableError(fmt.Errorf("modify tags status is %s, retry...", *resp.Response.Status))
-		// })
-		// if err != nil {
-		// 	return err
-		// }
+		err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			request := tke.NewDescribeBatchModifyTagsStatusRequest()
+			request.ClusterId = &id
+			resp, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeBatchModifyTagsStatus(request)
+			if errRet != nil {
+				return tccommon.RetryError(errRet, tccommon.InternalError)
+			}
+			// TaskFailed = "failed"; TaskRunning = "running"; TaskDone = "done"
+			if resp != nil && *resp.Response.Status == "done" {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("modify tags status is %s, retry...", *resp.Response.Status))
+		})
+		if err != nil {
+			return err
+		}
 
 	}
 
