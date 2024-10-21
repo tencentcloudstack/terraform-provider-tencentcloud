@@ -13,13 +13,13 @@ import (
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -1172,10 +1172,7 @@ func resourceTencentCloudKubernetesClusterUpdateOnStart(ctx context.Context) err
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
 
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	service := svctag.NewTagService(client)
 	tkeService := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	region := client.Region
 
 	d.Partial(true)
 	id := d.Id()
@@ -1185,11 +1182,25 @@ func resourceTencentCloudKubernetesClusterUpdateOnStart(ctx context.Context) err
 	}
 
 	if d.HasChange("tags") {
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		if err := modifyClusterTags(ctx); err != nil {
+			return err
+		}
 
-		resourceName := tccommon.BuildTagResourceName("ccs", "cluster", region, id)
-		if err := service.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+		// wait for tags ok
+		err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			request := tke.NewDescribeBatchModifyTagsStatusRequest()
+			request.ClusterId = &id
+			resp, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeBatchModifyTagsStatus(request)
+			if errRet != nil {
+				return tccommon.RetryError(errRet, tccommon.InternalError)
+			}
+			// TaskFailed = "failed"; TaskRunning = "running"; TaskDone = "done"
+			if resp != nil && *resp.Response.Status == "done" {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("modify tags status is %s, retry...", *resp.Response.Status))
+		})
+		if err != nil {
 			return err
 		}
 
@@ -1638,6 +1649,39 @@ func ResourceTkeGetAddonsDiffs(o, n []interface{}) (adds, removes, changes []int
 
 	changes = fullIndexedKeeps.Difference(fullIndexedOlds).List()
 	return
+}
+
+func modifyClusterTags(ctx context.Context) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	logId := tccommon.GetLogId(ctx)
+
+	id := d.Id()
+	tags := GetTkeTags(d, "tags")
+	body := map[string]interface{}{
+		"ClusterId":       id,
+		"SyncSubresource": false,
+		"Tags":            tags,
+	}
+
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOmitNilClient("tke")
+	request := tchttp.NewCommonRequest("tke", "2018-05-25", "ModifyClusterTags")
+	err := request.SetActionParameters(body)
+	if err != nil {
+		return err
+	}
+
+	response := tchttp.NewCommonResponse()
+	err = client.Send(request, response)
+	if err != nil {
+		fmt.Printf("Modify Cluster Tags failed: %v \n", err)
+		return err
+	}
+	reqBody, _ := request.MarshalJSON()
+	respBody := response.GetBody()
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), string(reqBody), string(respBody))
+	return nil
 }
 
 // upgradeClusterInstances upgrade instances, upgrade type try seq:major, hot.
