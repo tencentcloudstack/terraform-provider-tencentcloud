@@ -48,7 +48,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 			},
 
 			"labels": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Node Labels.",
 				Elem: &schema.Resource{
@@ -615,7 +615,7 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	}
 
 	if v, ok := d.GetOk("labels"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			labelsMap := item.(map[string]interface{})
 			label := tke2.Label{}
 			if v, ok := labelsMap["name"]; ok {
@@ -1423,7 +1423,7 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		}
 
 		if v, ok := d.GetOk("labels"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				labelsMap := item.(map[string]interface{})
 				label := tke2.Label{}
 				if v, ok := labelsMap["name"]; ok {
