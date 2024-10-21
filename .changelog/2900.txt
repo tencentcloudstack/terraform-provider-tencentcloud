@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/kubernetes_native_node_pool: adjust the `labels` field to Set type
+```
