@@ -13,7 +13,8 @@ import (
 
 func DataSourceTencentCloudWafWafInfos() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudWafWafInfosRead,
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.81.135.",
+		Read:               dataSourceTencentCloudWafWafInfosRead,
 		Schema: map[string]*schema.Schema{
 			"params": {
 				Required:    true,
