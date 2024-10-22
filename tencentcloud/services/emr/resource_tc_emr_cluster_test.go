@@ -156,14 +156,14 @@ func TestAccTencentCloudEmrClusterResource_Basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testEmrClusterResourceKey, "instance_id"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "sg_id", tcacctest.DefaultEMRSgId),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "tags.emr-key", "emr-value"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.core_count", "2"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.0.core_count", "2"),
 				),
 			},
 			{
 				Config: testEmrBasic_AddCoreNode,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEmrExists(testEmrClusterResourceKey),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.core_count", "3"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.0.core_count", "3"),
 				),
 			},
 			{
