@@ -4,6 +4,8 @@ import (
 	"context"
 	innerErr "errors"
 	"fmt"
+	"strconv"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -102,6 +104,28 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 					},
 				},
 				Description: "Resource specification of EMR instance.",
+			},
+			"terminate_node_info": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Terminate nodes. Note: it only works when the number of nodes decreases.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cvm_instance_ids": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "Destroy resource list.",
+						},
+						"node_flag": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Value range of destruction node type: `MASTER`, `TASK`, `CORE`, `ROUTER`.",
+						},
+					},
+				},
 			},
 			"support_ha": {
 				Type:         schema.TypeInt,
@@ -220,7 +244,7 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	immutableFields := []string{"auto_renew", "placement", "placement_info", "display_strategy", "login_settings", "resource_spec.0.master_count", "resource_spec.0.task_count", "resource_spec.0.core_count"}
+	immutableFields := []string{"auto_renew", "placement", "placement_info", "display_strategy", "login_settings", "extend_fs_field"}
 	for _, f := range immutableFields {
 		if d.HasChange(f) {
 			return fmt.Errorf("cannot update argument `%s`", f)
@@ -245,63 +269,92 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	hasChange := false
-	request := emr.NewScaleOutInstanceRequest()
-	request.TimeUnit = common.StringPtr(timeUnit.(string))
-	request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
-	request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
-	request.InstanceId = common.StringPtr(instanceId)
-
-	tmpResourceSpec := d.Get("resource_spec").([]interface{})
-	resourceSpec := tmpResourceSpec[0].(map[string]interface{})
-
 	if d.HasChange("resource_spec.0.master_count") {
-		request.MasterCount = common.Uint64Ptr((uint64)(resourceSpec["master_count"].(int)))
-		hasChange = true
+		request := emr.NewScaleOutInstanceRequest()
+		request.TimeUnit = common.StringPtr(timeUnit.(string))
+		request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
+		request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
+		request.InstanceId = common.StringPtr(instanceId)
+
+		o, n := d.GetChange("resource_spec.0.master_count")
+		if o.(int) < n.(int) {
+			request.MasterCount = common.Uint64Ptr((uint64)(n.(int) - o.(int)))
+			traceId, err := emrService.ScaleOutInstance(ctx, request)
+			if err != nil {
+				return err
+			}
+			time.Sleep(5 * time.Second)
+			conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		}
 	}
 	if d.HasChange("resource_spec.0.task_count") {
-		request.TaskCount = common.Uint64Ptr((uint64)(resourceSpec["task_count"].(int)))
-		hasChange = true
+		request := emr.NewScaleOutInstanceRequest()
+		request.TimeUnit = common.StringPtr(timeUnit.(string))
+		request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
+		request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
+		request.InstanceId = common.StringPtr(instanceId)
+
+		o, n := d.GetChange("resource_spec.0.task_count")
+		if o.(int) < n.(int) {
+			request.TaskCount = common.Uint64Ptr((uint64)(n.(int) - o.(int)))
+			traceId, err := emrService.ScaleOutInstance(ctx, request)
+			if err != nil {
+				return err
+			}
+			time.Sleep(5 * time.Second)
+			conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		}
 	}
 	if d.HasChange("resource_spec.0.core_count") {
-		request.CoreCount = common.Uint64Ptr((uint64)(resourceSpec["core_count"].(int)))
-		hasChange = true
-	}
-	if d.HasChange("extend_fs_field") {
-		return innerErr.New("extend_fs_field not support update.")
-	}
-	if !hasChange {
-		return nil
-	}
-	_, err := emrService.UpdateInstance(ctx, request)
-	if err != nil {
-		return err
-	}
-	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
+		request := emr.NewScaleOutInstanceRequest()
+		request.TimeUnit = common.StringPtr(timeUnit.(string))
+		request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
+		request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
+		request.InstanceId = common.StringPtr(instanceId)
 
-		if e, ok := err.(*errors.TencentCloudSDKError); ok {
-			if e.GetCode() == "InternalError.ClusterNotFound" {
-				return nil
+		o, n := d.GetChange("resource_spec.0.core_count")
+		if o.(int) < n.(int) {
+			request.CoreCount = common.Uint64Ptr((uint64)(n.(int) - o.(int)))
+			traceId, err := emrService.ScaleOutInstance(ctx, request)
+			if err != nil {
+				return err
+			}
+			time.Sleep(5 * time.Second)
+			conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
 			}
 		}
+	}
 
-		if len(clusters) > 0 {
-			status := *(clusters[0].Status)
-			if status != EmrInternetStatusCreated {
-				return resource.RetryableError(
-					fmt.Errorf("%v create cluster endpoint  status still is %v", instanceId, status))
+	if d.HasChange("resource_spec.0.master_count") || d.HasChange("resource_spec.0.task_count") || d.HasChange("resource_spec.0.core_count") {
+		if v, ok := d.GetOk("terminate_node_info"); ok {
+			terminateNodeInfos := v.([]interface{})
+			for _, terminateNodeInfo := range terminateNodeInfos {
+				terminateNodeInfoMap := terminateNodeInfo.(map[string]interface{})
+				instanceIds := make([]string, 0)
+				for _, instanceId := range terminateNodeInfoMap["cvm_instance_ids"].([]interface{}) {
+					instanceIds = append(instanceIds, instanceId.(string))
+				}
+				flowId, err := emrService.TerminateClusterNodes(ctx, instanceIds, instanceId, terminateNodeInfoMap["node_flag"].(string))
+				if err != nil {
+					return err
+				}
+				time.Sleep(5 * time.Second)
+				conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+				if _, e := conf.WaitForState(); e != nil {
+					return e
+				}
 			}
 		}
-
-		if err != nil {
-			return resource.RetryableError(err)
-		}
-		return nil
-	})
-	if err != nil {
-		return err
 	}
+
 	return resourceTencentCloudEmrClusterRead(d, meta)
 }
 

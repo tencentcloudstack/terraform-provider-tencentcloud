@@ -638,3 +638,96 @@ func (me *EMRService) DescribeLiteHbaseInstancesByFilter(ctx context.Context, pa
 
 	return
 }
+
+func (me *EMRService) TerminateClusterNodes(ctx context.Context, instanceIds []string, instanceId, nodeFlag string) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := emr.NewTerminateClusterNodesRequest()
+	request.CvmInstanceIds = helper.Strings(instanceIds)
+	request.InstanceId = helper.String(instanceId)
+	request.NodeFlag = helper.String(nodeFlag)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		response *emr.TerminateClusterNodesResponse
+		innerErr error
+	)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, innerErr = me.client.UseEmrClient().TerminateClusterNodes(request)
+		if innerErr != nil {
+			return tccommon.RetryError(innerErr)
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response != nil && response.Response.FlowId != nil {
+		flowId = *response.Response.FlowId
+		return
+	}
+	return
+
+}
+
+func (me *EMRService) FlowStatusRefreshFunc(instanceId, flowId, flowType string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+
+		request := emr.NewDescribeClusterFlowStatusDetailRequest()
+		request.InstanceId = helper.String(instanceId)
+		request.FlowParam = &emr.FlowParam{
+			FKey:   helper.String(flowType),
+			FValue: helper.String(flowId),
+		}
+
+		var (
+			response *emr.DescribeClusterFlowStatusDetailResponse
+			innerErr error
+		)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, innerErr = me.client.UseEmrClient().DescribeClusterFlowStatusDetail(request)
+			if innerErr != nil {
+				return tccommon.RetryError(innerErr)
+			}
+			return nil
+		})
+		if err != nil {
+			return nil, "", err
+		}
+
+		if response.Response == nil || response.Response.FlowTotalStatus == nil {
+			return nil, "", fmt.Errorf("Not found flow.")
+		}
+		return response.Response.FlowTotalStatus, helper.Int64ToStr(*response.Response.FlowTotalStatus), nil
+	}
+}
+
+func (me *EMRService) ScaleOutInstance(ctx context.Context, request *emr.ScaleOutInstanceRequest) (traceId string, err error) {
+	logId := tccommon.GetLogId(ctx)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseEmrClient().ScaleOutInstance(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		traceId = *response.Response.TraceId
+		return nil
+	})
+
+	if err != nil {
+		return
+	}
+	return
+}

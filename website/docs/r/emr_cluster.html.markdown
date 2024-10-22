@@ -137,6 +137,7 @@ The following arguments are supported:
 * `resource_spec` - (Optional, List) Resource specification of EMR instance.
 * `sg_id` - (Optional, String, ForceNew) The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.
 * `tags` - (Optional, Map) Tag description list.
+* `terminate_node_info` - (Optional, List) Terminate nodes. Note: it only works when the number of nodes decreases.
 * `time_span` - (Optional, Int) The length of time the instance was purchased. Use with TimeUnit.When TimeUnit is s, the parameter can only be filled in at 3600, representing a metered instance.
 When TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.
 * `time_unit` - (Optional, String) The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).
@@ -156,6 +157,11 @@ The `resource_spec` object supports the following:
 * `master_resource_spec` - (Optional, List, ForceNew) 
 * `task_count` - (Optional, Int) The number of core node.
 * `task_resource_spec` - (Optional, List, ForceNew) 
+
+The `terminate_node_info` object supports the following:
+
+* `cvm_instance_ids` - (Optional, List) Destroy resource list.
+* `node_flag` - (Optional, String) Value range of destruction node type: `MASTER`, `TASK`, `CORE`, `ROUTER`.
 
 ## Attributes Reference
 
