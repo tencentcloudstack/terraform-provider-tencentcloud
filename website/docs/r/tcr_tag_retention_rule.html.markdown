@@ -13,7 +13,7 @@ Provides a resource to create a tcr tag retention rule.
 
 ## Example Usage
 
-### Create a tcr tag retention rule instance
+### Create and enable a tcr tag retention rule instance
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
@@ -45,7 +45,6 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
     value = 2
   }
   cron_setting = "daily"
-  disabled     = true
 }
 ```
 
@@ -53,7 +52,7 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
 
 The following arguments are supported:
 
-* `cron_setting` - (Required, String) Execution cycle, currently only available selections are: manual; daily; weekly; monthly.
+* `cron_setting` - (Required, String, ForceNew) Execution cycle, currently only available selections are: manual; daily; weekly; monthly.
 * `namespace_name` - (Required, String) The Name of the namespace.
 * `registry_id` - (Required, String) The main instance ID.
 * `retention_rule` - (Required, List) Retention Policy.

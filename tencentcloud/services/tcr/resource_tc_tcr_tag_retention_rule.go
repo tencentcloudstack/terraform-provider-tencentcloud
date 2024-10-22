@@ -66,6 +66,7 @@ func ResourceTencentCloudTcrTagRetentionRule() *schema.Resource {
 
 			"cron_setting": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Execution cycle, currently only available selections are: manual; daily; weekly; monthly.",
 			},
@@ -267,7 +268,7 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
-	if d.HasChange("retention_rule") {
+	if d.HasChange("retention_rule") || d.HasChange("disabled") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "retention_rule"); ok {
 			retentionRule := tcr.RetentionRule{}
 			if v, ok := dMap["key"]; ok {
@@ -278,9 +279,7 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 			}
 			request.RetentionRule = &retentionRule
 		}
-	}
 
-	if d.HasChange("disabled") {
 		if v, ok := d.GetOkExists("disabled"); ok {
 			request.Disabled = helper.Bool(v.(bool))
 		}
