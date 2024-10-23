@@ -2100,7 +2100,6 @@ Web Application Firewall(WAF)
     tencentcloud_waf_cc_auto_status
     tencentcloud_waf_cc_session
     tencentcloud_waf_ip_access_control
-    tencentcloud_waf_modify_access_period
 
 Wedata
   Data Source

@@ -14,9 +14,10 @@ import (
 
 func ResourceTencentCloudWafModifyAccessPeriod() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudWafModifyAccessPeriodCreate,
-		Read:   resourceTencentCloudWafModifyAccessPeriodRead,
-		Delete: resourceTencentCloudWafModifyAccessPeriodDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.81.135.",
+		Create:             resourceTencentCloudWafModifyAccessPeriodCreate,
+		Read:               resourceTencentCloudWafModifyAccessPeriodRead,
+		Delete:             resourceTencentCloudWafModifyAccessPeriodDelete,
 
 		Schema: map[string]*schema.Schema{
 			"period": {
