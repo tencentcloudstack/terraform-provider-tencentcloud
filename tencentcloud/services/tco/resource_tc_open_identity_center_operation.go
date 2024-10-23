@@ -65,7 +65,7 @@ func resourceTencentCloudInviteOpenIdentityCenterOperationCreate(d *schema.Resou
 
 	if response.Response != nil && response.Response.ZoneId != nil {
 		d.SetId(*response.Response.ZoneId)
-		d.Set("zone_id", *response.Response.ZoneId)
+		_ = d.Set("zone_id", *response.Response.ZoneId)
 	}
 
 	_ = response

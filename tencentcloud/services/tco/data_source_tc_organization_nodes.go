@@ -108,7 +108,7 @@ func dataSourceTencentCloudOrganizationNodesRead(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("data_source.tencentcloud_organization_nodes.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(nil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
