@@ -136,12 +136,14 @@ func ResourceTencentCloudVpnConnection() *schema.Resource {
 			"ike_local_fqdn_name": {
 				Type:          schema.TypeString,
 				Optional:      true,
+				Computed:      true,
 				ConflictsWith: []string{"ike_local_address"},
 				Description:   "Local FQDN name of the IKE operation specification.",
 			},
 			"ike_remote_fqdn_name": {
 				Type:          schema.TypeString,
 				Optional:      true,
+				Computed:      true,
 				ConflictsWith: []string{"ike_remote_address"},
 				Description:   "Remote FQDN name of the IKE operation specification.",
 			},
