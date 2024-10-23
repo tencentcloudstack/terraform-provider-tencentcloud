@@ -26,8 +26,22 @@ func TestAccTencentCloudVpnDefaultHealthCheckIpDataSource_basic(t *testing.T) {
 
 const testAccVpnDefaultHealthCheckIpDataSource = `
 
+data "tencentcloud_vpc_instances" "foo" {
+  name = "Default-VPC"
+}
+
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "terraform_test_health_check"
+  vpc_id    = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
+  bandwidth = 10
+
+  tags = {
+    test = "tf"
+  }
+}
+
 data "tencentcloud_vpn_default_health_check_ip" "default_health_check_ip" {
-  vpn_gateway_id = "vpngw-gt8bianl"
+  vpn_gateway_id = tencentcloud_vpn_gateway.my_cgw.id
 }
 
 `

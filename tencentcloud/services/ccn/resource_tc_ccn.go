@@ -266,7 +266,7 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 
 	if d.HasChange("description") {
 		if temp, ok := d.GetOk("description"); ok {
-			request.CcnName = helper.String(temp.(string))
+			request.CcnDescription = helper.String(temp.(string))
 		}
 
 		change = true
