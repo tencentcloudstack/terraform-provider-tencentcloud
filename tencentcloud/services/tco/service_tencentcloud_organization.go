@@ -1847,3 +1847,50 @@ func (me *OrganizationService) DescribeIdentityCenterRoleConfigurationsByFilter(
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationNodesByFilter(ctx context.Context, param map[string]interface{}) (nodes []*organization.OrgNode, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewDescribeOrganizationNodesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Tags" {
+			request.Tags = v.([]*organization.Tag)
+		}
+	}
+
+	var (
+		limit  int64 = 50
+		offset int64 = 0
+	)
+	request.Limit = &limit
+	request.Offset = &offset
+	nodes = make([]*organization.OrgNode, 0)
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().DescribeOrganizationNodes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return
+		}
+
+		nodes = append(nodes, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+	}
+	return
+}
