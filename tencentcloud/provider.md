@@ -1682,6 +1682,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_identity_center_groups
     tencentcloud_identity_center_role_configurations
     tencentcloud_identity_center_users
+    tencentcloud_organization_nodes
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node
@@ -1708,6 +1709,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_identity_center_user_sync_provisioning
     tencentcloud_identity_center_role_assignment
     tencentcloud_invite_organization_member_operation
+    tencentcloud_open_identity_center_operation
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
