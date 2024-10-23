@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_open_identity_center_operation
+```
+
+```release-note:new-data-source
+tencentcloud_organization_nodes
+```
