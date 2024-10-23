@@ -76,6 +76,7 @@ func (info CcnBasicInfo) CreateTime() string {
 }
 
 type CcnAttachedInstanceInfo struct {
+	ccnUin         string
 	ccnId          string
 	instanceType   string
 	instanceRegion string
@@ -506,6 +507,7 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 		info.state = *item.State
 		info.description = *item.Description
 		info.routeTableId = *item.RouteTableId
+		info.ccnUin = *item.CcnUin
 		infos = append(infos, info)
 	}
 	return

@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ccn_attachment: fix attachment with ccn_uin
+```

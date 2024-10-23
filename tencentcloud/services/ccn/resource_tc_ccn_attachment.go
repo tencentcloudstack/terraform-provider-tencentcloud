@@ -169,47 +169,6 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	if v, ok := d.GetOk("ccn_uin"); ok {
-		ccnUin := v.(string)
-		ccnId := d.Get("ccn_id").(string)
-		instanceType := d.Get("instance_type").(string)
-		instanceRegion := d.Get("instance_region").(string)
-		instanceId := d.Get("instance_id").(string)
-
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			infos, e := service.DescribeCcnAttachmentsByInstance(ctx, instanceType, instanceId, instanceRegion)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-
-			if len(infos) == 0 {
-				d.SetId("")
-				return nil
-			}
-
-			findFlag := false
-			for _, info := range infos {
-				if *info.CcnUin == ccnUin && *info.CcnId == ccnId {
-					_ = d.Set("state", strings.ToUpper(*info.State))
-					_ = d.Set("attached_time", info.AttachedTime)
-					_ = d.Set("cidr_block", info.CidrBlock)
-					findFlag = true
-					break
-				}
-			}
-			if !findFlag {
-				d.SetId("")
-				return nil
-			}
-			return nil
-		})
-
-		if err != nil {
-			return err
-		}
-		return nil
-	}
-
 	var (
 		ccnId          = d.Get("ccn_id").(string)
 		instanceType   = d.Get("instance_type").(string)
@@ -248,6 +207,11 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		}
 
 		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		if v, ok := d.GetOk("ccn_uin"); ok && v.(string) != info.ccnUin {
 			d.SetId("")
 			return nil
 		}
