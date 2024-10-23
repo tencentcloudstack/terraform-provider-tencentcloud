@@ -2197,29 +2197,29 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	needSecret := true
 	if v, ok := d.GetOk("secret_id"); ok {
 		secretId = v.(string)
-	} else {
-		secretId = getProviderConfig("secretId")
 	}
 
 	if v, ok := d.GetOk("secret_key"); ok {
 		secretKey = v.(string)
-	} else {
-		secretKey = getProviderConfig("secretKey")
 	}
 
 	if v, ok := d.GetOk("security_token"); ok {
 		securityToken = v.(string)
-	} else {
-		securityToken = getProviderConfig("token")
 	}
 
 	if v, ok := d.GetOk("region"); ok {
 		region = v.(string)
-	} else {
+	}
+
+	if secretId == "" && secretKey == "" && securityToken == "" && region == "" {
+		secretId = getProviderConfig("secretId")
+		secretKey = getProviderConfig("secretKey")
+		securityToken = getProviderConfig("token")
 		region = getProviderConfig("region")
-		if region == "" {
-			region = DEFAULT_REGION
-		}
+	}
+
+	if region == "" {
+		region = DEFAULT_REGION
 	}
 
 	if v, ok := d.GetOk("protocol"); ok {
