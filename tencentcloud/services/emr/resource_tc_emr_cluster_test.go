@@ -156,12 +156,20 @@ func TestAccTencentCloudEmrClusterResource_Basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testEmrClusterResourceKey, "instance_id"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "sg_id", tcacctest.DefaultEMRSgId),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "tags.emr-key", "emr-value"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.0.core_count", "2"),
+				),
+			},
+			{
+				Config: testEmrBasic_AddCoreNode,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEmrExists(testEmrClusterResourceKey),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.0.core_count", "3"),
 				),
 			},
 			{
 				ResourceName:            testEmrClusterResourceKey,
 				ImportState:             true,
-				ImportStateVerifyIgnore: []string{"display_strategy", "placement", "time_span", "time_unit", "login_settings"},
+				ImportStateVerifyIgnore: []string{"display_strategy", "placement", "time_span", "time_unit", "login_settings", "terminate_node_info"},
 			},
 		},
 	})
@@ -309,6 +317,75 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 	  }
 	  master_count=1
 	  core_count=2
+	}
+	login_settings={
+	  password="Tencent@cloud123"
+	}
+	time_span=3600
+	time_unit="s"
+	pay_mode=0
+	placement_info {
+	  zone="ap-guangzhou-3"
+	  project_id=0
+	}
+	sg_id=var.sg_id
+	tags = {
+        emr-key = "emr-value"
+    }
+  }
+`
+
+const testEmrBasic_AddCoreNode = tcacctest.DefaultEMRVariable + `
+data "tencentcloud_instance_types" "cvm4c8m" {
+	exclude_sold_out=true
+	cpu_core_count=4
+	memory_size=8
+    filter {
+      name   = "instance-charge-type"
+      values = ["POSTPAID_BY_HOUR"]
+    }
+    filter {
+    name   = "zone"
+    values = ["ap-guangzhou-3"]
+  }
+}
+
+resource "tencentcloud_emr_cluster" "emrrrr" {
+	product_id=38
+	vpc_settings={
+	  vpc_id=var.vpc_id
+	  subnet_id=var.subnet_id
+	}
+	softwares = [
+	  "hdfs-2.8.5",
+	  "knox-1.6.1",
+	  "openldap-2.4.44",
+	  "yarn-2.8.5",
+	  "zookeeper-3.6.3",
+	]
+	support_ha=0
+	instance_name="emr-test-demo"
+	resource_spec {
+	  master_resource_spec {
+		mem_size=8192
+		cpu=4
+		disk_size=100
+		disk_type="CLOUD_PREMIUM"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+		storage_type=5
+		root_size=50
+	  }
+	  core_resource_spec {
+		mem_size=8192
+		cpu=4
+		disk_size=100
+		disk_type="CLOUD_PREMIUM"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+		storage_type=5
+		root_size=50
+	  }
+	  master_count=1
+	  core_count=3
 	}
 	login_settings={
 	  password="Tencent@cloud123"
