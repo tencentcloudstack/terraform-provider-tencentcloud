@@ -1,3 +1,22 @@
+## 1.81.135 (October 23 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_organization_nodes` ([#2906](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2906))
+* **New Resource:** `tencentcloud_open_identity_center_operation` ([#2906](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2906))
+
+ENHANCEMENTS:
+
+* provider/Update auth ([#2887](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2887))
+* resource/kubernetes_native_node_pool: adjust the `labels` field to Set type ([#2900](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2900))
+* resource/tencentcloud_cam_policy: Update error message ([#2902](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2902))
+* resource/tencentcloud_ccn_attachment: fix attachment with ccn_uin ([#2901](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2901))
+* resource/tencentcloud_emr_cluster: support emr horizontal expansion ([#2904](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2904))
+* resource/tencentcloud_kubernetes_auth_attachment: increase the timeout of the read retry ([#2900](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2900))
+* resource/tencentcloud_kubernetes_cluster: adjust TKE tags logic to support existing native nodes ([#2896](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2896))
+* resource/tencentcloud_tcr_tag_retention_rule: adjust modify logic ([#2905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2905))
+* resource/tencentcloud_waf_modify_access_period:  This resource has been deprecated in Terraform TencentCloud provider version 1.81.135. ([#2903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2903))
+
 ## 1.81.134 (October 18 , 2024)
 
 FEATURES:
