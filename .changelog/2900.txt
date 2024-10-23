@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/kubernetes_native_node_pool: adjust the `labels` field to Set type
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_auth_attachment: increase the timeout of the read retry
+```

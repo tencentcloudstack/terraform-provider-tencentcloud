@@ -196,7 +196,7 @@ func resourceTencentCloudKubernetesAuthAttachmentRead(d *schema.ResourceData, me
 	_ = d.Set("cluster_id", clusterId)
 
 	var respData *tkev20180525.DescribeClusterAuthenticationOptionsResponseParams
-	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	reqErr := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesAuthAttachmentById(ctx, clusterId)
 		if e != nil {
 			return tccommon.RetryError(e)

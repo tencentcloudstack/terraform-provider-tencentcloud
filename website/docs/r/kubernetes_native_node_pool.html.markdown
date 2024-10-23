@@ -113,7 +113,7 @@ The following arguments are supported:
 * `type` - (Required, String) Node pool type. Optional value is `Native`.
 * `annotations` - (Optional, Set) Node Annotation List.
 * `deletion_protection` - (Optional, Bool) Whether to enable deletion protection.
-* `labels` - (Optional, List) Node Labels.
+* `labels` - (Optional, Set) Node Labels.
 * `tags` - (Optional, List) Node tags.
 * `taints` - (Optional, List) Node taint.
 * `unschedulable` - (Optional, Bool) Whether the node is not schedulable by default. The native node is not aware of it and passes false by default.
