@@ -163,6 +163,7 @@ The following arguments are supported:
 * `min_size` - (Required, Int) Minimum number of node.
 * `name` - (Required, String) Name of the node pool. The name does not exceed 25 characters, and only supports Chinese, English, numbers, underscores, separators (`-`) and decimal points.
 * `vpc_id` - (Required, String, ForceNew) ID of VPC network.
+* `annotations` - (Optional, Set) Node Annotation List.
 * `default_cooldown` - (Optional, Int) Seconds of scaling group cool down. Default value is `300`.
 * `delete_keep_instance` - (Optional, Bool) Indicate to keep the CVM instance when delete the node pool. Default is `true`.
 * `deletion_protection` - (Optional, Bool) Indicates whether the node pool deletion protection is enabled.
@@ -183,6 +184,11 @@ The following arguments are supported:
 * `termination_policies` - (Optional, List: [`String`]) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 * `zones` - (Optional, List: [`String`]) List of auto scaling group available zones, for Basic network it is required.
+
+The `annotations` object supports the following:
+
+* `name` - (Required, String) Name in the map table.
+* `value` - (Required, String) Value in the map table.
 
 The `auto_scaling_config` object supports the following:
 
