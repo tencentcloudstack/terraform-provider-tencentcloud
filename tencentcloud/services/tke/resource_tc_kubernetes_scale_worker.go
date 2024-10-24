@@ -4,15 +4,13 @@ package tke
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
-
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
@@ -561,16 +559,10 @@ func resourceTencentCloudKubernetesScaleWorkerRead(d *schema.ResourceData, meta 
 		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	respData1, err := service.DescribeKubernetesScaleWorkerById1(ctx)
-	if err != nil {
+	if err := resourceTencentCloudKubernetesScaleWorkerReadPostHandleResponse0(ctx, respData); err != nil {
 		return err
 	}
 
-	if respData1 == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
 	_ = instanceIdSet
 	return nil
 }

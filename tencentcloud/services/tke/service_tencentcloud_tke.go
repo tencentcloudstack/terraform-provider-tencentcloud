@@ -3438,15 +3438,11 @@ func (me *TkeService) DescribeKubernetesScaleWorkerById1(ctx context.Context) (r
 
 	ratelimit.Check(request.GetAction())
 
-	if err := resourceTencentCloudKubernetesScaleWorkerReadPreRequest1(ctx, request); err != nil {
+	response, err := resourceTencentCloudKubernetesScaleWorkerReadPreRequest1(ctx, request)
+	if err != nil {
 		return nil, err
 	}
 
-	response, err := me.client.UseCvmV20170312Client().DescribeInstances(request)
-	if err != nil {
-		errRet = err
-		return
-	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if err := resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx, request, response); err != nil {

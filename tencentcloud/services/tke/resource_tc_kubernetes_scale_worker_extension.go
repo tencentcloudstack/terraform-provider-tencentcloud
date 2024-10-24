@@ -573,28 +573,57 @@ func resourceTencentCloudKubernetesScaleWorkerDeleteOnExit(ctx context.Context) 
 		return nil
 	}
 
-	err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
-	if err != nil {
-		err = resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
+	if len(needDeletes) <= 100 {
+		err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
+		if err != nil {
+			err = resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
 
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
-				if e.GetCode() == "InternalError.ClusterNotFound" {
-					return nil
+				if e, ok := err.(*errors.TencentCloudSDKError); ok {
+					if e.GetCode() == "InternalError.ClusterNotFound" {
+						return nil
+					}
+
+					if e.GetCode() == "InternalError.Param" &&
+						strings.Contains(e.GetMessage(), `PARAM_ERROR[some instances []is not in right state`) {
+						return nil
+					}
 				}
 
-				if e.GetCode() == "InternalError.Param" &&
-					strings.Contains(e.GetMessage(), `PARAM_ERROR[some instances []is not in right state`) {
-					return nil
+				if err != nil {
+					return tccommon.RetryError(err, tccommon.InternalError)
 				}
-			}
-
+				return nil
+			})
+		}
+	} else {
+		for _, subsubSlice := range spliteInstanceIds(helper.Strings(needDeletes), 100) {
+			tmpDeletes := helper.PStrings(subsubSlice)
+			err = service.DeleteClusterInstances(ctx, clusterId, tmpDeletes)
 			if err != nil {
-				return tccommon.RetryError(err, tccommon.InternalError)
+				err = resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					err = service.DeleteClusterInstances(ctx, clusterId, tmpDeletes)
+
+					if e, ok := err.(*errors.TencentCloudSDKError); ok {
+						if e.GetCode() == "InternalError.ClusterNotFound" {
+							return nil
+						}
+
+						if e.GetCode() == "InternalError.Param" &&
+							strings.Contains(e.GetMessage(), `PARAM_ERROR[some instances []is not in right state`) {
+							return nil
+						}
+					}
+
+					if err != nil {
+						return tccommon.RetryError(err, tccommon.InternalError)
+					}
+					return nil
+				})
 			}
-			return nil
-		})
+		}
 	}
+
 	return nil
 }
 
@@ -678,9 +707,85 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostFillRequest1(ctx context.C
 	return nil
 }
 
-func resourceTencentCloudKubernetesScaleWorkerReadPreRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest) error {
+func resourceTencentCloudKubernetesScaleWorkerReadPreRequest1(ctx context.Context, req *cvm.DescribeInstancesRequest) (resp *cvm.DescribeInstancesResponse, err error) {
+	logId := tccommon.GetLogId(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
 	ctxData := tccommon.DataFromContext(ctx)
 	instanceIds := ctxData.Get("instanceIds").([]*string)
-	req.InstanceIds = instanceIds
+	req.Limit = helper.Int64(100)
+	req.Offset = helper.Int64(0)
+	if len(instanceIds) <= 100 {
+		req.InstanceIds = instanceIds
+		resp, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmV20170312Client().DescribeInstances(req)
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, req.GetAction(), req.ToJsonString(), resp.ToJsonString())
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		var (
+			tmpTotalCount  int64
+			tmpInstanceSet []*cvm.Instance
+		)
+		tmpResp := new(cvm.DescribeInstancesResponse)
+		subSlices := spliteInstanceIds(instanceIds, 100)
+		for _, subsubSlice := range subSlices {
+			req.InstanceIds = subsubSlice
+			response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmV20170312Client().DescribeInstances(req)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, req.GetAction(), req.ToJsonString(), response.ToJsonString())
+			if err != nil {
+				return nil, err
+			}
+
+			if response.Response.TotalCount != nil {
+				tmpTotalCount += *response.Response.TotalCount
+			}
+
+			if len(response.Response.InstanceSet) != 0 {
+				tmpInstanceSet = append(tmpInstanceSet, response.Response.InstanceSet...)
+			}
+
+		}
+
+		tmpResp.Response = &cvm.DescribeInstancesResponseParams{
+			TotalCount:  &tmpTotalCount,
+			InstanceSet: tmpInstanceSet,
+		}
+
+		resp = tmpResp
+	}
+
+	return resp, nil
+}
+
+func resourceTencentCloudKubernetesScaleWorkerReadPostHandleResponse0(ctx context.Context, resp *tke.DescribeClustersResponseParams) error {
+	logId := tccommon.GetLogId(ctx)
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	respData1, err := service.DescribeKubernetesScaleWorkerById1(ctx)
+	if err != nil {
+		return err
+	}
+
+	if respData1 == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `kubernetes_scale_worker` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
 	return nil
+}
+
+func spliteInstanceIds(slice []*string, size int) [][]*string {
+	var result [][]*string
+	for i := 0; i < len(slice); i += size {
+		end := i + size
+		if end > len(slice) {
+			end = len(slice)
+		}
+
+		result = append(result, slice[i:end])
+	}
+
+	return result
 }
