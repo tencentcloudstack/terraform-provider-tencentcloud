@@ -180,9 +180,11 @@ resource tencentcloud_ccn main {
   bandwidth_limit_type = "INTER_REGION_LIMIT"
 }
 
+data "tencentcloud_user_info" "info" {}
+
 resource tencentcloud_ccn_attachment attachment_ccnuin {
   ccn_id          = tencentcloud_ccn.main.id
-  ccn_uin         = "100022770164"
+  ccn_uin         = data.tencentcloud_user_info.info.owner_uin
   instance_type   = "VPC"
   instance_id     = tencentcloud_vpc.vpc.id
   instance_region = var.region

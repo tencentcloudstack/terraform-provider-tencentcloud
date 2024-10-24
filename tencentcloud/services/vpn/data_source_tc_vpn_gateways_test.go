@@ -47,5 +47,6 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 
 data "tencentcloud_vpn_gateways" "cgws" {
   id = tencentcloud_vpn_gateway.my_cgw.id
+  depends_on = [tencentcloud_vpn_gateway.my_cgw]
 }
 `

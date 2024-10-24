@@ -16,7 +16,6 @@ import (
 )
 
 func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
