@@ -457,6 +457,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_tenant_instances":                         ccn.DataSourceTencentCloudCcnTenantInstance(),
 			"tencentcloud_ccn_cross_border_flow_monitor":                ccn.DataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_ccn_cross_border_region_bandwidth_limits":     ccn.DataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
+			"tencentcloud_ccn_route_table_input_policies":               ccn.DataSourceTencentCloudCcnRouteTableInputPolicies(),
 			"tencentcloud_dc_instances":                                 dc.DataSourceTencentCloudDcInstances(),
 			"tencentcloud_dc_access_points":                             dc.DataSourceTencentCloudDcAccessPoints(),
 			"tencentcloud_dc_internet_address_quota":                    dc.DataSourceTencentCloudDcInternetAddressQuota(),

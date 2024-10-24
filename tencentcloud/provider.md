@@ -312,6 +312,7 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_cross_border_flow_monitor
     tencentcloud_ccn_cross_border_region_bandwidth_limits
     tencentcloud_ccn_routes
+    tencentcloud_ccn_route_table_input_policies
 
   Resource
     tencentcloud_ccn

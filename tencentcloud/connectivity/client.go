@@ -217,6 +217,7 @@ type TencentCloudClient struct {
 	sslv20191205Conn      *sslCertificate.Client
 	postgresv20170312Conn *postgre.Client
 	cfwv20190904Conn      *cfw.Client
+	ccnv20170312Conn      *vpc.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1885,4 +1886,17 @@ func (me *TencentCloudClient) UseCfwV20190904Client() *cfw.Client {
 	me.cfwv20190904Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cfwv20190904Conn
+}
+
+// UseCcnV20170312Client return CCN client for service
+func (me *TencentCloudClient) UseCcnV20170312Client() *vpc.Client {
+	if me.ccnv20170312Conn != nil {
+		return me.ccnv20170312Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.ccnv20170312Conn, _ = vpc.NewClient(me.Credential, me.Region, cpf)
+	me.ccnv20170312Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ccnv20170312Conn
 }
