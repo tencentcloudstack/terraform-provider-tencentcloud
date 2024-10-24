@@ -2232,7 +2232,12 @@ func (me *CynosdbService) DescribeCynosdbClusterDatabasesById(ctx context.Contex
 		return
 	}
 
-	clusterDatabases = response.Response.DbInfos[0]
+	for _, dbInfo := range response.Response.DbInfos {
+		if dbInfo != nil && dbInfo.DbName != nil && *dbInfo.DbName == dbName {
+			clusterDatabases = dbInfo
+			return
+		}
+	}
 
 	return
 }
