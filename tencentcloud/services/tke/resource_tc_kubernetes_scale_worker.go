@@ -507,6 +507,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 			"create_result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Used to save results of CVMs creation error messages.",
 			},
 		},
