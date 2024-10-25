@@ -165,13 +165,15 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOk("vpc_set"); ok {
 		vpcSet := make([]*privatedns.VpcInfo, 0, 10)
 		for _, item := range v.([]interface{}) {
-			m := item.(map[string]interface{})
-			vpcInfo := privatedns.VpcInfo{
-				UniqVpcId: helper.String(m["uniq_vpc_id"].(string)),
-				Region:    helper.String(m["region"].(string)),
-			}
+			if item != nil {
+				m := item.(map[string]interface{})
+				vpcInfo := privatedns.VpcInfo{
+					UniqVpcId: helper.String(m["uniq_vpc_id"].(string)),
+					Region:    helper.String(m["region"].(string)),
+				}
 
-			vpcSet = append(vpcSet, &vpcInfo)
+				vpcSet = append(vpcSet, &vpcInfo)
+			}
 		}
 
 		request.VpcSet = vpcSet
@@ -371,12 +373,16 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 			var vpcSets = make([]*privatedns.VpcInfo, 0)
 			items := v.([]interface{})
 			for _, item := range items {
-				value := item.(map[string]interface{})
-				vpcInfo := &privatedns.VpcInfo{
-					UniqVpcId: helper.String(value["uniq_vpc_id"].(string)),
-					Region:    helper.String(value["region"].(string)),
+				if item != nil {
+					value := item.(map[string]interface{})
+					if value["uniq_vpc_id"].(string) != "" && value["region"].(string) != "" {
+						vpcInfo := &privatedns.VpcInfo{
+							UniqVpcId: helper.String(value["uniq_vpc_id"].(string)),
+							Region:    helper.String(value["region"].(string)),
+						}
+						vpcSets = append(vpcSets, vpcInfo)
+					}
 				}
-				vpcSets = append(vpcSets, vpcInfo)
 			}
 			request.VpcSet = vpcSets
 		}
