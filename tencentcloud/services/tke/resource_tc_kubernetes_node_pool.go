@@ -533,6 +533,27 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Description: "Indicates whether the node pool deletion protection is enabled.",
 			},
 
+			"annotations": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "Node Annotation List.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Name in the map table.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Value in the map table.",
+						},
+					},
+				},
+			},
+
 			"node_os": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -685,6 +706,20 @@ func resourceTencentCloudKubernetesNodePoolCreate(d *schema.ResourceData, meta i
 
 	if v, ok := d.GetOkExists("deletion_protection"); ok {
 		request.DeletionProtection = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("annotations"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			annotationsMap := item.(map[string]interface{})
+			annotationValue := tkev20180525.AnnotationValue{}
+			if v, ok := annotationsMap["name"]; ok {
+				annotationValue.Name = helper.String(v.(string))
+			}
+			if v, ok := annotationsMap["value"]; ok {
+				annotationValue.Value = helper.String(v.(string))
+			}
+			request.Annotations = append(request.Annotations, &annotationValue)
+		}
 	}
 
 	if err := resourceTencentCloudKubernetesNodePoolCreatePostFillRequest0(ctx, request); err != nil {
@@ -844,6 +879,25 @@ func resourceTencentCloudKubernetesNodePoolRead(d *schema.ResourceData, meta int
 		_ = d.Set("deletion_protection", respData1.DeletionProtection)
 	}
 
+	annotationsList := make([]map[string]interface{}, 0, len(respData1.Annotations))
+	if respData1.Annotations != nil {
+		for _, annotations := range respData1.Annotations {
+			annotationsMap := map[string]interface{}{}
+
+			if annotations.Name != nil {
+				annotationsMap["name"] = annotations.Name
+			}
+
+			if annotations.Value != nil {
+				annotationsMap["value"] = annotations.Value
+			}
+
+			annotationsList = append(annotationsList, annotationsMap)
+		}
+
+		_ = d.Set("annotations", annotationsList)
+	}
+
 	if err := resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx, respData1); err != nil {
 		return err
 	}
@@ -871,7 +925,7 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 	}
 
 	needChange := false
-	mutableArgs := []string{"name", "max_size", "min_size", "taints", "enable_auto_scale", "deletion_protection"}
+	mutableArgs := []string{"name", "max_size", "min_size", "enable_auto_scale", "deletion_protection", "annotations"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -904,6 +958,20 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 
 		if v, ok := d.GetOkExists("deletion_protection"); ok {
 			request.DeletionProtection = helper.Bool(v.(bool))
+		}
+
+		if v, ok := d.GetOk("annotations"); ok {
+			for _, item := range v.(*schema.Set).List() {
+				annotationsMap := item.(map[string]interface{})
+				annotationValue := tkev20180525.AnnotationValue{}
+				if v, ok := annotationsMap["name"]; ok {
+					annotationValue.Name = helper.String(v.(string))
+				}
+				if v, ok := annotationsMap["value"]; ok {
+					annotationValue.Value = helper.String(v.(string))
+				}
+				request.Annotations = append(request.Annotations, &annotationValue)
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
