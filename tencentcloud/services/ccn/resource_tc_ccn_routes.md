@@ -5,7 +5,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_ccn_routes" "example" {
   ccn_id   = "ccn-gr7nynbd"
-  route_id = "ccnrtb-jpf7bzn3"
+  route_id = "ccnr-5uhewx1s"
   switch   = "off"
 }
 ```
