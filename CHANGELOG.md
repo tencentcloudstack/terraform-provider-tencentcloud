@@ -1,3 +1,20 @@
+## 1.81.136 (October 25 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ccn_route_table_input_policies` ([#2910](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2910))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ccn_attachment: fix attachment with ccn_uin ([#2913](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2913))
+* resource/tencentcloud_kubernetes_node_pool: support `annotations` field ([#2909](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2909))
+* resource/tencentcloud_kubernetes_scale_worker: Update read function ([#2908](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2908))
+* resource/tencentcloud_private_dns_zone: Support unbind all VPCs bound to the current private dns zone. ([#2914](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2914))
+
+BUG FIXES:
+
+* resource/tencentcloud_cynosdb_cluster_databases: Fix the problem of matching errors caused by fuzzy query. ([#2912](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2912))
+
 ## 1.81.135 (October 23 , 2024)
 
 FEATURES:
