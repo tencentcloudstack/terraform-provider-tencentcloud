@@ -21,6 +21,7 @@ func TestAccTencentCloudCcnRouteTableInputPoliciesDataSource_basic(t *testing.T)
 				tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_route_table_input_policies.example"),
 				resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_route_table_input_policies.example", "ccn_id"),
 				resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_route_table_input_policies.example", "route_table_id"),
+				resource.TestCheckResourceAttr("data.tencentcloud_ccn_route_table_input_policies.example", "policy_set.#", "1"),
 			),
 		}},
 	})
@@ -59,6 +60,7 @@ resource "tencentcloud_ccn_route_table_input_policies" "example" {
 }
 
 data "tencentcloud_ccn_route_table_input_policies" "example" {
+  depends_on = [ tencentcloud_ccn_route_table_input_policies.example ]
   ccn_id         = tencentcloud_ccn.example.id
   route_table_id = tencentcloud_ccn_route_table.example.id
 }
