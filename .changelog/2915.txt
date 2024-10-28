@@ -1,0 +1,3 @@
+```release-note:enhancement
+datasource/tencentcloud_ccn_route_table_input_policies: Update unit test
+```
