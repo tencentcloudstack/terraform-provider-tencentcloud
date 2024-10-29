@@ -593,6 +593,11 @@ func resourceTencentCloudKubernetesClusterReadPostHandleResponse0(ctx context.Co
 		newOs = oldOs
 	}
 	_ = d.Set("cluster_os", newOs)
+	// When ImageId is not empty, cluster_os is ImageId. When ImageId is empty, cluster_os displays ClusterOs
+	if cluster.ImageId != nil {
+		_ = d.Set("cluster_os", cluster.ImageId)
+	}
+
 	_ = d.Set("tags", clusterInfo.Tags)
 
 	_ = d.Set("vpc_cni_type", clusterInfo.VpcCniType)
