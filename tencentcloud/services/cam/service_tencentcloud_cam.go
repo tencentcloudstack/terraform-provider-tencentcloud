@@ -1191,8 +1191,8 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 	type Statement struct {
 		Resource interface{} `json:"resource"`
 		//to avoid json unmarshal eats up with '/'
-		Action    []json.RawMessage `json:"action"`
-		Principal Principal         `json:"principal"`
+		Action    interface{} `json:"action"`
+		Principal Principal   `json:"principal"`
 	}
 	type Document struct {
 		Version   string      `json:"version"`
@@ -1212,15 +1212,9 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 		}
 
 		if state.Action != nil {
-			if reflect.TypeOf(state.Action) == reflect.TypeOf("string") {
-				return fmt.Errorf("The format of `action` in policy document is invalid, its type must be array.")
-			}
-
-		}
-		//multi value case in elemant `principal.qcs`:input :root/[uin of the user], output:[uin of the user]
-		for _, qcs := range state.Principal.Qcs {
-			if strings.Contains(qcs, "root") {
-				return fmt.Errorf("`root` format is not supported, please replace it with uin.")
+			actionType := reflect.TypeOf(state.Action).Kind()
+			if actionType != reflect.String && actionType != reflect.Slice {
+				return fmt.Errorf("The format of `action` in policy document is invalid, its type must be array or string.")
 			}
 		}
 	}
