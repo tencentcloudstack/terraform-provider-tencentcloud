@@ -109,18 +109,20 @@ The following arguments are supported:
 * `instance_name` - (Required, String, ForceNew) Name of the instance, which can contain 6 to 36 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `pay_mode` - (Required, Int) The pay mode of instance. 0 represent POSTPAID_BY_HOUR, 1 represent PREPAID.
 * `product_id` - (Required, Int, ForceNew) Product ID. Different products ID represents different EMR product versions. Value range:
-- 16: represents EMR-V2.3.0
-- 20: indicates EMR-V2.5.0
-- 25: represents EMR-V3.1.0
-- 27: represents KAFKA-V1.0.0
-- 30: indicates EMR-V2.6.0
-- 33: represents EMR-V3.2.1
-- 34: stands for EMR-V3.3.0
-- 36: represents STARROCKS-V1.0.0
-- 37: indicates EMR-V3.4.0
-- 38: represents EMR-V2.7.0
-- 39: stands for STARROCKS-V1.1.0
-- 41: represents DRUID-V1.1.0.
+	- 16: represents EMR-V2.3.0
+	- 20: represents EMR-V2.5.0
+	- 25: represents EMR-V3.1.0
+	- 27: represents KAFKA-V1.0.0
+	- 30: represents EMR-V2.6.0
+	- 33: represents EMR-V3.2.1
+	- 34: represents EMR-V3.3.0
+	- 37: represents EMR-V3.4.0
+	- 38: represents EMR-V2.7.0
+	- 44: represents EMR-V3.5.0
+	- 50: represents KAFKA-V2.0.0
+	- 51: represents STARROCKS-V1.4.0
+	- 53: represents EMR-V3.6.0
+	- 54: represents STARROCKS-V2.0.0.
 * `softwares` - (Required, Set: [`String`], ForceNew) The softwares of a EMR instance.
 * `support_ha` - (Required, Int, ForceNew) The flag whether the instance support high availability.(0=>not support, 1=>support).
 * `vpc_settings` - (Required, Map, ForceNew) The private net config of EMR instance.

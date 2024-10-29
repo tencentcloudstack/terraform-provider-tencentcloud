@@ -40,18 +40,20 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 				Description: "Product ID. Different products ID represents different EMR product versions. Value range:\n" +
-					"- 16: represents EMR-V2.3.0\n" +
-					"- 20: indicates EMR-V2.5.0\n" +
-					"- 25: represents EMR-V3.1.0\n" +
-					"- 27: represents KAFKA-V1.0.0\n" +
-					"- 30: indicates EMR-V2.6.0\n" +
-					"- 33: represents EMR-V3.2.1\n" +
-					"- 34: stands for EMR-V3.3.0\n" +
-					"- 36: represents STARROCKS-V1.0.0\n" +
-					"- 37: indicates EMR-V3.4.0\n" +
-					"- 38: represents EMR-V2.7.0\n" +
-					"- 39: stands for STARROCKS-V1.1.0\n" +
-					"- 41: represents DRUID-V1.1.0.",
+					"	- 16: represents EMR-V2.3.0\n" +
+					"	- 20: represents EMR-V2.5.0\n" +
+					"	- 25: represents EMR-V3.1.0\n" +
+					"	- 27: represents KAFKA-V1.0.0\n" +
+					"	- 30: represents EMR-V2.6.0\n" +
+					"	- 33: represents EMR-V3.2.1\n" +
+					"	- 34: represents EMR-V3.3.0\n" +
+					"	- 37: represents EMR-V3.4.0\n" +
+					"	- 38: represents EMR-V2.7.0\n" +
+					"	- 44: represents EMR-V3.5.0\n" +
+					"	- 50: represents KAFKA-V2.0.0\n" +
+					"	- 51: represents STARROCKS-V1.4.0\n" +
+					"	- 53: represents EMR-V3.6.0\n" +
+					"	- 54: represents STARROCKS-V2.0.0.",
 			},
 			"vpc_settings": {
 				Type:        schema.TypeMap,
@@ -534,6 +536,31 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 	}
 
 	_ = d.Set("instance_id", instanceId)
+	clusterNodeMap := make(map[string]*emr.NodeHardwareInfo)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, err := emrService.DescribeClusterNodes(ctx, instanceId, "all", "all", 0, 10)
+
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+
+		if len(result) > 0 {
+			_ = d.Set("auto_renew", result[0].IsAutoRenew)
+			for _, item := range result {
+				node := item
+				// 节点类型 0:common节点；1:master节点；2:core节点；3:task节点
+				if node.Flag != nil {
+					clusterNodeMap[strconv.FormatInt(*node.Flag, 10)] = node
+				}
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
 	if instance != nil {
 		_ = d.Set("product_id", instance.ProductId)
 		_ = d.Set("vpc_settings", map[string]interface{}{
@@ -587,6 +614,9 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				if masterResource.RootSize != nil {
 					masterResourceSpec["root_size"] = *masterResource.RootSize
 				}
+				if v, ok := clusterNodeMap["1"]; ok {
+					masterResourceSpec["multi_disks"] = fetchMultiDisks(v, masterResource)
+				}
 				resourceSpec["master_resource_spec"] = []interface{}{masterResourceSpec}
 			}
 
@@ -619,6 +649,10 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				if coreResource.RootSize != nil {
 					coreResourceSpec["root_size"] = *coreResource.RootSize
 				}
+				if v, ok := clusterNodeMap["2"]; ok {
+					coreResourceSpec["multi_disks"] = fetchMultiDisks(v, coreResource)
+				}
+
 				resourceSpec["core_resource_spec"] = []interface{}{coreResourceSpec}
 			}
 
@@ -650,6 +684,9 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				}
 				if taskResource.RootSize != nil {
 					taskResourceSpec["root_size"] = *taskResource.RootSize
+				}
+				if v, ok := clusterNodeMap["3"]; ok {
+					taskResourceSpec["multi_disks"] = fetchMultiDisks(v, taskResource)
 				}
 				resourceSpec["task_resource_spec"] = []interface{}{taskResourceSpec}
 			}
@@ -683,6 +720,9 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				if comResource.RootSize != nil {
 					comResourceSpec["root_size"] = *comResource.RootSize
 				}
+				if v, ok := clusterNodeMap["0"]; ok {
+					comResourceSpec["multi_disks"] = fetchMultiDisks(v, comResource)
+				}
 				resourceSpec["common_resource_spec"] = []interface{}{comResourceSpec}
 			}
 
@@ -713,22 +753,6 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	_ = d.Set("tags", tags)
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, err := emrService.DescribeClusterNodes(ctx, instanceId, "all", "all", 0, 10)
 
-		if err != nil {
-			return resource.RetryableError(err)
-		}
-
-		if len(result) > 0 {
-			_ = d.Set("auto_renew", result[0].IsAutoRenew)
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
 	return nil
 }
