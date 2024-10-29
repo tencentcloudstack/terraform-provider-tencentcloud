@@ -145,12 +145,12 @@ func resourceTencentCloudCvmActionTimerRead(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func resourceTencentCloudCvmActionTimerUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cvm_action_timer.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
+// func resourceTencentCloudCvmActionTimerUpdate(d *schema.ResourceData, meta interface{}) error {
+// 	defer tccommon.LogElapsed("resource.tencentcloud_cvm_action_timer.update")()
+// 	defer tccommon.InconsistentCheck(d, meta)()
 
-	return resourceTencentCloudCvmActionTimerRead(d, meta)
-}
+// 	return resourceTencentCloudCvmActionTimerRead(d, meta)
+// }
 
 func resourceTencentCloudCvmActionTimerDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cvm_action_timer.delete")()
