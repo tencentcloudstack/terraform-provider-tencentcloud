@@ -41,7 +41,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			"cluster_os": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     "tlinux2.4x86_64",
 				Description: "Cluster operating system, supports setting public images (the field passes the corresponding image Name) and custom images (the field passes the corresponding image ID). For details, please refer to: https://cloud.tencent.com/document/product/457/68289.",
 			},
@@ -1855,6 +1854,39 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request2.GetAction(), request2.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update kubernetes cluster failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	needChange3 := false
+	mutableArgs3 := []string{"cluster_os"}
+	for _, v := range mutableArgs3 {
+		if d.HasChange(v) {
+			needChange3 = true
+			break
+		}
+	}
+
+	if needChange3 {
+		request3 := tkev20180525.NewModifyClusterImageRequest()
+
+		request3.ClusterId = helper.String(clusterId)
+
+		if v, ok := d.GetOk("cluster_os"); ok {
+			request3.ImageId = helper.String(v.(string))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterImageWithContext(ctx, request3)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request3.GetAction(), request3.ToJsonString(), result.ToJsonString())
 			}
 			return nil
 		})
