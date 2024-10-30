@@ -160,6 +160,7 @@ func ResourceTencentCloudSqlserverInstance() *schema.Resource {
 			Optional:    true,
 			Default:     "DUAL",
 			Description: "Instance type. `DUAL` (dual-server high availability), `CLUSTER` (cluster). Default is `DUAL`.",
+			Deprecated:  "It has been deprecated from version 1.81.136.",
 		},
 		"maintenance_week_set": {
 			Type:        schema.TypeSet,
@@ -229,7 +230,6 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 		startTime      = d.Get("maintenance_start_time").(string)
 		timeSpan       = d.Get("maintenance_time_span").(int)
 		multiZones     = d.Get("multi_zones").(bool)
-		haType         = d.Get("ha_type").(string)
 		securityGroups = make([]string, 0)
 	)
 
@@ -256,7 +256,6 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 	request.Storage = helper.IntInt64(storage)
 	request.SubnetId = &subnetId
 	request.VpcId = &vpcId
-	request.HAType = &haType
 	request.MultiZones = &multiZones
 
 	if payType == svcpostgresql.COMMON_PAYTYPE_POSTPAID {
@@ -657,7 +656,6 @@ func resourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta inte
 	}
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("engine_version", instance.Version)
-	_ = d.Set("ha_type", SQLSERVER_HA_TYPE_FLAGS[*instance.HAFlag])
 
 	//maintanence
 	weekSet, startTime, timeSpan, outErr := sqlserverService.DescribeMaintenanceSpan(ctx, instanceId)
