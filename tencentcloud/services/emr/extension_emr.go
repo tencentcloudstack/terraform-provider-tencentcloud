@@ -130,6 +130,7 @@ func buildResourceSpecSchema() *schema.Schema {
 				},
 			},
 		},
+		Description: "Resource details.",
 	}
 }
 
