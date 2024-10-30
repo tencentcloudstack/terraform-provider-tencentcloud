@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: support `cluster_os` field to update and adjust its set logic
+```
