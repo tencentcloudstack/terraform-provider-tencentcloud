@@ -13,7 +13,7 @@ import (
 func TestAccDataSourceTencentCloudGaapHttpDomains_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -28,6 +28,7 @@ func TestAccDataSourceTencentCloudGaapHttpDomains_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_http_domains.foo", "domains.0.realserver_certificate_ids.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_http_domains.foo", "domains.0.basic_auth"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_http_domains.foo", "domains.0.gaap_auth"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_http_domains.foo", "domains.0.is_default_server"),
 				),
 			},
 		},

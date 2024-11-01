@@ -36,6 +36,7 @@ func TestAccTencentCloudGaapHttpDomainResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "basic_auth", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "is_default_server", "false"),
 				),
 			},
 			{

@@ -60,6 +60,7 @@ In addition to all arguments above, the following attributes are exported:
     * `ip` - IP.
     * `provider` - Supplier, BGP represents default, CMCC represents China Mobile, CUCC represents China Unicom, and CTCC represents China Telecom.
   * `ip` - IP.
+  * `is_support_tls_choice` - Whether to allow TLS configuration.0-no support, 1-expressed support.
   * `modify_config_time` - Configuration change timeNote: This field may return null, indicating that a valid value cannot be obtained.
   * `network_type` - Network type: normal represents regular BGP, cn2 represents premium BGP, triple represents triple network, secure_EIP represents customized security EIPNote: This field may return null, indicating that a valid value cannot be obtained.
   * `package_type` - proxy package type: Thunder represents standard proxy, Accelerator represents silver acceleration proxy,CrossBorder represents a cross-border proxy.Note: This field may return null, indicating that a valid value cannot be obtained.

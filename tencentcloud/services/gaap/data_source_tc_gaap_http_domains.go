@@ -102,6 +102,11 @@ func DataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 							Computed:    true,
 							Description: "ID of the SSL certificate.",
 						},
+						"is_default_server": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether to use as the default domain name.",
+						},
 					},
 				},
 			},
@@ -191,6 +196,7 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 			"realserver_certificate_id":     realserverCertificateId,
 			"realserver_certificate_ids":    realserverCertificateIds,
 			"realserver_certificate_domain": dr.RealServerCertificateDomain,
+			"is_default_server":             dr.IsDefaultServer,
 		}
 
 		domains = append(domains, m)
