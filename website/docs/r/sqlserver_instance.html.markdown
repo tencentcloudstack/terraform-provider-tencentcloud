@@ -55,7 +55,7 @@ The following arguments are supported:
 * `availability_zone` - (Optional, String, ForceNew) Availability zone.
 * `charge_type` - (Optional, String, ForceNew) Pay type of the SQL Server instance. Available values `PREPAID`, `POSTPAID_BY_HOUR`.
 * `engine_version` - (Optional, String, ForceNew) Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
-* `ha_type` - (Optional, String, ForceNew) Instance type. `DUAL` (dual-server high availability), `CLUSTER` (cluster). Default is `DUAL`.
+* `ha_type` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.81.136. Instance type. `DUAL` (dual-server high availability), `CLUSTER` (cluster). Default is `DUAL`.
 * `maintenance_start_time` - (Optional, String) Start time of the maintenance in one day, format like `HH:mm`.
 * `maintenance_time_span` - (Optional, Int) The timespan of maintenance in one day, unit is hour.
 * `maintenance_week_set` - (Optional, Set: [`Int`]) A list of integer indicates weekly maintenance. For example, [2,7] presents do weekly maintenance on every Tuesday and Sunday.
