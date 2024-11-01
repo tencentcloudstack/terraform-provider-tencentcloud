@@ -143,7 +143,7 @@ func ResourceTencentCloudSqlserverInstance() *schema.Resource {
 			Type:        schema.TypeBool,
 			ForceNew:    true,
 			Optional:    true,
-			Default:     false,
+			Computed:    true,
 			Description: "Indicate whether to deploy across availability zones.",
 		},
 		//RO computed values
@@ -229,9 +229,13 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 		weekSet        = make([]int, 0)
 		startTime      = d.Get("maintenance_start_time").(string)
 		timeSpan       = d.Get("maintenance_time_span").(int)
-		multiZones     = d.Get("multi_zones").(bool)
 		securityGroups = make([]string, 0)
 	)
+
+	var multiZones bool
+	if v, ok := d.GetOkExists("multi_zones"); ok {
+		multiZones = v.(bool)
+	}
 
 	if v, ok := d.GetOk("maintenance_week_set"); ok {
 		mWeekSet := v.(*schema.Set).List()
@@ -656,6 +660,7 @@ func resourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta inte
 	}
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("engine_version", instance.Version)
+	_ = d.Set("multi_zones", instance.IsDrZone)
 
 	//maintanence
 	weekSet, startTime, timeSpan, outErr := sqlserverService.DescribeMaintenanceSpan(ctx, instanceId)
