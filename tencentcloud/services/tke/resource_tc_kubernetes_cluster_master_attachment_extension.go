@@ -282,7 +282,7 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentCreatePostHandleRespon
 	}
 
 	// wait for cvm status
-	if err := resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
@@ -298,19 +298,18 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentCreatePostHandleRespon
 	}
 
 	// wait for tke init
-	return resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		resp, err := tkeService.DescribeKubernetesClusterMasterAttachmentById2(ctx, clusterId, instanceId, nodeRole)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 
-		has := false
-		if len(resp.InstanceSet) == 1 {
-			has = true
+		if len(resp.InstanceSet) != 1 {
+			return resource.NonRetryableError(fmt.Errorf("tke master node cvm instance %s not exist in tke instance list", instanceId))
 		}
 
-		if !has {
-			return resource.NonRetryableError(fmt.Errorf("cvm instance %s not exist in tke instance list", instanceId))
+		if *resp.InstanceSet[0].InstanceState != "running" {
+			return resource.RetryableError(fmt.Errorf("tke master node cvm instance  %s in tke status is %s, retry...", instanceId, resp.InstanceSet[0].InstanceState))
 		}
 
 		return nil
@@ -362,8 +361,9 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentDeletePostFillRequest0
 
 	req.ScaleInMasters = []*tkev20180525.ScaleInMaster{
 		{
-			InstanceId: helper.String(instanceId),
-			NodeRole:   helper.String(nodeRole),
+			InstanceId:         helper.String(instanceId),
+			NodeRole:           helper.String(nodeRole),
+			InstanceDeleteMode: helper.String("retain"),
 		},
 	}
 

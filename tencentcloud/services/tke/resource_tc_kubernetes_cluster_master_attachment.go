@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,9 +20,6 @@ func ResourceTencentCloudKubernetesClusterMasterAttachment() *schema.Resource {
 		Create: resourceTencentCloudKubernetesClusterMasterAttachmentCreate,
 		Read:   resourceTencentCloudKubernetesClusterMasterAttachmentRead,
 		Delete: resourceTencentCloudKubernetesClusterMasterAttachmentDelete,
-		Timeouts: &schema.ResourceTimeout{
-			Read: schema.DefaultTimeout(900000 * time.Millisecond),
-		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -475,7 +471,7 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentRead(d *schema.Resourc
 	}
 
 	var respData2 *tkev20180525.DescribeClusterInstancesResponseParams
-	reqErr2 := resource.Retry(900*time.Second, func() *resource.RetryError {
+	reqErr2 := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKubernetesClusterMasterAttachmentById2(ctx, clusterId, instanceId, nodeRole)
 		if e != nil {
 			return resourceTencentCloudKubernetesClusterMasterAttachmentReadRequestOnError2(ctx, result, e)
