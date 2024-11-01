@@ -229,7 +229,6 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 		weekSet        = make([]int, 0)
 		startTime      = d.Get("maintenance_start_time").(string)
 		timeSpan       = d.Get("maintenance_time_span").(int)
-		haType         = d.Get("ha_type").(string)
 		securityGroups = make([]string, 0)
 	)
 
@@ -661,11 +660,7 @@ func resourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta inte
 	}
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("engine_version", instance.Version)
-<<<<<<< HEAD
-=======
-	_ = d.Set("ha_type", SQLSERVER_HA_TYPE_FLAGS[*instance.HAFlag])
 	_ = d.Set("multi_zones", instance.IsDrZone)
->>>>>>> e3ce44d8d (add)
 
 	//maintanence
 	weekSet, startTime, timeSpan, outErr := sqlserverService.DescribeMaintenanceSpan(ctx, instanceId)
