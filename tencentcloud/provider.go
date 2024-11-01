@@ -2001,6 +2001,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_renew_host":                                                         cvm.ResourceTencentCloudCvmRenewHost(),
 			"tencentcloud_cvm_program_fpga_image":                                                 cvm.ResourceTencentCloudCvmProgramFpgaImage(),
 			"tencentcloud_cvm_modify_instance_disk_type":                                          cvm.ResourceTencentCloudCvmModifyInstanceDiskType(),
+			"tencentcloud_cvm_action_timer":                                                       cvm.ResourceTencentCloudCvmActionTimer(),
 			"tencentcloud_lighthouse_disk_backup":                                                 lighthouse.ResourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":                                           lighthouse.ResourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                                             lighthouse.ResourceTencentCloudLighthouseDiskAttachment(),

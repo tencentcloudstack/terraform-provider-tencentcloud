@@ -476,6 +476,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_cvm_sync_image
     tencentcloud_cvm_export_images
     tencentcloud_cvm_image_share_permission
+    tencentcloud_cvm_action_timer
 
 TDSQL-C MySQL(CynosDB)
   Data Source
