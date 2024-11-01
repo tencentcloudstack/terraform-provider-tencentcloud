@@ -818,6 +818,62 @@ resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
 }
 ```
 
+### Use delete options to delete CBS when deleting the Cluster
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                     = local.first_vpc_id
+  cluster_cidr               = var.example_cluster_cidr
+  cluster_max_pod_num        = 32
+  cluster_name               = "example"
+  cluster_desc               = "example for tke cluster"
+  cluster_max_service_num    = 32
+  cluster_level              = "L50"
+  auto_upgrade_cluster_level = true
+  cluster_internet           = false # (can be ignored) open it after the nodes added
+  cluster_version            = "1.30.0"
+  cluster_os                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_deploy_type        = "MANAGED_CLUSTER"
+  container_runtime          = "containerd"
+  docker_graph_path          = "/var/lib/containerd"
+  # without any worker config
+  tags = {
+    "demo" = "test"
+  }
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_first
+    instance_type              = "SA2.MEDIUM2"
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.first_subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    user_data                  = "dGVzdA=="
+    disaster_recover_group_ids = []
+    security_group_ids         = []
+    key_ids                    = []
+    cam_role_name              = "CVM_QcsRole"
+    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+  }
+
+  resource_delete_options {
+    resource_type = "CBS"
+    delete_mode   = "terminate"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -873,6 +929,7 @@ The following arguments are supported:
 * `node_pool_global_config` - (Optional, List) Global config effective for all node pools.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
+* `resource_delete_options` - (Optional, Set) The resource deletion policy when the cluster is deleted. Currently, CBS is supported (CBS is retained by default). Only valid when deleting cluster.
 * `runtime_version` - (Optional, String) Container Runtime version.
 * `service_cidr` - (Optional, String, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional, Map) The tags of the cluster.
@@ -993,6 +1050,12 @@ The `node_pool_global_config` object supports the following:
 * `scale_in_utilization_threshold` - (Optional, Int) Percentage of node resource usage below which the node is considered to be idle.
 * `skip_nodes_with_local_storage` - (Optional, Bool) During scale-in, ignore nodes with local storage pods.
 * `skip_nodes_with_system_pods` - (Optional, Bool) During scale-in, ignore nodes with pods in the kube-system namespace that are not managed by DaemonSet.
+
+The `resource_delete_options` object supports the following:
+
+* `delete_mode` - (Required, String) The deletion mode of CBS resources when the cluster is deleted, `terminate` (destroy), `retain` (retain). Other resources are deleted by default.
+* `resource_type` - (Required, String) Resource type, valid values are `CBS`, `CLB`, and `CVM`.
+* `skip_deletion_protection` - (Optional, Bool) Whether to skip resources with deletion protection enabled, the default is false.
 
 The `worker_config` object supports the following:
 

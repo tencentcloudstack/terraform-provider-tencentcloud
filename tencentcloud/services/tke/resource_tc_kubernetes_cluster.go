@@ -278,6 +278,31 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Description: "Indicates whether cluster deletion protection is enabled. Default is false.",
 			},
 
+			"resource_delete_options": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "The resource deletion policy when the cluster is deleted. Currently, CBS is supported (CBS is retained by default). Only valid when deleting cluster.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"resource_type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Resource type, valid values are `CBS`, `CLB`, and `CVM`.",
+						},
+						"delete_mode": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The deletion mode of CBS resources when the cluster is deleted, `terminate` (destroy), `retain` (retain). Other resources are deleted by default.",
+						},
+						"skip_deletion_protection": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to skip resources with deletion protection enabled, the default is false.",
+						},
+					},
+				},
+			},
+
 			"kube_proxy_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -1921,6 +1946,23 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 
 	instanceDeleteMode := "terminate"
 	request.InstanceDeleteMode = &instanceDeleteMode
+
+	if v, ok := d.GetOk("resource_delete_options"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			resourceDeleteOptionsMap := item.(map[string]interface{})
+			resourceDeleteOption := tkev20180525.ResourceDeleteOption{}
+			if v, ok := resourceDeleteOptionsMap["resource_type"]; ok {
+				resourceDeleteOption.ResourceType = helper.String(v.(string))
+			}
+			if v, ok := resourceDeleteOptionsMap["delete_mode"]; ok {
+				resourceDeleteOption.DeleteMode = helper.String(v.(string))
+			}
+			if v, ok := resourceDeleteOptionsMap["skip_deletion_protection"]; ok {
+				resourceDeleteOption.SkipDeletionProtection = helper.Bool(v.(bool))
+			}
+			request.ResourceDeleteOptions = append(request.ResourceDeleteOptions, &resourceDeleteOption)
+		}
+	}
 
 	if err := resourceTencentCloudKubernetesClusterDeletePostFillRequest0(ctx, request); err != nil {
 		return err
