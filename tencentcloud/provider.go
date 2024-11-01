@@ -1563,7 +1563,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_consumer_group_modify_offset":                                    ckafka.ResourceTencentCloudCkafkaConsumerGroupModifyOffset(),
 			"tencentcloud_ckafka_datahub_task":                                                    ckafka.ResourceTencentCloudCkafkaDatahubTask(),
 			"tencentcloud_ckafka_route":                                                           ckafka.ResourceTencentCloudCkafkaRoute(),
-			"tencentcloud_audit":                                                                  audit.ResourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                                            audit.ResourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                                                  cvm.ResourceTencentCloudImage(),
 			"tencentcloud_cynosdb_proxy":                                                          cynosdb.ResourceTencentCloudCynosdbProxy(),

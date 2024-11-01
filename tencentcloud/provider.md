@@ -158,7 +158,6 @@ Cloud Audit(Audit)
     tencentcloud_audit_events
 
   Resource
-    tencentcloud_audit
     tencentcloud_audit_track
 
 Auto Scaling(AS)
