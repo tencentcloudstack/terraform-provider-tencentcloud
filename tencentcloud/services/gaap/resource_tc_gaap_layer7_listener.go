@@ -3,6 +3,7 @@ package gaap
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -44,10 +45,20 @@ func ResourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Description:  "Port of the layer7 listener.",
 			},
 			"proxy_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "ID of the GAAP proxy.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"group_id"},
+				AtLeastOneOf:  []string{"group_id"},
+				Description:   "ID of the GAAP proxy.",
+			},
+			"group_id": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"proxy_id"},
+				AtLeastOneOf:  []string{"proxy_id"},
+				Description:   "Group ID.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,
@@ -86,6 +97,20 @@ func ResourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				ConflictsWith: []string{"client_certificate_id"},
 				Description:   "ID list of the client certificate. Set only when `auth_type` is specified as mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
+			"tls_support_versions": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Set:         schema.HashString,
+				Description: "TLS version, optional TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.",
+			},
+			"tls_ciphers": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Password Suite, optional GAAP_TLS_CIPHERS_STRICT, GAAP_TLS_CIPHERS_GENERAL, GAAP_TLS_CIPHERS_WIDE(default).",
+			},
 
 			// computed
 			"status": {
@@ -113,7 +138,13 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 	protocol := d.Get("protocol").(string)
 	name := d.Get("name").(string)
 	port := d.Get("port").(int)
-	proxyId := d.Get("proxy_id").(string)
+	var proxyId, groupId string
+	if v, ok := d.GetOk("proxy_id"); ok {
+		proxyId = v.(string)
+	}
+	if v, ok := d.GetOk("group_id"); ok {
+		groupId = v.(string)
+	}
 
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
@@ -124,7 +155,7 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 
 	switch protocol {
 	case "HTTP":
-		id, err = service.CreateHTTPListener(ctx, name, proxyId, port)
+		id, err = service.CreateHTTPListener(ctx, name, proxyId, groupId, port)
 
 	case "HTTPS":
 		var (
@@ -168,7 +199,7 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 
 		id, err = service.CreateHTTPSListener(
 			ctx,
-			name, certificateId, forwardProtocol, proxyId, polyClientCertificateIds, port, authType,
+			name, certificateId, forwardProtocol, proxyId, groupId, polyClientCertificateIds, port, authType,
 		)
 	}
 
@@ -177,6 +208,36 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 	}
 
 	d.SetId(id)
+
+	vTlsCiphers, okTlsCiphers := d.GetOk("tls_ciphers")
+	vTlsSupportVersions, okTlsSupportVersions := d.GetOk("tls_support_versions")
+	if okTlsCiphers && okTlsSupportVersions {
+		if protocol != "HTTPS" {
+			return errors.New("Only https can set tls")
+		}
+		if proxyId != "" {
+			proxyDetail, err := service.DescribeGaapProxyDetail(ctx, proxyId)
+			if err != nil {
+				return err
+			}
+			if proxyDetail.IsSupportTLSChoice != nil && int(*proxyDetail.IsSupportTLSChoice) != 1 {
+				return fmt.Errorf("proxy(%s) not support TLS Choice", proxyId)
+			}
+		}
+		if groupId != "" {
+			proxyGroup, err := service.DescribeGaapProxyGroupById(ctx, groupId)
+			if err != nil {
+				return err
+			}
+			if proxyGroup.IsSupportTLSChoice != nil && int(*proxyGroup.IsSupportTLSChoice) != 1 {
+				return fmt.Errorf("group(%s) not support TLS Choice", groupId)
+			}
+		}
+		err := service.SetTlsVersion(ctx, id, vTlsCiphers.(string), helper.InterfacesStrings(vTlsSupportVersions.(*schema.Set).List()))
+		if err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudGaapLayer7ListenerRead(d, m)
 }
@@ -201,6 +262,8 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		createTime               string
 		polyClientCertificateIds []*string
 		proxyId                  *string
+		tlsCiphers               *string
+		tlsSupportVersion        []*string
 	)
 
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
@@ -210,7 +273,7 @@ LOOP:
 		switch protocol {
 		case "":
 			// import mode, need check protocol
-			httpListeners, err := service.DescribeHTTPListeners(ctx, nil, &id, nil, nil)
+			httpListeners, err := service.DescribeHTTPListeners(ctx, nil, nil, &id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -219,7 +282,7 @@ LOOP:
 				continue
 			}
 
-			httpsListeners, err := service.DescribeHTTPSListeners(ctx, nil, &id, nil, nil)
+			httpsListeners, err := service.DescribeHTTPSListeners(ctx, nil, nil, &id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -233,7 +296,7 @@ LOOP:
 			return nil
 
 		case "HTTP":
-			listeners, err := service.DescribeHTTPListeners(ctx, nil, &id, nil, nil)
+			listeners, err := service.DescribeHTTPListeners(ctx, nil, nil, &id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -267,7 +330,7 @@ LOOP:
 			break LOOP
 
 		case "HTTPS":
-			listeners, err := service.DescribeHTTPSListeners(ctx, nil, &id, nil, nil)
+			listeners, err := service.DescribeHTTPSListeners(ctx, nil, nil, &id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -294,6 +357,8 @@ LOOP:
 			forwardProtocol = listener.ForwardProtocol
 			authType = listener.AuthType
 			proxyId = listener.ProxyId
+			tlsCiphers = listener.TLSCiphers
+			tlsSupportVersion = listener.TLSSupportVersion
 
 			// mutual authentication
 			if *authType == 1 {
@@ -326,6 +391,8 @@ LOOP:
 	_ = d.Set("status", status)
 	_ = d.Set("create_time", createTime)
 	_ = d.Set("proxy_id", proxyId)
+	_ = d.Set("tls_ciphers", tlsCiphers)
+	_ = d.Set("tls_support_versions", tlsSupportVersion)
 
 	return nil
 }
@@ -340,7 +407,13 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 
 	id := d.Id()
 	protocol := d.Get("protocol").(string)
-	proxyId := d.Get("proxy_id").(string)
+	var proxyId, groupId string
+	if v, ok := d.GetOk("proxy_id"); ok {
+		proxyId = v.(string)
+	}
+	if v, ok := d.GetOk("group_id"); ok {
+		groupId = v.(string)
+	}
 
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
@@ -348,9 +421,13 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 	case "HTTP":
 		if d.HasChange("name") {
 			name := d.Get("name").(string)
-			if err := service.ModifyHTTPListener(ctx, id, proxyId, name); err != nil {
+			if err := service.ModifyHTTPListener(ctx, id, proxyId, groupId, name); err != nil {
 				return err
 			}
+
+		}
+		if d.HasChange("tls_support_versions") || d.HasChange("tls_ciphers") {
+			return errors.New("http listener not support change tls_support_versions or tls_ciphers")
 		}
 
 	case "HTTPS":
@@ -359,16 +436,17 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 			certificateId            *string
 			forwardProtocol          *string
 			polyClientCertificateIds []string
+			isModifyHTTPSListener    bool
 		)
 
 		name = helper.String(d.Get("name").(string))
 		certificateId = helper.String(d.Get("certificate_id").(string))
 		forwardProtocol = helper.String(d.Get("forward_protocol").(string))
-
 		if d.HasChange("client_certificate_id") {
 			if raw, ok := d.GetOk("client_certificate_id"); ok {
 				polyClientCertificateIds = append(polyClientCertificateIds, raw.(string))
 			}
+			isModifyHTTPSListener = true
 		}
 
 		if d.HasChange("client_certificate_ids") {
@@ -380,10 +458,48 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 					polyClientCertificateIds = append(polyClientCertificateIds, polyId.(string))
 				}
 			}
+			isModifyHTTPSListener = true
 		}
 
-		if err := service.ModifyHTTPSListener(ctx, proxyId, id, name, forwardProtocol, certificateId, polyClientCertificateIds); err != nil {
-			return err
+		if isModifyHTTPSListener {
+			if err := service.ModifyHTTPSListener(ctx, proxyId, groupId, id, name, forwardProtocol, certificateId, polyClientCertificateIds); err != nil {
+				return err
+			}
+		}
+
+		if d.HasChange("tls_support_versions") || d.HasChange("tls_ciphers") {
+			var (
+				tlsCiphers        string
+				tlsSupportVersion []string
+			)
+			if v, ok := d.GetOk("tls_ciphers"); ok {
+				tlsCiphers = v.(string)
+			}
+			if v, ok := d.GetOk("tls_support_versions"); ok {
+				tlsSupportVersion = helper.InterfacesStrings(v.(*schema.Set).List())
+			}
+			if proxyId != "" {
+				proxyDetail, err := service.DescribeGaapProxyDetail(ctx, proxyId)
+				if err != nil {
+					return err
+				}
+				if proxyDetail.IsSupportTLSChoice != nil && int(*proxyDetail.IsSupportTLSChoice) != 1 {
+					return fmt.Errorf("proxy(%s) not support TLS Choice", proxyId)
+				}
+			}
+			if groupId != "" {
+				proxyGroup, err := service.DescribeGaapProxyGroupById(ctx, groupId)
+				if err != nil {
+					return err
+				}
+				if proxyGroup.IsSupportTLSChoice != nil && int(*proxyGroup.IsSupportTLSChoice) != 1 {
+					return fmt.Errorf("group(%s) not support TLS Choice", groupId)
+				}
+			}
+			err := service.SetTlsVersion(ctx, id, tlsCiphers, tlsSupportVersion)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

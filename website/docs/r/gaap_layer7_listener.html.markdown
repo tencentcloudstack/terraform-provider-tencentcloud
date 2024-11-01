@@ -37,12 +37,15 @@ The following arguments are supported:
 * `name` - (Required, String) Name of the layer7 listener, the maximum length is 30.
 * `port` - (Required, Int, ForceNew) Port of the layer7 listener.
 * `protocol` - (Required, String, ForceNew) Protocol of the layer7 listener. Valid value: `HTTP` and `HTTPS`.
-* `proxy_id` - (Required, String, ForceNew) ID of the GAAP proxy.
 * `auth_type` - (Optional, Int, ForceNew) Authentication type of the layer7 listener. `0` is one-way authentication and `1` is mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.
 * `certificate_id` - (Optional, String) Certificate ID of the layer7 listener. NOTES: Only supports listeners of `HTTPS` protocol.
 * `client_certificate_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.26.0. Set `client_certificate_ids` instead. ID of the client certificate. Set only when `auth_type` is specified as mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.
 * `client_certificate_ids` - (Optional, Set: [`String`]) ID list of the client certificate. Set only when `auth_type` is specified as mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.
 * `forward_protocol` - (Optional, String, ForceNew) Protocol type of the forwarding. Valid value: `HTTP` and `HTTPS`. NOTES: Only supports listeners of `HTTPS` protocol.
+* `group_id` - (Optional, String, ForceNew) Group ID.
+* `proxy_id` - (Optional, String, ForceNew) ID of the GAAP proxy.
+* `tls_ciphers` - (Optional, String) Password Suite, optional GAAP_TLS_CIPHERS_STRICT, GAAP_TLS_CIPHERS_GENERAL, GAAP_TLS_CIPHERS_WIDE(default).
+* `tls_support_versions` - (Optional, Set: [`String`]) TLS version, optional TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.
 
 ## Attributes Reference
 

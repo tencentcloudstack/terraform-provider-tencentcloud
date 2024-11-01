@@ -29,7 +29,7 @@ The following arguments are supported:
 
 * `end_time` - (Required, String) End Time(2019-03-25 12:00:00).
 * `granularity` - (Required, Int) Monitoring granularity, currently supporting 60 300 3600 86400, in seconds.When the time range does not exceed 3 days, support a minimum granularity of 60 seconds;When the time range does not exceed 7 days, support a minimum granularity of 300 seconds;When the time range does not exceed 30 days, the minimum granularity supported is 3600 seconds.
-* `metric_names` - (Required, Set: [`String`]) Metric Names. Valid values: InBandwidth,OutBandwidth, Concurrent, InPackets, OutPackets, PacketLoss, Latency, HttpQPS, HttpsQPS.
+* `metric_names` - (Required, Set: [`String`]) Metric Names. Valid values: InBandwidth,OutBandwidth, Concurrent, InPackets, OutPackets, PacketLoss, Latency, HttpQPS, HttpsQPS, HttpQPSPercent, HttpsQPSPercent.
 * `proxy_id` - (Required, String) Proxy Id.
 * `start_time` - (Required, String) Start Time(2019-03-25 12:00:00).
 * `isp` - (Optional, String) Operator (valid when the proxy is a three network proxy), supports CMCC, CUCC, CTCC, and merges data from the three operators if null values are passed or not passed.

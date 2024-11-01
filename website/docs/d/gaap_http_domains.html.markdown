@@ -61,6 +61,7 @@ In addition to all arguments above, the following attributes are exported:
   * `domain` - Forward domain of the layer7 listener.
   * `gaap_auth_id` - ID of the SSL certificate.
   * `gaap_auth` - Indicates whether SSL certificate authentication is enable.
+  * `is_default_server` - Whether to use as the default domain name.
   * `realserver_auth` - Indicates whether realserver authentication is enable.
   * `realserver_certificate_domain` - CA certificate domain of the realserver.
   * `realserver_certificate_id` - (**Deprecated**) It has been deprecated from version 1.28.0. Use `realserver_certificate_ids` instead. CA certificate ID of the realserver.

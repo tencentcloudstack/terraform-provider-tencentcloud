@@ -31,6 +31,18 @@ func ResourceTencentCloudGaapHttpDomain() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of the layer7 listener.",
 			},
+			"group_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Group Id.",
+			},
+			"is_default_server": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether to use as the default domain name, the default is false.",
+			},
 			"domain": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -127,6 +139,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 
 	listenerId := d.Get("listener_id").(string)
 	domain := d.Get("domain").(string)
+	isDefaultServer := d.Get("is_default_server").(bool)
 
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
@@ -134,7 +147,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 		protocol        string
 		forwardProtocol string
 	)
-	httpListeners, err := service.DescribeHTTPListeners(ctx, nil, &listenerId, nil, nil)
+	httpListeners, err := service.DescribeHTTPListeners(ctx, nil, nil, &listenerId, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -142,7 +155,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 		protocol = "HTTP"
 	}
 
-	httpsListeners, err := service.DescribeHTTPSListeners(ctx, nil, &listenerId, nil, nil)
+	httpsListeners, err := service.DescribeHTTPSListeners(ctx, nil, nil, &listenerId, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -156,7 +169,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 
 	switch protocol {
 	case "HTTP":
-		if err := service.CreateHTTPDomain(ctx, listenerId, domain); err != nil {
+		if err := service.CreateHTTPDomain(ctx, listenerId, domain, isDefaultServer); err != nil {
 			return err
 		}
 
@@ -244,7 +257,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 			return errors.New("when use gaap auth, gaap auth id should be set")
 		}
 
-		if err := service.CreateHTTPSDomain(ctx, listenerId, domain, certificateId, polyClientCertificateIds); err != nil {
+		if err := service.CreateHTTPSDomain(ctx, listenerId, domain, certificateId, polyClientCertificateIds, isDefaultServer); err != nil {
 			return err
 		}
 
@@ -350,6 +363,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 	_ = d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
 	_ = d.Set("gaap_auth_id", httpDomain.GaapCertificateId)
+	_ = d.Set("is_default_server", httpDomain.IsDefaultServer)
 
 	return nil
 }
@@ -376,6 +390,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	}
 
 	listenerId, protocol, domain = split[0], split[1], split[2]
+	isDefaultServer := d.Get("is_default_server").(bool)
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	switch protocol {
@@ -387,9 +402,9 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 				return fmt.Errorf("argument `%s` cannot be changed for http", v)
 			}
 		}
-		if d.HasChange("domain") {
+		if d.HasChange("domain") || d.HasChange("is_default_server") {
 			oldDomain, newDomain := d.GetChange("domain")
-			err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string))
+			err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string), isDefaultServer)
 			if err != nil {
 				return err
 			}
@@ -399,15 +414,15 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	case "HTTPS":
 	}
 
-	if d.HasChange("domain") {
+	if d.HasChange("domain") || d.HasChange("is_default_server") {
 		oldDomain, newDomain := d.GetChange("domain")
-		err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string))
+		err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string), isDefaultServer)
 		if err != nil {
 			return err
 		}
 	}
 
-	listeners, err := service.DescribeHTTPSListeners(ctx, nil, &listenerId, nil, nil)
+	listeners, err := service.DescribeHTTPSListeners(ctx, nil, nil, &listenerId, nil, nil)
 	if err != nil {
 		return err
 	}

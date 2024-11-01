@@ -34,7 +34,7 @@ func init() {
 			proxyIds := []string{tcacctest.DefaultGaapProxyId, tcacctest.DefaultGaapProxyId2}
 			for _, proxyId := range proxyIds {
 				proxyIdTmp := proxyId
-				httpListeners, err := service.DescribeHTTPListeners(ctx, &proxyIdTmp, nil, nil, nil)
+				httpListeners, err := service.DescribeHTTPListeners(ctx, &proxyIdTmp, nil, nil, nil, nil)
 				if err != nil {
 					return err
 				}
@@ -59,7 +59,7 @@ func init() {
 					}
 
 				}
-				httpsListeners, err := service.DescribeHTTPSListeners(ctx, &proxyIdTmp, nil, nil, nil)
+				httpsListeners, err := service.DescribeHTTPSListeners(ctx, &proxyIdTmp, nil, nil, nil, nil)
 				if err != nil {
 					return err
 				}
@@ -321,7 +321,7 @@ func testAccCheckGaapLayer7ListenerExists(n string, id *string, protocol string)
 
 		switch protocol {
 		case "HTTP":
-			listeners, err := service.DescribeHTTPListeners(context.TODO(), nil, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeHTTPListeners(context.TODO(), nil, nil, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -337,7 +337,7 @@ func testAccCheckGaapLayer7ListenerExists(n string, id *string, protocol string)
 			}
 
 		case "HTTPS":
-			listeners, err := service.DescribeHTTPSListeners(context.TODO(), nil, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeHTTPSListeners(context.TODO(), nil, nil, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -368,7 +368,7 @@ func testAccCheckGaapLayer7ListenerDestroy(id *string, protocol string) resource
 
 		switch protocol {
 		case "HTTP":
-			listeners, err := service.DescribeHTTPListeners(context.TODO(), nil, id, nil, nil)
+			listeners, err := service.DescribeHTTPListeners(context.TODO(), nil, nil, id, nil, nil)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 					if sdkError.Code == svcgaap.GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
@@ -383,7 +383,7 @@ func testAccCheckGaapLayer7ListenerDestroy(id *string, protocol string) resource
 			}
 
 		case "HTTPS":
-			listeners, err := service.DescribeHTTPSListeners(context.TODO(), nil, id, nil, nil)
+			listeners, err := service.DescribeHTTPSListeners(context.TODO(), nil, nil, id, nil, nil)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 					if sdkError.Code == svcgaap.GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {

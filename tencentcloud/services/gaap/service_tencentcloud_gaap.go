@@ -1734,12 +1734,17 @@ func (me *GaapService) DeleteSecurityRule(ctx context.Context, policyId, ruleId 
 	return nil
 }
 
-func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId string, port int) (id string, err error) {
+func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId, groupId string, port int) (id string, err error) {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
 
 	request := gaap.NewCreateHTTPListenerRequest()
-	request.ProxyId = &proxyId
+	if proxyId != "" {
+		request.ProxyId = &proxyId
+	}
+	if groupId != "" {
+		request.GroupId = &groupId
+	}
 	request.ListenerName = &name
 	request.Port = helper.IntUint64(port)
 
@@ -1766,7 +1771,7 @@ func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId str
 		return "", err
 	}
 
-	if err := waitLayer7ListenerReady(ctx, client, proxyId, id, "HTTP"); err != nil {
+	if err := waitLayer7ListenerReady(ctx, client, proxyId, groupId, id, "HTTP"); err != nil {
 		log.Printf("[CRITAL]%s create HTTP listener failed, reason: %v", logId, err)
 		return "", err
 	}
@@ -1776,7 +1781,7 @@ func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId str
 
 func (me *GaapService) CreateHTTPSListener(
 	ctx context.Context,
-	name, certificateId, forwardProtocol, proxyId string,
+	name, certificateId, forwardProtocol, proxyId, groupId string,
 	polyClientCertificateIds []string,
 	port, authType int,
 ) (id string, err error) {
@@ -1784,7 +1789,12 @@ func (me *GaapService) CreateHTTPSListener(
 	client := me.client.UseGaapClient()
 
 	request := gaap.NewCreateHTTPSListenerRequest()
-	request.ProxyId = &proxyId
+	if proxyId != "" {
+		request.ProxyId = &proxyId
+	}
+	if groupId != "" {
+		request.GroupId = &groupId
+	}
 	request.CertificateId = &certificateId
 	request.ForwardProtocol = &forwardProtocol
 	request.ListenerName = &name
@@ -1815,7 +1825,7 @@ func (me *GaapService) CreateHTTPSListener(
 		return "", err
 	}
 
-	if err := waitLayer7ListenerReady(ctx, client, proxyId, id, "HTTPS"); err != nil {
+	if err := waitLayer7ListenerReady(ctx, client, proxyId, groupId, id, "HTTPS"); err != nil {
 		log.Printf("[CRITAL]%s create HTTPS listener failed, reason: %v", logId, err)
 		return "", err
 	}
@@ -1825,13 +1835,18 @@ func (me *GaapService) CreateHTTPSListener(
 
 func (me *GaapService) DescribeHTTPListeners(
 	ctx context.Context,
-	proxyId, id, name *string,
+	proxyId, groupId, id, name *string,
 	port *int,
 ) (listeners []*gaap.HTTPListener, err error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := gaap.NewDescribeHTTPListenersRequest()
-	request.ProxyId = proxyId
+	if proxyId != nil && *proxyId != "" {
+		request.ProxyId = proxyId
+	}
+	if groupId != nil && *groupId != "" {
+		request.GroupId = groupId
+	}
 	request.ListenerId = id
 
 	if port != nil {
@@ -1890,13 +1905,18 @@ func (me *GaapService) DescribeHTTPListeners(
 
 func (me *GaapService) DescribeHTTPSListeners(
 	ctx context.Context,
-	proxyId, listenerId, name *string,
+	proxyId, groupId, listenerId, name *string,
 	port *int,
 ) (listeners []*gaap.HTTPSListener, err error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := gaap.NewDescribeHTTPSListenersRequest()
-	request.ProxyId = proxyId
+	if proxyId != nil && *proxyId != "" {
+		request.ProxyId = proxyId
+	}
+	if groupId != nil && *groupId != "" {
+		request.GroupId = groupId
+	}
 	request.ListenerId = listenerId
 
 	if port != nil {
@@ -1953,14 +1973,13 @@ func (me *GaapService) DescribeHTTPSListeners(
 	return
 }
 
-func (me *GaapService) ModifyHTTPListener(ctx context.Context, id, proxyId, name string) error {
+func (me *GaapService) ModifyHTTPListener(ctx context.Context, id, proxyId, groupId, name string) error {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
 
 	request := gaap.NewModifyHTTPListenerAttributeRequest()
 	request.ListenerId = &id
 	request.ListenerName = &name
-	request.ProxyId = &proxyId
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1976,7 +1995,7 @@ func (me *GaapService) ModifyHTTPListener(ctx context.Context, id, proxyId, name
 		return err
 	}
 
-	if err := waitLayer7ListenerReady(ctx, client, proxyId, id, "HTTP"); err != nil {
+	if err := waitLayer7ListenerReady(ctx, client, proxyId, groupId, id, "HTTP"); err != nil {
 		log.Printf("[CRITAL]%s modify HTTP listener failed, reason: %v", logId, err)
 		return err
 	}
@@ -1986,7 +2005,7 @@ func (me *GaapService) ModifyHTTPListener(ctx context.Context, id, proxyId, name
 
 func (me *GaapService) ModifyHTTPSListener(
 	ctx context.Context,
-	proxyId, id string,
+	proxyId, groupId, id string,
 	name, forwardProtocol, certificateId *string,
 	polyClientCertificateIds []string,
 ) error {
@@ -1994,7 +2013,9 @@ func (me *GaapService) ModifyHTTPSListener(
 	client := me.client.UseGaapClient()
 
 	request := gaap.NewModifyHTTPSListenerAttributeRequest()
-	request.ProxyId = &proxyId
+	if proxyId != "" {
+		request.ProxyId = &proxyId
+	}
 	request.ListenerId = &id
 	request.ListenerName = name
 	request.ForwardProtocol = forwardProtocol
@@ -2015,7 +2036,7 @@ func (me *GaapService) ModifyHTTPSListener(
 		return err
 	}
 
-	if err := waitLayer7ListenerReady(ctx, client, proxyId, id, "HTTPS"); err != nil {
+	if err := waitLayer7ListenerReady(ctx, client, proxyId, groupId, id, "HTTPS"); err != nil {
 		log.Printf("[CRITAL]%s modify HTTPS listener failed, reason: %v", logId, err)
 		return err
 	}
@@ -2236,14 +2257,19 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, id, proto
 	return
 }
 
-func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, id, protocol string) (err error) {
+func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, groupId, id, protocol string) (err error) {
 	logId := tccommon.GetLogId(ctx)
 
 	switch protocol {
 	case "HTTP":
 		request := gaap.NewDescribeHTTPListenersRequest()
-		request.ProxyId = &proxyId
 		request.ListenerId = &id
+		if proxyId != "" {
+			request.ProxyId = &proxyId
+		}
+		if groupId != "" {
+			request.GroupId = &groupId
+		}
 
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -2293,8 +2319,13 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 
 	case "HTTPS":
 		request := gaap.NewDescribeHTTPSListenersRequest()
-		request.ProxyId = &proxyId
 		request.ListenerId = &id
+		if proxyId != "" {
+			request.ProxyId = &proxyId
+		}
+		if groupId != "" {
+			request.GroupId = &groupId
+		}
 
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -2345,13 +2376,14 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 	return
 }
 
-func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain string) error {
+func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain string, isDefaultServer bool) error {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
 
 	createRequest := gaap.NewCreateDomainRequest()
 	createRequest.ListenerId = &listenerId
 	createRequest.Domain = &domain
+	createRequest.IsDefaultServer = &isDefaultServer
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(createRequest.GetAction())
@@ -2412,6 +2444,7 @@ func (me *GaapService) CreateHTTPSDomain(
 	ctx context.Context,
 	listenerId, domain, certificateId string,
 	polyClientCertificateIds []string,
+	isDefaultServer bool,
 ) error {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -2420,6 +2453,7 @@ func (me *GaapService) CreateHTTPSDomain(
 	createRequest.ListenerId = &listenerId
 	createRequest.Domain = &domain
 	createRequest.CertificateId = &certificateId
+	createRequest.IsDefaultServer = &isDefaultServer
 
 	for _, polyId := range polyClientCertificateIds {
 		createRequest.PolyClientCertificateIds = append(createRequest.PolyClientCertificateIds, helper.String(polyId))
@@ -4510,7 +4544,7 @@ func (me *GaapService) DeleteGaapGlobalDomainDnsById(ctx context.Context, dnsRec
 	return
 }
 
-func (me *GaapService) ModifyDomain(ctx context.Context, listenerId, oldDomain, newDomain string) (errRet error) {
+func (me *GaapService) ModifyDomain(ctx context.Context, listenerId, oldDomain, newDomain string, isDefaultServer bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := gaap.NewModifyDomainRequest()
@@ -4519,6 +4553,7 @@ func (me *GaapService) ModifyDomain(ctx context.Context, listenerId, oldDomain, 
 	request.NewDomain = &newDomain
 	request.CertificateId = helper.String("default")
 	request.PolyClientCertificateIds = helper.Strings([]string{"default"})
+	request.IsDefaultServer = &isDefaultServer
 
 	defer func() {
 		if errRet != nil {
@@ -4564,6 +4599,32 @@ func (me *GaapService) SwitchProxyGroup(ctx context.Context, groupId, status str
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
+
+	return
+}
+
+func (me *GaapService) SetTlsVersion(ctx context.Context, listenerId, tlsCiphers string, tlsSupportVersions []string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := gaap.NewSetTlsVersionRequest()
+	request.ListenerId = &listenerId
+	request.TLSCiphers = &tlsCiphers
+	request.TLSSupportVersion = helper.Strings(tlsSupportVersions)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().SetTlsVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

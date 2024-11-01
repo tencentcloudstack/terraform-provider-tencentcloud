@@ -345,6 +345,11 @@ func DataSourceTencentCloudGaapProxyDetail() *schema.Resource {
 							Computed:    true,
 							Description: "Property bitmap, where each bit represents a property, where:0 indicates that the feature is not supported;1, indicates support for this feature.The meaning of the feature bitmap is as follows (from right to left):The first bit supports 4-layer acceleration;The second bit supports 7-layer acceleration;The third bit supports Http3 access;The fourth bit supports IPv6;The fifth bit supports high-quality BGP access;The 6th bit supports three network access;The 7th bit supports QoS acceleration in the access segment.Note: This field may return null, indicating that a valid value cannot be obtained.Note: This field may return null, indicating that a valid value cannot be obtained.",
 						},
+						"is_support_tls_choice": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Whether to allow TLS configuration.0-no support, 1-expressed support.",
+						},
 					},
 				},
 			},
@@ -628,6 +633,9 @@ func dataSourceTencentCloudGaapProxyDetailRead(d *schema.ResourceData, meta inte
 
 		if proxyDetail.FeatureBitmap != nil {
 			proxyInfoMap["feature_bitmap"] = proxyDetail.FeatureBitmap
+		}
+		if proxyDetail.IsSupportTLSChoice != nil {
+			proxyInfoMap["is_support_tls_choice"] = proxyDetail.IsSupportTLSChoice
 		}
 
 		_ = d.Set("proxy_detail", []interface{}{proxyInfoMap})

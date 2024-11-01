@@ -28,6 +28,11 @@ func DataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 				Optional:    true,
 				Description: "ID of the GAAP proxy to be queried.",
 			},
+			"group_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Group id.",
+			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -119,6 +124,18 @@ func DataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 							Computed:    true,
 							Description: "Creation time of the layer7 listener.",
 						},
+						"tls_support_versions": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Set:         schema.HashString,
+							Description: "TLS version, optional TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.",
+						},
+						"tls_ciphers": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Password Suite, optional GAAP_TLS_CIPHERS_STRICT, GAAP_TLS_CIPHERS_GENERAL, GAAP_TLS_CIPHERS_WIDE(default).",
+						},
 					},
 				},
 			},
@@ -135,6 +152,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 
 	var (
 		proxyId    *string
+		groupId    *string
 		listenerId *string
 		name       *string
 		port       *int
@@ -145,12 +163,15 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 	if raw, ok := d.GetOk("proxy_id"); ok {
 		proxyId = helper.String(raw.(string))
 	}
+	if raw, ok := d.GetOk("group_id"); ok {
+		groupId = helper.String(raw.(string))
+	}
 	if raw, ok := d.GetOk("listener_id"); ok {
 		listenerId = helper.String(raw.(string))
 	}
 
-	if proxyId == nil && listenerId == nil {
-		return errors.New("proxy_id or listener_id must be set")
+	if proxyId == nil && groupId == nil && listenerId == nil {
+		return errors.New("One of proxy_id, group_id or listener_id must be set")
 	}
 
 	if raw, ok := d.GetOk("listener_name"); ok {
@@ -164,7 +185,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 
 	switch protocol {
 	case "HTTP":
-		httpListeners, err := service.DescribeHTTPListeners(ctx, proxyId, listenerId, name, port)
+		httpListeners, err := service.DescribeHTTPListeners(ctx, proxyId, groupId, listenerId, name, port)
 		if err != nil {
 			return err
 		}
@@ -190,20 +211,28 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 			}
 
 			ids = append(ids, *ls.ListenerId)
-
-			listeners = append(listeners, map[string]interface{}{
+			m := map[string]interface{}{
 				"protocol":    "HTTP",
 				"id":          *ls.ListenerId,
-				"proxy_id":    *ls.ProxyId,
 				"name":        *ls.ListenerName,
 				"port":        *ls.Port,
 				"status":      *ls.ListenerStatus,
 				"create_time": helper.FormatUnixTime(*ls.CreateTime),
-			})
+			}
+
+			if ls.ProxyId != nil {
+				m["proxy_id"] = *ls.ProxyId
+			}
+			if ls.GroupId != nil {
+				m["group_id"] = *ls.GroupId
+			}
+
+			listeners = append(listeners, m)
+
 		}
 
 	case "HTTPS":
-		httpsListeners, err := service.DescribeHTTPSListeners(ctx, proxyId, listenerId, name, port)
+		httpsListeners, err := service.DescribeHTTPSListeners(ctx, proxyId, groupId, listenerId, name, port)
 		if err != nil {
 			return err
 		}
@@ -255,7 +284,6 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 				"protocol":               "HTTPS",
 				"id":                     ls.ListenerId,
 				"name":                   ls.ListenerName,
-				"proxy_id":               ls.ProxyId,
 				"port":                   ls.Port,
 				"status":                 ls.ListenerStatus,
 				"certificate_id":         ls.CertificateId,
@@ -264,6 +292,14 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 				"create_time":            helper.FormatUnixTime(*ls.CreateTime),
 				"client_certificate_id":  clientCertificateId,
 				"client_certificate_ids": polyClientCertificateIds,
+				"tls_ciphers":            ls.TLSCiphers,
+				"tls_support_versions":   helper.PStrings(ls.TLSSupportVersion),
+			}
+			if ls.ProxyId != nil {
+				m["proxy_id"] = *ls.ProxyId
+			}
+			if ls.GroupId != nil {
+				m["group_id"] = *ls.GroupId
 			}
 
 			listeners = append(listeners, m)
