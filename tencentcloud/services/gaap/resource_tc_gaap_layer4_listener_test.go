@@ -735,3 +735,101 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   }
 }
 `, tcacctest.DefaultGaapProxyId, tcacctest.DefaultGaapRealserverIpId1, tcacctest.DefaultGaapRealserverIp1, tcacctest.DefaultGaapRealserverIpId2, tcacctest.DefaultGaapRealserverIp2)
+
+
+
+resource tencentcloud_gaap_realserver "rs_domain-1" {
+	domain                  = "ah-tencent-zpl.com"
+	name                    = "tf_gaap_test_rs_domain-1"
+}
+
+resource tencentcloud_gaap_realserver "rs_ip-1" {
+	ip                 		= "1.2.53.67"
+	name                    = "tf_gaap_test_rs_ip-1"
+}
+
+
+resource tencentcloud_gaap_proxy "foo" {
+	name              = "tf-ci-test-gaap-proxy-GZ-SH-1"
+	bandwidth         = 10
+	concurrent        = 2
+	access_region     = "Guangzhou"
+	realserver_region = "Shanghai"
+}
+
+resource tencentcloud_gaap_layer4_listener "udp_l4-1" {
+	proxy_id        = tencentcloud_gaap_proxy.foo.id
+	protocol        = "UDP"
+	name            = "tf-ci-test-gaap-udp-l4-1"
+	port            = 8080
+	realserver_type = "DOMAIN"
+	realserver_bind_set{
+		id                      = tencentcloud_gaap_realserver.rs_domain-1.id
+		ip                      = tencentcloud_gaap_realserver.rs_domain-1.domain
+		port                    = 456
+	}
+	health_check = true
+	connect_timeout = 5
+	interval = 10
+	healthy_threshold = 1
+	unhealthy_threshold = 1
+	check_type = "PORT"
+	check_port = "6666"
+	context_type = "TEXT"
+	send_context = "111"
+	recv_context = "222"
+}
+
+resource tencentcloud_gaap_layer4_listener "udp_l4-2" {
+	proxy_id        = tencentcloud_gaap_proxy.foo.id
+	protocol        = "UDP"
+	name            = "tf-ci-test-gaap-udp-l4-2"
+	port            = 8081
+	realserver_type = "IP"
+	realserver_bind_set{
+		id                      = tencentcloud_gaap_realserver.rs_ip-1.id
+		ip                      = tencentcloud_gaap_realserver.rs_ip-1.ip
+		port                    = 4567
+	}
+	health_check = true
+	check_type = "PING"
+	connect_timeout = 5
+	interval = 10
+	healthy_threshold = 1
+	unhealthy_threshold = 1
+}
+
+resource tencentcloud_gaap_layer4_listener "udp_l4-3" {
+	proxy_id        = tencentcloud_gaap_proxy.foo.id
+	protocol        = "UDP"
+	name            = "tf-ci-test-gaap-udp-l4-3"
+	port            = 8082
+	realserver_type = "IP"
+	health_check = true
+	check_type = "PING"
+}
+
+resource tencentcloud_gaap_layer4_listener "udp_l4-4" {
+	proxy_id        = tencentcloud_gaap_proxy.foo.id
+	protocol        = "UDP"
+	name            = "tf-ci-test-gaap-udp-l4-4"
+	port            = 8083
+	realserver_type = "IP"
+	health_check = true
+	check_type = "PORT"
+	healthy_threshold = 1
+	unhealthy_threshold = 1
+	check_type = "PORT"
+	check_port = "6666"
+	context_type = "TEXT"
+	send_context = "111"
+	recv_context = "222"
+}
+
+resource tencentcloud_gaap_layer4_listener "udp_l4-5" {
+	proxy_id = tencentcloud_gaap_proxy.foo.id
+	protocol = "UDP"
+	name = "tf-ci-test-gaap-udp-l4-5"
+	port = 8084
+	realserver_type = "IP"
+}

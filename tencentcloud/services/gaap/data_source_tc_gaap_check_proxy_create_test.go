@@ -27,8 +27,8 @@ func TestAccTencentCloudGaapCheckProxyCreateDataSource_basic(t *testing.T) {
 
 const testAccGaapCheckProxyCreateDataSource = `
 data "tencentcloud_gaap_check_proxy_create" "check_proxy_create" {
-  access_region = "Thailand"
-  real_server_region = "Jakarta"
+  access_region = "Beijing"
+  real_server_region = "Guangzhou"
   bandwidth = 10
   concurrent = 2
   ip_address_version = "IPv4"

@@ -45,7 +45,7 @@ const testAccGaapProxyGroup = `
 resource "tencentcloud_gaap_proxy_group" "proxy_group" {
   project_id = 0
   group_name = "tf-test"
-  real_server_region = "Jakarta"
+  real_server_region = "Guangzhou"
   ip_address_version = "IPv4"
   package_type = "Thunder"
 }
@@ -55,7 +55,7 @@ const testAccGaapProxyGroupUpdate = `
 resource "tencentcloud_gaap_proxy_group" "proxy_group" {
   project_id = 0
   group_name = "tf-test-update"
-  real_server_region = "Jakarta"
+  real_server_region = "Guangzhou"
   ip_address_version = "IPv4"
   package_type = "Thunder"
 }
