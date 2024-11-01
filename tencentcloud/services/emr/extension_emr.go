@@ -100,6 +100,7 @@ func buildResourceSpecSchema() *schema.Schema {
 								Type:     schema.TypeString,
 								Optional: true,
 								ForceNew: true,
+								Computed: true,
 								Elem: &schema.Schema{
 									Type: schema.TypeString,
 								},
@@ -112,12 +113,14 @@ func buildResourceSpecSchema() *schema.Schema {
 								Type:        schema.TypeInt,
 								Optional:    true,
 								ForceNew:    true,
+								Computed:    true,
 								Description: "Cloud disk size.",
 							},
 							"count": {
 								Type:        schema.TypeInt,
 								Optional:    true,
 								ForceNew:    true,
+								Computed:    true,
 								Description: "Number of cloud disks of this type.",
 							},
 						},
