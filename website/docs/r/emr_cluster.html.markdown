@@ -109,18 +109,20 @@ The following arguments are supported:
 * `instance_name` - (Required, String, ForceNew) Name of the instance, which can contain 6 to 36 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `pay_mode` - (Required, Int) The pay mode of instance. 0 represent POSTPAID_BY_HOUR, 1 represent PREPAID.
 * `product_id` - (Required, Int, ForceNew) Product ID. Different products ID represents different EMR product versions. Value range:
-- 16: represents EMR-V2.3.0
-- 20: indicates EMR-V2.5.0
-- 25: represents EMR-V3.1.0
-- 27: represents KAFKA-V1.0.0
-- 30: indicates EMR-V2.6.0
-- 33: represents EMR-V3.2.1
-- 34: stands for EMR-V3.3.0
-- 36: represents STARROCKS-V1.0.0
-- 37: indicates EMR-V3.4.0
-- 38: represents EMR-V2.7.0
-- 39: stands for STARROCKS-V1.1.0
-- 41: represents DRUID-V1.1.0.
+	- 16: represents EMR-V2.3.0
+	- 20: represents EMR-V2.5.0
+	- 25: represents EMR-V3.1.0
+	- 27: represents KAFKA-V1.0.0
+	- 30: represents EMR-V2.6.0
+	- 33: represents EMR-V3.2.1
+	- 34: represents EMR-V3.3.0
+	- 37: represents EMR-V3.4.0
+	- 38: represents EMR-V2.7.0
+	- 44: represents EMR-V3.5.0
+	- 50: represents KAFKA-V2.0.0
+	- 51: represents STARROCKS-V1.4.0
+	- 53: represents EMR-V3.6.0
+	- 54: represents STARROCKS-V2.0.0.
 * `softwares` - (Required, Set: [`String`], ForceNew) The softwares of a EMR instance.
 * `support_ha` - (Required, Int, ForceNew) The flag whether the instance support high availability.(0=>not support, 1=>support).
 * `vpc_settings` - (Required, Map, ForceNew) The private net config of EMR instance.
@@ -142,6 +144,99 @@ The following arguments are supported:
 When TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.
 * `time_unit` - (Optional, String) The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).
 
+The `common_resource_spec` object of `resource_spec` supports the following:
+
+* `cpu` - (Optional, Int, ForceNew) Number of CPU cores.
+* `disk_size` - (Optional, Int, ForceNew) Data disk capacity.
+* `disk_type` - (Optional, String, ForceNew) disk types. Value range:
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_BASIC: Represents Cloud Block Storage.
+* `mem_size` - (Optional, Int, ForceNew) Memory size in M.
+* `multi_disks` - (Optional, Set, ForceNew) Cloud disk list. When the data disk is a cloud disk, use disk_type and disk_size parameters directly, and use multi_disks for excess parts.
+* `root_size` - (Optional, Int, ForceNew) Root disk capacity.
+* `spec` - (Optional, String, ForceNew) Node specification description, such as CVM.SA2.
+* `storage_type` - (Optional, Int, ForceNew) Storage type. Value range:
+	- 4: Represents cloud SSD;
+	- 5: Represents efficient cloud disk;
+	- 6: Represents enhanced SSD Cloud Block Storage;
+	- 11: Represents throughput Cloud Block Storage;
+	- 12: Represents extremely fast SSD Cloud Block Storage.
+
+The `core_resource_spec` object of `resource_spec` supports the following:
+
+* `cpu` - (Optional, Int, ForceNew) Number of CPU cores.
+* `disk_size` - (Optional, Int, ForceNew) Data disk capacity.
+* `disk_type` - (Optional, String, ForceNew) disk types. Value range:
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_BASIC: Represents Cloud Block Storage.
+* `mem_size` - (Optional, Int, ForceNew) Memory size in M.
+* `multi_disks` - (Optional, Set, ForceNew) Cloud disk list. When the data disk is a cloud disk, use disk_type and disk_size parameters directly, and use multi_disks for excess parts.
+* `root_size` - (Optional, Int, ForceNew) Root disk capacity.
+* `spec` - (Optional, String, ForceNew) Node specification description, such as CVM.SA2.
+* `storage_type` - (Optional, Int, ForceNew) Storage type. Value range:
+	- 4: Represents cloud SSD;
+	- 5: Represents efficient cloud disk;
+	- 6: Represents enhanced SSD Cloud Block Storage;
+	- 11: Represents throughput Cloud Block Storage;
+	- 12: Represents extremely fast SSD Cloud Block Storage.
+
+The `master_resource_spec` object of `resource_spec` supports the following:
+
+* `cpu` - (Optional, Int, ForceNew) Number of CPU cores.
+* `disk_size` - (Optional, Int, ForceNew) Data disk capacity.
+* `disk_type` - (Optional, String, ForceNew) disk types. Value range:
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_BASIC: Represents Cloud Block Storage.
+* `mem_size` - (Optional, Int, ForceNew) Memory size in M.
+* `multi_disks` - (Optional, Set, ForceNew) Cloud disk list. When the data disk is a cloud disk, use disk_type and disk_size parameters directly, and use multi_disks for excess parts.
+* `root_size` - (Optional, Int, ForceNew) Root disk capacity.
+* `spec` - (Optional, String, ForceNew) Node specification description, such as CVM.SA2.
+* `storage_type` - (Optional, Int, ForceNew) Storage type. Value range:
+	- 4: Represents cloud SSD;
+	- 5: Represents efficient cloud disk;
+	- 6: Represents enhanced SSD Cloud Block Storage;
+	- 11: Represents throughput Cloud Block Storage;
+	- 12: Represents extremely fast SSD Cloud Block Storage.
+
+The `multi_disks` object of `common_resource_spec` supports the following:
+
+* `count` - (Optional, Int, ForceNew) Number of cloud disks of this type.
+* `disk_type` - (Optional, String, ForceNew) Cloud disk type
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.
+* `volume` - (Optional, Int, ForceNew) Cloud disk size.
+
+The `multi_disks` object of `core_resource_spec` supports the following:
+
+* `count` - (Optional, Int, ForceNew) Number of cloud disks of this type.
+* `disk_type` - (Optional, String, ForceNew) Cloud disk type
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.
+* `volume` - (Optional, Int, ForceNew) Cloud disk size.
+
+The `multi_disks` object of `master_resource_spec` supports the following:
+
+* `count` - (Optional, Int, ForceNew) Number of cloud disks of this type.
+* `disk_type` - (Optional, String, ForceNew) Cloud disk type
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.
+* `volume` - (Optional, Int, ForceNew) Cloud disk size.
+
+The `multi_disks` object of `task_resource_spec` supports the following:
+
+* `count` - (Optional, Int, ForceNew) Number of cloud disks of this type.
+* `disk_type` - (Optional, String, ForceNew) Cloud disk type
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.
+* `volume` - (Optional, Int, ForceNew) Cloud disk size.
+
 The `placement_info` object supports the following:
 
 * `zone` - (Required, String) Zone.
@@ -150,13 +245,32 @@ The `placement_info` object supports the following:
 The `resource_spec` object supports the following:
 
 * `common_count` - (Optional, Int, ForceNew) The number of common node.
-* `common_resource_spec` - (Optional, List, ForceNew) 
+* `common_resource_spec` - (Optional, List, ForceNew) Resource details.
 * `core_count` - (Optional, Int) The number of core node.
-* `core_resource_spec` - (Optional, List, ForceNew) 
+* `core_resource_spec` - (Optional, List, ForceNew) Resource details.
 * `master_count` - (Optional, Int) The number of master node.
-* `master_resource_spec` - (Optional, List, ForceNew) 
+* `master_resource_spec` - (Optional, List, ForceNew) Resource details.
 * `task_count` - (Optional, Int) The number of core node.
-* `task_resource_spec` - (Optional, List, ForceNew) 
+* `task_resource_spec` - (Optional, List, ForceNew) Resource details.
+
+The `task_resource_spec` object of `resource_spec` supports the following:
+
+* `cpu` - (Optional, Int, ForceNew) Number of CPU cores.
+* `disk_size` - (Optional, Int, ForceNew) Data disk capacity.
+* `disk_type` - (Optional, String, ForceNew) disk types. Value range:
+	- CLOUD_SSD: Represents cloud SSD;
+	- CLOUD_PREMIUM: Represents efficient cloud disk;
+	- CLOUD_BASIC: Represents Cloud Block Storage.
+* `mem_size` - (Optional, Int, ForceNew) Memory size in M.
+* `multi_disks` - (Optional, Set, ForceNew) Cloud disk list. When the data disk is a cloud disk, use disk_type and disk_size parameters directly, and use multi_disks for excess parts.
+* `root_size` - (Optional, Int, ForceNew) Root disk capacity.
+* `spec` - (Optional, String, ForceNew) Node specification description, such as CVM.SA2.
+* `storage_type` - (Optional, Int, ForceNew) Storage type. Value range:
+	- 4: Represents cloud SSD;
+	- 5: Represents efficient cloud disk;
+	- 6: Represents enhanced SSD Cloud Block Storage;
+	- 11: Represents throughput Cloud Block Storage;
+	- 12: Represents extremely fast SSD Cloud Block Storage.
 
 The `terminate_node_info` object supports the following:
 

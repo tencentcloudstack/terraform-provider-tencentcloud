@@ -101,15 +101,30 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		for k, v := range resourceSpec {
 			if k == "master_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.MasterResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					spec := v.([]interface{})[0].(map[string]interface{})
+					err = validateMultiDisks(spec)
+					if err != nil {
+						return
+					}
+					request.ResourceSpec.MasterResourceSpec = ParseResource(spec)
 				}
 			} else if k == "core_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.CoreResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					spec := v.([]interface{})[0].(map[string]interface{})
+					err = validateMultiDisks(spec)
+					if err != nil {
+						return
+					}
+					request.ResourceSpec.CoreResourceSpec = ParseResource(spec)
 				}
 			} else if k == "task_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.TaskResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					spec := v.([]interface{})[0].(map[string]interface{})
+					err = validateMultiDisks(spec)
+					if err != nil {
+						return
+					}
+					request.ResourceSpec.TaskResourceSpec = ParseResource(spec)
 				}
 			} else if k == "master_count" {
 				request.ResourceSpec.MasterCount = common.Int64Ptr((int64)(v.(int)))
@@ -119,7 +134,12 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 				request.ResourceSpec.TaskCount = common.Int64Ptr((int64)(v.(int)))
 			} else if k == "common_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.CommonResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					spec := v.([]interface{})[0].(map[string]interface{})
+					err = validateMultiDisks(spec)
+					if err != nil {
+						return
+					}
+					request.ResourceSpec.CommonResourceSpec = ParseResource(spec)
 				}
 			} else if k == "common_count" {
 				request.ResourceSpec.CommonCount = common.Int64Ptr((int64)(v.(int)))
