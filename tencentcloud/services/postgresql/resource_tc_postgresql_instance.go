@@ -230,6 +230,7 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"backup_plan": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Specify DB backup plan.",
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -237,21 +238,25 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 						"min_backup_start_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Specify earliest backup start time, format `hh:mm:ss`.",
 						},
 						"max_backup_start_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Specify latest backup start time, format `hh:mm:ss`.",
 						},
 						"base_backup_retention_period": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Specify days of the retention.",
 						},
 						"backup_period": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of backup period per week, available values: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. NOTE: At least specify two days.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
@@ -906,46 +911,44 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("tags", tags)
 
 	// backup plans (only specified will rewrite)
-	if _, ok := d.GetOk("backup_plan"); ok {
-		request := postgresql.NewDescribeBackupPlansRequest()
-		request.DBInstanceId = helper.String(d.Id())
-		response, err := postgresqlService.DescribeBackupPlans(ctx, request)
-		if err != nil {
-			return err
+	bkpRequest := postgresql.NewDescribeBackupPlansRequest()
+	bkpRequest.DBInstanceId = helper.String(d.Id())
+	bkpResponse, err := postgresqlService.DescribeBackupPlans(ctx, bkpRequest)
+	if err != nil {
+		return err
+	}
+
+	var backupPlan *postgresql.BackupPlan
+	if len(bkpResponse) > 0 {
+		backupPlan = bkpResponse[0]
+	}
+
+	if backupPlan != nil {
+		planMap := map[string]interface{}{}
+		if backupPlan.MinBackupStartTime != nil {
+			planMap["min_backup_start_time"] = backupPlan.MinBackupStartTime
 		}
 
-		var backupPlan *postgresql.BackupPlan
-		if len(response) > 0 {
-			backupPlan = response[0]
+		if backupPlan.MaxBackupStartTime != nil {
+			planMap["max_backup_start_time"] = backupPlan.MaxBackupStartTime
 		}
 
-		if backupPlan != nil {
-			planMap := map[string]interface{}{}
-			if backupPlan.MinBackupStartTime != nil {
-				planMap["min_backup_start_time"] = backupPlan.MinBackupStartTime
-			}
-
-			if backupPlan.MaxBackupStartTime != nil {
-				planMap["max_backup_start_time"] = backupPlan.MaxBackupStartTime
-			}
-
-			if backupPlan.BaseBackupRetentionPeriod != nil {
-				planMap["base_backup_retention_period"] = backupPlan.BaseBackupRetentionPeriod
-			}
-
-			if backupPlan.BackupPeriod != nil {
-				strSlice := []string{}
-				// set period list from BackupPeriods string, eg:"BackupPeriod": "[\"tuesday\",\"wednesday\"]",
-				err := json.Unmarshal([]byte(*backupPlan.BackupPeriod), &strSlice)
-				if err != nil {
-					return fmt.Errorf("BackupPeriod:[%s] has invalid format,Unmarshal failed! error: %v", *backupPlan.BackupPeriod, err.Error())
-				}
-
-				planMap["backup_period"] = strSlice
-			}
-
-			_ = d.Set("backup_plan", []interface{}{planMap})
+		if backupPlan.BaseBackupRetentionPeriod != nil {
+			planMap["base_backup_retention_period"] = backupPlan.BaseBackupRetentionPeriod
 		}
+
+		if backupPlan.BackupPeriod != nil {
+			strSlice := []string{}
+			// set period list from BackupPeriods string, eg:"BackupPeriod": "[\"tuesday\",\"wednesday\"]",
+			err := json.Unmarshal([]byte(*backupPlan.BackupPeriod), &strSlice)
+			if err != nil {
+				return fmt.Errorf("BackupPeriod:[%s] has invalid format,Unmarshal failed! error: %v", *backupPlan.BackupPeriod, err.Error())
+			}
+
+			planMap["backup_period"] = strSlice
+		}
+
+		_ = d.Set("backup_plan", []interface{}{planMap})
 	}
 
 	// pg params
