@@ -1348,6 +1348,7 @@ PrivateDNS
     tencentcloud_private_dns_zone
     tencentcloud_private_dns_record
     tencentcloud_private_dns_zone_vpc_attachment
+    tencentcloud_subscribe_private_zone_service
   Data Source
     tencentcloud_private_dns_records
     tencentcloud_private_dns_private_zone_list
