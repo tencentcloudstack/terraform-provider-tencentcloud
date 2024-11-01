@@ -50,7 +50,7 @@ resource "tencentcloud_audit_track" "example" {
     storage_name       = "db90b92c-91d2-46b0-94ac-debbbb21dc4e"
     storage_prefix     = "cloudaudit"
     storage_region     = "ap-guangzhou"
-    storage_type       = "cls"
+    storage_type       = "cos"
     storage_account_id = "100037717137"
     storage_app_id     = "1309116520"
   }
