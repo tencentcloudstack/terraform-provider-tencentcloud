@@ -84,6 +84,16 @@ func ResourceTencentCloudAuditTrack() *schema.Resource {
 							Required:    true,
 							Description: "Storage path prefix.",
 						},
+						"storage_account_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Designated to store user ID.",
+						},
+						"storage_app_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Designated to store user appid.",
+						},
 					},
 				},
 			},
@@ -152,6 +162,12 @@ func resourceTencentCloudAuditTrackCreate(d *schema.ResourceData, meta interface
 		}
 		if v, ok := dMap["storage_prefix"]; ok {
 			storage.StoragePrefix = helper.String(v.(string))
+		}
+		if v, ok := dMap["storage_account_id"]; ok && v != "" {
+			storage.StorageAccountId = helper.String(v.(string))
+		}
+		if v, ok := dMap["storage_app_id"]; ok && v != "" {
+			storage.StorageAppId = helper.String(v.(string))
 		}
 		request.Storage = &storage
 	}
@@ -239,6 +255,12 @@ func resourceTencentCloudAuditTrackRead(d *schema.ResourceData, meta interface{}
 		if track.Storage.StoragePrefix != nil {
 			storageMap["storage_prefix"] = track.Storage.StoragePrefix
 		}
+		if track.Storage.StorageAccountId != nil {
+			storageMap["storage_account_id"] = track.Storage.StorageAccountId
+		}
+		if track.Storage.StorageAppId != nil {
+			storageMap["storage_app_id"] = track.Storage.StorageAppId
+		}
 		_ = d.Set("storage", []interface{}{storageMap})
 	}
 
@@ -313,6 +335,12 @@ func resourceTencentCloudAuditTrackUpdate(d *schema.ResourceData, meta interface
 			}
 			if v, ok := dMap["storage_prefix"]; ok {
 				storage.StoragePrefix = helper.String(v.(string))
+			}
+			if v, ok := dMap["storage_account_id"]; ok && v != "" {
+				storage.StorageAccountId = helper.String(v.(string))
+			}
+			if v, ok := dMap["storage_app_id"]; ok && v != "" {
+				storage.StorageAppId = helper.String(v.(string))
 			}
 			request.Storage = &storage
 		}

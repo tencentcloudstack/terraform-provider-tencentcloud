@@ -14,7 +14,7 @@ Provides a resource to create a audit track
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_audit_track" "track" {
+resource "tencentcloud_audit_track" "example" {
   action_type = "Read"
   event_names = [
     "*",
@@ -29,6 +29,30 @@ resource "tencentcloud_audit_track" "track" {
     storage_prefix = "cloudaudit"
     storage_region = "ap-guangzhou"
     storage_type   = "cls"
+  }
+}
+```
+
+### Specify storage user
+
+```hcl
+resource "tencentcloud_audit_track" "example" {
+  action_type = "Read"
+  event_names = [
+    "*",
+  ]
+  name                  = "terraform_track"
+  resource_type         = "*"
+  status                = 1
+  track_for_all_members = 0
+
+  storage {
+    storage_name       = "db90b92c-91d2-46b0-94ac-debbbb21dc4e"
+    storage_prefix     = "cloudaudit"
+    storage_region     = "ap-guangzhou"
+    storage_type       = "cls"
+    storage_account_id = "100037717137"
+    storage_app_id     = "1309116520"
   }
 }
 ```
@@ -51,6 +75,8 @@ The `storage` object supports the following:
 * `storage_prefix` - (Required, String) Storage path prefix.
 * `storage_region` - (Required, String) Storage region.
 * `storage_type` - (Required, String) Track Storage type, optional:- `cos`- `cls`.
+* `storage_account_id` - (Optional, String) Designated to store user ID.
+* `storage_app_id` - (Optional, String) Designated to store user appid.
 
 ## Attributes Reference
 
@@ -64,6 +90,6 @@ In addition to all arguments above, the following attributes are exported:
 
 audit track can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_audit_track.track track_id
+$ terraform import tencentcloud_audit_track.example 24283
 ```
 
