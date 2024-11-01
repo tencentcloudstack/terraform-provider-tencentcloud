@@ -361,7 +361,7 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentDeletePostFillRequest0
 	}
 
 	req.ScaleInMasters = []*tkev20180525.ScaleInMaster{
-		&tkev20180525.ScaleInMaster{
+		{
 			InstanceId: helper.String(instanceId),
 			NodeRole:   helper.String(nodeRole),
 		},

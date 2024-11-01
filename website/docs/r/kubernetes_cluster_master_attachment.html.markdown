@@ -4,29 +4,50 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_cluster_master_attachment"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_cluster_master_attachment"
 description: |-
-  Provides a resource to create a tke kubernetes_cluster_master_attachment
+  Provides a resource to create a tke kubernetes cluster master attachment
 ---
 
 # tencentcloud_kubernetes_cluster_master_attachment
 
-Provides a resource to create a tke kubernetes_cluster_master_attachment
+Provides a resource to create a tke kubernetes cluster master attachment
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_kubernetes_cluster_master_attachment" "kubernetes_cluster_master_attachment" {
-  extra_args = {
-  }
-  master_config = {
-    labels = {
+resource "tencentcloud_kubernetes_cluster_master_attachment" "example" {
+  cluster_id                  = "cls-fp5o961e"
+  instance_id                 = "ins-7d6tpbyg"
+  node_role                   = "MASTER_ETCD"
+  enhanced_security_service   = true
+  enhanced_monitor_service    = true
+  enhanced_automation_service = true
+  password                    = "Password@123"
+  security_group_ids          = ["sg-hjs685q9"]
+
+  master_config {
+    mount_target      = "/var/data"
+    docker_graph_path = "/var/lib/containerd"
+    unschedulable     = 0
+    labels {
+      name  = "key"
+      value = "value"
     }
-    data_disks = {
+
+    data_disk {
+      file_system           = "ext4"
+      auto_format_and_mount = true
+      mount_target          = "/var/data"
+      disk_partition        = "/dev/vdb"
     }
-    extra_args = {
+
+    extra_args {
+      kubelet = ["root-dir=/root"]
     }
-    gpu_args = {
-    }
-    taints = {
+
+    taints {
+      key    = "key"
+      value  = "value"
+      effect = "NoSchedule"
     }
   }
 }
@@ -109,12 +130,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-tke kubernetes_cluster_master_attachment can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_kubernetes_cluster_master_attachment.kubernetes_cluster_master_attachment kubernetes_cluster_master_attachment_id
-```
 
