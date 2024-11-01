@@ -1,0 +1,23 @@
+```release-note:enhancement
+resource/tencentcloud_gaap_http_domain: add params `group_id` and `is_default_server`
+```
+
+```release-note:enhancement
+resource/tencentcloud_gaap_layer7_listener: add params `group_id`, `tls_support_versions` and `tls_ciphers`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_gaap_http_domains: add param `is_default_server`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_gaap_layer7_listeners: add params `group_id`, `tls_support_versions` and `tls_ciphers`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_gaap_proxy_detail: add param `is_support_tls_choice`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_gaap_proxy_statistics: update `metric_names`
+```

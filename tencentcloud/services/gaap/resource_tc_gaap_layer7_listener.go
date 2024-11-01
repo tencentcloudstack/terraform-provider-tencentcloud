@@ -391,12 +391,8 @@ LOOP:
 	_ = d.Set("status", status)
 	_ = d.Set("create_time", createTime)
 	_ = d.Set("proxy_id", proxyId)
-	if tlsCiphers != nil {
-		_ = d.Set("tls_ciphers", tlsCiphers)
-	}
-	if len(tlsSupportVersion) > 0 {
-		_ = d.Set("tls_support_versions", tlsSupportVersion)
-	}
+	_ = d.Set("tls_ciphers", tlsCiphers)
+	_ = d.Set("tls_support_versions", tlsSupportVersion)
 
 	return nil
 }
