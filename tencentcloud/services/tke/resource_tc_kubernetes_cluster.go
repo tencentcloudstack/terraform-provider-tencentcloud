@@ -282,7 +282,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			"resource_delete_options": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "The resource deletion policy when the cluster is deleted. Currently, CBS is supported (CBS is retained by default).",
+				Description: "The resource deletion policy when the cluster is deleted. Currently, CBS is supported (CBS is retained by default). Only valid when deleting cluster.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"resource_type": {

@@ -929,7 +929,7 @@ The following arguments are supported:
 * `node_pool_global_config` - (Optional, List) Global config effective for all node pools.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
-* `resource_delete_options` - (Optional, Set) The resource deletion policy when the cluster is deleted. Currently, CBS is supported (CBS is retained by default).
+* `resource_delete_options` - (Optional, Set) The resource deletion policy when the cluster is deleted. Currently, CBS is supported (CBS is retained by default). Only valid when deleting cluster.
 * `runtime_version` - (Optional, String) Container Runtime version.
 * `service_cidr` - (Optional, String, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional, Map) The tags of the cluster.
