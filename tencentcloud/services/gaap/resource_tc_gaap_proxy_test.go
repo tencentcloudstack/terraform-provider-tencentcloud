@@ -31,8 +31,8 @@ func TestAccTencentCloudGaapProxyResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Thailand"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Jakarta"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Beijing"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Guangzhou"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "enable", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
@@ -69,8 +69,8 @@ func TestAccTencentCloudGaapProxyResource_update(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Thailand"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Jakarta"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Beijing"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Guangzhou"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "enable", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
@@ -184,8 +184,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "Thailand"
-  realserver_region = "Jakarta"
+  access_region     = "Beijing"
+  realserver_region = "Guangzhou"
   network_type = "normal"
 }
 `
@@ -195,8 +195,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-update"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "Thailand"
-  realserver_region = "Jakarta"
+  access_region     = "Beijing"
+  realserver_region = "Guangzhou"
 }
 `
 
@@ -205,8 +205,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "Thailand"
-  realserver_region = "Jakarta"
+  access_region     = "Beijing"
+  realserver_region = "Guangzhou"
 }
 `
 
@@ -215,8 +215,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 2
-  access_region     = "Thailand"
-  realserver_region = "Jakarta"
+  access_region     = "Beijing"
+  realserver_region = "Guangzhou"
 }
 `
 
@@ -225,8 +225,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 10
-  access_region     = "Thailand"
-  realserver_region = "Jakarta"
+  access_region     = "Beijing"
+  realserver_region = "Guangzhou"
 }
 `
 
@@ -235,8 +235,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 10
-  access_region     = "Thailand"
-  realserver_region = "Jakarta"
+  access_region     = "Beijing"
+  realserver_region = "Guangzhou"
   enable            = false
 
   tags = {
@@ -250,8 +250,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 10
-  access_region     = "Thailand"
-  realserver_region = "Jakarta"
+  access_region     = "Beijing"
+  realserver_region = "Guangzhou"
   enable            = false
 
   tags = {
