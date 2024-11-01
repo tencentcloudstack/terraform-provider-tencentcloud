@@ -138,6 +138,11 @@ func ResourceTencentCloudPostgresqlCloneDbInstance() *schema.Resource {
 							Required:    true,
 							Description: "AZ where the node resides, such as ap-guangzhou-1.",
 						},
+						"dedicated_cluster_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Dedicated cluster ID.",
+						},
 					},
 				},
 			},
@@ -260,6 +265,9 @@ func resourceTencentCloudPostgresqlCloneDbInstanceCreate(d *schema.ResourceData,
 			}
 			if v, ok := dBNodeSetMap["zone"]; ok {
 				dBNode.Zone = helper.String(v.(string))
+			}
+			if v, ok := dBNodeSetMap["dedicated_cluster_id"]; ok {
+				dBNode.DedicatedClusterId = helper.String(v.(string))
 			}
 			request.DBNodeSet = append(request.DBNodeSet, &dBNode)
 		}
