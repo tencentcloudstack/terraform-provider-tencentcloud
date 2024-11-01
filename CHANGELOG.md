@@ -1,3 +1,29 @@
+## 1.81.137 (November 1 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cvm_action_timer` ([#2874](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2874))
+* **New Resource:** `tencentcloud_subscribe_private_zone_service` ([#2929](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2929))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_ccn_route_table_input_policies: Update unit test ([#2915](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2915))
+* datasource/tencentcloud_gaap_http_domains: add param `is_default_server` ([#2927](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2927))
+* datasource/tencentcloud_gaap_layer7_listeners: add params `group_id`, `tls_support_versions` and `tls_ciphers` ([#2927](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2927))
+* datasource/tencentcloud_gaap_proxy_detail: add param `is_support_tls_choice` ([#2927](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2927))
+* datasource/tencentcloud_gaap_proxy_statistics: update `metric_names` ([#2927](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2927))
+* resource/tencentcloud_audit_track: add `storage_account_id`, `storage_app_id` fields ([#2930](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2930))
+* resource/tencentcloud_cam_role: update the verification rules for field `document` ([#2917](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2917))
+* resource/tencentcloud_emr_cluster: Support multi_disks. ([#2919](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2919))
+* resource/tencentcloud_gaap_http_domain: add params `group_id` and `is_default_server` ([#2927](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2927))
+* resource/tencentcloud_gaap_layer7_listener: add params `group_id`, `tls_support_versions` and `tls_ciphers` ([#2927](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2927))
+* resource/tencentcloud_kubernetes_cluster: support `cluster_os` field to update and adjust its set logic ([#2918](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2918))
+* resource/tencentcloud_kubernetes_cluster: support field `resource_delete_options` for deleting CBS ([#2916](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2916))
+* resource/tencentcloud_postgresql_clone_db_instance: add `dedicated_cluster_id` params ([#2920](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2920))
+* resource/tencentcloud_postgresql_instance: update field properties for `backup_plan` ([#2921](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2921))
+* resource/tencentcloud_sqlserver_instance: deprecated field `ha_type` ([#2923](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2923))
+* resource/tencentcloud_sqlserver_instance: update field `multi_zones` ([#2922](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2922))
+
 ## 1.81.136 (October 25 , 2024)
 
 FEATURES:
