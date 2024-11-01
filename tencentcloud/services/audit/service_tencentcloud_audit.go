@@ -226,3 +226,29 @@ func (me *AuditService) DescribeAuditEventByFilter(ctx context.Context, param ma
 
 	return
 }
+
+func (me *AuditService) DescribeEventsAuditTrackById(ctx context.Context, trackId string) (ret *audit.DescribeAuditTrackResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := audit.NewDescribeAuditTrackRequest()
+
+	request.TrackId = helper.StrToUint64Point(trackId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAuditClient().DescribeAuditTrack(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
