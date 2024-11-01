@@ -513,9 +513,10 @@ func resourceTencentCloudGaapLayer7ListenerDelete(d *schema.ResourceData, m inte
 
 	id := d.Id()
 	proxyId := d.Get("proxy_id").(string)
+	groupId := d.Get("group_id").(string)
 	protocol := d.Get("protocol").(string)
 
 	service := GaapService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	return service.DeleteLayer7Listener(ctx, id, proxyId, protocol)
+	return service.DeleteLayer7Listener(ctx, id, proxyId, groupId, protocol)
 }

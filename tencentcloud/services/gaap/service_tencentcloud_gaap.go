@@ -2044,12 +2044,17 @@ func (me *GaapService) ModifyHTTPSListener(
 	return nil
 }
 
-func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, protocol string) error {
+func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, groupId, protocol string) error {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseGaapClient()
 
 	deleteRequest := gaap.NewDeleteListenersRequest()
-	deleteRequest.ProxyId = &proxyId
+	if proxyId != "" {
+		deleteRequest.ProxyId = &proxyId
+	}
+	if groupId != "" {
+		deleteRequest.GroupId = &groupId
+	}
 	deleteRequest.ListenerIds = []*string{helper.String(id)}
 	deleteRequest.Force = helper.IntUint64(0)
 
