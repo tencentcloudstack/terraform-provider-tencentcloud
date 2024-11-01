@@ -51,8 +51,8 @@ resource "tencentcloud_audit_track" "example" {
     storage_prefix     = "cloudaudit"
     storage_region     = "ap-guangzhou"
     storage_type       = "cls"
-    storage_account_id = "100037718139"
-    storage_app_id     = "1309118522"
+    storage_account_id = "100037717137"
+    storage_app_id     = "1309116520"
   }
 }
 ```
@@ -90,6 +90,6 @@ In addition to all arguments above, the following attributes are exported:
 
 audit track can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_audit_track.example track_id
+$ terraform import tencentcloud_audit_track.example 24283
 ```
 
