@@ -53,7 +53,7 @@ func init() {
 						continue
 					}
 
-					ee := service.DeleteLayer7Listener(ctx, *httpListener.ListenerId, proxyId, *httpListener.Protocol)
+					ee := service.DeleteLayer7Listener(ctx, *httpListener.ListenerId, proxyId, "", *httpListener.Protocol)
 					if ee != nil {
 						continue
 					}
@@ -79,7 +79,7 @@ func init() {
 						continue
 					}
 
-					ee := service.DeleteLayer7Listener(ctx, *httpsListener.ListenerId, proxyId, *httpsListener.Protocol)
+					ee := service.DeleteLayer7Listener(ctx, *httpsListener.ListenerId, proxyId, "", *httpsListener.Protocol)
 					if ee != nil {
 						continue
 					}
