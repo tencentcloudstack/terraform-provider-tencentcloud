@@ -33,25 +33,23 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentCreatePostFillRequest0
 	}
 
 	if v, ok := d.GetOkExists("enhanced_security_service"); ok {
-		enhancedService.SecurityService = &tkev20180525.RunSecurityServiceEnabled{
-			Enabled: helper.Bool(v.(bool)),
-		}
+		enhancedService.SecurityService = &tkev20180525.RunSecurityServiceEnabled{Enabled: helper.Bool(v.(bool))}
+		existedInstancesPara.EnhancedService = &enhancedService
 	}
 
 	if v, ok := d.GetOkExists("enhanced_monitor_service"); ok {
-		enhancedService.MonitorService = &tkev20180525.RunMonitorServiceEnabled{
-			Enabled: helper.Bool(v.(bool)),
-		}
+		enhancedService.MonitorService = &tkev20180525.RunMonitorServiceEnabled{Enabled: helper.Bool(v.(bool))}
+		existedInstancesPara.EnhancedService = &enhancedService
 	}
 
 	if v, ok := d.GetOkExists("enhanced_automation_service"); ok {
-		enhancedService.AutomationService = &tkev20180525.RunAutomationServiceEnabled{
-			Enabled: helper.Bool(v.(bool)),
-		}
+		enhancedService.AutomationService = &tkev20180525.RunAutomationServiceEnabled{Enabled: helper.Bool(v.(bool))}
+		existedInstancesPara.EnhancedService = &enhancedService
 	}
 
 	if v, ok := d.GetOk("password"); ok {
 		loginSettings.Password = helper.String(v.(string))
+		existedInstancesPara.LoginSettings = &loginSettings
 	}
 
 	if v, ok := d.GetOk("key_ids"); ok && len(v.([]interface{})) > 0 {
@@ -61,6 +59,8 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentCreatePostFillRequest0
 			keyId := keyIds[i].(string)
 			loginSettings.KeyIds = append(loginSettings.KeyIds, &keyId)
 		}
+
+		existedInstancesPara.LoginSettings = &loginSettings
 	}
 
 	if v, ok := d.GetOk("security_group_ids"); ok && len(v.([]interface{})) > 0 {
@@ -309,7 +309,7 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentCreatePostHandleRespon
 		}
 
 		if *resp.InstanceSet[0].InstanceState != "running" {
-			return resource.RetryableError(fmt.Errorf("tke master node cvm instance  %s in tke status is %s, retry...", instanceId, resp.InstanceSet[0].InstanceState))
+			return resource.RetryableError(fmt.Errorf("tke master node cvm instance  %s in tke status is %s, retry...", instanceId, *resp.InstanceSet[0].InstanceState))
 		}
 
 		return nil
