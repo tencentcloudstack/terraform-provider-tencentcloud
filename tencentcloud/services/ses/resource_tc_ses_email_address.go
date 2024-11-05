@@ -86,7 +86,7 @@ func resourceTencentCloudSesEmailAddressCreate(d *schema.ResourceData, meta inte
 
 	d.SetId(emailAddress)
 
-	// set pwd
+	// set smtp pwd
 	if v, ok := d.GetOk("smtp_password"); ok {
 		pwdRequest := ses.NewUpdateEmailSmtpPassWordRequest()
 		pwdRequest.EmailAddress = &emailAddress
