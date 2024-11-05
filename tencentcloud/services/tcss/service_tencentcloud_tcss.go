@@ -36,8 +36,8 @@ func (me *TcssService) DescribeTcssImageRegistryById(ctx context.Context, regist
 
 	var (
 		instances []*tcssv20201101.ImageRepoRegistryInfo
-		offset uint64 = 0
-		limit  uint64 = 20
+		offset    uint64 = 0
+		limit     uint64 = 20
 	)
 
 	for {
