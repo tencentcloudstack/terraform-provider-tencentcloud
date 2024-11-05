@@ -38,7 +38,7 @@ The following arguments are supported:
 * `name` - (Required, String) Repository name.
 * `net_type` - (Required, String) Network type, which can be `public` (public network).
 * `password` - (Required, String) Password.
-* `registry_type` - (Required, String) Repository type, which can be `harbor`.
+* `registry_type` - (Required, String) Repository type, which can be `harbor`. Valid values: harbor,quay,jfrog,aws,azure,other-tcr.
 * `url` - (Required, String) Repository URL.
 * `username` - (Required, String) Username.
 * `conn_detect_config` - (Optional, Set) Connectivity detection configuration.

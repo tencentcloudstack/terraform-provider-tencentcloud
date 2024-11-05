@@ -49,7 +49,7 @@ func ResourceTencentCloudTcssImageRegistry() *schema.Resource {
 			"registry_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Repository type, which can be `harbor`.",
+				Description: "Repository type, which can be `harbor`. Valid values: harbor, quay, jfrog, aws, azure, other-tcr.",
 			},
 
 			"net_type": {
