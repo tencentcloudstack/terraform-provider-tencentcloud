@@ -2215,3 +2215,7 @@ ControlCenter
 THPC
   Resource
     tencentcloud_thpc_workspaces
+
+Tencent Container Security Service(TCSS)
+  Resource
+    tencentcloud_tcss_image_registry

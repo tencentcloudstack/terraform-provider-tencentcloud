@@ -86,6 +86,7 @@ import (
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
+	tcss "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss/v20201101"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
@@ -218,6 +219,7 @@ type TencentCloudClient struct {
 	postgresv20170312Conn *postgre.Client
 	cfwv20190904Conn      *cfw.Client
 	ccnv20170312Conn      *vpc.Client
+	tcssv20201101Conn     *tcss.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1899,4 +1901,17 @@ func (me *TencentCloudClient) UseCcnV20170312Client() *vpc.Client {
 	me.ccnv20170312Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.ccnv20170312Conn
+}
+
+// UseTcssV20201101Client return TCSS client for service
+func (me *TencentCloudClient) UseTcssV20201101Client() *tcss.Client {
+	if me.tcssv20201101Conn != nil {
+		return me.tcssv20201101Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.tcssv20201101Conn, _ = tcss.NewClient(me.Credential, me.Region, cpf)
+	me.tcssv20201101Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tcssv20201101Conn
 }
