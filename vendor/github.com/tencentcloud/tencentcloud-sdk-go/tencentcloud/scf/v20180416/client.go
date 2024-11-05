@@ -245,6 +245,85 @@ func (c *Client) CreateAliasWithContext(ctx context.Context, request *CreateAlia
     return
 }
 
+func NewCreateCustomDomainRequest() (request *CreateCustomDomainRequest) {
+    request = &CreateCustomDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("scf", APIVersion, "CreateCustomDomain")
+    
+    
+    return
+}
+
+func NewCreateCustomDomainResponse() (response *CreateCustomDomainResponse) {
+    response = &CreateCustomDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCustomDomain
+// 创建自定义域名
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATEALIAS = "FailedOperation.CreateAlias"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETER_ROUTINGCONFIG = "InvalidParameter.RoutingConfig"
+//  INVALIDPARAMETERVALUE_ADDITIONALVERSIONWEIGHTS = "InvalidParameterValue.AdditionalVersionWeights"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
+//  INVALIDPARAMETERVALUE_ROUTINGCONFIG = "InvalidParameterValue.RoutingConfig"
+//  LIMITEXCEEDED_ALIAS = "LimitExceeded.Alias"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ALIAS = "ResourceInUse.Alias"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+//  RESOURCENOTFOUND_FUNCTIONVERSION = "ResourceNotFound.FunctionVersion"
+//  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
+func (c *Client) CreateCustomDomain(request *CreateCustomDomainRequest) (response *CreateCustomDomainResponse, err error) {
+    return c.CreateCustomDomainWithContext(context.Background(), request)
+}
+
+// CreateCustomDomain
+// 创建自定义域名
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATEALIAS = "FailedOperation.CreateAlias"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETER_ROUTINGCONFIG = "InvalidParameter.RoutingConfig"
+//  INVALIDPARAMETERVALUE_ADDITIONALVERSIONWEIGHTS = "InvalidParameterValue.AdditionalVersionWeights"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
+//  INVALIDPARAMETERVALUE_ROUTINGCONFIG = "InvalidParameterValue.RoutingConfig"
+//  LIMITEXCEEDED_ALIAS = "LimitExceeded.Alias"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ALIAS = "ResourceInUse.Alias"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+//  RESOURCENOTFOUND_FUNCTIONVERSION = "ResourceNotFound.FunctionVersion"
+//  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
+func (c *Client) CreateCustomDomainWithContext(ctx context.Context, request *CreateCustomDomainRequest) (response *CreateCustomDomainResponse, err error) {
+    if request == nil {
+        request = NewCreateCustomDomainRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCustomDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCustomDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateFunctionRequest() (request *CreateFunctionRequest) {
     request = &CreateFunctionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -274,6 +353,7 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  FAILEDOPERATION_CALLNETDEPLOYFAILED = "FailedOperation.CallNetDeployFailed"
 //  FAILEDOPERATION_CALLROLEFAILED = "FailedOperation.CallRoleFailed"
 //  FAILEDOPERATION_CLSSERVICEUNREGISTERED = "FailedOperation.ClsServiceUnregistered"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CREATEFUNCTION = "FailedOperation.CreateFunction"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
@@ -295,6 +375,7 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  INVALIDPARAMETERVALUE_APMCONFIGINSTANCEID = "InvalidParameterValue.ApmConfigInstanceId"
 //  INVALIDPARAMETERVALUE_APMCONFIGREGION = "InvalidParameterValue.ApmConfigRegion"
 //  INVALIDPARAMETERVALUE_ARGS = "InvalidParameterValue.Args"
+//  INVALIDPARAMETERVALUE_ARGSLIST = "InvalidParameterValue.ArgsList"
 //  INVALIDPARAMETERVALUE_ASYNCRUNENABLE = "InvalidParameterValue.AsyncRunEnable"
 //  INVALIDPARAMETERVALUE_CFSPARAMETERDUPLICATE = "InvalidParameterValue.CfsParameterDuplicate"
 //  INVALIDPARAMETERVALUE_CFSPARAMETERERROR = "InvalidParameterValue.CfsParameterError"
@@ -304,12 +385,14 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  INVALIDPARAMETERVALUE_CODESECRET = "InvalidParameterValue.CodeSecret"
 //  INVALIDPARAMETERVALUE_CODESOURCE = "InvalidParameterValue.CodeSource"
 //  INVALIDPARAMETERVALUE_COMMAND = "InvalidParameterValue.Command"
+//  INVALIDPARAMETERVALUE_COMMANDLIST = "InvalidParameterValue.CommandList"
 //  INVALIDPARAMETERVALUE_COS = "InvalidParameterValue.Cos"
 //  INVALIDPARAMETERVALUE_COSBUCKETNAME = "InvalidParameterValue.CosBucketName"
 //  INVALIDPARAMETERVALUE_COSBUCKETREGION = "InvalidParameterValue.CosBucketRegion"
 //  INVALIDPARAMETERVALUE_COSOBJECTNAME = "InvalidParameterValue.CosObjectName"
 //  INVALIDPARAMETERVALUE_DEADLETTERCONFIG = "InvalidParameterValue.DeadLetterConfig"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_DISKSIZE = "InvalidParameterValue.DiskSize"
 //  INVALIDPARAMETERVALUE_DNSINFO = "InvalidParameterValue.DnsInfo"
 //  INVALIDPARAMETERVALUE_DYNAMICENABLED = "InvalidParameterValue.DynamicEnabled"
 //  INVALIDPARAMETERVALUE_EIPCONFIG = "InvalidParameterValue.EipConfig"
@@ -330,6 +413,7 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  INVALIDPARAMETERVALUE_L5ENABLE = "InvalidParameterValue.L5Enable"
 //  INVALIDPARAMETERVALUE_LAYERS = "InvalidParameterValue.Layers"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_LOGFORMAT = "InvalidParameterValue.LogFormat"
 //  INVALIDPARAMETERVALUE_MAXCONCURRENCY = "InvalidParameterValue.MaxConcurrency"
 //  INVALIDPARAMETERVALUE_MEMORY = "InvalidParameterValue.Memory"
 //  INVALIDPARAMETERVALUE_MEMORYSIZE = "InvalidParameterValue.MemorySize"
@@ -356,6 +440,7 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
 //  LIMITEXCEEDED_INTRAIP = "LimitExceeded.IntraIp"
 //  LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
+//  LIMITEXCEEDED_PRIVILEGECONTAINER = "LimitExceeded.PrivilegeContainer"
 //  LIMITEXCEEDED_TIMEOUT = "LimitExceeded.Timeout"
 //  MISSINGPARAMETER_CODE = "MissingParameter.Code"
 //  MISSINGPARAMETER_RUNTIME = "MissingParameter.Runtime"
@@ -383,6 +468,7 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  UNAUTHORIZEDOPERATION_TEMPCOSAPPID = "UnauthorizedOperation.TempCosAppid"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_ASYNCRUNENABLE = "UnsupportedOperation.AsyncRunEnable"
+//  UNSUPPORTEDOPERATION_DISKSIZE = "UnsupportedOperation.DiskSize"
 //  UNSUPPORTEDOPERATION_EIPFIXED = "UnsupportedOperation.EipFixed"
 //  UNSUPPORTEDOPERATION_VPCCONFIG = "UnsupportedOperation.VpcConfig"
 func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *CreateFunctionResponse, err error) {
@@ -399,6 +485,7 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //  FAILEDOPERATION_CALLNETDEPLOYFAILED = "FailedOperation.CallNetDeployFailed"
 //  FAILEDOPERATION_CALLROLEFAILED = "FailedOperation.CallRoleFailed"
 //  FAILEDOPERATION_CLSSERVICEUNREGISTERED = "FailedOperation.ClsServiceUnregistered"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CREATEFUNCTION = "FailedOperation.CreateFunction"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
@@ -420,6 +507,7 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //  INVALIDPARAMETERVALUE_APMCONFIGINSTANCEID = "InvalidParameterValue.ApmConfigInstanceId"
 //  INVALIDPARAMETERVALUE_APMCONFIGREGION = "InvalidParameterValue.ApmConfigRegion"
 //  INVALIDPARAMETERVALUE_ARGS = "InvalidParameterValue.Args"
+//  INVALIDPARAMETERVALUE_ARGSLIST = "InvalidParameterValue.ArgsList"
 //  INVALIDPARAMETERVALUE_ASYNCRUNENABLE = "InvalidParameterValue.AsyncRunEnable"
 //  INVALIDPARAMETERVALUE_CFSPARAMETERDUPLICATE = "InvalidParameterValue.CfsParameterDuplicate"
 //  INVALIDPARAMETERVALUE_CFSPARAMETERERROR = "InvalidParameterValue.CfsParameterError"
@@ -429,12 +517,14 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //  INVALIDPARAMETERVALUE_CODESECRET = "InvalidParameterValue.CodeSecret"
 //  INVALIDPARAMETERVALUE_CODESOURCE = "InvalidParameterValue.CodeSource"
 //  INVALIDPARAMETERVALUE_COMMAND = "InvalidParameterValue.Command"
+//  INVALIDPARAMETERVALUE_COMMANDLIST = "InvalidParameterValue.CommandList"
 //  INVALIDPARAMETERVALUE_COS = "InvalidParameterValue.Cos"
 //  INVALIDPARAMETERVALUE_COSBUCKETNAME = "InvalidParameterValue.CosBucketName"
 //  INVALIDPARAMETERVALUE_COSBUCKETREGION = "InvalidParameterValue.CosBucketRegion"
 //  INVALIDPARAMETERVALUE_COSOBJECTNAME = "InvalidParameterValue.CosObjectName"
 //  INVALIDPARAMETERVALUE_DEADLETTERCONFIG = "InvalidParameterValue.DeadLetterConfig"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_DISKSIZE = "InvalidParameterValue.DiskSize"
 //  INVALIDPARAMETERVALUE_DNSINFO = "InvalidParameterValue.DnsInfo"
 //  INVALIDPARAMETERVALUE_DYNAMICENABLED = "InvalidParameterValue.DynamicEnabled"
 //  INVALIDPARAMETERVALUE_EIPCONFIG = "InvalidParameterValue.EipConfig"
@@ -455,6 +545,7 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //  INVALIDPARAMETERVALUE_L5ENABLE = "InvalidParameterValue.L5Enable"
 //  INVALIDPARAMETERVALUE_LAYERS = "InvalidParameterValue.Layers"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_LOGFORMAT = "InvalidParameterValue.LogFormat"
 //  INVALIDPARAMETERVALUE_MAXCONCURRENCY = "InvalidParameterValue.MaxConcurrency"
 //  INVALIDPARAMETERVALUE_MEMORY = "InvalidParameterValue.Memory"
 //  INVALIDPARAMETERVALUE_MEMORYSIZE = "InvalidParameterValue.MemorySize"
@@ -481,6 +572,7 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //  LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
 //  LIMITEXCEEDED_INTRAIP = "LimitExceeded.IntraIp"
 //  LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
+//  LIMITEXCEEDED_PRIVILEGECONTAINER = "LimitExceeded.PrivilegeContainer"
 //  LIMITEXCEEDED_TIMEOUT = "LimitExceeded.Timeout"
 //  MISSINGPARAMETER_CODE = "MissingParameter.Code"
 //  MISSINGPARAMETER_RUNTIME = "MissingParameter.Runtime"
@@ -508,6 +600,7 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //  UNAUTHORIZEDOPERATION_TEMPCOSAPPID = "UnauthorizedOperation.TempCosAppid"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_ASYNCRUNENABLE = "UnsupportedOperation.AsyncRunEnable"
+//  UNSUPPORTEDOPERATION_DISKSIZE = "UnsupportedOperation.DiskSize"
 //  UNSUPPORTEDOPERATION_EIPFIXED = "UnsupportedOperation.EipFixed"
 //  UNSUPPORTEDOPERATION_VPCCONFIG = "UnsupportedOperation.VpcConfig"
 func (c *Client) CreateFunctionWithContext(ctx context.Context, request *CreateFunctionRequest) (response *CreateFunctionResponse, err error) {
@@ -819,6 +912,67 @@ func (c *Client) DeleteAliasWithContext(ctx context.Context, request *DeleteAlia
     return
 }
 
+func NewDeleteCustomDomainRequest() (request *DeleteCustomDomainRequest) {
+    request = &DeleteCustomDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("scf", APIVersion, "DeleteCustomDomain")
+    
+    
+    return
+}
+
+func NewDeleteCustomDomainResponse() (response *DeleteCustomDomainResponse) {
+    response = &DeleteCustomDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCustomDomain
+// 删除自定义域名
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DELETEALIAS = "FailedOperation.DeleteAlias"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETERVALUE_ALIAS = "InvalidParameterValue.Alias"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  RESOURCENOTFOUND_ALIAS = "ResourceNotFound.Alias"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+func (c *Client) DeleteCustomDomain(request *DeleteCustomDomainRequest) (response *DeleteCustomDomainResponse, err error) {
+    return c.DeleteCustomDomainWithContext(context.Background(), request)
+}
+
+// DeleteCustomDomain
+// 删除自定义域名
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DELETEALIAS = "FailedOperation.DeleteAlias"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETERVALUE_ALIAS = "InvalidParameterValue.Alias"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  RESOURCENOTFOUND_ALIAS = "ResourceNotFound.Alias"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+func (c *Client) DeleteCustomDomainWithContext(ctx context.Context, request *DeleteCustomDomainRequest) (response *DeleteCustomDomainResponse, err error) {
+    if request == nil {
+        request = NewDeleteCustomDomainRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCustomDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCustomDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteFunctionRequest() (request *DeleteFunctionRequest) {
     request = &DeleteFunctionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -848,6 +1002,7 @@ func NewDeleteFunctionResponse() (response *DeleteFunctionResponse) {
 //  FAILEDOPERATION_FUNCTIONSTATUSERROR = "FailedOperation.FunctionStatusError"
 //  FAILEDOPERATION_PROVISIONEDINPROGRESS = "FailedOperation.ProvisionedInProgress"
 //  INTERNALERROR_CMQ = "InternalError.Cmq"
+//  INTERNALERROR_GETSTSTOKENFAILED = "InternalError.GetStsTokenFailed"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
 //  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -878,6 +1033,7 @@ func (c *Client) DeleteFunction(request *DeleteFunctionRequest) (response *Delet
 //  FAILEDOPERATION_FUNCTIONSTATUSERROR = "FailedOperation.FunctionStatusError"
 //  FAILEDOPERATION_PROVISIONEDINPROGRESS = "FailedOperation.ProvisionedInProgress"
 //  INTERNALERROR_CMQ = "InternalError.Cmq"
+//  INTERNALERROR_GETSTSTOKENFAILED = "InternalError.GetStsTokenFailed"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
 //  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1442,6 +1598,61 @@ func (c *Client) GetAsyncEventStatusWithContext(ctx context.Context, request *Ge
     return
 }
 
+func NewGetCustomDomainRequest() (request *GetCustomDomainRequest) {
+    request = &GetCustomDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("scf", APIVersion, "GetCustomDomain")
+    
+    
+    return
+}
+
+func NewGetCustomDomainResponse() (response *GetCustomDomainResponse) {
+    response = &GetCustomDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetCustomDomain
+// 查看云函数自定义域名详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ASYNCEVENTSTATUS = "FailedOperation.AsyncEventStatus"
+//  RESOURCENOTFOUND_ASYNCEVENT = "ResourceNotFound.AsyncEvent"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+func (c *Client) GetCustomDomain(request *GetCustomDomainRequest) (response *GetCustomDomainResponse, err error) {
+    return c.GetCustomDomainWithContext(context.Background(), request)
+}
+
+// GetCustomDomain
+// 查看云函数自定义域名详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ASYNCEVENTSTATUS = "FailedOperation.AsyncEventStatus"
+//  RESOURCENOTFOUND_ASYNCEVENT = "ResourceNotFound.AsyncEvent"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+func (c *Client) GetCustomDomainWithContext(ctx context.Context, request *GetCustomDomainRequest) (response *GetCustomDomainResponse, err error) {
+    if request == nil {
+        request = NewGetCustomDomainRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetCustomDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetCustomDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetFunctionRequest() (request *GetFunctionRequest) {
     request = &GetFunctionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1936,13 +2147,13 @@ func NewGetRequestStatusResponse() (response *GetRequestStatusResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
 //  FAILEDOPERATION_TOPICNOTEXIST = "FailedOperation.TopicNotExist"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
 //  INVALIDPARAMETER_CLS = "InvalidParameter.Cls"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DATETIME = "InvalidParameterValue.DateTime"
-//  INVALIDPARAMETERVALUE_FUNCTION = "InvalidParameterValue.Function"
 //  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  INVALIDPARAMETERVALUE_FUNCTIONREQUESTID = "InvalidParameterValue.FunctionRequestId"
 //  INVALIDPARAMETERVALUE_RETCODE = "InvalidParameterValue.RetCode"
@@ -1961,13 +2172,13 @@ func (c *Client) GetRequestStatus(request *GetRequestStatusRequest) (response *G
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
 //  FAILEDOPERATION_TOPICNOTEXIST = "FailedOperation.TopicNotExist"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
 //  INVALIDPARAMETER_CLS = "InvalidParameter.Cls"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DATETIME = "InvalidParameterValue.DateTime"
-//  INVALIDPARAMETERVALUE_FUNCTION = "InvalidParameterValue.Function"
 //  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  INVALIDPARAMETERVALUE_FUNCTIONREQUESTID = "InvalidParameterValue.FunctionRequestId"
 //  INVALIDPARAMETERVALUE_RETCODE = "InvalidParameterValue.RetCode"
@@ -2145,7 +2356,7 @@ func NewInvokeFunctionResponse() (response *InvokeFunctionResponse) {
 }
 
 // InvokeFunction
-//  SCF同步调用函数接口
+// SCF同步调用函数接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FUNCTIONSTATUSERROR = "FailedOperation.FunctionStatusError"
@@ -2170,7 +2381,7 @@ func (c *Client) InvokeFunction(request *InvokeFunctionRequest) (response *Invok
 }
 
 // InvokeFunction
-//  SCF同步调用函数接口
+// SCF同步调用函数接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FUNCTIONSTATUSERROR = "FailedOperation.FunctionStatusError"
@@ -2328,6 +2539,71 @@ func (c *Client) ListAsyncEventsWithContext(ctx context.Context, request *ListAs
     request.SetContext(ctx)
     
     response = NewListAsyncEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListCustomDomainsRequest() (request *ListCustomDomainsRequest) {
+    request = &ListCustomDomainsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("scf", APIVersion, "ListCustomDomains")
+    
+    
+    return
+}
+
+func NewListCustomDomainsResponse() (response *ListCustomDomainsResponse) {
+    response = &ListCustomDomainsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListCustomDomains
+// 遍历域名列表信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+//  INVALIDPARAMETERVALUE_INVOKETYPE = "InvalidParameterValue.InvokeType"
+//  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
+//  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
+//  INVALIDPARAMETERVALUE_STATUS = "InvalidParameterValue.Status"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  RESOURCENOTFOUND_VERSION = "ResourceNotFound.Version"
+func (c *Client) ListCustomDomains(request *ListCustomDomainsRequest) (response *ListCustomDomainsResponse, err error) {
+    return c.ListCustomDomainsWithContext(context.Background(), request)
+}
+
+// ListCustomDomains
+// 遍历域名列表信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+//  INVALIDPARAMETERVALUE_INVOKETYPE = "InvalidParameterValue.InvokeType"
+//  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
+//  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
+//  INVALIDPARAMETERVALUE_STATUS = "InvalidParameterValue.Status"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  RESOURCENOTFOUND_VERSION = "ResourceNotFound.Version"
+func (c *Client) ListCustomDomainsWithContext(ctx context.Context, request *ListCustomDomainsRequest) (response *ListCustomDomainsResponse, err error) {
+    if request == nil {
+        request = NewListCustomDomainsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListCustomDomains require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListCustomDomainsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3283,6 +3559,89 @@ func (c *Client) UpdateAliasWithContext(ctx context.Context, request *UpdateAlia
     return
 }
 
+func NewUpdateCustomDomainRequest() (request *UpdateCustomDomainRequest) {
+    request = &UpdateCustomDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("scf", APIVersion, "UpdateCustomDomain")
+    
+    
+    return
+}
+
+func NewUpdateCustomDomainResponse() (response *UpdateCustomDomainResponse) {
+    response = &UpdateCustomDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateCustomDomain
+// 更新自定义域名相关配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UPDATEALIAS = "FailedOperation.UpdateAlias"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETER_ROUTINGCONFIG = "InvalidParameter.RoutingConfig"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDITIONALVERSIONWEIGHTS = "InvalidParameterValue.AdditionalVersionWeights"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
+//  INVALIDPARAMETERVALUE_ROUTINGCONFIG = "InvalidParameterValue.RoutingConfig"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_ALIAS = "ResourceNotFound.Alias"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+//  RESOURCENOTFOUND_FUNCTIONVERSION = "ResourceNotFound.FunctionVersion"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
+func (c *Client) UpdateCustomDomain(request *UpdateCustomDomainRequest) (response *UpdateCustomDomainResponse, err error) {
+    return c.UpdateCustomDomainWithContext(context.Background(), request)
+}
+
+// UpdateCustomDomain
+// 更新自定义域名相关配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UPDATEALIAS = "FailedOperation.UpdateAlias"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETER_ROUTINGCONFIG = "InvalidParameter.RoutingConfig"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDITIONALVERSIONWEIGHTS = "InvalidParameterValue.AdditionalVersionWeights"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
+//  INVALIDPARAMETERVALUE_ROUTINGCONFIG = "InvalidParameterValue.RoutingConfig"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_ALIAS = "ResourceNotFound.Alias"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+//  RESOURCENOTFOUND_FUNCTIONVERSION = "ResourceNotFound.FunctionVersion"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
+func (c *Client) UpdateCustomDomainWithContext(ctx context.Context, request *UpdateCustomDomainRequest) (response *UpdateCustomDomainResponse, err error) {
+    if request == nil {
+        request = NewUpdateCustomDomainRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateCustomDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateCustomDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateFunctionCodeRequest() (request *UpdateFunctionCodeRequest) {
     request = &UpdateFunctionCodeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3315,10 +3674,12 @@ func NewUpdateFunctionCodeResponse() (response *UpdateFunctionCodeResponse) {
 //  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_ARGS = "InvalidParameterValue.Args"
+//  INVALIDPARAMETERVALUE_ARGSLIST = "InvalidParameterValue.ArgsList"
 //  INVALIDPARAMETERVALUE_CODE = "InvalidParameterValue.Code"
 //  INVALIDPARAMETERVALUE_CODESECRET = "InvalidParameterValue.CodeSecret"
 //  INVALIDPARAMETERVALUE_CODESOURCE = "InvalidParameterValue.CodeSource"
 //  INVALIDPARAMETERVALUE_COMMAND = "InvalidParameterValue.Command"
+//  INVALIDPARAMETERVALUE_COMMANDLIST = "InvalidParameterValue.CommandList"
 //  INVALIDPARAMETERVALUE_COS = "InvalidParameterValue.Cos"
 //  INVALIDPARAMETERVALUE_COSBUCKETNAME = "InvalidParameterValue.CosBucketName"
 //  INVALIDPARAMETERVALUE_COSBUCKETREGION = "InvalidParameterValue.CosBucketRegion"
@@ -3369,10 +3730,12 @@ func (c *Client) UpdateFunctionCode(request *UpdateFunctionCodeRequest) (respons
 //  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_ARGS = "InvalidParameterValue.Args"
+//  INVALIDPARAMETERVALUE_ARGSLIST = "InvalidParameterValue.ArgsList"
 //  INVALIDPARAMETERVALUE_CODE = "InvalidParameterValue.Code"
 //  INVALIDPARAMETERVALUE_CODESECRET = "InvalidParameterValue.CodeSecret"
 //  INVALIDPARAMETERVALUE_CODESOURCE = "InvalidParameterValue.CodeSource"
 //  INVALIDPARAMETERVALUE_COMMAND = "InvalidParameterValue.Command"
+//  INVALIDPARAMETERVALUE_COMMANDLIST = "InvalidParameterValue.CommandList"
 //  INVALIDPARAMETERVALUE_COS = "InvalidParameterValue.Cos"
 //  INVALIDPARAMETERVALUE_COSBUCKETNAME = "InvalidParameterValue.CosBucketName"
 //  INVALIDPARAMETERVALUE_COSBUCKETREGION = "InvalidParameterValue.CosBucketRegion"
@@ -3472,6 +3835,7 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  INVALIDPARAMETERVALUE_CLS = "InvalidParameterValue.Cls"
 //  INVALIDPARAMETERVALUE_CLSROLE = "InvalidParameterValue.ClsRole"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_DISKSIZE = "InvalidParameterValue.DiskSize"
 //  INVALIDPARAMETERVALUE_DNSINFO = "InvalidParameterValue.DnsInfo"
 //  INVALIDPARAMETERVALUE_DYNAMICENABLED = "InvalidParameterValue.DynamicEnabled"
 //  INVALIDPARAMETERVALUE_EIPCONFIG = "InvalidParameterValue.EipConfig"
@@ -3502,6 +3866,7 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
 //  LIMITEXCEEDED_INTRAIP = "LimitExceeded.IntraIp"
 //  LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
+//  LIMITEXCEEDED_PRIVILEGECONTAINER = "LimitExceeded.PrivilegeContainer"
 //  LIMITEXCEEDED_TIMEOUT = "LimitExceeded.Timeout"
 //  RESOURCENOTFOUND_CFSMOUNTINSNOTMATCH = "ResourceNotFound.CfsMountInsNotMatch"
 //  RESOURCENOTFOUND_CFSPROTOCOLERROR = "ResourceNotFound.CfsProtocolError"
@@ -3519,6 +3884,7 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 //  UNAUTHORIZEDOPERATION_ROLE = "UnauthorizedOperation.Role"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_DISKSIZE = "UnsupportedOperation.DiskSize"
 //  UNSUPPORTEDOPERATION_EIPFIXED = "UnsupportedOperation.EipFixed"
 //  UNSUPPORTEDOPERATION_VPCCONFIG = "UnsupportedOperation.VpcConfig"
 func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfigurationRequest) (response *UpdateFunctionConfigurationResponse, err error) {
@@ -3556,6 +3922,7 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
 //  INVALIDPARAMETERVALUE_CLS = "InvalidParameterValue.Cls"
 //  INVALIDPARAMETERVALUE_CLSROLE = "InvalidParameterValue.ClsRole"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+//  INVALIDPARAMETERVALUE_DISKSIZE = "InvalidParameterValue.DiskSize"
 //  INVALIDPARAMETERVALUE_DNSINFO = "InvalidParameterValue.DnsInfo"
 //  INVALIDPARAMETERVALUE_DYNAMICENABLED = "InvalidParameterValue.DynamicEnabled"
 //  INVALIDPARAMETERVALUE_EIPCONFIG = "InvalidParameterValue.EipConfig"
@@ -3586,6 +3953,7 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
 //  LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
 //  LIMITEXCEEDED_INTRAIP = "LimitExceeded.IntraIp"
 //  LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
+//  LIMITEXCEEDED_PRIVILEGECONTAINER = "LimitExceeded.PrivilegeContainer"
 //  LIMITEXCEEDED_TIMEOUT = "LimitExceeded.Timeout"
 //  RESOURCENOTFOUND_CFSMOUNTINSNOTMATCH = "ResourceNotFound.CfsMountInsNotMatch"
 //  RESOURCENOTFOUND_CFSPROTOCOLERROR = "ResourceNotFound.CfsProtocolError"
@@ -3603,6 +3971,7 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 //  UNAUTHORIZEDOPERATION_ROLE = "UnauthorizedOperation.Role"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_DISKSIZE = "UnsupportedOperation.DiskSize"
 //  UNSUPPORTEDOPERATION_EIPFIXED = "UnsupportedOperation.EipFixed"
 //  UNSUPPORTEDOPERATION_VPCCONFIG = "UnsupportedOperation.VpcConfig"
 func (c *Client) UpdateFunctionConfigurationWithContext(ctx context.Context, request *UpdateFunctionConfigurationRequest) (response *UpdateFunctionConfigurationResponse, err error) {
