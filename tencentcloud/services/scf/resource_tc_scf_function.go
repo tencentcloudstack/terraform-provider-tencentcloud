@@ -320,7 +320,7 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: tccommon.ValidateAllowedStringValue(SCF_TRIGGER_TYPES),
-							Description:  "Type of the SCF function trigger, support `cos`, `cmq`, `timer`, `ckafka`, `apigw`.",
+							Description:  "Type of the SCF function trigger, support `cos`, `cls`, `timer`, `ckafka`, `http`, `apigw`, `cmq`.",
 						},
 						"trigger_desc": {
 							Type:        schema.TypeString,
