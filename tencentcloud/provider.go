@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
-
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -1566,6 +1565,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_datahub_task":                                                    ckafka.ResourceTencentCloudCkafkaDatahubTask(),
 			"tencentcloud_ckafka_route":                                                           ckafka.ResourceTencentCloudCkafkaRoute(),
 			"tencentcloud_audit_track":                                                            audit.ResourceTencentCloudAuditTrack(),
+			"tencentcloud_events_audit_track":                                                     audit.ResourceTencentCloudEventsAuditTrack(),
 			"tencentcloud_image":                                                                  cvm.ResourceTencentCloudImage(),
 			"tencentcloud_cynosdb_proxy":                                                          cynosdb.ResourceTencentCloudCynosdbProxy(),
 			"tencentcloud_cynosdb_reload_proxy_node":                                              cynosdb.ResourceTencentCloudCynosdbReloadProxyNode(),

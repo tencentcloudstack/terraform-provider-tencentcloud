@@ -212,14 +212,15 @@ type TencentCloudClient struct {
 	controlcenterConn *controlcenter.Client
 	thpcConn          *thpc.Client
 	//omit nil client
-	omitNilConn           *common.Client
-	emrv20190103Conn      *emr.Client
-	teov20220901Conn      *teo.Client
-	sslv20191205Conn      *sslCertificate.Client
-	postgresv20170312Conn *postgre.Client
-	cfwv20190904Conn      *cfw.Client
-	ccnv20170312Conn      *vpc.Client
-	tcssv20201101Conn     *tcss.Client
+	omitNilConn             *common.Client
+	emrv20190103Conn        *emr.Client
+	teov20220901Conn        *teo.Client
+	sslv20191205Conn        *sslCertificate.Client
+	postgresv20170312Conn   *postgre.Client
+	cfwv20190904Conn        *cfw.Client
+	ccnv20170312Conn        *vpc.Client
+	tcssv20201101Conn       *tcss.Client
+	cloudauditv20190319Conn *audit.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1914,4 +1915,17 @@ func (me *TencentCloudClient) UseTcssV20201101Client() *tcss.Client {
 	me.tcssv20201101Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcssv20201101Conn
+}
+
+// UseCloudauditV20190319Client return CLOUDAUDIT client for service
+func (me *TencentCloudClient) UseCloudauditV20190319Client() *audit.Client {
+	if me.cloudauditv20190319Conn != nil {
+		return me.cloudauditv20190319Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cloudauditv20190319Conn, _ = audit.NewClient(me.Credential, me.Region, cpf)
+	me.cloudauditv20190319Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cloudauditv20190319Conn
 }
