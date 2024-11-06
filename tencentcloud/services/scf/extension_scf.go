@@ -14,11 +14,13 @@ const (
 	SCF_FUNCTION_RESOURCE        = "lam"
 	SCF_FUNCTION_RESOURCE_PREFIX = "namespace"
 
+	// 目前支持 cos 、cmq、 timer、 ckafka、apigw类型。创建函数 URL 填写 http
 	SCF_TRIGGER_TYPE_COS         = "cos"
 	SCF_TRIGGER_TYPE_CMQ         = "cmq"
 	SCF_TRIGGER_TYPE_TIMER       = "timer"
 	SCF_TRIGGER_TYPE_CKAFKA      = "ckafka"
 	SCF_TRIGGER_TYPE_API_GATEWAY = "apigw"
+	SCF_TRIGGER_TYPE_HTTP        = "http"
 
 	SCF_LOGS_ORDER_BY_FUNCTION_NAME = "function_name"
 	SCF_LOGS_ORDER_BY_DERATION      = "duration"
@@ -57,6 +59,7 @@ var (
 		SCF_TRIGGER_TYPE_TIMER,
 		SCF_TRIGGER_TYPE_CKAFKA,
 		SCF_TRIGGER_TYPE_API_GATEWAY,
+		SCF_TRIGGER_TYPE_HTTP,
 	}
 
 	SCF_LOGS_ORDERS = []string{
