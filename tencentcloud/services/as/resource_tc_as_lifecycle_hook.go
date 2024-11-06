@@ -77,6 +77,12 @@ func ResourceTencentCloudAsLifecycleHook() *schema.Resource {
 				Optional:    true,
 				Description: "For CMQ_TOPIC type, a name of topic must be set.",
 			},
+			"lifecycle_transition_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The scenario where the lifecycle hook is applied. `EXTENSION`: the lifecycle hook will be triggered when AttachInstances, DetachInstances or RemoveInstaces is called. `NORMAL`: the lifecycle hook is not triggered by the above APIs.",
+			},
 			"lifecycle_command": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -121,6 +127,9 @@ func resourceTencentCloudAsLifecycleHookCreate(d *schema.ResourceData, meta inte
 	}
 	if v, ok := d.GetOk("notification_metadata"); ok {
 		request.NotificationMetadata = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("lifecycle_transition_type"); ok {
+		request.LifecycleTransitionType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("notification_target_type"); ok {
 		request.NotificationTarget = &as.NotificationTarget{}
@@ -200,6 +209,9 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 		if lifecycleHook.NotificationMetadata != nil {
 			_ = d.Set("notification_metadata", *lifecycleHook.NotificationMetadata)
 		}
+		if lifecycleHook.LifecycleTransitionType != nil {
+			_ = d.Set("lifecycle_transition_type", *lifecycleHook.LifecycleTransitionType)
+		}
 		if lifecycleHook.NotificationTarget != nil {
 			_ = d.Set("notification_target_type", *lifecycleHook.NotificationTarget.TargetType)
 			if lifecycleHook.NotificationTarget.QueueName != nil {
@@ -247,6 +259,9 @@ func resourceTencentCloudAsLifecycleHookUpdate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOk("notification_metadata"); ok {
 		request.NotificationMetadata = helper.String(v.(string))
 	}
+	if v, ok := d.GetOk("lifecycle_transition_type"); ok {
+		request.LifecycleTransitionType = helper.String(v.(string))
+	}
 	if v, ok := d.GetOk("notification_target_type"); ok {
 		request.NotificationTarget = &as.NotificationTarget{}
 		request.NotificationTarget.TargetType = helper.String(v.(string))
@@ -265,15 +280,17 @@ func resourceTencentCloudAsLifecycleHookUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "lifecycle_command"); ok {
-		lifecycleCommand := as.LifecycleCommand{}
-		if v, ok := dMap["command_id"]; ok {
-			lifecycleCommand.CommandId = helper.String(v.(string))
+	if d.HasChange("lifecycle_command") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "lifecycle_command"); ok {
+			lifecycleCommand := as.LifecycleCommand{}
+			if v, ok := dMap["command_id"]; ok && v != "" {
+				lifecycleCommand.CommandId = helper.String(v.(string))
+			}
+			if v, ok := dMap["parameters"]; ok && v != "" {
+				lifecycleCommand.Parameters = helper.String(v.(string))
+			}
+			request.LifecycleCommand = &lifecycleCommand
 		}
-		if v, ok := dMap["parameters"]; ok {
-			lifecycleCommand.Parameters = helper.String(v.(string))
-		}
-		request.LifecycleCommand = &lifecycleCommand
 	}
 
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().UpgradeLifecycleHook(request)

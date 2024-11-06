@@ -56,11 +56,13 @@ resource "tencentcloud_as_scaling_group" "example" {
 }
 
 resource "tencentcloud_as_lifecycle_hook" "example" {
-  scaling_group_id      = tencentcloud_as_scaling_group.example.id
-  lifecycle_hook_name   = "tf-as-lifecycle-hook"
-  lifecycle_transition  = "INSTANCE_LAUNCHING"
-  default_result        = "CONTINUE"
-  heartbeat_timeout     = 500
+  scaling_group_id          = tencentcloud_as_scaling_group.example.id
+  lifecycle_hook_name       = "tf-as-lifecycle-hook"
+  lifecycle_transition      = "INSTANCE_LAUNCHING"
+  default_result            = "CONTINUE"
+  heartbeat_timeout         = 500
+  lifecycle_transition_type = "NORMAL"
+  #  lifecycle_transition_type = "EXTENSION"
   notification_metadata = "tf test"
 }
 ```
@@ -121,6 +123,7 @@ The following arguments are supported:
 * `default_result` - (Optional, String) Defines the action the AS group should take when the lifecycle hook timeout elapses or if an unexpected failure occurs. Valid values: `CONTINUE` and `ABANDON`. The default value is `CONTINUE`.
 * `heartbeat_timeout` - (Optional, Int) Defines the amount of time, in seconds, that can elapse before the lifecycle hook times out. Valid value ranges: (30~7200). and default value is `300`.
 * `lifecycle_command` - (Optional, List) Remote command execution object. `NotificationTarget` and `LifecycleCommand` cannot be specified at the same time.
+* `lifecycle_transition_type` - (Optional, String) The scenario where the lifecycle hook is applied. `EXTENSION`: the lifecycle hook will be triggered when AttachInstances, DetachInstances or RemoveInstaces is called. `NORMAL`: the lifecycle hook is not triggered by the above APIs.
 * `notification_metadata` - (Optional, String) Contains additional information that you want to include any time AS sends a message to the notification target.
 * `notification_queue_name` - (Optional, String) For CMQ_QUEUE type, a name of queue must be set.
 * `notification_target_type` - (Optional, String) Target type. Valid values: `CMQ_QUEUE`, `CMQ_TOPIC`, `TDMQ_CMQ_QUEUE`, `TDMQ_CMQ_TOPIC`.

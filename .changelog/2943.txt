@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_as_lifecycle_hook: add `lifecycle_transition_type`
+```

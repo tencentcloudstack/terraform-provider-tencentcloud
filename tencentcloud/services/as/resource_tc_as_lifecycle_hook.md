@@ -45,12 +45,14 @@ resource "tencentcloud_as_scaling_group" "example" {
 }
 
 resource "tencentcloud_as_lifecycle_hook" "example" {
-  scaling_group_id      = tencentcloud_as_scaling_group.example.id
-  lifecycle_hook_name   = "tf-as-lifecycle-hook"
-  lifecycle_transition  = "INSTANCE_LAUNCHING"
-  default_result        = "CONTINUE"
-  heartbeat_timeout     = 500
-  notification_metadata = "tf test"
+  scaling_group_id          = tencentcloud_as_scaling_group.example.id
+  lifecycle_hook_name       = "tf-as-lifecycle-hook"
+  lifecycle_transition      = "INSTANCE_LAUNCHING"
+  default_result            = "CONTINUE"
+  heartbeat_timeout         = 500
+  lifecycle_transition_type = "NORMAL"
+  #  lifecycle_transition_type = "EXTENSION"
+  notification_metadata     = "tf test"
 }
 ```
 
