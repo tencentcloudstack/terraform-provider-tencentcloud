@@ -529,7 +529,23 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("end_port", instance.EndPort)
 	}
 
-	if instance.AttrFlags != nil && len(instance.AttrFlags) != 0 {
+	var clbIns *clb.LoadBalancer
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := clbService.DescribeLoadBalancerById(ctx, clbId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		clbIns = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s read CLB instance failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if clbIns.AttributeFlags != nil && len(clbIns.AttributeFlags) != 0 {
 		_ = d.Set("h2c_switch", true)
 	} else {
 		_ = d.Set("h2c_switch", false)
