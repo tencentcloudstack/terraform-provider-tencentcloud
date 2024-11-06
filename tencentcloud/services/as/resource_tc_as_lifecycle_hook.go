@@ -80,6 +80,7 @@ func ResourceTencentCloudAsLifecycleHook() *schema.Resource {
 			"lifecycle_transition_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The scenario where the lifecycle hook is applied. `EXTENSION`: the lifecycle hook will be triggered when AttachInstances, DetachInstances or RemoveInstaces is called. `NORMAL`: the lifecycle hook is not triggered by the above APIs.",
 			},
 			"lifecycle_command": {
