@@ -16,8 +16,9 @@ import (
 
 func ResourceTencentCloudSesEmailAddress() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudSesEmailAddressRead,
 		Create: resourceTencentCloudSesEmailAddressCreate,
+		Read:   resourceTencentCloudSesEmailAddressRead,
+		Update: resourceTencentCloudSesEmailAddressUpdate,
 		Delete: resourceTencentCloudSesEmailAddressDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -27,7 +28,7 @@ func ResourceTencentCloudSesEmailAddress() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Your sender address. (You can create up to 10 sender addresses for each domain.).",
+				Description: "Your sender address(You can create up to 10 sender addresses for each domain).",
 			},
 
 			"email_sender_name": {
@@ -35,6 +36,13 @@ func ResourceTencentCloudSesEmailAddress() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "Sender name.",
+			},
+
+			"smtp_password": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "Password for SMTP, Length limit 64.",
 			},
 		},
 	}
@@ -77,6 +85,29 @@ func resourceTencentCloudSesEmailAddressCreate(d *schema.ResourceData, meta inte
 	}
 
 	d.SetId(emailAddress)
+
+	// set smtp pwd
+	if v, ok := d.GetOk("smtp_password"); ok {
+		pwdRequest := ses.NewUpdateEmailSmtpPassWordRequest()
+		pwdRequest.EmailAddress = &emailAddress
+		pwdRequest.Password = helper.String(v.(string))
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().UpdateEmailSmtpPassWord(pwdRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, pwdRequest.GetAction(), pwdRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update ses email address smtp password failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	return resourceTencentCloudSesEmailAddressRead(d, meta)
 }
 
@@ -111,6 +142,41 @@ func resourceTencentCloudSesEmailAddressRead(d *schema.ResourceData, meta interf
 	}
 
 	return nil
+}
+
+func resourceTencentCloudSesEmailAddressUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ses_email_address.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		emailAddress = d.Id()
+	)
+
+	if d.HasChange("smtp_password") {
+		if v, ok := d.GetOk("smtp_password"); ok {
+			pwdRequest := ses.NewUpdateEmailSmtpPassWordRequest()
+			pwdRequest.EmailAddress = &emailAddress
+			pwdRequest.Password = helper.String(v.(string))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().UpdateEmailSmtpPassWord(pwdRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, pwdRequest.GetAction(), pwdRequest.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update ses email address smtp password failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
+	return resourceTencentCloudSesEmailAddressRead(d, meta)
 }
 
 func resourceTencentCloudSesEmailAddressDelete(d *schema.ResourceData, meta interface{}) error {
