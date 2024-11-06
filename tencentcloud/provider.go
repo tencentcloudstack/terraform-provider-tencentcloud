@@ -100,6 +100,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmq"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcss"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
@@ -2169,7 +2170,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_thpc_workspaces":                thpc.ResourceTencentCloudThpcWorkspaces(),
 			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy(),
 			"tencentcloud_lite_hbase_instance":            emr.ResourceTencentCloudLiteHbaseInstance(),
-			"tencentcloud_kubernetes_log_config":          tke.ResourceTencentCloudKubernetesLogConfig()},
+			"tencentcloud_kubernetes_log_config":          tke.ResourceTencentCloudKubernetesLogConfig(),
+			"tencentcloud_tcss_image_registry":            tcss.ResourceTencentCloudTcssImageRegistry(),
+		},
 
 		ConfigureFunc: providerConfigure,
 	}
