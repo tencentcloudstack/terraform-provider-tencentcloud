@@ -522,6 +522,9 @@ func resourceTencentCloudKubernetesNodePoolDeletePostHandleResponse0(ctx context
 			if errCode == "InternalError.UnexpectedInternal" {
 				return nil
 			}
+			if errCode == "FailedOperation.NodePoolQueryFailed" {
+				return nil
+			}
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if has {
