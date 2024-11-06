@@ -1,3 +1,22 @@
+## 1.81.138 (November 6 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_events_audit_track` ([#2931](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2931))
+* **New Resource:** `tencentcloud_kubernetes_cluster_master_attachment` ([#2926](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2926))
+* **New Resource:** `tencentcloud_tcss_image_registry` ([#2935](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2935))
+* **New Resource:** `tencentcloud_vpc_notify_routes` ([#2941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2941))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_lifecycle_hook: add `lifecycle_transition_type` ([#2943](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2943))
+* resource/tencentcloud_as_start_instance_refresh: add `max_surge` ([#2942](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2942))
+* resource/tencentcloud_clb_listener: support `h2c_switch` params ([#2939](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2939))
+* resource/tencentcloud_kubernetes_node_pool: compatible `NodePoolQueryFailed` error when deleted node pool ([#2940](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2940))
+* resource/tencentcloud_scf_function: field `triggers.type` suuport `http` and `cls` ([#2938](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2938))
+* resource/tencentcloud_ses_email_address: support set `smtp_password` ([#2937](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2937))
+* resource/tencentcloud_ssl_check_certificate_domain_verification_operation: Add retry and customize the maximum timeout ([#2936](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2936))
+
 ## 1.81.137 (November 1 , 2024)
 
 FEATURES:
