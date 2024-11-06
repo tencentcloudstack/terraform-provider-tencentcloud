@@ -3,7 +3,9 @@ package ssl
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,6 +20,9 @@ func ResourceTencentCloudSslCheckCertificateDomainVerificationOperation() *schem
 		Create: resourceTencentCloudSslCheckCertificateDomainVerificationOperationCreate,
 		Read:   resourceTencentCloudSslCheckCertificateDomainVerificationOperationRead,
 		Delete: resourceTencentCloudSslCheckCertificateDomainVerificationOperationDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(15 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"certificate_id": {
 				Type:        schema.TypeString,
@@ -106,18 +111,27 @@ func resourceTencentCloudSslCheckCertificateDomainVerificationOperationCreate(d 
 		request.CertificateId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSslV20191205Client().CheckCertificateDomainVerificationWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
-		return nil
+
+		if result == nil || result.Response == nil || len(result.Response.VerificationResults) != 1 {
+			return resource.NonRetryableError(fmt.Errorf("response does not meet expectations"))
+		}
+
+		if *result.Response.VerificationResults[0].Issued == true {
+			response = result
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("checking verification result is: %t", *result.Response.VerificationResults[0].Issued))
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ssl check certificate domain verification operation failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create ssl check certificate domain verification operation failed, reason: %+v", logId, err)
 		return err
 	}
 
