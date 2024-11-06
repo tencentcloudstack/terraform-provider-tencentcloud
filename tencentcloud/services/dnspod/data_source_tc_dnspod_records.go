@@ -84,7 +84,7 @@ func DataSourceTencentCloudDnspodRecords() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 			},
-			"result": {
+			"instance_list": {
 				Computed:    true,
 				Description: "The record list result.",
 				Elem: &schema.Resource{Schema: map[string]*schema.Schema{
@@ -261,7 +261,7 @@ func dataSourceTencentCloudDnspodRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	err = d.Set("result", result)
+	err = d.Set("instance_list", result)
 	if err != nil {
 		return err
 	}
@@ -270,7 +270,7 @@ func dataSourceTencentCloudDnspodRead(d *schema.ResourceData, meta interface{}) 
 	if ok && output.(string) != "" {
 		err = tccommon.WriteToFile(output.(string), map[string]interface{}{
 			"record_count_info": info,
-			"result":            result,
+			"instance_list":     result,
 		})
 		if err != nil {
 			return err

@@ -885,7 +885,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_web_vitals_page":                          rum.DataSourceTencentCloudRumWebVitalsPage(),
 			"tencentcloud_rum_log_export":                               rum.DataSourceTencentCloudRumLogExport(),
 			"tencentcloud_rum_log_export_list":                          rum.DataSourceTencentCloudRumLogExportList(),
-			"tencentcloud_dnspod_records":                               dnspod.DataSourceTencentCloudDnspodRecords(),
+			"tencentcloud_dnspod_record":                                dnspod.DataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_dnspod_domain_list":                           dnspod.DataSourceTencentCloudDnspodDomainList(),
 			"tencentcloud_dnspod_domain_analytics":                      dnspod.DataSourceTencentCloudDnspodDomainAnalytics(),
 			"tencentcloud_dnspod_domain_log_list":                       dnspod.DataSourceTencentCloudDnspodDomainLogList(),
