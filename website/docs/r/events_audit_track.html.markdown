@@ -32,7 +32,7 @@ resource "tencentcloud_events_audit_track" "example" {
       resource_type = "cam"
       action_type   = "*"
       event_names   = ["AddSubAccount", "AddSubAccountCheckingMFA"]
-    } c ' le '
+    }
     resource_fields {
       resource_type = "cvm"
       action_type   = "*"
