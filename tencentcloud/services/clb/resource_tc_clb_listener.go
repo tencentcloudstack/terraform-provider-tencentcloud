@@ -242,6 +242,13 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "This parameter is used to specify the end port and is required when creating a port range listener. Only one member can be passed in when inputting the `Ports` parameter, which is used to specify the start port. If you want to try the port range feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).",
 			},
+			"h2c_switch": {
+				Type:        schema.TypeBool,
+				ForceNew:    true,
+				Computed:    true,
+				Optional:    true,
+				Description: "Enable H2C switch for intranet HTTP listener.",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -348,6 +355,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("end_port"); ok {
 		request.EndPort = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("h2c_switch"); ok {
+		request.H2cSwitch = helper.Bool(v.(bool))
 	}
 
 	var response *clb.CreateListenerResponse
@@ -516,6 +527,28 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 
 	if instance.EndPort != nil {
 		_ = d.Set("end_port", instance.EndPort)
+	}
+
+	var clbIns *clb.LoadBalancer
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := clbService.DescribeLoadBalancerById(ctx, clbId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		clbIns = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s read CLB instance failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if clbIns.AttributeFlags != nil && len(clbIns.AttributeFlags) != 0 {
+		_ = d.Set("h2c_switch", true)
+	} else {
+		_ = d.Set("h2c_switch", false)
 	}
 
 	return nil
