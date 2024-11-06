@@ -529,7 +529,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("end_port", instance.EndPort)
 	}
 
-	if instance.AttrFlags != nil || len(instance.AttrFlags) != 0 {
+	if instance.AttrFlags != nil && len(instance.AttrFlags) != 0 {
 		_ = d.Set("h2c_switch", true)
 	} else {
 		_ = d.Set("h2c_switch", false)
