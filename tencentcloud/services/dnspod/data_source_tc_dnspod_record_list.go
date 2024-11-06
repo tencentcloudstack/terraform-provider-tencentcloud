@@ -151,7 +151,8 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 			"is_exact_sub_domain": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to perform an exact search based on the SubDomain parameter.",
+				Default:     true,
+				Description: "Whether to perform an exact search based on the SubDomain parameter. Default true.",
 			},
 
 			"project_id": {
@@ -185,12 +186,17 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 				},
 			},
 
-			"record_list": {
+			"instance_list": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "List of records.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"domain": {
+							Computed:    true,
+							Type:        schema.TypeString,
+							Description: "Domain.",
+						},
 						"record_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -211,7 +217,7 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 							Computed:    true,
 							Description: "Update time.",
 						},
-						"name": {
+						"sub_domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Host header.",
@@ -281,10 +287,11 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
+	var domain string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("domain"); ok {
-		paramMap["Domain"] = helper.String(v.(string))
+		domain = v.(string)
+		paramMap["Domain"] = helper.String(domain)
 	}
 
 	if v, ok := d.GetOkExists("domain_id"); ok {
@@ -399,7 +406,7 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 	if recordList != nil {
 		for _, recordListItem := range recordList {
 			recordListItemMap := map[string]interface{}{}
-
+			recordListItemMap["domain"] = domain
 			if recordListItem.RecordId != nil {
 				recordListItemMap["record_id"] = recordListItem.RecordId
 			}
@@ -417,7 +424,7 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 			}
 
 			if recordListItem.Name != nil {
-				recordListItemMap["name"] = recordListItem.Name
+				recordListItemMap["sub_domain"] = recordListItem.Name
 			}
 
 			if recordListItem.Line != nil {
@@ -460,7 +467,7 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 			tmpList = append(tmpList, recordListItemMap)
 		}
 
-		_ = d.Set("record_list", tmpList)
+		_ = d.Set("instance_list", tmpList)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
