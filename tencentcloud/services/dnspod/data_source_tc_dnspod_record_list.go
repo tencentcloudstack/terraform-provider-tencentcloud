@@ -222,7 +222,7 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 							Computed:    true,
 							Description: "Host header.",
 						},
-						"line": {
+						"record_line": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Record line.",
@@ -232,7 +232,7 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 							Computed:    true,
 							Description: "Line ID.",
 						},
-						"type": {
+						"record_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Record type.",
@@ -428,7 +428,7 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 			}
 
 			if recordListItem.Line != nil {
-				recordListItemMap["line"] = recordListItem.Line
+				recordListItemMap["record_line"] = recordListItem.Line
 			}
 
 			if recordListItem.LineId != nil {
@@ -436,7 +436,7 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 			}
 
 			if recordListItem.Type != nil {
-				recordListItemMap["type"] = recordListItem.Type
+				recordListItemMap["record_type"] = recordListItem.Type
 			}
 
 			if recordListItem.Weight != nil {
