@@ -44,6 +44,7 @@ The `rolling_update_settings` object of `refresh_settings` supports the followin
 
 * `batch_number` - (Required, Int) Batch quantity. The batch quantity should be a positive integer greater than 0, but cannot exceed the total number of instances pending refresh.
 * `batch_pause` - (Optional, String) Pause policy between batches. Default value: Automatic. Valid values: <br><li>FIRST_BATCH_PAUSE: Pause after the first batch update completes.</li> <li>BATCH_INTERVAL_PAUSE: Pause between each batch update.</li> <li>AUTOMATIC: No pauses.
+* `max_surge` - (Optional, Int) Maximum Extra Quantity. After setting this parameter, a batch of pay-as-you-go extra instances will be created according to the launch configuration before the rolling update starts, and the extra instances will be destroyed after the rolling update is completed.
 
 ## Attributes Reference
 

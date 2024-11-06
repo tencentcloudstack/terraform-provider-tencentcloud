@@ -15,9 +15,9 @@
 package v20180416
 
 import (
-	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 type AccessInfo struct {
@@ -218,7 +218,7 @@ type CopyFunctionRequestParams struct {
 
 type CopyFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要复制的函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -250,8 +250,8 @@ type CopyFunctionRequest struct {
 }
 
 func (r *CopyFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -287,8 +287,8 @@ type CopyFunctionResponse struct {
 }
 
 func (r *CopyFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -320,7 +320,7 @@ type CreateAliasRequestParams struct {
 
 type CreateAliasRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 别名的名称，在函数级别中唯一，只能包含字母、数字、'_'和‘-’，且必须以字母开头，长度限制为1-64
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -341,8 +341,8 @@ type CreateAliasRequest struct {
 }
 
 func (r *CreateAliasRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -376,8 +376,8 @@ type CreateAliasResponse struct {
 }
 
 func (r *CreateAliasResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -406,7 +406,7 @@ type CreateCustomDomainRequestParams struct {
 
 type CreateCustomDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 域名，不支持泛域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
@@ -424,8 +424,8 @@ type CreateCustomDomainRequest struct {
 }
 
 func (r *CreateCustomDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -458,8 +458,8 @@ type CreateCustomDomainResponse struct {
 }
 
 func (r *CreateCustomDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -566,7 +566,7 @@ type CreateFunctionRequestParams struct {
 
 type CreateFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 创建的函数名称，函数名称支持26个英文字母大小写、数字、连接符和下划线，第一个字符只能以字母开头，最后一个字符不能为连接符或者下划线，名称长度2-60
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -662,8 +662,8 @@ type CreateFunctionRequest struct {
 }
 
 func (r *CreateFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -722,8 +722,8 @@ type CreateFunctionResponse struct {
 }
 
 func (r *CreateFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -746,7 +746,7 @@ type CreateNamespaceRequestParams struct {
 
 type CreateNamespaceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 命名空间名称
 	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 
@@ -758,8 +758,8 @@ type CreateNamespaceRequest struct {
 }
 
 func (r *CreateNamespaceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -790,8 +790,8 @@ type CreateNamespaceResponse struct {
 }
 
 func (r *CreateNamespaceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -832,7 +832,7 @@ type CreateTriggerRequestParams struct {
 
 type CreateTriggerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 新建触发器绑定的函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -862,8 +862,8 @@ type CreateTriggerRequest struct {
 }
 
 func (r *CreateTriggerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -903,8 +903,8 @@ type CreateTriggerResponse struct {
 }
 
 func (r *CreateTriggerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -938,7 +938,7 @@ type DeleteAliasRequestParams struct {
 
 type DeleteAliasRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -950,8 +950,8 @@ type DeleteAliasRequest struct {
 }
 
 func (r *DeleteAliasRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -982,8 +982,8 @@ type DeleteAliasResponse struct {
 }
 
 func (r *DeleteAliasResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1000,14 +1000,14 @@ type DeleteCustomDomainRequestParams struct {
 
 type DeleteCustomDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 }
 
 func (r *DeleteCustomDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1036,8 +1036,8 @@ type DeleteCustomDomainResponse struct {
 }
 
 func (r *DeleteCustomDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1060,7 +1060,7 @@ type DeleteFunctionRequestParams struct {
 
 type DeleteFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要删除的函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -1072,8 +1072,8 @@ type DeleteFunctionRequest struct {
 }
 
 func (r *DeleteFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1104,8 +1104,8 @@ type DeleteFunctionResponse struct {
 }
 
 func (r *DeleteFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1125,7 +1125,7 @@ type DeleteLayerVersionRequestParams struct {
 
 type DeleteLayerVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 层名称
 	LayerName *string `json:"LayerName,omitnil,omitempty" name:"LayerName"`
 
@@ -1134,8 +1134,8 @@ type DeleteLayerVersionRequest struct {
 }
 
 func (r *DeleteLayerVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1165,8 +1165,8 @@ type DeleteLayerVersionResponse struct {
 }
 
 func (r *DeleteLayerVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1183,14 +1183,14 @@ type DeleteNamespaceRequestParams struct {
 
 type DeleteNamespaceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 命名空间名称
 	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 }
 
 func (r *DeleteNamespaceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1219,8 +1219,8 @@ type DeleteNamespaceResponse struct {
 }
 
 func (r *DeleteNamespaceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1243,7 +1243,7 @@ type DeleteProvisionedConcurrencyConfigRequestParams struct {
 
 type DeleteProvisionedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要删除预置并发的函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -1255,8 +1255,8 @@ type DeleteProvisionedConcurrencyConfigRequest struct {
 }
 
 func (r *DeleteProvisionedConcurrencyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1287,8 +1287,8 @@ type DeleteProvisionedConcurrencyConfigResponse struct {
 }
 
 func (r *DeleteProvisionedConcurrencyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1308,7 +1308,7 @@ type DeleteReservedConcurrencyConfigRequestParams struct {
 
 type DeleteReservedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要删除最大独占配额的函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -1317,8 +1317,8 @@ type DeleteReservedConcurrencyConfigRequest struct {
 }
 
 func (r *DeleteReservedConcurrencyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1348,8 +1348,8 @@ type DeleteReservedConcurrencyConfigResponse struct {
 }
 
 func (r *DeleteReservedConcurrencyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1381,7 +1381,7 @@ type DeleteTriggerRequestParams struct {
 
 type DeleteTriggerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -1402,8 +1402,8 @@ type DeleteTriggerRequest struct {
 }
 
 func (r *DeleteTriggerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1437,8 +1437,8 @@ type DeleteTriggerResponse struct {
 }
 
 func (r *DeleteTriggerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1644,15 +1644,17 @@ type FunctionVersion struct {
 
 // Predefined struct for user
 type GetAccountRequestParams struct {
+
 }
 
 type GetAccountRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *GetAccountRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1662,7 +1664,7 @@ func (r *GetAccountRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetAccountRequest has unknown keys!", "")
 	}
@@ -1687,8 +1689,8 @@ type GetAccountResponse struct {
 }
 
 func (r *GetAccountResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1711,7 +1713,7 @@ type GetAliasRequestParams struct {
 
 type GetAliasRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -1723,8 +1725,8 @@ type GetAliasRequest struct {
 }
 
 func (r *GetAliasRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1776,8 +1778,8 @@ type GetAliasResponse struct {
 }
 
 func (r *GetAliasResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1794,14 +1796,14 @@ type GetAsyncEventStatusRequestParams struct {
 
 type GetAsyncEventStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 异步执行请求 id
 	InvokeRequestId *string `json:"InvokeRequestId,omitnil,omitempty" name:"InvokeRequestId"`
 }
 
 func (r *GetAsyncEventStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1833,8 +1835,8 @@ type GetAsyncEventStatusResponse struct {
 }
 
 func (r *GetAsyncEventStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1851,14 +1853,14 @@ type GetCustomDomainRequestParams struct {
 
 type GetCustomDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 }
 
 func (r *GetCustomDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1902,8 +1904,8 @@ type GetCustomDomainResponse struct {
 }
 
 func (r *GetCustomDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1926,7 +1928,7 @@ type GetFunctionAddressRequestParams struct {
 
 type GetFunctionAddressRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -1938,8 +1940,8 @@ type GetFunctionAddressRequest struct {
 }
 
 func (r *GetFunctionAddressRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1976,8 +1978,8 @@ type GetFunctionAddressResponse struct {
 }
 
 func (r *GetFunctionAddressResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2000,7 +2002,7 @@ type GetFunctionEventInvokeConfigRequestParams struct {
 
 type GetFunctionEventInvokeConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -2012,8 +2014,8 @@ type GetFunctionEventInvokeConfigRequest struct {
 }
 
 func (r *GetFunctionEventInvokeConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2047,8 +2049,8 @@ type GetFunctionEventInvokeConfigResponse struct {
 }
 
 func (r *GetFunctionEventInvokeConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2100,7 +2102,7 @@ type GetFunctionLogsRequestParams struct {
 
 type GetFunctionLogsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数的名称。
 	// - 为保证[获取函数运行日志](https://cloud.tencent.com/document/product/583/18583)接口`GetFunctionLogs`兼容性，输入参数`FunctionName`仍为非必填项，但建议填写该参数，否则可能导致日志获取失败。
 	// - 函数关联日志服务后，建议使用[日志服务](https://cloud.tencent.com/document/product/614/16875)相关接口以获得最佳日志检索体验。
@@ -2141,8 +2143,8 @@ type GetFunctionLogsRequest struct {
 }
 
 func (r *GetFunctionLogsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2191,8 +2193,8 @@ type GetFunctionLogsResponse struct {
 }
 
 func (r *GetFunctionLogsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2220,7 +2222,7 @@ type GetFunctionRequestParams struct {
 
 type GetFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要获取详情的函数名称，ResourceId和FunctionName只能传一个
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -2237,8 +2239,8 @@ type GetFunctionRequest struct {
 }
 
 func (r *GetFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2425,8 +2427,8 @@ type GetFunctionResponse struct {
 }
 
 func (r *GetFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2446,7 +2448,7 @@ type GetLayerVersionRequestParams struct {
 
 type GetLayerVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 层名称
 	LayerName *string `json:"LayerName,omitnil,omitempty" name:"LayerName"`
 
@@ -2455,8 +2457,8 @@ type GetLayerVersionRequest struct {
 }
 
 func (r *GetLayerVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2513,8 +2515,8 @@ type GetLayerVersionResponse struct {
 }
 
 func (r *GetLayerVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2537,7 +2539,7 @@ type GetProvisionedConcurrencyConfigRequestParams struct {
 
 type GetProvisionedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要获取预置并发详情的函数名称。
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -2549,8 +2551,8 @@ type GetProvisionedConcurrencyConfigRequest struct {
 }
 
 func (r *GetProvisionedConcurrencyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2587,8 +2589,8 @@ type GetProvisionedConcurrencyConfigResponse struct {
 }
 
 func (r *GetProvisionedConcurrencyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2617,7 +2619,7 @@ type GetRequestStatusRequestParams struct {
 
 type GetRequestStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -2635,8 +2637,8 @@ type GetRequestStatusRequest struct {
 }
 
 func (r *GetRequestStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2677,8 +2679,8 @@ type GetRequestStatusResponse struct {
 }
 
 func (r *GetRequestStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2698,7 +2700,7 @@ type GetReservedConcurrencyConfigRequestParams struct {
 
 type GetReservedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要获取最大独占配额详情的函数名称。
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -2707,8 +2709,8 @@ type GetReservedConcurrencyConfigRequest struct {
 }
 
 func (r *GetReservedConcurrencyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2742,8 +2744,8 @@ type GetReservedConcurrencyConfigResponse struct {
 }
 
 func (r *GetReservedConcurrencyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2840,7 +2842,7 @@ type InvokeFunctionRequestParams struct {
 
 type InvokeFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -2861,8 +2863,8 @@ type InvokeFunctionRequest struct {
 }
 
 func (r *InvokeFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2899,8 +2901,8 @@ type InvokeFunctionResponse struct {
 }
 
 func (r *InvokeFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2935,7 +2937,7 @@ type InvokeRequestParams struct {
 
 type InvokeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -2959,8 +2961,8 @@ type InvokeRequest struct {
 }
 
 func (r *InvokeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2998,8 +3000,8 @@ type InvokeResponse struct {
 }
 
 func (r *InvokeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3107,7 +3109,7 @@ type ListAliasesRequestParams struct {
 
 type ListAliasesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -3125,8 +3127,8 @@ type ListAliasesRequest struct {
 }
 
 func (r *ListAliasesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3166,8 +3168,8 @@ type ListAliasesResponse struct {
 }
 
 func (r *ListAliasesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3217,7 +3219,7 @@ type ListAsyncEventsRequestParams struct {
 
 type ListAsyncEventsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -3256,8 +3258,8 @@ type ListAsyncEventsRequest struct {
 }
 
 func (r *ListAsyncEventsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3303,8 +3305,8 @@ type ListAsyncEventsResponse struct {
 }
 
 func (r *ListAsyncEventsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3333,7 +3335,7 @@ type ListCustomDomainsRequestParams struct {
 
 type ListCustomDomainsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 偏移量，默认0
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -3351,8 +3353,8 @@ type ListCustomDomainsRequest struct {
 }
 
 func (r *ListCustomDomainsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3392,8 +3394,8 @@ type ListCustomDomainsResponse struct {
 }
 
 func (r *ListCustomDomainsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3427,14 +3429,14 @@ type ListFunctionsRequestParams struct {
 
 	// 过滤条件。
 	// - tag:tag-key - String - 是否必填：否 - （过滤条件）按照标签键值对进行过滤。 tag-key使用具体的标签键进行替换。
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type ListFunctionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 以升序还是降序的方式返回结果，可选值 ASC 和 DESC
 	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
 
@@ -3458,14 +3460,14 @@ type ListFunctionsRequest struct {
 
 	// 过滤条件。
 	// - tag:tag-key - String - 是否必填：否 - （过滤条件）按照标签键值对进行过滤。 tag-key使用具体的标签键进行替换。
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *ListFunctionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3507,8 +3509,8 @@ type ListFunctionsResponse struct {
 }
 
 func (r *ListFunctionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3528,7 +3530,7 @@ type ListLayerVersionsRequestParams struct {
 
 type ListLayerVersionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 层名称
 	LayerName *string `json:"LayerName,omitnil,omitempty" name:"LayerName"`
 
@@ -3537,8 +3539,8 @@ type ListLayerVersionsRequest struct {
 }
 
 func (r *ListLayerVersionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3571,8 +3573,8 @@ type ListLayerVersionsResponse struct {
 }
 
 func (r *ListLayerVersionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3598,7 +3600,7 @@ type ListLayersRequestParams struct {
 
 type ListLayersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 适配的运行时
 	CompatibleRuntime *string `json:"CompatibleRuntime,omitnil,omitempty" name:"CompatibleRuntime"`
 
@@ -3613,8 +3615,8 @@ type ListLayersRequest struct {
 }
 
 func (r *ListLayersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3652,8 +3654,8 @@ type ListLayersResponse struct {
 }
 
 func (r *ListLayersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3682,7 +3684,7 @@ type ListNamespacesRequestParams struct {
 
 type ListNamespacesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 返回数据长度，默认值为 20
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
@@ -3700,8 +3702,8 @@ type ListNamespacesRequest struct {
 }
 
 func (r *ListNamespacesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3740,8 +3742,8 @@ type ListNamespacesResponse struct {
 }
 
 func (r *ListNamespacesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3778,7 +3780,7 @@ type ListTriggersRequestParams struct {
 
 type ListTriggersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -3804,8 +3806,8 @@ type ListTriggersRequest struct {
 }
 
 func (r *ListTriggersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3846,8 +3848,8 @@ type ListTriggersResponse struct {
 }
 
 func (r *ListTriggersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3879,7 +3881,7 @@ type ListVersionByFunctionRequestParams struct {
 
 type ListVersionByFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -3900,8 +3902,8 @@ type ListVersionByFunctionRequest struct {
 }
 
 func (r *ListVersionByFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3946,8 +3948,8 @@ type ListVersionByFunctionResponse struct {
 }
 
 func (r *ListVersionByFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4153,7 +4155,7 @@ type PublishLayerVersionRequestParams struct {
 
 type PublishLayerVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 层名称，支持26个英文字母大小写、数字、连接符和下划线，第一个字符只能以字母开头，最后一个字符不能为连接符或者下划线，名称长度1-64
 	LayerName *string `json:"LayerName,omitnil,omitempty" name:"LayerName"`
 
@@ -4174,8 +4176,8 @@ type PublishLayerVersionRequest struct {
 }
 
 func (r *PublishLayerVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4212,8 +4214,8 @@ type PublishLayerVersionResponse struct {
 }
 
 func (r *PublishLayerVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4236,7 +4238,7 @@ type PublishVersionRequestParams struct {
 
 type PublishVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 发布函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -4248,8 +4250,8 @@ type PublishVersionRequest struct {
 }
 
 func (r *PublishVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4305,8 +4307,8 @@ type PublishVersionResponse struct {
 }
 
 func (r *PublishVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4336,7 +4338,7 @@ type PutProvisionedConcurrencyConfigRequestParams struct {
 	// 静态预置：Default
 	// 动态追踪并发利用率指标预置：ConcurrencyUtilizationTracking
 	// 预置类型二选一，设置静态预置时可以设置VersionProvisionedConcurrencyNum。
-	//
+	// 
 	// 动态利用率预置可以设置TrackingTarget，MinCapacity，MaxCapacity，保持向后兼容性此时VersionProvisionedConcurrencyNum设置为0.
 	ProvisionedType *string `json:"ProvisionedType,omitnil,omitempty" name:"ProvisionedType"`
 
@@ -4352,7 +4354,7 @@ type PutProvisionedConcurrencyConfigRequestParams struct {
 
 type PutProvisionedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要设置预置并发的函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -4372,7 +4374,7 @@ type PutProvisionedConcurrencyConfigRequest struct {
 	// 静态预置：Default
 	// 动态追踪并发利用率指标预置：ConcurrencyUtilizationTracking
 	// 预置类型二选一，设置静态预置时可以设置VersionProvisionedConcurrencyNum。
-	//
+	// 
 	// 动态利用率预置可以设置TrackingTarget，MinCapacity，MaxCapacity，保持向后兼容性此时VersionProvisionedConcurrencyNum设置为0.
 	ProvisionedType *string `json:"ProvisionedType,omitnil,omitempty" name:"ProvisionedType"`
 
@@ -4387,8 +4389,8 @@ type PutProvisionedConcurrencyConfigRequest struct {
 }
 
 func (r *PutProvisionedConcurrencyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4425,8 +4427,8 @@ type PutProvisionedConcurrencyConfigResponse struct {
 }
 
 func (r *PutProvisionedConcurrencyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4449,7 +4451,7 @@ type PutReservedConcurrencyConfigRequestParams struct {
 
 type PutReservedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要设置最大独占配额的函数的名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -4461,8 +4463,8 @@ type PutReservedConcurrencyConfigRequest struct {
 }
 
 func (r *PutReservedConcurrencyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4493,8 +4495,8 @@ type PutReservedConcurrencyConfigResponse struct {
 }
 
 func (r *PutReservedConcurrencyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4514,7 +4516,7 @@ type PutTotalConcurrencyConfigRequestParams struct {
 
 type PutTotalConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 账号并发内存配额，注：账号并发内存配额下限：用户已用并发内存总额 + 12800
 	TotalConcurrencyMem *uint64 `json:"TotalConcurrencyMem,omitnil,omitempty" name:"TotalConcurrencyMem"`
 
@@ -4523,8 +4525,8 @@ type PutTotalConcurrencyConfigRequest struct {
 }
 
 func (r *PutTotalConcurrencyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4554,8 +4556,8 @@ type PutTotalConcurrencyConfigResponse struct {
 }
 
 func (r *PutTotalConcurrencyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4670,7 +4672,7 @@ type TerminateAsyncEventRequestParams struct {
 
 type TerminateAsyncEventRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -4685,8 +4687,8 @@ type TerminateAsyncEventRequest struct {
 }
 
 func (r *TerminateAsyncEventRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4718,8 +4720,8 @@ type TerminateAsyncEventResponse struct {
 }
 
 func (r *TerminateAsyncEventResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4912,7 +4914,7 @@ type UpdateAliasRequestParams struct {
 
 type UpdateAliasRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -4933,8 +4935,8 @@ type UpdateAliasRequest struct {
 }
 
 func (r *UpdateAliasRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4968,8 +4970,8 @@ type UpdateAliasResponse struct {
 }
 
 func (r *UpdateAliasResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4998,7 +5000,7 @@ type UpdateCustomDomainRequestParams struct {
 
 type UpdateCustomDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 自定义域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
@@ -5016,8 +5018,8 @@ type UpdateCustomDomainRequest struct {
 }
 
 func (r *UpdateCustomDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5050,8 +5052,8 @@ type UpdateCustomDomainResponse struct {
 }
 
 func (r *UpdateCustomDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5101,7 +5103,7 @@ type UpdateFunctionCodeRequestParams struct {
 
 type UpdateFunctionCodeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要修改的函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -5140,8 +5142,8 @@ type UpdateFunctionCodeRequest struct {
 }
 
 func (r *UpdateFunctionCodeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5181,8 +5183,8 @@ type UpdateFunctionCodeResponse struct {
 }
 
 func (r *UpdateFunctionCodeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5269,7 +5271,7 @@ type UpdateFunctionConfigurationRequestParams struct {
 
 type UpdateFunctionConfigurationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要修改的函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -5345,8 +5347,8 @@ type UpdateFunctionConfigurationRequest struct {
 }
 
 func (r *UpdateFunctionConfigurationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5398,8 +5400,8 @@ type UpdateFunctionConfigurationResponse struct {
 }
 
 func (r *UpdateFunctionConfigurationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5422,7 +5424,7 @@ type UpdateFunctionEventInvokeConfigRequestParams struct {
 
 type UpdateFunctionEventInvokeConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 异步重试配置信息
 	AsyncTriggerConfig *AsyncTriggerConfig `json:"AsyncTriggerConfig,omitnil,omitempty" name:"AsyncTriggerConfig"`
 
@@ -5434,8 +5436,8 @@ type UpdateFunctionEventInvokeConfigRequest struct {
 }
 
 func (r *UpdateFunctionEventInvokeConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5466,8 +5468,8 @@ type UpdateFunctionEventInvokeConfigResponse struct {
 }
 
 func (r *UpdateFunctionEventInvokeConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5487,7 +5489,7 @@ type UpdateNamespaceRequestParams struct {
 
 type UpdateNamespaceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 命名空间名称
 	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 
@@ -5496,8 +5498,8 @@ type UpdateNamespaceRequest struct {
 }
 
 func (r *UpdateNamespaceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5527,8 +5529,8 @@ type UpdateNamespaceResponse struct {
 }
 
 func (r *UpdateNamespaceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5569,7 +5571,7 @@ type UpdateTriggerRequestParams struct {
 
 type UpdateTriggerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitnil,omitempty" name:"FunctionName"`
 
@@ -5599,8 +5601,8 @@ type UpdateTriggerRequest struct {
 }
 
 func (r *UpdateTriggerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5637,8 +5639,8 @@ type UpdateTriggerResponse struct {
 }
 
 func (r *UpdateTriggerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5673,7 +5675,7 @@ type UpdateTriggerStatusRequestParams struct {
 
 type UpdateTriggerStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 触发器的初始是能状态OPEN表示开启 CLOSE表示关闭
 	Enable *string `json:"Enable,omitnil,omitempty" name:"Enable"`
 
@@ -5697,8 +5699,8 @@ type UpdateTriggerStatusRequest struct {
 }
 
 func (r *UpdateTriggerStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5733,8 +5735,8 @@ type UpdateTriggerStatusResponse struct {
 }
 
 func (r *UpdateTriggerStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function

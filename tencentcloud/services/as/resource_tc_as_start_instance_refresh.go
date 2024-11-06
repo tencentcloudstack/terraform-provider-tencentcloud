@@ -56,6 +56,11 @@ func ResourceTencentCloudAsStartInstanceRefresh() *schema.Resource {
 										Optional:    true,
 										Description: "Pause policy between batches. Default value: Automatic. Valid values: <br><li>FIRST_BATCH_PAUSE: Pause after the first batch update completes.</li> <li>BATCH_INTERVAL_PAUSE: Pause between each batch update.</li> <li>AUTOMATIC: No pauses.",
 									},
+									"max_surge": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Maximum Extra Quantity. After setting this parameter, a batch of pay-as-you-go extra instances will be created according to the launch configuration before the rolling update starts, and the extra instances will be destroyed after the rolling update is completed.",
+									},
 								},
 							},
 						},
@@ -103,6 +108,10 @@ func resourceTencentCloudAsStartInstanceRefreshCreate(d *schema.ResourceData, me
 
 			if v, ok := rollingUpdateSettingsMap["batch_pause"]; ok {
 				rollingUpdateSettings.BatchPause = helper.String(v.(string))
+			}
+
+			if v, ok := rollingUpdateSettingsMap["max_surge"]; ok {
+				rollingUpdateSettings.MaxSurge = helper.IntInt64(v.(int))
 			}
 
 			refreshSettings.RollingUpdateSettings = &rollingUpdateSettings
