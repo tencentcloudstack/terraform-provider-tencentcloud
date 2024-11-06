@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
-
 	"io/ioutil"
 	"net/url"
 	"os"

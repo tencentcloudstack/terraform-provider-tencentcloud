@@ -21,7 +21,15 @@ func NewAuditService(client *connectivity.TencentCloudClient) AuditService {
 	return AuditService{client: client}
 }
 
+func NewCloudauditService(client *connectivity.TencentCloudClient) CloudauditService {
+	return CloudauditService{client: client}
+}
+
 type AuditService struct {
+	client *connectivity.TencentCloudClient
+}
+
+type CloudauditService struct {
 	client *connectivity.TencentCloudClient
 }
 
@@ -227,11 +235,10 @@ func (me *AuditService) DescribeAuditEventByFilter(ctx context.Context, param ma
 	return
 }
 
-func (me *AuditService) DescribeEventsAuditTrackById(ctx context.Context, trackId string) (ret *audit.DescribeAuditTrackResponseParams, errRet error) {
+func (me *CloudauditService) DescribeEventsAuditTrackById(ctx context.Context, trackId string) (ret *audit.DescribeAuditTrackResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := audit.NewDescribeAuditTrackRequest()
-
 	request.TrackId = helper.StrToUint64Point(trackId)
 
 	defer func() {
@@ -242,7 +249,7 @@ func (me *AuditService) DescribeEventsAuditTrackById(ctx context.Context, trackI
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseAuditClient().DescribeAuditTrack(request)
+	response, err := me.client.UseCloudauditV20190319Client().DescribeAuditTrack(request)
 	if err != nil {
 		errRet = err
 		return
