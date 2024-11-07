@@ -2557,7 +2557,9 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 			}
 
 			for k, v := range config {
-				providerConfig[k] = strings.TrimSpace(v.(string))
+				if strValue, ok := v.(string); ok {
+					providerConfig[k] = strings.TrimSpace(strValue)
+				}
 			}
 		}
 
