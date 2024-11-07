@@ -34,13 +34,13 @@ resource "tencentcloud_scf_function" "foo" {
   runtime           = "Python3.6"
   enable_public_net = true
   dns_cache         = true
+  vpc_id            = "vpc-391sv4w3"
+  subnet_id         = "subnet-ljyn7h30"
+  zip_file          = "/scf/first.zip"
+
   intranet_config {
     ip_fixed = "ENABLE"
   }
-  vpc_id    = "vpc-391sv4w3"
-  subnet_id = "subnet-ljyn7h30"
-
-  zip_file = "/scf/first.zip"
 
   tags = {
     "env" = "test"
@@ -75,8 +75,7 @@ resource "tencentcloud_scf_function" "foo" {
   handler           = "first.do_it_first"
   runtime           = "Python3.6"
   enable_public_net = true
-
-  zip_file = "/scf/first.zip"
+  zip_file          = "/scf/first.zip"
 
   triggers {
     name         = "tf-test-fn-trigger"
@@ -89,6 +88,18 @@ resource "tencentcloud_scf_function" "foo" {
     cos_region   = "ap-guangzhou"
     type         = "cos"
     trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
+  }
+
+  triggers {
+    name = "tf-test-fn-trigger"
+    type = "http"
+    trigger_desc = jsonencode({
+      "AuthType" : "NONE",
+      "NetConfig" : {
+        "EnableIntranet" : true,
+        "EnableExtranet" : false,
+      }
+    })
   }
 }
 ```
