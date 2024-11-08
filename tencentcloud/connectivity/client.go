@@ -221,11 +221,8 @@ type TencentCloudClient struct {
 	ccnv20170312Conn        *vpc.Client
 	tcssv20201101Conn       *tcss.Client
 	cloudauditv20190319Conn *audit.Client
-<<<<<<< HEAD
 	privatednsv20201028Conn *privatedns.Client
-=======
 	wafv20180125Conn        *waf.Client
->>>>>>> c5a5ebdb2 (add)
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1935,7 +1932,6 @@ func (me *TencentCloudClient) UseCloudauditV20190319Client() *audit.Client {
 	return me.cloudauditv20190319Conn
 }
 
-<<<<<<< HEAD
 // UsePrivatednsV20201028Client return PRIVATEDNS client for service
 func (me *TencentCloudClient) UsePrivatednsV20201028Client() *privatedns.Client {
 	if me.privatednsv20201028Conn != nil {
@@ -1947,7 +1943,8 @@ func (me *TencentCloudClient) UsePrivatednsV20201028Client() *privatedns.Client 
 	me.privatednsv20201028Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.privatednsv20201028Conn
-=======
+}
+
 // UseWafV20180125Client return WAF client for service
 func (me *TencentCloudClient) UseWafV20180125Client() *waf.Client {
 	if me.wafv20180125Conn != nil {
@@ -1959,5 +1956,4 @@ func (me *TencentCloudClient) UseWafV20180125Client() *waf.Client {
 	me.wafv20180125Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.wafv20180125Conn
->>>>>>> c5a5ebdb2 (add)
 }
