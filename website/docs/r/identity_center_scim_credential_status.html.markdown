@@ -4,17 +4,20 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_identity_center_scim_credential_status"
 sidebar_current: "docs-tencentcloud-resource-identity_center_scim_credential_status"
 description: |-
-  Provides a resource to create a organization identity_center_scim_credential_status
+  Provides a resource to manage identity center scim credential status
 ---
 
 # tencentcloud_identity_center_scim_credential_status
 
-Provides a resource to create a organization identity_center_scim_credential_status
+Provides a resource to manage identity center scim credential status
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_identity_center_scim_credential_status" "identity_center_scim_credential_status" {
+  zone_id       = "z-xxxxxx"
+  credential_id = "scimcred-xxxxxx"
+  status        = "Enabled"
 }
 ```
 
@@ -39,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 organization identity_center_scim_credential_status can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_identity_center_scim_credential_status.identity_center_scim_credential_status identity_center_scim_credential_status_id
+terraform import tencentcloud_identity_center_scim_credential_status.identity_center_scim_credential_status ${zone_id}#${credential_id}
 ```
 

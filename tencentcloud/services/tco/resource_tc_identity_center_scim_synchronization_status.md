@@ -14,5 +14,5 @@ Import
 organization identity_center_scim_synchronization_status can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_identity_center_scim_synchronization_status.identity_center_scim_synchronization_status identity_center_scim_synchronization_status_id
+terraform import tencentcloud_identity_center_scim_synchronization_status.identity_center_scim_synchronization_status ${zone_id}
 ```

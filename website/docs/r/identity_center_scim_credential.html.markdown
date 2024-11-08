@@ -4,17 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_identity_center_scim_credential"
 sidebar_current: "docs-tencentcloud-resource-identity_center_scim_credential"
 description: |-
-  Provides a resource to create a organization identity_center_scim_credential
+  Provides a resource to create an identity center scim credential
 ---
 
 # tencentcloud_identity_center_scim_credential
 
-Provides a resource to create a organization identity_center_scim_credential
+Provides a resource to create an identity center scim credential
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_identity_center_scim_credential" "identity_center_scim_credential" {
+  zone_id = "z-xxxxxx"
 }
 ```
 
@@ -41,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 organization identity_center_scim_credential can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_identity_center_scim_credential.identity_center_scim_credential identity_center_scim_credential_id
+terraform import tencentcloud_identity_center_scim_credential.identity_center_scim_credential ${zone_id}#${credential_id}
 ```
 

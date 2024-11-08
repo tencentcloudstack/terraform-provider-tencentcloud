@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_identity_center_scim_credential_status
+```
+
+```release-note:new-resource
+tencentcloud_identity_center_scim_credential
+```
+
+```release-note:new-resource
+tencentcloud_identity_center_scim_synchronization_status
+```
