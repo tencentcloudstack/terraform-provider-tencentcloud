@@ -1356,6 +1356,8 @@ PrivateDNS
   Data Source
     tencentcloud_private_dns_records
     tencentcloud_private_dns_private_zone_list
+    tencentcloud_private_dns_forward_rules
+    tencentcloud_private_dns_end_points
 
 Cloud Log Service(CLS)
   Resource
