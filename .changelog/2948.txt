@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_private_dns_forward_rule
+```
+
+```release-note:new-resource
+tencentcloud_private_dns_end_point
+```
