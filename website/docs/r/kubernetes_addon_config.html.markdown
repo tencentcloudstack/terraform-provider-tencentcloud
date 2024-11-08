@@ -32,6 +32,7 @@ The following arguments are supported:
 * `cluster_id` - (Required, String, ForceNew) ID of cluster.
 * `addon_version` - (Optional, String) Version of addon.
 * `raw_values` - (Optional, String) Params of addon, base64 encoded json format.
+* `update_strategy` - (Optional, String) The update strategy of Addon parameters. Valid values are: `replace` and `merge`. The default value is merge, which is compatible with the old version API. `replace`: Use the new RawValues to completely replace the original RawValues of Addon. `merge`: Add or update the corresponding parameters in the original RawValues of Addon according to the new RawValues. Only valid in update addon process.
 
 ## Attributes Reference
 

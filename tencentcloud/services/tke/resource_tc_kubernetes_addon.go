@@ -42,7 +42,14 @@ func ResourceTencentCloudKubernetesAddon() *schema.Resource {
 			"addon_version": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Version of addon.",
+			},
+
+			"update_strategy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The update strategy of Addon parameters. Valid values are: `replace` and `merge`. The default value is merge, which is compatible with the old version API. `replace`: Use the new RawValues to completely replace the original RawValues of Addon. `merge`: Add or update the corresponding parameters in the original RawValues of Addon according to the new RawValues. Only valid in update addon process.",
 			},
 
 			"raw_values": {
@@ -160,12 +167,13 @@ func resourceTencentCloudKubernetesAddonRead(d *schema.ResourceData, meta interf
 		_ = d.Set("addon_version", respData.AddonVersion)
 	}
 
-	if respData.RawValues != nil {
-		rawValues := respData.RawValues
-		base64DecodeValues, _ := base64.StdEncoding.DecodeString(*rawValues)
-		jsonValues := string(base64DecodeValues)
-		_ = d.Set("raw_values", jsonValues)
-	}
+	// describe cannot return the correct raw_values when included the update_strategy
+	// if respData.RawValues != nil {
+	// 	rawValues := respData.RawValues
+	// 	base64DecodeValues, _ := base64.StdEncoding.DecodeString(*rawValues)
+	// 	jsonValues := string(base64DecodeValues)
+	// 	_ = d.Set("raw_values", jsonValues)
+	// }
 
 	if respData.Phase != nil {
 		_ = d.Set("phase", respData.Phase)
@@ -195,7 +203,7 @@ func resourceTencentCloudKubernetesAddonUpdate(d *schema.ResourceData, meta inte
 	addonName := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"addon_version", "raw_values"}
+	mutableArgs := []string{"addon_version", "raw_values", "update_strategy"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -217,6 +225,10 @@ func resourceTencentCloudKubernetesAddonUpdate(d *schema.ResourceData, meta inte
 			jsonValues := helper.String(v.(string))
 			rawValues := base64.StdEncoding.EncodeToString([]byte(*jsonValues))
 			request.RawValues = &rawValues
+		}
+
+		if v, ok := d.GetOk("update_strategy"); ok {
+			request.UpdateStrategy = helper.String(v.(string))
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

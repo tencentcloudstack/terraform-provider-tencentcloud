@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_addon: support `update_strategy`
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_addon_config: support `update_strategy`
+```
