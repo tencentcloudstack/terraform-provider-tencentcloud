@@ -45,7 +45,7 @@ func ResourceTencentCloudKubernetesAddonConfig() *schema.Resource {
 			"update_strategy": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The update strategy of Addon parameters. Valid values ​​are: `replace` and `merge`. The default value is merge, which is compatible with the old version API. `replace`: Use the new RawValues ​​to completely replace the original RawValues ​​of Addon. `merge`: Add or update the corresponding parameters in the original RawValues ​​of Addon according to the new RawValues.",
+				Description: "The update strategy of Addon parameters. Valid values are: `replace` and `merge`. The default value is merge, which is compatible with the old version API. `replace`: Use the new RawValues to completely replace the original RawValues of Addon. `merge`: Add or update the corresponding parameters in the original RawValues of Addon according to the new RawValues. Only valid in update addon process.",
 			},
 
 			"raw_values": {
