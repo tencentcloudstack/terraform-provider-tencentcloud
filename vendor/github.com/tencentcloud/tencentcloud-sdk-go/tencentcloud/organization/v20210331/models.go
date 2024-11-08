@@ -314,6 +314,9 @@ type AddPermissionPolicyToRoleConfigurationRequestParams struct {
 
 	// 自定义策略内容。长度：最大 4096 个字符。当RolePolicyType为Inline时，该参数必须配置。关于权限策略的语法和结构，请参见权限策略语法和结构。
 	CustomPolicyDocument *string `json:"CustomPolicyDocument,omitnil,omitempty" name:"CustomPolicyDocument"`
+
+	// 自定义策略内容列表（跟RolePolicyNames一一对应）
+	CustomPolicyDocuments []*string `json:"CustomPolicyDocuments,omitnil,omitempty" name:"CustomPolicyDocuments"`
 }
 
 type AddPermissionPolicyToRoleConfigurationRequest struct {
@@ -336,6 +339,9 @@ type AddPermissionPolicyToRoleConfigurationRequest struct {
 
 	// 自定义策略内容。长度：最大 4096 个字符。当RolePolicyType为Inline时，该参数必须配置。关于权限策略的语法和结构，请参见权限策略语法和结构。
 	CustomPolicyDocument *string `json:"CustomPolicyDocument,omitnil,omitempty" name:"CustomPolicyDocument"`
+
+	// 自定义策略内容列表（跟RolePolicyNames一一对应）
+	CustomPolicyDocuments []*string `json:"CustomPolicyDocuments,omitnil,omitempty" name:"CustomPolicyDocuments"`
 }
 
 func (r *AddPermissionPolicyToRoleConfigurationRequest) ToJsonString() string {
@@ -356,6 +362,7 @@ func (r *AddPermissionPolicyToRoleConfigurationRequest) FromJsonString(s string)
 	delete(f, "RolePolicyNames")
 	delete(f, "RolePolicies")
 	delete(f, "CustomPolicyDocument")
+	delete(f, "CustomPolicyDocuments")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddPermissionPolicyToRoleConfigurationRequest has unknown keys!", "")
 	}
@@ -1032,6 +1039,9 @@ type CreateGroupRequestParams struct {
 
 	// 用户组的描述。  长度：最大 1024 个字符。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 用户组类型  Manual：手动创建，Synchronized：外部导入
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
 }
 
 type CreateGroupRequest struct {
@@ -1045,6 +1055,9 @@ type CreateGroupRequest struct {
 
 	// 用户组的描述。  长度：最大 1024 个字符。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 用户组类型  Manual：手动创建，Synchronized：外部导入
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
 }
 
 func (r *CreateGroupRequest) ToJsonString() string {
@@ -1062,6 +1075,7 @@ func (r *CreateGroupRequest) FromJsonString(s string) error {
 	delete(f, "ZoneId")
 	delete(f, "GroupName")
 	delete(f, "Description")
+	delete(f, "GroupType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateGroupRequest has unknown keys!", "")
 	}
@@ -1881,6 +1895,81 @@ func (r *CreateRoleConfigurationResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateSCIMCredentialRequestParams struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+type CreateSCIMCredentialRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+func (r *CreateSCIMCredentialRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateSCIMCredentialRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSCIMCredentialRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateSCIMCredentialResponseParams struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥ID。scimcred-前缀开头，后面是12位随机数字/小写字母。
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+
+	// SCIM密钥类型。
+	CredentialType *string `json:"CredentialType,omitnil,omitempty" name:"CredentialType"`
+
+	// SCIM 密钥的创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// SCIM 密钥的过期时间。
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+
+	// SCIM密钥状态，Enabled已开启，Disabled已关闭。
+	CredentialStatus *string `json:"CredentialStatus,omitnil,omitempty" name:"CredentialStatus"`
+
+	// SCIM密钥。
+	CredentialSecret *string `json:"CredentialSecret,omitnil,omitempty" name:"CredentialSecret"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateSCIMCredentialResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateSCIMCredentialResponseParams `json:"Response"`
+}
+
+func (r *CreateSCIMCredentialResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateSCIMCredentialResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateUserRequestParams struct {
 	// 空间 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -1905,6 +1994,9 @@ type CreateUserRequestParams struct {
 
 	// 用户的状态。取值：  Enabled（默认值）：启用。 Disabled：禁用。
 	UserStatus *string `json:"UserStatus,omitnil,omitempty" name:"UserStatus"`
+
+	// 用户类型  Manual：手动创建，Synchronized：外部导入
+	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
 }
 
 type CreateUserRequest struct {
@@ -1933,6 +2025,9 @@ type CreateUserRequest struct {
 
 	// 用户的状态。取值：  Enabled（默认值）：启用。 Disabled：禁用。
 	UserStatus *string `json:"UserStatus,omitnil,omitempty" name:"UserStatus"`
+
+	// 用户类型  Manual：手动创建，Synchronized：外部导入
+	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
 }
 
 func (r *CreateUserRequest) ToJsonString() string {
@@ -1955,6 +2050,7 @@ func (r *CreateUserRequest) FromJsonString(s string) error {
 	delete(f, "Description")
 	delete(f, "Email")
 	delete(f, "UserStatus")
+	delete(f, "UserType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserRequest has unknown keys!", "")
 	}
@@ -2772,6 +2868,67 @@ func (r *DeleteRoleConfigurationResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteRoleConfigurationResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteSCIMCredentialRequestParams struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥ID。scimcred-前缀开头，后面是12位随机数字/小写字母。
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+}
+
+type DeleteSCIMCredentialRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥ID。scimcred-前缀开头，后面是12位随机数字/小写字母。
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+}
+
+func (r *DeleteSCIMCredentialRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteSCIMCredentialRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "CredentialId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteSCIMCredentialRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteSCIMCredentialResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteSCIMCredentialResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteSCIMCredentialResponseParams `json:"Response"`
+}
+
+func (r *DeleteSCIMCredentialResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteSCIMCredentialResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5241,6 +5398,63 @@ func (r *GetRoleConfigurationResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type GetSCIMSynchronizationStatusRequestParams struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+type GetSCIMSynchronizationStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+func (r *GetSCIMSynchronizationStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetSCIMSynchronizationStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetSCIMSynchronizationStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type GetSCIMSynchronizationStatusResponseParams struct {
+	// SCIM 同步状态。Enabled：启用。 Disabled：禁用。
+	SCIMSynchronizationStatus *string `json:"SCIMSynchronizationStatus,omitnil,omitempty" name:"SCIMSynchronizationStatus"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type GetSCIMSynchronizationStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *GetSCIMSynchronizationStatusResponseParams `json:"Response"`
+}
+
+func (r *GetSCIMSynchronizationStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetSCIMSynchronizationStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type GetTaskStatusRequestParams struct {
 	// 空间ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -5938,8 +6152,11 @@ type ListGroupsRequestParams struct {
 	// 排序的字段，目前只支持CreateTime，默认是CreateTime字段
 	SortField *string `json:"SortField,omitnil,omitempty" name:"SortField"`
 
-	// 排序类型：Desc 倒序 Asc  正序，需要你和SortField一起设置
+	// 排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
+
+	// 翻页offset. 不要与NextToken同时使用，优先使用NextToken
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type ListGroupsRequest struct {
@@ -5966,8 +6183,11 @@ type ListGroupsRequest struct {
 	// 排序的字段，目前只支持CreateTime，默认是CreateTime字段
 	SortField *string `json:"SortField,omitnil,omitempty" name:"SortField"`
 
-	// 排序类型：Desc 倒序 Asc  正序，需要你和SortField一起设置
+	// 排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
+
+	// 翻页offset. 不要与NextToken同时使用，优先使用NextToken
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *ListGroupsRequest) ToJsonString() string {
@@ -5990,6 +6210,7 @@ func (r *ListGroupsRequest) FromJsonString(s string) error {
 	delete(f, "FilterUsers")
 	delete(f, "SortField")
 	delete(f, "SortType")
+	delete(f, "Offset")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListGroupsRequest has unknown keys!", "")
 	}
@@ -7024,7 +7245,7 @@ type ListRoleConfigurationsRequestParams struct {
 	// 每页的最大数据条数。  取值范围：1~100。  默认值：10。
 	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 过滤条件。不区分大小写。目前，只支持 RoleConfigurationName，只支持 eq（Equals）和 sw（Start With）。 示例：Filter = "RoleConfigurationName，只支持 sw test"，表示查询名称以 test 开头的全部权限配置。Filter = "RoleConfigurationName，只支持 eq TestRoleConfiguration"，表示查询名称为 TestRoleConfiguration 的权限配置。
+	// 过滤文本。不区分大小写。目前，支持 RoleConfigurationName和Description. 示例：Filter = "test"，表示查询名称或描述里包含 test 的权限配置。
 	Filter *string `json:"Filter,omitnil,omitempty" name:"Filter"`
 
 	// 检索成员账号是否配置过权限，如果配置过返回IsSelected: true, 否则返回false。
@@ -7046,7 +7267,7 @@ type ListRoleConfigurationsRequest struct {
 	// 每页的最大数据条数。  取值范围：1~100。  默认值：10。
 	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 过滤条件。不区分大小写。目前，只支持 RoleConfigurationName，只支持 eq（Equals）和 sw（Start With）。 示例：Filter = "RoleConfigurationName，只支持 sw test"，表示查询名称以 test 开头的全部权限配置。Filter = "RoleConfigurationName，只支持 eq TestRoleConfiguration"，表示查询名称为 TestRoleConfiguration 的权限配置。
+	// 过滤文本。不区分大小写。目前，支持 RoleConfigurationName和Description. 示例：Filter = "test"，表示查询名称或描述里包含 test 的权限配置。
 	Filter *string `json:"Filter,omitnil,omitempty" name:"Filter"`
 
 	// 检索成员账号是否配置过权限，如果配置过返回IsSelected: true, 否则返回false。
@@ -7114,6 +7335,73 @@ func (r *ListRoleConfigurationsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ListRoleConfigurationsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListSCIMCredentialsRequestParams struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥ID
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+}
+
+type ListSCIMCredentialsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥ID
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+}
+
+func (r *ListSCIMCredentialsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListSCIMCredentialsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "CredentialId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListSCIMCredentialsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListSCIMCredentialsResponseParams struct {
+	// SCIM密钥数量。
+	TotalCounts *int64 `json:"TotalCounts,omitnil,omitempty" name:"TotalCounts"`
+
+	// SCIM 密钥信息。
+	SCIMCredentials []*SCIMCredential `json:"SCIMCredentials,omitnil,omitempty" name:"SCIMCredentials"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ListSCIMCredentialsResponse struct {
+	*tchttp.BaseResponse
+	Response *ListSCIMCredentialsResponseParams `json:"Response"`
+}
+
+func (r *ListSCIMCredentialsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListSCIMCredentialsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7504,8 +7792,11 @@ type ListUsersRequestParams struct {
 	// 排序的字段，目前只支持CreateTime，默认是CreateTime字段
 	SortField *string `json:"SortField,omitnil,omitempty" name:"SortField"`
 
-	// 排序类型：Desc 倒序 Asc  正序，需要你和SortField一起设置
+	// 排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
+
+	// 翻页offset. 不要与NextToken同时使用，优先使用NextToken
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type ListUsersRequest struct {
@@ -7535,8 +7826,11 @@ type ListUsersRequest struct {
 	// 排序的字段，目前只支持CreateTime，默认是CreateTime字段
 	SortField *string `json:"SortField,omitnil,omitempty" name:"SortField"`
 
-	// 排序类型：Desc 倒序 Asc  正序，需要你和SortField一起设置
+	// 排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
+
+	// 翻页offset. 不要与NextToken同时使用，优先使用NextToken
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *ListUsersRequest) ToJsonString() string {
@@ -7560,6 +7854,7 @@ func (r *ListUsersRequest) FromJsonString(s string) error {
 	delete(f, "FilterGroups")
 	delete(f, "SortField")
 	delete(f, "SortType")
+	delete(f, "Offset")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListUsersRequest has unknown keys!", "")
 	}
@@ -8876,6 +9171,26 @@ type SAMLServiceProvider struct {
 	AcsUrl *string `json:"AcsUrl,omitnil,omitempty" name:"AcsUrl"`
 }
 
+type SCIMCredential struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥状态，Enabled已开启，Disabled已关闭。
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// SCIM密钥ID。scimcred-前缀开头，后面是12位随机数字/小写字母。
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+
+	// SCIM密钥类型。
+	CredentialType *string `json:"CredentialType,omitnil,omitempty" name:"CredentialType"`
+
+	// SCIM 密钥的创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// SCIM 密钥的过期时间。
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+}
+
 // Predefined struct for user
 type SendOrgMemberAccountBindEmailRequestParams struct {
 	// 成员Uin。
@@ -9809,6 +10124,135 @@ func (r *UpdateRoleConfigurationResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateRoleConfigurationResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateSCIMCredentialStatusRequestParams struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥ID。scimcred-前缀开头，后面是12位随机数字/小写字母。
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+
+	// SCIM密钥状态。Enabled：启用。 Disabled：禁用。
+	NewStatus *string `json:"NewStatus,omitnil,omitempty" name:"NewStatus"`
+}
+
+type UpdateSCIMCredentialStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM密钥ID。scimcred-前缀开头，后面是12位随机数字/小写字母。
+	CredentialId *string `json:"CredentialId,omitnil,omitempty" name:"CredentialId"`
+
+	// SCIM密钥状态。Enabled：启用。 Disabled：禁用。
+	NewStatus *string `json:"NewStatus,omitnil,omitempty" name:"NewStatus"`
+}
+
+func (r *UpdateSCIMCredentialStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateSCIMCredentialStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "CredentialId")
+	delete(f, "NewStatus")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateSCIMCredentialStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateSCIMCredentialStatusResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateSCIMCredentialStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateSCIMCredentialStatusResponseParams `json:"Response"`
+}
+
+func (r *UpdateSCIMCredentialStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateSCIMCredentialStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateSCIMSynchronizationStatusRequestParams struct {
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM 同步状态。Enabled：启用。Disabled：禁用。
+	SCIMSynchronizationStatus *string `json:"SCIMSynchronizationStatus,omitnil,omitempty" name:"SCIMSynchronizationStatus"`
+}
+
+type UpdateSCIMSynchronizationStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// SCIM 同步状态。Enabled：启用。Disabled：禁用。
+	SCIMSynchronizationStatus *string `json:"SCIMSynchronizationStatus,omitnil,omitempty" name:"SCIMSynchronizationStatus"`
+}
+
+func (r *UpdateSCIMSynchronizationStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateSCIMSynchronizationStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "SCIMSynchronizationStatus")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateSCIMSynchronizationStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateSCIMSynchronizationStatusResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateSCIMSynchronizationStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateSCIMSynchronizationStatusResponseParams `json:"Response"`
+}
+
+func (r *UpdateSCIMSynchronizationStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateSCIMSynchronizationStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
