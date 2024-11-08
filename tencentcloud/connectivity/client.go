@@ -221,6 +221,7 @@ type TencentCloudClient struct {
 	ccnv20170312Conn        *vpc.Client
 	tcssv20201101Conn       *tcss.Client
 	cloudauditv20190319Conn *audit.Client
+	privatednsv20201028Conn *privatedns.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1928,4 +1929,17 @@ func (me *TencentCloudClient) UseCloudauditV20190319Client() *audit.Client {
 	me.cloudauditv20190319Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cloudauditv20190319Conn
+}
+
+// UsePrivatednsV20201028Client return PRIVATEDNS client for service
+func (me *TencentCloudClient) UsePrivatednsV20201028Client() *privatedns.Client {
+	if me.privatednsv20201028Conn != nil {
+		return me.privatednsv20201028Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.privatednsv20201028Conn, _ = privatedns.NewClient(me.Credential, me.Region, cpf)
+	me.privatednsv20201028Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.privatednsv20201028Conn
 }

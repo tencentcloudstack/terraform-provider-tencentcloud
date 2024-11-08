@@ -1685,6 +1685,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_private_dns_record":                                                     privatedns.ResourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                                        privatedns.ResourceTencentCloudPrivateDnsZoneVpcAttachment(),
 			"tencentcloud_subscribe_private_zone_service":                                         privatedns.ResourceTencentCloudSubscribePrivateZoneService(),
+			"tencentcloud_private_dns_forward_rule":                                               privatedns.ResourceTencentCloudPrivateDnsForwardRule(),
+			"tencentcloud_private_dns_end_point":                                                  privatedns.ResourceTencentCloudPrivateDnsEndPoint(),
 			"tencentcloud_cls_logset":                                                             cls.ResourceTencentCloudClsLogset(),
 			"tencentcloud_cls_topic":                                                              cls.ResourceTencentCloudClsTopic(),
 			"tencentcloud_cls_config":                                                             cls.ResourceTencentCloudClsConfig(),

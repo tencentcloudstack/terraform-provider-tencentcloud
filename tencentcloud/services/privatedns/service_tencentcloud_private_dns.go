@@ -11,12 +11,17 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 // basic information
 
 type PrivateDnsService struct {
+	client *connectivity.TencentCloudClient
+}
+
+type PrivatednsService struct {
 	client *connectivity.TencentCloudClient
 }
 
@@ -220,5 +225,63 @@ func (me *PrivateDnsService) DescribePrivatednsPrivateZoneListByFilter(ctx conte
 	}
 
 	privateZoneList = response.Response.PrivateZoneSet
+	return
+}
+
+func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Context, ruleId string) (ret *privatedns.ForwardRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatedns.NewDescribeForwardRuleRequest()
+	request.RuleId = helper.String(ruleId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePrivatednsV20201028Client().DescribeForwardRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.ForwardRule
+	return
+}
+
+func (me *PrivatednsService) DescribePrivateDnsEndPointById(ctx context.Context, endPointId string) (ret *privatedns.DescribeEndPointListResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatedns.NewDescribeEndPointListRequest()
+	filter := &privatedns.Filter{
+		Name:   helper.String("EndPointId"),
+		Values: []*string{helper.String(endPointId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePrivatednsV20201028Client().DescribeEndPointList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }
