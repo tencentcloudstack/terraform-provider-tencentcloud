@@ -1468,34 +1468,7 @@ func (me *WafService) DeleteWafIpAccessControlById(ctx context.Context, domain s
 	return
 }
 
-func (me *WafService) DescribeWafClbIpAccessControlById(ctx context.Context, domain string, ruleId string) (ret *waf.DescribeIpAccessControlResponseParams, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := waf.NewDescribeIpAccessControlRequest()
-	request.Domain = helper.String(domain)
-	request.Count = helper.Uint64(1)
-	request.RuleId = helper.StrToUint64Point(ruleId)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseWafV20180125Client().DescribeIpAccessControl(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	ret = response.Response
-	return
-}
-
-func (me *WafService) DescribeWafSaasIpAccessControlById(ctx context.Context, domain string, ruleId string) (ret *waf.DescribeIpAccessControlResponseParams, errRet error) {
+func (me *WafService) DescribeWafIpAccessControlV2ById(ctx context.Context, domain string, ruleId string) (ret *waf.DescribeIpAccessControlResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := waf.NewDescribeIpAccessControlRequest()

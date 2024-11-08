@@ -15,12 +15,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudWafClbIpAccessControl() *schema.Resource {
+func ResourceTencentCloudWafIpAccessControlV2() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudWafClbIpAccessControlCreate,
-		Read:   resourceTencentCloudWafClbIpAccessControlRead,
-		Update: resourceTencentCloudWafClbIpAccessControlUpdate,
-		Delete: resourceTencentCloudWafClbIpAccessControlDelete,
+		Create: resourceTencentCloudWafIpAccessControlV2Create,
+		Read:   resourceTencentCloudWafIpAccessControlV2Read,
+		Update: resourceTencentCloudWafIpAccessControlV2Update,
+		Delete: resourceTencentCloudWafIpAccessControlV2Delete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -142,8 +142,8 @@ func ResourceTencentCloudWafClbIpAccessControl() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudWafClbIpAccessControlCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_clb_ip_access_control.create")()
+func resourceTencentCloudWafIpAccessControlV2Create(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_ip_access_control_v2.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -186,9 +186,6 @@ func resourceTencentCloudWafClbIpAccessControlCreate(d *schema.ResourceData, met
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = helper.String(v.(string))
 	}
-
-	edition := "clb-waf"
-	request.Edition = &edition
 
 	sourceType := "custom"
 	request.SourceType = &sourceType
@@ -260,7 +257,7 @@ func resourceTencentCloudWafClbIpAccessControlCreate(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create waf clb ip access control failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create waf ip access control v2 failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -268,11 +265,11 @@ func resourceTencentCloudWafClbIpAccessControlCreate(d *schema.ResourceData, met
 
 	d.SetId(strings.Join([]string{instanceId, domain, helper.UInt64ToStr(ruleId)}, tccommon.FILED_SP))
 
-	return resourceTencentCloudWafClbIpAccessControlRead(d, meta)
+	return resourceTencentCloudWafIpAccessControlV2Read(d, meta)
 }
 
-func resourceTencentCloudWafClbIpAccessControlRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_clb_ip_access_control.read")()
+func resourceTencentCloudWafIpAccessControlV2Read(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_ip_access_control_v2.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -293,17 +290,17 @@ func resourceTencentCloudWafClbIpAccessControlRead(d *schema.ResourceData, meta 
 
 	_ = d.Set("domain", domain)
 
-	respData, err := service.DescribeWafClbIpAccessControlById(ctx, domain, ruleId)
+	respData, err := service.DescribeWafIpAccessControlV2ById(ctx, domain, ruleId)
 	if err != nil {
 		return err
 	}
 
 	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `waf_clb_ip_access_control` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `waf_ip_access_control_v2` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if err := resourceTencentCloudWafClbIpAccessControlReadPostHandleResponse0(ctx, respData); err != nil {
+	if err := resourceTencentCloudWafIpAccessControlV2ReadPostHandleResponse0(ctx, respData); err != nil {
 		return err
 	}
 
@@ -311,8 +308,8 @@ func resourceTencentCloudWafClbIpAccessControlRead(d *schema.ResourceData, meta 
 	return nil
 }
 
-func resourceTencentCloudWafClbIpAccessControlUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_clb_ip_access_control.update")()
+func resourceTencentCloudWafIpAccessControlV2Update(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_ip_access_control_v2.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -404,7 +401,7 @@ func resourceTencentCloudWafClbIpAccessControlUpdate(d *schema.ResourceData, met
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			if err := resourceTencentCloudWafClbIpAccessControlUpdatePreRequest0(ctx, request); err != nil {
+			if err := resourceTencentCloudWafIpAccessControlV2UpdatePreRequest0(ctx, request); err != nil {
 				return err
 			}
 
@@ -417,7 +414,7 @@ func resourceTencentCloudWafClbIpAccessControlUpdate(d *schema.ResourceData, met
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s update waf clb ip access control failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update waf ip access control v2 failed, reason:%+v", logId, err)
 			return err
 		}
 	}
@@ -425,11 +422,11 @@ func resourceTencentCloudWafClbIpAccessControlUpdate(d *schema.ResourceData, met
 	_ = instanceId
 	_ = domain
 	_ = ruleId
-	return resourceTencentCloudWafClbIpAccessControlRead(d, meta)
+	return resourceTencentCloudWafIpAccessControlV2Read(d, meta)
 }
 
-func resourceTencentCloudWafClbIpAccessControlDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_clb_ip_access_control.delete")()
+func resourceTencentCloudWafIpAccessControlV2Delete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_ip_access_control_v2.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -451,7 +448,7 @@ func resourceTencentCloudWafClbIpAccessControlDelete(d *schema.ResourceData, met
 	request.Domain = helper.String(domain)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		if err := resourceTencentCloudWafClbIpAccessControlDeletePreRequest0(ctx, request); err != nil {
+		if err := resourceTencentCloudWafIpAccessControlV2DeletePreRequest0(ctx, request); err != nil {
 			return err
 		}
 
@@ -465,7 +462,7 @@ func resourceTencentCloudWafClbIpAccessControlDelete(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete waf clb ip access control failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete waf ip access control v2 failed, reason:%+v", logId, err)
 		return err
 	}
 

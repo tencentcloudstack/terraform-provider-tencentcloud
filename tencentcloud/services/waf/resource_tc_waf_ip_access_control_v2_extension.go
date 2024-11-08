@@ -13,7 +13,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWafClbIpAccessControlReadPostHandleResponse0(ctx context.Context, resp *wafv20180125.DescribeIpAccessControlResponseParams) error {
+func resourceTencentCloudWafIpAccessControlV2ReadPostHandleResponse0(ctx context.Context, resp *wafv20180125.DescribeIpAccessControlResponseParams) error {
 	logId := tccommon.GetLogId(ctx)
 	d := tccommon.ResourceDataFromContext(ctx)
 	if d == nil {
@@ -104,7 +104,7 @@ func resourceTencentCloudWafClbIpAccessControlReadPostHandleResponse0(ctx contex
 	return nil
 }
 
-func resourceTencentCloudWafClbIpAccessControlUpdatePreRequest0(ctx context.Context, req *wafv20180125.ModifyIpAccessControlRequest) *resource.RetryError {
+func resourceTencentCloudWafIpAccessControlV2UpdatePreRequest0(ctx context.Context, req *wafv20180125.ModifyIpAccessControlRequest) *resource.RetryError {
 	d := tccommon.ResourceDataFromContext(ctx)
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
@@ -124,16 +124,13 @@ func resourceTencentCloudWafClbIpAccessControlUpdatePreRequest0(ctx context.Cont
 		req.ActionType = helper.IntInt64(v.(int))
 	}
 
-	edition := "clb-waf"
-	req.Edition = &edition
-
 	sourceType := "custom"
 	req.SourceType = &sourceType
 
 	return nil
 }
 
-func resourceTencentCloudWafClbIpAccessControlDeletePreRequest0(ctx context.Context, req *wafv20180125.DeleteIpAccessControlV2Request) *resource.RetryError {
+func resourceTencentCloudWafIpAccessControlV2DeletePreRequest0(ctx context.Context, req *wafv20180125.DeleteIpAccessControlV2Request) *resource.RetryError {
 	d := tccommon.ResourceDataFromContext(ctx)
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {

@@ -1,12 +1,12 @@
-Provides a resource to create a waf saas ip access control
+Provides a resource to create a waf ip access control v2
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_waf_saas_ip_access_control" "example" {
+resource "tencentcloud_waf_ip_access_control_v2" "example" {
   instance_id = "waf_2kxtlbky11bbcr4b"
   domain      = "example.com"
-  action_type = 42
+  action_type = 40
   note        = "note."
 
   ip_list = [
@@ -30,8 +30,8 @@ resource "tencentcloud_waf_saas_ip_access_control" "example" {
 
 Import
 
-waf waf_saas_ip_access_control can be imported using the id, e.g.
+waf ip access control v2 can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_saas_ip_access_control.example waf_2kxtlbky11bbcr4b#example.com#5503616778
+terraform import tencentcloud_waf_ip_access_control_v2.example waf_2kxtlbky11bbcr4b#example.com#5503616778
 ```

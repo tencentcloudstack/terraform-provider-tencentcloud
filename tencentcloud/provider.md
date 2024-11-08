@@ -2111,8 +2111,7 @@ Web Application Firewall(WAF)
     tencentcloud_waf_cc_auto_status
     tencentcloud_waf_cc_session
     tencentcloud_waf_ip_access_control
-    tencentcloud_waf_clb_ip_access_control
-    tencentcloud_waf_saas_ip_access_control
+    tencentcloud_waf_ip_access_control_v2
 
 Wedata
   Data Source
