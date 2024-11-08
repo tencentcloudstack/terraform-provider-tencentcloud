@@ -192,6 +192,11 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 				Description: "List of records.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"id": {
+							Computed:    true,
+							Type:        schema.TypeString,
+							Description: "ID.",
+						},
 						"domain": {
 							Computed:    true,
 							Type:        schema.TypeString,
@@ -409,6 +414,7 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 			recordListItemMap["domain"] = domain
 			if recordListItem.RecordId != nil {
 				recordListItemMap["record_id"] = recordListItem.RecordId
+				recordListItemMap["id"] = domain + tccommon.FILED_SP + helper.UInt64ToStr(*recordListItem.RecordId)
 			}
 
 			if recordListItem.Value != nil {
