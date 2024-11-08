@@ -1719,6 +1719,9 @@ Tencent Cloud Organization (TCO)
     tencentcloud_identity_center_role_assignment
     tencentcloud_invite_organization_member_operation
     tencentcloud_open_identity_center_operation
+    tencentcloud_identity_center_scim_credential_status
+    tencentcloud_identity_center_scim_credential
+    tencentcloud_identity_center_scim_synchronization_status
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source

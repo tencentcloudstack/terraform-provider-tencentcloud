@@ -1894,3 +1894,88 @@ func (me *OrganizationService) DescribeOrganizationNodesByFilter(ctx context.Con
 	}
 	return
 }
+
+func (me *OrganizationService) DescribeIdentityCenterScimCredentialById(ctx context.Context, zoneId string, credentialId string) (ret *organization.SCIMCredential, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListSCIMCredentialsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.CredentialId = helper.String(credentialId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().ListSCIMCredentials(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SCIMCredentials) < 1 {
+		return
+	}
+
+	ret = response.Response.SCIMCredentials[0]
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterScimCredentialStatusById(ctx context.Context, zoneId string, credentialId string) (ret *organization.SCIMCredential, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListSCIMCredentialsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.CredentialId = helper.String(credentialId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().ListSCIMCredentials(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SCIMCredentials) < 1 {
+		return
+	}
+
+	ret = response.Response.SCIMCredentials[0]
+	return
+}
+
+func (me *OrganizationService) DescribeIdentityCenterScimSynchronizationStatusById(ctx context.Context, zoneId string) (ret *organization.GetSCIMSynchronizationStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetSCIMSynchronizationStatusRequest()
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().GetSCIMSynchronizationStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
