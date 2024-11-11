@@ -16,6 +16,8 @@ Provide a resource to create a kubernetes cluster.
 ~> **NOTE:** We recommend this usage that uses the `tencentcloud_kubernetes_cluster` resource to create a cluster without any `worker_config`, then adds nodes by the `tencentcloud_kubernetes_node_pool` resource.
 It's more flexible than managing worker config directly with `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_scale_worker`, or existing node management of `tencentcloud_kubernetes_attachment`. The reason is that `worker_config` is unchangeable and may cause the whole cluster resource to `ForceNew`.
 
+~> **NOTE:** Executing `terraform destroy` to destroy the resource will default to deleting the node resource, If it is necessary to preserve node instance resources, Please set `instance_delete_mode` to `retain`.
+
 ## Example Usage
 
 ### Create a basic cluster with two worker nodes
@@ -917,6 +919,7 @@ The following arguments are supported:
 * `globe_desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
 * `ignore_service_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the service cidr conflict error. Only valid in `VPC-CNI` mode.
+* `instance_delete_mode` - (Optional, String) The strategy for deleting cluster instances: terminate (destroy instances, only support pay as you go cloud host instances) retain (remove only, keep instances), Default is terminate.
 * `is_non_static_ip_mode` - (Optional, Bool, ForceNew) Indicates whether non-static ip mode is enabled. Default is false.
 * `kube_proxy_mode` - (Optional, String) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.
 * `labels` - (Optional, Map, ForceNew) Labels of tke cluster nodes.
@@ -1116,6 +1119,6 @@ In addition to all arguments above, the following attributes are exported:
 tke cluster can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_cluster.test cls-xxx
+$ terraform import tencentcloud_kubernetes_cluster.example cls-n2h4jbtk
 ```
 

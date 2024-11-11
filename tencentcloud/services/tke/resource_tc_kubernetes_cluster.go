@@ -1325,6 +1325,12 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				Description: "CDC ID.",
 			},
+
+			"instance_delete_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The strategy for deleting cluster instances: terminate (destroy instances, only support pay as you go cloud host instances) retain (remove only, keep instances), Default is terminate.",
+			},
 		},
 	}
 }
@@ -1945,6 +1951,10 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 	request.ClusterId = helper.String(clusterId)
 
 	instanceDeleteMode := "terminate"
+	if v, ok := d.GetOk("instance_delete_mode"); ok {
+		instanceDeleteMode = v.(string)
+	}
+
 	request.InstanceDeleteMode = &instanceDeleteMode
 
 	if v, ok := d.GetOk("resource_delete_options"); ok {
