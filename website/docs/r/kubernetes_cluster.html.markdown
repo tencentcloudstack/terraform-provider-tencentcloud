@@ -16,6 +16,8 @@ Provide a resource to create a kubernetes cluster.
 ~> **NOTE:** We recommend this usage that uses the `tencentcloud_kubernetes_cluster` resource to create a cluster without any `worker_config`, then adds nodes by the `tencentcloud_kubernetes_node_pool` resource.
 It's more flexible than managing worker config directly with `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_scale_worker`, or existing node management of `tencentcloud_kubernetes_attachment`. The reason is that `worker_config` is unchangeable and may cause the whole cluster resource to `ForceNew`.
 
+~> **NOTE:** Executing `terraform destroy` to destroy the resource will default to deleting the node resource, If it is necessary to preserve node instance resources, Please set `instance_delete_mode` to `retain`.
+
 ## Example Usage
 
 ### Create a basic cluster with two worker nodes
@@ -1117,6 +1119,6 @@ In addition to all arguments above, the following attributes are exported:
 tke cluster can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_cluster.test cls-xxx
+$ terraform import tencentcloud_kubernetes_cluster.example cls-n2h4jbtk
 ```
 
