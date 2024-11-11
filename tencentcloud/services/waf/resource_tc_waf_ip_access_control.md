@@ -1,5 +1,7 @@
 Provides a resource to create a waf ip_access_control
 
+~> **NOTE:** This resource is no longer under maintenance, please use `tencentcloud_waf_ip_access_control_v2` instead
+
 Example Usage
 
 ```hcl
