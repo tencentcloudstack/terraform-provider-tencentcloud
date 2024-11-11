@@ -2224,11 +2224,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		region = v.(string)
 	}
 
-	if secretId == "" && secretKey == "" && securityToken == "" && region == "" {
+	if secretId == "" && secretKey == "" && securityToken == "" {
 		secretId = getProviderConfig("secretId")
 		secretKey = getProviderConfig("secretKey")
 		securityToken = getProviderConfig("token")
-		region = getProviderConfig("region")
+		if region == "" {
+			region = getProviderConfig("region")
+		}
 	}
 
 	if region == "" {
@@ -2564,7 +2566,9 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 			}
 
 			for k, v := range config {
-				providerConfig[k] = strings.TrimSpace(v.(string))
+				if strValue, ok := v.(string); ok {
+					providerConfig[k] = strings.TrimSpace(strValue)
+				}
 			}
 		}
 
