@@ -500,41 +500,6 @@ func (me *WafService) DescribeWafFindDomainsByFilter(ctx context.Context, param 
 	return
 }
 
-func (me *WafService) DescribeWafWafInfosByFilter(ctx context.Context, param map[string]interface{}) (wafInfos []*waf.ClbHostResult, errRet error) {
-	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = waf.NewDescribeWafInfoRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	for k, v := range param {
-		if k == "Params" {
-			request.Params = v.([]*waf.ClbHostsParams)
-		}
-	}
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseWafClient().DescribeWafInfo(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || len(response.Response.HostList) < 1 {
-		return
-	}
-
-	wafInfos = response.Response.HostList
-	return
-}
-
 func (me *WafService) DescribeWafPortsByFilter(ctx context.Context, param map[string]interface{}) (ports *waf.DescribePortsResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
@@ -1500,5 +1465,32 @@ func (me *WafService) DeleteWafIpAccessControlById(ctx context.Context, domain s
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *WafService) DescribeWafIpAccessControlV2ById(ctx context.Context, domain string, ruleId string) (ret *waf.DescribeIpAccessControlResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeIpAccessControlRequest()
+	request.Domain = helper.String(domain)
+	request.Count = helper.Uint64(1)
+	request.RuleId = helper.StrToUint64Point(ruleId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafV20180125Client().DescribeIpAccessControl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }

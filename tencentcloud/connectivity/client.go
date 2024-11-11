@@ -222,6 +222,7 @@ type TencentCloudClient struct {
 	tcssv20201101Conn       *tcss.Client
 	cloudauditv20190319Conn *audit.Client
 	privatednsv20201028Conn *privatedns.Client
+	wafv20180125Conn        *waf.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1942,4 +1943,17 @@ func (me *TencentCloudClient) UsePrivatednsV20201028Client() *privatedns.Client 
 	me.privatednsv20201028Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.privatednsv20201028Conn
+}
+
+// UseWafV20180125Client return WAF client for service
+func (me *TencentCloudClient) UseWafV20180125Client() *waf.Client {
+	if me.wafv20180125Conn != nil {
+		return me.wafv20180125Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.wafv20180125Conn, _ = waf.NewClient(me.Credential, me.Region, cpf)
+	me.wafv20180125Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.wafv20180125Conn
 }
