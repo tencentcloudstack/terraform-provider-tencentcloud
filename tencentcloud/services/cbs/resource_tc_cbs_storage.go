@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -124,6 +125,34 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Computed:    true,
 				Description: "The quota of backup points of cloud disk.",
 			},
+			"auto_mount_configuration": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "Specifies whether to automatically attach and initialize the newly created data disk.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance_id": {
+							Type:        schema.TypeSet,
+							Required:    true,
+							Description: "ID of the instance to which the cloud disk is attached.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+						"mount_point": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Mount point in the instance.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+						"file_system_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "File system type. Valid values: ext4, xfs.",
+						},
+					},
+				},
+			},
 			// computed
 			"storage_status": {
 				Type:        schema.TypeString,
@@ -147,6 +176,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request    = cbs.NewCreateDisksRequest()
+		autoMount  bool
 	)
 
 	request.DiskName = helper.String(d.Get("storage_name").(string))
@@ -193,6 +223,32 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		if renewFlag, ok := d.GetOk("prepaid_renew_flag"); ok {
 			request.DiskChargePrepaid.RenewFlag = helper.String(renewFlag.(string))
 		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "auto_mount_configuration"); ok {
+		autoMountConfiguration := cbs.AutoMountConfiguration{}
+		if v, ok := dMap["instance_id"]; ok {
+			instanceId := v.(*schema.Set).List()
+			for i := range instanceId {
+				insId := instanceId[i].(string)
+				autoMountConfiguration.InstanceId = append(autoMountConfiguration.InstanceId, helper.String(insId))
+			}
+		}
+
+		if v, ok := dMap["mount_point"]; ok {
+			mountPoint := v.(*schema.Set).List()
+			for i := range mountPoint {
+				mpId := mountPoint[i].(string)
+				autoMountConfiguration.MountPoint = append(autoMountConfiguration.MountPoint, helper.String(mpId))
+			}
+		}
+
+		if v, ok := dMap["file_system_type"]; ok {
+			autoMountConfiguration.FileSystemType = helper.String(v.(string))
+		}
+
+		request.AutoMountConfiguration = &autoMountConfiguration
+		autoMount = true
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -246,6 +302,11 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if autoMount {
+		// Skip the initial UNATTACHED state of the CBS
+		time.Sleep(10 * time.Second)
+	}
+
 	// must wait for finishing creating disk
 	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
@@ -257,7 +318,15 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 			return resource.RetryableError(fmt.Errorf("storage is still creating..."))
 		}
 
-		return nil
+		if *storage.DiskState == "ATTACHING" {
+			return resource.RetryableError(fmt.Errorf("storage is still attaching..."))
+		}
+
+		if *storage.DiskState == "ATTACHED" || *storage.DiskState == "UNATTACHED" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("storage is still creating..."))
 	})
 
 	if err != nil {
