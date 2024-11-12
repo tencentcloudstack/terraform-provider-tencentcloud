@@ -24,24 +24,22 @@ func resourceTencentCloudKubernetesAuthAttachmentCreatePreRequest0(ctx context.C
 
 	return nil
 }
+
 func resourceTencentCloudKubernetesAuthAttachmentReadRequestOnSuccess0(ctx context.Context, resp *tke.DescribeClusterAuthenticationOptionsResponseParams) *resource.RetryError {
-	tmpRespServiceAccount := tke.ServiceAccountAuthenticationOptions{}
 	d := tccommon.ResourceDataFromContext(ctx)
 
-	if resp != nil && resp.ServiceAccounts != nil {
-		if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
-			resp.ServiceAccounts.Issuer = tmpRespServiceAccount.Issuer
-			resp.ServiceAccounts.JWKSURI = tmpRespServiceAccount.JWKSURI
-			_ = d.Set("tke_default_issuer", resp.ServiceAccounts.Issuer)
-			_ = d.Set("tke_default_jwks_uri", resp.ServiceAccounts.JWKSURI)
-		}
+	if resp != nil && resp.ServiceAccounts != nil && resp.ServiceAccounts.UseTKEDefault != nil && *resp.ServiceAccounts.UseTKEDefault {
+		_ = d.Set("tke_default_issuer", resp.ServiceAccounts.Issuer)
+		_ = d.Set("tke_default_jwks_uri", resp.ServiceAccounts.JWKSURI)
 
-		resp.ServiceAccounts.UseTKEDefault = tmpRespServiceAccount.UseTKEDefault
-		resp.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = tmpRespServiceAccount.AutoCreateDiscoveryAnonymousAuth
+		// if true, set params nil
+		resp.ServiceAccounts.Issuer = nil
+		resp.ServiceAccounts.JWKSURI = nil
 	}
 
 	return nil
 }
+
 func resourceTencentCloudKubernetesAuthAttachmentUpdatePreRequest0(ctx context.Context, req *tke.ModifyClusterAuthenticationOptionsRequest) *resource.RetryError {
 	d := tccommon.ResourceDataFromContext(ctx)
 
@@ -71,6 +69,7 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdatePreRequest0(ctx context.C
 func resourceTencentCloudKubernetesAuthAttachmentUpdateRequestOnError0(ctx context.Context, req *tke.ModifyClusterAuthenticationOptionsRequest, e error) *resource.RetryError {
 	return tccommon.RetryError(e, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
 }
+
 func resourceTencentCloudKubernetesAuthAttachmentReadPostFillRequest0(ctx context.Context, req *tke.DescribeClusterAuthenticationOptionsRequest) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 
@@ -85,6 +84,7 @@ func resourceTencentCloudKubernetesAuthAttachmentReadPostFillRequest0(ctx contex
 	}
 	return nil
 }
+
 func resourceTencentCloudKubernetesAuthAttachmentDeletePreRequest0(ctx context.Context, req *tke.ModifyClusterAuthenticationOptionsRequest) *resource.RetryError {
 	req.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
 		JWKSURI: helper.String(""),
@@ -92,6 +92,7 @@ func resourceTencentCloudKubernetesAuthAttachmentDeletePreRequest0(ctx context.C
 	}
 	return nil
 }
+
 func resourceTencentCloudKubernetesAuthAttachmentDeletePostHandleResponse0(ctx context.Context, resp *tke.ModifyClusterAuthenticationOptionsResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 
