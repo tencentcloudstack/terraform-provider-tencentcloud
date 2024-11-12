@@ -61,7 +61,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_deploy_type = "MANAGED_CLUSTER"
 }
 
-resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
+resource "tencentcloud_kubernetes_auth_attachment" "example" {
   cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
   jwks_uri                             = "https://${tencentcloud_kubernetes_cluster.managed_cluster.id}.ccs.tencent-cloud.com/openid/v1/jwks"
   issuer                               = "https://${tencentcloud_kubernetes_cluster.managed_cluster.id}.ccs.tencent-cloud.com"
@@ -129,7 +129,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 
 # if you want to use tke default issuer and jwks_uri, please set use_tke_default to true and set issuer to empty string.
-resource "tencentcloud_kubernetes_auth_attachment" "test_use_tke_default_auth_attach" {
+resource "tencentcloud_kubernetes_auth_attachment" "example" {
   cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
@@ -137,8 +137,9 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_use_tke_default_auth_at
 ```
 
 Use OIDC Config
+
 ```
-resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
+resource "tencentcloud_kubernetes_auth_attachment" "example" {
   cluster_id                              = tencentcloud_kubernetes_cluster.managed_cluster.id
   use_tke_default                         = true
   auto_create_discovery_anonymous_auth    = true
@@ -149,7 +150,7 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
 data "tencentcloud_cam_oidc_config" "oidc_config" {
   name       = tencentcloud_kubernetes_cluster.managed_cluster.id
   depends_on = [
-    tencentcloud_kubernetes_auth_attachment.test_auth_attach
+    tencentcloud_kubernetes_auth_attachment.example
   ]
 }
 
@@ -160,7 +161,6 @@ output "identity_key" {
 output "identity_url" {
   value = data.tencentcloud_cam_oidc_config.oidc_config.identity_url
 }
-
 ```
 
 Import
@@ -168,5 +168,5 @@ Import
 tke cluster authentication can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_auth_attachment.test cls-xxx
+$ terraform import tencentcloud_kubernetes_auth_attachment.example cls-fp5o961e
 ```
