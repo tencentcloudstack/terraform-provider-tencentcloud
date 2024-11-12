@@ -93,7 +93,7 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(HEALTH_CHECK_TYPE),
-				Description:  "Type of health check. Valid value is `CUSTOM`, `TCP`, `HTTP`.",
+				Description:  "Type of health check. Valid value is `CUSTOM`, `PING`, `TCP`, `HTTP`, `HTTPS`, `GRPC`, `GRPCS`.",
 			},
 			"health_check_time_out": {
 				Type:         schema.TypeInt,
@@ -176,8 +176,8 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"HTTP", "HTTPS", "TRPC"}),
-				Description:  "Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `TRPC`. The default is `HTTP`.",
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"HTTP", "HTTPS", "GRPC", "GRPCS", "TRPC"}),
+				Description:  "Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `GRPC`, `GRPCS`, `TRPC`. The default is `HTTP`.",
 			},
 			"quic": {
 				Type:        schema.TypeBool,
