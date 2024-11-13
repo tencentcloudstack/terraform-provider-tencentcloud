@@ -1989,31 +1989,230 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 }
 
 func tkeGetCvmExistInstancesPara(dMap map[string]interface{}) (tke.ExistedInstancesForNode, error) {
-
 	inst := tke.ExistedInstancesForNode{}
+	if temp, ok := dMap["node_role"]; ok {
+		nodeRole := temp.(string)
+		inst.NodeRole = &nodeRole
+	}
 
 	if temp, ok := dMap["instances_para"]; ok {
 		paras := temp.([]interface{})
 		if len(paras) > 0 {
 			paraMap := paras[0].(map[string]interface{})
-			instanceIds := paraMap["instance_ids"].([]interface{})
 			inst.ExistedInstancesPara = &tke.ExistedInstancesPara{}
-			inst.ExistedInstancesPara.InstanceIds = make([]*string, 0)
-			for _, v := range instanceIds {
-				inst.ExistedInstancesPara.InstanceIds = append(inst.ExistedInstancesPara.InstanceIds, helper.String(v.(string)))
+			loginSettings := &tke.LoginSettings{}
+			enhancedService := &tke.EnhancedService{}
+
+			if v, ok := paraMap["instance_ids"]; ok && len(v.([]interface{})) > 0 {
+				insIDs := v.([]interface{})
+				inst.ExistedInstancesPara.InstanceIds = make([]*string, 0, len(insIDs))
+				for _, v := range insIDs {
+					inst.ExistedInstancesPara.InstanceIds = append(inst.ExistedInstancesPara.InstanceIds, helper.String(v.(string)))
+				}
+			}
+
+			if v, ok := paraMap["security_group_ids"]; ok && len(v.([]interface{})) > 0 {
+				sgIds := v.([]interface{})
+				inst.ExistedInstancesPara.SecurityGroupIds = make([]*string, 0, len(sgIds))
+				for i := range sgIds {
+					sgId := sgIds[i].(string)
+					inst.ExistedInstancesPara.SecurityGroupIds = append(inst.ExistedInstancesPara.SecurityGroupIds, &sgId)
+				}
+			}
+
+			if v, ok := paraMap["password"]; ok {
+				loginSettings.Password = helper.String(v.(string))
+				inst.ExistedInstancesPara.LoginSettings = loginSettings
+			}
+
+			if v, ok := paraMap["key_ids"]; ok && len(v.([]interface{})) > 0 {
+				keyIds := v.([]interface{})
+				loginSettings.KeyIds = make([]*string, 0, len(keyIds))
+				for i := range keyIds {
+					keyId := keyIds[i].(string)
+					loginSettings.KeyIds = append(loginSettings.KeyIds, &keyId)
+				}
+
+				inst.ExistedInstancesPara.LoginSettings = loginSettings
+			}
+
+			if v, ok := paraMap["enhanced_security_service"]; ok {
+				enhancedService.SecurityService = &tke.RunSecurityServiceEnabled{Enabled: helper.Bool(v.(bool))}
+				inst.ExistedInstancesPara.EnhancedService = enhancedService
+			}
+
+			if v, ok := paraMap["enhanced_monitor_service"]; ok {
+				enhancedService.MonitorService = &tke.RunMonitorServiceEnabled{Enabled: helper.Bool(v.(bool))}
+				inst.ExistedInstancesPara.EnhancedService = enhancedService
+			}
+
+			if v, ok := paraMap["master_config"]; ok && len(v.([]interface{})) > 0 {
+				for _, item := range v.([]interface{}) {
+					instanceAdvancedSettingsOverridesMap := item.(map[string]interface{})
+					instanceAdvancedSettings := tke.InstanceAdvancedSettings{}
+					if v, ok := instanceAdvancedSettingsOverridesMap["mount_target"]; ok {
+						instanceAdvancedSettings.MountTarget = helper.String(v.(string))
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["docker_graph_path"]; ok {
+						instanceAdvancedSettings.DockerGraphPath = helper.String(v.(string))
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["user_script"]; ok {
+						instanceAdvancedSettings.UserScript = helper.String(v.(string))
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["unschedulable"]; ok {
+						instanceAdvancedSettings.Unschedulable = helper.IntInt64(v.(int))
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["labels"]; ok && len(v.([]interface{})) > 0 {
+						for _, item := range v.([]interface{}) {
+							labelsMap := item.(map[string]interface{})
+							labels := tke.Label{}
+							if v, ok := labelsMap["name"]; ok {
+								labels.Name = helper.String(v.(string))
+							}
+
+							if v, ok := labelsMap["value"]; ok {
+								labels.Value = helper.String(v.(string))
+							}
+
+							instanceAdvancedSettings.Labels = append(instanceAdvancedSettings.Labels, &labels)
+						}
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["data_disk"]; ok && len(v.([]interface{})) > 0 {
+						for _, item := range v.([]interface{}) {
+							dataDisksMap := item.(map[string]interface{})
+							dataDisk := tke.DataDisk{}
+							if v, ok := dataDisksMap["disk_type"]; ok {
+								dataDisk.DiskType = helper.String(v.(string))
+							}
+
+							if v, ok := dataDisksMap["file_system"]; ok {
+								dataDisk.FileSystem = helper.String(v.(string))
+							}
+
+							if v, ok := dataDisksMap["disk_size"]; ok {
+								dataDisk.DiskSize = helper.IntInt64(v.(int))
+							}
+
+							if v, ok := dataDisksMap["auto_format_and_mount"]; ok {
+								dataDisk.AutoFormatAndMount = helper.Bool(v.(bool))
+							}
+
+							if v, ok := dataDisksMap["mount_target"]; ok {
+								dataDisk.MountTarget = helper.String(v.(string))
+							}
+
+							if v, ok := dataDisksMap["disk_partition"]; ok {
+								dataDisk.DiskPartition = helper.String(v.(string))
+							}
+
+							instanceAdvancedSettings.DataDisks = append(instanceAdvancedSettings.DataDisks, &dataDisk)
+						}
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["extra_args"]; ok && len(v.([]interface{})) > 0 {
+						for _, item := range v.([]interface{}) {
+							extraArgsMap := item.(map[string]interface{})
+							args := tke.InstanceExtraArgs{}
+							if v, ok := extraArgsMap["kubelet"]; ok {
+								args.Kubelet = helper.InterfacesStringsPoint(v.([]interface{}))
+							}
+
+							instanceAdvancedSettings.ExtraArgs = &args
+						}
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["desired_pod_number"]; ok {
+						instanceAdvancedSettings.DesiredPodNumber = helper.IntInt64(v.(int))
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["gpu_args"]; ok && len(v.([]interface{})) > 0 {
+						gpuArgs := v.([]interface{})[0].(map[string]interface{})
+
+						var (
+							migEnable    = gpuArgs["mig_enable"].(bool)
+							driver       = gpuArgs["driver"].(map[string]interface{})
+							cuda         = gpuArgs["cuda"].(map[string]interface{})
+							cudnn        = gpuArgs["cudnn"].(map[string]interface{})
+							customDriver = gpuArgs["custom_driver"].(map[string]interface{})
+						)
+
+						tkeGpuArgs := tke.GPUArgs{}
+						tkeGpuArgs.MIGEnable = &migEnable
+						if len(driver) > 0 {
+							tkeGpuArgs.Driver = &tke.DriverVersion{
+								Version: helper.String(driver["version"].(string)),
+								Name:    helper.String(driver["name"].(string)),
+							}
+						}
+
+						if len(cuda) > 0 {
+							tkeGpuArgs.CUDA = &tke.DriverVersion{
+								Version: helper.String(cuda["version"].(string)),
+								Name:    helper.String(cuda["name"].(string)),
+							}
+						}
+
+						if len(cudnn) > 0 {
+							tkeGpuArgs.CUDNN = &tke.CUDNN{
+								Version: helper.String(cudnn["version"].(string)),
+								Name:    helper.String(cudnn["name"].(string)),
+							}
+
+							if cudnn["doc_name"] != nil {
+								tkeGpuArgs.CUDNN.DocName = helper.String(cudnn["doc_name"].(string))
+							}
+
+							if cudnn["dev_name"] != nil {
+								tkeGpuArgs.CUDNN.DevName = helper.String(cudnn["dev_name"].(string))
+							}
+						}
+
+						if len(customDriver) > 0 {
+							tkeGpuArgs.CustomDriver = &tke.CustomDriver{
+								Address: helper.String(customDriver["address"].(string)),
+							}
+						}
+
+						instanceAdvancedSettings.GPUArgs = &tkeGpuArgs
+					}
+
+					if v, ok := instanceAdvancedSettingsOverridesMap["taints"]; ok && len(v.([]interface{})) > 0 {
+						for _, item := range v.([]interface{}) {
+							taintsMap := item.(map[string]interface{})
+							taint := tke.Taint{}
+							if v, ok := taintsMap["key"]; ok {
+								taint.Key = helper.String(v.(string))
+							}
+
+							if v, ok := taintsMap["value"]; ok {
+								taint.Value = helper.String(v.(string))
+							}
+
+							if v, ok := taintsMap["effect"]; ok {
+								taint.Effect = helper.String(v.(string))
+							}
+
+							instanceAdvancedSettings.Taints = append(instanceAdvancedSettings.Taints, &taint)
+						}
+					}
+
+					inst.InstanceAdvancedSettingsOverride = &instanceAdvancedSettings
+				}
 			}
 		}
 	}
+
 	if temp, ok := dMap["desired_pod_numbers"]; ok {
 		inst.DesiredPodNumbers = make([]*int64, 0)
 		podNums := temp.([]interface{})
 		for _, v := range podNums {
 			inst.DesiredPodNumbers = append(inst.DesiredPodNumbers, helper.Int64(int64(v.(int))))
 		}
-	}
-	if temp, ok := dMap["node_role"]; ok {
-		nodeRole := temp.(string)
-		inst.NodeRole = &nodeRole
 	}
 
 	return inst, nil
