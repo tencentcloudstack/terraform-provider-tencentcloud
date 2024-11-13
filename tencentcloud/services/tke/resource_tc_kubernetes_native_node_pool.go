@@ -543,6 +543,13 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 								Type: schema.TypeString,
 							},
 						},
+						"machine_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Node pool type. Example value: `NativeCVM` or `Native`. Default is `Native`.",
+						},
 					},
 				},
 			},
@@ -906,6 +913,9 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 				createNativeNodePoolParam.KeyIds = append(createNativeNodePoolParam.KeyIds, helper.String(keyIds))
 			}
 		}
+		if v, ok := nativeMap["machine_type"]; ok {
+			createNativeNodePoolParam.MachineType = helper.String(v.(string))
+		}
 		request.Native = &createNativeNodePoolParam
 	}
 
@@ -1220,6 +1230,10 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 
 		if respData.Native.KeyIds != nil {
 			nativeMap["key_ids"] = respData.Native.KeyIds
+		}
+
+		if respData.Native.MachineType != nil {
+			nativeMap["machine_type"] = respData.Native.MachineType
 		}
 
 		managementMap := map[string]interface{}{}

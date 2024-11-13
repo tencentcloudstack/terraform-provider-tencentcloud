@@ -183,6 +183,7 @@ The `native` object supports the following:
 * `key_ids` - (Optional, List) Node pool ssh public key id array.
 * `kubelet_args` - (Optional, List) Kubelet custom parameters.
 * `lifecycle` - (Optional, List) Predefined scripts.
+* `machine_type` - (Optional, String, ForceNew) Node pool type. Example value: `NativeCVM` or `Native`. Default is `Native`.
 * `management` - (Optional, List) Node pool management parameter settings.
 * `replicas` - (Optional, Int) Desired number of nodes.
 * `runtime_root_dir` - (Optional, String, ForceNew) Runtime root directory.
