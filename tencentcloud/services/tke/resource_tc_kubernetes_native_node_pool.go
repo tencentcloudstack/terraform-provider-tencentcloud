@@ -546,6 +546,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 						"machine_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							ForceNew:    true,
 							Description: "Node pool type. Example value: `NativeCVM` or `Native`. Default is `Native`.",
 						},
