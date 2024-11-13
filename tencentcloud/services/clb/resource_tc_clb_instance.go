@@ -79,7 +79,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.",
+				Description: "It's only applicable to public network CLB instances. IP version. Values: `IPV4`, `IPV6` and `IPv6FullChain` (case-insensitive). Default: `IPV4`. Note: IPV6 indicates IPv6 NAT64, while IPv6FullChain indicates IPv6.",
 			},
 			"internet_charge_type": {
 				Type:        schema.TypeString,
