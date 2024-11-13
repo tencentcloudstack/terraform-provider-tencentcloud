@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -175,45 +177,57 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 	}
 	request.RecordId = helper.IntUint64(recordId)
 
+	var recordInfo *dnspod.RecordInfo
+
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().DescribeRecord(request)
 		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		recordInfo := response.Response.RecordInfo
-
-		_ = d.Set("sub_domain", recordInfo.SubDomain)
-		_ = d.Set("mx", recordInfo.MX)
-		_ = d.Set("ttl", recordInfo.TTL)
-		_ = d.Set("monitor_status", recordInfo.MonitorStatus)
-		_ = d.Set("weight", recordInfo.Weight)
-		_ = d.Set("domain", items[0])
-		_ = d.Set("record_line", recordInfo.RecordLine)
-		_ = d.Set("record_type", recordInfo.RecordType)
-		if v, ok := d.GetOk("value"); ok {
-			value := v.(string)
-			if strings.HasSuffix(value, ".") {
-				_ = d.Set("value", recordInfo.Value)
+			e, ok := e.(*sdkErrors.TencentCloudSDKError)
+			if ok && e.GetCode() == "InvalidParameter.RecordIdInvalid" {
+				// cannot find record id
+				return nil
 			} else {
-				_ = d.Set("value", strings.TrimSuffix(*recordInfo.Value, "."))
+				return tccommon.RetryError(e)
 			}
-		} else {
-			_ = d.Set("value", recordInfo.Value)
 		}
-		_ = d.Set("remark", recordInfo.Remark)
-		if *recordInfo.Enabled == uint64(0) {
-			_ = d.Set("status", "DISABLE")
-		} else {
-			_ = d.Set("status", "ENABLE")
-		}
-
+		recordInfo = response.Response.RecordInfo
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read DnsPod record failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	if recordInfo == nil {
+		d.SetId("")
+		return nil
+	}
+
+	_ = d.Set("sub_domain", recordInfo.SubDomain)
+	_ = d.Set("mx", recordInfo.MX)
+	_ = d.Set("ttl", recordInfo.TTL)
+	_ = d.Set("monitor_status", recordInfo.MonitorStatus)
+	_ = d.Set("weight", recordInfo.Weight)
+	_ = d.Set("domain", items[0])
+	_ = d.Set("record_line", recordInfo.RecordLine)
+	_ = d.Set("record_type", recordInfo.RecordType)
+	if v, ok := d.GetOk("value"); ok {
+		value := v.(string)
+		if strings.HasSuffix(value, ".") {
+			_ = d.Set("value", recordInfo.Value)
+		} else {
+			_ = d.Set("value", strings.TrimSuffix(*recordInfo.Value, "."))
+		}
+	} else {
+		_ = d.Set("value", recordInfo.Value)
+	}
+	_ = d.Set("remark", recordInfo.Remark)
+	if *recordInfo.Enabled == uint64(0) {
+		_ = d.Set("status", "DISABLE")
+	} else {
+		_ = d.Set("status", "ENABLE")
+	}
+
 	return nil
 }
 
