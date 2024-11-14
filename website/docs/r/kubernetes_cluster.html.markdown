@@ -730,11 +730,10 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 256
   cluster_internet        = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type = "MANAGED_CLUSTER"
-  network_type        = "VPC-CNI"
-  eni_subnet_ids      = ["subnet-bk1etlyu"]
-  service_cidr        = "10.1.0.0/24"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+  network_type            = "VPC-CNI"
+  eni_subnet_ids          = ["subnet-bk1etlyu"]
+  service_cidr            = "10.1.0.0/24"
 
   worker_config {
     count                      = 1
@@ -755,8 +754,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
+    key_ids                   = "skey-11112222"
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids = "skey-11112222"
   }
 
   labels = {
@@ -795,26 +794,52 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
-  cdc_id                  = "cluster-xxxxx"
-  vpc_id                  = "vpc-xxxxx"
+  cdc_id                  = "cluster-262n63e8"
+  vpc_id                  = "vpc-0m6078eb"
   cluster_cidr            = "192.168.0.0/16"
   cluster_max_pod_num     = 64
   cluster_name            = "test-cdc"
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 1024
   cluster_version         = "1.30.0"
-
-  cluster_os          = "tlinux3.1x86_64"
-  cluster_level       = "L20"
-  cluster_deploy_type = "INDEPENDENT_CLUSTER"
-
-  container_runtime     = "containerd"
-  runtime_version       = "1.6.9"
-  pre_start_user_script = "aXB0YWJsZXMgLUEgSU5QVVQgLXAgdGNwIC1zIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAppcHRhYmxlcyAtQSBPVVRQVVQgLXAgdGNwIC1kIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAoKZWNobyAnCmlwdGFibGVzIC1BIElOUFVUIC1wIHRjcCAtcyAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKaXB0YWJsZXMgLUEgT1VUUFVUIC1wIHRjcCAtZCAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKJyA+PiAvZXRjL3JjLmQvcmMubG9jYWw="
+  cluster_os              = "tlinux3.1x86_64"
+  cluster_level           = "L20"
+  cluster_deploy_type     = "INDEPENDENT_CLUSTER"
+  container_runtime       = "containerd"
+  runtime_version         = "1.6.9"
+  pre_start_user_script   = "aXB0YWJsZXMgLUEgSU5QVVQgLXAgdGNwIC1zIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAppcHRhYmxlcyAtQSBPVVRQVVQgLXAgdGNwIC1kIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAoKZWNobyAnCmlwdGFibGVzIC1BIElOUFVUIC1wIHRjcCAtcyAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKaXB0YWJsZXMgLUEgT1VUUFVUIC1wIHRjcCAtZCAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKJyA+PiAvZXRjL3JjLmQvcmMubG9jYWw="
+  instance_delete_mode    = "retain"
   exist_instance {
     node_role = "MASTER_ETCD"
     instances_para {
-      instance_ids = ["ins-eeijdk16", "ins-84ku5rba", "ins-8oa3im2s"]
+      instance_ids              = ["ins-mam0c7lw", "ins-quvwayve", "ins-qbffk8iw"]
+      enhanced_security_service = true
+      enhanced_monitor_service  = true
+      password                  = "Password@123"
+      security_group_ids        = ["sg-hjs685q9"]
+      master_config {
+        mount_target      = "/var/data"
+        docker_graph_path = "/var/lib/containerd"
+        unschedulable     = 0
+        labels {
+          name  = "key"
+          value = "value"
+        }
+        data_disk {
+          file_system           = "ext4"
+          auto_format_and_mount = true
+          mount_target          = "/var/data"
+          disk_partition        = "/dev/vdb"
+        }
+        extra_args {
+          kubelet = ["root-dir=/root"]
+        }
+        taints {
+          key    = "key"
+          value  = "value"
+          effect = "NoSchedule"
+        }
+      }
     }
   }
 }
@@ -973,6 +998,15 @@ The `data_disk` object of `master_config` supports the following:
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
 
+The `data_disk` object of `master_config` supports the following:
+
+* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
+* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
+* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
+* `mount_target` - (Optional, String, ForceNew) Mount target.
+
 The `data_disk` object of `worker_config` supports the following:
 
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
@@ -1003,14 +1037,50 @@ The `extension_addon` object supports the following:
 * `name` - (Required, String) Add-on name.
 * `param` - (Required, String) Parameter of the add-on resource object in JSON string format, please check the example at the top of page for reference.
 
+The `extra_args` object of `master_config` supports the following:
+
+* `kubelet` - (Optional, List, ForceNew) Kubelet custom parameter. The parameter format is ["k1=v1", "k1=v2"].
+
+The `gpu_args` object of `master_config` supports the following:
+
+* `cuda` - (Optional, Map, ForceNew) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map, ForceNew) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map, ForceNew) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map, ForceNew) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `mig_enable` - (Optional, Bool, ForceNew) Whether to enable MIG.
+
 The `instances_para` object of `exist_instance` supports the following:
 
 * `instance_ids` - (Required, List, ForceNew) Cluster IDs.
+* `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
+* `enhanced_security_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
+* `key_ids` - (Optional, List, ForceNew) ID list of keys, should be set if `password` not set.
+* `master_config` - (Optional, List, ForceNew) Advanced Node Settings. commonly used to attach existing instances.
+* `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
+* `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
+
+The `labels` object of `master_config` supports the following:
+
+* `name` - (Required, String, ForceNew) Name of map.
+* `value` - (Required, String, ForceNew) Value of map.
 
 The `log_agent` object supports the following:
 
 * `enabled` - (Required, Bool) Whether the log agent enabled.
 * `kubelet_root_dir` - (Optional, String) Kubelet root directory as the literal.
+
+The `master_config` object of `instances_para` supports the following:
+
+* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
+* `desired_pod_number` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
+* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
+* `labels` - (Optional, List, ForceNew) Node label list.
+* `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
+* `taints` - (Optional, List, ForceNew) Node taint.
+* `unschedulable` - (Optional, Int, ForceNew) Set whether the joined nodes participate in scheduling, with a default value of 0, indicating participation in scheduling; Non 0 means not participating in scheduling.
+* `user_script` - (Optional, String, ForceNew) User script encoded in base64, which will be executed after the k8s component runs. The user needs to ensure the script's reentrant and retry logic. The script and its generated log files can be viewed in the node path /data/ccs_userscript/. If the node needs to be initialized before joining the schedule, it can be used in conjunction with the `unschedulable` parameter. After the final initialization of the userScript is completed, add the command "kubectl uncordon nodename --kubeconfig=/root/.kube/config" to add the node to the schedule.
 
 The `master_config` object supports the following:
 
@@ -1059,6 +1129,12 @@ The `resource_delete_options` object supports the following:
 * `delete_mode` - (Required, String) The deletion mode of CBS resources when the cluster is deleted, `terminate` (destroy), `retain` (retain). Other resources are deleted by default.
 * `resource_type` - (Required, String) Resource type, valid values are `CBS`, `CLB`, and `CVM`.
 * `skip_deletion_protection` - (Optional, Bool) Whether to skip resources with deletion protection enabled, the default is false.
+
+The `taints` object of `master_config` supports the following:
+
+* `effect` - (Optional, String, ForceNew) Effect of the taint.
+* `key` - (Optional, String, ForceNew) Key of the taint.
+* `value` - (Optional, String, ForceNew) Value of the taint.
 
 The `worker_config` object supports the following:
 

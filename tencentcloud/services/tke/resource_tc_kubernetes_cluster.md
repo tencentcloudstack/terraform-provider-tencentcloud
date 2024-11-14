@@ -135,7 +135,6 @@ resource "tencentcloud_kubernetes_cluster" "example" {
     "test2" = "test2",
   }
 }
-
 ```
 
 Create an empty cluster with a node pool
@@ -261,7 +260,6 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     ]
   }
 }
-
 ````
 
 Create a cluster with a node pool and open the network access with cluster endpoint
@@ -715,17 +713,16 @@ variable "default_instance_type" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = var.vpc
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 256
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
-  network_type								 = "VPC-CNI"
-  eni_subnet_ids							 = ["subnet-bk1etlyu"]
-  service_cidr								 = "10.1.0.0/24"
+  vpc_id                  = var.vpc
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 256
+  cluster_internet        = true
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+  network_type            = "VPC-CNI"
+  eni_subnet_ids          = ["subnet-bk1etlyu"]
+  service_cidr            = "10.1.0.0/24"
 
   worker_config {
     count                      = 1
@@ -746,8 +743,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
     key_ids                   = "skey-11112222"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   labels = {
@@ -783,30 +780,57 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 ```
 
 Create a CDC scenario cluster
+
 ```
 resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
-    cdc_id = "cluster-xxxxx"
-    vpc_id = "vpc-xxxxx"
-    cluster_cidr = "192.168.0.0/16"
-    cluster_max_pod_num = 64
-    cluster_name = "test-cdc"
-    cluster_desc = "test cluster desc"
-    cluster_max_service_num = 1024
-    cluster_version = "1.30.0"
-
-    cluster_os = "tlinux3.1x86_64"
-    cluster_level = "L20"
-    cluster_deploy_type = "INDEPENDENT_CLUSTER"
-  
-    container_runtime = "containerd"
-    runtime_version = "1.6.9"
-    pre_start_user_script = "aXB0YWJsZXMgLUEgSU5QVVQgLXAgdGNwIC1zIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAppcHRhYmxlcyAtQSBPVVRQVVQgLXAgdGNwIC1kIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAoKZWNobyAnCmlwdGFibGVzIC1BIElOUFVUIC1wIHRjcCAtcyAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKaXB0YWJsZXMgLUEgT1VUUFVUIC1wIHRjcCAtZCAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKJyA+PiAvZXRjL3JjLmQvcmMubG9jYWw="
-    exist_instance {
-        node_role = "MASTER_ETCD"
-        instances_para {
-        instance_ids = ["ins-eeijdk16", "ins-84ku5rba", "ins-8oa3im2s"]
+  cdc_id                  = "cluster-262n63e8"
+  vpc_id                  = "vpc-0m6078eb"
+  cluster_cidr            = "192.168.0.0/16"
+  cluster_max_pod_num     = 64
+  cluster_name            = "test-cdc"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 1024
+  cluster_version         = "1.30.0"
+  cluster_os              = "tlinux3.1x86_64"
+  cluster_level           = "L20"
+  cluster_deploy_type     = "INDEPENDENT_CLUSTER"
+  container_runtime       = "containerd"
+  runtime_version         = "1.6.9"
+  pre_start_user_script   = "aXB0YWJsZXMgLUEgSU5QVVQgLXAgdGNwIC1zIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAppcHRhYmxlcyAtQSBPVVRQVVQgLXAgdGNwIC1kIDE2OS4yNTQuMC4wLzE5IC0tdGNwLWZsYWdzIFNZTixSU1QgU1lOIC1qIFRDUE1TUyAtLXNldC1tc3MgMTE2MAoKZWNobyAnCmlwdGFibGVzIC1BIElOUFVUIC1wIHRjcCAtcyAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKaXB0YWJsZXMgLUEgT1VUUFVUIC1wIHRjcCAtZCAxNjkuMjU0LjAuMC8xOSAtLXRjcC1mbGFncyBTWU4sUlNUIFNZTiAtaiBUQ1BNU1MgLS1zZXQtbXNzIDExNjAKJyA+PiAvZXRjL3JjLmQvcmMubG9jYWw="
+  instance_delete_mode    = "retain"
+  exist_instance {
+    node_role = "MASTER_ETCD"
+    instances_para {
+      instance_ids              = ["ins-mam0c7lw", "ins-quvwayve", "ins-qbffk8iw"]
+      enhanced_security_service = true
+      enhanced_monitor_service  = true
+      password                  = "Password@123"
+      security_group_ids        = ["sg-hjs685q9"]
+      master_config {
+        mount_target      = "/var/data"
+        docker_graph_path = "/var/lib/containerd"
+        unschedulable     = 0
+        labels {
+          name  = "key"
+          value = "value"
         }
+        data_disk {
+          file_system           = "ext4"
+          auto_format_and_mount = true
+          mount_target          = "/var/data"
+          disk_partition        = "/dev/vdb"
+        }
+        extra_args {
+          kubelet = ["root-dir=/root"]
+        }
+        taints {
+          key    = "key"
+          value  = "value"
+          effect = "NoSchedule"
+        }
+      }
     }
+  }
 }
 ```
 
