@@ -3154,7 +3154,7 @@ func (me *MysqlService) DescribeMysqlRoGroupById(ctx context.Context, instanceId
 	return
 }
 
-func (me *MysqlService) DescribeRoGroupByIdAndRoId(ctx context.Context, instanceId string, roInstanceId string) (roGroup *cdb.RoGroup, errRet error) {
+func (me *MysqlService) DescribeRoGroupByIdAndRoId(ctx context.Context, region string, instanceId string, roInstanceId string) (roGroup *cdb.RoGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdb.NewDescribeRoGroupsRequest()
@@ -3168,7 +3168,7 @@ func (me *MysqlService) DescribeRoGroupByIdAndRoId(ctx context.Context, instance
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseMysqlClient().DescribeRoGroups(request)
+	response, err := me.client.UseMysqlClientRegion(region).DescribeRoGroups(request)
 	if err != nil {
 		errRet = err
 		return

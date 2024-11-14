@@ -405,6 +405,23 @@ func (me *TencentCloudClient) UseMysqlClient(iacExtInfo ...IacExtInfo) *cdb.Clie
 	return me.mysqlConn
 }
 
+func (me *TencentCloudClient) UseMysqlClientRegion(region string, iacExtInfo ...IacExtInfo) *cdb.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	cpf := me.NewClientProfile(300)
+	if region != "" {
+		me.mysqlConn, _ = cdb.NewClient(me.Credential, region, cpf)
+	} else {
+		me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
+	}
+	me.mysqlConn.WithHttpTransport(&logRoundTripper)
+
+	return me.mysqlConn
+}
+
 // UseRedisClient returns redis client for service
 func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	if me.redisConn != nil {
