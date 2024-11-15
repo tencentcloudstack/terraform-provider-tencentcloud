@@ -1,3 +1,34 @@
+## 1.81.140 (November 15 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_identity_center_role_configuration_permission_custom_policies_attachment` ([#2962](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2962))
+* **New Resource:** `tencentcloud_waf_ip_access_control_v2` ([#2946](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2946))
+
+ENHANCEMENTS:
+
+* provider: Adapt to data type for `tccli` ([#2944](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2944))
+* resource/tencentcloud_clb_instance: update doc ([#2956](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2956))
+* resource/tencentcloud_clb_listener_rule: support set `GRPC` and `GRPCS` ([#2952](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2952))
+* resource/tencentcloud_dnspod_record: support refresh state while destroy outside of Terraform ([#2957](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2957))
+* resource/tencentcloud_emr_cluster: support param pre_executed_file_settings ([#2960](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2960))
+* resource/tencentcloud_kubernetes_auth_attachment: Update the logic of the read function ([#2953](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2953))
+* resource/tencentcloud_kubernetes_cluster: support set `instance_delete_mode` ([#2949](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2949))
+* resource/tencentcloud_kubernetes_cluster: update `exist_instance` params ([#2958](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2958))
+* resource/tencentcloud_kubernetes_native_node_pool: support field `machine_type`. ([#2951](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2951))
+* resource/tencentcloud_nat_gateway: add `stock_public_ip_addresses_bandwidth_out` fields ([#2955](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2955))
+* resource/tencentcloud_scf_function: Update doc ([#2945](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2945))
+
+## 1.81.139 (November 8 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_identity_center_scim_credential` ([#2950](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2950))
+* **New Resource:** `tencentcloud_identity_center_scim_credential_status` ([#2950](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2950))
+* **New Resource:** `tencentcloud_identity_center_scim_synchronization_status` ([#2950](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2950))
+* **New Resource:** `tencentcloud_private_dns_end_point` ([#2948](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2948))
+* **New Resource:** `tencentcloud_private_dns_forward_rule` ([#2948](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2948))
+
 ## 1.81.138 (November 6 , 2024)
 
 FEATURES:
