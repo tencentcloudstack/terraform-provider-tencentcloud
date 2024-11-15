@@ -237,6 +237,67 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Computed:    true,
 				Description: "0 means turn off automatic renewal, 1 means turn on automatic renewal. Default is 0.",
 			},
+			"pre_executed_file_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Pre executed file settings. It can only be set at the time of creation, and cannot be modified.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"args": {
+							Type:     schema.TypeList,
+							Optional: true,
+							ForceNew: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "Execution script parameters.",
+						},
+						"run_order": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Run order.",
+						},
+						"when_run": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "`resourceAfter` or `clusterAfter`.",
+						},
+						"cos_file_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Script file name.",
+						},
+						"cos_file_uri": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "The cos address of the script.",
+						},
+						"cos_secret_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Cos secretId.",
+						},
+						"cos_secret_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Cos secretKey.",
+						},
+						"remark": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Remark.",
+						},
+					},
+				},
+			},
 		},
 	}
 }

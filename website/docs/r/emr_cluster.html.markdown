@@ -136,6 +136,7 @@ The following arguments are supported:
 				By default, the cluster Master node internet is enabled.
 * `placement_info` - (Optional, List) The location of the instance.
 * `placement` - (Optional, Map, **Deprecated**) It will be deprecated in later versions. Use `placement_info` instead. The location of the instance.
+* `pre_executed_file_settings` - (Optional, List, ForceNew) Pre executed file settings. It can only be set at the time of creation, and cannot be modified.
 * `resource_spec` - (Optional, List) Resource specification of EMR instance.
 * `sg_id` - (Optional, String, ForceNew) The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.
 * `tags` - (Optional, Map) Tag description list.
@@ -241,6 +242,17 @@ The `placement_info` object supports the following:
 
 * `zone` - (Required, String) Zone.
 * `project_id` - (Optional, Int) Project id.
+
+The `pre_executed_file_settings` object supports the following:
+
+* `args` - (Optional, List, ForceNew) Execution script parameters.
+* `cos_file_name` - (Optional, String, ForceNew) Script file name.
+* `cos_file_uri` - (Optional, String, ForceNew) The cos address of the script.
+* `cos_secret_id` - (Optional, String, ForceNew) Cos secretId.
+* `cos_secret_key` - (Optional, String, ForceNew) Cos secretKey.
+* `remark` - (Optional, String, ForceNew) Remark.
+* `run_order` - (Optional, Int, ForceNew) Run order.
+* `when_run` - (Optional, String, ForceNew) `resourceAfter` or `clusterAfter`.
 
 The `resource_spec` object supports the following:
 
