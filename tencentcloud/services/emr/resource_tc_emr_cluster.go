@@ -241,7 +241,7 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Pre executed file settings.",
+				Description: "Pre executed file settings. It can only be set at the time of creation, and cannot be modified.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"args": {
