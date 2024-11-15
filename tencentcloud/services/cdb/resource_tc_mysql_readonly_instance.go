@@ -221,14 +221,9 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 	// the mysql master instance must have a backup before creating a read-only instance
 	masterInstanceId := d.Get("master_instance_id").(string)
-	masterClient := *client
-	if v, ok := d.GetOk("master_region"); ok {
-		masterClient.Region = v.(string)
-	}
 
 	err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		masterService := MysqlService{client: &masterClient}
-		backups, err := masterService.DescribeBackupsByMysqlId(ctx, masterInstanceId, 10)
+		backups, err := mysqlService.DescribeBackupsByMysqlId(ctx, masterInstanceId, 10)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
