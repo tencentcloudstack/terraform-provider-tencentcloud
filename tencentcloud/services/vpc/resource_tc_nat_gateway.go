@@ -12,6 +12,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -85,6 +86,13 @@ func ResourceTencentCloudNatGateway() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2}),
 				Description:  "1: traditional NAT, 2: standard NAT, default value is 1.",
+			},
+			"stock_public_ip_addresses_bandwidth_out": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "The elastic public IP bandwidth value (unit: Mbps) for binding NAT gateway. When this parameter is not filled in, it defaults to the bandwidth value of the elastic public IP, and for some users, it defaults to the bandwidth limit of the elastic public IP of that user type.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -161,6 +169,10 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOk("subnet_id"); ok {
 		request.SubnetId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("stock_public_ip_addresses_bandwidth_out"); ok {
+		request.StockPublicIpAddressesBandwidthOut = helper.IntUint64(v.(int))
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -290,6 +302,39 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	}
 	if nat.NatProductVersion != nil {
 		_ = d.Set("nat_product_version", *nat.NatProductVersion)
+	}
+
+	// set `stock_public_ip_addresses_bandwidth_out`
+	bandwidthRequest := vpc.NewDescribeAddressesRequest()
+	bandwidthResponse := vpc.NewDescribeAddressesResponse()
+	bandwidthRequest.Filters = []*vpc.Filter{
+		{
+			Name:   common.StringPtr("address-ip"),
+			Values: flattenAddressList((*nat).PublicIpAddressSet),
+		},
+	}
+
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient(iacExtInfo).DescribeAddresses(bandwidthRequest)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, bandwidthRequest.GetAction(), bandwidthRequest.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		bandwidthResponse = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s read NAT gateway addresses failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+
+	if bandwidthResponse != nil && len(bandwidthResponse.Response.AddressSet) > 0 {
+		address := bandwidthResponse.Response.AddressSet[0]
+		if address.Bandwidth != nil {
+			_ = d.Set("stock_public_ip_addresses_bandwidth_out", address.Bandwidth)
+		}
 	}
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
