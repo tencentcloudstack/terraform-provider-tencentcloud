@@ -228,6 +228,38 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		request.Tags = emrTags
 	}
 
+	if v, ok := d.GetOk("pre_executed_file_settings"); ok {
+		preExecutedFileSettings := v.([]interface{})
+		for _, preExecutedFileSetting := range preExecutedFileSettings {
+			preExecutedFileSettingMap := preExecutedFileSetting.(map[string]interface{})
+			tmpPreExecutedFileSetting := &emr.PreExecuteFileSettings{}
+			if v, ok := preExecutedFileSettingMap["args"]; ok {
+				tmpPreExecutedFileSetting.Args = helper.InterfacesStringsPoint(v.([]interface{}))
+			}
+			if v, ok := preExecutedFileSettingMap["run_order"]; ok {
+				tmpPreExecutedFileSetting.RunOrder = helper.IntInt64(v.(int))
+			}
+			if v, ok := preExecutedFileSettingMap["when_run"]; ok {
+				tmpPreExecutedFileSetting.WhenRun = helper.String(v.(string))
+			}
+			if v, ok := preExecutedFileSettingMap["cos_file_name"]; ok {
+				tmpPreExecutedFileSetting.CosFileName = helper.String(v.(string))
+			}
+			if v, ok := preExecutedFileSettingMap["cos_file_uri"]; ok {
+				tmpPreExecutedFileSetting.CosFileURI = helper.String(v.(string))
+			}
+			if v, ok := preExecutedFileSettingMap["cos_secret_id"]; ok {
+				tmpPreExecutedFileSetting.CosSecretId = helper.String(v.(string))
+			}
+			if v, ok := preExecutedFileSettingMap["cos_secret_key"]; ok {
+				tmpPreExecutedFileSetting.CosSecretKey = helper.String(v.(string))
+			}
+			if v, ok := preExecutedFileSettingMap["remark"]; ok {
+				tmpPreExecutedFileSetting.Remark = helper.String(v.(string))
+			}
+			request.PreExecutedFileSettings = append(request.PreExecutedFileSettings, tmpPreExecutedFileSetting)
+		}
+	}
 	ratelimit.Check(request.GetAction())
 	//API: https://cloud.tencent.com/document/api/589/34261
 	response, err := me.client.UseEmrClient().CreateInstance(request)
