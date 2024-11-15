@@ -1003,6 +1003,248 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 											Type: schema.TypeString,
 										},
 									},
+									"security_group_ids": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "Security groups to which a CVM instance belongs.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"password": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ForceNew:     true,
+										Sensitive:    true,
+										Description:  "Password to access, should be set if `key_ids` not set.",
+										ValidateFunc: tccommon.ValidateAsConfigPassword,
+									},
+									"key_ids": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "ID list of keys, should be set if `password` not set.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"enhanced_security_service": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										ForceNew:    true,
+										Default:     true,
+										Description: "To specify whether to enable cloud security service. Default is TRUE.",
+									},
+									"enhanced_monitor_service": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										ForceNew:    true,
+										Default:     true,
+										Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
+									},
+									"master_config": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										MaxItems:    1,
+										Description: "Advanced Node Settings. commonly used to attach existing instances.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"mount_target": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: "Mount target. Default is not mounting.",
+												},
+												"docker_graph_path": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: "Docker graph path. Default is `/var/lib/docker`.",
+												},
+												"user_script": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: "User script encoded in base64, which will be executed after the k8s component runs. The user needs to ensure the script's reentrant and retry logic. The script and its generated log files can be viewed in the node path /data/ccs_userscript/. If the node needs to be initialized before joining the schedule, it can be used in conjunction with the `unschedulable` parameter. After the final initialization of the userScript is completed, add the command \"kubectl uncordon nodename --kubeconfig=/root/.kube/config\" to add the node to the schedule.",
+												},
+												"unschedulable": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													ForceNew:    true,
+													Description: "Set whether the joined nodes participate in scheduling, with a default value of 0, indicating participation in scheduling; Non 0 means not participating in scheduling.",
+												},
+												"labels": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													ForceNew:    true,
+													Description: "Node label list.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																ForceNew:    true,
+																Description: "Name of map.",
+															},
+															"value": {
+																Type:        schema.TypeString,
+																Required:    true,
+																ForceNew:    true,
+																Description: "Value of map.",
+															},
+														},
+													},
+												},
+												"data_disk": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													ForceNew:    true,
+													MaxItems:    1,
+													Description: "Configurations of data disk.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"disk_type": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
+															},
+															"file_system": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "File system, e.g. `ext3/ext4/xfs`.",
+															},
+															"disk_size": {
+																Type:        schema.TypeInt,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Volume of disk in GB. Default is `0`.",
+															},
+															"auto_format_and_mount": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+															},
+															"mount_target": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Mount target.",
+															},
+															"disk_partition": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.",
+															},
+														},
+													},
+												},
+												"extra_args": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													ForceNew:    true,
+													MaxItems:    1,
+													Description: "Custom parameter information related to the node. This is a white-list parameter.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"kubelet": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Kubelet custom parameter. The parameter format is [\"k1=v1\", \"k1=v2\"].",
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+														},
+													},
+												},
+												"desired_pod_number": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													ForceNew:    true,
+													Description: "Indicate to set desired pod number in node. valid when the cluster is podCIDR.",
+												},
+												"gpu_args": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													ForceNew:    true,
+													MaxItems:    1,
+													Description: "GPU driver parameters.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"mig_enable": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Whether to enable MIG.",
+															},
+															"driver": {
+																Type:         schema.TypeMap,
+																Optional:     true,
+																ForceNew:     true,
+																Description:  "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+																ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
+															},
+															"cuda": {
+																Type:         schema.TypeMap,
+																Optional:     true,
+																ForceNew:     true,
+																Description:  "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+																ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
+															},
+															"cudnn": {
+																Type:         schema.TypeMap,
+																Optional:     true,
+																ForceNew:     true,
+																Description:  "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
+																ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
+															},
+															"custom_driver": {
+																Type:        schema.TypeMap,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
+															},
+														},
+													},
+												},
+												"taints": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													ForceNew:    true,
+													Description: "Node taint.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"key": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Key of the taint.",
+															},
+															"value": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Value of the taint.",
+															},
+															"effect": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																ForceNew:    true,
+																Description: "Effect of the taint.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
 								},
 							},
 						},

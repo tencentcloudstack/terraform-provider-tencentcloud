@@ -165,7 +165,7 @@ func resourceTencentCloudKubernetesClusterMasterAttachmentCreatePostFillRequest0
 				}
 			}
 
-			if v, ok := d.GetOkExists("desired_pod_number"); ok {
+			if v, ok := instanceAdvancedSettingsOverridesMap["desired_pod_number"]; ok {
 				instanceAdvancedSettings.DesiredPodNumber = helper.IntInt64(v.(int))
 			}
 
