@@ -393,10 +393,10 @@ func (me *TencentCloudClient) UseMysqlClient(iacExtInfo ...IacExtInfo) *cdb.Clie
 		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
 	}
 
-	if me.mysqlConn != nil {
-		me.mysqlConn.WithHttpTransport(&logRoundTripper)
-		return me.mysqlConn
-	}
+	// if me.mysqlConn != nil {
+	// 	me.mysqlConn.WithHttpTransport(&logRoundTripper)
+	// 	return me.mysqlConn
+	// }
 
 	cpf := me.NewClientProfile(300)
 	me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
