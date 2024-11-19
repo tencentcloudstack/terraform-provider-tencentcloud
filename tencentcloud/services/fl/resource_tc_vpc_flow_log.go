@@ -325,33 +325,31 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	request.FlowLogId = &flowLogId
-	request.VpcId = &vpcId
-
-	if d.HasChange("flow_log_name") {
+	if d.HasChange("flow_log_name") || d.HasChange("flow_log_description") {
 		if v, ok := d.GetOk("flow_log_name"); ok {
 			request.FlowLogName = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("flow_log_description") {
 		if v, ok := d.GetOk("flow_log_description"); ok {
 			request.FlowLogDescription = helper.String(v.(string))
 		}
-	}
 
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyFlowLogAttribute(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		request.FlowLogId = &flowLogId
+		request.VpcId = &vpcId
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyFlowLogAttribute(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update vpc flowLog failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update vpc flowLog failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if d.HasChange("tags") {
