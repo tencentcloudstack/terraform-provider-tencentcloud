@@ -1353,11 +1353,13 @@ PrivateDNS
     tencentcloud_subscribe_private_zone_service
     tencentcloud_private_dns_forward_rule
     tencentcloud_private_dns_end_point
+    tencentcloud_private_dns_account
   Data Source
     tencentcloud_private_dns_records
     tencentcloud_private_dns_private_zone_list
     tencentcloud_private_dns_forward_rules
     tencentcloud_private_dns_end_points
+    tencentcloud_private_dns_accounts
 
 Cloud Log Service(CLS)
   Resource
