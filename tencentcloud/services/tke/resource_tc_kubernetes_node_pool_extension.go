@@ -618,6 +618,8 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnStart(ctx context.Context) er
 
 	// ModifyClusterNodePool
 	if d.HasChanges(
+		"node_os",
+		"node_os_type",
 		"labels",
 		"tags",
 	) {
