@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_private_dns_account
+```
+
+```release-note:new-datasource
+tencentcloud_private_dns_accounts
+```
