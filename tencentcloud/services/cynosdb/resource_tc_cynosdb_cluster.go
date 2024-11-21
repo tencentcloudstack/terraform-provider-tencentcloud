@@ -795,6 +795,26 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	// update root pwd
+	if d.HasChange("password") {
+		request := cynosdb.NewResetAccountPasswordRequest()
+		request.ClusterId = helper.String(clusterId)
+		request.AccountName = helper.String("root")
+		request.AccountPassword = helper.String(d.Get("password").(string))
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().ResetAccountPassword(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
 	// update tags
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
