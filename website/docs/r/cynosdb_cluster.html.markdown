@@ -198,7 +198,7 @@ The following arguments are supported:
 * `cluster_name` - (Required, String) Name of CynosDB cluster.
 * `db_type` - (Required, String, ForceNew) Type of CynosDB, and available values include `MYSQL`.
 * `db_version` - (Required, String, ForceNew) Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`, `8.0`.
-* `password` - (Required, String, ForceNew) Password of `root` account.
+* `password` - (Required, String) Password of `root` account.
 * `subnet_id` - (Required, String) ID of the subnet within this VPC.
 * `vpc_id` - (Required, String) ID of the VPC.
 * `auto_pause_delay` - (Optional, Int) Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.

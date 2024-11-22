@@ -181,7 +181,6 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"password": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Sensitive:   true,
 			Description: "Password of `root` account.",
 		},
