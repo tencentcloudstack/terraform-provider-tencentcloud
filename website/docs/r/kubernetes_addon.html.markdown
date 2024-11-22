@@ -30,10 +30,9 @@ resource "tencentcloud_kubernetes_cluster" "example" {
 }
 
 resource "tencentcloud_kubernetes_addon" "kubernetes_addon" {
-  cluster_id    = tencentcloud_kubernetes_cluster.example.id
-  addon_name    = "cos"
-  addon_version = "2018-05-25"
-  raw_values    = "e30="
+  cluster_id = tencentcloud_kubernetes_cluster.example.id
+  addon_name = "cos"
+  raw_values = "{\"tolerations\":[{\"key\":\"test\",\"value\":\"100\",\"operator\":\"Equal\"}]}"
 }
 ```
 

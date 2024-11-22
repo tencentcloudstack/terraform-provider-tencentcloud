@@ -127,7 +127,7 @@ The `data_disks` object of `native` supports the following:
 
 * `auto_format_and_mount` - (Required, Bool) Whether to automatically format the disk and mount it.
 * `disk_size` - (Required, Int) Cloud disk size (G).
-* `disk_type` - (Required, String) Cloud disk type. Valid values: `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: cloud SSD disk, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD, `LOCAL_NVME`: local NVME disk.
+* `disk_type` - (Required, String) Cloud disk type. Valid values: `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: cloud SSD disk, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `LOCAL_NVME`: local NVME disk.
 * `disk_partition` - (Optional, String) Mount device name or partition name.
 * `encrypt` - (Optional, String) Pass in this parameter to create an encrypted cloud disk. The value is fixed to `ENCRYPT`.
 * `file_system` - (Optional, String) File system (ext3/ext4/xfs).
