@@ -30,9 +30,9 @@ data "tencentcloud_instance_types" "instance_types" {
 }
 
 resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "delogsetmo"
-  tags        = {
-    "test" = "test"
+  logset_name = "logset"
+  tags = {
+    createBy = "Terraform"
   }
 }
 
@@ -44,26 +44,26 @@ resource "tencentcloud_cls_topic" "topic" {
   partition_count      = 1
   period               = 10
   storage_type         = "hot"
-  tags                 = {
-    "test" = "test",
+  tags = {
+    createBy = "Terraform"
   }
 }
 
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-flow-log-vpc"
+  name       = "vpc"
   cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
   availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
-  name              = "vpc-flow-log-subnet"
+  name              = "subnet"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
   is_multicast      = false
 }
 
 resource "tencentcloud_eni" "example" {
-  name        = "vpc-flow-log-eni"
+  name        = "tf-example"
   vpc_id      = tencentcloud_vpc.vpc.id
   subnet_id   = tencentcloud_subnet.subnet.id
   description = "eni desc"
@@ -71,7 +71,7 @@ resource "tencentcloud_eni" "example" {
 }
 
 resource "tencentcloud_instance" "example" {
-  instance_name            = "ci-test-eni-attach"
+  instance_name            = "tf-example"
   availability_zone        = data.tencentcloud_availability_zones.zones.zones.0.name
   image_id                 = data.tencentcloud_images.image.images.0.image_id
   instance_type            = data.tencentcloud_instance_types.instance_types.instance_types.0.instance_type
@@ -88,7 +88,7 @@ resource "tencentcloud_eni_attachment" "example" {
 }
 
 resource "tencentcloud_vpc_flow_log" "example" {
-  flow_log_name        = "tf-example-vpc-flow-log"
+  flow_log_name        = "tf-example"
   resource_type        = "NETWORKINTERFACE"
   resource_id          = tencentcloud_eni_attachment.example.eni_id
   traffic_type         = "ACCEPT"
@@ -96,8 +96,8 @@ resource "tencentcloud_vpc_flow_log" "example" {
   flow_log_description = "this is a testing flow log"
   cloud_log_id         = tencentcloud_cls_topic.topic.id
   storage_type         = "cls"
-  tags                 = {
-    "testKey" = "testValue"
+  tags = {
+    createBy = "Terraform"
   }
 }
 ```
@@ -107,5 +107,5 @@ Import
 vpc flow_log can be imported using the flow log Id combine vpc Id, e.g.
 
 ```
-$ terraform import tencentcloud_vpc_flow_log.flow_log flow_log_id fl-xxxx1234#vpc-yyyy5678
+$ terraform import tencentcloud_vpc_flow_log.example fl-7k59x22l#vpc-n6qjlen5
 ```
