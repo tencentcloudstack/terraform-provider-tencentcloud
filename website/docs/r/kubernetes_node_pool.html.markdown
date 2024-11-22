@@ -38,7 +38,7 @@ variable "default_instance_type" {
 }
 
 //this is the cluster with empty worker config
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+resource "tencentcloud_kubernetes_cluster" "example" {
   vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
   cluster_cidr            = var.cluster_cidr
   cluster_max_pod_num     = 32
@@ -50,9 +50,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 
 //this is one example of managing node using node pool
-resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
-  name                     = "mynodepool"
-  cluster_id               = tencentcloud_kubernetes_cluster.managed_cluster.id
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
+  cluster_id               = tencentcloud_kubernetes_cluster.example.id
   max_size                 = 6
   min_size                 = 1
   vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
@@ -61,6 +61,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   desired_capacity         = 4
   enable_auto_scale        = true
   multi_zone_subnet_policy = "EQUALITY"
+  node_os                  = "img-9qrfy1xt"
 
   auto_scaling_config {
     instance_type              = var.default_instance_type
@@ -101,6 +102,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   }
 
   node_config {
+    docker_graph_path = "/var/lib/docker"
     extra_args = [
       "root-dir=/var/lib/kubelet"
     ]
@@ -111,8 +113,8 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
 ### Using Spot CVM Instance
 
 ```hcl
-resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
-  name                     = "mynodepool"
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
   cluster_id               = tencentcloud_kubernetes_cluster.managed_cluster.id
   max_size                 = 6
   min_size                 = 1
@@ -147,9 +149,8 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2",
+    "test2" = "test2"
   }
-
 }
 ```
 
@@ -280,6 +281,6 @@ In addition to all arguments above, the following attributes are exported:
 tke node pool can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_node_pool.test cls-xxx#np-xxx
+$ terraform import tencentcloud_kubernetes_node_pool.example cls-d2xdg3io#np-380ay1o8
 ```
 
