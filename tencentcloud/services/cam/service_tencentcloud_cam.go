@@ -1965,3 +1965,76 @@ func (me *CamService) DescribeCamGroupUserAccountByFilter(ctx context.Context, p
 	GroupUserAccount = result
 	return
 }
+
+func (me *CamService) DescribeCamSubAccountsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cam.SubAccountUser, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cam.NewDescribeSubAccountsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FilterSubAccountUin" {
+			request.FilterSubAccountUin = v.([]*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamV20190116Client().DescribeSubAccounts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SubAccounts) < 1 {
+		return
+	}
+
+	ret = response.Response.SubAccounts
+	return
+}
+
+func (me *CamService) DescribeCamRoleDetailByFilter(ctx context.Context, param map[string]interface{}) (ret *cam.GetRoleResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cam.NewGetRoleRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RoleId" {
+			request.RoleId = v.(*string)
+		}
+		if k == "RoleName" {
+			request.RoleName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamV20190116Client().GetRole(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}

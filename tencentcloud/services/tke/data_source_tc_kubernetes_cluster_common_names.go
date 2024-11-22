@@ -3,7 +3,6 @@ package tke
 
 import (
 	"context"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,9 +15,6 @@ import (
 func DataSourceTencentCloudKubernetesClusterCommonNames() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKubernetesClusterCommonNamesRead,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -55,10 +51,16 @@ func DataSourceTencentCloudKubernetesClusterCommonNames() *schema.Resource {
 							Computed:    true,
 							Description: "User UIN.",
 						},
+						"common_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The CommonName in the certificate of the client corresponding to the sub-account.",
+						},
 						"common_names": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The CommonName in the certificate of the client corresponding to the sub-account.",
+							Deprecated:  "It has been deprecated from version 1.81.140. Please use `common_name`.",
 						},
 					},
 				},
@@ -89,8 +91,26 @@ func dataSourceTencentCloudKubernetesClusterCommonNamesRead(d *schema.ResourceDa
 		clusterId = v.(string)
 	}
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("cluster_id"); ok {
-		paramMap["ClusterId"] = helper.String(v.(string))
+	if v, ok := d.GetOk("subaccount_uins"); ok {
+		subaccountUinsList := []*string{}
+		subaccountUinsSet := v.([]interface{})
+		for i := range subaccountUinsSet {
+			subaccountUins := subaccountUinsSet[i].(string)
+			subaccountUinsList = append(subaccountUinsList, helper.String(subaccountUins))
+		}
+		paramMap["SubaccountUins"] = subaccountUinsList
+	}
+
+	paramMap["ClusterId"] = helper.String(clusterId)
+
+	if v, ok := d.GetOk("role_ids"); ok {
+		roleIdsList := []*string{}
+		roleIdsSet := v.([]interface{})
+		for i := range roleIdsSet {
+			roleIds := roleIdsSet[i].(string)
+			roleIdsList = append(roleIdsList, helper.String(roleIds))
+		}
+		paramMap["RoleIds"] = roleIdsList
 	}
 
 	var respData []*tkev20180525.CommonName
@@ -106,30 +126,27 @@ func dataSourceTencentCloudKubernetesClusterCommonNamesRead(d *schema.ResourceDa
 		return err
 	}
 
-	var cns []string
 	commonNamesList := make([]map[string]interface{}, 0, len(respData))
 	if respData != nil {
 		for _, commonNames := range respData {
 			commonNamesMap := map[string]interface{}{}
 
-			var cN string
 			if commonNames.SubaccountUin != nil {
 				commonNamesMap["subaccount_uin"] = commonNames.SubaccountUin
 			}
 
 			if commonNames.CN != nil {
+				commonNamesMap["common_name"] = commonNames.CN
 				commonNamesMap["common_names"] = commonNames.CN
-				cN = *commonNames.CN
 			}
 
-			cns = append(cns, cN)
 			commonNamesList = append(commonNamesList, commonNamesMap)
 		}
 
 		_ = d.Set("list", commonNamesList)
 	}
 
-	d.SetId(strings.Join([]string{clusterId, helper.DataResourceIdsHash(cns)}, tccommon.FILED_SP))
+	d.SetId(clusterId)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
