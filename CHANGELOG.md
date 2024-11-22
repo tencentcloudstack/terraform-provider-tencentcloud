@@ -1,3 +1,19 @@
+## 1.81.140 (November 22 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cam_role_detail` ([#2970](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2970))
+* **New Data Source:** `tencentcloud_cam_sub_accounts` ([#2970](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2970))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kubernetes_cluster_common_names: Update code ([#2970](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2970))
+* resource/tencentcloud_cynosdb_cluster: suppor `password` modification ([#2968](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2968))
+* resource/tencentcloud_kubernetes_node_pool: Fix the issue where `node_os` cannot be modified ([#2964](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2964))
+* resource/tencentcloud_mysql_readonly_instance: Supports creating read-only instances across regions. ([#2959](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2959))
+* resource/tencentcloud_redis_instance: Processing the change from a single-AZ instance to a multi-AZ instance. ([#2961](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2961))
+* resource/tencentcloud_vpc_flow_log: support modifying `tags` ([#2963](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2963))
+
 ## 1.81.140 (November 15 , 2024)
 
 FEATURES:
