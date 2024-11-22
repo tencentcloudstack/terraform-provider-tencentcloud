@@ -1181,13 +1181,40 @@ func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *s
 				ZoneId:   helper.IntUint64(zoneId),
 			})
 		}
-		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			_, err := service.UpgradeInstance(ctx, d.Id(), memSize, shardNum, redisReplicaCount+len(adds), addNodes)
-			if err != nil {
-				return tccommon.RetryError(err, redis.FAILEDOPERATION_UNKNOWN)
+		if redisReplicaCount+len(adds) == 0 && len(adds) == 1 {
+			// Processing the change from a single-AZ instance to a multi-AZ instance
+			request := redis.NewModifyInstanceAvailabilityZonesRequest()
+			if v, ok := d.GetOkExists("wait_switch"); ok {
+				request.SwitchOption = helper.IntInt64(v.(int))
+			} else {
+				request.SwitchOption = helper.IntInt64(2)
 			}
-			return nil
-		})
+			request.InstanceId = &id
+			request.NodeSet = append(request.NodeSet,
+				&redis.RedisNodeInfo{
+					NodeType: helper.IntInt64(1),
+					ZoneId:   helper.IntUint64(adds[0]),
+				},
+				&redis.RedisNodeInfo{
+					NodeType: helper.IntInt64(0),
+					ZoneId:   helper.IntUint64(int(*info.ZoneId)),
+				})
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, err := service.client.UseRedisClient().ModifyInstanceAvailabilityZones(request)
+				if err != nil {
+					return tccommon.RetryError(err, redis.INTERNALERROR)
+				}
+				return nil
+			})
+		} else {
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, err := service.UpgradeInstance(ctx, d.Id(), memSize, shardNum, redisReplicaCount+len(adds), addNodes)
+				if err != nil {
+					return tccommon.RetryError(err, redis.FAILEDOPERATION_UNKNOWN)
+				}
+				return nil
+			})
+		}
 		if err != nil {
 			return err
 		}

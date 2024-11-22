@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_redis_instance: Processing the change from a single-AZ instance to a multi-AZ instance.
+```
