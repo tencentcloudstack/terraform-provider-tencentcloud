@@ -98,6 +98,61 @@ needMoreItems:
 
 }
 
+func (me *MysqlService) DescribeBackupsByMysqlIdRegion(ctx context.Context,
+	mysqlId string,
+	leftNumber int64, region string) (backupInfos []*cdb.BackupInfo, errRet error) {
+
+	logId := tccommon.GetLogId(ctx)
+
+	listInitSize := leftNumber
+	if listInitSize > 500 {
+		listInitSize = 500
+	}
+	backupInfos = make([]*cdb.BackupInfo, 0, listInitSize)
+
+	request := cdb.NewDescribeBackupsRequest()
+	request.InstanceId = &mysqlId
+
+	var offset, limit int64 = 0, 50
+needMoreItems:
+	if leftNumber <= 0 {
+		return
+	}
+	if leftNumber < limit {
+		limit = leftNumber
+	}
+	request.Limit = &limit
+	request.Offset = &offset
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClientRegion(region).DescribeBackups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	totalCount := *response.Response.TotalCount
+	leftNumber = leftNumber - limit
+	offset += limit
+
+	backupInfos = append(backupInfos, response.Response.Items...)
+	if leftNumber > 0 && totalCount-offset > 0 {
+		goto needMoreItems
+	}
+	return backupInfos, nil
+
+}
+
 func (me *MysqlService) CreateBackup(ctx context.Context, mysqlId string) (backupId int64, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
@@ -3154,7 +3209,7 @@ func (me *MysqlService) DescribeMysqlRoGroupById(ctx context.Context, instanceId
 	return
 }
 
-func (me *MysqlService) DescribeRoGroupByIdAndRoId(ctx context.Context, instanceId string, roInstanceId string) (roGroup *cdb.RoGroup, errRet error) {
+func (me *MysqlService) DescribeRoGroupByIdAndRoId(ctx context.Context, region string, instanceId string, roInstanceId string) (roGroup *cdb.RoGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdb.NewDescribeRoGroupsRequest()
@@ -3168,7 +3223,7 @@ func (me *MysqlService) DescribeRoGroupByIdAndRoId(ctx context.Context, instance
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseMysqlClient().DescribeRoGroups(request)
+	response, err := me.client.UseMysqlClientRegion(region).DescribeRoGroups(request)
 	if err != nil {
 		errRet = err
 		return

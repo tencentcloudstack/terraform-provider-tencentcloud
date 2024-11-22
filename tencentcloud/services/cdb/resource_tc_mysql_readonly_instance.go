@@ -46,7 +46,7 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Computed:    true,
-			Description: "Read only group id. If rogroupId is empty, a new ro group is created by default. If it is not empty, the existing ro group is used.",
+			Description: "Read only group id. If rogroupId is empty, a new ro group is created by default. If it is not empty, the existing ro group is used. Cross-region query requires master instance permission.",
 		},
 	}
 
@@ -216,13 +216,18 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	mysqlService := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	mysqlService := MysqlService{client: client}
 
 	// the mysql master instance must have a backup before creating a read-only instance
 	masterInstanceId := d.Get("master_instance_id").(string)
+	masterRegion := ""
+	if v, ok := d.GetOk("master_region"); ok {
+		masterRegion = v.(string)
+	}
 
 	err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		backups, err := mysqlService.DescribeBackupsByMysqlId(ctx, masterInstanceId, 10)
+		backups, err := mysqlService.DescribeBackupsByMysqlIdRegion(ctx, masterInstanceId, 10, masterRegion)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
@@ -297,6 +302,7 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	mysqlService := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	masterRegion := ""
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, e := tencentMsyqlBasicInfoRead(ctx, d, meta, false)
 		if e != nil {
@@ -313,6 +319,7 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 		_ = d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 		_ = d.Set("zone", *mysqlInfo.Zone)
 		_ = d.Set("master_region", *mysqlInfo.MasterInfo.Region)
+		masterRegion = *mysqlInfo.MasterInfo.Region
 
 		return nil
 	})
@@ -394,7 +401,7 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("status", mysqlInfo.Status)
 	_ = d.Set("task_status", mysqlInfo.TaskStatus)
 
-	roGroup, err := mysqlService.DescribeRoGroupByIdAndRoId(ctx, *mysqlInfo.MasterInfo.InstanceId, d.Id())
+	roGroup, err := mysqlService.DescribeRoGroupByIdAndRoId(ctx, masterRegion, *mysqlInfo.MasterInfo.InstanceId, d.Id())
 	if err != nil {
 		return err
 	}

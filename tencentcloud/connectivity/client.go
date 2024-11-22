@@ -394,13 +394,30 @@ func (me *TencentCloudClient) UseMysqlClient(iacExtInfo ...IacExtInfo) *cdb.Clie
 		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
 	}
 
-	if me.mysqlConn != nil {
-		me.mysqlConn.WithHttpTransport(&logRoundTripper)
-		return me.mysqlConn
-	}
+	// if me.mysqlConn != nil {
+	// 	me.mysqlConn.WithHttpTransport(&logRoundTripper)
+	// 	return me.mysqlConn
+	// }
 
 	cpf := me.NewClientProfile(300)
 	me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
+	me.mysqlConn.WithHttpTransport(&logRoundTripper)
+
+	return me.mysqlConn
+}
+
+func (me *TencentCloudClient) UseMysqlClientRegion(region string, iacExtInfo ...IacExtInfo) *cdb.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	cpf := me.NewClientProfile(300)
+	if region != "" {
+		me.mysqlConn, _ = cdb.NewClient(me.Credential, region, cpf)
+	} else {
+		me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
+	}
 	me.mysqlConn.WithHttpTransport(&logRoundTripper)
 
 	return me.mysqlConn
