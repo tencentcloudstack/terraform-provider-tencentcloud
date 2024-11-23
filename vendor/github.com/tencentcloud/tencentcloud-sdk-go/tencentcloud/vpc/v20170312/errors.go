@@ -275,6 +275,9 @@ const (
 	// 无效的IPv6地址。
 	INVALIDPARAMETERVALUE_INVALIDIPV6 = "InvalidParameterValue.InvalidIpv6"
 
+	// 旧的带宽值无效。
+	INVALIDPARAMETERVALUE_INVALIDOLDBANDWIDTH = "InvalidParameterValue.InvalidOldBandwidth"
+
 	// 该Tag不合法。
 	INVALIDPARAMETERVALUE_INVALIDTAG = "InvalidParameterValue.InvalidTag"
 
@@ -461,6 +464,9 @@ const (
 	// 指定的流量包不支持此操作
 	INVALIDPARAMETERVALUE_TRAFFICPACKAGENOTSUPPORTED = "InvalidParameterValue.TrafficPackageNotSupported"
 
+	// 指定的流量包资源ID不合法
+	INVALIDPARAMETERVALUE_TRAFFICPACKAGERESOURCEIDMALFORMED = "InvalidParameterValue.TrafficPackageResourceIdMalformed"
+
 	// 该可用区不可用。
 	INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
 
@@ -601,6 +607,9 @@ const (
 
 	// 安全组规则数量超过上限。
 	LIMITEXCEEDED_SECURITYGROUPPOLICYSET = "LimitExceeded.SecurityGroupPolicySet"
+
+	// SSL-VPN客户端个数大于SSL-VPN-SERVER客户端地址池能够分配的个数。
+	LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 
 	// 子网分配子网段数量达到上限。
 	LIMITEXCEEDED_SUBNETCIDRBLOCK = "LimitExceeded.SubnetCidrBlock"
@@ -749,6 +758,9 @@ const (
 	// 已绑定EIP。
 	UNSUPPORTEDOPERATION_BINDEIP = "UnsupportedOperation.BindEIP"
 
+	// 添加 community 时，传播条件只支持 vpg 类型或 vpg 实例
+	UNSUPPORTEDOPERATION_BROADCASTCONDITIONMUSTBEVPGTYPEORVPGINSTANCE = "UnsupportedOperation.BroadcastConditionMustBeVpgTypeOrVpgInstance"
+
 	// 指定VPC CIDR范围不支持私有网络和基础网络设备互通。
 	UNSUPPORTEDOPERATION_CIDRUNSUPPORTEDCLASSICLINK = "UnsupportedOperation.CIDRUnSupportedClassicLink"
 
@@ -767,11 +779,17 @@ const (
 	// CCN实例所属账号未通过联通审批。
 	UNSUPPORTEDOPERATION_CCNINSTANCEACCOUNTNOTAPPROVEDBYUNICOM = "UnsupportedOperation.CcnInstanceAccountNotApprovedByUnicom"
 
+	// 云联网开启ipv6不支持创建多路由表
+	UNSUPPORTEDOPERATION_CCNIPV6NOTSUPPORTMULTIPLEROUTETABLE = "UnsupportedOperation.CcnIpv6NotSupportMultipleRouteTable"
+
 	// 实例未关联CCN。
 	UNSUPPORTEDOPERATION_CCNNOTATTACHED = "UnsupportedOperation.CcnNotAttached"
 
 	// 当前云联网未开启路由传播策略。
 	UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastPolicy"
+
+	// 添加 community 时，vpg 需要开通传播 community 白名单
+	UNSUPPORTEDOPERATION_CCNNOTENABLECOMMUNITY = "UnsupportedOperation.CcnNotEnableCommunity"
 
 	// 跨账号场景下不支持自驾云账号实例 关联普通账号云联网。
 	UNSUPPORTEDOPERATION_CCNORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.CcnOrdinaryAccountRefuseAttach"
@@ -1051,6 +1069,9 @@ const (
 
 	// 记录不存在。
 	UNSUPPORTEDOPERATION_RECORDNOTEXISTS = "UnsupportedOperation.RecordNotExists"
+
+	// 此安全组存在嵌套安全组规则，不支持跨地域克隆。
+	UNSUPPORTEDOPERATION_REMOTEREGIONSGHASREFERENCEDSG = "UnsupportedOperation.RemoteRegionSgHasReferencedSg"
 
 	// 资源处于不可用状态，禁止操作。
 	UNSUPPORTEDOPERATION_RESOURCEISINVALIDSTATE = "UnsupportedOperation.ResourceIsInvalidState"
