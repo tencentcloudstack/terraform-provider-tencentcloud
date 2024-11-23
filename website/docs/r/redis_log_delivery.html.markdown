@@ -69,7 +69,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `enabled` - Log delivery enable status, enable: `true`, disable: `false`.
 
 
 ## Import
