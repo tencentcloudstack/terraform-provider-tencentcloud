@@ -1,3 +1,9 @@
+## 1.81.142 (November 23 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_reserve_ip_address` ([#2972](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2972))
+
 ## 1.81.141 (November 22 , 2024)
 
 FEATURES:
