@@ -1377,6 +1377,7 @@ Cloud Log Service(CLS)
     tencentcloud_cls_export
     tencentcloud_cls_scheduled_sql
     tencentcloud_cls_data_transform
+    tencentcloud_cls_cloud_product_log_task
 
   Data Source
     tencentcloud_cls_shipper_tasks

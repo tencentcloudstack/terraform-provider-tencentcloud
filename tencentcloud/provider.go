@@ -1704,6 +1704,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_cos_recharge":                                                         cls.ResourceTencentCloudClsCosRecharge(),
 			"tencentcloud_cls_export":                                                               cls.ResourceTencentCloudClsExport(),
 			"tencentcloud_cls_data_transform":                                                       cls.ResourceTencentCloudClsDataTransform(),
+			"tencentcloud_cls_cloud_product_log_task":                                               cls.ResourceTencentCloudClsCloudProductLogTask(),
 			"tencentcloud_lighthouse_instance":                                                      lighthouse.ResourceTencentCloudLighthouseInstance(),
 			"tencentcloud_lighthouse_firewall_template":                                             lighthouse.ResourceTencentCloudLighthouseFirewallTemplate(),
 			"tencentcloud_tem_environment":                                                          tem.ResourceTencentCloudTemEnvironment(),

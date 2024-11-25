@@ -224,6 +224,7 @@ type TencentCloudClient struct {
 	privatednsv20201028Conn *privatedns.Client
 	wafv20180125Conn        *waf.Client
 	camv20190116Conn        *cam.Client
+	clsv20201016Conn        *cls.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1987,4 +1988,17 @@ func (me *TencentCloudClient) UseCamV20190116Client() *cam.Client {
 	me.camv20190116Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.camv20190116Conn
+}
+
+// UseClsV20201016Client return CLS client for service
+func (me *TencentCloudClient) UseClsV20201016Client() *cls.Client {
+	if me.clsv20201016Conn != nil {
+		return me.clsv20201016Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.clsv20201016Conn, _ = cls.NewClient(me.Credential, me.Region, cpf)
+	me.clsv20201016Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.clsv20201016Conn
 }
