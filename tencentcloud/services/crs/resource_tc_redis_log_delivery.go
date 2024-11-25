@@ -82,6 +82,12 @@ func ResourceTencentCloudRedisLogDelivery() *schema.Resource {
 				Computed:    true,
 				Description: "Whether to create an index when creating a log topic.",
 			},
+
+			"enabled": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Log delivery enable status, enable: `true`, disable: `false`.",
+			},
 		},
 	}
 }
@@ -225,6 +231,10 @@ func resourceTencentCloudRedisLogDeliveryRead(d *schema.ResourceData, meta inter
 
 	if respData.LogRegion != nil {
 		_ = d.Set("log_region", respData.LogRegion)
+	}
+
+	if respData.Enabled != nil {
+		_ = d.Set("enabled", respData.Enabled)
 	}
 
 	_ = instanceId
