@@ -1,5 +1,6 @@
 ```release-note:enhancement
 datasource/tencentcloud_kubernetes_cluster_common_names: Update code
+```
 
 ```release-note:new-data-source
 tencentcloud_cam_sub_accounts
