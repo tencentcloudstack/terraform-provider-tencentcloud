@@ -2451,7 +2451,7 @@ func waitTaskReady(ctx context.Context, client *clb.Client, reqeustId string) er
 		} else if status == 1 {
 			return resource.NonRetryableError(fmt.Errorf("Task[%s] failed", reqeustId))
 		} else {
-			return resource.RetryableError(fmt.Errorf("Task[%s] status: %s", reqeustId, status))
+			return resource.RetryableError(fmt.Errorf("Task[%s] status: %d", reqeustId, status))
 		}
 	})
 	if err != nil {
