@@ -1371,3 +1371,31 @@ func (me *ClsService) DeleteClsScheduledSqlById(ctx context.Context, taskId stri
 
 	return
 }
+
+func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context) (ret *cls.DescribeCloudProductLogTasksResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeCloudProductLogTasksRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	if err := resourceTencentCloudClsCloudProductLogTaskReadPreRequest0(ctx, request); err != nil {
+		return nil, err
+	}
+
+	response, err := me.client.UseClsV20201016Client().DescribeCloudProductLogTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}

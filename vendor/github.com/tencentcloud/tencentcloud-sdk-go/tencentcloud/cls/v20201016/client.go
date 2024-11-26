@@ -447,7 +447,21 @@ func NewCreateAlarmNoticeResponse() (response *CreateAlarmNoticeResponse) {
 }
 
 // CreateAlarmNotice
-// 该接口用于创建通知渠道组。
+// 该接口用于创建通知渠道组，提供两种配置模式，二选一：
+//
+// 1，简易模式，提供最基本的通知渠道功能。需填写如下参数：
+//
+// - Type
+//
+// - NoticeReceivers
+//
+// - WebCallbacks
+//
+// 
+//
+// 2，高级模式，在简易模式基础上，支持设定规则，为不同类型的告警分别设定通知渠道，并支持告警升级功能。需填写如下参数：
+//
+// - NoticeRules
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -464,7 +478,21 @@ func (c *Client) CreateAlarmNotice(request *CreateAlarmNoticeRequest) (response 
 }
 
 // CreateAlarmNotice
-// 该接口用于创建通知渠道组。
+// 该接口用于创建通知渠道组，提供两种配置模式，二选一：
+//
+// 1，简易模式，提供最基本的通知渠道功能。需填写如下参数：
+//
+// - Type
+//
+// - NoticeReceivers
+//
+// - WebCallbacks
+//
+// 
+//
+// 2，高级模式，在简易模式基础上，支持设定规则，为不同类型的告警分别设定通知渠道，并支持告警升级功能。需填写如下参数：
+//
+// - NoticeRules
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -553,6 +581,77 @@ func (c *Client) CreateAlarmShieldWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateAlarmShieldResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudProductLogTaskRequest() (request *CreateCloudProductLogTaskRequest) {
+    request = &CreateCloudProductLogTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateCloudProductLogTask")
+    
+    
+    return
+}
+
+func NewCreateCloudProductLogTaskResponse() (response *CreateCloudProductLogTaskResponse) {
+    response = &CreateCloudProductLogTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudProductLogTask
+// 内部云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCloudProductLogTask(request *CreateCloudProductLogTaskRequest) (response *CreateCloudProductLogTaskResponse, err error) {
+    return c.CreateCloudProductLogTaskWithContext(context.Background(), request)
+}
+
+// CreateCloudProductLogTask
+// 内部云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCloudProductLogTaskWithContext(ctx context.Context, request *CreateCloudProductLogTaskRequest) (response *CreateCloudProductLogTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudProductLogTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudProductLogTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudProductLogTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -697,6 +796,59 @@ func (c *Client) CreateConfigExtraWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateConfigExtraResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateConsoleSharingRequest() (request *CreateConsoleSharingRequest) {
+    request = &CreateConsoleSharingRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateConsoleSharing")
+    
+    
+    return
+}
+
+func NewCreateConsoleSharingResponse() (response *CreateConsoleSharingResponse) {
+    response = &CreateConsoleSharingResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConsoleSharing
+// 创建控制台分享
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateConsoleSharing(request *CreateConsoleSharingRequest) (response *CreateConsoleSharingResponse, err error) {
+    return c.CreateConsoleSharingWithContext(context.Background(), request)
+}
+
+// CreateConsoleSharing
+// 创建控制台分享
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateConsoleSharingWithContext(ctx context.Context, request *CreateConsoleSharingRequest) (response *CreateConsoleSharingResponse, err error) {
+    if request == nil {
+        request = NewCreateConsoleSharingRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConsoleSharing require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConsoleSharingResponse()
     err = c.Send(request, response)
     return
 }
@@ -1407,6 +1559,71 @@ func (c *Client) CreateMachineGroupWithContext(ctx context.Context, request *Cre
     return
 }
 
+func NewCreateNoticeContentRequest() (request *CreateNoticeContentRequest) {
+    request = &CreateNoticeContentRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateNoticeContent")
+    
+    
+    return
+}
+
+func NewCreateNoticeContentResponse() (response *CreateNoticeContentResponse) {
+    response = &CreateNoticeContentResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateNoticeContent
+// 该接口用于创建通知内容。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) CreateNoticeContent(request *CreateNoticeContentRequest) (response *CreateNoticeContentResponse, err error) {
+    return c.CreateNoticeContentWithContext(context.Background(), request)
+}
+
+// CreateNoticeContent
+// 该接口用于创建通知内容。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) CreateNoticeContentWithContext(ctx context.Context, request *CreateNoticeContentRequest) (response *CreateNoticeContentResponse, err error) {
+    if request == nil {
+        request = NewCreateNoticeContentRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateNoticeContent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateNoticeContentResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateScheduledSqlRequest() (request *CreateScheduledSqlRequest) {
     request = &CreateScheduledSqlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1827,6 +2044,73 @@ func (c *Client) DeleteAlarmShieldWithContext(ctx context.Context, request *Dele
     return
 }
 
+func NewDeleteCloudProductLogTaskRequest() (request *DeleteCloudProductLogTaskRequest) {
+    request = &DeleteCloudProductLogTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteCloudProductLogTask")
+    
+    
+    return
+}
+
+func NewDeleteCloudProductLogTaskResponse() (response *DeleteCloudProductLogTaskResponse) {
+    response = &DeleteCloudProductLogTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudProductLogTask
+// 内部云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCloudProductLogTask(request *DeleteCloudProductLogTaskRequest) (response *DeleteCloudProductLogTaskResponse, err error) {
+    return c.DeleteCloudProductLogTaskWithContext(context.Background(), request)
+}
+
+// DeleteCloudProductLogTask
+// 内部云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCloudProductLogTaskWithContext(ctx context.Context, request *DeleteCloudProductLogTaskRequest) (response *DeleteCloudProductLogTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudProductLogTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudProductLogTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudProductLogTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteConfigRequest() (request *DeleteConfigRequest) {
     request = &DeleteConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2028,6 +2312,59 @@ func (c *Client) DeleteConfigFromMachineGroupWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDeleteConfigFromMachineGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteConsoleSharingRequest() (request *DeleteConsoleSharingRequest) {
+    request = &DeleteConsoleSharingRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteConsoleSharing")
+    
+    
+    return
+}
+
+func NewDeleteConsoleSharingResponse() (response *DeleteConsoleSharingResponse) {
+    response = &DeleteConsoleSharingResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteConsoleSharing
+// 删除控制台分享
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConsoleSharing(request *DeleteConsoleSharingRequest) (response *DeleteConsoleSharingResponse, err error) {
+    return c.DeleteConsoleSharingWithContext(context.Background(), request)
+}
+
+// DeleteConsoleSharing
+// 删除控制台分享
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConsoleSharingWithContext(ctx context.Context, request *DeleteConsoleSharingRequest) (response *DeleteConsoleSharingResponse, err error) {
+    if request == nil {
+        request = NewDeleteConsoleSharingRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteConsoleSharing require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteConsoleSharingResponse()
     err = c.Send(request, response)
     return
 }
@@ -2621,6 +2958,73 @@ func (c *Client) DeleteMachineGroupInfoWithContext(ctx context.Context, request 
     return
 }
 
+func NewDeleteNoticeContentRequest() (request *DeleteNoticeContentRequest) {
+    request = &DeleteNoticeContentRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteNoticeContent")
+    
+    
+    return
+}
+
+func NewDeleteNoticeContentResponse() (response *DeleteNoticeContentResponse) {
+    response = &DeleteNoticeContentResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteNoticeContent
+// 该接口用于删除通知内容配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDEDALARM = "FailedOperation.BindedAlarm"
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  OPERATIONDENIED_NOTICEHASALARM = "OperationDenied.NoticeHasAlarm"
+//  RESOURCENOTFOUND_ALARMNOTICENOTEXIST = "ResourceNotFound.AlarmNoticeNotExist"
+func (c *Client) DeleteNoticeContent(request *DeleteNoticeContentRequest) (response *DeleteNoticeContentResponse, err error) {
+    return c.DeleteNoticeContentWithContext(context.Background(), request)
+}
+
+// DeleteNoticeContent
+// 该接口用于删除通知内容配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDEDALARM = "FailedOperation.BindedAlarm"
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  OPERATIONDENIED_NOTICEHASALARM = "OperationDenied.NoticeHasAlarm"
+//  RESOURCENOTFOUND_ALARMNOTICENOTEXIST = "ResourceNotFound.AlarmNoticeNotExist"
+func (c *Client) DeleteNoticeContentWithContext(ctx context.Context, request *DeleteNoticeContentRequest) (response *DeleteNoticeContentResponse, err error) {
+    if request == nil {
+        request = NewDeleteNoticeContentRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteNoticeContent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteNoticeContentResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteScheduledSqlRequest() (request *DeleteScheduledSqlRequest) {
     request = &DeleteScheduledSqlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2790,6 +3194,7 @@ func NewDeleteTopicResponse() (response *DeleteTopicResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -2813,6 +3218,7 @@ func (c *Client) DeleteTopic(request *DeleteTopicRequest) (response *DeleteTopic
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3114,6 +3520,55 @@ func (c *Client) DescribeAlertRecordHistoryWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeCloudProductLogTasksRequest() (request *DescribeCloudProductLogTasksRequest) {
+    request = &DescribeCloudProductLogTasksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeCloudProductLogTasks")
+    
+    
+    return
+}
+
+func NewDescribeCloudProductLogTasksResponse() (response *DescribeCloudProductLogTasksResponse) {
+    response = &DescribeCloudProductLogTasksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudProductLogTasks
+// 云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeCloudProductLogTasks(request *DescribeCloudProductLogTasksRequest) (response *DescribeCloudProductLogTasksResponse, err error) {
+    return c.DescribeCloudProductLogTasksWithContext(context.Background(), request)
+}
+
+// DescribeCloudProductLogTasks
+// 云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeCloudProductLogTasksWithContext(ctx context.Context, request *DescribeCloudProductLogTasksRequest) (response *DescribeCloudProductLogTasksResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudProductLogTasksRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudProductLogTasks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudProductLogTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeConfigExtrasRequest() (request *DescribeConfigExtrasRequest) {
     request = &DescribeConfigExtrasRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3323,6 +3778,57 @@ func (c *Client) DescribeConfigsWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeConsoleSharingListRequest() (request *DescribeConsoleSharingListRequest) {
+    request = &DescribeConsoleSharingListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeConsoleSharingList")
+    
+    
+    return
+}
+
+func NewDescribeConsoleSharingListResponse() (response *DescribeConsoleSharingListResponse) {
+    response = &DescribeConsoleSharingListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConsoleSharingList
+// 批量查询控制台分享列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeConsoleSharingList(request *DescribeConsoleSharingListRequest) (response *DescribeConsoleSharingListResponse, err error) {
+    return c.DescribeConsoleSharingListWithContext(context.Background(), request)
+}
+
+// DescribeConsoleSharingList
+// 批量查询控制台分享列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeConsoleSharingListWithContext(ctx context.Context, request *DescribeConsoleSharingListRequest) (response *DescribeConsoleSharingListResponse, err error) {
+    if request == nil {
+        request = NewDescribeConsoleSharingListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConsoleSharingList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConsoleSharingListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeConsumerRequest() (request *DescribeConsumerRequest) {
     request = &DescribeConsumerRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3481,7 +3987,7 @@ func NewDescribeDashboardSubscribesResponse() (response *DescribeDashboardSubscr
 }
 
 // DescribeDashboardSubscribes
-//  本接口用于获取仪表盘订阅列表，支持分页
+// 本接口用于获取仪表盘订阅列表，支持分页
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3501,7 +4007,7 @@ func (c *Client) DescribeDashboardSubscribes(request *DescribeDashboardSubscribe
 }
 
 // DescribeDashboardSubscribes
-//  本接口用于获取仪表盘订阅列表，支持分页
+// 本接口用于获取仪表盘订阅列表，支持分页
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4072,6 +4578,7 @@ func NewDescribeLogHistogramResponse() (response *DescribeLogHistogramResponse) 
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
 //  INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
+//  INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -4099,6 +4606,7 @@ func (c *Client) DescribeLogHistogram(request *DescribeLogHistogramRequest) (res
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
 //  INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
+//  INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -4400,6 +4908,71 @@ func (c *Client) DescribeMachinesWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeMachinesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNoticeContentsRequest() (request *DescribeNoticeContentsRequest) {
+    request = &DescribeNoticeContentsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeNoticeContents")
+    
+    
+    return
+}
+
+func NewDescribeNoticeContentsResponse() (response *DescribeNoticeContentsResponse) {
+    response = &DescribeNoticeContentsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNoticeContents
+// 获取通知内容列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeNoticeContents(request *DescribeNoticeContentsRequest) (response *DescribeNoticeContentsResponse, err error) {
+    return c.DescribeNoticeContentsWithContext(context.Background(), request)
+}
+
+// DescribeNoticeContents
+// 获取通知内容列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeNoticeContentsWithContext(ctx context.Context, request *DescribeNoticeContentsRequest) (response *DescribeNoticeContentsResponse, err error) {
+    if request == nil {
+        request = NewDescribeNoticeContentsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNoticeContents require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNoticeContentsResponse()
     err = c.Send(request, response)
     return
 }
@@ -4797,6 +5370,7 @@ func NewGetAlarmLogResponse() (response *GetAlarmLogResponse) {
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
 //  INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
+//  INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -4825,6 +5399,7 @@ func (c *Client) GetAlarmLog(request *GetAlarmLogRequest) (response *GetAlarmLog
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
 //  INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
+//  INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -5134,6 +5709,73 @@ func (c *Client) ModifyAlarmShieldWithContext(ctx context.Context, request *Modi
     return
 }
 
+func NewModifyCloudProductLogTaskRequest() (request *ModifyCloudProductLogTaskRequest) {
+    request = &ModifyCloudProductLogTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyCloudProductLogTask")
+    
+    
+    return
+}
+
+func NewModifyCloudProductLogTaskResponse() (response *ModifyCloudProductLogTaskResponse) {
+    response = &ModifyCloudProductLogTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCloudProductLogTask
+// 内部云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCloudProductLogTask(request *ModifyCloudProductLogTaskRequest) (response *ModifyCloudProductLogTaskResponse, err error) {
+    return c.ModifyCloudProductLogTaskWithContext(context.Background(), request)
+}
+
+// ModifyCloudProductLogTask
+// 内部云产品接入使用相关接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCloudProductLogTaskWithContext(ctx context.Context, request *ModifyCloudProductLogTaskRequest) (response *ModifyCloudProductLogTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyCloudProductLogTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCloudProductLogTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCloudProductLogTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyConfigRequest() (request *ModifyConfigRequest) {
     request = &ModifyConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5274,6 +5916,59 @@ func (c *Client) ModifyConfigExtraWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyConfigExtraResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConsoleSharingRequest() (request *ModifyConsoleSharingRequest) {
+    request = &ModifyConsoleSharingRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyConsoleSharing")
+    
+    
+    return
+}
+
+func NewModifyConsoleSharingResponse() (response *ModifyConsoleSharingResponse) {
+    response = &ModifyConsoleSharingResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConsoleSharing
+// 修改控制台分享，目前仅允许修改有效期
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConsoleSharing(request *ModifyConsoleSharingRequest) (response *ModifyConsoleSharingResponse, err error) {
+    return c.ModifyConsoleSharingWithContext(context.Background(), request)
+}
+
+// ModifyConsoleSharing
+// 修改控制台分享，目前仅允许修改有效期
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConsoleSharingWithContext(ctx context.Context, request *ModifyConsoleSharingRequest) (response *ModifyConsoleSharingResponse, err error) {
+    if request == nil {
+        request = NewModifyConsoleSharingRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConsoleSharing require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConsoleSharingResponse()
     err = c.Send(request, response)
     return
 }
@@ -5927,6 +6622,77 @@ func (c *Client) ModifyMachineGroupWithContext(ctx context.Context, request *Mod
     return
 }
 
+func NewModifyNoticeContentRequest() (request *ModifyNoticeContentRequest) {
+    request = &ModifyNoticeContentRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyNoticeContent")
+    
+    
+    return
+}
+
+func NewModifyNoticeContentResponse() (response *ModifyNoticeContentResponse) {
+    response = &ModifyNoticeContentResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyNoticeContent
+// 该接口用于修改通知内容配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ALARMCONFLICT = "InvalidParameter.AlarmConflict"
+//  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_ALARMNOTICENOTEXIST = "ResourceNotFound.AlarmNoticeNotExist"
+func (c *Client) ModifyNoticeContent(request *ModifyNoticeContentRequest) (response *ModifyNoticeContentResponse, err error) {
+    return c.ModifyNoticeContentWithContext(context.Background(), request)
+}
+
+// ModifyNoticeContent
+// 该接口用于修改通知内容配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ALARMCONFLICT = "InvalidParameter.AlarmConflict"
+//  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_ALARMNOTICENOTEXIST = "ResourceNotFound.AlarmNoticeNotExist"
+func (c *Client) ModifyNoticeContentWithContext(ctx context.Context, request *ModifyNoticeContentRequest) (response *ModifyNoticeContentResponse, err error) {
+    if request == nil {
+        request = NewModifyNoticeContentRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyNoticeContent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyNoticeContentResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyScheduledSqlRequest() (request *ModifyScheduledSqlRequest) {
     request = &ModifyScheduledSqlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6312,7 +7078,9 @@ func NewQueryMetricResponse() (response *QueryMetricResponse) {
 }
 
 // QueryMetric
-// 查询指定时刻指标的最新值
+// 查询指定时刻指标的最新值。
+//
+// 如果该时刻向前推5分钟内均无指标数据，则无相应的查询结果。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6329,7 +7097,9 @@ func (c *Client) QueryMetric(request *QueryMetricRequest) (response *QueryMetric
 }
 
 // QueryMetric
-// 查询指定时刻指标的最新值
+// 查询指定时刻指标的最新值。
+//
+// 如果该时刻向前推5分钟内均无指标数据，则无相应的查询结果。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6682,6 +7452,7 @@ func NewSearchLogResponse() (response *SearchLogResponse) {
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
 //  INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
+//  INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
 //  LIMITEXCEEDED_SEARCHRESOURCES = "LimitExceeded.SearchResources"
@@ -6718,6 +7489,7 @@ func (c *Client) SearchLog(request *SearchLogRequest) (response *SearchLogRespon
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
 //  INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
+//  INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
 //  LIMITEXCEEDED_SEARCHRESOURCES = "LimitExceeded.SearchResources"
@@ -6864,30 +7636,6 @@ func NewUploadLogResponse() (response *UploadLogResponse) {
 // 
 //
 // 本接口用于将日志写入到指定的日志主题。
-//
-// 
-//
-// 日志服务提供以下两种模式：
-//
-// 
-//
-// #### 负载均衡模式
-//
-// 
-//
-// 系统根据当前日志主题下所有可读写的分区，遵循负载均衡原则自动分配写入的目标分区。该模式适合消费不保序的场景。
-//
-// 
-//
-// #### 哈希路由模式
-//
-// 
-//
-// 系统根据携带的哈希值（X-CLS-HashKey）将数据写入到符合范围要求的目标分区。例如，可以将某个日志源端通过 hashkey 与某个主题分区强绑定，这样可以保证数据在该分区上写入和消费是严格保序的。
-//
-// 
-//
-//                  
 //
 // 
 //
@@ -7201,30 +7949,6 @@ func (c *Client) UploadLog(request *UploadLogRequest, data []byte) (response *Up
 // 
 //
 // 本接口用于将日志写入到指定的日志主题。
-//
-// 
-//
-// 日志服务提供以下两种模式：
-//
-// 
-//
-// #### 负载均衡模式
-//
-// 
-//
-// 系统根据当前日志主题下所有可读写的分区，遵循负载均衡原则自动分配写入的目标分区。该模式适合消费不保序的场景。
-//
-// 
-//
-// #### 哈希路由模式
-//
-// 
-//
-// 系统根据携带的哈希值（X-CLS-HashKey）将数据写入到符合范围要求的目标分区。例如，可以将某个日志源端通过 hashkey 与某个主题分区强绑定，这样可以保证数据在该分区上写入和消费是严格保序的。
-//
-// 
-//
-//                  
 //
 // 
 //
