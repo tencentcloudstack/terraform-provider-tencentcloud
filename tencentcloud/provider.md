@@ -1263,7 +1263,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_protocol_template_group
     tencentcloud_route_table
     tencentcloud_vpc_private_nat_gateway
-	tencentcloud_route_table_association
+    tencentcloud_route_table_association
     tencentcloud_route_entry
     tencentcloud_route_table_entry
     tencentcloud_dnat
@@ -1275,6 +1275,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_vpc_bandwidth_package
     tencentcloud_vpc_bandwidth_package_attachment
     tencentcloud_ipv6_address_bandwidth
+    tencentcloud_reserve_ip_address
 
 Private Link(PLS)
   Resource

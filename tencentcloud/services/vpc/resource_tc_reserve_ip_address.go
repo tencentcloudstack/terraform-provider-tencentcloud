@@ -226,7 +226,7 @@ func resourceTencentCloudReserveIpAddressUpdate(d *schema.ResourceData, meta int
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"vpc_id", "ip_addresses", "subnet_id"}
+	immutableArgs := []string{"vpc_id", "ip_address", "subnet_id"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
