@@ -1,3 +1,3 @@
 ```release-note:enhancement
-resource/tencentcloud_clb_listener_rule: support param `o_auth`
+resource/tencentcloud_clb_listener_rule: support param `oauth`
 ```

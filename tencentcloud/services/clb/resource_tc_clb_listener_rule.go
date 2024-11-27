@@ -185,7 +185,7 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Computed:    true,
 				Description: "Whether to enable QUIC. Note: QUIC can be enabled only for HTTPS domain names.",
 			},
-			"o_auth": {
+			"oauth": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
@@ -193,13 +193,13 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Description: "OAuth configuration information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"o_auth_enable": {
+						"oauth_enable": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Computed:    true,
 							Description: "Enable or disable authentication. True: Enabled; False: Disabled.",
 						},
-						"o_auth_failure_status": {
+						"oauth_failure_status": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
@@ -408,16 +408,16 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "o_auth"); ok {
+	if dMap, ok := helper.InterfacesHeadMap(d, "oauth"); ok {
 		modifyRuleRequest := clb.NewModifyRuleRequest()
 		modifyRuleRequest.ListenerId = helper.String(listenerId)
 		modifyRuleRequest.LoadBalancerId = helper.String(clbId)
 		modifyRuleRequest.LocationId = helper.String(locationId)
 		oauth := &clb.OAuth{}
-		if v, ok := dMap["o_auth_enable"]; ok {
+		if v, ok := dMap["oauth_enable"]; ok {
 			oauth.OAuthEnable = helper.Bool(v.(bool))
 		}
-		if v, ok := dMap["o_auth_failure_status"]; ok {
+		if v, ok := dMap["oauth_failure_status"]; ok {
 			oauth.OAuthFailureStatus = helper.String(v.(string))
 		}
 		modifyRuleRequest.OAuth = oauth
@@ -554,12 +554,12 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	if instance.OAuth != nil {
 		oath := make(map[string]interface{})
 		if instance.OAuth.OAuthEnable != nil {
-			oath["o_auth_enable"] = instance.OAuth.OAuthEnable
+			oath["oauth_enable"] = instance.OAuth.OAuthEnable
 		}
 		if instance.OAuth.OAuthFailureStatus != nil {
-			oath["o_auth_failure_status"] = instance.OAuth.OAuthFailureStatus
+			oath["oauth_failure_status"] = instance.OAuth.OAuthFailureStatus
 		}
-		_ = d.Set("o_auth", []interface{}{oath})
+		_ = d.Set("oauth", []interface{}{oath})
 	}
 
 	return nil
@@ -615,14 +615,14 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		url = d.Get("url").(string)
 		request.Url = helper.String(url)
 	}
-	if d.HasChange("o_auth") {
+	if d.HasChange("oauth") {
 		changed = true
-		if dMap, ok := helper.InterfacesHeadMap(d, "o_auth"); ok {
+		if dMap, ok := helper.InterfacesHeadMap(d, "oauth"); ok {
 			oauth := &clb.OAuth{}
-			if v, ok := dMap["o_auth_enable"]; ok {
+			if v, ok := dMap["oauth_enable"]; ok {
 				oauth.OAuthEnable = helper.Bool(v.(bool))
 			}
-			if v, ok := dMap["o_auth_failure_status"]; ok {
+			if v, ok := dMap["oauth_failure_status"]; ok {
 				oauth.OAuthFailureStatus = helper.String(v.(string))
 			}
 			request.OAuth = oauth

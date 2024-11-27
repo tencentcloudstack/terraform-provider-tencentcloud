@@ -133,18 +133,18 @@ func TestAccTencentCloudClbListenerRuleResource_oauth(t *testing.T) {
 				Config: testAccClbListenerRule_oauth,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_oauth"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "o_auth.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "o_auth.0.o_auth_enable", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "o_auth.0.o_auth_failure_status", "REJECT"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_enable", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_failure_status", "REJECT"),
 				),
 			},
 			{
 				Config: testAccClbListenerRule_oauthUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_oauth"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "o_auth.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "o_auth.0.o_auth_enable", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "o_auth.0.o_auth_failure_status", "BYPASS"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_enable", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_failure_status", "BYPASS"),
 				),
 			},
 			{
@@ -345,9 +345,9 @@ resource "tencentcloud_clb_listener_rule" "rule_oauth" {
   scheduler           = "WRR"
   target_type         = "TARGETGROUP"
   forward_type        = "HTTPS"
-  o_auth {
-    o_auth_enable = true
-    o_auth_failure_status = "REJECT"
+  oauth {
+    oauth_enable = true
+    oauth_failure_status = "REJECT"
   }
 }
 `
@@ -362,9 +362,9 @@ resource "tencentcloud_clb_listener_rule" "rule_oauth" {
   scheduler           = "WRR"
   target_type         = "TARGETGROUP"
   forward_type        = "HTTPS"
-  o_auth {
-    o_auth_enable = false
-    o_auth_failure_status = "BYPASS"
+  oauth {
+    oauth_enable = false
+    oauth_failure_status = "BYPASS"
   }
 }
 `
