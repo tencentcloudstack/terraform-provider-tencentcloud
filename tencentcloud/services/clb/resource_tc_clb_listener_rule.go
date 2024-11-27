@@ -185,6 +185,29 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Computed:    true,
 				Description: "Whether to enable QUIC. Note: QUIC can be enabled only for HTTPS domain names.",
 			},
+			"oauth": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "OAuth configuration information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"oauth_enable": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Computed:    true,
+							Description: "Enable or disable authentication. True: Enabled; False: Disabled.",
+						},
+						"oauth_failure_status": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "After all IAPs fail, the request is rejected or released. BYPASS: PASS; REJECT: Reject.",
+						},
+					},
+				},
+			},
 			//computed
 			"rule_id": {
 				Type:        schema.TypeString,
@@ -384,6 +407,41 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 			return err
 		}
 	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "oauth"); ok {
+		modifyRuleRequest := clb.NewModifyRuleRequest()
+		modifyRuleRequest.ListenerId = helper.String(listenerId)
+		modifyRuleRequest.LoadBalancerId = helper.String(clbId)
+		modifyRuleRequest.LocationId = helper.String(locationId)
+		oauth := &clb.OAuth{}
+		if v, ok := dMap["oauth_enable"]; ok {
+			oauth.OAuthEnable = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["oauth_failure_status"]; ok {
+			oauth.OAuthFailureStatus = helper.String(v.(string))
+		}
+		modifyRuleRequest.OAuth = oauth
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyRule(modifyRuleRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				requestId := *response.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				if retryErr != nil {
+					return resource.NonRetryableError(errors.WithStack(retryErr))
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update CLB listener rule failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	return resourceTencentCloudClbListenerRuleRead(d, meta)
 }
 
@@ -493,6 +551,16 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 			_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
 		}
 	}
+	if instance.OAuth != nil {
+		oath := make(map[string]interface{})
+		if instance.OAuth.OAuthEnable != nil {
+			oath["oauth_enable"] = instance.OAuth.OAuthEnable
+		}
+		if instance.OAuth.OAuthFailureStatus != nil {
+			oath["oauth_failure_status"] = instance.OAuth.OAuthFailureStatus
+		}
+		_ = d.Set("oauth", []interface{}{oath})
+	}
 
 	return nil
 }
@@ -546,6 +614,19 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		changed = true
 		url = d.Get("url").(string)
 		request.Url = helper.String(url)
+	}
+	if d.HasChange("oauth") {
+		changed = true
+		if dMap, ok := helper.InterfacesHeadMap(d, "oauth"); ok {
+			oauth := &clb.OAuth{}
+			if v, ok := dMap["oauth_enable"]; ok {
+				oauth.OAuthEnable = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["oauth_failure_status"]; ok {
+				oauth.OAuthFailureStatus = helper.String(v.(string))
+			}
+			request.OAuth = oauth
+		}
 	}
 
 	if d.HasChange("forward_type") {

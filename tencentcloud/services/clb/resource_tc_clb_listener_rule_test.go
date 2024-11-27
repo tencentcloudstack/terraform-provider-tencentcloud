@@ -118,6 +118,44 @@ func TestAccTencentCloudClbListenerRuleResource_full(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClbListenerRuleResource_oauth(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+			tcacctest.AccStepSetRegion(t, "ap-jakarta")
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbListenerRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListenerRule_oauth,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_oauth"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_enable", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_failure_status", "REJECT"),
+				),
+			},
+			{
+				Config: testAccClbListenerRule_oauthUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_oauth"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_enable", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_oauth", "oauth.0.oauth_failure_status", "BYPASS"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener_rule.rule_oauth",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -294,5 +332,39 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   health_check_http_method   = "HEAD"
   certificate_ssl_mode       = "UNIDIRECTIONAL"
   certificate_id             = "%s"
+}
+`
+
+const testAccClbListenerRule_oauth = `
+resource "tencentcloud_clb_listener_rule" "rule_oauth" {
+  clb_id              = "lb-az5cm2h7"
+  listener_id         = "lbl-egzxfxgj"
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
+  forward_type        = "HTTPS"
+  oauth {
+    oauth_enable = true
+    oauth_failure_status = "REJECT"
+  }
+}
+`
+
+const testAccClbListenerRule_oauthUpdate = `
+resource "tencentcloud_clb_listener_rule" "rule_oauth" {
+  clb_id              = "lb-az5cm2h7"
+  listener_id         = "lbl-egzxfxgj"
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
+  forward_type        = "HTTPS"
+  oauth {
+    oauth_enable = false
+    oauth_failure_status = "BYPASS"
+  }
 }
 `
