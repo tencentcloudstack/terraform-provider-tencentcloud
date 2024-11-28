@@ -146,6 +146,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 ```
 
 Set `wait_node_ready` and `scale_tolerance`
+
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {
   name                     = "tf-example"

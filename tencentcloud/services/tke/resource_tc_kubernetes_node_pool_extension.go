@@ -1418,18 +1418,18 @@ func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string)
 		autoscalingGroupId string
 	)
 
-	if v, ok := d.GetOkExists("desired_capacity"); ok {
-		desiredCapacity = int64(v.(int))
-		if desiredCapacity == 0 {
-			desiredCapacity = 1
-		}
-	}
-
 	if v, ok := d.GetOkExists("wait_node_ready"); ok {
 		waitNodeReady = v.(bool)
 	}
 
 	if waitNodeReady {
+		if v, ok := d.GetOkExists("desired_capacity"); ok {
+			desiredCapacity = int64(v.(int))
+			if desiredCapacity == 0 {
+				desiredCapacity = 1
+			}
+		}
+
 		if v, ok := d.GetOkExists("scale_tolerance"); ok {
 			scaleTolerance = int64(v.(int))
 		}
