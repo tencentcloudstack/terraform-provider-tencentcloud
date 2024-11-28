@@ -1500,7 +1500,9 @@ func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string)
 					return nil
 				})
 
-				return fmt.Errorf("Node pool scaling failed, Reason: %s\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", errFmt)
+				if err != nil {
+					return fmt.Errorf("Node pool scaling failed, Reason: %s\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", errFmt)
+				}
 			} else {
 				return fmt.Errorf("Node pool scaling failed, Desired value: %d, Actual value: %d, Scale tolerance: %d%%\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", desiredCapacity, currentNormal, scaleTolerance)
 			}
