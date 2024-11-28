@@ -109,7 +109,7 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 			"instance_charge_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
+				Description: "Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
 			},
 			"instance_charge_type_prepaid_period": {
 				Type:         schema.TypeInt,
@@ -261,6 +261,11 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 						},
 					},
 				},
+			},
+			"dedicated_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Dedicated Cluster ID.",
 			},
 			// Computed values
 			"status": {
@@ -485,6 +490,10 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.InstanceNameSettings = settings[0]
 	}
 
+	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
+		request.DedicatedClusterId = helper.String(v.(string))
+	}
+
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLaunchConfiguration(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -598,6 +607,11 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		if config.InstanceChargePrepaid != nil {
 			_ = d.Set("instance_charge_type_prepaid_renew_flag", config.InstanceChargePrepaid.RenewFlag)
 		}
+
+		if config.DedicatedClusterId != nil {
+			_ = d.Set("dedicated_cluster_id", config.DedicatedClusterId)
+		}
+
 		return nil
 	})
 	if err != nil {
@@ -851,6 +865,12 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOk("keep_image_login"); ok {
 			keepImageLogin := v.(bool)
 			request.LoginSettings.KeepImageLogin = &keepImageLogin
+		}
+	}
+
+	if d.HasChange("dedicated_cluster_id") {
+		if v, ok := d.GetOk("dedicated_cluster_id"); ok {
+			request.DedicatedClusterId = helper.String(v.(string))
 		}
 	}
 

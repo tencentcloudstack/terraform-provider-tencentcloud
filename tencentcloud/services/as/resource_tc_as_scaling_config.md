@@ -4,16 +4,18 @@ Provides a resource to create a configuration for an AS (Auto scaling) instance.
 
 Example Usage
 
+Create a normal configuration
+
 ```hcl
 data "tencentcloud_images" "example" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "TencentOS Server 3.2 (Final)"
+  os_name    = "TencentOS Server 4 for x86_64"
 }
 
 resource "tencentcloud_as_scaling_config" "example" {
-  configuration_name = "example-launch-configuration"
+  configuration_name = "tf-example"
   image_id           = data.tencentcloud_images.example.images.0.image_id
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = ["SA5.MEDIUM4"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
@@ -33,7 +35,7 @@ resource "tencentcloud_as_scaling_config" "example" {
   user_data                         = "dGVzdA=="
 
   host_name_settings {
-    host_name       = "host-name-test"
+    host_name       = "host-name"
     host_name_style = "UNIQUE"
   }
 
@@ -48,13 +50,13 @@ Using `SPOTPAID` charge type
 ```hcl
 data "tencentcloud_images" "example" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "TencentOS Server 3.2 (Final)"
+  os_name    = "TencentOS Server 4 for x86_64"
 }
 
 resource "tencentcloud_as_scaling_config" "example" {
-  configuration_name   = "launch-configuration"
+  configuration_name   = "tf-example"
   image_id             = data.tencentcloud_images.example.images.0.image_id
-  instance_types       = ["SA1.SMALL1"]
+  instance_types       = ["SA5.MEDIUM4"]
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "one-time"
   spot_max_price       = "1000"
@@ -85,6 +87,49 @@ resource "tencentcloud_as_scaling_config" "example" {
   ]
   system_disk_size = 50
   system_disk_type = "CLOUD_BSSD"
+}
+```
+
+Create a CDC configuration
+
+```hcl
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 4 for x86_64"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name   = "tf-example"
+  image_id             = data.tencentcloud_images.example.images.0.image_id
+  instance_types       = ["SA5.MEDIUM4"]
+  project_id           = 0
+  system_disk_type     = "CLOUD_PREMIUM"
+  system_disk_size     = "50"
+  instance_charge_type = "CDCPAID"
+  dedicated_cluster_id = "cluster-262n63e8"
+
+  data_disk {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+  }
+
+  internet_charge_type              = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out        = 10
+  public_ip_assigned                = true
+  password                          = "Test@123#"
+  enhanced_security_service         = false
+  enhanced_monitor_service          = false
+  enhanced_automation_tools_service = false
+  user_data                         = "dGVzdA=="
+
+  host_name_settings {
+    host_name       = "host-name"
+    host_name_style = "UNIQUE"
+  }
+
+  instance_tags = {
+    tag = "example"
+  }
 }
 ```
 

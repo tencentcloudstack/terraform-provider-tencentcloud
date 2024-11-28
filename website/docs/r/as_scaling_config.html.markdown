@@ -15,16 +15,18 @@ Provides a resource to create a configuration for an AS (Auto scaling) instance.
 
 ## Example Usage
 
+### Create a normal configuration
+
 ```hcl
 data "tencentcloud_images" "example" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "TencentOS Server 3.2 (Final)"
+  os_name    = "TencentOS Server 4 for x86_64"
 }
 
 resource "tencentcloud_as_scaling_config" "example" {
-  configuration_name = "example-launch-configuration"
+  configuration_name = "tf-example"
   image_id           = data.tencentcloud_images.example.images.0.image_id
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = ["SA5.MEDIUM4"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
@@ -44,7 +46,7 @@ resource "tencentcloud_as_scaling_config" "example" {
   user_data                         = "dGVzdA=="
 
   host_name_settings {
-    host_name       = "host-name-test"
+    host_name       = "host-name"
     host_name_style = "UNIQUE"
   }
 
@@ -59,13 +61,13 @@ resource "tencentcloud_as_scaling_config" "example" {
 ```hcl
 data "tencentcloud_images" "example" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "TencentOS Server 3.2 (Final)"
+  os_name    = "TencentOS Server 4 for x86_64"
 }
 
 resource "tencentcloud_as_scaling_config" "example" {
-  configuration_name   = "launch-configuration"
+  configuration_name   = "tf-example"
   image_id             = data.tencentcloud_images.example.images.0.image_id
-  instance_types       = ["SA1.SMALL1"]
+  instance_types       = ["SA5.MEDIUM4"]
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "one-time"
   spot_max_price       = "1000"
@@ -99,6 +101,49 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
+### Create a CDC configuration
+
+```hcl
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 4 for x86_64"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name   = "tf-example"
+  image_id             = data.tencentcloud_images.example.images.0.image_id
+  instance_types       = ["SA5.MEDIUM4"]
+  project_id           = 0
+  system_disk_type     = "CLOUD_PREMIUM"
+  system_disk_size     = "50"
+  instance_charge_type = "CDCPAID"
+  dedicated_cluster_id = "cluster-262n63e8"
+
+  data_disk {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+  }
+
+  internet_charge_type              = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out        = 10
+  public_ip_assigned                = true
+  password                          = "Test@123#"
+  enhanced_security_service         = false
+  enhanced_monitor_service          = false
+  enhanced_automation_tools_service = false
+  user_data                         = "dGVzdA=="
+
+  host_name_settings {
+    host_name       = "host-name"
+    host_name_style = "UNIQUE"
+  }
+
+  instance_tags = {
+    tag = "example"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -107,6 +152,7 @@ The following arguments are supported:
 * `instance_types` - (Required, List: [`String`]) Specified types of CVM instances.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
+* `dedicated_cluster_id` - (Optional, String) Dedicated Cluster ID.
 * `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
 * `enhanced_automation_tools_service` - (Optional, Bool) To specify whether to enable cloud automation tools service.
 * `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
@@ -116,7 +162,7 @@ The following arguments are supported:
 * `image_id` - (Optional, String) An available image ID for a cvm instance.
 * `instance_charge_type_prepaid_period` - (Optional, Int) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
-* `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
+* `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `instance_name_settings` - (Optional, List) Settings of CVM instance names.
 * `instance_tags` - (Optional, Map) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
