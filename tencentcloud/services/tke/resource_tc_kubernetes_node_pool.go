@@ -63,6 +63,19 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				ValidateFunc: tccommon.ValidateIntegerInRange(0, 2000),
 			},
 
+			"wait_node_ready": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to wait for all expansion resources to be ready. Default is false. Only can be set if `enable_auto_scale` is `false`.",
+			},
+
+			"scale_tolerance": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Description:  "Control how many expectations(`desired_capacity`) can be tolerated successfully. Unit is percentage, Default is `100`. Only can be set if `wait_node_ready` is `true`.",
+				ValidateFunc: tccommon.ValidateIntegerInRange(0, 100),
+			},
+
 			"enable_auto_scale": {
 				Type:        schema.TypeBool,
 				Optional:    true,
