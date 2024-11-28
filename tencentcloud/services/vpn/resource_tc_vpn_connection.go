@@ -247,6 +247,11 @@ func ResourceTencentCloudVpnConnection() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(svcvpc.VPN_CONNECTION_ROUTE_TYPE),
 				Description:  "Route type of the VPN connection. Valid value: `STATIC`, `StaticRoute`, `Policy`.",
 			},
+			"negotiation_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The default negotiation type is `active`. Optional values: `active` (active negotiation), `passive` (passive negotiation), `flowTrigger` (traffic negotiation).",
+			},
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -327,6 +332,10 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOk("route_type"); ok {
 		request.RouteType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("negotiation_type"); ok {
+		request.NegotiationType = helper.String(v.(string))
 	}
 
 	//set up  SecurityPolicyDatabases
@@ -638,6 +647,10 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 			return err
 		}
 		_ = d.Set("dpd_timeout", dpdTimeoutInt)
+	}
+
+	if connection.NegotiationType != nil {
+		_ = d.Set("negotiation_type", *connection.NegotiationType)
 	}
 
 	_ = d.Set("dpd_action", *connection.DpdAction)
