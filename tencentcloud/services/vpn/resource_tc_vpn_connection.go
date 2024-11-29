@@ -245,7 +245,92 @@ func ResourceTencentCloudVpnConnection() *schema.Resource {
 				Computed:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(svcvpc.VPN_CONNECTION_ROUTE_TYPE),
-				Description:  "Route type of the VPN connection. Valid value: `STATIC`, `StaticRoute`, `Policy`.",
+				Description:  "Route type of the VPN connection. Valid value: `STATIC`, `StaticRoute`, `Policy`, `Bgp`.",
+			},
+			"negotiation_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The default negotiation type is `active`. Optional values: `active` (active negotiation), `passive` (passive negotiation), `flowTrigger` (traffic negotiation).",
+			},
+			// "route": {
+			// 	Type:        schema.TypeList,
+			// 	Optional:    true,
+			// 	ForceNew:    true,
+			// 	MaxItems:    1,
+			// 	Description: "Create channel routing information.",
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"destination_cidr_block": {
+			// 				Type:        schema.TypeString,
+			// 				Required:    true,
+			// 				Description: "Destination IDC network segment.",
+			// 			},
+			// 			"priority": {
+			// 				Type:        schema.TypeInt,
+			// 				Optional:    true,
+			// 				Description: "Priority. Optional value [0, 100].",
+			// 			},
+			// 		},
+			// 	},
+			// },
+			"bgp_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "BGP config.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tunnel_cidr": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "BGP tunnel segment.",
+						},
+						"local_bgp_ip": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Cloud BGP address. It must be allocated from within the BGP tunnel network segment.",
+						},
+						"remote_bgp_ip": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "User side BGP address. It must be allocated from within the BGP tunnel network segment.",
+						},
+					},
+				},
+			},
+			"health_check_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "VPN channel health check configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"probe_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Detection mode, default is `NQA`, cannot be modified.",
+						},
+						"probe_interval": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Detection interval, Tencent Cloud's interval between two health checks, range [1000-5000], Unit: ms.",
+						},
+						"probe_threshold": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Detection times, perform route switching after N consecutive health check failures, range [3-8], Unit: times.",
+						},
+						"probe_timeout": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Detection timeout, range [10-5000], Unit: ms.",
+						},
+					},
+				},
 			},
 			"state": {
 				Type:        schema.TypeString,
@@ -329,6 +414,10 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		request.RouteType = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("negotiation_type"); ok {
+		request.NegotiationType = helper.String(v.(string))
+	}
+
 	//set up  SecurityPolicyDatabases
 	if v, ok := d.GetOk("security_group_policy"); ok {
 		sgps := v.(*schema.Set).List()
@@ -409,6 +498,66 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	}
 	if v, ok := d.GetOk("health_check_remote_ip"); ok {
 		request.HealthCheckRemoteIp = helper.String(v.(string))
+	}
+
+	// if v, ok := d.GetOk("route"); ok {
+	// 	for _, item := range v.([]interface{}) {
+	// 		dMap := item.(map[string]interface{})
+	// 		route := vpc.CreateVpnConnRoute{}
+	// 		if v, ok := dMap["destination_cidr_block"]; ok {
+	// 			route.DestinationCidrBlock = helper.String(v.(string))
+	// 		}
+
+	// 		if v, ok := dMap["priority"]; ok {
+	// 			route.Priority = helper.IntUint64(v.(int))
+	// 		}
+
+	// 		request.Route = &route
+	// 	}
+	// }
+
+	if v, ok := d.GetOk("bgp_config"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			bgpConfig := vpc.BgpConfig{}
+			if v, ok := dMap["tunnel_cidr"]; ok {
+				bgpConfig.TunnelCidr = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["local_bgp_ip"]; ok {
+				bgpConfig.LocalBgpIp = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["remote_bgp_ip"]; ok {
+				bgpConfig.RemoteBgpIp = helper.String(v.(string))
+			}
+
+			request.BgpConfig = &bgpConfig
+		}
+	}
+
+	if v, ok := d.GetOk("health_check_config"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			healthCheckConfig := vpc.HealthCheckConfig{}
+			if v, ok := dMap["probe_type"]; ok {
+				healthCheckConfig.ProbeType = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["probe_interval"]; ok {
+				healthCheckConfig.ProbeInterval = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := dMap["probe_threshold"]; ok {
+				healthCheckConfig.ProbeThreshold = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := dMap["probe_timeout"]; ok {
+				healthCheckConfig.ProbeTimeout = helper.IntInt64(v.(int))
+			}
+
+			request.HealthCheckConfig = &healthCheckConfig
+		}
 	}
 
 	var response *vpc.CreateVpnConnectionResponse
@@ -640,7 +789,53 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("dpd_timeout", dpdTimeoutInt)
 	}
 
+	if connection.NegotiationType != nil {
+		_ = d.Set("negotiation_type", *connection.NegotiationType)
+	}
+
 	_ = d.Set("dpd_action", *connection.DpdAction)
+
+	if connection.BgpConfig != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		dMap := make(map[string]interface{})
+		if connection.BgpConfig.TunnelCidr != nil {
+			dMap["tunnel_cidr"] = *connection.BgpConfig.TunnelCidr
+		}
+
+		if connection.BgpConfig.LocalBgpIp != nil {
+			dMap["local_bgp_ip"] = *connection.BgpConfig.LocalBgpIp
+		}
+
+		if connection.BgpConfig.RemoteBgpIp != nil {
+			dMap["remote_bgp_ip"] = *connection.BgpConfig.RemoteBgpIp
+		}
+
+		tmpList = append(tmpList, dMap)
+		_ = d.Set("bgp_config", tmpList)
+	}
+
+	if connection.HealthCheckConfig != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		dMap := make(map[string]interface{})
+		if connection.HealthCheckConfig.ProbeType != nil {
+			dMap["probe_type"] = *connection.HealthCheckConfig.ProbeType
+		}
+
+		if connection.HealthCheckConfig.ProbeInterval != nil {
+			dMap["probe_interval"] = *connection.HealthCheckConfig.ProbeInterval
+		}
+
+		if connection.HealthCheckConfig.ProbeThreshold != nil {
+			dMap["probe_threshold"] = *connection.HealthCheckConfig.ProbeThreshold
+		}
+
+		if connection.HealthCheckConfig.ProbeTimeout != nil {
+			dMap["probe_timeout"] = *connection.HealthCheckConfig.ProbeTimeout
+		}
+
+		tmpList = append(tmpList, dMap)
+		_ = d.Set("health_check_config", tmpList)
+	}
 
 	//tags
 	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
@@ -818,6 +1013,41 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		request.IPSECOptionsSpecification = &ipsecOptionsSpecification
 		changeFlag = true
 	}
+
+	if d.HasChange("negotiation_type") {
+		if v, ok := d.GetOk("negotiation_type"); ok {
+			request.NegotiationType = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("health_check_config") {
+		if v, ok := d.GetOk("health_check_config"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				healthCheckConfig := vpc.HealthCheckConfig{}
+				if v, ok := dMap["probe_type"]; ok {
+					healthCheckConfig.ProbeType = helper.String(v.(string))
+				}
+
+				if v, ok := dMap["probe_interval"]; ok {
+					healthCheckConfig.ProbeInterval = helper.IntInt64(v.(int))
+				}
+
+				if v, ok := dMap["probe_threshold"]; ok {
+					healthCheckConfig.ProbeThreshold = helper.IntInt64(v.(int))
+				}
+
+				if v, ok := dMap["probe_timeout"]; ok {
+					healthCheckConfig.ProbeTimeout = helper.IntInt64(v.(int))
+				}
+
+				request.HealthCheckConfig = &healthCheckConfig
+			}
+
+			changeFlag = true
+		}
+	}
+
 	if changeFlag {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyVpnConnectionAttribute(request)
