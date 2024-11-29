@@ -1400,3 +1400,28 @@ func (me *ScfService) DescribeScfTriggerConfigById(ctx context.Context, function
 	triggerConfig = instances[0]
 	return
 }
+
+func (me *ScfService) DescribeScfCustomDomainById(ctx context.Context, domain string) (ret *scf.GetCustomDomainResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := scf.NewGetCustomDomainRequest()
+	request.Domain = helper.String(domain)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetCustomDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
