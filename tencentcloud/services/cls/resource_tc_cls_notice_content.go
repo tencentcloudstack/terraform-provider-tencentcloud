@@ -279,7 +279,7 @@ func resourceTencentCloudClsNoticeContentRead(d *schema.ResourceData, meta inter
 					for _, item := range noticeContents.RecoveryContent.Headers {
 						tmpList = append(tmpList, *item)
 					}
-					
+
 					recoveryContentMap["headers"] = tmpList
 				}
 
