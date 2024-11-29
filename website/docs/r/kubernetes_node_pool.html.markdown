@@ -17,6 +17,8 @@ Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
 
+~> **NOTE:**  There are two parameters `wait_node_ready` and `scale_tolerance` to ensure better management of node pool scaling operations. If this parameter is set, when creating resources, if the set criteria are not met, the resources will be marked as `tainted`.
+
 ## Example Usage
 
 ```hcl
@@ -154,6 +156,73 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
+
+
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
+  cluster_id               = tencentcloud_kubernetes_cluster.managed_cluster.id
+  max_size                 = 100
+  min_size                 = 1
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids               = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  desired_capacity         = 50
+  enable_auto_scale        = false
+  wait_node_ready          = true
+  scale_tolerance          = 90
+  multi_zone_subnet_policy = "EQUALITY"
+  node_os                  = "img-6n21msk1"
+  delete_keep_instance     = false
+
+  auto_scaling_config {
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = ["sg-bw28gmso"]
+
+    data_disk {
+      disk_type            = "CLOUD_PREMIUM"
+      disk_size            = 50
+      delete_with_instance = true
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    host_name                  = "12.123.0.0"
+    host_name_style            = "ORIGINAL"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  taints {
+    key    = "test_taint"
+    value  = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  taints {
+    key    = "test_taint2"
+    value  = "taint_value2"
+    effect = "PreferNoSchedule"
+  }
+
+  node_config {
+    docker_graph_path = "/var/lib/docker"
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -176,6 +245,7 @@ The following arguments are supported:
 * `node_os_type` - (Optional, String) The image version of the node. Valida values are `DOCKER_CUSTOMIZE` and `GENERAL`. Default is `GENERAL`. This parameter will only affect new nodes, not including the existing nodes.
 * `node_os` - (Optional, String) Operating system of the cluster. Please refer to [TencentCloud Documentation](https://www.tencentcloud.com/document/product/457/46750?lang=en&pg=#list-of-public-images-supported-by-tke) for available values. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.
 * `retry_policy` - (Optional, String, ForceNew) Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.
+* `scale_tolerance` - (Optional, Int) Control how many expectations(`desired_capacity`) can be tolerated successfully. Unit is percentage, Default is `100`. Only can be set if `wait_node_ready` is `true`.
 * `scaling_group_name` - (Optional, String) Name of relative scaling group.
 * `scaling_group_project_id` - (Optional, Int) Project ID the scaling group belongs to.
 * `scaling_mode` - (Optional, String, ForceNew) Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/destroy instances), `WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance. If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking).
@@ -184,6 +254,7 @@ The following arguments are supported:
 * `taints` - (Optional, List) Taints of kubernetes node pool created nodes.
 * `termination_policies` - (Optional, List: [`String`]) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `wait_node_ready` - (Optional, Bool) Whether to wait for all expansion resources to be ready. Default is false. Only can be set if `enable_auto_scale` is `false`.
 * `zones` - (Optional, List: [`String`]) List of auto scaling group available zones, for Basic network it is required.
 
 The `annotations` object supports the following:

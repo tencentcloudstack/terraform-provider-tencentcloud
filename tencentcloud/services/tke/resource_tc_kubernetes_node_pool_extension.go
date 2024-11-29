@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
@@ -52,6 +53,11 @@ func resourceTencentCloudKubernetesNodePoolCreatePostFillRequest0(ctx context.Co
 	)
 	if len(configParas) != 1 {
 		return fmt.Errorf("need only one auto_scaling_config")
+	}
+
+	// check params
+	if err := checkParams(ctx); err != nil {
+		return err
 	}
 
 	groupParaStr, err := composeParameterToAsScalingGroupParaSerial(d)
@@ -150,6 +156,11 @@ func resourceTencentCloudKubernetesNodePoolCreatePostHandleResponse0(ctx context
 		return err
 	}
 	if err := resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx); err != nil {
+		return err
+	}
+
+	// wait node scaling
+	if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId); err != nil {
 		return err
 	}
 
@@ -556,6 +567,11 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnStart(ctx context.Context) er
 	clusterId := items[0]
 	nodePoolId := items[1]
 
+	// check params
+	if err := checkParams(ctx); err != nil {
+		return err
+	}
+
 	d.Partial(true)
 
 	nodePool, _, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
@@ -614,6 +630,11 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnStart(ctx context.Context) er
 			return err
 		}
 		capacityHasChanged = true
+
+		// wait node scaling
+		if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId); err != nil {
+			return err
+		}
 	}
 
 	// ModifyClusterNodePool
@@ -695,6 +716,11 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnStart(ctx context.Context) er
 			return nil
 		})
 		if err != nil {
+			return err
+		}
+
+		// wait node scaling
+		if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId); err != nil {
 			return err
 		}
 	}
@@ -1349,5 +1375,139 @@ func resourceTencentCloudKubernetesNodePoolUpdateTaints(ctx context.Context, clu
 
 		return nil
 	}
+	return nil
+}
+
+func checkParams(ctx context.Context) error {
+	d := tccommon.ResourceDataFromContext(ctx)
+	var (
+		enableAutoscale bool
+		waitNodeReady   bool
+	)
+
+	if v, ok := d.GetOkExists("enable_auto_scale"); ok {
+		enableAutoscale = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("wait_node_ready"); ok {
+		waitNodeReady = v.(bool)
+	}
+
+	if enableAutoscale && waitNodeReady {
+		return fmt.Errorf("`wait_node_ready` only can be set if `enable_auto_scale` is `false`.")
+	}
+
+	if _, ok := d.GetOkExists("scale_tolerance"); ok {
+		if !waitNodeReady {
+			return fmt.Errorf("`scale_tolerance` only can be set if `wait_node_ready` is `true`.")
+		}
+	}
+
+	return nil
+}
+
+func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string) (err error) {
+	d := tccommon.ResourceDataFromContext(ctx)
+	meta := tccommon.ProviderMetaFromContext(ctx)
+
+	var (
+		currentNormal      int64
+		desiredCapacity    int64
+		waitNodeReady      bool
+		scaleTolerance     int64 = 100
+		autoscalingGroupId string
+	)
+
+	if v, ok := d.GetOkExists("wait_node_ready"); ok {
+		waitNodeReady = v.(bool)
+	}
+
+	if waitNodeReady {
+		if v, ok := d.GetOkExists("desired_capacity"); ok {
+			desiredCapacity = int64(v.(int))
+			if desiredCapacity == 0 {
+				desiredCapacity = 1
+			}
+		}
+
+		if v, ok := d.GetOkExists("scale_tolerance"); ok {
+			scaleTolerance = int64(v.(int))
+		}
+
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		nodePoolDetailrequest := tke.NewDescribeClusterNodePoolDetailRequest()
+		nodePoolDetailrequest.ClusterId = common.StringPtr(clusterId)
+		nodePoolDetailrequest.NodePoolId = common.StringPtr(nodePoolId)
+		err = resource.Retry(1*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClusterNodePoolDetailWithContext(ctx, nodePoolDetailrequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, nodePoolDetailrequest.GetAction(), nodePoolDetailrequest.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.NodePool == nil || result.Response.NodePool.NodeCountSummary == nil || result.Response.NodePool.NodeCountSummary.AutoscalingAdded == nil {
+				e = fmt.Errorf("Cluster %s node pool %s not exists", clusterId, nodePoolId)
+				return resource.NonRetryableError(e)
+			}
+
+			desiredNodesNum := result.Response.NodePool.DesiredNodesNum
+			autoscalingAdded := result.Response.NodePool.NodeCountSummary.AutoscalingAdded
+			total := autoscalingAdded.Total
+			normal := autoscalingAdded.Normal
+			if *total != 0 {
+				if *normal > *desiredNodesNum {
+					return resource.RetryableError(fmt.Errorf("Node pool is still scaling"))
+				}
+
+				currentTolerance := int64((float64(*normal) / float64(*desiredNodesNum)) * 100)
+				if currentTolerance >= scaleTolerance || *desiredNodesNum == *normal {
+					return nil
+				}
+			}
+
+			currentNormal = *normal
+			autoscalingGroupId = *result.Response.NodePool.AutoscalingGroupId
+			return resource.RetryableError(fmt.Errorf("Node pool is still scaling"))
+		})
+
+		if err != nil {
+			if currentNormal < 1 {
+				var errFmt string
+				asRequest := as.NewDescribeAutoScalingActivitiesRequest()
+				asRequest.Filters = []*as.Filter{
+					{
+						Name:   common.StringPtr("auto-scaling-group-id"),
+						Values: common.StringPtrs([]string{autoscalingGroupId}),
+					},
+				}
+
+				err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().DescribeAutoScalingActivitiesWithContext(ctx, asRequest)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, asRequest.GetAction(), asRequest.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ActivitySet == nil || len(result.Response.ActivitySet) < 1 {
+						e = fmt.Errorf("Describe auto scaling activities failed")
+						return resource.NonRetryableError(e)
+					}
+
+					res := result.Response.ActivitySet[0]
+					errFmt = fmt.Sprintf("%s\nDescription: %s\nStatusMessage: %s", *res.StatusMessageSimplified, *res.Description, *res.StatusMessage)
+					return nil
+				})
+
+				if err != nil {
+					return fmt.Errorf("Node pool scaling failed, Reason: %s\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", errFmt)
+				}
+			} else {
+				return fmt.Errorf("Node pool scaling failed, Desired value: %d, Actual value: %d, Scale tolerance: %d%%\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", desiredCapacity, currentNormal, scaleTolerance)
+			}
+		}
+	}
+
 	return nil
 }

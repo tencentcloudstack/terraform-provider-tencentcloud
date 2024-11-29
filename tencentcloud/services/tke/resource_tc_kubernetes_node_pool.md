@@ -6,6 +6,8 @@ Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
 
+~> **NOTE:**  There are two parameters `wait_node_ready` and `scale_tolerance` to ensure better management of node pool scaling operations. If this parameter is set, when creating resources, if the set criteria are not met, the resources will be marked as `tainted`.
+
 Example Usage
 
 ```hcl
@@ -139,6 +141,73 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
   labels = {
     "test1" = "test1",
     "test2" = "test2"
+  }
+}
+```
+
+Set `wait_node_ready` and `scale_tolerance`
+
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
+  cluster_id               = tencentcloud_kubernetes_cluster.managed_cluster.id
+  max_size                 = 100
+  min_size                 = 1
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids               = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  desired_capacity         = 50
+  enable_auto_scale        = false
+  wait_node_ready          = true
+  scale_tolerance          = 90
+  multi_zone_subnet_policy = "EQUALITY"
+  node_os                  = "img-6n21msk1"
+  delete_keep_instance     = false
+
+  auto_scaling_config {
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = ["sg-bw28gmso"]
+
+    data_disk {
+      disk_type            = "CLOUD_PREMIUM"
+      disk_size            = 50
+      delete_with_instance = true
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                  = "test123#"
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    host_name                 = "12.123.0.0"
+    host_name_style           = "ORIGINAL"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  taints {
+    key    = "test_taint"
+    value  = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  taints {
+    key    = "test_taint2"
+    value  = "taint_value2"
+    effect = "PreferNoSchedule"
+  }
+
+  node_config {
+    docker_graph_path = "/var/lib/docker"
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
   }
 }
 ```
