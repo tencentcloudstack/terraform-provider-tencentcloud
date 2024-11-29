@@ -1,3 +1,18 @@
+## 1.81.143 (November 29 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cls_cloud_product_log_task` ([#2976](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2976))
+* **New Resource:** `tencentcloud_cls_notice_content` ([#2981](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2981))
+* **New Resource:** `tencentcloud_scf_custom_domain` ([#2983](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2983))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_config: support cdc ([#2980](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2980))
+* resource/tencentcloud_clb_listener_rule: support param `oauth` ([#2978](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2978))
+* resource/tencentcloud_kubernetes_node_pool: add `wait_node_ready`, `scale_tolerance` params ([#2979](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2979))
+* resource/tencentcloud_vpn_connection: add `negotiation_type`, `bgp_config`, `health_check_config` params ([#2982](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2982))
+
 ## 1.81.142 (November 23 , 2024)
 
 FEATURES:
