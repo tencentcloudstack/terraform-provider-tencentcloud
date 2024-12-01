@@ -94,7 +94,7 @@ func ResourceTencentCloudAsScalingGroup() *schema.Resource {
 				Description:   "ID list of traditional load balancers.",
 			},
 			"forward_balancer_ids": {
-				Type:          schema.TypeList,
+				Type:          schema.TypeSet,
 				Optional:      true,
 				ConflictsWith: []string{"load_balancer_ids"},
 				Description:   "List of application load balancers, which can't be specified with `load_balancer_ids` together.",
@@ -269,7 +269,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	}
 
 	if v, ok := d.GetOk("forward_balancer_ids"); ok {
-		forwardBalancers := v.([]interface{})
+		forwardBalancers := v.(*schema.Set).List()
 		request.ForwardLoadBalancers = make([]*as.ForwardLoadBalancer, 0, len(forwardBalancers))
 		for _, v := range forwardBalancers {
 			vv := v.(map[string]interface{})
@@ -638,7 +638,7 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("forward_balancer_ids") {
 		updateAttrs = append(updateAttrs, "forward_balancer_ids")
 
-		forwardBalancers := d.Get("forward_balancer_ids").([]interface{})
+		forwardBalancers := d.Get("forward_balancer_ids").(*schema.Set).List()
 		balancerRequest.ForwardLoadBalancers = make([]*as.ForwardLoadBalancer, 0, len(forwardBalancers))
 		for _, v := range forwardBalancers {
 			vv := v.(map[string]interface{})

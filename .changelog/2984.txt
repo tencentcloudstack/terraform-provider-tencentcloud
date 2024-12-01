@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_as_scaling_group: The asg ignores the order of `forward_balancer_ids`
+```
+
+```release-note:enhancement
+resource/tencentcloud_as_start_instance_refresh: Add `timeouts` for refresh action
+```

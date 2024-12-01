@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,6 +20,10 @@ func ResourceTencentCloudAsStartInstanceRefresh() *schema.Resource {
 		Create: resourceTencentCloudAsStartInstanceRefreshCreate,
 		Read:   resourceTencentCloudAsStartInstanceRefreshRead,
 		Delete: resourceTencentCloudAsStartInstanceRefreshDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(5 * time.Minute),
+		},
+
 		Schema: map[string]*schema.Schema{
 			"auto_scaling_group_id": {
 				Type:        schema.TypeString,
@@ -151,7 +156,7 @@ func resourceTencentCloudAsStartInstanceRefreshCreate(d *schema.ResourceData, me
 
 	// wait
 	waitRequest.RefreshActivityIds = helper.Strings([]string{refreshActivityId})
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().DescribeRefreshActivitiesWithContext(ctx, waitRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
