@@ -14,5 +14,9 @@ resource "tencentcloud_as_start_instance_refresh" "example" {
       max_surge    = 1
     }
   }
+
+  timeouts {
+    create = "10m"
+  }
 }
 ```
