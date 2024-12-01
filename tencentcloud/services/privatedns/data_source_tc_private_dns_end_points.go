@@ -155,8 +155,10 @@ func dataSourceTencentCloudPrivateDnsEndPointsRead(d *schema.ResourceData, meta 
 		for _, endPointSet := range respData {
 			endPointSetMap := map[string]interface{}{}
 
+			var endPointId string
 			if endPointSet.EndPointId != nil {
 				endPointSetMap["end_point_id"] = endPointSet.EndPointId
+				endPointId = *endPointSet.EndPointId
 			}
 
 			if endPointSet.EndPointName != nil {
@@ -193,6 +195,7 @@ func dataSourceTencentCloudPrivateDnsEndPointsRead(d *schema.ResourceData, meta 
 
 				endPointSetMap["tags"] = tagsList
 			}
+			ids = append(ids, endPointId)
 			endPointSetList = append(endPointSetList, endPointSetMap)
 		}
 

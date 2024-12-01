@@ -210,6 +210,7 @@ func dataSourceTencentCloudPrivateDnsForwardRulesRead(d *schema.ResourceData, me
 
 			if forwardRuleSet.RuleId != nil {
 				forwardRuleSetMap["rule_id"] = forwardRuleSet.RuleId
+				ruleId = *forwardRuleSet.RuleId
 			}
 
 			if forwardRuleSet.RuleType != nil {
