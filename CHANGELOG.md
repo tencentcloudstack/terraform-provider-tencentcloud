@@ -1,3 +1,10 @@
+## 1.81.144 (December 1 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_group: The asg ignores the order of `forward_balancer_ids` ([#2984](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2984))
+* resource/tencentcloud_as_start_instance_refresh: Add `timeouts` for refresh action ([#2984](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2984))
+
 ## 1.81.143 (November 29 , 2024)
 
 FEATURES:
