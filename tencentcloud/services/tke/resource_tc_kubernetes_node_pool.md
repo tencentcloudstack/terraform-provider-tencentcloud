@@ -6,7 +6,7 @@ Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
 
-~> **NOTE:**  There are two parameters `wait_node_ready` and `scale_tolerance` to ensure better management of node pool scaling operations. If this parameter is set, when creating resources, if the set criteria are not met, the resources will be marked as `tainted`.
+~> **NOTE:**  There are two parameters `wait_node_ready` and `scale_tolerance` to ensure better management of node pool scaling operations. If this parameter is set when creating a resource, the resource will be marked as `tainted` if the set conditions are not met.
 
 Example Usage
 
@@ -145,7 +145,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
-Set `wait_node_ready` and `scale_tolerance`
+Wait for all scaling nodes to be ready with wait_node_ready and scale_tolerance parameters.
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {
