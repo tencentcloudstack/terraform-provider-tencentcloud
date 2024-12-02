@@ -34,12 +34,12 @@ func DataSourceTencentCloudCamSubAccounts() *schema.Resource {
 						"uin": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Sub-user ID",
+							Description: "Sub-user ID.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Sub-user name",
+							Description: "Sub-user name.",
 						},
 						"uid": {
 							Type:        schema.TypeInt,
@@ -49,7 +49,7 @@ func DataSourceTencentCloudCamSubAccounts() *schema.Resource {
 						"remark": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Sub-user remarks",
+							Description: "Sub-user remarks.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -59,15 +59,17 @@ func DataSourceTencentCloudCamSubAccounts() *schema.Resource {
 						"user_type": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "User type (1: root account; 2: sub-user; 3: WeCom sub-user; 4: collaborator; 5: message recipient)",
+							Description: "User type (1: root account; 2: sub-user; 3: WeCom sub-user; 4: collaborator; 5: message recipient).",
 						},
 						"last_login_ip": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Last login IP.",
 						},
 						"last_login_time": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Last login time.",
 						},
 					},
 				},
