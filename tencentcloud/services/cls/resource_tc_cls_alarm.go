@@ -99,16 +99,40 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 			},
 
 			"condition": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "triggering conditions.",
+				Optional:      true,
+				Type:          schema.TypeString,
+				ConflictsWith: []string{"multi_conditions"},
+				Description:   "Trigger condition.",
 			},
 
 			"alarm_level": {
-				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.",
+				Optional:      true,
+				Computed:      true,
+				Type:          schema.TypeInt,
+				ConflictsWith: []string{"multi_conditions"},
+				Description:   "Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.",
+			},
+
+			"multi_conditions": {
+				Optional:      true,
+				Type:          schema.TypeList,
+				ConflictsWith: []string{"condition", "alarm_level"},
+				Description:   "Multiple triggering conditions.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"condition": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Trigger condition.",
+						},
+						"alarm_level": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.",
+						},
+					},
+				},
 			},
 
 			"trigger_count": {
@@ -294,6 +318,23 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOkExists("alarm_level"); ok {
 		request.AlarmLevel = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("multi_conditions"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			multiCondition := cls.MultiCondition{}
+			if v, ok := dMap["condition"]; ok {
+				multiCondition.Condition = helper.String(v.(string))
+				multiCondition.AlarmLevel = helper.IntUint64(0)
+			}
+
+			if v, ok := dMap["alarm_level"]; ok {
+				multiCondition.AlarmLevel = helper.IntUint64(v.(int))
+			}
+
+			request.MultiConditions = append(request.MultiConditions, &multiCondition)
+		}
 	}
 
 	if v, ok := d.GetOkExists("trigger_count"); ok {
@@ -494,6 +535,24 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("alarm_level", alarm.AlarmLevel)
 	}
 
+	if alarm.MultiConditions != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		for _, item := range alarm.MultiConditions {
+			dMap := make(map[string]interface{})
+			if item.Condition != nil {
+				dMap["condition"] = *item.Condition
+			}
+
+			if item.AlarmLevel != nil {
+				dMap["alarm_level"] = *item.AlarmLevel
+			}
+
+			tmpList = append(tmpList, dMap)
+		}
+
+		_ = d.Set("multi_conditions", tmpList)
+	}
+
 	if alarm.TriggerCount != nil {
 		_ = d.Set("trigger_count", alarm.TriggerCount)
 	}
@@ -597,7 +656,7 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 	request.AlarmId = &alarmId
 	mutableArgs := []string{
 		"name", "alarm_targets", "monitor_time", "condition", "alarm_level",
-		"trigger_count", "alarm_period", "alarm_notice_ids",
+		"multi_conditions", "trigger_count", "alarm_period", "alarm_notice_ids",
 		"status", "message_template", "call_back", "analysis",
 	}
 
@@ -669,6 +728,23 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 
 		if v, ok := d.GetOkExists("alarm_level"); ok {
 			request.AlarmLevel = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("multi_conditions"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				multiCondition := cls.MultiCondition{}
+				if v, ok := dMap["condition"]; ok {
+					multiCondition.Condition = helper.String(v.(string))
+					multiCondition.AlarmLevel = helper.IntUint64(0)
+				}
+
+				if v, ok := dMap["alarm_level"]; ok {
+					multiCondition.AlarmLevel = helper.IntUint64(v.(int))
+				}
+
+				request.MultiConditions = append(request.MultiConditions, &multiCondition)
+			}
 		}
 
 		if v, ok := d.GetOkExists("trigger_count"); ok {
