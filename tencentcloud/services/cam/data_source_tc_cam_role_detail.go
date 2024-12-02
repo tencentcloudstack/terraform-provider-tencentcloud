@@ -19,55 +19,55 @@ func DataSourceTencentCloudCamRoleDetail() *schema.Resource {
 			"role_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Role ID, used to specify role. Input either `RoleId` or `RoleName`",
+				Description: "Role ID, used to specify role. Input either `RoleId` or `RoleName`.",
 			},
 
 			"role_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Role name, used to specify role. Input either `RoleId` or `RoleName`",
+				Description: "Role name, used to specify role. Input either `RoleId` or `RoleName`.",
 			},
 
 			"role_info": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Role details",
+				Description: "Role details.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"role_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Role ID",
+							Description: "Role ID.",
 						},
 						"role_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Role name",
+							Description: "Role name.",
 						},
 						"policy_document": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Role policy document",
+							Description: "Role policy document.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Role description",
+							Description: "Role description.",
 						},
 						"add_time": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Time role created",
+							Description: "Time role created.",
 						},
 						"update_time": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Time role last updated",
+							Description: "Time role last updated.",
 						},
 						"console_login": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "If login is allowed for the role",
+							Description: "If login is allowed for the role.",
 						},
 						"role_type": {
 							Type:        schema.TypeString,

@@ -1,0 +1,7 @@
+```release-note:enhancement
+datasource/tencentcloud_cam_sub_accounts: Update doc
+```
+
+```release-note:enhancement
+datasource/tencentcloud_cam_role_detail: Update doc
+```
