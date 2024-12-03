@@ -51,6 +51,10 @@ resource "tencentcloud_cam_role" "foo" {
     test = "tf-cam-role"
   }
 }
+
+output "arn" {
+  value = tencentcloud_cam_role.foo.role_arn
+}
 ```
 
 ### Create with SAML provider
@@ -109,6 +113,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the CAM role.
+* `role_arn` - RoleArn Information for Roles.
 * `update_time` - The last update time of the CAM role.
 
 

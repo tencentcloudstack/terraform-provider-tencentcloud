@@ -59,8 +59,9 @@ func NewAddUserRequest() (request *AddUserRequest) {
 func NewAddUserResponse() (response *AddUserResponse) {
     response = &AddUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddUser
@@ -121,8 +122,9 @@ func NewAddUserToGroupRequest() (request *AddUserToGroupRequest) {
 func NewAddUserToGroupResponse() (response *AddUserToGroupResponse) {
     response = &AddUserToGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddUserToGroup
@@ -181,8 +183,9 @@ func NewAttachGroupPolicyRequest() (request *AttachGroupPolicyRequest) {
 func NewAttachGroupPolicyResponse() (response *AttachGroupPolicyResponse) {
     response = &AttachGroupPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachGroupPolicy
@@ -249,8 +252,9 @@ func NewAttachRolePolicyRequest() (request *AttachRolePolicyRequest) {
 func NewAttachRolePolicyResponse() (response *AttachRolePolicyResponse) {
     response = &AttachRolePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachRolePolicy
@@ -311,8 +315,9 @@ func NewAttachUserPolicyRequest() (request *AttachUserPolicyRequest) {
 func NewAttachUserPolicyResponse() (response *AttachUserPolicyResponse) {
     response = &AttachUserPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachUserPolicy
@@ -363,6 +368,63 @@ func (c *Client) AttachUserPolicyWithContext(ctx context.Context, request *Attac
     return
 }
 
+func NewBuildDataFlowAuthTokenRequest() (request *BuildDataFlowAuthTokenRequest) {
+    request = &BuildDataFlowAuthTokenRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "BuildDataFlowAuthToken")
+    
+    
+    return
+}
+
+func NewBuildDataFlowAuthTokenResponse() (response *BuildDataFlowAuthTokenResponse) {
+    response = &BuildDataFlowAuthTokenResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// BuildDataFlowAuthToken
+// 获取数据流认证Token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUILDAUTHTOKEN = "FailedOperation.BuildAuthToken"
+//  FAILEDOPERATION_FLOWAUTHILLEGAL = "FailedOperation.FlowAuthIllegal"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  RESOURCENOTFOUND_DATAFLOWAUTHCLOSE = "ResourceNotFound.DataFlowAuthClose"
+//  RESOURCEUNAVAILABLE_FLOWAUTHSECET = "ResourceUnavailable.FlowAuthSecet"
+func (c *Client) BuildDataFlowAuthToken(request *BuildDataFlowAuthTokenRequest) (response *BuildDataFlowAuthTokenResponse, err error) {
+    return c.BuildDataFlowAuthTokenWithContext(context.Background(), request)
+}
+
+// BuildDataFlowAuthToken
+// 获取数据流认证Token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUILDAUTHTOKEN = "FailedOperation.BuildAuthToken"
+//  FAILEDOPERATION_FLOWAUTHILLEGAL = "FailedOperation.FlowAuthIllegal"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  RESOURCENOTFOUND_DATAFLOWAUTHCLOSE = "ResourceNotFound.DataFlowAuthClose"
+//  RESOURCEUNAVAILABLE_FLOWAUTHSECET = "ResourceUnavailable.FlowAuthSecet"
+func (c *Client) BuildDataFlowAuthTokenWithContext(ctx context.Context, request *BuildDataFlowAuthTokenRequest) (response *BuildDataFlowAuthTokenResponse, err error) {
+    if request == nil {
+        request = NewBuildDataFlowAuthTokenRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BuildDataFlowAuthToken require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBuildDataFlowAuthTokenResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewConsumeCustomMFATokenRequest() (request *ConsumeCustomMFATokenRequest) {
     request = &ConsumeCustomMFATokenRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -377,8 +439,9 @@ func NewConsumeCustomMFATokenRequest() (request *ConsumeCustomMFATokenRequest) {
 func NewConsumeCustomMFATokenResponse() (response *ConsumeCustomMFATokenResponse) {
     response = &ConsumeCustomMFATokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ConsumeCustomMFAToken
@@ -425,8 +488,9 @@ func NewCreateAccessKeyRequest() (request *CreateAccessKeyRequest) {
 func NewCreateAccessKeyResponse() (response *CreateAccessKeyResponse) {
     response = &CreateAccessKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAccessKey
@@ -485,8 +549,9 @@ func NewCreateGroupRequest() (request *CreateGroupRequest) {
 func NewCreateGroupResponse() (response *CreateGroupResponse) {
     response = &CreateGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateGroup
@@ -539,8 +604,9 @@ func NewCreateMessageReceiverRequest() (request *CreateMessageReceiverRequest) {
 func NewCreateMessageReceiverResponse() (response *CreateMessageReceiverResponse) {
     response = &CreateMessageReceiverResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateMessageReceiver
@@ -599,8 +665,9 @@ func NewCreateOIDCConfigRequest() (request *CreateOIDCConfigRequest) {
 func NewCreateOIDCConfigResponse() (response *CreateOIDCConfigResponse) {
     response = &CreateOIDCConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOIDCConfig
@@ -659,8 +726,9 @@ func NewCreatePolicyRequest() (request *CreatePolicyRequest) {
 func NewCreatePolicyResponse() (response *CreatePolicyResponse) {
     response = &CreatePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePolicy
@@ -775,8 +843,9 @@ func NewCreatePolicyVersionRequest() (request *CreatePolicyVersionRequest) {
 func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
     response = &CreatePolicyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePolicyVersion
@@ -899,8 +968,9 @@ func NewCreateRoleRequest() (request *CreateRoleRequest) {
 func NewCreateRoleResponse() (response *CreateRoleResponse) {
     response = &CreateRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRole
@@ -993,8 +1063,9 @@ func NewCreateSAMLProviderRequest() (request *CreateSAMLProviderRequest) {
 func NewCreateSAMLProviderResponse() (response *CreateSAMLProviderResponse) {
     response = &CreateSAMLProviderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSAMLProvider
@@ -1049,8 +1120,9 @@ func NewCreateServiceLinkedRoleRequest() (request *CreateServiceLinkedRoleReques
 func NewCreateServiceLinkedRoleResponse() (response *CreateServiceLinkedRoleResponse) {
     response = &CreateServiceLinkedRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateServiceLinkedRole
@@ -1127,8 +1199,9 @@ func NewCreateUserOIDCConfigRequest() (request *CreateUserOIDCConfigRequest) {
 func NewCreateUserOIDCConfigResponse() (response *CreateUserOIDCConfigResponse) {
     response = &CreateUserOIDCConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateUserOIDCConfig
@@ -1187,8 +1260,9 @@ func NewCreateUserSAMLConfigRequest() (request *CreateUserSAMLConfigRequest) {
 func NewCreateUserSAMLConfigResponse() (response *CreateUserSAMLConfigResponse) {
     response = &CreateUserSAMLConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateUserSAMLConfig
@@ -1237,8 +1311,9 @@ func NewDeleteAccessKeyRequest() (request *DeleteAccessKeyRequest) {
 func NewDeleteAccessKeyResponse() (response *DeleteAccessKeyResponse) {
     response = &DeleteAccessKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAccessKey
@@ -1303,8 +1378,9 @@ func NewDeleteGroupRequest() (request *DeleteGroupRequest) {
 func NewDeleteGroupResponse() (response *DeleteGroupResponse) {
     response = &DeleteGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteGroup
@@ -1339,6 +1415,57 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     return
 }
 
+func NewDeleteMessageReceiverRequest() (request *DeleteMessageReceiverRequest) {
+    request = &DeleteMessageReceiverRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "DeleteMessageReceiver")
+    
+    
+    return
+}
+
+func NewDeleteMessageReceiverResponse() (response *DeleteMessageReceiverResponse) {
+    response = &DeleteMessageReceiverResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteMessageReceiver
+// 删除消息接收人
+//
+// 可能返回的错误码:
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXISTS = "ResourceNotFound.UserNotExists"
+func (c *Client) DeleteMessageReceiver(request *DeleteMessageReceiverRequest) (response *DeleteMessageReceiverResponse, err error) {
+    return c.DeleteMessageReceiverWithContext(context.Background(), request)
+}
+
+// DeleteMessageReceiver
+// 删除消息接收人
+//
+// 可能返回的错误码:
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXISTS = "ResourceNotFound.UserNotExists"
+func (c *Client) DeleteMessageReceiverWithContext(ctx context.Context, request *DeleteMessageReceiverRequest) (response *DeleteMessageReceiverResponse, err error) {
+    if request == nil {
+        request = NewDeleteMessageReceiverRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteMessageReceiver require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteMessageReceiverResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteOIDCConfigRequest() (request *DeleteOIDCConfigRequest) {
     request = &DeleteOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1353,8 +1480,9 @@ func NewDeleteOIDCConfigRequest() (request *DeleteOIDCConfigRequest) {
 func NewDeleteOIDCConfigResponse() (response *DeleteOIDCConfigResponse) {
     response = &DeleteOIDCConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOIDCConfig
@@ -1403,8 +1531,9 @@ func NewDeletePolicyRequest() (request *DeletePolicyRequest) {
 func NewDeletePolicyResponse() (response *DeletePolicyResponse) {
     response = &DeletePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePolicy
@@ -1413,6 +1542,7 @@ func NewDeletePolicyResponse() (response *DeletePolicyResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_OPERATEPOLICIESOVERLIMIT = "InvalidParameter.OperatePoliciesOverLimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -1428,6 +1558,7 @@ func (c *Client) DeletePolicy(request *DeletePolicyRequest) (response *DeletePol
 // 可能返回的错误码:
 //  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_OPERATEPOLICIESOVERLIMIT = "InvalidParameter.OperatePoliciesOverLimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -1463,8 +1594,9 @@ func NewDeletePolicyVersionRequest() (request *DeletePolicyVersionRequest) {
 func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
     response = &DeletePolicyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePolicyVersion
@@ -1563,8 +1695,9 @@ func NewDeleteRoleRequest() (request *DeleteRoleRequest) {
 func NewDeleteRoleResponse() (response *DeleteRoleResponse) {
     response = &DeleteRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRole
@@ -1621,8 +1754,9 @@ func NewDeleteRolePermissionsBoundaryRequest() (request *DeleteRolePermissionsBo
 func NewDeleteRolePermissionsBoundaryResponse() (response *DeleteRolePermissionsBoundaryResponse) {
     response = &DeleteRolePermissionsBoundaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRolePermissionsBoundary
@@ -1683,14 +1817,16 @@ func NewDeleteSAMLProviderRequest() (request *DeleteSAMLProviderRequest) {
 func NewDeleteSAMLProviderResponse() (response *DeleteSAMLProviderResponse) {
     response = &DeleteSAMLProviderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSAMLProvider
 // 删除SAML身份提供商
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 func (c *Client) DeleteSAMLProvider(request *DeleteSAMLProviderRequest) (response *DeleteSAMLProviderResponse, err error) {
@@ -1701,6 +1837,7 @@ func (c *Client) DeleteSAMLProvider(request *DeleteSAMLProviderRequest) (respons
 // 删除SAML身份提供商
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 func (c *Client) DeleteSAMLProviderWithContext(ctx context.Context, request *DeleteSAMLProviderRequest) (response *DeleteSAMLProviderResponse, err error) {
@@ -1733,8 +1870,9 @@ func NewDeleteServiceLinkedRoleRequest() (request *DeleteServiceLinkedRoleReques
 func NewDeleteServiceLinkedRoleResponse() (response *DeleteServiceLinkedRoleResponse) {
     response = &DeleteServiceLinkedRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteServiceLinkedRole
@@ -1785,8 +1923,9 @@ func NewDeleteUserRequest() (request *DeleteUserRequest) {
 func NewDeleteUserResponse() (response *DeleteUserResponse) {
     response = &DeleteUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteUser
@@ -1795,6 +1934,7 @@ func NewDeleteUserResponse() (response *DeleteUserResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
 //  OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
 //  REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -1809,6 +1949,7 @@ func (c *Client) DeleteUser(request *DeleteUserRequest) (response *DeleteUserRes
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
 //  OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
 //  REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -1843,8 +1984,9 @@ func NewDeleteUserPermissionsBoundaryRequest() (request *DeleteUserPermissionsBo
 func NewDeleteUserPermissionsBoundaryResponse() (response *DeleteUserPermissionsBoundaryResponse) {
     response = &DeleteUserPermissionsBoundaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteUserPermissionsBoundary
@@ -1901,8 +2043,9 @@ func NewDescribeOIDCConfigRequest() (request *DescribeOIDCConfigRequest) {
 func NewDescribeOIDCConfigResponse() (response *DescribeOIDCConfigResponse) {
     response = &DescribeOIDCConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOIDCConfig
@@ -1953,8 +2096,9 @@ func NewDescribeRoleListRequest() (request *DescribeRoleListRequest) {
 func NewDescribeRoleListResponse() (response *DescribeRoleListResponse) {
     response = &DescribeRoleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRoleList
@@ -2005,8 +2149,9 @@ func NewDescribeSafeAuthFlagRequest() (request *DescribeSafeAuthFlagRequest) {
 func NewDescribeSafeAuthFlagResponse() (response *DescribeSafeAuthFlagResponse) {
     response = &DescribeSafeAuthFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSafeAuthFlag
@@ -2057,8 +2202,9 @@ func NewDescribeSafeAuthFlagCollRequest() (request *DescribeSafeAuthFlagCollRequ
 func NewDescribeSafeAuthFlagCollResponse() (response *DescribeSafeAuthFlagCollResponse) {
     response = &DescribeSafeAuthFlagCollResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSafeAuthFlagColl
@@ -2109,8 +2255,9 @@ func NewDescribeSafeAuthFlagIntlRequest() (request *DescribeSafeAuthFlagIntlRequ
 func NewDescribeSafeAuthFlagIntlResponse() (response *DescribeSafeAuthFlagIntlResponse) {
     response = &DescribeSafeAuthFlagIntlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSafeAuthFlagIntl
@@ -2161,8 +2308,9 @@ func NewDescribeSubAccountsRequest() (request *DescribeSubAccountsRequest) {
 func NewDescribeSubAccountsResponse() (response *DescribeSubAccountsResponse) {
     response = &DescribeSubAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSubAccounts
@@ -2213,8 +2361,9 @@ func NewDescribeUserOIDCConfigRequest() (request *DescribeUserOIDCConfigRequest)
 func NewDescribeUserOIDCConfigResponse() (response *DescribeUserOIDCConfigResponse) {
     response = &DescribeUserOIDCConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserOIDCConfig
@@ -2261,15 +2410,20 @@ func NewDescribeUserSAMLConfigRequest() (request *DescribeUserSAMLConfigRequest)
 func NewDescribeUserSAMLConfigResponse() (response *DescribeUserSAMLConfigResponse) {
     response = &DescribeUserSAMLConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserSAMLConfig
 // 查询用户SAML配置
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
 func (c *Client) DescribeUserSAMLConfig(request *DescribeUserSAMLConfigRequest) (response *DescribeUserSAMLConfigResponse, err error) {
     return c.DescribeUserSAMLConfigWithContext(context.Background(), request)
 }
@@ -2278,7 +2432,11 @@ func (c *Client) DescribeUserSAMLConfig(request *DescribeUserSAMLConfigRequest) 
 // 查询用户SAML配置
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
 func (c *Client) DescribeUserSAMLConfigWithContext(ctx context.Context, request *DescribeUserSAMLConfigRequest) (response *DescribeUserSAMLConfigResponse, err error) {
     if request == nil {
         request = NewDescribeUserSAMLConfigRequest()
@@ -2309,8 +2467,9 @@ func NewDetachGroupPolicyRequest() (request *DetachGroupPolicyRequest) {
 func NewDetachGroupPolicyResponse() (response *DetachGroupPolicyResponse) {
     response = &DetachGroupPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachGroupPolicy
@@ -2371,8 +2530,9 @@ func NewDetachRolePolicyRequest() (request *DetachRolePolicyRequest) {
 func NewDetachRolePolicyResponse() (response *DetachRolePolicyResponse) {
     response = &DetachRolePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachRolePolicy
@@ -2427,8 +2587,9 @@ func NewDetachUserPolicyRequest() (request *DetachUserPolicyRequest) {
 func NewDetachUserPolicyResponse() (response *DetachUserPolicyResponse) {
     response = &DetachUserPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachUserPolicy
@@ -2491,8 +2652,9 @@ func NewDisableUserSSORequest() (request *DisableUserSSORequest) {
 func NewDisableUserSSOResponse() (response *DisableUserSSOResponse) {
     response = &DisableUserSSOResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableUserSSO
@@ -2539,8 +2701,9 @@ func NewGetAccountSummaryRequest() (request *GetAccountSummaryRequest) {
 func NewGetAccountSummaryResponse() (response *GetAccountSummaryResponse) {
     response = &GetAccountSummaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetAccountSummary
@@ -2587,8 +2750,9 @@ func NewGetCustomMFATokenInfoRequest() (request *GetCustomMFATokenInfoRequest) {
 func NewGetCustomMFATokenInfoResponse() (response *GetCustomMFATokenInfoResponse) {
     response = &GetCustomMFATokenInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetCustomMFATokenInfo
@@ -2635,8 +2799,9 @@ func NewGetGroupRequest() (request *GetGroupRequest) {
 func NewGetGroupResponse() (response *GetGroupResponse) {
     response = &GetGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetGroup
@@ -2685,8 +2850,9 @@ func NewGetPolicyRequest() (request *GetPolicyRequest) {
 func NewGetPolicyResponse() (response *GetPolicyResponse) {
     response = &GetPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetPolicy
@@ -2739,8 +2905,9 @@ func NewGetPolicyVersionRequest() (request *GetPolicyVersionRequest) {
 func NewGetPolicyVersionResponse() (response *GetPolicyVersionResponse) {
     response = &GetPolicyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetPolicyVersion
@@ -2795,8 +2962,9 @@ func NewGetRoleRequest() (request *GetRoleRequest) {
 func NewGetRoleResponse() (response *GetRoleResponse) {
     response = &GetRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetRole
@@ -2847,8 +3015,9 @@ func NewGetRolePermissionBoundaryRequest() (request *GetRolePermissionBoundaryRe
 func NewGetRolePermissionBoundaryResponse() (response *GetRolePermissionBoundaryResponse) {
     response = &GetRolePermissionBoundaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetRolePermissionBoundary
@@ -2901,8 +3070,9 @@ func NewGetSAMLProviderRequest() (request *GetSAMLProviderRequest) {
 func NewGetSAMLProviderResponse() (response *GetSAMLProviderResponse) {
     response = &GetSAMLProviderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetSAMLProvider
@@ -2951,8 +3121,9 @@ func NewGetSecurityLastUsedRequest() (request *GetSecurityLastUsedRequest) {
 func NewGetSecurityLastUsedResponse() (response *GetSecurityLastUsedResponse) {
     response = &GetSecurityLastUsedResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetSecurityLastUsed
@@ -3001,8 +3172,9 @@ func NewGetServiceLinkedRoleDeletionStatusRequest() (request *GetServiceLinkedRo
 func NewGetServiceLinkedRoleDeletionStatusResponse() (response *GetServiceLinkedRoleDeletionStatusResponse) {
     response = &GetServiceLinkedRoleDeletionStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetServiceLinkedRoleDeletionStatus
@@ -3053,8 +3225,9 @@ func NewGetUserRequest() (request *GetUserRequest) {
 func NewGetUserResponse() (response *GetUserResponse) {
     response = &GetUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetUser
@@ -3105,8 +3278,9 @@ func NewGetUserAppIdRequest() (request *GetUserAppIdRequest) {
 func NewGetUserAppIdResponse() (response *GetUserAppIdResponse) {
     response = &GetUserAppIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetUserAppId
@@ -3155,8 +3329,9 @@ func NewGetUserPermissionBoundaryRequest() (request *GetUserPermissionBoundaryRe
 func NewGetUserPermissionBoundaryResponse() (response *GetUserPermissionBoundaryResponse) {
     response = &GetUserPermissionBoundaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetUserPermissionBoundary
@@ -3209,8 +3384,9 @@ func NewListAccessKeysRequest() (request *ListAccessKeysRequest) {
 func NewListAccessKeysResponse() (response *ListAccessKeysResponse) {
     response = &ListAccessKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListAccessKeys
@@ -3273,8 +3449,9 @@ func NewListAttachedGroupPoliciesRequest() (request *ListAttachedGroupPoliciesRe
 func NewListAttachedGroupPoliciesResponse() (response *ListAttachedGroupPoliciesResponse) {
     response = &ListAttachedGroupPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListAttachedGroupPolicies
@@ -3325,8 +3502,9 @@ func NewListAttachedRolePoliciesRequest() (request *ListAttachedRolePoliciesRequ
 func NewListAttachedRolePoliciesResponse() (response *ListAttachedRolePoliciesResponse) {
     response = &ListAttachedRolePoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListAttachedRolePolicies
@@ -3375,8 +3553,9 @@ func NewListAttachedUserAllPoliciesRequest() (request *ListAttachedUserAllPolici
 func NewListAttachedUserAllPoliciesResponse() (response *ListAttachedUserAllPoliciesResponse) {
     response = &ListAttachedUserAllPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListAttachedUserAllPolicies
@@ -3427,8 +3606,9 @@ func NewListAttachedUserPoliciesRequest() (request *ListAttachedUserPoliciesRequ
 func NewListAttachedUserPoliciesResponse() (response *ListAttachedUserPoliciesResponse) {
     response = &ListAttachedUserPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListAttachedUserPolicies
@@ -3477,8 +3657,9 @@ func NewListCollaboratorsRequest() (request *ListCollaboratorsRequest) {
 func NewListCollaboratorsResponse() (response *ListCollaboratorsResponse) {
     response = &ListCollaboratorsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListCollaborators
@@ -3525,8 +3706,9 @@ func NewListEntitiesForPolicyRequest() (request *ListEntitiesForPolicyRequest) {
 func NewListEntitiesForPolicyResponse() (response *ListEntitiesForPolicyResponse) {
     response = &ListEntitiesForPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListEntitiesForPolicy
@@ -3579,8 +3761,9 @@ func NewListGroupsRequest() (request *ListGroupsRequest) {
 func NewListGroupsResponse() (response *ListGroupsResponse) {
     response = &ListGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListGroups
@@ -3627,8 +3810,9 @@ func NewListGroupsForUserRequest() (request *ListGroupsForUserRequest) {
 func NewListGroupsForUserResponse() (response *ListGroupsForUserResponse) {
     response = &ListGroupsForUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListGroupsForUser
@@ -3679,8 +3863,9 @@ func NewListPoliciesRequest() (request *ListPoliciesRequest) {
 func NewListPoliciesResponse() (response *ListPoliciesResponse) {
     response = &ListPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListPolicies
@@ -3741,8 +3926,9 @@ func NewListPoliciesGrantingServiceAccessRequest() (request *ListPoliciesGrantin
 func NewListPoliciesGrantingServiceAccessResponse() (response *ListPoliciesGrantingServiceAccessResponse) {
     response = &ListPoliciesGrantingServiceAccessResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListPoliciesGrantingServiceAccess
@@ -3795,8 +3981,9 @@ func NewListPolicyVersionsRequest() (request *ListPolicyVersionsRequest) {
 func NewListPolicyVersionsResponse() (response *ListPolicyVersionsResponse) {
     response = &ListPolicyVersionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListPolicyVersions
@@ -3835,6 +4022,61 @@ func (c *Client) ListPolicyVersionsWithContext(ctx context.Context, request *Lis
     return
 }
 
+func NewListReceiverRequest() (request *ListReceiverRequest) {
+    request = &ListReceiverRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "ListReceiver")
+    
+    
+    return
+}
+
+func NewListReceiverResponse() (response *ListReceiverResponse) {
+    response = &ListReceiverResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListReceiver
+// 获取消息接收人列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
+//  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
+func (c *Client) ListReceiver(request *ListReceiverRequest) (response *ListReceiverResponse, err error) {
+    return c.ListReceiverWithContext(context.Background(), request)
+}
+
+// ListReceiver
+// 获取消息接收人列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
+//  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
+func (c *Client) ListReceiverWithContext(ctx context.Context, request *ListReceiverRequest) (response *ListReceiverResponse, err error) {
+    if request == nil {
+        request = NewListReceiverRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListReceiver require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListReceiverResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewListSAMLProvidersRequest() (request *ListSAMLProvidersRequest) {
     request = &ListSAMLProvidersRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3849,8 +4091,9 @@ func NewListSAMLProvidersRequest() (request *ListSAMLProvidersRequest) {
 func NewListSAMLProvidersResponse() (response *ListSAMLProvidersResponse) {
     response = &ListSAMLProvidersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListSAMLProviders
@@ -3903,8 +4146,9 @@ func NewListUsersRequest() (request *ListUsersRequest) {
 func NewListUsersResponse() (response *ListUsersResponse) {
     response = &ListUsersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListUsers
@@ -3951,8 +4195,9 @@ func NewListUsersForGroupRequest() (request *ListUsersForGroupRequest) {
 func NewListUsersForGroupResponse() (response *ListUsersForGroupResponse) {
     response = &ListUsersForGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListUsersForGroup
@@ -4001,8 +4246,9 @@ func NewListWeChatWorkSubAccountsRequest() (request *ListWeChatWorkSubAccountsRe
 func NewListWeChatWorkSubAccountsResponse() (response *ListWeChatWorkSubAccountsResponse) {
     response = &ListWeChatWorkSubAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListWeChatWorkSubAccounts
@@ -4051,8 +4297,9 @@ func NewPutRolePermissionsBoundaryRequest() (request *PutRolePermissionsBoundary
 func NewPutRolePermissionsBoundaryResponse() (response *PutRolePermissionsBoundaryResponse) {
     response = &PutRolePermissionsBoundaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PutRolePermissionsBoundary
@@ -4115,8 +4362,9 @@ func NewPutUserPermissionsBoundaryRequest() (request *PutUserPermissionsBoundary
 func NewPutUserPermissionsBoundaryResponse() (response *PutUserPermissionsBoundaryResponse) {
     response = &PutUserPermissionsBoundaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PutUserPermissionsBoundary
@@ -4177,8 +4425,9 @@ func NewRemoveUserFromGroupRequest() (request *RemoveUserFromGroupRequest) {
 func NewRemoveUserFromGroupResponse() (response *RemoveUserFromGroupResponse) {
     response = &RemoveUserFromGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveUserFromGroup
@@ -4231,8 +4480,9 @@ func NewSetDefaultPolicyVersionRequest() (request *SetDefaultPolicyVersionReques
 func NewSetDefaultPolicyVersionResponse() (response *SetDefaultPolicyVersionResponse) {
     response = &SetDefaultPolicyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetDefaultPolicyVersion
@@ -4357,8 +4607,9 @@ func NewSetMfaFlagRequest() (request *SetMfaFlagRequest) {
 func NewSetMfaFlagResponse() (response *SetMfaFlagResponse) {
     response = &SetMfaFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetMfaFlag
@@ -4417,8 +4668,9 @@ func NewTagRoleRequest() (request *TagRoleRequest) {
 func NewTagRoleResponse() (response *TagRoleResponse) {
     response = &TagRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TagRole
@@ -4481,8 +4733,9 @@ func NewUntagRoleRequest() (request *UntagRoleRequest) {
 func NewUntagRoleResponse() (response *UntagRoleResponse) {
     response = &UntagRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UntagRole
@@ -4545,8 +4798,9 @@ func NewUpdateAccessKeyRequest() (request *UpdateAccessKeyRequest) {
 func NewUpdateAccessKeyResponse() (response *UpdateAccessKeyResponse) {
     response = &UpdateAccessKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateAccessKey
@@ -4607,8 +4861,9 @@ func NewUpdateAssumeRolePolicyRequest() (request *UpdateAssumeRolePolicyRequest)
 func NewUpdateAssumeRolePolicyResponse() (response *UpdateAssumeRolePolicyResponse) {
     response = &UpdateAssumeRolePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateAssumeRolePolicy
@@ -4691,8 +4946,9 @@ func NewUpdateGroupRequest() (request *UpdateGroupRequest) {
 func NewUpdateGroupResponse() (response *UpdateGroupResponse) {
     response = &UpdateGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateGroup
@@ -4747,8 +5003,9 @@ func NewUpdateOIDCConfigRequest() (request *UpdateOIDCConfigRequest) {
 func NewUpdateOIDCConfigResponse() (response *UpdateOIDCConfigResponse) {
     response = &UpdateOIDCConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateOIDCConfig
@@ -4809,8 +5066,9 @@ func NewUpdatePolicyRequest() (request *UpdatePolicyRequest) {
 func NewUpdatePolicyResponse() (response *UpdatePolicyResponse) {
     response = &UpdatePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdatePolicy
@@ -4935,8 +5193,9 @@ func NewUpdateRoleConsoleLoginRequest() (request *UpdateRoleConsoleLoginRequest)
 func NewUpdateRoleConsoleLoginResponse() (response *UpdateRoleConsoleLoginResponse) {
     response = &UpdateRoleConsoleLoginResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateRoleConsoleLogin
@@ -4987,8 +5246,9 @@ func NewUpdateRoleDescriptionRequest() (request *UpdateRoleDescriptionRequest) {
 func NewUpdateRoleDescriptionResponse() (response *UpdateRoleDescriptionResponse) {
     response = &UpdateRoleDescriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateRoleDescription
@@ -5041,14 +5301,16 @@ func NewUpdateSAMLProviderRequest() (request *UpdateSAMLProviderRequest) {
 func NewUpdateSAMLProviderResponse() (response *UpdateSAMLProviderResponse) {
     response = &UpdateSAMLProviderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateSAMLProvider
 // 更新SAML身份提供商信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 func (c *Client) UpdateSAMLProvider(request *UpdateSAMLProviderRequest) (response *UpdateSAMLProviderResponse, err error) {
@@ -5059,6 +5321,7 @@ func (c *Client) UpdateSAMLProvider(request *UpdateSAMLProviderRequest) (respons
 // 更新SAML身份提供商信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 func (c *Client) UpdateSAMLProviderWithContext(ctx context.Context, request *UpdateSAMLProviderRequest) (response *UpdateSAMLProviderResponse, err error) {
@@ -5091,8 +5354,9 @@ func NewUpdateUserRequest() (request *UpdateUserRequest) {
 func NewUpdateUserResponse() (response *UpdateUserResponse) {
     response = &UpdateUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateUser
@@ -5101,6 +5365,7 @@ func NewUpdateUserResponse() (response *UpdateUserResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -5114,6 +5379,7 @@ func (c *Client) UpdateUser(request *UpdateUserRequest) (response *UpdateUserRes
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -5147,8 +5413,9 @@ func NewUpdateUserOIDCConfigRequest() (request *UpdateUserOIDCConfigRequest) {
 func NewUpdateUserOIDCConfigResponse() (response *UpdateUserOIDCConfigResponse) {
     response = &UpdateUserOIDCConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateUserOIDCConfig
@@ -5209,8 +5476,9 @@ func NewUpdateUserSAMLConfigRequest() (request *UpdateUserSAMLConfigRequest) {
 func NewUpdateUserSAMLConfigResponse() (response *UpdateUserSAMLConfigResponse) {
     response = &UpdateUserSAMLConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateUserSAMLConfig

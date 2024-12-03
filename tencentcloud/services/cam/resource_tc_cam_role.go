@@ -82,6 +82,11 @@ func ResourceTencentCloudCamRole() *schema.Resource {
 				Computed:    true,
 				Description: "The last update time of the CAM role.",
 			},
+			"role_arn": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "RoleArn Information for Roles.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -220,6 +225,10 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 	_ = d.Set("update_time", instance.UpdateTime)
 	if instance.Description != nil {
 		_ = d.Set("description", instance.Description)
+	}
+
+	if instance.RoleArn != nil {
+		_ = d.Set("role_arn", instance.RoleArn)
 	}
 
 	if instance.ConsoleLogin != nil {
