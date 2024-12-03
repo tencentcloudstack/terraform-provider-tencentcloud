@@ -265,11 +265,7 @@ func CompleteCommonParams(request Request, region string, requestClient string) 
 	params["Action"] = request.GetAction()
 	params["Timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
 	params["Nonce"] = strconv.Itoa(rand.Int())
-<<<<<<< HEAD
-	params["RequestClient"] = "SDK_GO_1.0.1051"
-=======
 	params["RequestClient"] = "SDK_GO_1.0.1052"
->>>>>>> ce4752e08 (add)
 	if requestClient != "" {
 		params["RequestClient"] += ": " + requestClient
 	}
