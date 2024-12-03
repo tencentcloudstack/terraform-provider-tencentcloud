@@ -30,6 +30,29 @@ resource "tencentcloud_cbs_storage" "example" {
 }
 ```
 
+### Create a CBS storage with auto mount instance
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-4"
+  project_id        = 0
+  encrypt           = false
+
+  auto_mount_configuration {
+    instance_id      = ["ins-ett39bv2"]
+    mount_point      = ["/mnt/datadisk0"]
+    file_system_type = "ext4"
+  }
+
+  tags = {
+    createBy = "terraform"
+  }
+}
+```
+
 ### Create a dedicated cluster CBS storage
 
 ```hcl
@@ -57,6 +80,7 @@ The following arguments are supported:
 * `storage_name` - (Required, String) Name of CBS. The maximum length can not exceed 60 bytes.
 * `storage_size` - (Required, Int) Volume of CBS, and unit is GB.
 * `storage_type` - (Required, String, ForceNew) Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.
+* `auto_mount_configuration` - (Optional, List, ForceNew) Specifies whether to automatically attach and initialize the newly created data disk.
 * `charge_type` - (Optional, String) The charge type of CBS instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `CDCPAID` and `DEDICATED_CLUSTER_PAID`. The default is `POSTPAID_BY_HOUR`.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disk_backup_quota` - (Optional, Int) The quota of backup points of cloud disk.
@@ -69,6 +93,12 @@ The following arguments are supported:
 * `snapshot_id` - (Optional, String) ID of the snapshot. If specified, created the CBS by this snapshot.
 * `tags` - (Optional, Map) The available tags within this CBS.
 * `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
+
+The `auto_mount_configuration` object supports the following:
+
+* `instance_id` - (Required, Set) ID of the instance to which the cloud disk is attached.
+* `file_system_type` - (Optional, String) File system type. Valid values: ext4, xfs.
+* `mount_point` - (Optional, Set) Mount point in the instance.
 
 ## Attributes Reference
 

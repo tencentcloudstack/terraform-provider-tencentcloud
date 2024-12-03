@@ -19,6 +19,29 @@ resource "tencentcloud_cbs_storage" "example" {
 }
 ```
 
+Create a CBS storage with auto mount instance
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-4"
+  project_id        = 0
+  encrypt           = false
+
+  auto_mount_configuration {
+    instance_id      = ["ins-ett39bv2"]
+    mount_point      = ["/mnt/datadisk0"]
+    file_system_type = "ext4"
+  }
+
+  tags = {
+    createBy = "terraform"
+  }
+}
+```
+
 Create a dedicated cluster CBS storage
 
 ```hcl
