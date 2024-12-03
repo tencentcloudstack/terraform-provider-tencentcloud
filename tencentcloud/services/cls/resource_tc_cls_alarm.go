@@ -110,6 +110,7 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 				Computed:      true,
 				Type:          schema.TypeInt,
 				ConflictsWith: []string{"multi_conditions"},
+				RequiredWith:  []string{"condition"},
 				Description:   "Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.",
 			},
 
