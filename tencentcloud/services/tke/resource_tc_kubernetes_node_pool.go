@@ -66,7 +66,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"wait_node_ready": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Whether to wait for all expansion resources to be ready. Default is false. Only can be set if `enable_auto_scale` is `false`.",
+				Description: "Whether to wait for all desired nodes to be ready. Default is false. Only can be set if `enable_auto_scale` is `false`.",
 			},
 
 			"scale_tolerance": {

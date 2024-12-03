@@ -1438,7 +1438,7 @@ func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string)
 		nodePoolDetailrequest := tke.NewDescribeClusterNodePoolDetailRequest()
 		nodePoolDetailrequest.ClusterId = common.StringPtr(clusterId)
 		nodePoolDetailrequest.NodePoolId = common.StringPtr(nodePoolId)
-		err = resource.Retry(1*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClusterNodePoolDetailWithContext(ctx, nodePoolDetailrequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -1501,8 +1501,10 @@ func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string)
 				})
 
 				if err != nil {
-					return fmt.Errorf("Node pool scaling failed, Reason: %s\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", errFmt)
+					return fmt.Errorf("Describe auto scaling activities failed: %s", err)
 				}
+
+				return fmt.Errorf("Node pool scaling failed, Reason: %s\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", errFmt)
 			} else {
 				return fmt.Errorf("Node pool scaling failed, Desired value: %d, Actual value: %d, Scale tolerance: %d%%\nPlease check your resource inventory, Or adjust `desired_capacity`, `scale_tolerance` and `instance_type`, Then try again.", desiredCapacity, currentNormal, scaleTolerance)
 			}

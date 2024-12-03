@@ -17,7 +17,7 @@ Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
 
-~> **NOTE:**  There are two parameters `wait_node_ready` and `scale_tolerance` to ensure better management of node pool scaling operations. If this parameter is set, when creating resources, if the set criteria are not met, the resources will be marked as `tainted`.
+~> **NOTE:**  There are two parameters `wait_node_ready` and `scale_tolerance` to ensure better management of node pool scaling operations. If this parameter is set when creating a resource, the resource will be marked as `tainted` if the set conditions are not met.
 
 ## Example Usage
 
@@ -156,7 +156,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
-
+### Wait for all scaling nodes to be ready with wait_node_ready and scale_tolerance parameters.
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {
@@ -254,7 +254,7 @@ The following arguments are supported:
 * `taints` - (Optional, List) Taints of kubernetes node pool created nodes.
 * `termination_policies` - (Optional, List: [`String`]) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
-* `wait_node_ready` - (Optional, Bool) Whether to wait for all expansion resources to be ready. Default is false. Only can be set if `enable_auto_scale` is `false`.
+* `wait_node_ready` - (Optional, Bool) Whether to wait for all desired nodes to be ready. Default is false. Only can be set if `enable_auto_scale` is `false`.
 * `zones` - (Optional, List: [`String`]) List of auto scaling group available zones, for Basic network it is required.
 
 The `annotations` object supports the following:
