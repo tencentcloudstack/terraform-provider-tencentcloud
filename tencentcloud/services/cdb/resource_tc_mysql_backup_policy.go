@@ -35,9 +35,9 @@ func ResourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 			"backup_model": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      MYSQL_ALLOW_BACKUP_MODEL[1],
+				Default:      MYSQL_ALLOW_BACKUP_MODEL[0],
 				ValidateFunc: tccommon.ValidateAllowedStringValue(MYSQL_ALLOW_BACKUP_MODEL),
-				Description:  "Backup method. Supported values include: `physical` - physical backup.",
+				Description:  "Backup method. Supported values include: `physical` - physical backup; `snapshot` - snapshot backup. Multi node only support `physical`, Single node only support `snapshot`.",
 			},
 			"backup_time": {
 				Type:         schema.TypeString,
@@ -137,13 +137,10 @@ func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta in
 	mysqlService := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
-		isUpdate = false
-
-		mysqlId         = d.Get("mysql_id").(string)
-		retentionPeriod = int64(d.Get("retention_period").(int))
-		backupModel     = d.Get("backup_model").(string)
-		backupTime      = d.Get("backup_time").(string)
-
+		mysqlId             = d.Get("mysql_id").(string)
+		retentionPeriod     = int64(d.Get("retention_period").(int))
+		backupModel         = d.Get("backup_model").(string)
+		backupTime          = d.Get("backup_time").(string)
 		binlogExpireDays    int64
 		enableBinlogStandby string
 		binlogStandbyDays   int64
@@ -163,18 +160,12 @@ func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta in
 
 	if d.HasChange("retention_period") || d.HasChange("backup_model") || d.HasChange("backup_time") ||
 		d.HasChange("binlog_period") || d.HasChange("enable_binlog_standby") || d.HasChange("binlog_standby_days") {
-		if backupModel != "physical" {
-			return fmt.Errorf("`backup_model` only support 'physical'")
-		}
-		isUpdate = true
-	}
-
-	if isUpdate {
 		err := mysqlService.ModifyBackupConfigByMysqlId(ctx, mysqlId, retentionPeriod, backupModel, backupTime, binlogExpireDays, enableBinlogStandby, binlogStandbyDays)
 		if err != nil {
 			return err
 		}
 	}
+
 	return resourceTencentCloudMysqlBackupPolicyRead(d, meta)
 }
 
