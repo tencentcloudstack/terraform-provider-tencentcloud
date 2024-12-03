@@ -234,6 +234,7 @@ The following arguments are supported:
 * `name` - (Required, String) Name of the node pool. The name does not exceed 25 characters, and only supports Chinese, English, numbers, underscores, separators (`-`) and decimal points.
 * `vpc_id` - (Required, String, ForceNew) ID of VPC network.
 * `annotations` - (Optional, Set) Node Annotation List.
+* `auto_update_instance_tags` - (Optional, Bool, ForceNew) Automatically update instance tags. The default value is false. After configuration, if the scaling group tags are updated, the tags of the running instances in the scaling group will be updated synchronously (synchronous updates only support adding and modifying tags, and do not support deleting tags for the time being). Synchronous updates do not take effect immediately and there is a certain delay.
 * `default_cooldown` - (Optional, Int) Seconds of scaling group cool down. Default value is `300`.
 * `delete_keep_instance` - (Optional, Bool) Indicate to keep the CVM instance when delete the node pool. Default is `true`.
 * `deletion_protection` - (Optional, Bool) Indicates whether the node pool deletion protection is enabled.

@@ -479,6 +479,11 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 				_ = d.Set("scaling_mode", v.(string))
 			}
 		}
+
+		if asg.ServiceSettings != nil && asg.ServiceSettings.AutoUpdateInstanceTags != nil {
+			_ = d.Set("auto_update_instance_tags", asg.ServiceSettings.AutoUpdateInstanceTags)
+		}
+
 		// If not check, the diff between computed and default empty value leads to force replacement
 		if _, ok := d.GetOk("multi_zone_subnet_policy"); ok {
 			_ = d.Set("multi_zone_subnet_policy", asg.MultiZoneSubnetPolicy)
@@ -891,8 +896,15 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 		request.SubnetIds = helper.InterfacesStringsPoint(subnetIds)
 	}
 
+	asServiceSettings := as.ServiceSettings{}
 	if v, ok := d.GetOk("scaling_mode"); ok {
-		request.ServiceSettings = &as.ServiceSettings{ScalingMode: helper.String(v.(string))}
+		asServiceSettings.ScalingMode = helper.String(v.(string))
+		request.ServiceSettings = &asServiceSettings
+	}
+
+	if v, ok := d.GetOkExists("auto_update_instance_tags"); ok {
+		asServiceSettings.AutoUpdateInstanceTags = helper.Bool(v.(bool))
+		request.ServiceSettings = &asServiceSettings
 	}
 
 	if v, ok := d.GetOk("multi_zone_subnet_policy"); ok {
