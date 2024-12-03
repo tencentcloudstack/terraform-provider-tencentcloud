@@ -59,7 +59,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Bool) Automatic renewal, the default is true.
 * `enable_create_default_ha_mirror_queue` - (Optional, Bool) Mirrored queue, the default is false.
 * `node_num` - (Optional, Int) The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3.
-* `node_spec` - (Optional, String) Node specifications, basic type rabbit-vip-basic-1, standard type rabbit-vip-basic-2, high-level type 1 rabbit-vip-basic-3, high-level type 2 rabbit-vip-basic-4. If not passed, the default is the basic type.
+* `node_spec` - (Optional, String) Node specifications. Valid values: rabbit-vip-basic-1 (for 4C8G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-basic-3 (for 12C24G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-basic-5 (for 2C4G), rabbit-vip-basic-6 (for 4C12G), rabbit-vip-basic-7 (for 8C24G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.
 * `storage_size` - (Optional, Int) Single node storage specification, the default is 200G.
 * `time_span` - (Optional, Int) Purchase duration, the default is 1 (month).
 
