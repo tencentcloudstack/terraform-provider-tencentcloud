@@ -32,6 +32,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - SCIM create time.
 * `credential_id` - SCIM key ID. scimcred-prefix and followed by 12 random digits/lowercase letters.
+* `credential_secret` - SCIM key.
 * `credential_type` - SCIM credential type.
 * `expire_time` - SCIM expire time.
 * `status` - SCIM key status, Enabled-On, Disabled-Closed.
