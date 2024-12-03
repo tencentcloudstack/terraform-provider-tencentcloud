@@ -26,6 +26,15 @@ const (
 	// 操作访问密钥错误。
 	FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
 
+	// 生成AuthToken异常。
+	FAILEDOPERATION_BUILDAUTHTOKEN = "FailedOperation.BuildAuthToken"
+
+	// CIC的身份提供商禁止操作
+	FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
+
+	// 凭据操作失败。
+	FAILEDOPERATION_FLOWAUTHILLEGAL = "FailedOperation.FlowAuthIllegal"
+
 	// 集团策略不允许操作。
 	FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 
@@ -46,6 +55,9 @@ const (
 
 	// 解绑标签失败。
 	FAILEDOPERATION_UNTAGRESOURCEFAILED = "FailedOperation.UnTagResourceFailed"
+
+	// 禁止变更
+	FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
 
 	// 用户未绑定手机。
 	FAILEDOPERATION_USERNOTBINDPHONE = "FailedOperation.UserNotBindPhone"
@@ -139,6 +151,9 @@ const (
 
 	// 一次操作实体数过多。
 	INVALIDPARAMETER_OPERATEENTITIESOVERLIMIT = "InvalidParameter.OperateEntitiesOverLimit"
+
+	// 一次操作策略数过多。
+	INVALIDPARAMETER_OPERATEPOLICIESOVERLIMIT = "InvalidParameter.OperatePoliciesOverLimit"
 
 	// 当前角色仅支持企业管理员操作，如需修改，请联系企业管理员。
 	INVALIDPARAMETER_ORGANIZATIONROLEOPERATEERROR = "InvalidParameter.OrganizationRoleOperateError"
@@ -299,11 +314,17 @@ const (
 	// 被操作密钥与账号不匹配。
 	OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
 
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+
 	// 创建子用户频率超过限制。
 	REQUESTLIMITEXCEEDED_CREATEUSER = "RequestLimitExceeded.CreateUser"
 
 	// 用户账号超出了限制。
 	REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
+
+	// 未开启CAM数据流认证。
+	RESOURCENOTFOUND_DATAFLOWAUTHCLOSE = "ResourceNotFound.DataFlowAuthClose"
 
 	// 用户组不存在。
 	RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
@@ -322,6 +343,12 @@ const (
 
 	// 用户不存在。
 	RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+
+	// 用户不存在。
+	RESOURCENOTFOUND_USERNOTEXISTS = "ResourceNotFound.UserNotExists"
+
+	// 凭据信息异常。
+	RESOURCEUNAVAILABLE_FLOWAUTHSECET = "ResourceUnavailable.FlowAuthSecet"
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"

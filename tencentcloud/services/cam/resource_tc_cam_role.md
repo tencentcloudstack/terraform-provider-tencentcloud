@@ -40,6 +40,10 @@ resource "tencentcloud_cam_role" "foo" {
     test  = "tf-cam-role"
   }
 }
+
+output "arn" {
+  value = tencentcloud_cam_role.foo.role_arn
+}
 ```
 
 Create with SAML provider
