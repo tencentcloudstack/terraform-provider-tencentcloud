@@ -25,12 +25,14 @@ func TestAccTencentCloudIdentityCenterScimCredentialResource_basic(t *testing.T)
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_scim_credential.identity_center_scim_credential", "credential_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_scim_credential.identity_center_scim_credential", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_scim_credential.identity_center_scim_credential", "expire_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_scim_credential.identity_center_scim_credential", "credential_secret"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_identity_center_scim_credential.identity_center_scim_credential",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_identity_center_scim_credential.identity_center_scim_credential",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"credential_secret"},
 			},
 		},
 	})

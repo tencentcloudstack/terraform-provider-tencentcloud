@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_identity_center_scim_credential: support param `credential_secret`
+```

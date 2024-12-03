@@ -42,6 +42,13 @@ func ResourceTencentCloudIdentityCenterScimCredential() *schema.Resource {
 				Description: "SCIM key ID. scimcred-prefix and followed by 12 random digits/lowercase letters.",
 			},
 
+			"credential_secret": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "SCIM key.",
+			},
+
 			"credential_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -104,6 +111,9 @@ func resourceTencentCloudIdentityCenterScimCredentialCreate(d *schema.ResourceDa
 	credentialId = *response.Response.CredentialId
 
 	d.SetId(strings.Join([]string{zoneId, credentialId}, tccommon.FILED_SP))
+	if response.Response != nil && response.Response.CredentialSecret != nil {
+		_ = d.Set("credential_secret", *response.Response.CredentialSecret)
+	}
 
 	return resourceTencentCloudIdentityCenterScimCredentialRead(d, meta)
 }
