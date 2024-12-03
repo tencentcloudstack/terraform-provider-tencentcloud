@@ -6,7 +6,7 @@ const (
 
 var MYSQL_ALLOW_BACKUP_TIME = []string{"02:00-06:00", "06:00-10:00", "10:00-14:00", "14:00-18:00", "18:00-22:00", "22:00-02:00"}
 
-var MYSQL_ALLOW_BACKUP_MODEL = []string{"logical", "physical"}
+var MYSQL_ALLOW_BACKUP_MODEL = []string{"physical", "snapshot"}
 
 // mysql Status	https://cloud.tencent.com/document/api/236/15872
 const (
