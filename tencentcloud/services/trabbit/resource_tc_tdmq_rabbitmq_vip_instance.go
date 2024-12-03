@@ -49,7 +49,7 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 			"node_spec": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Node specifications, basic type rabbit-vip-basic-1, standard type rabbit-vip-basic-2, high-level type 1 rabbit-vip-basic-3, high-level type 2 rabbit-vip-basic-4. If not passed, the default is the basic type.",
+				Description: "Node specifications. Valid values: rabbit-vip-basic-1 (for 4C8G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-basic-3 (for 12C24G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-basic-5 (for 2C4G), rabbit-vip-basic-6 (for 4C12G), rabbit-vip-basic-7 (for 8C24G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.",
 			},
 			"node_num": {
 				Optional:    true,
