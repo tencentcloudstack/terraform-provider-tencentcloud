@@ -99,10 +99,10 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 			},
 
 			"condition": {
-				Optional:      true,
-				Type:          schema.TypeString,
-				ConflictsWith: []string{"multi_conditions"},
-				Description:   "Trigger condition.",
+				Optional:     true,
+				Type:         schema.TypeString,
+				ExactlyOneOf: []string{"multi_conditions"},
+				Description:  "Trigger condition.",
 			},
 
 			"alarm_level": {
@@ -114,10 +114,10 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 			},
 
 			"multi_conditions": {
-				Optional:      true,
-				Type:          schema.TypeList,
-				ConflictsWith: []string{"condition", "alarm_level"},
-				Description:   "Multiple triggering conditions.",
+				Optional:     true,
+				Type:         schema.TypeList,
+				ExactlyOneOf: []string{"condition"},
+				Description:  "Multiple triggering conditions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"condition": {
@@ -311,12 +311,14 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 		request.MonitorTime = &monitorTime
 	}
 
-	if v, ok := d.GetOk("condition"); ok {
+	var changeCondition bool
+	if v, ok := d.GetOk("condition"); ok && v.(string) != "" {
 		request.Condition = helper.String(v.(string))
 		request.AlarmLevel = helper.IntUint64(0)
+		changeCondition = true
 	}
 
-	if v, ok := d.GetOkExists("alarm_level"); ok {
+	if v, ok := d.GetOkExists("alarm_level"); ok && changeCondition {
 		request.AlarmLevel = helper.IntUint64(v.(int))
 	}
 
@@ -527,12 +529,11 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("monitor_time", []interface{}{monitorTimeMap})
 	}
 
-	if alarm.Condition != nil {
+	if alarm.Condition != nil && *alarm.Condition != "" {
 		_ = d.Set("condition", alarm.Condition)
-	}
-
-	if alarm.AlarmLevel != nil {
-		_ = d.Set("alarm_level", alarm.AlarmLevel)
+		if alarm.AlarmLevel != nil {
+			_ = d.Set("alarm_level", alarm.AlarmLevel)
+		}
 	}
 
 	if alarm.MultiConditions != nil {
@@ -721,12 +722,14 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 			request.MonitorTime = &monitorTime
 		}
 
-		if v, ok := d.GetOk("condition"); ok {
+		var changeCondition bool
+		if v, ok := d.GetOk("condition"); ok && v.(string) != "" {
 			request.Condition = helper.String(v.(string))
 			request.AlarmLevel = helper.IntUint64(0)
+			changeCondition = true
 		}
 
-		if v, ok := d.GetOkExists("alarm_level"); ok {
+		if v, ok := d.GetOkExists("alarm_level"); ok && changeCondition {
 			request.AlarmLevel = helper.IntUint64(v.(int))
 		}
 
