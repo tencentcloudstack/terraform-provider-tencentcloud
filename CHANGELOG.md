@@ -1,3 +1,19 @@
+## 1.81.145 (December 3 , 2024)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_cam_role_detail: Update doc ([#2987](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2987))
+* datasource/tencentcloud_cam_sub_accounts: Update doc ([#2987](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2987))
+* resource/tencentcloud_cam_role: Add computed attribute `role_arn` ([#2990](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2990))
+* resource/tencentcloud_ccn: Modify the description of `qos` ([#2989](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2989))
+* resource/tencentcloud_cls_alarm: support `multi_conditions` ([#2985](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2985))
+* resource/tencentcloud_identity_center_group: `group_type` support optional ([#2992](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2992))
+* resource/tencentcloud_identity_center_scim_credential: support param `credential_secret` ([#2994](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2994))
+* resource/tencentcloud_kubernetes_node_pool: add `auto_update_instance_tags` params ([#2991](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2991))
+* resource/tencentcloud_kubernetes_node_pool: update doc and code ([#2986](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2986))
+* resource/tencentcloud_mysql_backup_policy: `backup_model` support `snapshot` ([#2993](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2993))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: Update doc ([#2995](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2995))
+
 ## 1.81.144 (December 1 , 2024)
 
 ENHANCEMENTS:
