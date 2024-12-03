@@ -28,6 +28,7 @@ The following arguments are supported:
 * `group_name` - (Required, String) The name of the user group. Format: Allow English letters, numbers and special characters-. Length: Maximum 128 characters.
 * `zone_id` - (Required, String) Zone id.
 * `description` - (Optional, String) A description of the user group. Length: Maximum 1024 characters.
+* `group_type` - (Optional, String) Type of user group. `Manual`: manual creation, `Synchronized`: external import.
 
 ## Attributes Reference
 
@@ -36,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time of the user group.
 * `group_id` - ID of the user group.
-* `group_type` - Type of user group. `Manual`: manual creation, `Synchronized`: external import.
 * `member_count` - Number of team members.
 * `update_time` - Modification time for the user group.
 

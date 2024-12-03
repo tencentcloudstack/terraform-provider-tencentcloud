@@ -43,6 +43,7 @@ func ResourceTencentCloudIdentityCenterGroup() *schema.Resource {
 			},
 			"group_type": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
 				Description: "Type of user group. `Manual`: manual creation, `Synchronized`: external import.",
 			},
@@ -102,6 +103,10 @@ func resourceTencentCloudIdentityCenterGroupCreate(d *schema.ResourceData, meta 
 
 	if v, ok := d.GetOk("description"); ok {
 		request.Description = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("group_type"); ok {
+		request.GroupType = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -194,7 +199,7 @@ func resourceTencentCloudIdentityCenterGroupUpdate(d *schema.ResourceData, meta 
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"zone_id"}
+	immutableArgs := []string{"zone_id", "group_type"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

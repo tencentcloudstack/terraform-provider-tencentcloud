@@ -23,7 +23,7 @@ func TestAccTencentCloudIdentityCenterGroupResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_identity_center_group.identity_center_group", "zone_id", "z-s64jh54hbcra"),
 					resource.TestCheckResourceAttr("tencentcloud_identity_center_group.identity_center_group", "group_name", "tf-test-group"),
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_group.identity_center_group", "create_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_group.identity_center_group", "group_type"),
+					resource.TestCheckResourceAttr("tencentcloud_identity_center_group.identity_center_group", "group_type", "Manual"),
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_group.identity_center_group", "update_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_group.identity_center_group", "group_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_identity_center_group.identity_center_group", "member_count"),
@@ -48,16 +48,18 @@ func TestAccTencentCloudIdentityCenterGroupResource_basic(t *testing.T) {
 
 const testAccIdentityCenterGroup = `
 resource "tencentcloud_identity_center_group" "identity_center_group" {
-	zone_id = "z-s64jh54hbcra"
+    zone_id = "z-s64jh54hbcra"
     group_name = "tf-test-group"
     description = "test"
+    group_type = "Manual"
 }
 `
 
 const testAccIdentityCenterGroupUpdate = `
 resource "tencentcloud_identity_center_group" "identity_center_group" {
-	zone_id = "z-s64jh54hbcra"
+    zone_id = "z-s64jh54hbcra"
     group_name = "tf-test-group"
     description = "test_update"
+    group_type = "Manual"
 }
 `
