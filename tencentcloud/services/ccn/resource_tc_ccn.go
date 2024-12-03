@@ -46,7 +46,7 @@ func ResourceTencentCloudCcn() *schema.Resource {
 				ForceNew:     true,
 				Default:      CNN_QOS_AU,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CNN_QOS_PT, CNN_QOS_AU, CNN_QOS_AG}),
-				Description:  "Service quality of CCN. Valid values: `PT`, `AU`, `AG`. The default is `AU`.",
+				Description:  "CCN service quality, 'PT': Platinum, 'AU': Gold, 'AG': Silver. The default is 'AU'.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
