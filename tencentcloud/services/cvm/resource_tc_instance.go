@@ -244,13 +244,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
 			},
+			"system_disk_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Name of the system disk.",
+			},
 			"system_disk_resize_online": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Resize online.",
 			},
 			"data_disks": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
@@ -268,6 +274,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 							Required: true,
 							//ForceNew:    true,
 							Description: "Size of the data disk, and unit is GB.",
+						},
+						"data_disk_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Name of data disk.",
 						},
 						"data_disk_snapshot_id": {
 							Type:        schema.TypeString,
@@ -613,8 +625,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.SystemDisk.DiskId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("system_disk_name"); ok {
+		request.SystemDisk.DiskName = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("data_disks"); ok {
-		dataDisks := v.([]interface{})
+		dataDisks := v.(*schema.Set).List()
 		request.DataDisks = make([]*cvm.DataDisk, 0, len(dataDisks))
 		for _, d := range dataDisks {
 			value := d.(map[string]interface{})
@@ -625,6 +641,13 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				DiskType:              &diskType,
 				DiskSize:              &diskSize,
 				ThroughputPerformance: &throughputPerformance,
+			}
+
+			if v, ok := value["data_disk_name"]; ok && v != nil {
+				diskName := v.(string)
+				if diskName != "" {
+					dataDisk.DiskName = helper.String(diskName)
+				}
 			}
 
 			if v, ok := value["data_disk_snapshot_id"]; ok && v != nil {
@@ -924,6 +947,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
+	_ = d.Set("system_disk_name", instance.SystemDisk.DiskName)
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
@@ -1019,7 +1043,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 
 	tmpDataDisks := make([]interface{}, 0, len(instance.DataDisks))
 	if v, ok := d.GetOk("data_disks"); ok {
-		tmpDataDisks = v.([]interface{})
+		tmpDataDisks = v.(*schema.Set).List()
 	}
 
 	for index, disk := range instance.DataDisks {
@@ -1040,6 +1064,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
+		dataDisk["data_disk_name"] = disk.DiskName
 		dataDisk["data_disk_type"] = disk.DiskType
 		dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
 		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
@@ -1402,15 +1427,22 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		for i := range nv {
 			sizeKey := fmt.Sprintf("data_disks.%d.data_disk_size", i)
 			idKey := fmt.Sprintf("data_disks.%d.data_disk_id", i)
-			if !d.HasChange(sizeKey) {
-				continue
+			nameKey := fmt.Sprintf("data_disks.%d.data_disk_name", i)
+			if d.HasChange(sizeKey) {
+				size := d.Get(sizeKey).(int)
+				diskId := d.Get(idKey).(string)
+				err := cbsService.ResizeDisk(ctx, diskId, size)
+				if err != nil {
+					return fmt.Errorf("an error occurred when modifying data disk size: %s, reason: %s", sizeKey, err.Error())
+				}
 			}
-
-			size := d.Get(sizeKey).(int)
-			diskId := d.Get(idKey).(string)
-			err := cbsService.ResizeDisk(ctx, diskId, size)
-			if err != nil {
-				return fmt.Errorf("an error occurred when modifying %s, reason: %s", sizeKey, err.Error())
+			if d.HasChange(nameKey) {
+				name := d.Get(nameKey).(string)
+				diskId := d.Get(idKey).(string)
+				err := cbsService.ModifyDiskAttributes(ctx, diskId, name, -1)
+				if err != nil {
+					return fmt.Errorf("an error occurred when modifying data disk name: %s, reason: %s", name, err.Error())
+				}
 			}
 		}
 	}
@@ -1471,6 +1503,20 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 		if err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("system_disk_name") {
+		systemDiskName := d.Get("system_disk_name").(string)
+		if v, ok := d.GetOk("system_disk_id"); ok {
+			systemDiskId := v.(string)
+			cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+			err := cbsService.ModifyDiskAttributes(ctx, systemDiskId, systemDiskName, -1)
+			if err != nil {
+				return fmt.Errorf("an error occurred when modifying system disk name %s, reason: %s", systemDiskName, err.Error())
+			}
+		} else {
+			return fmt.Errorf("system disk name do not support change because of no system disk ID.")
 		}
 	}
 
