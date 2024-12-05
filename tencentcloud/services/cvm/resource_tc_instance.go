@@ -256,7 +256,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Description: "Resize online.",
 			},
 			"data_disks": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
@@ -630,7 +630,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	if v, ok := d.GetOk("data_disks"); ok {
-		dataDisks := v.(*schema.Set).List()
+		dataDisks := v.([]interface{})
 		request.DataDisks = make([]*cvm.DataDisk, 0, len(dataDisks))
 		for _, d := range dataDisks {
 			value := d.(map[string]interface{})
@@ -947,7 +947,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
-	_ = d.Set("system_disk_name", instance.SystemDisk.DiskName)
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
@@ -981,7 +980,34 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	delete(tags, "tencentcloud:autoscaling:auto-scaling-group-id")
 	_ = d.Set("tags", tags)
 
-	//set data_disks
+	// set system_disk_name
+	if instance.SystemDisk.DiskId != nil {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			disks, err := cbsService.DescribeDiskList(ctx, []*string{instance.SystemDisk.DiskId})
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+
+			for i := range disks {
+				disk := disks[i]
+				if *disk.DiskState == "EXPANDING" {
+					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
+				}
+
+				if *disk.DiskId == *instance.SystemDisk.DiskId {
+					_ = d.Set("system_disk_name", disk.DiskName)
+				}
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	// set data_disks
 	var hasDataDisks, isCombineDataDisks bool
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	diskSizeMap := map[string]*uint64{}
@@ -1043,7 +1069,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 
 	tmpDataDisks := make([]interface{}, 0, len(instance.DataDisks))
 	if v, ok := d.GetOk("data_disks"); ok {
-		tmpDataDisks = v.(*schema.Set).List()
+		tmpDataDisks = v.([]interface{})
 	}
 
 	for index, disk := range instance.DataDisks {
@@ -1064,7 +1090,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		dataDisk["data_disk_name"] = disk.DiskName
 		dataDisk["data_disk_type"] = disk.DiskType
 		dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
 		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
