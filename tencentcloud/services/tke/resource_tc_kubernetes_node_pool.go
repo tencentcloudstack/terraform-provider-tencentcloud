@@ -24,6 +24,10 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 		Read:   resourceTencentCloudKubernetesNodePoolRead,
 		Update: resourceTencentCloudKubernetesNodePoolUpdate,
 		Delete: resourceTencentCloudKubernetesNodePoolDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(1800000 * time.Millisecond),
+			Update: schema.DefaultTimeout(1800000 * time.Millisecond),
+		},
 		Importer: &schema.ResourceImporter{
 			StateContext: nodePoolCustomResourceImporter,
 		},
@@ -747,7 +751,7 @@ func resourceTencentCloudKubernetesNodePoolCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().CreateClusterNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -995,7 +999,7 @@ func resourceTencentCloudKubernetesNodePoolUpdate(d *schema.ResourceData, meta i
 			}
 		}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterNodePoolWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)

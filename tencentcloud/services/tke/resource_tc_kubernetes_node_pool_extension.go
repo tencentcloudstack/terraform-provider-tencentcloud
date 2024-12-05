@@ -123,7 +123,7 @@ func resourceTencentCloudKubernetesNodePoolCreatePostHandleResponse0(ctx context
 	nodePoolId := *resp.Response.NodePoolId
 
 	// todo wait for status ok
-	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		nodePool, _, errRet := service.DescribeNodePool(ctx, clusterId, nodePoolId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
@@ -160,7 +160,7 @@ func resourceTencentCloudKubernetesNodePoolCreatePostHandleResponse0(ctx context
 	}
 
 	// wait node scaling
-	if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId); err != nil {
+	if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId, schema.TimeoutCreate); err != nil {
 		return err
 	}
 
@@ -637,7 +637,7 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnStart(ctx context.Context) er
 		capacityHasChanged = true
 
 		// wait node scaling
-		if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId); err != nil {
+		if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId, schema.TimeoutUpdate); err != nil {
 			return err
 		}
 	}
@@ -725,7 +725,7 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnStart(ctx context.Context) er
 		}
 
 		// wait node scaling
-		if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId); err != nil {
+		if err = waitNodePoolInitializing(ctx, clusterId, nodePoolId, schema.TimeoutUpdate); err != nil {
 			return err
 		}
 	}
@@ -1418,7 +1418,7 @@ func checkParams(ctx context.Context) error {
 	return nil
 }
 
-func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string) (err error) {
+func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId, step string) (err error) {
 	d := tccommon.ResourceDataFromContext(ctx)
 	meta := tccommon.ProviderMetaFromContext(ctx)
 
@@ -1435,6 +1435,13 @@ func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string)
 	}
 
 	if waitNodeReady {
+		var dTimeout string
+		if step == schema.TimeoutCreate {
+			dTimeout = schema.TimeoutCreate
+		} else {
+			dTimeout = schema.TimeoutUpdate
+		}
+
 		if v, ok := d.GetOkExists("desired_capacity"); ok {
 			desiredCapacity = int64(v.(int))
 			if desiredCapacity == 0 {
@@ -1450,7 +1457,7 @@ func waitNodePoolInitializing(ctx context.Context, clusterId, nodePoolId string)
 		nodePoolDetailrequest := tke.NewDescribeClusterNodePoolDetailRequest()
 		nodePoolDetailrequest.ClusterId = common.StringPtr(clusterId)
 		nodePoolDetailrequest.NodePoolId = common.StringPtr(nodePoolId)
-		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(d.Timeout(dTimeout), func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClusterNodePoolDetailWithContext(ctx, nodePoolDetailrequest)
 			if e != nil {
 				return tccommon.RetryError(e)
