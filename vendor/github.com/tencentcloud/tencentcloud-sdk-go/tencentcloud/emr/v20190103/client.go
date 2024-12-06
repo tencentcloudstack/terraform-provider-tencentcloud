@@ -511,11 +511,11 @@ func NewCreateSLInstanceResponse() (response *CreateSLInstanceResponse) {
 }
 
 // CreateSLInstance
-// 本接口（CreateSLInstance）用于创建 Lite HBase 实例
+// 本接口（CreateSLInstance）用于创建Serverless HBase实例
 //
-// - 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回创建实例的 InstaceId 和请求的 RequestID。
+// - 接口调用成功，会创建Serverless HBase实例，创建实例请求成功会返回创建实例的InstaceId和请求的 RequestID。
 //
-// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用DescribeInstancesList查看当前实例的StatusDesc状态。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -542,11 +542,11 @@ func (c *Client) CreateSLInstance(request *CreateSLInstanceRequest) (response *C
 }
 
 // CreateSLInstance
-// 本接口（CreateSLInstance）用于创建 Lite HBase 实例
+// 本接口（CreateSLInstance）用于创建Serverless HBase实例
 //
-// - 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回创建实例的 InstaceId 和请求的 RequestID。
+// - 接口调用成功，会创建Serverless HBase实例，创建实例请求成功会返回创建实例的InstaceId和请求的 RequestID。
 //
-// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用DescribeInstancesList查看当前实例的StatusDesc状态。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1245,6 +1245,65 @@ func (c *Client) DescribeEmrOverviewMetricsWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeGlobalConfigRequest() (request *DescribeGlobalConfigRequest) {
+    request = &DescribeGlobalConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeGlobalConfig")
+    
+    
+    return
+}
+
+func NewDescribeGlobalConfigResponse() (response *DescribeGlobalConfigResponse) {
+    response = &DescribeGlobalConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGlobalConfig
+// 查询YARN资源调度的全局配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeGlobalConfig(request *DescribeGlobalConfigRequest) (response *DescribeGlobalConfigResponse, err error) {
+    return c.DescribeGlobalConfigWithContext(context.Background(), request)
+}
+
+// DescribeGlobalConfig
+// 查询YARN资源调度的全局配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeGlobalConfigWithContext(ctx context.Context, request *DescribeGlobalConfigRequest) (response *DescribeGlobalConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeGlobalConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGlobalConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGlobalConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeHBaseTableOverviewRequest() (request *DescribeHBaseTableOverviewRequest) {
     request = &DescribeHBaseTableOverviewRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1296,6 +1355,61 @@ func (c *Client) DescribeHBaseTableOverviewWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeHBaseTableOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeHDFSStorageInfoRequest() (request *DescribeHDFSStorageInfoRequest) {
+    request = &DescribeHDFSStorageInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeHDFSStorageInfo")
+    
+    
+    return
+}
+
+func NewDescribeHDFSStorageInfoResponse() (response *DescribeHDFSStorageInfoResponse) {
+    response = &DescribeHDFSStorageInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeHDFSStorageInfo
+// 查询HDFS存储文件信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DOOPENTSDBREQUESTEXCEPTION = "InternalError.DoOpenTSDBRequestException"
+//  INTERNALERROR_OPENTSDBHTTPRETURNCODENOTOK = "InternalError.OpenTSDBHttpReturnCodeNotOK"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeHDFSStorageInfo(request *DescribeHDFSStorageInfoRequest) (response *DescribeHDFSStorageInfoResponse, err error) {
+    return c.DescribeHDFSStorageInfoWithContext(context.Background(), request)
+}
+
+// DescribeHDFSStorageInfo
+// 查询HDFS存储文件信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DOOPENTSDBREQUESTEXCEPTION = "InternalError.DoOpenTSDBRequestException"
+//  INTERNALERROR_OPENTSDBHTTPRETURNCODENOTOK = "InternalError.OpenTSDBHttpReturnCodeNotOK"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeHDFSStorageInfoWithContext(ctx context.Context, request *DescribeHDFSStorageInfoRequest) (response *DescribeHDFSStorageInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeHDFSStorageInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeHDFSStorageInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeHDFSStorageInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -1819,6 +1933,57 @@ func (c *Client) DescribeJobFlowWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeKyuubiQueryInfoRequest() (request *DescribeKyuubiQueryInfoRequest) {
+    request = &DescribeKyuubiQueryInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeKyuubiQueryInfo")
+    
+    
+    return
+}
+
+func NewDescribeKyuubiQueryInfoResponse() (response *DescribeKyuubiQueryInfoResponse) {
+    response = &DescribeKyuubiQueryInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeKyuubiQueryInfo
+// 查询Kyuubi查询信息
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeKyuubiQueryInfo(request *DescribeKyuubiQueryInfoRequest) (response *DescribeKyuubiQueryInfoResponse, err error) {
+    return c.DescribeKyuubiQueryInfoWithContext(context.Background(), request)
+}
+
+// DescribeKyuubiQueryInfo
+// 查询Kyuubi查询信息
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeKyuubiQueryInfoWithContext(ctx context.Context, request *DescribeKyuubiQueryInfoRequest) (response *DescribeKyuubiQueryInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeKyuubiQueryInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeKyuubiQueryInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeKyuubiQueryInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeResourceScheduleRequest() (request *DescribeResourceScheduleRequest) {
     request = &DescribeResourceScheduleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1957,7 +2122,7 @@ func NewDescribeSLInstanceResponse() (response *DescribeSLInstanceResponse) {
 }
 
 // DescribeSLInstance
-// 本接口（DescribeSLInstance）用于查询 Lite HBase 实例基本信息
+// 本接口（DescribeSLInstance）用于查询 Serverless HBase实例基本信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1979,7 +2144,7 @@ func (c *Client) DescribeSLInstance(request *DescribeSLInstanceRequest) (respons
 }
 
 // DescribeSLInstance
-// 本接口（DescribeSLInstance）用于查询 Lite HBase 实例基本信息
+// 本接口（DescribeSLInstance）用于查询 Serverless HBase实例基本信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2032,7 +2197,7 @@ func NewDescribeSLInstanceListResponse() (response *DescribeSLInstanceListRespon
 }
 
 // DescribeSLInstanceList
-// 本接口（DescribeSLInstanceList）用于查询 Lite HBase 实例列表详细信息
+// 本接口（DescribeSLInstanceList）用于查询Serverless HBase实例列表详细信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2109,7 +2274,7 @@ func (c *Client) DescribeSLInstanceList(request *DescribeSLInstanceListRequest) 
 }
 
 // DescribeSLInstanceList
-// 本接口（DescribeSLInstanceList）用于查询 Lite HBase 实例列表详细信息
+// 本接口（DescribeSLInstanceList）用于查询Serverless HBase实例列表详细信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2294,6 +2459,108 @@ func (c *Client) DescribeServiceNodeInfosWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeSparkQueriesRequest() (request *DescribeSparkQueriesRequest) {
+    request = &DescribeSparkQueriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeSparkQueries")
+    
+    
+    return
+}
+
+func NewDescribeSparkQueriesResponse() (response *DescribeSparkQueriesResponse) {
+    response = &DescribeSparkQueriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSparkQueries
+// 查询Spark查询信息列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeSparkQueries(request *DescribeSparkQueriesRequest) (response *DescribeSparkQueriesResponse, err error) {
+    return c.DescribeSparkQueriesWithContext(context.Background(), request)
+}
+
+// DescribeSparkQueries
+// 查询Spark查询信息列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeSparkQueriesWithContext(ctx context.Context, request *DescribeSparkQueriesRequest) (response *DescribeSparkQueriesResponse, err error) {
+    if request == nil {
+        request = NewDescribeSparkQueriesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSparkQueries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSparkQueriesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeStarRocksQueryInfoRequest() (request *DescribeStarRocksQueryInfoRequest) {
+    request = &DescribeStarRocksQueryInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeStarRocksQueryInfo")
+    
+    
+    return
+}
+
+func NewDescribeStarRocksQueryInfoResponse() (response *DescribeStarRocksQueryInfoResponse) {
+    response = &DescribeStarRocksQueryInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeStarRocksQueryInfo
+// 查询StarRocks查询信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeStarRocksQueryInfo(request *DescribeStarRocksQueryInfoRequest) (response *DescribeStarRocksQueryInfoResponse, err error) {
+    return c.DescribeStarRocksQueryInfoWithContext(context.Background(), request)
+}
+
+// DescribeStarRocksQueryInfo
+// 查询StarRocks查询信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeStarRocksQueryInfoWithContext(ctx context.Context, request *DescribeStarRocksQueryInfoRequest) (response *DescribeStarRocksQueryInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeStarRocksQueryInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeStarRocksQueryInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeStarRocksQueryInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTrinoQueryInfoRequest() (request *DescribeTrinoQueryInfoRequest) {
     request = &DescribeTrinoQueryInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2314,7 +2581,7 @@ func NewDescribeTrinoQueryInfoResponse() (response *DescribeTrinoQueryInfoRespon
 }
 
 // DescribeTrinoQueryInfo
-// 获取trino查询结果
+// 查询Trino(PrestoSQL)查询信息
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
@@ -2324,7 +2591,7 @@ func (c *Client) DescribeTrinoQueryInfo(request *DescribeTrinoQueryInfoRequest) 
 }
 
 // DescribeTrinoQueryInfo
-// 获取trino查询结果
+// 查询Trino(PrestoSQL)查询信息
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
@@ -3252,6 +3519,65 @@ func (c *Client) ModifyAutoScaleStrategyWithContext(ctx context.Context, request
     return
 }
 
+func NewModifyGlobalConfigRequest() (request *ModifyGlobalConfigRequest) {
+    request = &ModifyGlobalConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyGlobalConfig")
+    
+    
+    return
+}
+
+func NewModifyGlobalConfigResponse() (response *ModifyGlobalConfigResponse) {
+    response = &ModifyGlobalConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGlobalConfig
+// 修改YARN资源调度的全局配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) ModifyGlobalConfig(request *ModifyGlobalConfigRequest) (response *ModifyGlobalConfigResponse, err error) {
+    return c.ModifyGlobalConfigWithContext(context.Background(), request)
+}
+
+// ModifyGlobalConfig
+// 修改YARN资源调度的全局配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) ModifyGlobalConfigWithContext(ctx context.Context, request *ModifyGlobalConfigRequest) (response *ModifyGlobalConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyGlobalConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGlobalConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGlobalConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyResourcePoolsRequest() (request *ModifyResourcePoolsRequest) {
     request = &ModifyResourcePoolsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3504,11 +3830,11 @@ func NewModifySLInstanceResponse() (response *ModifySLInstanceResponse) {
 }
 
 // ModifySLInstance
-// 本接口（ModifySLInstance）用于修改Lite HBase 实例节点数。
+// 本接口（ModifySLInstance）用于Serverless HBase变配实例。
 //
-// - 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回请求的 RequestID。
+// - 接口调用成功，会创建Serverless HBase实例，创建实例请求成功会返回请求的 RequestID。
 //
-// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用DescribeInstancesList查看当前实例的StatusDesc状态。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3532,11 +3858,11 @@ func (c *Client) ModifySLInstance(request *ModifySLInstanceRequest) (response *M
 }
 
 // ModifySLInstance
-// 本接口（ModifySLInstance）用于修改Lite HBase 实例节点数。
+// 本接口（ModifySLInstance）用于Serverless HBase变配实例。
 //
-// - 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回请求的 RequestID。
+// - 接口调用成功，会创建Serverless HBase实例，创建实例请求成功会返回请求的 RequestID。
 //
-// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+// - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用DescribeInstancesList查看当前实例的StatusDesc状态。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4560,7 +4886,7 @@ func NewTerminateSLInstanceResponse() (response *TerminateSLInstanceResponse) {
 }
 
 // TerminateSLInstance
-// 本接口（TerminateSLInstance）用于销毁 Lite HBase 实例
+// 本接口（TerminateSLInstance）用于销毁Serverless HBase实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4583,7 +4909,7 @@ func (c *Client) TerminateSLInstance(request *TerminateSLInstanceRequest) (respo
 }
 
 // TerminateSLInstance
-// 本接口（TerminateSLInstance）用于销毁 Lite HBase 实例
+// 本接口（TerminateSLInstance）用于销毁Serverless HBase实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"

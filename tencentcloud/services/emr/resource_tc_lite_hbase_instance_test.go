@@ -51,9 +51,39 @@ func TestAccTencentCloudLiteHbaseInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_lite_hbase_instance.lite_hbase_instance",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_lite_hbase_instance.lite_hbase_instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"node_type", "time_span", "time_unit"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudLiteHbaseInstanceResource_prepay(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccLiteHbaseInstancePrePay,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_lite_hbase_instance.lite_hbase_instance_prepay", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance_prepay", "instance_name", "tf-test-prepay"),
+					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance_prepay", "pay_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance_prepay", "time_span", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance_prepay", "time_unit", "m"),
+					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance_prepay", "auto_renew_flag", "1"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_lite_hbase_instance.lite_hbase_instance_prepay",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"node_type", "time_span", "time_unit"},
 			},
 		},
 	})
@@ -137,6 +167,31 @@ resource "tencentcloud_lite_hbase_instance" "lite_hbase_instance" {
     tag_key = "test"
     tag_value = "test"
   }
+}
+`
+
+const testAccLiteHbaseInstancePrePay = `
+resource "tencentcloud_lite_hbase_instance" "lite_hbase_instance_prepay" {
+  instance_name = "tf-test-prepay"
+  pay_mode = 1
+  disk_type = "CLOUD_HSSD"
+  disk_size = 100
+  node_type = "4C16G"
+  zone_settings {
+    zone = "ap-guangzhou-6"
+    vpc_settings {
+      vpc_id = "vpc-a5pph3hr"
+      subnet_id = "subnet-bpr2mo2g"
+    }
+    node_num = 3
+  }
+  tags {
+    tag_key = "test"
+    tag_value = "test"
+  }
+  time_span = 1
+  time_unit = "m"
+  auto_renew_flag = 1
 }
 `
 
