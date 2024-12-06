@@ -34,19 +34,19 @@ func ResourceTencentCloudLiteHbaseInstance() *schema.Resource {
 			"pay_mode": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Instance pay mode. Value range: 0: indicates post pay mode, that is, pay-as-you-go.",
+				Description: "Instance pay mode. Value range: 0: indicates post-pay mode, that is, pay-as-you-go. 1: indicates pre-pay mode, that is, monthly subscription.",
 			},
 
 			"disk_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Instance disk type, fill in CLOUD_HSSD to indicate performance cloud storage.",
+				Description: "Instance disk type, Value range: CLOUD_HSSD: indicate performance cloud storage(ESSD). CLOUD_BSSD: indicate standard cloud storage(SSD).",
 			},
 
 			"disk_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Instance single-node disk capacity, in GB. The single-node disk capacity must be greater than or equal to 100 and less than or equal to 10000, with an adjustment step size of 20.",
+				Description: "Instance single-node disk capacity, in GB. The single-node disk capacity must be greater than or equal to 100 and less than or equal to 250 times the number of CPU cores. The capacity adjustment step is 100.",
 			},
 
 			"node_type": {
@@ -113,6 +113,23 @@ func ResourceTencentCloudLiteHbaseInstance() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			"time_span": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Time span.",
+			},
+			"time_unit": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Time unit, fill in m which means month.",
+			},
+			"auto_renew_flag": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "AutoRenewFlag, Value range: 0: indicates NOTIFY_AND_MANUAL_RENEW; 1: indicates NOTIFY_AND_AUTO_RENEW; 2: indicates DISABLE_NOTIFY_AND_MANUAL_RENEW.",
 			},
 		},
 	}
@@ -187,6 +204,31 @@ func resourceTencentCloudLiteHbaseInstanceCreate(d *schema.ResourceData, meta in
 			}
 			request.Tags = append(request.Tags, &tag)
 		}
+	}
+
+	var prePaySetting *emr.PrePaySetting
+	if v, ok := d.GetOk("time_span"); ok {
+		prePaySetting = &emr.PrePaySetting{}
+		prePaySetting.Period = &emr.Period{}
+		prePaySetting.Period.TimeSpan = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.GetOk("time_unit"); ok {
+		if prePaySetting == nil {
+			prePaySetting = &emr.PrePaySetting{}
+		}
+		if prePaySetting.Period == nil {
+			prePaySetting.Period = &emr.Period{}
+		}
+		prePaySetting.Period.TimeUnit = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("auto_renew_flag"); ok {
+		if prePaySetting == nil {
+			prePaySetting = &emr.PrePaySetting{}
+		}
+		prePaySetting.AutoRenewFlag = helper.IntInt64(v.(int))
+	}
+	if prePaySetting != nil {
+		request.PrePaySetting = prePaySetting
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -267,10 +309,6 @@ func resourceTencentCloudLiteHbaseInstanceRead(d *schema.ResourceData, meta inte
 		_ = d.Set("disk_size", respData.DiskSize)
 	}
 
-	if respData.NodeType != nil {
-		_ = d.Set("node_type", respData.NodeType)
-	}
-
 	zoneSettingsList := make([]map[string]interface{}, 0, len(respData.ZoneSettings))
 	if respData.ZoneSettings != nil {
 		for _, zoneSettings := range respData.ZoneSettings {
@@ -322,6 +360,9 @@ func resourceTencentCloudLiteHbaseInstanceRead(d *schema.ResourceData, meta inte
 
 		_ = d.Set("tags", tagsList)
 	}
+	if respData.AutoRenewFlag != nil {
+		_ = d.Set("auto_renew_flag", respData.AutoRenewFlag)
+	}
 
 	_ = instanceId
 	return nil
@@ -335,7 +376,7 @@ func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta in
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"instance_name", "pay_mode", "disk_type", "disk_size", "node_type", "tags"}
+	immutableArgs := []string{"instance_name", "pay_mode", "disk_type", "disk_size", "node_type", "tags", "time_span", "time_unit", "auto_renew_flag"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -434,9 +475,33 @@ func resourceTencentCloudLiteHbaseInstanceDelete(d *schema.ResourceData, meta in
 		log.Printf("[CRITAL]%s delete lite hbase instance failed, reason:%+v", logId, err)
 		return err
 	}
+
 	emrService := EMRService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
+
+	if d.Get("pay_mode").(int) == 1 {
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"201"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().TerminateSLInstanceWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete lite hbase instance failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"-2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
 	if _, e := conf.WaitForState(); e != nil {
 		return e
