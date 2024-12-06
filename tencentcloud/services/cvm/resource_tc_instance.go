@@ -2,7 +2,9 @@ package cvm
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"log"
 	"sort"
@@ -17,6 +19,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 
@@ -270,9 +273,8 @@ func ResourceTencentCloudInstance() *schema.Resource {
 							Description: "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: LOCAL_BASIC: local disk, LOCAL_SSD: local SSD disk, LOCAL_NVME: local NVME disk, specified in the InstanceType, LOCAL_PRO: local HDD disk, specified in the InstanceType, CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD, CLOUD_BSSD: Balanced SSD.",
 						},
 						"data_disk_size": {
-							Type:     schema.TypeInt,
-							Required: true,
-							//ForceNew:    true,
+							Type:        schema.TypeInt,
+							Required:    true,
 							Description: "Size of the data disk, and unit is GB.",
 						},
 						"data_disk_name": {
@@ -1008,16 +1010,28 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// set data_disks
-	var hasDataDisks, isCombineDataDisks bool
+	var hasDataDisks, isCombineDataDisks, hasDataDisksName bool
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	diskSizeMap := map[string]*uint64{}
 	diskOrderMap := make(map[string]int)
 
-	if _, ok := d.GetOk("data_disks"); ok {
+	if v, ok := d.GetOk("data_disks"); ok {
 		hasDataDisks = true
+		// check has data disk name
+		dataDisks := v.([]interface{})
+		for _, item := range dataDisks {
+			value := item.(map[string]interface{})
+			if v, ok := value["data_disk_name"]; ok && v != nil {
+				diskName := v.(string)
+				if diskName != "" {
+					hasDataDisksName = true
+				}
+			}
+		}
 	}
 
-	if len(instance.DataDisks) > 0 {
+	// scene with has disks name
+	if len(instance.DataDisks) > 0 && !hasDataDisksName {
 		var diskIds []*string
 		for i := range instance.DataDisks {
 			id := instance.DataDisks[i].DiskId
@@ -1065,48 +1079,206 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
-	}
 
-	tmpDataDisks := make([]interface{}, 0, len(instance.DataDisks))
-	if v, ok := d.GetOk("data_disks"); ok {
-		tmpDataDisks = v.([]interface{})
-	}
-
-	for index, disk := range instance.DataDisks {
-		dataDisk := make(map[string]interface{}, 5)
-		dataDisk["data_disk_id"] = disk.DiskId
-		if disk.DiskId == nil {
-			dataDisk["data_disk_size"] = disk.DiskSize
-		} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
-			dataDisk["data_disk_size"] = size
+		tmpDataDisks := make([]interface{}, 0, len(instance.DataDisks))
+		if v, ok := d.GetOk("data_disks"); ok {
+			tmpDataDisks = v.([]interface{})
 		}
 
-		dataDisk["delete_with_instance_prepaid"] = false
-		if len(tmpDataDisks) == len(instance.DataDisks) {
-			tmpDataDisk := tmpDataDisks[index].(map[string]interface{})
-			if deleteWithInstancePrepaid, ok := tmpDataDisk["delete_with_instance_prepaid"]; ok {
-				deleteWithInstancePrepaidBool := deleteWithInstancePrepaid.(bool)
-				dataDisk["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+		for index, disk := range instance.DataDisks {
+			dataDisk := make(map[string]interface{}, 5)
+			dataDisk["data_disk_id"] = disk.DiskId
+			if disk.DiskId == nil {
+				dataDisk["data_disk_size"] = disk.DiskSize
+			} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
+				dataDisk["data_disk_size"] = size
+			}
+
+			dataDisk["delete_with_instance_prepaid"] = false
+			if len(tmpDataDisks) == len(instance.DataDisks) {
+				tmpDataDisk := tmpDataDisks[index].(map[string]interface{})
+				if deleteWithInstancePrepaid, ok := tmpDataDisk["delete_with_instance_prepaid"]; ok {
+					deleteWithInstancePrepaidBool := deleteWithInstancePrepaid.(bool)
+					dataDisk["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+				}
+			}
+
+			dataDisk["data_disk_type"] = disk.DiskType
+			dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
+			dataDisk["delete_with_instance"] = disk.DeleteWithInstance
+			dataDisk["encrypt"] = disk.Encrypt
+			dataDisk["throughput_performance"] = disk.ThroughputPerformance
+			dataDiskList = append(dataDiskList, dataDisk)
+		}
+
+		if hasDataDisks && !isCombineDataDisks {
+			sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
+				dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
+				dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
+				return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
+			})
+		}
+
+		_ = d.Set("data_disks", dataDiskList)
+	} else if len(instance.DataDisks) > 0 && hasDataDisksName {
+		// scene with no disks name
+		dDiskHash := make([]map[string]interface{}, 0)
+		// get source disk hash
+		if v, ok := d.GetOk("data_disks"); ok {
+			dataDisks := v.([]interface{})
+			for index, item := range dataDisks {
+				value := item.(map[string]interface{})
+				tmpMap := make(map[string]interface{})
+				diskName := string(index)
+				diskType := value["data_disk_type"].(string)
+				diskSize := int64(value["data_disk_size"].(int))
+				deleteWithInstance := value["delete_with_instance"].(bool)
+				encrypt := value["encrypt"].(bool)
+				if v, ok := value["data_disk_name"].(string); ok && v != "" {
+					diskName = v
+				}
+
+				diskObj := diskHash{
+					diskType:           diskType,
+					diskSize:           diskSize,
+					deleteWithInstance: deleteWithInstance,
+					encrypt:            encrypt,
+				}
+
+				// set hash
+				tmpMap[diskName] = getDataDiskHash(diskObj)
+				tmpMap["index"] = index
+				tmpMap["flag"] = 0
+				dDiskHash = append(dDiskHash, tmpMap)
 			}
 		}
 
-		dataDisk["data_disk_type"] = disk.DiskType
-		dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
-		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
-		dataDisk["encrypt"] = disk.Encrypt
-		dataDisk["throughput_performance"] = disk.ThroughputPerformance
-		dataDiskList = append(dataDiskList, dataDisk)
-	}
+		tmpDataDiskMap := make(map[int]interface{}, 0)
+		var diskIds []*string
+		var cbsDisks []*cbs.Disk
+		for i := range instance.DataDisks {
+			id := instance.DataDisks[i].DiskId
+			if id == nil {
+				continue
+			}
 
-	if hasDataDisks && !isCombineDataDisks {
-		sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
-			dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
-			dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
-			return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
+			if strings.HasPrefix(*id, "disk-") {
+				diskIds = append(diskIds, id)
+			}
+		}
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			cbsDisks, err = cbsService.DescribeDiskList(ctx, diskIds)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+
+			for i := range cbsDisks {
+				disk := cbsDisks[i]
+				if *disk.DiskState == "EXPANDING" {
+					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
+				}
+			}
+
+			return nil
 		})
-	}
 
-	_ = d.Set("data_disks", dataDiskList)
+		if err != nil {
+			return err
+		}
+
+		// update instance DataDisks
+		for _, cvmDisk := range instance.DataDisks {
+			for _, cbsDisk := range cbsDisks {
+				if *cvmDisk.DiskId == *cbsDisk.DiskId {
+					dName := *cbsDisk.DiskName
+					cvmDisk.DiskName = &dName
+					break
+				}
+			}
+
+			fmt.Println(1111111111)
+			fmt.Println(1111111111)
+			fmt.Println(*cvmDisk.DiskName)
+			fmt.Println(1111111111)
+			fmt.Println(1111111111)
+		}
+
+		// has disk name first
+		for _, disk := range instance.DataDisks {
+			for _, hashItem := range dDiskHash {
+				diskName := *disk.DiskName
+				tmpHash := getDataDiskHash(diskHash{
+					diskType:           *disk.DiskType,
+					diskSize:           *disk.DiskSize,
+					deleteWithInstance: *disk.DeleteWithInstance,
+					encrypt:            *disk.Encrypt,
+				})
+
+				// get disk name
+				if _, ok := hashItem[diskName]; ok {
+					// check hash and flag
+					if tmpHash == hashItem[diskName] && hashItem["flag"] == 0 {
+						dataDisk := make(map[string]interface{}, 5)
+						dataDisk["data_disk_id"] = disk.DiskId
+						dataDisk["data_disk_size"] = disk.DiskSize
+						dataDisk["data_disk_name"] = disk.DiskName
+						dataDisk["data_disk_type"] = disk.DiskType
+						dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
+						dataDisk["delete_with_instance"] = disk.DeleteWithInstance
+						dataDisk["encrypt"] = disk.Encrypt
+						dataDisk["throughput_performance"] = disk.ThroughputPerformance
+						tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
+						hashItem["flag"] = 1
+						break
+					}
+				}
+			}
+		}
+
+		// no disk name last
+		for _, disk := range instance.DataDisks {
+			for index, hashItem := range dDiskHash {
+				tmpHash := getDataDiskHash(diskHash{
+					diskType:           *disk.DiskType,
+					diskSize:           *disk.DiskSize,
+					deleteWithInstance: *disk.DeleteWithInstance,
+					encrypt:            *disk.Encrypt,
+				})
+
+				// check hash and flag
+				if tmpHash == hashItem[string(index)] && hashItem["flag"] == 0 {
+					dataDisk := make(map[string]interface{}, 5)
+					dataDisk["data_disk_id"] = disk.DiskId
+					dataDisk["data_disk_size"] = disk.DiskSize
+					dataDisk["data_disk_name"] = disk.DiskName
+					dataDisk["data_disk_type"] = disk.DiskType
+					dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
+					dataDisk["delete_with_instance"] = disk.DeleteWithInstance
+					dataDisk["encrypt"] = disk.Encrypt
+					dataDisk["throughput_performance"] = disk.ThroughputPerformance
+					tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
+					hashItem["flag"] = 1
+					break
+				}
+			}
+		}
+
+		keys := make([]int, 0, len(tmpDataDiskMap))
+		for k := range tmpDataDiskMap {
+			keys = append(keys, k)
+		}
+
+		sort.Ints(keys)
+		for _, v := range keys {
+			tmpDataDisk := tmpDataDiskMap[v].(map[string]interface{})
+			dataDiskList = append(dataDiskList, tmpDataDisk)
+		}
+
+		_ = d.Set("data_disks", dataDiskList)
+	} else {
+		_ = d.Set("data_disks", dataDiskList)
+	}
 
 	if len(instance.PrivateIpAddresses) > 0 {
 		_ = d.Set("private_ip", instance.PrivateIpAddresses[0])
@@ -2159,4 +2331,20 @@ func waitIpRelease(ctx context.Context, vpcService vpc.VpcService, instance *cvm
 	}
 
 	return nil
+}
+
+type diskHash struct {
+	diskType           string
+	diskSize           int64
+	deleteWithInstance bool
+	encrypt            bool
+}
+
+func getDataDiskHash(obj diskHash) string {
+	h := sha256.New()
+	h.Write([]byte(obj.diskType))
+	h.Write([]byte(fmt.Sprintf("%d", obj.diskSize)))
+	h.Write([]byte(fmt.Sprintf("%t", obj.deleteWithInstance)))
+	h.Write([]byte(fmt.Sprintf("%t", obj.encrypt)))
+	return hex.EncodeToString(h.Sum(nil))
 }
