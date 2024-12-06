@@ -1196,12 +1196,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 					break
 				}
 			}
-
-			fmt.Println(1111111111)
-			fmt.Println(1111111111)
-			fmt.Println(*cvmDisk.DiskName)
-			fmt.Println(1111111111)
-			fmt.Println(1111111111)
 		}
 
 		// has disk name first
