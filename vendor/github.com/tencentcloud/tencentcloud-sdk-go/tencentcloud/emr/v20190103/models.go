@@ -374,6 +374,23 @@ type COSSettings struct {
 	LogOnCosPath *string `json:"LogOnCosPath,omitnil,omitempty" name:"LogOnCosPath"`
 }
 
+type CapacityGlobalConfig struct {
+	// 是否开启了标签调度
+	EnableLabel *bool `json:"EnableLabel,omitnil,omitempty" name:"EnableLabel"`
+
+	// 如果开启了标签调度，标签信息存放的路径
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelDir *string `json:"LabelDir,omitnil,omitempty" name:"LabelDir"`
+
+	// 是否覆盖用户指定队列，为true表示覆盖。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QueueMappingOverride *bool `json:"QueueMappingOverride,omitnil,omitempty" name:"QueueMappingOverride"`
+
+	// 高级设置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DefaultSettings []*DefaultSetting `json:"DefaultSettings,omitnil,omitempty" name:"DefaultSettings"`
+}
+
 type CdbInfo struct {
 	// 数据库实例
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -671,6 +688,10 @@ type ClusterInstancesInfo struct {
 	// 集群产品配置信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ConfigDetail *EmrProductConfigDetail `json:"ConfigDetail,omitnil,omitempty" name:"ConfigDetail"`
+
+	// 集群绑定的文件系统数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BindFileSystemNum *int64 `json:"BindFileSystemNum,omitnil,omitempty" name:"BindFileSystemNum"`
 }
 
 type ClusterSetting struct {
@@ -1455,7 +1476,7 @@ type CreateSLInstanceRequestParams struct {
 	// 实例存储类型，填写CLOUD_HSSD，表示性能云存储。
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 实例单节点磁盘容量，单位GB，单节点磁盘容量需大于等于100，小于等于10000，容量调整步长为20。
+	// 实例单节点磁盘容量，单位GB，单节点磁盘容量需大于等于100，小于等于250*CPU核心数，容量调整步长为100。
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
 	// 实例节点规格，可填写4C16G、8C32G、16C64G、32C128G，不区分大小写。
@@ -1466,6 +1487,9 @@ type CreateSLInstanceRequestParams struct {
 
 	// 实例要绑定的标签列表。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 预付费参数
+	PrePaySetting *PrePaySetting `json:"PrePaySetting,omitnil,omitempty" name:"PrePaySetting"`
 }
 
 type CreateSLInstanceRequest struct {
@@ -1480,7 +1504,7 @@ type CreateSLInstanceRequest struct {
 	// 实例存储类型，填写CLOUD_HSSD，表示性能云存储。
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 实例单节点磁盘容量，单位GB，单节点磁盘容量需大于等于100，小于等于10000，容量调整步长为20。
+	// 实例单节点磁盘容量，单位GB，单节点磁盘容量需大于等于100，小于等于250*CPU核心数，容量调整步长为100。
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
 	// 实例节点规格，可填写4C16G、8C32G、16C64G、32C128G，不区分大小写。
@@ -1491,6 +1515,9 @@ type CreateSLInstanceRequest struct {
 
 	// 实例要绑定的标签列表。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 预付费参数
+	PrePaySetting *PrePaySetting `json:"PrePaySetting,omitnil,omitempty" name:"PrePaySetting"`
 }
 
 func (r *CreateSLInstanceRequest) ToJsonString() string {
@@ -1512,6 +1539,7 @@ func (r *CreateSLInstanceRequest) FromJsonString(s string) error {
 	delete(f, "NodeType")
 	delete(f, "ZoneSettings")
 	delete(f, "Tags")
+	delete(f, "PrePaySetting")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSLInstanceRequest has unknown keys!", "")
 	}
@@ -1590,6 +1618,24 @@ type DayRepeatStrategy struct {
 	// 每隔Step天执行一次
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Step *uint64 `json:"Step,omitnil,omitempty" name:"Step"`
+}
+
+type DefaultSetting struct {
+	// 名称，作为入参的key
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 描述
+	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
+
+	// 提示
+	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
+
+	// key，用于展示，该配置对应与配置文件中的配置项
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// Name对应的值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
 // Predefined struct for user
@@ -1683,6 +1729,9 @@ type DeleteUserManagerUserListRequestParams struct {
 
 	// 用户组
 	UserGroupList []*UserAndGroup `json:"UserGroupList,omitnil,omitempty" name:"UserGroupList"`
+
+	// 是否删除家目录，只针对cvm集群
+	DeleteHomeDir *bool `json:"DeleteHomeDir,omitnil,omitempty" name:"DeleteHomeDir"`
 }
 
 type DeleteUserManagerUserListRequest struct {
@@ -1702,6 +1751,9 @@ type DeleteUserManagerUserListRequest struct {
 
 	// 用户组
 	UserGroupList []*UserAndGroup `json:"UserGroupList,omitnil,omitempty" name:"UserGroupList"`
+
+	// 是否删除家目录，只针对cvm集群
+	DeleteHomeDir *bool `json:"DeleteHomeDir,omitnil,omitempty" name:"DeleteHomeDir"`
 }
 
 func (r *DeleteUserManagerUserListRequest) ToJsonString() string {
@@ -1721,6 +1773,7 @@ func (r *DeleteUserManagerUserListRequest) FromJsonString(s string) error {
 	delete(f, "TkeClusterId")
 	delete(f, "DisplayStrategy")
 	delete(f, "UserGroupList")
+	delete(f, "DeleteHomeDir")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteUserManagerUserListRequest has unknown keys!", "")
 	}
@@ -2169,10 +2222,10 @@ type DescribeClusterNodesRequestParams struct {
 	// 支持搜索的字段
 	SearchFields []*SearchItem `json:"SearchFields,omitnil,omitempty" name:"SearchFields"`
 
-	// 无
+	// 排序字段
 	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
 
-	// 无
+	// 是否升序，1:升序，0:降序
 	Asc *int64 `json:"Asc,omitnil,omitempty" name:"Asc"`
 }
 
@@ -2211,10 +2264,10 @@ type DescribeClusterNodesRequest struct {
 	// 支持搜索的字段
 	SearchFields []*SearchItem `json:"SearchFields,omitnil,omitempty" name:"SearchFields"`
 
-	// 无
+	// 排序字段
 	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
 
-	// 无
+	// 是否升序，1:升序，0:降序
 	Asc *int64 `json:"Asc,omitnil,omitempty" name:"Asc"`
 }
 
@@ -2499,7 +2552,7 @@ type DescribeEmrOverviewMetricsRequestParams struct {
 	// 结束时间
 	End *int64 `json:"End,omitnil,omitempty" name:"End"`
 
-	// 指标名
+	// 指标名，NODE.CPU：节点平均CPU利用率和总核数；NODE.CPU.SLHBASE：Serverless实例平均CPU利用率和总核数；HDFS.NN.CAPACITY：存储使用率和总量
 	Metric *string `json:"Metric,omitnil,omitempty" name:"Metric"`
 
 	// 集群id
@@ -2524,7 +2577,7 @@ type DescribeEmrOverviewMetricsRequest struct {
 	// 结束时间
 	End *int64 `json:"End,omitnil,omitempty" name:"End"`
 
-	// 指标名
+	// 指标名，NODE.CPU：节点平均CPU利用率和总核数；NODE.CPU.SLHBASE：Serverless实例平均CPU利用率和总核数；HDFS.NN.CAPACITY：存储使用率和总量
 	Metric *string `json:"Metric,omitnil,omitempty" name:"Metric"`
 
 	// 集群id
@@ -2590,6 +2643,77 @@ func (r *DescribeEmrOverviewMetricsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeEmrOverviewMetricsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGlobalConfigRequestParams struct {
+	// emr集群的英文id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeGlobalConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// emr集群的英文id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeGlobalConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGlobalConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGlobalConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGlobalConfigResponseParams struct {
+	// 是否开启了资源调度功能
+	EnableResourceSchedule *bool `json:"EnableResourceSchedule,omitnil,omitempty" name:"EnableResourceSchedule"`
+
+	// 当前生效的资源调度器
+	ActiveScheduler *string `json:"ActiveScheduler,omitnil,omitempty" name:"ActiveScheduler"`
+
+	// 公平调度器的信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CapacityGlobalConfig *CapacityGlobalConfig `json:"CapacityGlobalConfig,omitnil,omitempty" name:"CapacityGlobalConfig"`
+
+	// 容量调度器的信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FairGlobalConfig *FairGlobalConfig `json:"FairGlobalConfig,omitnil,omitempty" name:"FairGlobalConfig"`
+
+	// 最新的资源调度器
+	Scheduler *string `json:"Scheduler,omitnil,omitempty" name:"Scheduler"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGlobalConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGlobalConfigResponseParams `json:"Response"`
+}
+
+func (r *DescribeGlobalConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGlobalConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2688,6 +2812,82 @@ func (r *DescribeHBaseTableOverviewResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeHBaseTableOverviewResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeHDFSStorageInfoRequestParams struct {
+	// 集群id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 获取查询信息开始时间 (s)
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 获取查询信息结束时间 (s)
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+type DescribeHDFSStorageInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 获取查询信息开始时间 (s)
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 获取查询信息结束时间 (s)
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+func (r *DescribeHDFSStorageInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeHDFSStorageInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeHDFSStorageInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeHDFSStorageInfoResponseParams struct {
+	// 采样时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SampleTime *int64 `json:"SampleTime,omitnil,omitempty" name:"SampleTime"`
+
+	// hdfs存储详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StorageSummaryDistribution []*StorageSummaryDistribution `json:"StorageSummaryDistribution,omitnil,omitempty" name:"StorageSummaryDistribution"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeHDFSStorageInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeHDFSStorageInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeHDFSStorageInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeHDFSStorageInfoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2925,6 +3125,9 @@ type DescribeInsightListRequestParams struct {
 
 	// 分页查询时的页号，从1开始
 	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+
+	// 查询类型,支持HIVE,SPARK,DLC_SPARK,SPARK_SQL,SCHEDULE,MAPREDUCE,TRINO等类型,默认查询全部
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 type DescribeInsightListRequest struct {
@@ -2944,6 +3147,9 @@ type DescribeInsightListRequest struct {
 
 	// 分页查询时的页号，从1开始
 	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+
+	// 查询类型,支持HIVE,SPARK,DLC_SPARK,SPARK_SQL,SCHEDULE,MAPREDUCE,TRINO等类型,默认查询全部
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 func (r *DescribeInsightListRequest) ToJsonString() string {
@@ -2963,6 +3169,7 @@ func (r *DescribeInsightListRequest) FromJsonString(s string) error {
 	delete(f, "EndTime")
 	delete(f, "PageSize")
 	delete(f, "Page")
+	delete(f, "Type")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInsightListRequest has unknown keys!", "")
 	}
@@ -3081,7 +3288,7 @@ type DescribeInstancesListRequestParams struct {
 	// 按照OrderField升序或者降序进行排序。取值范围：<li>0：表示升序。</li><li>1：表示降序。</li>默认值为0。
 	Asc *int64 `json:"Asc,omitnil,omitempty" name:"Asc"`
 
-	// 自定义查询
+	// 自定义查询过滤器。示例：<li>根据ClusterId过滤实例：[{"Name":"ClusterId","Values":["emr-xxxxxxxx"]}]</li><li>根据clusterName过滤实例：[{"Name": "ClusterName","Values": ["cluster_name"]}]</li><li>根据ClusterStatus过滤实例：[{"Name": "ClusterStatus","Values": ["2"]}]</li>
 	Filters []*Filters `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -3104,7 +3311,7 @@ type DescribeInstancesListRequest struct {
 	// 按照OrderField升序或者降序进行排序。取值范围：<li>0：表示升序。</li><li>1：表示降序。</li>默认值为0。
 	Asc *int64 `json:"Asc,omitnil,omitempty" name:"Asc"`
 
-	// 自定义查询
+	// 自定义查询过滤器。示例：<li>根据ClusterId过滤实例：[{"Name":"ClusterId","Values":["emr-xxxxxxxx"]}]</li><li>根据clusterName过滤实例：[{"Name": "ClusterName","Values": ["cluster_name"]}]</li><li>根据ClusterStatus过滤实例：[{"Name": "ClusterStatus","Values": ["2"]}]</li>
 	Filters []*Filters `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -3355,6 +3562,95 @@ func (r *DescribeJobFlowResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeKyuubiQueryInfoRequestParams struct {
+	// 集群ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 获取查询信息开始时间 (s)
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 获取查询信息结束时间 (s)
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 分页查询时的分页大小，最小1，最大100
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// 分页查询时的页号，从1开始
+	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+}
+
+type DescribeKyuubiQueryInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 获取查询信息开始时间 (s)
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 获取查询信息结束时间 (s)
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 分页查询时的分页大小，最小1，最大100
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// 分页查询时的页号，从1开始
+	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+}
+
+func (r *DescribeKyuubiQueryInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeKyuubiQueryInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "PageSize")
+	delete(f, "Page")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeKyuubiQueryInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeKyuubiQueryInfoResponseParams struct {
+	// 总数，分页查询时使用
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// Kyuubi查询信息列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KyuubiQueryInfoList []*KyuubiQueryInfo `json:"KyuubiQueryInfoList,omitnil,omitempty" name:"KyuubiQueryInfoList"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeKyuubiQueryInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeKyuubiQueryInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeKyuubiQueryInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeKyuubiQueryInfoResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeResourceScheduleDiffDetailRequestParams struct {
 	// emr集群的英文id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -3499,10 +3795,10 @@ type DescribeSLInstanceListRequestParams struct {
 	// 排序字段。取值范围：<li>clusterId：表示按照实例ID排序。</li><li>addTime：表示按照实例创建时间排序。</li><li>status：表示按照实例的状态码排序。</li>
 	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
 
-	// 按照OrderField升序或者降序进行排序。取值范围：<li>0：表示降序。</li><li>1：表示升序。</li>默认值为0。
+	// 按照OrderField升序或者降序进行排序。取值范围：<li>0：表示升序。</li><li>1：表示降序。</li>默认值为0。
 	Asc *int64 `json:"Asc,omitnil,omitempty" name:"Asc"`
 
-	// 自定义查询过滤器。
+	// 自定义查询过滤器。示例：<li>根据ClusterId过滤实例：[{"Name":"ClusterId","Values":["emr-xxxxxxxx"]}]</li><li>根据clusterName过滤实例：[{"Name": "ClusterName","Values": ["cluster_name"]}]</li><li>根据ClusterStatus过滤实例：[{"Name": "ClusterStatus","Values": ["2"]}]</li>
 	Filters []*Filters `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -3521,10 +3817,10 @@ type DescribeSLInstanceListRequest struct {
 	// 排序字段。取值范围：<li>clusterId：表示按照实例ID排序。</li><li>addTime：表示按照实例创建时间排序。</li><li>status：表示按照实例的状态码排序。</li>
 	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
 
-	// 按照OrderField升序或者降序进行排序。取值范围：<li>0：表示降序。</li><li>1：表示升序。</li>默认值为0。
+	// 按照OrderField升序或者降序进行排序。取值范围：<li>0：表示升序。</li><li>1：表示降序。</li>默认值为0。
 	Asc *int64 `json:"Asc,omitnil,omitempty" name:"Asc"`
 
-	// 自定义查询过滤器。
+	// 自定义查询过滤器。示例：<li>根据ClusterId过滤实例：[{"Name":"ClusterId","Values":["emr-xxxxxxxx"]}]</li><li>根据clusterName过滤实例：[{"Name": "ClusterName","Values": ["cluster_name"]}]</li><li>根据ClusterStatus过滤实例：[{"Name": "ClusterStatus","Values": ["2"]}]</li>
 	Filters []*Filters `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -3614,6 +3910,9 @@ func (r *DescribeSLInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSLInstanceResponseParams struct {
+	// 实例字符串标识。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
 	// 实例名称。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
@@ -3635,6 +3934,33 @@ type DescribeSLInstanceResponseParams struct {
 	// 实例绑定的标签列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 实例数字标识。
+	ClusterId *int64 `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例区域ID。
+	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
+
+	// 实例主可用区。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 实例过期时间，后付费返回0000-00-00 00:00:00
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+
+	// 实例隔离时间，未隔离返回0000-00-00 00:00:00。
+	IsolateTime *string `json:"IsolateTime,omitnil,omitempty" name:"IsolateTime"`
+
+	// 实例创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 实例状态码，-2:  "TERMINATED", 2:   "RUNNING", 14:  "TERMINATING", 19:  "ISOLATING", 22:  "ADJUSTING", 201: "ISOLATED"。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 自动续费标记， 0：表示通知即将过期，但不自动续费 1：表示通知即将过期，而且自动续费 2：表示不通知即将过期，也不自动续费，若业务无续费概念为0
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
+
+	// 实例节点总数。
+	NodeNum *int64 `json:"NodeNum,omitnil,omitempty" name:"NodeNum"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -3697,12 +4023,7 @@ type DescribeServiceNodeInfosRequestParams struct {
 	// 服务组件名称，都是大写例如YARN
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 节点名称
-	// master
-	// core
-	// task
-	// common
-	// router
+	// 节点名称master,core,task,common,router
 	NodeTypeName *string `json:"NodeTypeName,omitnil,omitempty" name:"NodeTypeName"`
 
 	// 过滤条件：dn是否处于维护状态
@@ -3756,12 +4077,7 @@ type DescribeServiceNodeInfosRequest struct {
 	// 服务组件名称，都是大写例如YARN
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 节点名称
-	// master
-	// core
-	// task
-	// common
-	// router
+	// 节点名称master,core,task,common,router
 	NodeTypeName *string `json:"NodeTypeName,omitnil,omitempty" name:"NodeTypeName"`
 
 	// 过滤条件：dn是否处于维护状态
@@ -3838,6 +4154,191 @@ func (r *DescribeServiceNodeInfosResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeServiceNodeInfosResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSparkQueriesRequestParams struct {
+	// 集群ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 开始时间
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 分页起始偏移，从0开始
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页大小，合法范围[1,100]
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 执行状态:RUNNING,COMPLETED,FAILED
+	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+type DescribeSparkQueriesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 开始时间
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 分页起始偏移，从0开始
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页大小，合法范围[1,100]
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 执行状态:RUNNING,COMPLETED,FAILED
+	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+func (r *DescribeSparkQueriesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSparkQueriesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Status")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSparkQueriesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSparkQueriesResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 结果列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Results []*SparkQuery `json:"Results,omitnil,omitempty" name:"Results"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSparkQueriesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSparkQueriesResponseParams `json:"Response"`
+}
+
+func (r *DescribeSparkQueriesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSparkQueriesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeStarRocksQueryInfoRequestParams struct {
+	// 集群ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 获取查询信息开始时间 (s)
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 获取查询信息结束时间 (s)
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 分页查询时的分页大小，最小1，最大100
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// 分页查询时的页号，从1开始
+	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+}
+
+type DescribeStarRocksQueryInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 获取查询信息开始时间 (s)
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 获取查询信息结束时间 (s)
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 分页查询时的分页大小，最小1，最大100
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// 分页查询时的页号，从1开始
+	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+}
+
+func (r *DescribeStarRocksQueryInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeStarRocksQueryInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "PageSize")
+	delete(f, "Page")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeStarRocksQueryInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeStarRocksQueryInfoResponseParams struct {
+	// 总数，分页查询时使用
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// Starrocks 查询信息列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StarRocksQueryInfoList []*StarRocksQueryInfo `json:"StarRocksQueryInfoList,omitnil,omitempty" name:"StarRocksQueryInfoList"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeStarRocksQueryInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeStarRocksQueryInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeStarRocksQueryInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeStarRocksQueryInfoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4156,99 +4657,7 @@ func (r *DescribeYarnQueueRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeYarnQueueResponseParams struct {
-	// 队列信息。是一个对象转成的json字符串，对应的golang结构体如下所示，比如`QueueWithConfigSetForFairScheduler`的第一个字段`Name`：
-	// 
-	// ```
-	// Name                         string                               `json:"name"` //队列名称
-	// ```
-	// - `Name`：字段名
-	// - `string`：字段类型
-	// - `json:"name"`：表示在序列化和反序列化`json`时，对应的`json key`，下面以`json key`来指代
-	// - `//`：后面的注释内容对应页面上看到的名称
-	// 
-	// 字段类型以`*`开头的表示取值可能为json规范下的null，不同的语言需要使用能表达null的类型来接收，比如java的包装类型；字段类型以`[]`开头的表示是数组类型；`json key`在调用`ModifyYarnQueueV2 `接口也会使用。
-	// 
-	// - 公平调度器
-	// 
-	// ```
-	// type QueueWithConfigSetForFairScheduler struct {
-	// 	Name                         string                               `json:"name"` //队列名称
-	// 	MyId                         string                  `json:"myId"` // 队列id，用于编辑、删除、克隆时使用
-	// 	ParentId                     string                  `json:"parentId"`  // 父队列Id
-	// 	Type                         *string                              `json:"type"` // 队列归属。parent或空，当确定某个队列是父队列，且没有子队列时，才可以设置，通常用来支持放置策略nestedUserQueue
-	// 	AclSubmitApps                *AclForYarnQueue                     `json:"aclSubmitApps"` // 提交访问控制
-	// 	AclAdministerApps            *AclForYarnQueue                     `json:"aclAdministerApps"` // 管理访问控制
-	// 	MinSharePreemptionTimeout    *int                                 `json:"minSharePreemptionTimeout"` // 最小共享优先权超时时间
-	// 	FairSharePreemptionTimeout   *int                                 `json:"fairSharePreemptionTimeout"` // 公平份额抢占超时时间
-	// 	FairSharePreemptionThreshold *float32                             `json:"fairSharePreemptionThreshold"` // 公平份额抢占阈值。取值 （0，1]
-	// 	AllowPreemptionFrom          *bool                                `json:"allowPreemptionFrom"`                                        // 抢占模式
-	// 	SchedulingPolicy             *string                              `json:"schedulingPolicy"`  // 调度策略，取值有drf、fair、fifo
-	// 	IsDefault                    *bool                                `json:"isDefault"` // 是否是root.default队列
-	// 	IsRoot                       *bool                                `json:"isRoot"` // 是否是root队列
-	// 	ConfigSets                   []ConfigSetForFairScheduler          `json:"configSets"` // 配置集设置
-	// 	Children                     []QueueWithConfigSetForFairScheduler `json:"queues"` // 子队列信息。递归
-	// }
-	// 
-	// type AclForYarnQueue struct {
-	// 	User  *string `json:"user"` //用户名
-	// 	Group *string `json:"group"`//组名
-	// }
-	// 
-	// type ConfigSetForFairScheduler struct {
-	// 	Name              string        `json:"name"` // 配置集名称
-	// 	MinResources      *YarnResource `json:"minResources"` // 最小资源量
-	// 	MaxResources      *YarnResource `json:"maxResources"` // 最大资源量
-	// 	MaxChildResources *YarnResource `json:"maxChildResources"` // 能够分配给为未声明子队列的最大资源量
-	// 	MaxRunningApps    *int          `json:"maxRunningApps"` // 最高可同时处于运行的App数量
-	// 	Weight            *float32      `json:"weight"`                   // 权重
-	// 	MaxAMShare        *float32      `json:"maxAMShare"` // App Master最大份额
-	// }
-	// 
-	// type YarnResource struct {
-	// 	Vcores *int `json:"vcores"`
-	// 	Memory *int `json:"memory"`
-	// 	Type *string `json:"type"` // 当值为`percent`时，表示使用的百分比，否则就是使用的绝对数值
-	// }
-	// ```
-	// 
-	// - 容量调度器
-	// 
-	// ```
-	// type QueueForCapacitySchedulerV3 struct {
-	// 	Name                       string                `json:"name"` // 队列名称
-	// 	MyId                       string                `json:"myId"` // 队列id，用于编辑、删除、克隆时使用
-	// 	ParentId                   string                `json:"parentId"` // 父队列Id
-	// 	Configs                    []ConfigForCapacityV3 `json:"configs"` //配置集设置
-	// 	State                      *string         `json:"state"` // 资源池状态
-	// 	DefaultNodeLabelExpression *string               `json:"default-node-label-expression"` // 默认标签表达式
-	// 	AclSubmitApps              *AclForYarnQueue      `json:"acl_submit_applications"` // 提交访问控制
-	// 	AclAdminQueue              *AclForYarnQueue      `json:"acl_administer_queue"` //管理访问控制
-	// 	MaxAllocationMB *int32 `json:"maximum-allocation-mb"` // 分配Container最大内存数量
-	// 	MaxAllocationVcores *int32                         `json:"maximum-allocation-vcores"` // Container最大vCore数量
-	// 	IsDefault           *bool                          `json:"isDefault"`// 是否是root.default队列
-	// 	IsRoot              *bool                          `json:"isRoot"` // 是否是root队列
-	// 	Queues              []*QueueForCapacitySchedulerV3 `json:"queues"`//子队列信息。递归
-	// }
-	// type ConfigForCapacityV3 struct {
-	// 	Name                string          `json:"configName"` // 配置集名称
-	// 	Labels              []CapacityLabel `json:"labels"` // 标签信息
-	// 	MinUserLimitPercent *int32          `json:"minimum-user-limit-percent"` // 用户最小容量
-	// 	UserLimitFactor     *float32        `json:"user-limit-factor" valid:"rangeExcludeLeft(0|)"`  // 用户资源因子
-	// 	MaxApps *int32 `json:"maximum-applications" valid:"rangeExcludeLeft(0|)"` // 最大应用数Max-Applications
-	// 	MaxAmPercent               *float32 `json:"maximum-am-resource-percent"` // 最大AM比例
-	// 	DefaultApplicationPriority *int32   `json:"default-application-priority"` // 资源池优先级
-	// }
-	// type CapacityLabel struct {
-	// 	Name        string   `json:"labelName"`
-	// 	Capacity    *float32 `json:"capacity"`  // 容量
-	// 	MaxCapacity *float32 `json:"maximum-capacity"` //最大容量
-	// }
-	// 
-	// type AclForYarnQueue struct {
-	// 	User  *string `json:"user"` //用户名
-	// 	Group *string `json:"group"`//组名
-	// }
-	// ```
+	// 队列信息。是一个对象转成的json字符串，对应的golang结构体如下所示，例如`QueueWithConfigSetForFairScheduler`的第一个字段`Name`：```Name                         string                               `json:"name"` //队列名称```- `Name`：字段名- `string`：字段类型- `json:"name"`：表示在序列化和反序列化`json`时，对应的`json key`，下面以`json key`来指代- `//`：后面的注释内容对应页面上看到的名称字段类型以`*`开头的表示取值可能为json规范下的null，不同的语言需要使用能表达null的类型来接收，例如java的包装类型；字段类型以`[]`开头的表示是数组类型；`json key`在调用`ModifyYarnQueueV2 `接口也会使用。- 公平调度器```type QueueWithConfigSetForFairScheduler struct {	Name                         string                               `json:"name"` //队列名称	MyId                         string                  `json:"myId"` // 队列id，用于编辑、删除、克隆时使用	ParentId                     string                  `json:"parentId"`  // 父队列Id	Type                         *string                              `json:"type"` // 队列归属。parent或空，当确定某个队列是父队列，且没有子队列时，才可以设置，通常用来支持放置策略nestedUserQueue	AclSubmitApps                *AclForYarnQueue                     `json:"aclSubmitApps"` // 提交访问控制	AclAdministerApps            *AclForYarnQueue                     `json:"aclAdministerApps"` // 管理访问控制	MinSharePreemptionTimeout    *int                                 `json:"minSharePreemptionTimeout"` // 最小共享优先权超时时间	FairSharePreemptionTimeout   *int                                 `json:"fairSharePreemptionTimeout"` // 公平份额抢占超时时间	FairSharePreemptionThreshold *float32                             `json:"fairSharePreemptionThreshold"` // 公平份额抢占阈值。取值 （0，1]	AllowPreemptionFrom          *bool                                `json:"allowPreemptionFrom"`                                        // 抢占模式	SchedulingPolicy             *string                              `json:"schedulingPolicy"`  // 调度策略，取值有drf、fair、fifo	IsDefault                    *bool                                `json:"isDefault"` // 是否是root.default队列	IsRoot                       *bool                                `json:"isRoot"` // 是否是root队列	ConfigSets                   []ConfigSetForFairScheduler          `json:"configSets"` // 配置集设置	Children                     []QueueWithConfigSetForFairScheduler `json:"queues"` // 子队列信息。递归}type AclForYarnQueue struct {	User  *string `json:"user"` //用户名	Group *string `json:"group"`//组名}type ConfigSetForFairScheduler struct {	Name              string        `json:"name"` // 配置集名称	MinResources      *YarnResource `json:"minResources"` // 最小资源量	MaxResources      *YarnResource `json:"maxResources"` // 最大资源量	MaxChildResources *YarnResource `json:"maxChildResources"` // 能够分配给为未声明子队列的最大资源量	MaxRunningApps    *int          `json:"maxRunningApps"` // 最高可同时处于运行的App数量	Weight            *float32      `json:"weight"`                   // 权重	MaxAMShare        *float32      `json:"maxAMShare"` // App Master最大份额}type YarnResource struct {	Vcores *int `json:"vcores"`	Memory *int `json:"memory"`	Type *string `json:"type"` // 当值为`percent`时，表示使用的百分比，否则就是使用的绝对数值}```- 容量调度器```type QueueForCapacitySchedulerV3 struct {	Name                       string                `json:"name"` // 队列名称	MyId                       string                `json:"myId"` // 队列id，用于编辑、删除、克隆时使用	ParentId                   string                `json:"parentId"` // 父队列Id	Configs                    []ConfigForCapacityV3 `json:"configs"` //配置集设置	State                      *string         `json:"state"` // 资源池状态	DefaultNodeLabelExpression *string               `json:"default-node-label-expression"` // 默认标签表达式	AclSubmitApps              *AclForYarnQueue      `json:"acl_submit_applications"` // 提交访问控制	AclAdminQueue              *AclForYarnQueue      `json:"acl_administer_queue"` //管理访问控制	MaxAllocationMB *int32 `json:"maximum-allocation-mb"` // 分配Container最大内存数量	MaxAllocationVcores *int32                         `json:"maximum-allocation-vcores"` // Container最大vCore数量	IsDefault           *bool                          `json:"isDefault"`// 是否是root.default队列	IsRoot              *bool                          `json:"isRoot"` // 是否是root队列	Queues              []*QueueForCapacitySchedulerV3 `json:"queues"`//子队列信息。递归}type ConfigForCapacityV3 struct {	Name                string          `json:"configName"` // 配置集名称	Labels              []CapacityLabel `json:"labels"` // 标签信息	MinUserLimitPercent *int32          `json:"minimum-user-limit-percent"` // 用户最小容量	UserLimitFactor     *float32        `json:"user-limit-factor" valid:"rangeExcludeLeft(0|)"`  // 用户资源因子	MaxApps *int32 `json:"maximum-applications" valid:"rangeExcludeLeft(0|)"` // 最大应用数Max-Applications	MaxAmPercent               *float32 `json:"maximum-am-resource-percent"` // 最大AM比例	DefaultApplicationPriority *int32   `json:"default-application-priority"` // 资源池优先级}type CapacityLabel struct {	Name        string   `json:"labelName"`	Capacity    *float32 `json:"capacity"`  // 容量	MaxCapacity *float32 `json:"maximum-capacity"` //最大容量}type AclForYarnQueue struct {	User  *string `json:"user"` //用户名	Group *string `json:"group"`//组名}```
 	Queue *string `json:"Queue,omitnil,omitempty" name:"Queue"`
 
 	// 版本
@@ -4513,6 +4922,20 @@ type DiskSpecInfo struct {
 	// 数据容量，单位为GB
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
+
+	// 额外性能
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExtraPerformance *int64 `json:"ExtraPerformance,omitnil,omitempty" name:"ExtraPerformance"`
+}
+
+type Dps struct {
+	// 时间戳
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Timestamp *string `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
+
+	// 采样值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
 type DynamicPodSpec struct {
@@ -4838,14 +5261,20 @@ type ExternalService struct {
 	// 共用组件类型，EMR/CUSTOM
 	ShareType *string `json:"ShareType,omitnil,omitempty" name:"ShareType"`
 
-	// 自定义参数集合
-	CustomServiceDefineList []*CustomServiceDefine `json:"CustomServiceDefineList,omitnil,omitempty" name:"CustomServiceDefineList"`
-
 	// 共用组件名
 	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
 
 	// 共用组件集群
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 自定义参数集合
+	CustomServiceDefineList []*CustomServiceDefine `json:"CustomServiceDefineList,omitnil,omitempty" name:"CustomServiceDefineList"`
+}
+
+type FairGlobalConfig struct {
+	// 对应与页面的<p>程序上限</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UserMaxAppsDefault *int64 `json:"UserMaxAppsDefault,omitnil,omitempty" name:"UserMaxAppsDefault"`
 }
 
 type Filters struct {
@@ -5231,11 +5660,7 @@ type InquiryPriceCreateInstanceRequestParams struct {
 	// 产品ID，不同产品ID表示不同的EMR产品版本。取值范围：<li>2：表示EMR-V2.0.1</li><li>16：表示EMR-V2.3.0</li><li>20：表示EMR-V2.5.0</li><li>30：表示EMR-V2.6.0</li><li>38：表示EMR-V2.7.0</li><li>57：表示EMR-V2.8.0</li><li>7：表示EMR-V3.0.0</li><li>25：表示EMR-V3.1.0</li><li>31：表示EMR-V3.1.1</li><li>28：表示EMR-V3.2.0</li><li>33：表示EMR-V3.2.1</li><li>34：表示EMR-V3.3.0</li><li>37：表示EMR-V3.4.0</li><li>44：表示EMR-V3.5.0</li><li>53：表示EMR-V3.6.0</li><li>58：表示EMR-V3.6.1</li><li>47：表示EMR-V4.0.0</li>
 	ProductId *uint64 `json:"ProductId,omitnil,omitempty" name:"ProductId"`
 
-	// 场景化取值：
-	// Hadoop-Kudu
-	// Hadoop-Zookeeper
-	// Hadoop-Presto
-	// Hadoop-Hbase
+	// 场景化取值：Hadoop-Kudu，Hadoop-Zookeeper，Hadoop-Presto，Hadoop-Hbase
 	SceneName *string `json:"SceneName,omitnil,omitempty" name:"SceneName"`
 
 	// 共用组件信息
@@ -5302,11 +5727,7 @@ type InquiryPriceCreateInstanceRequest struct {
 	// 产品ID，不同产品ID表示不同的EMR产品版本。取值范围：<li>2：表示EMR-V2.0.1</li><li>16：表示EMR-V2.3.0</li><li>20：表示EMR-V2.5.0</li><li>30：表示EMR-V2.6.0</li><li>38：表示EMR-V2.7.0</li><li>57：表示EMR-V2.8.0</li><li>7：表示EMR-V3.0.0</li><li>25：表示EMR-V3.1.0</li><li>31：表示EMR-V3.1.1</li><li>28：表示EMR-V3.2.0</li><li>33：表示EMR-V3.2.1</li><li>34：表示EMR-V3.3.0</li><li>37：表示EMR-V3.4.0</li><li>44：表示EMR-V3.5.0</li><li>53：表示EMR-V3.6.0</li><li>58：表示EMR-V3.6.1</li><li>47：表示EMR-V4.0.0</li>
 	ProductId *uint64 `json:"ProductId,omitnil,omitempty" name:"ProductId"`
 
-	// 场景化取值：
-	// Hadoop-Kudu
-	// Hadoop-Zookeeper
-	// Hadoop-Presto
-	// Hadoop-Hbase
+	// 场景化取值：Hadoop-Kudu，Hadoop-Zookeeper，Hadoop-Presto，Hadoop-Hbase
 	SceneName *string `json:"SceneName,omitnil,omitempty" name:"SceneName"`
 
 	// 共用组件信息
@@ -6005,6 +6426,56 @@ type KeyValue struct {
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
+type KyuubiQueryInfo struct {
+	// 提交IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClientIP *string `json:"ClientIP,omitnil,omitempty" name:"ClientIP"`
+
+	// 执行时长
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// 结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// Engine Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EngineID *string `json:"EngineID,omitnil,omitempty" name:"EngineID"`
+
+	// 计算引擎
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
+
+	// ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// Session Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SessionID *string `json:"SessionID,omitnil,omitempty" name:"SessionID"`
+
+	// 开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BeginTime *int64 `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
+
+	// 执行状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutionState *string `json:"ExecutionState,omitnil,omitempty" name:"ExecutionState"`
+
+	// 执行语句
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutionStatement *string `json:"ExecutionStatement,omitnil,omitempty" name:"ExecutionStatement"`
+
+	// Statement Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StatementID *string `json:"StatementID,omitnil,omitempty" name:"StatementID"`
+
+	// 提交用户
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	User *string `json:"User,omitnil,omitempty" name:"User"`
+}
+
 type LoadAutoScaleStrategy struct {
 	// 规则ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -6283,6 +6754,83 @@ func (r *ModifyAutoScaleStrategyResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAutoScaleStrategyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGlobalConfigRequestParams struct {
+	// emr集群的英文id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 修改的配置列表。其中Key的取值与`DescribeGlobalConfig`接口的出参一一对应，不区分大小写（如果报错找不到Key，以出参为准），分别为：
+	// 1. 开启或关闭资源调度：enableResourceSchedule；在关闭时会有一个同步的选项，Key为sync，取值为true或false。
+	// 2. 调度器类型：scheduler。
+	// 2. 开启或关闭标签：enableLabel，取值为true或false。
+	// 2. 标签目录：labelDir。
+	// 3. 是否覆盖用户指定队列：queueMappingOverride，取值为true、false。
+	// 4. 程序上限：userMaxAppsDefault。
+	// 5. 动态配置项：`DescribeGlobalConfig`接口返回的DefaultSettings中的Name字段。
+	// Value的取值都是字符串，对于**是否覆盖用户指定队列**、**程序上限**，json规范中的null表示清空该配置的值。支持修改单个配置项的值。对于**动态配置项**则需要全量传递以进行覆盖。
+	Items []*Item `json:"Items,omitnil,omitempty" name:"Items"`
+}
+
+type ModifyGlobalConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// emr集群的英文id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 修改的配置列表。其中Key的取值与`DescribeGlobalConfig`接口的出参一一对应，不区分大小写（如果报错找不到Key，以出参为准），分别为：
+	// 1. 开启或关闭资源调度：enableResourceSchedule；在关闭时会有一个同步的选项，Key为sync，取值为true或false。
+	// 2. 调度器类型：scheduler。
+	// 2. 开启或关闭标签：enableLabel，取值为true或false。
+	// 2. 标签目录：labelDir。
+	// 3. 是否覆盖用户指定队列：queueMappingOverride，取值为true、false。
+	// 4. 程序上限：userMaxAppsDefault。
+	// 5. 动态配置项：`DescribeGlobalConfig`接口返回的DefaultSettings中的Name字段。
+	// Value的取值都是字符串，对于**是否覆盖用户指定队列**、**程序上限**，json规范中的null表示清空该配置的值。支持修改单个配置项的值。对于**动态配置项**则需要全量传递以进行覆盖。
+	Items []*Item `json:"Items,omitnil,omitempty" name:"Items"`
+}
+
+func (r *ModifyGlobalConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGlobalConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Items")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGlobalConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGlobalConfigResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGlobalConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGlobalConfigResponseParams `json:"Response"`
+}
+
+func (r *ModifyGlobalConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGlobalConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6930,6 +7478,10 @@ type MultiDiskMC struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
+	// 磁盘大小
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Size *string `json:"Size,omitnil,omitempty" name:"Size"`
+
 	// 云盘大小
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
@@ -7194,6 +7746,14 @@ type NodeHardwareInfo struct {
 	// 备注
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// 共享集群id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SharedClusterId *string `json:"SharedClusterId,omitnil,omitempty" name:"SharedClusterId"`
+
+	// 共享集群id描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SharedClusterIdDesc *string `json:"SharedClusterIdDesc,omitnil,omitempty" name:"SharedClusterIdDesc"`
 }
 
 type NodeResourceSpec struct {
@@ -7338,6 +7898,16 @@ type PartDetailPriceItem struct {
 	// 数量
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
+}
+
+type Period struct {
+	// 时间跨度
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
+
+	// 时间单位，"m"代表月。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 }
 
 type PersistentVolumeContext struct {
@@ -7786,6 +8356,16 @@ type PreExecuteFileSettings struct {
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 }
 
+type PrePaySetting struct {
+	// 时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Period *Period `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// 自动续费标记，0：表示通知即将过期，但不自动续费 1：表示通知即将过期，而且自动续费 2：表示不通知即将过期，也不自动续费
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
+}
+
 type PriceDetail struct {
 	// 节点ID
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
@@ -7910,6 +8490,18 @@ type RenewInstancesInfo struct {
 
 	// 磁盘类型
 	StorageType *int64 `json:"StorageType,omitnil,omitempty" name:"StorageType"`
+
+	// 系统盘大小
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RootSize *int64 `json:"RootSize,omitnil,omitempty" name:"RootSize"`
+
+	// 系统盘类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RootStorageType *int64 `json:"RootStorageType,omitnil,omitempty" name:"RootStorageType"`
+
+	// 数据盘信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MCMultiDisk []*MultiDiskMC `json:"MCMultiDisk,omitnil,omitempty" name:"MCMultiDisk"`
 }
 
 type RepeatStrategy struct {
@@ -8328,6 +8920,15 @@ type SLInstanceInfo struct {
 	// 实例标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 自动续费标记， 0：表示通知即将过期，但不自动续费 1：表示通知即将过期，而且自动续费 2：表示不通知即将过期，也不自动续费，若业务无续费概念，设置为0
+	AutoRenewFlag *uint64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
+
+	// 隔离时间，未隔离返回0000-00-00 00:00:00。
+	IsolateTime *string `json:"IsolateTime,omitnil,omitempty" name:"IsolateTime"`
+
+	// 过期时间，后付费返回0000-00-00 00:00:00
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 }
 
 // Predefined struct for user
@@ -9075,6 +9676,64 @@ type SoftDependInfo struct {
 	Required *bool `json:"Required,omitnil,omitempty" name:"Required"`
 }
 
+type SparkQuery struct {
+	// 执行语句
+	Statement *string `json:"Statement,omitnil,omitempty" name:"Statement"`
+
+	// 执行时长（单位毫秒）
+	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// 执行状态
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 查询ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 扫描分区数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScanPartitionNum *int64 `json:"ScanPartitionNum,omitnil,omitempty" name:"ScanPartitionNum"`
+
+	// 扫描总行数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScanRowNum *int64 `json:"ScanRowNum,omitnil,omitempty" name:"ScanRowNum"`
+
+	// 扫描总文件数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScanFileNum *int64 `json:"ScanFileNum,omitnil,omitempty" name:"ScanFileNum"`
+
+	// 查询扫描总数据量(单位B)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScanTotalData *int64 `json:"ScanTotalData,omitnil,omitempty" name:"ScanTotalData"`
+
+	// 应用ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApplicationId []*string `json:"ApplicationId,omitnil,omitempty" name:"ApplicationId"`
+
+	// 输出总行数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OutputRowNum *int64 `json:"OutputRowNum,omitnil,omitempty" name:"OutputRowNum"`
+
+	// 输出总文件数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OutputFileNum *int64 `json:"OutputFileNum,omitnil,omitempty" name:"OutputFileNum"`
+
+	// 输出分区数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OutputPartitionNum *int64 `json:"OutputPartitionNum,omitnil,omitempty" name:"OutputPartitionNum"`
+
+	// 输出总数据量（单位B）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OutputTotalData *int64 `json:"OutputTotalData,omitnil,omitempty" name:"OutputTotalData"`
+
+	// 开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BeginTime *int64 `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
+
+	// 结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
 type StageInfoDetail struct {
 	// 步骤id
 	Stage *string `json:"Stage,omitnil,omitempty" name:"Stage"`
@@ -9131,6 +9790,84 @@ type StageInfoDetail struct {
 	// 步骤耗时
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TimeConsuming *string `json:"TimeConsuming,omitnil,omitempty" name:"TimeConsuming"`
+}
+
+type StarRocksQueryInfo struct {
+	// 提交IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClientIP *string `json:"ClientIP,omitnil,omitempty" name:"ClientIP"`
+
+	// CPU总时间(ns)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CPUCost *int64 `json:"CPUCost,omitnil,omitempty" name:"CPUCost"`
+
+	// 默认DB
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DefaultDB *string `json:"DefaultDB,omitnil,omitempty" name:"DefaultDB"`
+
+	// 结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 执行IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutionIP *string `json:"ExecutionIP,omitnil,omitempty" name:"ExecutionIP"`
+
+	// 查询ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QueryID *string `json:"QueryID,omitnil,omitempty" name:"QueryID"`
+
+	// 查询类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QueryType *string `json:"QueryType,omitnil,omitempty" name:"QueryType"`
+
+	// 消耗总内存(bytes)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MemCost *int64 `json:"MemCost,omitnil,omitempty" name:"MemCost"`
+
+	// plan阶段CPU占用(ns)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PlanCpuCosts *int64 `json:"PlanCpuCosts,omitnil,omitempty" name:"PlanCpuCosts"`
+
+	// plan阶段内存占用(bytes)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PlanMemCosts *int64 `json:"PlanMemCosts,omitnil,omitempty" name:"PlanMemCosts"`
+
+	// 执行时长
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QueryTime *int64 `json:"QueryTime,omitnil,omitempty" name:"QueryTime"`
+
+	// 资源组
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceGroup *string `json:"ResourceGroup,omitnil,omitempty" name:"ResourceGroup"`
+
+	// 获取行数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReturnRows *int64 `json:"ReturnRows,omitnil,omitempty" name:"ReturnRows"`
+
+	// 扫描数据量(bytes)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScanBytes *int64 `json:"ScanBytes,omitnil,omitempty" name:"ScanBytes"`
+
+	// 扫描行数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScanRows *int64 `json:"ScanRows,omitnil,omitempty" name:"ScanRows"`
+
+	// 开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BeginTime *int64 `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
+
+	// 执行状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutionState *string `json:"ExecutionState,omitnil,omitempty" name:"ExecutionState"`
+
+	// 执行语句
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutionStatement *string `json:"ExecutionStatement,omitnil,omitempty" name:"ExecutionStatement"`
+
+	// 用户
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	User *string `json:"User,omitnil,omitempty" name:"User"`
 }
 
 // Predefined struct for user
@@ -9255,6 +9992,20 @@ type StopParams struct {
 
 	// 线程数
 	ThreadCount *int64 `json:"ThreadCount,omitnil,omitempty" name:"ThreadCount"`
+}
+
+type StorageSummaryDistribution struct {
+	// 数据项
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MetricItem *string `json:"MetricItem,omitnil,omitempty" name:"MetricItem"`
+
+	// 数据项描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
+
+	// 采样值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Dps []*Dps `json:"Dps,omitnil,omitempty" name:"Dps"`
 }
 
 type StrategyConfig struct {

@@ -39,13 +39,16 @@ resource "tencentcloud_lite_hbase_instance" "lite_hbase_instance" {
 
 The following arguments are supported:
 
-* `disk_size` - (Required, Int) Instance single-node disk capacity, in GB. The single-node disk capacity must be greater than or equal to 100 and less than or equal to 10000, with an adjustment step size of 20.
-* `disk_type` - (Required, String) Instance disk type, fill in CLOUD_HSSD to indicate performance cloud storage.
+* `disk_size` - (Required, Int) Instance single-node disk capacity, in GB. The single-node disk capacity must be greater than or equal to 100 and less than or equal to 250 times the number of CPU cores. The capacity adjustment step is 100.
+* `disk_type` - (Required, String) Instance disk type, Value range: CLOUD_HSSD: indicate performance cloud storage(ESSD). CLOUD_BSSD: indicate standard cloud storage(SSD).
 * `instance_name` - (Required, String) Instance name. Length limit is 6-36 characters. Only Chinese characters, letters, numbers, -, and _ are allowed.
 * `node_type` - (Required, String) Instance node type, can be filled in as 4C16G, 8C32G, 16C64G, 32C128G, case insensitive.
-* `pay_mode` - (Required, Int) Instance pay mode. Value range: 0: indicates post pay mode, that is, pay-as-you-go.
+* `pay_mode` - (Required, Int) Instance pay mode. Value range: 0: indicates post-pay mode, that is, pay-as-you-go. 1: indicates pre-pay mode, that is, monthly subscription.
 * `zone_settings` - (Required, List) Detailed configuration of the instance availability zone, currently supports multiple availability zones, the number of availability zones can only be 1 or 3, including zone name, VPC information, and number of nodes. The total number of nodes across all zones must be greater than or equal to 3 and less than or equal to 50.
+* `auto_renew_flag` - (Optional, Int) AutoRenewFlag, Value range: 0: indicates NOTIFY_AND_MANUAL_RENEW; 1: indicates NOTIFY_AND_AUTO_RENEW; 2: indicates DISABLE_NOTIFY_AND_MANUAL_RENEW.
 * `tags` - (Optional, List) List of tags to bind to the instance.
+* `time_span` - (Optional, Int) Time span.
+* `time_unit` - (Optional, String) Time unit, fill in m which means month.
 
 The `tags` object supports the following:
 
