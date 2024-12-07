@@ -55,6 +55,11 @@ func ResourceTencentCloudDnspodDomainInstance() *schema.Resource {
 				Description: "The remark of Domain.",
 			},
 			//computed
+			"domain_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "ID of the domain.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -153,6 +158,7 @@ func resourceTencentCloudDnspodDomainInstanceRead(d *schema.ResourceData, meta i
 
 		d.SetId(*response.Response.DomainInfo.Domain)
 
+		_ = d.Set("domain_id", info.DomainId)
 		_ = d.Set("domain", info.Domain)
 		_ = d.Set("create_time", info.CreatedOn)
 		_ = d.Set("is_mark", info.IsMark)
