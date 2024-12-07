@@ -57,7 +57,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							Optional:    true,
 							ForceNew:    true,
 							Default:     "CLOUD_PREMIUM",
-							Description: "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.",
+							Description: "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD`.",
 						},
 						"file_system": {
 							Type:        schema.TypeString,
@@ -236,7 +236,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 										Optional:    true,
 										ForceNew:    true,
 										Default:     "CLOUD_PREMIUM",
-										Description: "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.",
+										Description: "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD`.",
 									},
 									"encrypt": {
 										Type:        schema.TypeBool,

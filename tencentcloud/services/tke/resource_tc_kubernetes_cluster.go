@@ -540,7 +540,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 										Optional:     true,
 										ForceNew:     true,
 										Default:      "CLOUD_PREMIUM",
-										Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.",
+										Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD`.",
 										ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
 									},
 									"disk_size": {
@@ -803,7 +803,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 										Optional:     true,
 										ForceNew:     true,
 										Default:      "CLOUD_PREMIUM",
-										Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.",
+										Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD`.",
 										ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
 									},
 									"disk_size": {
@@ -1109,7 +1109,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 																Type:        schema.TypeString,
 																Optional:    true,
 																ForceNew:    true,
-																Description: "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
+																Description: "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD` and `CLOUD_BSSD`.",
 															},
 															"file_system": {
 																Type:        schema.TypeString,

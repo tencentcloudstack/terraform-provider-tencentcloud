@@ -485,7 +485,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 									"disk_type": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Cloud disk type. Valid values: `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: cloud SSD disk, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD, `LOCAL_NVME`: local NVME disk.",
+										Description: "Cloud disk type. Valid values: `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: cloud SSD disk, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `LOCAL_NVME`: local NVME disk.",
 									},
 									"file_system": {
 										Type:        schema.TypeString,
