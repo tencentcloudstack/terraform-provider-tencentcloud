@@ -145,7 +145,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
-Wait for all scaling nodes to be ready with wait_node_ready and scale_tolerance parameters.
+Wait for all scaling nodes to be ready with wait_node_ready and scale_tolerance parameters. The default maximum scaling timeout is 30 minutes.
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {
@@ -208,6 +208,11 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     extra_args = [
       "root-dir=/var/lib/kubelet"
     ]
+  }
+
+  timeouts {
+    create = "30m"
+    update = "30m"
   }
 }
 ```
