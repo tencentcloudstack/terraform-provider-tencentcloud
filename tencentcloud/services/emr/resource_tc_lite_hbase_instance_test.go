@@ -12,6 +12,7 @@ func TestAccTencentCloudLiteHbaseInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			tcacctest.AccStepSetRegion(t, "ap-shanghai")
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
@@ -64,6 +65,7 @@ func TestAccTencentCloudLiteHbaseInstanceResource_prepay(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			tcacctest.AccStepSetRegion(t, "ap-shanghai")
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
@@ -93,6 +95,7 @@ func TestAccTencentCloudLiteHbaseInstanceResource_multiZone(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			tcacctest.AccStepSetRegion(t, "ap-shanghai")
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
@@ -178,10 +181,10 @@ resource "tencentcloud_lite_hbase_instance" "lite_hbase_instance_prepay" {
   disk_size = 100
   node_type = "4C16G"
   zone_settings {
-    zone = "ap-guangzhou-6"
+    zone = "ap-shanghai-2"
     vpc_settings {
-      vpc_id = "vpc-a5pph3hr"
-      subnet_id = "subnet-bpr2mo2g"
+      vpc_id = "vpc-muytmxhk"
+      subnet_id = "subnet-9ye3xm5v"
     }
     node_num = 3
   }
