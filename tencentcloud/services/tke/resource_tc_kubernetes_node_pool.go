@@ -25,8 +25,8 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 		Update: resourceTencentCloudKubernetesNodePoolUpdate,
 		Delete: resourceTencentCloudKubernetesNodePoolDelete,
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(1800000 * time.Millisecond),
-			Update: schema.DefaultTimeout(1800000 * time.Millisecond),
+			Create: schema.DefaultTimeout(30 * time.Minute),
+			Update: schema.DefaultTimeout(30 * time.Minute),
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: nodePoolCustomResourceImporter,
