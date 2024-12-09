@@ -1330,6 +1330,7 @@ MapReduce(EMR)
     tencentcloud_emr_cluster
     tencentcloud_emr_user_manager
     tencentcloud_lite_hbase_instance
+    tencentcloud_serverless_hbase_instance
 
 DNSPOD
   Resource
