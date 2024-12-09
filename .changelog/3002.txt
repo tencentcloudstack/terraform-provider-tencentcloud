@@ -1,3 +1,7 @@
 ```release-note:enhancement
 resource/tencentcloud_lite_hbase_instance: support `time_span`, `time_unit` and `auto_renew_flag`
 ```
+
+```release-note:new-resource
+tencentcloud_serverless_hbase_instance
+```
