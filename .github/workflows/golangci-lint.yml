@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   golangci-lint:
     # The type of runner that the job will run on
-    runs-on: macos-12
+    runs-on: macos-latest
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -38,7 +38,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.45.2
+          version: v1.48.0
           #version: v1.54
           working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v
