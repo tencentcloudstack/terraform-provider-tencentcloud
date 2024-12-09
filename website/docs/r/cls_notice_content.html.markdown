@@ -49,7 +49,7 @@ The following arguments are supported:
 
 The `notice_contents` object supports the following:
 
-* `type` - (Required, String) Channel type. Email: Email; Sms: SMS; WeChat: WeChat; Phone: Telephone; WeCom: Enterprise WeChat; DingTalk: DingTalk; Lark: Feishu; HTTP: Custom callback.
+* `type` - (Required, String) Channel type. Email: Email; Sms: SMS; WeChat: WeChat; Phone: Telephone; WeCom: Enterprise WeChat; DingTalk: DingTalk; Lark: Feishu; Http: Custom callback.
 * `recovery_content` - (Optional, List) Template for Alarm Recovery Notification Content.
 * `trigger_content` - (Optional, List) Alarm triggered notification content template.
 
