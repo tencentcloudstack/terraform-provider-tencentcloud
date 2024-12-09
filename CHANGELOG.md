@@ -1,3 +1,10 @@
+## 1.81.146 (December 9 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_alarm_notice: add new params ([#3000](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3000))
+* resource/tencentcloud_kubernetes_node_pool: spport `timeouts` for create and update ([#2998](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2998))
+
 ## 1.81.145 (December 3 , 2024)
 
 ENHANCEMENTS:
