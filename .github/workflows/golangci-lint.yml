@@ -34,6 +34,12 @@ jobs:
           #go-version: '1.21'
           cache: false 
 
+      - name: list of changed files
+        id: getDiffFile
+        run: |
+          echo "::set-output name=files::$(git diff --name-only origin/master | grep '\.go$' | xargs)"
+        shell: bash
+
       # Runs a set of commands using the runners shell
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
@@ -41,5 +47,5 @@ jobs:
           version: v1.48.0
           #version: v1.54
           working-directory: ./tencentcloud
-          args: --new-from-rev=origin/master -v
+          args: {{ steps.getDiffFile.outputs.files }} --new-from-rev=origin/master -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v

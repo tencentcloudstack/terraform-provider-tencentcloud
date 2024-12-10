@@ -31,12 +31,14 @@ func ResourceTencentCloudCcnRouteTableInputPolicies() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "CCN Instance ID.",
 			},
+
 			"route_table_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "CCN Route table ID.",
 			},
+
 			"policies": {
 				Optional:    true,
 				Type:        schema.TypeList,
