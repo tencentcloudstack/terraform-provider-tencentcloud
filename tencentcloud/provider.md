@@ -1338,6 +1338,7 @@ DNSPOD
     tencentcloud_dnspod_custom_line
     tencentcloud_dnspod_snapshot_config
     tencentcloud_dnspod_domain_lock
+    tencentcloud_subdomain_validate_txt_value_operation
 
   Data Source
     tencentcloud_dnspod_records
@@ -1348,6 +1349,7 @@ DNSPOD
     tencentcloud_dnspod_record_line_list
     tencentcloud_dnspod_record_list
     tencentcloud_dnspod_record_type
+    tencentcloud_subdomain_validate_status
 
 PrivateDNS
   Resource
