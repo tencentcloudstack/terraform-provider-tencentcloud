@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_subdomain_validate_txt_value_operation
+```
+
+```release-note:new-datasource
+tencentcloud_subdomain_validate_status
+```
