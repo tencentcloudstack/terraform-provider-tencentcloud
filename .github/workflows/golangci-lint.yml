@@ -22,6 +22,12 @@ jobs:
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: list of changed files
+        id: getDiffFile
+        run: |
+          echo "::set-output name=files::$(git diff --name-only origin/master | grep '\.go$' | xargs)"
+        shell: bash
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
         with:
@@ -33,12 +39,6 @@ jobs:
           go-version-file: .go-version
           #go-version: '1.21'
           cache: false 
-
-      - name: list of changed files
-        id: getDiffFile
-        run: |
-          echo "::set-output name=files::$(git diff --name-only origin/master | grep '\.go$' | xargs)"
-        shell: bash
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
