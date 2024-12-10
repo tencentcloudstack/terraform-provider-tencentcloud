@@ -62,13 +62,13 @@ func ResourceTencentCloudCcnRouteTableInputPolicies() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "condition type.",
+										Description: "Condition type. Example value: `instance-type`.",
 									},
 									"values": {
 										Type:        schema.TypeList,
 										Required:    true,
 										Elem:        &schema.Schema{Type: schema.TypeString},
-										Description: "List of conditional values.",
+										Description: "List of conditional values. Example value: `VPC`, `DIRECTCONNECT`.",
 									},
 									"match_pattern": {
 										Type:        schema.TypeInt,
