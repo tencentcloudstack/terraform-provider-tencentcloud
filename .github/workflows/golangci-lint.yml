@@ -22,6 +22,12 @@ jobs:
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: list of changed files
+        id: getDiffFile
+        run: |
+          echo "::set-output name=files::$(git diff --name-only origin/master | grep '\.go$' | xargs)"
+        shell: bash
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
         with:
@@ -41,5 +47,5 @@ jobs:
           version: v1.48.0
           #version: v1.54
           working-directory: ./tencentcloud
-          args: --new-from-rev=origin/master -v
+          args: --new-from-rev=origin/master -v ${{ steps.getDiffFile.outputs.files }} 
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
