@@ -100,8 +100,12 @@ The `policies` object supports the following:
 The `route_conditions` object of `policies` supports the following:
 
 * `match_pattern` - (Required, Int) Matching mode, `1` precise matching, `0` fuzzy matching.
-* `name` - (Required, String) condition type.
-* `values` - (Required, List) List of conditional values.
+* `name` - (Required, String) Condition type. Example value: `instance-type`, `instance-region`, `instance-id`, `cidr-block`.
+* `values` - (Required, List) List of conditional values. Example value:
+ `instance-type`: `VPC`, `VPNGW`, `DIRECTCONNECT`
+ `instance-region`: `ap-guangzhou`
+ `instance-id`: `vpc-axrsmmrv`, `dcg-oxad32f7`, `vpngw-33p5vnwd`
+ `cidr-block`: `172.0.0.0/8`.
 
 ## Attributes Reference
 
