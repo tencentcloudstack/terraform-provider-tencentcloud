@@ -90,7 +90,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												"target": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.\n  - `url`: Partial URL under the current site.\n  - `client_country`: Country/Region of the client.\n  - `query_string`: Query string in the request URL.\n  - `request_header`: HTTP request header.",
+													Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.\n  - `url`: Partial URL under the current site.\n  - `client_country`: Country/Region of the client.\n  - `query_string`: Query string in the request URL.\n  - `request_header`: HTTP request header.\n  - `client_ip`: Client IP.",
 												},
 												"values": {
 													Type:        schema.TypeSet,
@@ -286,7 +286,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																		"target": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.\n  - `url`: Partial URL under the current site.  - `client_country`: Country/Region of the client.\n  - `query_string`: Query string in the request URL.\n  - `request_header`: HTTP request header.",
+																			Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL, which indicates the complete URL path under the current site and must contain the HTTP protocol, host, and path.\n  - `url`: Partial URL under the current site.  - `client_country`: Country/Region of the client.\n  - `query_string`: Query string in the request URL.\n  - `request_header`: HTTP request header.\n  - `client_ip`: Client IP.",
 																		},
 																		"values": {
 																			Type:        schema.TypeSet,
