@@ -1,3 +1,9 @@
+## 1.81.147 (December 11 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_subdomain_validate_txt_value_operation` ([#3005](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3005))
+
 ## 1.81.146 (December 9 , 2024)
 
 ENHANCEMENTS:
