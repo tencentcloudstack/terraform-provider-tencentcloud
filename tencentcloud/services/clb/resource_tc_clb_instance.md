@@ -38,6 +38,43 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
+Create CLB with eip_address_id, Only support INTERNAL CLB
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create clb
+resource "tencentcloud_clb_instance" "example" {
+  network_type   = "INTERNAL"
+  clb_name       = "tf-example"
+  project_id     = 0
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
+  eip_address_id = "eip-lt0w6jhq"
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 Create dedicated cluster clb
 
 ```hcl
