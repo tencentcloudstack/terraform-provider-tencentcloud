@@ -121,6 +121,50 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		request.ParamTemplateId = helper.IntInt64(v.(int))
 	}
 
+	if v, ok := d.GetOk("instance_init_infos"); ok {
+		for _, item := range v.([]interface{}) {
+			value := item.(map[string]interface{})
+			tmpInitInfo := cynosdb.InstanceInitInfo{}
+			if v, ok := value["cpu"]; ok {
+				tmpInitInfo.Cpu = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := value["memory"]; ok {
+				tmpInitInfo.Memory = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := value["instance_type"]; ok {
+				tmpInitInfo.InstanceType = helper.String(v.(string))
+			}
+
+			if v, ok := value["instance_count"]; ok {
+				tmpInitInfo.InstanceCount = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := value["min_ro_count"].(int); ok && v != 0 {
+				tmpInitInfo.MinRoCount = helper.IntInt64(v)
+			}
+
+			if v, ok := value["max_ro_count"].(int); ok && v != 0 {
+				tmpInitInfo.MaxRoCount = helper.IntInt64(v)
+			}
+
+			if v, ok := value["min_ro_cpu"].(float64); ok && v != 0 {
+				tmpInitInfo.MinRoCpu = helper.Float64(v)
+			}
+
+			if v, ok := value["max_ro_cpu"].(float64); ok && v != 0 {
+				tmpInitInfo.MaxRoCpu = helper.Float64(v)
+			}
+
+			if v, ok := value["device_type"].(string); ok && v != "" {
+				tmpInitInfo.DeviceType = helper.String(v)
+			}
+
+			request.InstanceInitInfos = append(request.InstanceInitInfos, &tmpInitInfo)
+		}
+	}
+
 	isServerless := d.Get("db_mode").(string) == CYNOSDB_SERVERLESS
 	if v, ok := d.GetOk("instance_cpu_core"); ok {
 		request.Cpu = helper.IntInt64(v.(int))
@@ -158,8 +202,6 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	request.PayMode = &chargeType
-	request.InstanceCount = helper.Int64(1)
-
 	var response *cynosdb.CreateClustersResponse
 	var err error
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

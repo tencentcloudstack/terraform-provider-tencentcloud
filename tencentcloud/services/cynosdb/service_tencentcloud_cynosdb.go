@@ -1649,48 +1649,48 @@ func (me *CynosdbService) DescribeCynosdbRollbackTimeRangeByFilter(ctx context.C
 	return
 }
 
-func (me *CynosdbService) DescribeCynosdbRollbackTimeValidityByFilter(ctx context.Context, param map[string]interface{}) (rollbackTimeValidity *cynosdb.DescribeRollbackTimeValidityResponseParams, errRet error) {
-	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = cynosdb.NewDescribeRollbackTimeValidityRequest()
-	)
+// func (me *CynosdbService) DescribeCynosdbRollbackTimeValidityByFilter(ctx context.Context, param map[string]interface{}) (rollbackTimeValidity *cynosdb.DescribeRollbackTimeValidityResponseParams, errRet error) {
+// 	var (
+// 		logId   = tccommon.GetLogId(ctx)
+// 		request = cynosdb.NewDescribeRollbackTimeValidityRequest()
+// 	)
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
+// 	defer func() {
+// 		if errRet != nil {
+// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+// 		}
+// 	}()
 
-	for k, v := range param {
-		if k == "ClusterId" {
-			request.ClusterId = v.(*string)
-		}
-		if k == "ExpectTime" {
-			request.ExpectTime = v.(*string)
-		}
-		if k == "ExpectTimeThresh" {
-			request.ExpectTimeThresh = v.(*uint64)
-		}
-	}
+// 	for k, v := range param {
+// 		if k == "ClusterId" {
+// 			request.ClusterId = v.(*string)
+// 		}
+// 		if k == "ExpectTime" {
+// 			request.ExpectTime = v.(*string)
+// 		}
+// 		if k == "ExpectTimeThresh" {
+// 			request.ExpectTimeThresh = v.(*uint64)
+// 		}
+// 	}
 
-	ratelimit.Check(request.GetAction())
+// 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseCynosdbClient().DescribeRollbackTimeValidity(request)
-	if err != nil {
-		errRet = err
-		return
-	}
+// 	response, err := me.client.UseCynosdbClient().DescribeRollbackTimeValidity(request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil {
-		return
-	}
+// 	if response == nil {
+// 		return
+// 	}
 
-	rollbackTimeValidity = response.Response
+// 	rollbackTimeValidity = response.Response
 
-	return
-}
+// 	return
+// }
 
 func (me *CynosdbService) DescribeCynosdbResourcePackageListByFilter(ctx context.Context, param map[string]interface{}) (resourcePackageList []*cynosdb.Package, errRet error) {
 	var (

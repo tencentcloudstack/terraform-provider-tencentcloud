@@ -377,6 +377,70 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			ConflictsWith: []string{"prarm_template_id"},
 			Description:   "The ID of the parameter template.",
 		},
+		"instance_init_infos": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Instance initialization configuration information, mainly used to select instances of different specifications when purchasing a cluster.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"cpu": {
+						Type:        schema.TypeInt,
+						Required:    true,
+						ForceNew:    true,
+						Description: "CPU of instance.",
+					},
+					"memory": {
+						Type:        schema.TypeInt,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Memory of instance.",
+					},
+					"instance_type": {
+						Type:        schema.TypeString,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Instance type. Value: `rw`, `ro`.",
+					},
+					"instance_count": {
+						Type:        schema.TypeInt,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Instance count. Range: [1, 15].",
+					},
+					"min_ro_count": {
+						Type:        schema.TypeInt,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Minimum number of Serverless instances. Range [1,15].",
+					},
+					"max_ro_count": {
+						Type:        schema.TypeInt,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Maximum number of Serverless instances. Range [1,15].",
+					},
+					"min_ro_cpu": {
+						Type:        schema.TypeFloat,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Minimum Serverless Instance Specifications.",
+					},
+					"max_ro_cpu": {
+						Type:        schema.TypeFloat,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Maximum Serverless Instance Specifications.",
+					},
+					"device_type": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Instance machine type. Values: `common`, `exclusive`.",
+					},
+				},
+			},
+		},
 		"db_mode": {
 			Type:        schema.TypeString,
 			Optional:    true,
