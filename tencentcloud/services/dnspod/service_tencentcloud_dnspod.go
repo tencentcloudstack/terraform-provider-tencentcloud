@@ -10,13 +10,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
-
-// basic information
 
 func NewDnspodService(client *connectivity.TencentCloudClient) DnspodService {
 	return DnspodService{client: client}
@@ -793,5 +792,41 @@ func (me *DnspodService) DescribeDnspodSnapshotConfigById(ctx context.Context, d
 	}
 
 	snapshotConfig = response.Response.SnapshotConfig
+	return
+}
+
+func (me *DnspodService) DescribeSubdomainValidateStatusByFilter(ctx context.Context, param map[string]interface{}) (status int, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dnspod.NewDescribeSubdomainValidateStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DomainZone" {
+			request.DomainZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeSubdomainValidateStatus(request)
+	if err != nil {
+		if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkerr.Code == "InvalidParameter.QuhuiTxtNotMatch" || sdkerr.Code == "InvalidParameter.QuhuiTxtRecordWait" {
+				status = 0
+				return
+			}
+		}
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	status = 1
 	return
 }

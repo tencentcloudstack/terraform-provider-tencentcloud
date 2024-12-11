@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1034
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1046
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1052
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1056
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1014
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -55,7 +55,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.797
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.831
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.1056
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
