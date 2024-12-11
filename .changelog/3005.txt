@@ -2,6 +2,6 @@
 tencentcloud_subdomain_validate_txt_value_operation
 ```
 
-```release-note:new-datasource
+```release-note:new-data-source
 tencentcloud_subdomain_validate_status
 ```
