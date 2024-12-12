@@ -49,7 +49,12 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "AABBccdd1122"
+    password                  = "Password@123"
+
+    tags {
+      key   = "createBy"
+      value = "Terraform"
+    }
   }
 
   create_result_output_file = "my_output_file_path"
@@ -102,7 +107,7 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "AABBccdd1122"
+    password                  = "Password@123"
   }
 }
 ```

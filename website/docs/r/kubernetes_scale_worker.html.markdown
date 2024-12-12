@@ -60,7 +60,12 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "AABBccdd1122"
+    password                  = "Password@123"
+
+    tags {
+      key   = "createBy"
+      value = "Terraform"
+    }
   }
 
   create_result_output_file = "my_output_file_path"
@@ -113,7 +118,7 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "AABBccdd1122"
+    password                  = "Password@123"
   }
 }
 ```
@@ -166,6 +171,11 @@ The `gpu_args` object supports the following:
 * `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
 * `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
+The `tags` object of `worker_config` supports the following:
+
+* `key` - (Required, String, ForceNew) Tag key.
+* `value` - (Required, String, ForceNew) Tag value.
+
 The `taints` object supports the following:
 
 * `effect` - (Optional, String, ForceNew) Effect of the taint.
@@ -200,6 +210,7 @@ The `worker_config` object supports the following:
 * `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, Int, ForceNew) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
+* `tags` - (Optional, List, ForceNew) Tag pairs.
 * `user_data` - (Optional, String, ForceNew) User data provided to instances, needs to be encoded in base64, and the maximum supported data size is 16KB.
 
 ## Attributes Reference

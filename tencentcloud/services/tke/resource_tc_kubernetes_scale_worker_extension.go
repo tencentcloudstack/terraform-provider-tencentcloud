@@ -98,6 +98,21 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 		}
 
 		mapping["data_disk"] = dataDisks // worker_config.data_disk
+
+		if instance.Tags != nil {
+			tmpList := make([]interface{}, 0, len(instance.Tags))
+			for _, item := range instance.Tags {
+				tmpTag := map[string]interface{}{
+					"key":   item.Key,
+					"value": item.Value,
+				}
+
+				tmpList = append(tmpList, tmpTag)
+			}
+
+			mapping["tags"] = tmpList
+		}
+
 		instanceList = append(instanceList, mapping)
 	}
 	if importFlag1 {
