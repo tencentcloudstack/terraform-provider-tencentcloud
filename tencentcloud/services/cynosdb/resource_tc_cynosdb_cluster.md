@@ -44,7 +44,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   db_type                      = "MYSQL"
   db_version                   = "5.7"
   port                         = 3306
-  storage_limit                = 1000
   cluster_name                 = "tf-example"
   password                     = "cynosDB@123"
   instance_maintain_duration   = 7200
@@ -79,6 +78,22 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   ro_group_sg = [
     tencentcloud_security_group.example.id,
   ]
+
+  instance_init_infos {
+    cpu            = 2
+    memory         = 4
+    instance_type  = "rw"
+    instance_count = 1
+    device_type    = "common"
+  }
+
+  instance_init_infos {
+    cpu            = 2
+    memory         = 4
+    instance_type  = "ro"
+    instance_count = 1
+    device_type    = "exclusive"
+  }
 
   tags = {
     createBy = "terraform"
@@ -146,7 +161,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   db_type                      = "MYSQL"
   db_version                   = "8.0"
   port                         = 3306
-  storage_limit                = 1000
   cluster_name                 = "tf-example"
   password                     = "cynosDB@123"
   instance_maintain_duration   = 7200

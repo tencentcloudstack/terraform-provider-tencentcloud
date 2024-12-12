@@ -55,7 +55,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   db_type                      = "MYSQL"
   db_version                   = "5.7"
   port                         = 3306
-  storage_limit                = 1000
   cluster_name                 = "tf-example"
   password                     = "cynosDB@123"
   instance_maintain_duration   = 7200
@@ -90,6 +89,22 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   ro_group_sg = [
     tencentcloud_security_group.example.id,
   ]
+
+  instance_init_infos {
+    cpu            = 2
+    memory         = 4
+    instance_type  = "rw"
+    instance_count = 1
+    device_type    = "common"
+  }
+
+  instance_init_infos {
+    cpu            = 2
+    memory         = 4
+    instance_type  = "ro"
+    instance_count = 1
+    device_type    = "exclusive"
+  }
 
   tags = {
     createBy = "terraform"
@@ -157,7 +172,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   db_type                      = "MYSQL"
   db_version                   = "8.0"
   port                         = 3306
-  storage_limit                = 1000
   cluster_name                 = "tf-example"
   password                     = "cynosDB@123"
   instance_maintain_duration   = 7200
@@ -208,6 +222,7 @@ The following arguments are supported:
 * `db_mode` - (Optional, String) Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.
 * `force_delete` - (Optional, Bool) Indicate whether to delete cluster instance directly or not. Default is false. If set true, the cluster and its `All RELATED INSTANCES` will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
 * `instance_cpu_core` - (Optional, Int) The number of CPU cores of read-write type instance in the CynosDB cluster. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
+* `instance_init_infos` - (Optional, List, ForceNew) Instance initialization configuration information, mainly used to select instances of different specifications when purchasing a cluster.
 * `instance_maintain_duration` - (Optional, Int) Duration time for maintenance, unit in second. `3600` by default.
 * `instance_maintain_start_time` - (Optional, Int) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional, Set: [`String`]) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
@@ -228,6 +243,18 @@ The following arguments are supported:
 * `storage_limit` - (Optional, Int) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `storage_pay_mode` - (Optional, Int) Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
+
+The `instance_init_infos` object supports the following:
+
+* `cpu` - (Required, Int, ForceNew) CPU of instance.
+* `instance_count` - (Required, Int, ForceNew) Instance count. Range: [1, 15].
+* `instance_type` - (Required, String, ForceNew) Instance type. Value: `rw`, `ro`.
+* `memory` - (Required, Int, ForceNew) Memory of instance.
+* `device_type` - (Optional, String, ForceNew) Instance machine type. Values: `common`, `exclusive`.
+* `max_ro_count` - (Optional, Int, ForceNew) Maximum number of Serverless instances. Range [1,15].
+* `max_ro_cpu` - (Optional, Float64, ForceNew) Maximum Serverless Instance Specifications.
+* `min_ro_count` - (Optional, Int, ForceNew) Minimum number of Serverless instances. Range [1,15].
+* `min_ro_cpu` - (Optional, Float64, ForceNew) Minimum Serverless Instance Specifications.
 
 The `param_items` object supports the following:
 

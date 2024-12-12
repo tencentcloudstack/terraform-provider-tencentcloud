@@ -59,8 +59,9 @@ func NewActivateInstanceRequest() (request *ActivateInstanceRequest) {
 func NewActivateInstanceResponse() (response *ActivateInstanceResponse) {
     response = &ActivateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ActivateInstance
@@ -129,16 +130,18 @@ func NewAddClusterSlaveZoneRequest() (request *AddClusterSlaveZoneRequest) {
 func NewAddClusterSlaveZoneResponse() (response *AddClusterSlaveZoneResponse) {
     response = &AddClusterSlaveZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddClusterSlaveZone
-// 增加从可用区
+// 本接口（AddClusterSlaveZone）用于对集群开启多可用区部署。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -148,11 +151,12 @@ func (c *Client) AddClusterSlaveZone(request *AddClusterSlaveZoneRequest) (respo
 }
 
 // AddClusterSlaveZone
-// 增加从可用区
+// 本接口（AddClusterSlaveZone）用于对集群开启多可用区部署。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -187,12 +191,13 @@ func NewAddInstancesRequest() (request *AddInstancesRequest) {
 func NewAddInstancesResponse() (response *AddInstancesResponse) {
     response = &AddInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddInstances
-// 本接口（AddInstances）用于集群添加实例
+// 本接口（AddInstances）用于集群添加实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -222,7 +227,7 @@ func (c *Client) AddInstances(request *AddInstancesRequest) (response *AddInstan
 }
 
 // AddInstances
-// 本接口（AddInstances）用于集群添加实例
+// 本接口（AddInstances）用于集群添加实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -277,12 +282,13 @@ func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsReques
 func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResponse) {
     response = &AssociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateSecurityGroups
-// 安全组批量绑定云资源
+// 本接口（AssociateSecurityGroups）用于安全组批量绑定云资源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -297,7 +303,7 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
 }
 
 // AssociateSecurityGroups
-// 安全组批量绑定云资源
+// 本接口（AssociateSecurityGroups）用于安全组批量绑定云资源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -337,12 +343,13 @@ func NewBindClusterResourcePackagesRequest() (request *BindClusterResourcePackag
 func NewBindClusterResourcePackagesResponse() (response *BindClusterResourcePackagesResponse) {
     response = &BindClusterResourcePackagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindClusterResourcePackages
-// 为集群绑定资源包
+// 本接口（BindClusterResourcePackages）用于为集群绑定资源包。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BINDSOURCEPACKAGEERROR = "FailedOperation.BindSourcePackageError"
@@ -359,7 +366,7 @@ func (c *Client) BindClusterResourcePackages(request *BindClusterResourcePackage
 }
 
 // BindClusterResourcePackages
-// 为集群绑定资源包
+// 本接口（BindClusterResourcePackages）用于为集群绑定资源包。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BINDSOURCEPACKAGEERROR = "FailedOperation.BindSourcePackageError"
@@ -401,12 +408,13 @@ func NewCloseAuditServiceRequest() (request *CloseAuditServiceRequest) {
 func NewCloseAuditServiceResponse() (response *CloseAuditServiceResponse) {
     response = &CloseAuditServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseAuditService
-// TDSQL-C for MySQL实例关闭审计服务
+// 本接口（CloseAuditService）用于关闭 TDSQL-C MySQL 实例的数据库审计服务。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -415,7 +423,7 @@ func (c *Client) CloseAuditService(request *CloseAuditServiceRequest) (response 
 }
 
 // CloseAuditService
-// TDSQL-C for MySQL实例关闭审计服务
+// 本接口（CloseAuditService）用于关闭 TDSQL-C MySQL 实例的数据库审计服务。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -449,12 +457,13 @@ func NewCloseClusterPasswordComplexityRequest() (request *CloseClusterPasswordCo
 func NewCloseClusterPasswordComplexityResponse() (response *CloseClusterPasswordComplexityResponse) {
     response = &CloseClusterPasswordComplexityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseClusterPasswordComplexity
-// 本接口（CloseClusterPasswordComplexity）用于关闭集群密码复杂度
+// 本接口（CloseClusterPasswordComplexity）用于关闭集群密码复杂度。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -468,7 +477,7 @@ func (c *Client) CloseClusterPasswordComplexity(request *CloseClusterPasswordCom
 }
 
 // CloseClusterPasswordComplexity
-// 本接口（CloseClusterPasswordComplexity）用于关闭集群密码复杂度
+// 本接口（CloseClusterPasswordComplexity）用于关闭集群密码复杂度。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -507,12 +516,13 @@ func NewCloseProxyRequest() (request *CloseProxyRequest) {
 func NewCloseProxyResponse() (response *CloseProxyResponse) {
     response = &CloseProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseProxy
-// 关闭数据库代理
+// 本接口（CloseProxy）用于关闭集群的数据库代理服务。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -520,14 +530,16 @@ func NewCloseProxyResponse() (response *CloseProxyResponse) {
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CloseProxy(request *CloseProxyRequest) (response *CloseProxyResponse, err error) {
     return c.CloseProxyWithContext(context.Background(), request)
 }
 
 // CloseProxy
-// 关闭数据库代理
+// 本接口（CloseProxy）用于关闭集群的数据库代理服务。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -535,7 +547,9 @@ func (c *Client) CloseProxy(request *CloseProxyRequest) (response *CloseProxyRes
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CloseProxyWithContext(ctx context.Context, request *CloseProxyRequest) (response *CloseProxyResponse, err error) {
     if request == nil {
@@ -549,6 +563,71 @@ func (c *Client) CloseProxyWithContext(ctx context.Context, request *CloseProxyR
     request.SetContext(ctx)
     
     response = NewCloseProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCloseProxyEndPointRequest() (request *CloseProxyEndPointRequest) {
+    request = &CloseProxyEndPointRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "CloseProxyEndPoint")
+    
+    
+    return
+}
+
+func NewCloseProxyEndPointResponse() (response *CloseProxyEndPointResponse) {
+    response = &CloseProxyEndPointResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CloseProxyEndPoint
+// 关闭数据库代理连接地址
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CloseProxyEndPoint(request *CloseProxyEndPointRequest) (response *CloseProxyEndPointResponse, err error) {
+    return c.CloseProxyEndPointWithContext(context.Background(), request)
+}
+
+// CloseProxyEndPoint
+// 关闭数据库代理连接地址
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CloseProxyEndPointWithContext(ctx context.Context, request *CloseProxyEndPointRequest) (response *CloseProxyEndPointResponse, err error) {
+    if request == nil {
+        request = NewCloseProxyEndPointRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseProxyEndPoint require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloseProxyEndPointResponse()
     err = c.Send(request, response)
     return
 }
@@ -567,12 +646,13 @@ func NewCloseWanRequest() (request *CloseWanRequest) {
 func NewCloseWanResponse() (response *CloseWanResponse) {
     response = &CloseWanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseWan
-// 本接口（CloseWan）用于关闭外网
+// 本接口（CloseWan）用于关闭外网。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -580,6 +660,7 @@ func NewCloseWanResponse() (response *CloseWanResponse) {
 //  FAILEDOPERATION_GETNETSERVICEINFOERROR = "FailedOperation.GetNetServiceInfoError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
 //  INTERNALERROR_SERVICEERROR = "InternalError.ServiceError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -590,7 +671,7 @@ func (c *Client) CloseWan(request *CloseWanRequest) (response *CloseWanResponse,
 }
 
 // CloseWan
-// 本接口（CloseWan）用于关闭外网
+// 本接口（CloseWan）用于关闭外网。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -598,6 +679,7 @@ func (c *Client) CloseWan(request *CloseWanRequest) (response *CloseWanResponse,
 //  FAILEDOPERATION_GETNETSERVICEINFOERROR = "FailedOperation.GetNetServiceInfoError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
 //  INTERNALERROR_SERVICEERROR = "InternalError.ServiceError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -633,12 +715,13 @@ func NewCopyClusterPasswordComplexityRequest() (request *CopyClusterPasswordComp
 func NewCopyClusterPasswordComplexityResponse() (response *CopyClusterPasswordComplexityResponse) {
     response = &CopyClusterPasswordComplexityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CopyClusterPasswordComplexity
-// 本接口（CopyClusterPasswordComplexity）用于复制集群密码复杂度
+// 本接口（CopyClusterPasswordComplexity）用于复制集群密码复杂度。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -653,7 +736,7 @@ func (c *Client) CopyClusterPasswordComplexity(request *CopyClusterPasswordCompl
 }
 
 // CopyClusterPasswordComplexity
-// 本接口（CopyClusterPasswordComplexity）用于复制集群密码复杂度
+// 本接口（CopyClusterPasswordComplexity）用于复制集群密码复杂度。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -693,12 +776,13 @@ func NewCreateAccountsRequest() (request *CreateAccountsRequest) {
 func NewCreateAccountsResponse() (response *CreateAccountsResponse) {
     response = &CreateAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAccounts
-// 创建账号
+// 本接口（CreateAccounts）用于创建用户账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -743,7 +827,7 @@ func (c *Client) CreateAccounts(request *CreateAccountsRequest) (response *Creat
 }
 
 // CreateAccounts
-// 创建账号
+// 本接口（CreateAccounts）用于创建用户账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -813,8 +897,9 @@ func NewCreateAuditLogFileRequest() (request *CreateAuditLogFileRequest) {
 func NewCreateAuditLogFileResponse() (response *CreateAuditLogFileResponse) {
     response = &CreateAuditLogFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAuditLogFile
@@ -822,6 +907,10 @@ func NewCreateAuditLogFileResponse() (response *CreateAuditLogFileResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_AUDITPOLICYNOTEXISTERROR = "OperationDenied.AuditPolicyNotExistError"
 func (c *Client) CreateAuditLogFile(request *CreateAuditLogFileRequest) (response *CreateAuditLogFileResponse, err error) {
     return c.CreateAuditLogFileWithContext(context.Background(), request)
 }
@@ -831,6 +920,10 @@ func (c *Client) CreateAuditLogFile(request *CreateAuditLogFileRequest) (respons
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_AUDITPOLICYNOTEXISTERROR = "OperationDenied.AuditPolicyNotExistError"
 func (c *Client) CreateAuditLogFileWithContext(ctx context.Context, request *CreateAuditLogFileRequest) (response *CreateAuditLogFileResponse, err error) {
     if request == nil {
         request = NewCreateAuditLogFileRequest()
@@ -861,12 +954,13 @@ func NewCreateAuditRuleTemplateRequest() (request *CreateAuditRuleTemplateReques
 func NewCreateAuditRuleTemplateResponse() (response *CreateAuditRuleTemplateResponse) {
     response = &CreateAuditRuleTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAuditRuleTemplate
-// 创建审计规则模版
+// 本接口（CreateAuditRuleTemplate）用于创建审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -876,7 +970,7 @@ func (c *Client) CreateAuditRuleTemplate(request *CreateAuditRuleTemplateRequest
 }
 
 // CreateAuditRuleTemplate
-// 创建审计规则模版
+// 本接口（CreateAuditRuleTemplate）用于创建审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -911,16 +1005,18 @@ func NewCreateBackupRequest() (request *CreateBackupRequest) {
 func NewCreateBackupResponse() (response *CreateBackupResponse) {
     response = &CreateBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBackup
-// 为集群创建手动备份
+// 本接口（CreateBackup）用于为集群创建手动备份。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
@@ -931,11 +1027,12 @@ func (c *Client) CreateBackup(request *CreateBackupRequest) (response *CreateBac
 }
 
 // CreateBackup
-// 为集群创建手动备份
+// 本接口（CreateBackup）用于为集群创建手动备份。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
@@ -957,6 +1054,59 @@ func (c *Client) CreateBackupWithContext(ctx context.Context, request *CreateBac
     return
 }
 
+func NewCreateCLSDeliveryRequest() (request *CreateCLSDeliveryRequest) {
+    request = &CreateCLSDeliveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "CreateCLSDelivery")
+    
+    
+    return
+}
+
+func NewCreateCLSDeliveryResponse() (response *CreateCLSDeliveryResponse) {
+    response = &CreateCLSDeliveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCLSDelivery
+// 本接口（CreateCLSDelivery）用于创建日志投递。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateCLSDelivery(request *CreateCLSDeliveryRequest) (response *CreateCLSDeliveryResponse, err error) {
+    return c.CreateCLSDeliveryWithContext(context.Background(), request)
+}
+
+// CreateCLSDelivery
+// 本接口（CreateCLSDelivery）用于创建日志投递。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateCLSDeliveryWithContext(ctx context.Context, request *CreateCLSDeliveryRequest) (response *CreateCLSDeliveryResponse, err error) {
+    if request == nil {
+        request = NewCreateCLSDeliveryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCLSDelivery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCLSDeliveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateClusterDatabaseRequest() (request *CreateClusterDatabaseRequest) {
     request = &CreateClusterDatabaseRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -971,12 +1121,13 @@ func NewCreateClusterDatabaseRequest() (request *CreateClusterDatabaseRequest) {
 func NewCreateClusterDatabaseResponse() (response *CreateClusterDatabaseResponse) {
     response = &CreateClusterDatabaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterDatabase
-// 创建数据库
+// 本接口（CreateClusterDatabase）用于创建数据库。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -988,7 +1139,7 @@ func (c *Client) CreateClusterDatabase(request *CreateClusterDatabaseRequest) (r
 }
 
 // CreateClusterDatabase
-// 创建数据库
+// 本接口（CreateClusterDatabase）用于创建数据库。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -1025,12 +1176,13 @@ func NewCreateClustersRequest() (request *CreateClustersRequest) {
 func NewCreateClustersResponse() (response *CreateClustersResponse) {
     response = &CreateClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusters
-// 创建集群
+// 本接口（CreateClusters）用于新购集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
@@ -1049,6 +1201,7 @@ func NewCreateClustersResponse() (response *CreateClustersResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
 //  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
 //  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
 //  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
@@ -1062,7 +1215,7 @@ func (c *Client) CreateClusters(request *CreateClustersRequest) (response *Creat
 }
 
 // CreateClusters
-// 创建集群
+// 本接口（CreateClusters）用于新购集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
@@ -1081,6 +1234,7 @@ func (c *Client) CreateClusters(request *CreateClustersRequest) (response *Creat
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
 //  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
 //  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
 //  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
@@ -1119,15 +1273,17 @@ func NewCreateParamTemplateRequest() (request *CreateParamTemplateRequest) {
 func NewCreateParamTemplateResponse() (response *CreateParamTemplateResponse) {
     response = &CreateParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateParamTemplate
-// 本接口（CreateParamTemplate）用于创建参数模板
+// 本接口（CreateParamTemplate）用于创建参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -1136,10 +1292,11 @@ func (c *Client) CreateParamTemplate(request *CreateParamTemplateRequest) (respo
 }
 
 // CreateParamTemplate
-// 本接口（CreateParamTemplate）用于创建参数模板
+// 本接口（CreateParamTemplate）用于创建参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -1173,12 +1330,13 @@ func NewCreateProxyRequest() (request *CreateProxyRequest) {
 func NewCreateProxyResponse() (response *CreateProxyResponse) {
     response = &CreateProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateProxy
-// 创建数据库代理
+// 本接口（CreateProxy）用于开启集群的数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1186,13 +1344,16 @@ func NewCreateProxyResponse() (response *CreateProxyResponse) {
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CreateProxy(request *CreateProxyRequest) (response *CreateProxyResponse, err error) {
     return c.CreateProxyWithContext(context.Background(), request)
 }
 
 // CreateProxy
-// 创建数据库代理
+// 本接口（CreateProxy）用于开启集群的数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1200,6 +1361,9 @@ func (c *Client) CreateProxy(request *CreateProxyRequest) (response *CreateProxy
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CreateProxyWithContext(ctx context.Context, request *CreateProxyRequest) (response *CreateProxyResponse, err error) {
     if request == nil {
@@ -1231,12 +1395,13 @@ func NewCreateProxyEndPointRequest() (request *CreateProxyEndPointRequest) {
 func NewCreateProxyEndPointResponse() (response *CreateProxyEndPointResponse) {
     response = &CreateProxyEndPointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateProxyEndPoint
-// 创建数据库代理连接点
+// 本接口（CreateProxyEndPoint）用于创建数据库代理连接点。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1255,7 +1420,7 @@ func (c *Client) CreateProxyEndPoint(request *CreateProxyEndPointRequest) (respo
 }
 
 // CreateProxyEndPoint
-// 创建数据库代理连接点
+// 本接口（CreateProxyEndPoint）用于创建数据库代理连接点。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1299,17 +1464,19 @@ func NewCreateResourcePackageRequest() (request *CreateResourcePackageRequest) {
 func NewCreateResourcePackageResponse() (response *CreateResourcePackageResponse) {
     response = &CreateResourcePackageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateResourcePackage
-// 新购资源包
+// 本接口（CreateResourcePackage）用于新购资源包。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATESOURCEPACKAGEERROR = "FailedOperation.CreateSourcePackageError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CreateResourcePackage(request *CreateResourcePackageRequest) (response *CreateResourcePackageResponse, err error) {
@@ -1317,12 +1484,13 @@ func (c *Client) CreateResourcePackage(request *CreateResourcePackageRequest) (r
 }
 
 // CreateResourcePackage
-// 新购资源包
+// 本接口（CreateResourcePackage）用于新购资源包。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATESOURCEPACKAGEERROR = "FailedOperation.CreateSourcePackageError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CreateResourcePackageWithContext(ctx context.Context, request *CreateResourcePackageRequest) (response *CreateResourcePackageResponse, err error) {
@@ -1355,12 +1523,13 @@ func NewDeleteAccountsRequest() (request *DeleteAccountsRequest) {
 func NewDeleteAccountsResponse() (response *DeleteAccountsResponse) {
     response = &DeleteAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAccounts
-// 删除账号
+// 本接口（DeleteAccounts）用于删除用户账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1381,7 +1550,7 @@ func (c *Client) DeleteAccounts(request *DeleteAccountsRequest) (response *Delet
 }
 
 // DeleteAccounts
-// 删除账号
+// 本接口（DeleteAccounts）用于删除用户账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1427,8 +1596,9 @@ func NewDeleteAuditLogFileRequest() (request *DeleteAuditLogFileRequest) {
 func NewDeleteAuditLogFileResponse() (response *DeleteAuditLogFileResponse) {
     response = &DeleteAuditLogFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAuditLogFile
@@ -1499,12 +1669,13 @@ func NewDeleteAuditRuleTemplatesRequest() (request *DeleteAuditRuleTemplatesRequ
 func NewDeleteAuditRuleTemplatesResponse() (response *DeleteAuditRuleTemplatesResponse) {
     response = &DeleteAuditRuleTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAuditRuleTemplates
-// 删除审计规则模版
+// 本接口（DeleteAuditRuleTemplates）用于删除审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -1513,7 +1684,7 @@ func (c *Client) DeleteAuditRuleTemplates(request *DeleteAuditRuleTemplatesReque
 }
 
 // DeleteAuditRuleTemplates
-// 删除审计规则模版
+// 本接口（DeleteAuditRuleTemplates）用于删除审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -1547,12 +1718,13 @@ func NewDeleteBackupRequest() (request *DeleteBackupRequest) {
 func NewDeleteBackupResponse() (response *DeleteBackupResponse) {
     response = &DeleteBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBackup
-// 为集群删除手动备份，无法删除自动备份
+// 本接口（DeleteBackup）用于为集群删除手动备份，无法删除自动备份。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1568,7 +1740,7 @@ func (c *Client) DeleteBackup(request *DeleteBackupRequest) (response *DeleteBac
 }
 
 // DeleteBackup
-// 为集群删除手动备份，无法删除自动备份
+// 本接口（DeleteBackup）用于为集群删除手动备份，无法删除自动备份。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1595,6 +1767,55 @@ func (c *Client) DeleteBackupWithContext(ctx context.Context, request *DeleteBac
     return
 }
 
+func NewDeleteCLSDeliveryRequest() (request *DeleteCLSDeliveryRequest) {
+    request = &DeleteCLSDeliveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DeleteCLSDelivery")
+    
+    
+    return
+}
+
+func NewDeleteCLSDeliveryResponse() (response *DeleteCLSDeliveryResponse) {
+    response = &DeleteCLSDeliveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCLSDelivery
+// 本接口（DeleteCLSDelivery）用于删除日志投递。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteCLSDelivery(request *DeleteCLSDeliveryRequest) (response *DeleteCLSDeliveryResponse, err error) {
+    return c.DeleteCLSDeliveryWithContext(context.Background(), request)
+}
+
+// DeleteCLSDelivery
+// 本接口（DeleteCLSDelivery）用于删除日志投递。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteCLSDeliveryWithContext(ctx context.Context, request *DeleteCLSDeliveryRequest) (response *DeleteCLSDeliveryResponse, err error) {
+    if request == nil {
+        request = NewDeleteCLSDeliveryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCLSDelivery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCLSDeliveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteClusterDatabaseRequest() (request *DeleteClusterDatabaseRequest) {
     request = &DeleteClusterDatabaseRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1609,15 +1830,18 @@ func NewDeleteClusterDatabaseRequest() (request *DeleteClusterDatabaseRequest) {
 func NewDeleteClusterDatabaseResponse() (response *DeleteClusterDatabaseResponse) {
     response = &DeleteClusterDatabaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterDatabase
-// 删除数据库
+// 本接口（DeleteClusterDatabase）用于删除数据库。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DeleteClusterDatabase(request *DeleteClusterDatabaseRequest) (response *DeleteClusterDatabaseResponse, err error) {
@@ -1625,10 +1849,12 @@ func (c *Client) DeleteClusterDatabase(request *DeleteClusterDatabaseRequest) (r
 }
 
 // DeleteClusterDatabase
-// 删除数据库
+// 本接口（DeleteClusterDatabase）用于删除数据库。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DeleteClusterDatabaseWithContext(ctx context.Context, request *DeleteClusterDatabaseRequest) (response *DeleteClusterDatabaseResponse, err error) {
@@ -1661,8 +1887,9 @@ func NewDeleteParamTemplateRequest() (request *DeleteParamTemplateRequest) {
 func NewDeleteParamTemplateResponse() (response *DeleteParamTemplateResponse) {
     response = &DeleteParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteParamTemplate
@@ -1711,12 +1938,13 @@ func NewDescribeAccountAllGrantPrivilegesRequest() (request *DescribeAccountAllG
 func NewDescribeAccountAllGrantPrivilegesResponse() (response *DescribeAccountAllGrantPrivilegesResponse) {
     response = &DescribeAccountAllGrantPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountAllGrantPrivileges
-// 账号所有权限
+// 本接口（DescribeAccountAllGrantPrivileges）用于查询账号所有可授予的权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1749,6 +1977,7 @@ func NewDescribeAccountAllGrantPrivilegesResponse() (response *DescribeAccountAl
 //  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
 //  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
@@ -1759,7 +1988,7 @@ func (c *Client) DescribeAccountAllGrantPrivileges(request *DescribeAccountAllGr
 }
 
 // DescribeAccountAllGrantPrivileges
-// 账号所有权限
+// 本接口（DescribeAccountAllGrantPrivileges）用于查询账号所有可授予的权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1792,6 +2021,7 @@ func (c *Client) DescribeAccountAllGrantPrivileges(request *DescribeAccountAllGr
 //  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
 //  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
@@ -1827,12 +2057,13 @@ func NewDescribeAccountPrivilegesRequest() (request *DescribeAccountPrivilegesRe
 func NewDescribeAccountPrivilegesResponse() (response *DescribeAccountPrivilegesResponse) {
     response = &DescribeAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountPrivileges
-// 查询账号已有权限
+// 本接口（DescribeAccountPrivileges）用于查询账号已有权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1876,7 +2107,7 @@ func (c *Client) DescribeAccountPrivileges(request *DescribeAccountPrivilegesReq
 }
 
 // DescribeAccountPrivileges
-// 查询账号已有权限
+// 本接口（DescribeAccountPrivileges）用于查询账号已有权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1945,12 +2176,13 @@ func NewDescribeAccountsRequest() (request *DescribeAccountsRequest) {
 func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
     response = &DescribeAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccounts
-// 本接口(DescribeAccounts)用于查询数据库管理账号。
+// 本接口（DescribeAccounts）用于查询数据库账号列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1967,7 +2199,7 @@ func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *D
 }
 
 // DescribeAccounts
-// 本接口(DescribeAccounts)用于查询数据库管理账号。
+// 本接口（DescribeAccounts）用于查询数据库账号列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1995,6 +2227,55 @@ func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *Descr
     return
 }
 
+func NewDescribeAuditInstanceListRequest() (request *DescribeAuditInstanceListRequest) {
+    request = &DescribeAuditInstanceListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeAuditInstanceList")
+    
+    
+    return
+}
+
+func NewDescribeAuditInstanceListResponse() (response *DescribeAuditInstanceListResponse) {
+    response = &DescribeAuditInstanceListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAuditInstanceList
+// 本接口（DescribeAuditInstanceList）用于获取数据库审计的实例列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
+    return c.DescribeAuditInstanceListWithContext(context.Background(), request)
+}
+
+// DescribeAuditInstanceList
+// 本接口（DescribeAuditInstanceList）用于获取数据库审计的实例列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+func (c *Client) DescribeAuditInstanceListWithContext(ctx context.Context, request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditInstanceListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditInstanceList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditInstanceListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAuditLogFilesRequest() (request *DescribeAuditLogFilesRequest) {
     request = &DescribeAuditLogFilesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2009,23 +2290,16 @@ func NewDescribeAuditLogFilesRequest() (request *DescribeAuditLogFilesRequest) {
 func NewDescribeAuditLogFilesResponse() (response *DescribeAuditLogFilesResponse) {
     response = &DescribeAuditLogFilesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditLogFiles
 // 本接口(DescribeAuditLogFiles)用于查询云数据库实例的审计日志文件。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 func (c *Client) DescribeAuditLogFiles(request *DescribeAuditLogFilesRequest) (response *DescribeAuditLogFilesResponse, err error) {
     return c.DescribeAuditLogFilesWithContext(context.Background(), request)
 }
@@ -2034,15 +2308,7 @@ func (c *Client) DescribeAuditLogFiles(request *DescribeAuditLogFilesRequest) (r
 // 本接口(DescribeAuditLogFiles)用于查询云数据库实例的审计日志文件。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 func (c *Client) DescribeAuditLogFilesWithContext(ctx context.Context, request *DescribeAuditLogFilesRequest) (response *DescribeAuditLogFilesResponse, err error) {
     if request == nil {
         request = NewDescribeAuditLogFilesRequest()
@@ -2073,23 +2339,18 @@ func NewDescribeAuditLogsRequest() (request *DescribeAuditLogsRequest) {
 func NewDescribeAuditLogsResponse() (response *DescribeAuditLogsResponse) {
     response = &DescribeAuditLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditLogs
 // 本接口(DescribeAuditLogs)用于查询数据库审计日志。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeAuditLogs(request *DescribeAuditLogsRequest) (response *DescribeAuditLogsResponse, err error) {
     return c.DescribeAuditLogsWithContext(context.Background(), request)
 }
@@ -2098,15 +2359,9 @@ func (c *Client) DescribeAuditLogs(request *DescribeAuditLogsRequest) (response 
 // 本接口(DescribeAuditLogs)用于查询数据库审计日志。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeAuditLogsWithContext(ctx context.Context, request *DescribeAuditLogsRequest) (response *DescribeAuditLogsResponse, err error) {
     if request == nil {
         request = NewDescribeAuditLogsRequest()
@@ -2137,40 +2392,29 @@ func NewDescribeAuditRuleTemplatesRequest() (request *DescribeAuditRuleTemplates
 func NewDescribeAuditRuleTemplatesResponse() (response *DescribeAuditRuleTemplatesResponse) {
     response = &DescribeAuditRuleTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditRuleTemplates
-// 查询审计规则模版信息
+// 本接口（DescribeAuditRuleTemplates）用于查询审计规则模板信息。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeAuditRuleTemplates(request *DescribeAuditRuleTemplatesRequest) (response *DescribeAuditRuleTemplatesResponse, err error) {
     return c.DescribeAuditRuleTemplatesWithContext(context.Background(), request)
 }
 
 // DescribeAuditRuleTemplates
-// 查询审计规则模版信息
+// 本接口（DescribeAuditRuleTemplates）用于查询审计规则模板信息。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
-//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeAuditRuleTemplatesWithContext(ctx context.Context, request *DescribeAuditRuleTemplatesRequest) (response *DescribeAuditRuleTemplatesResponse, err error) {
     if request == nil {
         request = NewDescribeAuditRuleTemplatesRequest()
@@ -2201,8 +2445,9 @@ func NewDescribeAuditRuleWithInstanceIdsRequest() (request *DescribeAuditRuleWit
 func NewDescribeAuditRuleWithInstanceIdsResponse() (response *DescribeAuditRuleWithInstanceIdsResponse) {
     response = &DescribeAuditRuleWithInstanceIdsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditRuleWithInstanceIds
@@ -2249,12 +2494,13 @@ func NewDescribeBackupConfigRequest() (request *DescribeBackupConfigRequest) {
 func NewDescribeBackupConfigResponse() (response *DescribeBackupConfigResponse) {
     response = &DescribeBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupConfig
-// 获取指定集群的备份配置信息，包括全量备份时间段，备份文件保留时间
+// 本接口（DescribeBackupConfig）用于获取指定集群的备份配置信息，包括全量备份时间段、备份文件保留时间。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2270,7 +2516,7 @@ func (c *Client) DescribeBackupConfig(request *DescribeBackupConfigRequest) (res
 }
 
 // DescribeBackupConfig
-// 获取指定集群的备份配置信息，包括全量备份时间段，备份文件保留时间
+// 本接口（DescribeBackupConfig）用于获取指定集群的备份配置信息，包括全量备份时间段、备份文件保留时间。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2311,12 +2557,13 @@ func NewDescribeBackupDownloadUrlRequest() (request *DescribeBackupDownloadUrlRe
 func NewDescribeBackupDownloadUrlResponse() (response *DescribeBackupDownloadUrlResponse) {
     response = &DescribeBackupDownloadUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupDownloadUrl
-// 此接口（DescribeBackupDownloadUrl）用于查询集群备份文件下载地址。
+// 本接口（DescribeBackupDownloadUrl）用于查询集群备份文件下载地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -2328,7 +2575,7 @@ func (c *Client) DescribeBackupDownloadUrl(request *DescribeBackupDownloadUrlReq
 }
 
 // DescribeBackupDownloadUrl
-// 此接口（DescribeBackupDownloadUrl）用于查询集群备份文件下载地址。
+// 本接口（DescribeBackupDownloadUrl）用于查询集群备份文件下载地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -2365,17 +2612,20 @@ func NewDescribeBackupListRequest() (request *DescribeBackupListRequest) {
 func NewDescribeBackupListResponse() (response *DescribeBackupListResponse) {
     response = &DescribeBackupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupList
-// 查询备份文件列表
+// 本接口（DescribeBackupList）用于查询集群的备份文件列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GETBACKUPSTRATEGYERROR = "FailedOperation.GetBackupStrategyError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
@@ -2386,12 +2636,14 @@ func (c *Client) DescribeBackupList(request *DescribeBackupListRequest) (respons
 }
 
 // DescribeBackupList
-// 查询备份文件列表
+// 本接口（DescribeBackupList）用于查询集群的备份文件列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GETBACKUPSTRATEGYERROR = "FailedOperation.GetBackupStrategyError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
@@ -2413,6 +2665,55 @@ func (c *Client) DescribeBackupListWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeBinlogConfigRequest() (request *DescribeBinlogConfigRequest) {
+    request = &DescribeBinlogConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeBinlogConfig")
+    
+    
+    return
+}
+
+func NewDescribeBinlogConfigResponse() (response *DescribeBinlogConfigResponse) {
+    response = &DescribeBinlogConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBinlogConfig
+// 该接口（DescribeBinlogConfig）用于查询binlog配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+func (c *Client) DescribeBinlogConfig(request *DescribeBinlogConfigRequest) (response *DescribeBinlogConfigResponse, err error) {
+    return c.DescribeBinlogConfigWithContext(context.Background(), request)
+}
+
+// DescribeBinlogConfig
+// 该接口（DescribeBinlogConfig）用于查询binlog配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+func (c *Client) DescribeBinlogConfigWithContext(ctx context.Context, request *DescribeBinlogConfigRequest) (response *DescribeBinlogConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeBinlogConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBinlogConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBinlogConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeBinlogDownloadUrlRequest() (request *DescribeBinlogDownloadUrlRequest) {
     request = &DescribeBinlogDownloadUrlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2427,12 +2728,13 @@ func NewDescribeBinlogDownloadUrlRequest() (request *DescribeBinlogDownloadUrlRe
 func NewDescribeBinlogDownloadUrlResponse() (response *DescribeBinlogDownloadUrlResponse) {
     response = &DescribeBinlogDownloadUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBinlogDownloadUrl
-// 此接口（DescribeBinlogDownloadUrl）用于查询Binlog的下载地址。
+// 本接口（DescribeBinlogDownloadUrl）用于查询 Binlog 的下载地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -2445,7 +2747,7 @@ func (c *Client) DescribeBinlogDownloadUrl(request *DescribeBinlogDownloadUrlReq
 }
 
 // DescribeBinlogDownloadUrl
-// 此接口（DescribeBinlogDownloadUrl）用于查询Binlog的下载地址。
+// 本接口（DescribeBinlogDownloadUrl）用于查询 Binlog 的下载地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -2483,8 +2785,9 @@ func NewDescribeBinlogSaveDaysRequest() (request *DescribeBinlogSaveDaysRequest)
 func NewDescribeBinlogSaveDaysResponse() (response *DescribeBinlogSaveDaysResponse) {
     response = &DescribeBinlogSaveDaysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBinlogSaveDays
@@ -2492,7 +2795,9 @@ func NewDescribeBinlogSaveDaysResponse() (response *DescribeBinlogSaveDaysRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_GETBACKUPSTRATEGYERROR = "FailedOperation.GetBackupStrategyError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -2505,7 +2810,9 @@ func (c *Client) DescribeBinlogSaveDays(request *DescribeBinlogSaveDaysRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_GETBACKUPSTRATEGYERROR = "FailedOperation.GetBackupStrategyError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -2539,12 +2846,13 @@ func NewDescribeBinlogsRequest() (request *DescribeBinlogsRequest) {
 func NewDescribeBinlogsResponse() (response *DescribeBinlogsResponse) {
     response = &DescribeBinlogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBinlogs
-// 此接口（DescribeBinlogs）用来查询集群Binlog日志列表。
+// 本接口（DescribeBinlogs）用来查询集群 Binlog 日志列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -2555,7 +2863,7 @@ func (c *Client) DescribeBinlogs(request *DescribeBinlogsRequest) (response *Des
 }
 
 // DescribeBinlogs
-// 此接口（DescribeBinlogs）用来查询集群Binlog日志列表。
+// 本接口（DescribeBinlogs）用来查询集群 Binlog 日志列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -2577,6 +2885,190 @@ func (c *Client) DescribeBinlogsWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeChangedParamsAfterUpgradeRequest() (request *DescribeChangedParamsAfterUpgradeRequest) {
+    request = &DescribeChangedParamsAfterUpgradeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeChangedParamsAfterUpgrade")
+    
+    
+    return
+}
+
+func NewDescribeChangedParamsAfterUpgradeResponse() (response *DescribeChangedParamsAfterUpgradeResponse) {
+    response = &DescribeChangedParamsAfterUpgradeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeChangedParamsAfterUpgrade
+// 本接口（DescribeChangedParamsAfterUpgrade）用于查询升降配运行参数对比。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeChangedParamsAfterUpgrade(request *DescribeChangedParamsAfterUpgradeRequest) (response *DescribeChangedParamsAfterUpgradeResponse, err error) {
+    return c.DescribeChangedParamsAfterUpgradeWithContext(context.Background(), request)
+}
+
+// DescribeChangedParamsAfterUpgrade
+// 本接口（DescribeChangedParamsAfterUpgrade）用于查询升降配运行参数对比。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeChangedParamsAfterUpgradeWithContext(ctx context.Context, request *DescribeChangedParamsAfterUpgradeRequest) (response *DescribeChangedParamsAfterUpgradeResponse, err error) {
+    if request == nil {
+        request = NewDescribeChangedParamsAfterUpgradeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeChangedParamsAfterUpgrade require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeChangedParamsAfterUpgradeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterDatabasesRequest() (request *DescribeClusterDatabasesRequest) {
+    request = &DescribeClusterDatabasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterDatabases")
+    
+    
+    return
+}
+
+func NewDescribeClusterDatabasesResponse() (response *DescribeClusterDatabasesResponse) {
+    response = &DescribeClusterDatabasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterDatabases
+// 本接口（DescribeClusterDatabases）用于获取集群数据库列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterDatabases(request *DescribeClusterDatabasesRequest) (response *DescribeClusterDatabasesResponse, err error) {
+    return c.DescribeClusterDatabasesWithContext(context.Background(), request)
+}
+
+// DescribeClusterDatabases
+// 本接口（DescribeClusterDatabases）用于获取集群数据库列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterDatabasesWithContext(ctx context.Context, request *DescribeClusterDatabasesRequest) (response *DescribeClusterDatabasesResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterDatabasesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterDatabases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterDatabasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterDetailRequest() (request *DescribeClusterDetailRequest) {
     request = &DescribeClusterDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2591,12 +3083,13 @@ func NewDescribeClusterDetailRequest() (request *DescribeClusterDetailRequest) {
 func NewDescribeClusterDetailResponse() (response *DescribeClusterDetailResponse) {
     response = &DescribeClusterDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterDetail
-// 该接口（DescribeClusterDetail）显示集群详情
+// 该接口（DescribeClusterDetail）用于显示集群详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
@@ -2619,7 +3112,7 @@ func (c *Client) DescribeClusterDetail(request *DescribeClusterDetailRequest) (r
 }
 
 // DescribeClusterDetail
-// 该接口（DescribeClusterDetail）显示集群详情
+// 该接口（DescribeClusterDetail）用于显示集群详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
@@ -2667,12 +3160,13 @@ func NewDescribeClusterDetailDatabasesRequest() (request *DescribeClusterDetailD
 func NewDescribeClusterDetailDatabasesResponse() (response *DescribeClusterDetailDatabasesResponse) {
     response = &DescribeClusterDetailDatabasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterDetailDatabases
-// 查询数据库列表
+// 本接口（DescribeClusterDetailDatabases）用于查询数据库列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2687,7 +3181,7 @@ func (c *Client) DescribeClusterDetailDatabases(request *DescribeClusterDetailDa
 }
 
 // DescribeClusterDetailDatabases
-// 查询数据库列表
+// 本接口（DescribeClusterDetailDatabases）用于查询数据库列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2713,6 +3207,67 @@ func (c *Client) DescribeClusterDetailDatabasesWithContext(ctx context.Context, 
     return
 }
 
+func NewDescribeClusterInstanceGroupsRequest() (request *DescribeClusterInstanceGroupsRequest) {
+    request = &DescribeClusterInstanceGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterInstanceGroups")
+    
+    
+    return
+}
+
+func NewDescribeClusterInstanceGroupsResponse() (response *DescribeClusterInstanceGroupsResponse) {
+    response = &DescribeClusterInstanceGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterInstanceGroups
+// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterInstanceGroups(request *DescribeClusterInstanceGroupsRequest) (response *DescribeClusterInstanceGroupsResponse, err error) {
+    return c.DescribeClusterInstanceGroupsWithContext(context.Background(), request)
+}
+
+// DescribeClusterInstanceGroups
+// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterInstanceGroupsWithContext(ctx context.Context, request *DescribeClusterInstanceGroupsRequest) (response *DescribeClusterInstanceGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterInstanceGroupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterInstanceGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterInstanceGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterInstanceGrpsRequest() (request *DescribeClusterInstanceGrpsRequest) {
     request = &DescribeClusterInstanceGrpsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2727,12 +3282,13 @@ func NewDescribeClusterInstanceGrpsRequest() (request *DescribeClusterInstanceGr
 func NewDescribeClusterInstanceGrpsResponse() (response *DescribeClusterInstanceGrpsResponse) {
     response = &DescribeClusterInstanceGrpsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterInstanceGrps
-// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。
+// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。 该接口已废弃，推荐使用DescribeClusterInstanceGroups
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2747,7 +3303,7 @@ func (c *Client) DescribeClusterInstanceGrps(request *DescribeClusterInstanceGrp
 }
 
 // DescribeClusterInstanceGrps
-// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。
+// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。 该接口已废弃，推荐使用DescribeClusterInstanceGroups
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2787,12 +3343,13 @@ func NewDescribeClusterParamLogsRequest() (request *DescribeClusterParamLogsRequ
 func NewDescribeClusterParamLogsResponse() (response *DescribeClusterParamLogsResponse) {
     response = &DescribeClusterParamLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterParamLogs
-// 本接口（DescribeClusterParamLogs）查询参数修改日志
+// 本接口（DescribeClusterParamLogs）用于查询参数修改记录。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2807,7 +3364,7 @@ func (c *Client) DescribeClusterParamLogs(request *DescribeClusterParamLogsReque
 }
 
 // DescribeClusterParamLogs
-// 本接口（DescribeClusterParamLogs）查询参数修改日志
+// 本接口（DescribeClusterParamLogs）用于查询参数修改记录。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2847,12 +3404,13 @@ func NewDescribeClusterParamsRequest() (request *DescribeClusterParamsRequest) {
 func NewDescribeClusterParamsResponse() (response *DescribeClusterParamsResponse) {
     response = &DescribeClusterParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterParams
-// 本接口（DescribeClusterParams）用于查询集群参数
+// 本接口（DescribeClusterParams）用于查询集群参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2871,7 +3429,7 @@ func (c *Client) DescribeClusterParams(request *DescribeClusterParamsRequest) (r
 }
 
 // DescribeClusterParams
-// 本接口（DescribeClusterParams）用于查询集群参数
+// 本接口（DescribeClusterParams）用于查询集群参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2915,12 +3473,13 @@ func NewDescribeClusterPasswordComplexityRequest() (request *DescribeClusterPass
 func NewDescribeClusterPasswordComplexityResponse() (response *DescribeClusterPasswordComplexityResponse) {
     response = &DescribeClusterPasswordComplexityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterPasswordComplexity
-// 本接口（DescribeClusterPasswordComplexity）用于查看集群密码复杂度详情
+// 本接口（DescribeClusterPasswordComplexity）用于查看集群密码复杂度详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_GETOSSINFOERROR = "FailedOperation.GetOssInfoError"
@@ -2937,7 +3496,7 @@ func (c *Client) DescribeClusterPasswordComplexity(request *DescribeClusterPassw
 }
 
 // DescribeClusterPasswordComplexity
-// 本接口（DescribeClusterPasswordComplexity）用于查看集群密码复杂度详情
+// 本接口（DescribeClusterPasswordComplexity）用于查看集群密码复杂度详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_GETOSSINFOERROR = "FailedOperation.GetOssInfoError"
@@ -2965,6 +3524,71 @@ func (c *Client) DescribeClusterPasswordComplexityWithContext(ctx context.Contex
     return
 }
 
+func NewDescribeClusterTransparentEncryptInfoRequest() (request *DescribeClusterTransparentEncryptInfoRequest) {
+    request = &DescribeClusterTransparentEncryptInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterTransparentEncryptInfo")
+    
+    
+    return
+}
+
+func NewDescribeClusterTransparentEncryptInfoResponse() (response *DescribeClusterTransparentEncryptInfoResponse) {
+    response = &DescribeClusterTransparentEncryptInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterTransparentEncryptInfo
+// 查询集群透明加密信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETOSSINFOERROR = "FailedOperation.GetOssInfoError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterTransparentEncryptInfo(request *DescribeClusterTransparentEncryptInfoRequest) (response *DescribeClusterTransparentEncryptInfoResponse, err error) {
+    return c.DescribeClusterTransparentEncryptInfoWithContext(context.Background(), request)
+}
+
+// DescribeClusterTransparentEncryptInfo
+// 查询集群透明加密信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETOSSINFOERROR = "FailedOperation.GetOssInfoError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterTransparentEncryptInfoWithContext(ctx context.Context, request *DescribeClusterTransparentEncryptInfoRequest) (response *DescribeClusterTransparentEncryptInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterTransparentEncryptInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterTransparentEncryptInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterTransparentEncryptInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClustersRequest() (request *DescribeClustersRequest) {
     request = &DescribeClustersRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2979,12 +3603,13 @@ func NewDescribeClustersRequest() (request *DescribeClustersRequest) {
 func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
     response = &DescribeClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusters
-// 查询集群列表
+// 本接口（DescribeClusters）用于查询集群列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
@@ -3002,7 +3627,7 @@ func (c *Client) DescribeClusters(request *DescribeClustersRequest) (response *D
 }
 
 // DescribeClusters
-// 查询集群列表
+// 本接口（DescribeClusters）用于查询集群列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
@@ -3045,16 +3670,18 @@ func NewDescribeDBSecurityGroupsRequest() (request *DescribeDBSecurityGroupsRequ
 func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsResponse) {
     response = &DescribeDBSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBSecurityGroups
-// 查询实例安全组信息
+// 本接口（DescribeDBSecurityGroups）用于查询实例安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsRequest) (response *DescribeDBSecurityGroupsResponse, err error) {
@@ -3062,11 +3689,12 @@ func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsReque
 }
 
 // DescribeDBSecurityGroups
-// 查询实例安全组信息
+// 本接口（DescribeDBSecurityGroups）用于查询实例安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, request *DescribeDBSecurityGroupsRequest) (response *DescribeDBSecurityGroupsResponse, err error) {
@@ -3099,12 +3727,13 @@ func NewDescribeFlowRequest() (request *DescribeFlowRequest) {
 func NewDescribeFlowResponse() (response *DescribeFlowResponse) {
     response = &DescribeFlowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFlow
-// 本接口（DescribeFlow）用于查询任务流信息
+// 本接口（DescribeFlow）用于查询任务流信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -3118,7 +3747,7 @@ func (c *Client) DescribeFlow(request *DescribeFlowRequest) (response *DescribeF
 }
 
 // DescribeFlow
-// 本接口（DescribeFlow）用于查询任务流信息
+// 本接口（DescribeFlow）用于查询任务流信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -3143,6 +3772,63 @@ func (c *Client) DescribeFlowWithContext(ctx context.Context, request *DescribeF
     return
 }
 
+func NewDescribeInstanceCLSLogDeliveryRequest() (request *DescribeInstanceCLSLogDeliveryRequest) {
+    request = &DescribeInstanceCLSLogDeliveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeInstanceCLSLogDelivery")
+    
+    
+    return
+}
+
+func NewDescribeInstanceCLSLogDeliveryResponse() (response *DescribeInstanceCLSLogDeliveryResponse) {
+    response = &DescribeInstanceCLSLogDeliveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceCLSLogDelivery
+// 本接口（DescribeInstanceCLSLogDelivery）用于查询实例日志投递信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstanceCLSLogDelivery(request *DescribeInstanceCLSLogDeliveryRequest) (response *DescribeInstanceCLSLogDeliveryResponse, err error) {
+    return c.DescribeInstanceCLSLogDeliveryWithContext(context.Background(), request)
+}
+
+// DescribeInstanceCLSLogDelivery
+// 本接口（DescribeInstanceCLSLogDelivery）用于查询实例日志投递信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstanceCLSLogDeliveryWithContext(ctx context.Context, request *DescribeInstanceCLSLogDeliveryRequest) (response *DescribeInstanceCLSLogDeliveryResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceCLSLogDeliveryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceCLSLogDelivery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceCLSLogDeliveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceDetailRequest() (request *DescribeInstanceDetailRequest) {
     request = &DescribeInstanceDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3157,8 +3843,9 @@ func NewDescribeInstanceDetailRequest() (request *DescribeInstanceDetailRequest)
 func NewDescribeInstanceDetailResponse() (response *DescribeInstanceDetailResponse) {
     response = &DescribeInstanceDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceDetail
@@ -3168,6 +3855,7 @@ func NewDescribeInstanceDetailResponse() (response *DescribeInstanceDetailRespon
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
@@ -3186,6 +3874,7 @@ func (c *Client) DescribeInstanceDetail(request *DescribeInstanceDetailRequest) 
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
@@ -3223,12 +3912,13 @@ func NewDescribeInstanceErrorLogsRequest() (request *DescribeInstanceErrorLogsRe
 func NewDescribeInstanceErrorLogsResponse() (response *DescribeInstanceErrorLogsResponse) {
     response = &DescribeInstanceErrorLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceErrorLogs
-// 查询实例错误日志列表
+// 本接口（DescribeInstanceErrorLogs）用于查询实例错误日志列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3236,6 +3926,7 @@ func NewDescribeInstanceErrorLogsResponse() (response *DescribeInstanceErrorLogs
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_VALUENOTFOUND = "InvalidParameterValue.ValueNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstanceErrorLogs(request *DescribeInstanceErrorLogsRequest) (response *DescribeInstanceErrorLogsResponse, err error) {
@@ -3243,7 +3934,7 @@ func (c *Client) DescribeInstanceErrorLogs(request *DescribeInstanceErrorLogsReq
 }
 
 // DescribeInstanceErrorLogs
-// 查询实例错误日志列表
+// 本接口（DescribeInstanceErrorLogs）用于查询实例错误日志列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3251,6 +3942,7 @@ func (c *Client) DescribeInstanceErrorLogs(request *DescribeInstanceErrorLogsReq
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_VALUENOTFOUND = "InvalidParameterValue.ValueNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstanceErrorLogsWithContext(ctx context.Context, request *DescribeInstanceErrorLogsRequest) (response *DescribeInstanceErrorLogsResponse, err error) {
@@ -3283,12 +3975,13 @@ func NewDescribeInstanceParamsRequest() (request *DescribeInstanceParamsRequest)
 func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsResponse) {
     response = &DescribeInstanceParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceParams
-// 该接口(DescribeInstanceParams)查询实例参数列表
+// 本接口（DescribeInstanceParams）用于查询实例参数列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3304,7 +3997,7 @@ func (c *Client) DescribeInstanceParams(request *DescribeInstanceParamsRequest) 
 }
 
 // DescribeInstanceParams
-// 该接口(DescribeInstanceParams)查询实例参数列表
+// 本接口（DescribeInstanceParams）用于查询实例参数列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3345,12 +4038,13 @@ func NewDescribeInstanceSlowQueriesRequest() (request *DescribeInstanceSlowQueri
 func NewDescribeInstanceSlowQueriesResponse() (response *DescribeInstanceSlowQueriesResponse) {
     response = &DescribeInstanceSlowQueriesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceSlowQueries
-// 此接口（DescribeInstanceSlowQueries）用于查询实例慢查询日志。
+// 此接口（DescribeInstanceSlowQueries）用于查询实例慢日志详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3362,7 +4056,7 @@ func (c *Client) DescribeInstanceSlowQueries(request *DescribeInstanceSlowQuerie
 }
 
 // DescribeInstanceSlowQueries
-// 此接口（DescribeInstanceSlowQueries）用于查询实例慢查询日志。
+// 此接口（DescribeInstanceSlowQueries）用于查询实例慢日志详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3399,29 +4093,34 @@ func NewDescribeInstanceSpecsRequest() (request *DescribeInstanceSpecsRequest) {
 func NewDescribeInstanceSpecsResponse() (response *DescribeInstanceSpecsResponse) {
     response = &DescribeInstanceSpecsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceSpecs
-// 本接口（DescribeInstanceSpecs）用于查询实例规格
+// 本接口（DescribeInstanceSpecs）用于查询购买页可购买的实例规格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstanceSpecs(request *DescribeInstanceSpecsRequest) (response *DescribeInstanceSpecsResponse, err error) {
     return c.DescribeInstanceSpecsWithContext(context.Background(), request)
 }
 
 // DescribeInstanceSpecs
-// 本接口（DescribeInstanceSpecs）用于查询实例规格
+// 本接口（DescribeInstanceSpecs）用于查询购买页可购买的实例规格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstanceSpecsWithContext(ctx context.Context, request *DescribeInstanceSpecsRequest) (response *DescribeInstanceSpecsResponse, err error) {
     if request == nil {
@@ -3453,8 +4152,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -3511,6 +4211,132 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeInstancesWithinSameClusterRequest() (request *DescribeInstancesWithinSameClusterRequest) {
+    request = &DescribeInstancesWithinSameClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeInstancesWithinSameCluster")
+    
+    
+    return
+}
+
+func NewDescribeInstancesWithinSameClusterResponse() (response *DescribeInstancesWithinSameClusterResponse) {
+    response = &DescribeInstancesWithinSameClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstancesWithinSameCluster
+// 本接口(DescribeInstancesWithinSameCluster)用于查询同一集群下实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstancesWithinSameCluster(request *DescribeInstancesWithinSameClusterRequest) (response *DescribeInstancesWithinSameClusterResponse, err error) {
+    return c.DescribeInstancesWithinSameClusterWithContext(context.Background(), request)
+}
+
+// DescribeInstancesWithinSameCluster
+// 本接口(DescribeInstancesWithinSameCluster)用于查询同一集群下实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstancesWithinSameClusterWithContext(ctx context.Context, request *DescribeInstancesWithinSameClusterRequest) (response *DescribeInstancesWithinSameClusterResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstancesWithinSameClusterRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstancesWithinSameCluster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstancesWithinSameClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeIsolatedInstancesRequest() (request *DescribeIsolatedInstancesRequest) {
+    request = &DescribeIsolatedInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeIsolatedInstances")
+    
+    
+    return
+}
+
+func NewDescribeIsolatedInstancesResponse() (response *DescribeIsolatedInstancesResponse) {
+    response = &DescribeIsolatedInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIsolatedInstances
+// 本接口(DescribeIsolatedInstances)用于查询回收站实例列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMBOTHSETERROR = "InvalidParameterValue.ParamBothSetError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeIsolatedInstances(request *DescribeIsolatedInstancesRequest) (response *DescribeIsolatedInstancesResponse, err error) {
+    return c.DescribeIsolatedInstancesWithContext(context.Background(), request)
+}
+
+// DescribeIsolatedInstances
+// 本接口(DescribeIsolatedInstances)用于查询回收站实例列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMBOTHSETERROR = "InvalidParameterValue.ParamBothSetError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeIsolatedInstancesWithContext(ctx context.Context, request *DescribeIsolatedInstancesRequest) (response *DescribeIsolatedInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeIsolatedInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIsolatedInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIsolatedInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeMaintainPeriodRequest() (request *DescribeMaintainPeriodRequest) {
     request = &DescribeMaintainPeriodRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3525,18 +4351,20 @@ func NewDescribeMaintainPeriodRequest() (request *DescribeMaintainPeriodRequest)
 func NewDescribeMaintainPeriodResponse() (response *DescribeMaintainPeriodResponse) {
     response = &DescribeMaintainPeriodResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMaintainPeriod
-// 查询实例维护时间窗
+// 本接口（DescribeMaintainPeriod）用于查询实例维护时间窗。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeMaintainPeriod(request *DescribeMaintainPeriodRequest) (response *DescribeMaintainPeriodResponse, err error) {
@@ -3544,13 +4372,14 @@ func (c *Client) DescribeMaintainPeriod(request *DescribeMaintainPeriodRequest) 
 }
 
 // DescribeMaintainPeriod
-// 查询实例维护时间窗
+// 本接口（DescribeMaintainPeriod）用于查询实例维护时间窗。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeMaintainPeriodWithContext(ctx context.Context, request *DescribeMaintainPeriodRequest) (response *DescribeMaintainPeriodResponse, err error) {
@@ -3583,12 +4412,13 @@ func NewDescribeParamTemplateDetailRequest() (request *DescribeParamTemplateDeta
 func NewDescribeParamTemplateDetailResponse() (response *DescribeParamTemplateDetailResponse) {
     response = &DescribeParamTemplateDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeParamTemplateDetail
-// 本接口（DescribeParamTemplateDetail）用于查询用户参数模板详情
+// 本接口（DescribeParamTemplateDetail）用于查询用户参数模板详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3599,7 +4429,7 @@ func (c *Client) DescribeParamTemplateDetail(request *DescribeParamTemplateDetai
 }
 
 // DescribeParamTemplateDetail
-// 本接口（DescribeParamTemplateDetail）用于查询用户参数模板详情
+// 本接口（DescribeParamTemplateDetail）用于查询用户参数模板详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3635,12 +4465,13 @@ func NewDescribeParamTemplatesRequest() (request *DescribeParamTemplatesRequest)
 func NewDescribeParamTemplatesResponse() (response *DescribeParamTemplatesResponse) {
     response = &DescribeParamTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeParamTemplates
-// 查询用户指定产品下的所有参数模板信息
+// 本接口（DescribeParamTemplates）用于查询用户指定产品下的所有参数模板信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3650,7 +4481,7 @@ func (c *Client) DescribeParamTemplates(request *DescribeParamTemplatesRequest) 
 }
 
 // DescribeParamTemplates
-// 查询用户指定产品下的所有参数模板信息
+// 本接口（DescribeParamTemplates）用于查询用户指定产品下的所有参数模板信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3685,12 +4516,13 @@ func NewDescribeProjectSecurityGroupsRequest() (request *DescribeProjectSecurity
 func NewDescribeProjectSecurityGroupsResponse() (response *DescribeProjectSecurityGroupsResponse) {
     response = &DescribeProjectSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProjectSecurityGroups
-// 查询项目安全组信息
+// 本接口（DescribeProjectSecurityGroups）用于查询项目安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3702,7 +4534,7 @@ func (c *Client) DescribeProjectSecurityGroups(request *DescribeProjectSecurityG
 }
 
 // DescribeProjectSecurityGroups
-// 查询项目安全组信息
+// 本接口（DescribeProjectSecurityGroups）用于查询项目安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -3739,12 +4571,13 @@ func NewDescribeProxiesRequest() (request *DescribeProxiesRequest) {
 func NewDescribeProxiesResponse() (response *DescribeProxiesResponse) {
     response = &DescribeProxiesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProxies
-// 查询数据库代理列表
+// 本接口（DescribeProxies）用于查询数据库代理列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
@@ -3761,7 +4594,7 @@ func (c *Client) DescribeProxies(request *DescribeProxiesRequest) (response *Des
 }
 
 // DescribeProxies
-// 查询数据库代理列表
+// 本接口（DescribeProxies）用于查询数据库代理列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
@@ -3803,12 +4636,13 @@ func NewDescribeProxyNodesRequest() (request *DescribeProxyNodesRequest) {
 func NewDescribeProxyNodesResponse() (response *DescribeProxyNodesResponse) {
     response = &DescribeProxyNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProxyNodes
-// 本接口（DescribeProxyNodes）用于查询代理接口列表。
+// 本接口（DescribeProxyNodes）用于查询代理节点列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -3819,7 +4653,7 @@ func (c *Client) DescribeProxyNodes(request *DescribeProxyNodesRequest) (respons
 }
 
 // DescribeProxyNodes
-// 本接口（DescribeProxyNodes）用于查询代理接口列表。
+// 本接口（DescribeProxyNodes）用于查询代理节点列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -3855,12 +4689,13 @@ func NewDescribeProxySpecsRequest() (request *DescribeProxySpecsRequest) {
 func NewDescribeProxySpecsResponse() (response *DescribeProxySpecsResponse) {
     response = &DescribeProxySpecsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProxySpecs
-// 查询数据库代理规格
+// 本接口（DescribeProxySpecs）用于查询数据库代理规格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3870,7 +4705,7 @@ func (c *Client) DescribeProxySpecs(request *DescribeProxySpecsRequest) (respons
 }
 
 // DescribeProxySpecs
-// 查询数据库代理规格
+// 本接口（DescribeProxySpecs）用于查询数据库代理规格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3905,12 +4740,13 @@ func NewDescribeResourcePackageDetailRequest() (request *DescribeResourcePackage
 func NewDescribeResourcePackageDetailResponse() (response *DescribeResourcePackageDetailResponse) {
     response = &DescribeResourcePackageDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourcePackageDetail
-// 查询资源包使用详情
+// 本接口（DescribeResourcePackageDetail）用于查询资源包使用详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYSOURCEPACKAGEDETAILERROR = "FailedOperation.QuerySourcePackageDetailError"
@@ -3922,7 +4758,7 @@ func (c *Client) DescribeResourcePackageDetail(request *DescribeResourcePackageD
 }
 
 // DescribeResourcePackageDetail
-// 查询资源包使用详情
+// 本接口（DescribeResourcePackageDetail）用于查询资源包使用详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYSOURCEPACKAGEDETAILERROR = "FailedOperation.QuerySourcePackageDetailError"
@@ -3959,12 +4795,13 @@ func NewDescribeResourcePackageListRequest() (request *DescribeResourcePackageLi
 func NewDescribeResourcePackageListResponse() (response *DescribeResourcePackageListResponse) {
     response = &DescribeResourcePackageListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourcePackageList
-// 查询资源包列表
+// 本接口（DescribeResourcePackageList）用于查询资源包列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -3978,7 +4815,7 @@ func (c *Client) DescribeResourcePackageList(request *DescribeResourcePackageLis
 }
 
 // DescribeResourcePackageList
-// 查询资源包列表
+// 本接口（DescribeResourcePackageList）用于查询资源包列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4017,12 +4854,13 @@ func NewDescribeResourcePackageSaleSpecRequest() (request *DescribeResourcePacka
 func NewDescribeResourcePackageSaleSpecResponse() (response *DescribeResourcePackageSaleSpecResponse) {
     response = &DescribeResourcePackageSaleSpecResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourcePackageSaleSpec
-// 查询资源包规格
+// 本接口（DescribeResourcePackageSaleSpec）用于查询资源包规格。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -4034,7 +4872,7 @@ func (c *Client) DescribeResourcePackageSaleSpec(request *DescribeResourcePackag
 }
 
 // DescribeResourcePackageSaleSpec
-// 查询资源包规格
+// 本接口（DescribeResourcePackageSaleSpec）用于查询资源包规格。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -4071,12 +4909,13 @@ func NewDescribeResourcesByDealNameRequest() (request *DescribeResourcesByDealNa
 func NewDescribeResourcesByDealNameResponse() (response *DescribeResourcesByDealNameResponse) {
     response = &DescribeResourcesByDealNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourcesByDealName
-// 根据计费订单id查询资源列表
+// 本接口（DescribeResourcesByDealName）用于查询订单关联实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4092,7 +4931,7 @@ func (c *Client) DescribeResourcesByDealName(request *DescribeResourcesByDealNam
 }
 
 // DescribeResourcesByDealName
-// 根据计费订单id查询资源列表
+// 本接口（DescribeResourcesByDealName）用于查询订单关联实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4133,17 +4972,20 @@ func NewDescribeRollbackTimeRangeRequest() (request *DescribeRollbackTimeRangeRe
 func NewDescribeRollbackTimeRangeResponse() (response *DescribeRollbackTimeRangeResponse) {
     response = &DescribeRollbackTimeRangeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRollbackTimeRange
-// 查询指定集群有效回滚时间范围
+// 本接口（DescribeRollbackTimeRange）用于查询回档时间范围。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -4153,12 +4995,14 @@ func (c *Client) DescribeRollbackTimeRange(request *DescribeRollbackTimeRangeReq
 }
 
 // DescribeRollbackTimeRange
-// 查询指定集群有效回滚时间范围
+// 本接口（DescribeRollbackTimeRange）用于查询回档时间范围。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -4179,58 +5023,120 @@ func (c *Client) DescribeRollbackTimeRangeWithContext(ctx context.Context, reque
     return
 }
 
-func NewDescribeRollbackTimeValidityRequest() (request *DescribeRollbackTimeValidityRequest) {
-    request = &DescribeRollbackTimeValidityRequest{
+func NewDescribeServerlessInstanceSpecsRequest() (request *DescribeServerlessInstanceSpecsRequest) {
+    request = &DescribeServerlessInstanceSpecsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeRollbackTimeValidity")
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeServerlessInstanceSpecs")
     
     
     return
 }
 
-func NewDescribeRollbackTimeValidityResponse() (response *DescribeRollbackTimeValidityResponse) {
-    response = &DescribeRollbackTimeValidityResponse{
+func NewDescribeServerlessInstanceSpecsResponse() (response *DescribeServerlessInstanceSpecsResponse) {
+    response = &DescribeServerlessInstanceSpecsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
-// DescribeRollbackTimeValidity
-// 指定时间和集群查询是否可回滚
+// DescribeServerlessInstanceSpecs
+// 查询Serverless实例可选规格
 //
 // 可能返回的错误码:
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
-//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
-//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
-func (c *Client) DescribeRollbackTimeValidity(request *DescribeRollbackTimeValidityRequest) (response *DescribeRollbackTimeValidityResponse, err error) {
-    return c.DescribeRollbackTimeValidityWithContext(context.Background(), request)
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeServerlessInstanceSpecs(request *DescribeServerlessInstanceSpecsRequest) (response *DescribeServerlessInstanceSpecsResponse, err error) {
+    return c.DescribeServerlessInstanceSpecsWithContext(context.Background(), request)
 }
 
-// DescribeRollbackTimeValidity
-// 指定时间和集群查询是否可回滚
+// DescribeServerlessInstanceSpecs
+// 查询Serverless实例可选规格
 //
 // 可能返回的错误码:
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
-//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
-//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
-func (c *Client) DescribeRollbackTimeValidityWithContext(ctx context.Context, request *DescribeRollbackTimeValidityRequest) (response *DescribeRollbackTimeValidityResponse, err error) {
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeServerlessInstanceSpecsWithContext(ctx context.Context, request *DescribeServerlessInstanceSpecsRequest) (response *DescribeServerlessInstanceSpecsResponse, err error) {
     if request == nil {
-        request = NewDescribeRollbackTimeValidityRequest()
+        request = NewDescribeServerlessInstanceSpecsRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeRollbackTimeValidity require credential")
+        return nil, errors.New("DescribeServerlessInstanceSpecs require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeRollbackTimeValidityResponse()
+    response = NewDescribeServerlessInstanceSpecsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeServerlessStrategyRequest() (request *DescribeServerlessStrategyRequest) {
+    request = &DescribeServerlessStrategyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeServerlessStrategy")
+    
+    
+    return
+}
+
+func NewDescribeServerlessStrategyResponse() (response *DescribeServerlessStrategyResponse) {
+    response = &DescribeServerlessStrategyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServerlessStrategy
+// 查询serverless策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_DBMODENOTSERVERLESSERROR = "InvalidParameterValue.DbModeNotServerlessError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+func (c *Client) DescribeServerlessStrategy(request *DescribeServerlessStrategyRequest) (response *DescribeServerlessStrategyResponse, err error) {
+    return c.DescribeServerlessStrategyWithContext(context.Background(), request)
+}
+
+// DescribeServerlessStrategy
+// 查询serverless策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_DBMODENOTSERVERLESSERROR = "InvalidParameterValue.DbModeNotServerlessError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+func (c *Client) DescribeServerlessStrategyWithContext(ctx context.Context, request *DescribeServerlessStrategyRequest) (response *DescribeServerlessStrategyResponse, err error) {
+    if request == nil {
+        request = NewDescribeServerlessStrategyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServerlessStrategy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServerlessStrategyResponse()
     err = c.Send(request, response)
     return
 }
@@ -4249,12 +5155,13 @@ func NewDescribeSupportProxyVersionRequest() (request *DescribeSupportProxyVersi
 func NewDescribeSupportProxyVersionResponse() (response *DescribeSupportProxyVersionResponse) {
     response = &DescribeSupportProxyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSupportProxyVersion
-// 查询支持的数据库代理版本
+// 本接口（DescribeSupportProxyVersion）用于查询支持的数据库代理版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4270,7 +5177,7 @@ func (c *Client) DescribeSupportProxyVersion(request *DescribeSupportProxyVersio
 }
 
 // DescribeSupportProxyVersion
-// 查询支持的数据库代理版本
+// 本接口（DescribeSupportProxyVersion）用于查询支持的数据库代理版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4297,6 +5204,63 @@ func (c *Client) DescribeSupportProxyVersionWithContext(ctx context.Context, req
     return
 }
 
+func NewDescribeTasksRequest() (request *DescribeTasksRequest) {
+    request = &DescribeTasksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeTasks")
+    
+    
+    return
+}
+
+func NewDescribeTasksResponse() (response *DescribeTasksResponse) {
+    response = &DescribeTasksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTasks
+// 本接口（DescribeTasks）用于查询任务列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeTasks(request *DescribeTasksRequest) (response *DescribeTasksResponse, err error) {
+    return c.DescribeTasksWithContext(context.Background(), request)
+}
+
+// DescribeTasks
+// 本接口（DescribeTasks）用于查询任务列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeTasksWithContext(ctx context.Context, request *DescribeTasksRequest) (response *DescribeTasksResponse, err error) {
+    if request == nil {
+        request = NewDescribeTasksRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTasks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
     request = &DescribeZonesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4311,12 +5275,13 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
 func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
     response = &DescribeZonesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeZones
-// 本接口(DescribeZones)用于查询可售卖地域可用区信息。
+// 本接口（DescribeZones）用于查询可售卖地域可用区信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4328,7 +5293,7 @@ func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *Describ
 }
 
 // DescribeZones
-// 本接口(DescribeZones)用于查询可售卖地域可用区信息。
+// 本接口（DescribeZones）用于查询可售卖地域可用区信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4365,12 +5330,13 @@ func NewDisassociateSecurityGroupsRequest() (request *DisassociateSecurityGroups
 func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGroupsResponse) {
     response = &DisassociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateSecurityGroups
-// 安全组批量解绑云资源
+// 本接口（DisassociateSecurityGroups）用于安全组批量解绑云资源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -4384,7 +5350,7 @@ func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsR
 }
 
 // DisassociateSecurityGroups
-// 安全组批量解绑云资源
+// 本接口（DisassociateSecurityGroups）用于安全组批量解绑云资源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -4423,8 +5389,9 @@ func NewExportInstanceErrorLogsRequest() (request *ExportInstanceErrorLogsReques
 func NewExportInstanceErrorLogsResponse() (response *ExportInstanceErrorLogsResponse) {
     response = &ExportInstanceErrorLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportInstanceErrorLogs
@@ -4475,12 +5442,13 @@ func NewExportInstanceSlowQueriesRequest() (request *ExportInstanceSlowQueriesRe
 func NewExportInstanceSlowQueriesResponse() (response *ExportInstanceSlowQueriesResponse) {
     response = &ExportInstanceSlowQueriesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportInstanceSlowQueries
-// 此接口（ExportInstanceSlowQueries）用于导出实例慢日志。
+// 本接口（ExportInstanceSlowQueries）用于导出实例慢日志。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -4491,7 +5459,7 @@ func (c *Client) ExportInstanceSlowQueries(request *ExportInstanceSlowQueriesReq
 }
 
 // ExportInstanceSlowQueries
-// 此接口（ExportInstanceSlowQueries）用于导出实例慢日志。
+// 本接口（ExportInstanceSlowQueries）用于导出实例慢日志。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -4513,6 +5481,69 @@ func (c *Client) ExportInstanceSlowQueriesWithContext(ctx context.Context, reque
     return
 }
 
+func NewExportResourcePackageDeductDetailsRequest() (request *ExportResourcePackageDeductDetailsRequest) {
+    request = &ExportResourcePackageDeductDetailsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ExportResourcePackageDeductDetails")
+    
+    
+    return
+}
+
+func NewExportResourcePackageDeductDetailsResponse() (response *ExportResourcePackageDeductDetailsResponse) {
+    response = &ExportResourcePackageDeductDetailsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ExportResourcePackageDeductDetails
+// 资源包使用明细导出
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSOURCEPACKAGEERROR = "FailedOperation.QuerySourcePackageError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ExportResourcePackageDeductDetails(request *ExportResourcePackageDeductDetailsRequest) (response *ExportResourcePackageDeductDetailsResponse, err error) {
+    return c.ExportResourcePackageDeductDetailsWithContext(context.Background(), request)
+}
+
+// ExportResourcePackageDeductDetails
+// 资源包使用明细导出
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSOURCEPACKAGEERROR = "FailedOperation.QuerySourcePackageError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ExportResourcePackageDeductDetailsWithContext(ctx context.Context, request *ExportResourcePackageDeductDetailsRequest) (response *ExportResourcePackageDeductDetailsResponse, err error) {
+    if request == nil {
+        request = NewExportResourcePackageDeductDetailsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ExportResourcePackageDeductDetails require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewExportResourcePackageDeductDetailsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGrantAccountPrivilegesRequest() (request *GrantAccountPrivilegesRequest) {
     request = &GrantAccountPrivilegesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4527,12 +5558,13 @@ func NewGrantAccountPrivilegesRequest() (request *GrantAccountPrivilegesRequest)
 func NewGrantAccountPrivilegesResponse() (response *GrantAccountPrivilegesResponse) {
     response = &GrantAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GrantAccountPrivileges
-// 批量授权账号权限
+// 本接口（GrantAccountPrivileges）用于批量授权账号权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4577,7 +5609,7 @@ func (c *Client) GrantAccountPrivileges(request *GrantAccountPrivilegesRequest) 
 }
 
 // GrantAccountPrivileges
-// 批量授权账号权限
+// 本接口（GrantAccountPrivileges）用于批量授权账号权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4647,12 +5679,13 @@ func NewInquirePriceCreateRequest() (request *InquirePriceCreateRequest) {
 func NewInquirePriceCreateResponse() (response *InquirePriceCreateResponse) {
     response = &InquirePriceCreateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceCreate
-// 查询新购集群价格
+// 本接口（InquirePriceCreate）用于新购集群的价格查询。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -4665,7 +5698,7 @@ func (c *Client) InquirePriceCreate(request *InquirePriceCreateRequest) (respons
 }
 
 // InquirePriceCreate
-// 查询新购集群价格
+// 本接口（InquirePriceCreate）用于新购集群的价格查询。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -4689,6 +5722,63 @@ func (c *Client) InquirePriceCreateWithContext(ctx context.Context, request *Inq
     return
 }
 
+func NewInquirePriceModifyRequest() (request *InquirePriceModifyRequest) {
+    request = &InquirePriceModifyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "InquirePriceModify")
+    
+    
+    return
+}
+
+func NewInquirePriceModifyResponse() (response *InquirePriceModifyResponse) {
+    response = &InquirePriceModifyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquirePriceModify
+// 变配预付费集群询价
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) InquirePriceModify(request *InquirePriceModifyRequest) (response *InquirePriceModifyResponse, err error) {
+    return c.InquirePriceModifyWithContext(context.Background(), request)
+}
+
+// InquirePriceModify
+// 变配预付费集群询价
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) InquirePriceModifyWithContext(ctx context.Context, request *InquirePriceModifyRequest) (response *InquirePriceModifyResponse, err error) {
+    if request == nil {
+        request = NewInquirePriceModifyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquirePriceModify require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquirePriceModifyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewInquirePriceRenewRequest() (request *InquirePriceRenewRequest) {
     request = &InquirePriceRenewRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4703,12 +5793,13 @@ func NewInquirePriceRenewRequest() (request *InquirePriceRenewRequest) {
 func NewInquirePriceRenewResponse() (response *InquirePriceRenewResponse) {
     response = &InquirePriceRenewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceRenew
-// 查询续费集群价格
+// 本接口（InquirePriceRenew）用于查询续费集群价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
@@ -4725,7 +5816,7 @@ func (c *Client) InquirePriceRenew(request *InquirePriceRenewRequest) (response 
 }
 
 // InquirePriceRenew
-// 查询续费集群价格
+// 本接口（InquirePriceRenew）用于查询续费集群价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
@@ -4767,12 +5858,13 @@ func NewIsolateClusterRequest() (request *IsolateClusterRequest) {
 func NewIsolateClusterResponse() (response *IsolateClusterResponse) {
     response = &IsolateClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateCluster
-// 隔离集群
+// 本接口（IsolateCluster）用于隔离集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4793,7 +5885,7 @@ func (c *Client) IsolateCluster(request *IsolateClusterRequest) (response *Isola
 }
 
 // IsolateCluster
-// 隔离集群
+// 本接口（IsolateCluster）用于隔离集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -4839,8 +5931,9 @@ func NewIsolateInstanceRequest() (request *IsolateInstanceRequest) {
 func NewIsolateInstanceResponse() (response *IsolateInstanceResponse) {
     response = &IsolateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateInstance
@@ -4911,8 +6004,9 @@ func NewModifyAccountDescriptionRequest() (request *ModifyAccountDescriptionRequ
 func NewModifyAccountDescriptionResponse() (response *ModifyAccountDescriptionResponse) {
     response = &ModifyAccountDescriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountDescription
@@ -4975,12 +6069,13 @@ func NewModifyAccountHostRequest() (request *ModifyAccountHostRequest) {
 func NewModifyAccountHostResponse() (response *ModifyAccountHostResponse) {
     response = &ModifyAccountHostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountHost
-// 修改账号主机
+// 本接口（ModifyAccountHost）用于修改账号主机。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5023,7 +6118,7 @@ func (c *Client) ModifyAccountHost(request *ModifyAccountHostRequest) (response 
 }
 
 // ModifyAccountHost
-// 修改账号主机
+// 本接口（ModifyAccountHost）用于修改账号主机。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5091,12 +6186,13 @@ func NewModifyAccountParamsRequest() (request *ModifyAccountParamsRequest) {
 func NewModifyAccountParamsResponse() (response *ModifyAccountParamsResponse) {
     response = &ModifyAccountParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountParams
-// 修改账号参数
+// 本接口（ModifyAccountParams）用于修改账号配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5141,7 +6237,7 @@ func (c *Client) ModifyAccountParams(request *ModifyAccountParamsRequest) (respo
 }
 
 // ModifyAccountParams
-// 修改账号参数
+// 本接口（ModifyAccountParams）用于修改账号配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5211,12 +6307,13 @@ func NewModifyAccountPrivilegesRequest() (request *ModifyAccountPrivilegesReques
 func NewModifyAccountPrivilegesResponse() (response *ModifyAccountPrivilegesResponse) {
     response = &ModifyAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountPrivileges
-// 修改账号权限
+// 本接口（ModifyAccountPrivileges）用于修改账号库表权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5260,7 +6357,7 @@ func (c *Client) ModifyAccountPrivileges(request *ModifyAccountPrivilegesRequest
 }
 
 // ModifyAccountPrivileges
-// 修改账号权限
+// 本接口（ModifyAccountPrivileges）用于修改账号库表权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5329,14 +6426,16 @@ func NewModifyAuditRuleTemplatesRequest() (request *ModifyAuditRuleTemplatesRequ
 func NewModifyAuditRuleTemplatesResponse() (response *ModifyAuditRuleTemplatesResponse) {
     response = &ModifyAuditRuleTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAuditRuleTemplates
-// 修改审计规则模版
+// 本接口（ModifyAuditRuleTemplates）用于修改审计规则模板。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 func (c *Client) ModifyAuditRuleTemplates(request *ModifyAuditRuleTemplatesRequest) (response *ModifyAuditRuleTemplatesResponse, err error) {
@@ -5344,9 +6443,10 @@ func (c *Client) ModifyAuditRuleTemplates(request *ModifyAuditRuleTemplatesReque
 }
 
 // ModifyAuditRuleTemplates
-// 修改审计规则模版
+// 本接口（ModifyAuditRuleTemplates）用于修改审计规则模板。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 func (c *Client) ModifyAuditRuleTemplatesWithContext(ctx context.Context, request *ModifyAuditRuleTemplatesRequest) (response *ModifyAuditRuleTemplatesResponse, err error) {
@@ -5379,8 +6479,9 @@ func NewModifyAuditServiceRequest() (request *ModifyAuditServiceRequest) {
 func NewModifyAuditServiceResponse() (response *ModifyAuditServiceResponse) {
     response = &ModifyAuditServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAuditService
@@ -5388,6 +6489,7 @@ func NewModifyAuditServiceResponse() (response *ModifyAuditServiceResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 func (c *Client) ModifyAuditService(request *ModifyAuditServiceRequest) (response *ModifyAuditServiceResponse, err error) {
     return c.ModifyAuditServiceWithContext(context.Background(), request)
@@ -5398,6 +6500,7 @@ func (c *Client) ModifyAuditService(request *ModifyAuditServiceRequest) (respons
 //
 // 可能返回的错误码:
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 func (c *Client) ModifyAuditServiceWithContext(ctx context.Context, request *ModifyAuditServiceRequest) (response *ModifyAuditServiceResponse, err error) {
     if request == nil {
@@ -5429,16 +6532,19 @@ func NewModifyBackupConfigRequest() (request *ModifyBackupConfigRequest) {
 func NewModifyBackupConfigResponse() (response *ModifyBackupConfigResponse) {
     response = &ModifyBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBackupConfig
-// 修改指定集群的备份配置
+// 本接口（ModifyBackupConfig）用于修改指定集群的备份配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CYNOSDBMYSQLSETBACKUPSTRATEGY = "FailedOperation.CynosdbMysqlSetBackupStrategy"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -5448,11 +6554,13 @@ func (c *Client) ModifyBackupConfig(request *ModifyBackupConfigRequest) (respons
 }
 
 // ModifyBackupConfig
-// 修改指定集群的备份配置
+// 本接口（ModifyBackupConfig）用于修改指定集群的备份配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CYNOSDBMYSQLSETBACKUPSTRATEGY = "FailedOperation.CynosdbMysqlSetBackupStrategy"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -5487,8 +6595,9 @@ func NewModifyBackupNameRequest() (request *ModifyBackupNameRequest) {
 func NewModifyBackupNameResponse() (response *ModifyBackupNameResponse) {
     response = &ModifyBackupNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBackupName
@@ -5525,6 +6634,57 @@ func (c *Client) ModifyBackupNameWithContext(ctx context.Context, request *Modif
     return
 }
 
+func NewModifyBinlogConfigRequest() (request *ModifyBinlogConfigRequest) {
+    request = &ModifyBinlogConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyBinlogConfig")
+    
+    
+    return
+}
+
+func NewModifyBinlogConfigResponse() (response *ModifyBinlogConfigResponse) {
+    response = &ModifyBinlogConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyBinlogConfig
+// 该接口（ModifyBinlogConfig）用于修改Binlog配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) ModifyBinlogConfig(request *ModifyBinlogConfigRequest) (response *ModifyBinlogConfigResponse, err error) {
+    return c.ModifyBinlogConfigWithContext(context.Background(), request)
+}
+
+// ModifyBinlogConfig
+// 该接口（ModifyBinlogConfig）用于修改Binlog配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) ModifyBinlogConfigWithContext(ctx context.Context, request *ModifyBinlogConfigRequest) (response *ModifyBinlogConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyBinlogConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBinlogConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBinlogConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyBinlogSaveDaysRequest() (request *ModifyBinlogSaveDaysRequest) {
     request = &ModifyBinlogSaveDaysRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5539,8 +6699,9 @@ func NewModifyBinlogSaveDaysRequest() (request *ModifyBinlogSaveDaysRequest) {
 func NewModifyBinlogSaveDaysResponse() (response *ModifyBinlogSaveDaysResponse) {
     response = &ModifyBinlogSaveDaysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBinlogSaveDays
@@ -5593,12 +6754,13 @@ func NewModifyClusterDatabaseRequest() (request *ModifyClusterDatabaseRequest) {
 func NewModifyClusterDatabaseResponse() (response *ModifyClusterDatabaseResponse) {
     response = &ModifyClusterDatabaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterDatabase
-// 修改数据库
+// 本接口（ModifyClusterDatabase）用于修改数据库的账号授权。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -5610,7 +6772,7 @@ func (c *Client) ModifyClusterDatabase(request *ModifyClusterDatabaseRequest) (r
 }
 
 // ModifyClusterDatabase
-// 修改数据库
+// 本接口（ModifyClusterDatabase）用于修改数据库的账号授权。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -5647,12 +6809,13 @@ func NewModifyClusterNameRequest() (request *ModifyClusterNameRequest) {
 func NewModifyClusterNameResponse() (response *ModifyClusterNameResponse) {
     response = &ModifyClusterNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterName
-// 修改集群名称
+// 本接口（ModifyClusterName）用于修改集群名称。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5667,7 +6830,7 @@ func (c *Client) ModifyClusterName(request *ModifyClusterNameRequest) (response 
 }
 
 // ModifyClusterName
-// 修改集群名称
+// 本接口（ModifyClusterName）用于修改集群名称。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5707,12 +6870,13 @@ func NewModifyClusterParamRequest() (request *ModifyClusterParamRequest) {
 func NewModifyClusterParamResponse() (response *ModifyClusterParamResponse) {
     response = &ModifyClusterParamResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterParam
-// 修改集群参数
+// 本接口（ModifyClusterParam）用于修改集群参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -5732,7 +6896,7 @@ func (c *Client) ModifyClusterParam(request *ModifyClusterParamRequest) (respons
 }
 
 // ModifyClusterParam
-// 修改集群参数
+// 本接口（ModifyClusterParam）用于修改集群参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -5777,17 +6941,19 @@ func NewModifyClusterPasswordComplexityRequest() (request *ModifyClusterPassword
 func NewModifyClusterPasswordComplexityResponse() (response *ModifyClusterPasswordComplexityResponse) {
     response = &ModifyClusterPasswordComplexityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterPasswordComplexity
-// 本接口（ModifyClusterPasswordComplexity）用于修改/开启集群密码复杂度
+// 本接口（ModifyClusterPasswordComplexity）用于修改/开启集群密码复杂度。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
@@ -5797,12 +6963,13 @@ func (c *Client) ModifyClusterPasswordComplexity(request *ModifyClusterPasswordC
 }
 
 // ModifyClusterPasswordComplexity
-// 本接口（ModifyClusterPasswordComplexity）用于修改/开启集群密码复杂度
+// 本接口（ModifyClusterPasswordComplexity）用于修改/开启集群密码复杂度。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
@@ -5837,12 +7004,13 @@ func NewModifyClusterSlaveZoneRequest() (request *ModifyClusterSlaveZoneRequest)
 func NewModifyClusterSlaveZoneResponse() (response *ModifyClusterSlaveZoneResponse) {
     response = &ModifyClusterSlaveZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterSlaveZone
-// 修改从可用区
+// 本接口（ModifyClusterSlaveZone）用于变更集群的备可用区。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5855,7 +7023,7 @@ func (c *Client) ModifyClusterSlaveZone(request *ModifyClusterSlaveZoneRequest) 
 }
 
 // ModifyClusterSlaveZone
-// 修改从可用区
+// 本接口（ModifyClusterSlaveZone）用于变更集群的备可用区。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -5893,12 +7061,13 @@ func NewModifyClusterStorageRequest() (request *ModifyClusterStorageRequest) {
 func NewModifyClusterStorageResponse() (response *ModifyClusterStorageResponse) {
     response = &ModifyClusterStorageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterStorage
-// 升级预付费存储
+// 本接口（ModifyClusterStorage）用于调整包年包月存储容量。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5920,7 +7089,7 @@ func (c *Client) ModifyClusterStorage(request *ModifyClusterStorageRequest) (res
 }
 
 // ModifyClusterStorage
-// 升级预付费存储
+// 本接口（ModifyClusterStorage）用于调整包年包月存储容量。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5967,12 +7136,13 @@ func NewModifyDBInstanceSecurityGroupsRequest() (request *ModifyDBInstanceSecuri
 func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecurityGroupsResponse) {
     response = &ModifyDBInstanceSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceSecurityGroups
-// 本接口(ModifyDBInstanceSecurityGroups)用于修改实例绑定的安全组。
+// 本接口（ModifyDBInstanceSecurityGroups）用于修改实例绑定的安全组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -5986,7 +7156,7 @@ func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurit
 }
 
 // ModifyDBInstanceSecurityGroups
-// 本接口(ModifyDBInstanceSecurityGroups)用于修改实例绑定的安全组。
+// 本接口（ModifyDBInstanceSecurityGroups）用于修改实例绑定的安全组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -6025,8 +7195,9 @@ func NewModifyInstanceNameRequest() (request *ModifyInstanceNameRequest) {
 func NewModifyInstanceNameResponse() (response *ModifyInstanceNameResponse) {
     response = &ModifyInstanceNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceName
@@ -6087,8 +7258,9 @@ func NewModifyInstanceParamRequest() (request *ModifyInstanceParamRequest) {
 func NewModifyInstanceParamResponse() (response *ModifyInstanceParamResponse) {
     response = &ModifyInstanceParamResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceParam
@@ -6096,6 +7268,7 @@ func NewModifyInstanceParamResponse() (response *ModifyInstanceParamResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
@@ -6110,6 +7283,7 @@ func (c *Client) ModifyInstanceParam(request *ModifyInstanceParamRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
@@ -6131,6 +7305,59 @@ func (c *Client) ModifyInstanceParamWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyInstanceUpgradeLimitDaysRequest() (request *ModifyInstanceUpgradeLimitDaysRequest) {
+    request = &ModifyInstanceUpgradeLimitDaysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyInstanceUpgradeLimitDays")
+    
+    
+    return
+}
+
+func NewModifyInstanceUpgradeLimitDaysResponse() (response *ModifyInstanceUpgradeLimitDaysResponse) {
+    response = &ModifyInstanceUpgradeLimitDaysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceUpgradeLimitDays
+// 本接口（ModifyInstanceUpgradeLimitDays）用于修改实例内核小版本的升级限制时间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyInstanceUpgradeLimitDays(request *ModifyInstanceUpgradeLimitDaysRequest) (response *ModifyInstanceUpgradeLimitDaysResponse, err error) {
+    return c.ModifyInstanceUpgradeLimitDaysWithContext(context.Background(), request)
+}
+
+// ModifyInstanceUpgradeLimitDays
+// 本接口（ModifyInstanceUpgradeLimitDays）用于修改实例内核小版本的升级限制时间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyInstanceUpgradeLimitDaysWithContext(ctx context.Context, request *ModifyInstanceUpgradeLimitDaysRequest) (response *ModifyInstanceUpgradeLimitDaysResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceUpgradeLimitDaysRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceUpgradeLimitDays require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceUpgradeLimitDaysResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyMaintainPeriodConfigRequest() (request *ModifyMaintainPeriodConfigRequest) {
     request = &ModifyMaintainPeriodConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6145,12 +7372,13 @@ func NewModifyMaintainPeriodConfigRequest() (request *ModifyMaintainPeriodConfig
 func NewModifyMaintainPeriodConfigResponse() (response *ModifyMaintainPeriodConfigResponse) {
     response = &ModifyMaintainPeriodConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMaintainPeriodConfig
-// 修改维护时间配置
+// 本接口（ModifyMaintainPeriodConfig）用于修改维护时间配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6163,7 +7391,7 @@ func (c *Client) ModifyMaintainPeriodConfig(request *ModifyMaintainPeriodConfigR
 }
 
 // ModifyMaintainPeriodConfig
-// 修改维护时间配置
+// 本接口（ModifyMaintainPeriodConfig）用于修改维护时间配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6201,8 +7429,9 @@ func NewModifyParamTemplateRequest() (request *ModifyParamTemplateRequest) {
 func NewModifyParamTemplateResponse() (response *ModifyParamTemplateResponse) {
     response = &ModifyParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyParamTemplate
@@ -6210,6 +7439,7 @@ func NewModifyParamTemplateResponse() (response *ModifyParamTemplateResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 func (c *Client) ModifyParamTemplate(request *ModifyParamTemplateRequest) (response *ModifyParamTemplateResponse, err error) {
@@ -6221,6 +7451,7 @@ func (c *Client) ModifyParamTemplate(request *ModifyParamTemplateRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 func (c *Client) ModifyParamTemplateWithContext(ctx context.Context, request *ModifyParamTemplateRequest) (response *ModifyParamTemplateResponse, err error) {
@@ -6253,27 +7484,30 @@ func NewModifyProxyDescRequest() (request *ModifyProxyDescRequest) {
 func NewModifyProxyDescResponse() (response *ModifyProxyDescResponse) {
     response = &ModifyProxyDescResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyProxyDesc
-// 修改数据库代理描述
+// 本接口（ModifyProxyDesc）用于修改数据库代理描述。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyProxyDesc(request *ModifyProxyDescRequest) (response *ModifyProxyDescResponse, err error) {
     return c.ModifyProxyDescWithContext(context.Background(), request)
 }
 
 // ModifyProxyDesc
-// 修改数据库代理描述
+// 本接口（ModifyProxyDesc）用于修改数据库代理描述。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyProxyDescWithContext(ctx context.Context, request *ModifyProxyDescRequest) (response *ModifyProxyDescResponse, err error) {
     if request == nil {
@@ -6305,33 +7539,42 @@ func NewModifyProxyRwSplitRequest() (request *ModifyProxyRwSplitRequest) {
 func NewModifyProxyRwSplitResponse() (response *ModifyProxyRwSplitResponse) {
     response = &ModifyProxyRwSplitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyProxyRwSplit
-// 配置数据库代理读写分离
+// 本接口（ModifyProxyRwSplit）用于配置数据库代理读写分离。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyProxyRwSplit(request *ModifyProxyRwSplitRequest) (response *ModifyProxyRwSplitResponse, err error) {
     return c.ModifyProxyRwSplitWithContext(context.Background(), request)
 }
 
 // ModifyProxyRwSplit
-// 配置数据库代理读写分离
+// 本接口（ModifyProxyRwSplit）用于配置数据库代理读写分离。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyProxyRwSplitWithContext(ctx context.Context, request *ModifyProxyRwSplitRequest) (response *ModifyProxyRwSplitResponse, err error) {
     if request == nil {
@@ -6363,12 +7606,13 @@ func NewModifyResourcePackageClustersRequest() (request *ModifyResourcePackageCl
 func NewModifyResourcePackageClustersResponse() (response *ModifyResourcePackageClustersResponse) {
     response = &ModifyResourcePackageClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourcePackageClusters
-// 给资源包绑定集群
+// 本接口（ModifyResourcePackageClusters）用于修改资源包与集群之间的绑定关系。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BINDSOURCEPACKAGEERROR = "FailedOperation.BindSourcePackageError"
@@ -6385,7 +7629,7 @@ func (c *Client) ModifyResourcePackageClusters(request *ModifyResourcePackageClu
 }
 
 // ModifyResourcePackageClusters
-// 给资源包绑定集群
+// 本接口（ModifyResourcePackageClusters）用于修改资源包与集群之间的绑定关系。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BINDSOURCEPACKAGEERROR = "FailedOperation.BindSourcePackageError"
@@ -6427,12 +7671,13 @@ func NewModifyResourcePackageNameRequest() (request *ModifyResourcePackageNameRe
 func NewModifyResourcePackageNameResponse() (response *ModifyResourcePackageNameResponse) {
     response = &ModifyResourcePackageNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourcePackageName
-// 修改资源包名称
+// 本接口（ModifyResourcePackageName）用于修改资源包名称。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BINDSOURCEPACKAGEERROR = "FailedOperation.BindSourcePackageError"
@@ -6449,7 +7694,7 @@ func (c *Client) ModifyResourcePackageName(request *ModifyResourcePackageNameReq
 }
 
 // ModifyResourcePackageName
-// 修改资源包名称
+// 本接口（ModifyResourcePackageName）用于修改资源包名称。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BINDSOURCEPACKAGEERROR = "FailedOperation.BindSourcePackageError"
@@ -6477,6 +7722,142 @@ func (c *Client) ModifyResourcePackageNameWithContext(ctx context.Context, reque
     return
 }
 
+func NewModifyResourcePackagesDeductionPriorityRequest() (request *ModifyResourcePackagesDeductionPriorityRequest) {
+    request = &ModifyResourcePackagesDeductionPriorityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyResourcePackagesDeductionPriority")
+    
+    
+    return
+}
+
+func NewModifyResourcePackagesDeductionPriorityResponse() (response *ModifyResourcePackagesDeductionPriorityResponse) {
+    response = &ModifyResourcePackagesDeductionPriorityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyResourcePackagesDeductionPriority
+// 修改已绑定资源包抵扣优先级
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_MODIFYDEDUCTIONPRIORITYERROR = "FailedOperation.ModifyDeductionPriorityError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyResourcePackagesDeductionPriority(request *ModifyResourcePackagesDeductionPriorityRequest) (response *ModifyResourcePackagesDeductionPriorityResponse, err error) {
+    return c.ModifyResourcePackagesDeductionPriorityWithContext(context.Background(), request)
+}
+
+// ModifyResourcePackagesDeductionPriority
+// 修改已绑定资源包抵扣优先级
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_MODIFYDEDUCTIONPRIORITYERROR = "FailedOperation.ModifyDeductionPriorityError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyResourcePackagesDeductionPriorityWithContext(ctx context.Context, request *ModifyResourcePackagesDeductionPriorityRequest) (response *ModifyResourcePackagesDeductionPriorityResponse, err error) {
+    if request == nil {
+        request = NewModifyResourcePackagesDeductionPriorityRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyResourcePackagesDeductionPriority require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyResourcePackagesDeductionPriorityResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyServerlessStrategyRequest() (request *ModifyServerlessStrategyRequest) {
+    request = &ModifyServerlessStrategyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyServerlessStrategy")
+    
+    
+    return
+}
+
+func NewModifyServerlessStrategyResponse() (response *ModifyServerlessStrategyResponse) {
+    response = &ModifyServerlessStrategyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyServerlessStrategy
+// 修改serverless策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_SERVERLESSSETSTRATEGYERROR = "FailedOperation.ServerlessSetStrategyError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_DBMODENOTSERVERLESSERROR = "InvalidParameterValue.DbModeNotServerlessError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyServerlessStrategy(request *ModifyServerlessStrategyRequest) (response *ModifyServerlessStrategyResponse, err error) {
+    return c.ModifyServerlessStrategyWithContext(context.Background(), request)
+}
+
+// ModifyServerlessStrategy
+// 修改serverless策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_SERVERLESSSETSTRATEGYERROR = "FailedOperation.ServerlessSetStrategyError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_DBMODENOTSERVERLESSERROR = "InvalidParameterValue.DbModeNotServerlessError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyServerlessStrategyWithContext(ctx context.Context, request *ModifyServerlessStrategyRequest) (response *ModifyServerlessStrategyResponse, err error) {
+    if request == nil {
+        request = NewModifyServerlessStrategyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyServerlessStrategy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyServerlessStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyVipVportRequest() (request *ModifyVipVportRequest) {
     request = &ModifyVipVportRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6491,12 +7872,13 @@ func NewModifyVipVportRequest() (request *ModifyVipVportRequest) {
 func NewModifyVipVportResponse() (response *ModifyVipVportResponse) {
     response = &ModifyVipVportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyVipVport
-// 修改实例组ip，端口
+// 本接口（ModifyVipVport）用于修改实例组ip，端口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6512,7 +7894,7 @@ func (c *Client) ModifyVipVport(request *ModifyVipVportRequest) (response *Modif
 }
 
 // ModifyVipVport
-// 修改实例组ip，端口
+// 本接口（ModifyVipVport）用于修改实例组ip，端口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6553,12 +7935,13 @@ func NewOfflineClusterRequest() (request *OfflineClusterRequest) {
 func NewOfflineClusterResponse() (response *OfflineClusterResponse) {
     response = &OfflineClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OfflineCluster
-// 下线集群
+// 本接口（OfflineCluster）用于销毁集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -6575,7 +7958,7 @@ func (c *Client) OfflineCluster(request *OfflineClusterRequest) (response *Offli
 }
 
 // OfflineCluster
-// 下线集群
+// 本接口（OfflineCluster）用于销毁集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -6617,12 +8000,13 @@ func NewOfflineInstanceRequest() (request *OfflineInstanceRequest) {
 func NewOfflineInstanceResponse() (response *OfflineInstanceResponse) {
     response = &OfflineInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OfflineInstance
-// 下线实例
+// 本接口（OfflineInstance）用于销毁实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6641,7 +8025,7 @@ func (c *Client) OfflineInstance(request *OfflineInstanceRequest) (response *Off
 }
 
 // OfflineInstance
-// 下线实例
+// 本接口（OfflineInstance）用于销毁实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6685,12 +8069,13 @@ func NewOpenAuditServiceRequest() (request *OpenAuditServiceRequest) {
 func NewOpenAuditServiceResponse() (response *OpenAuditServiceResponse) {
     response = &OpenAuditServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenAuditService
-// TDSQL-C for MySQL实例开通审计服务
+// 本接口（OpenAuditService）用于为实例开通数据库审计服务。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -6701,7 +8086,7 @@ func (c *Client) OpenAuditService(request *OpenAuditServiceRequest) (response *O
 }
 
 // OpenAuditService
-// TDSQL-C for MySQL实例开通审计服务
+// 本接口（OpenAuditService）用于为实例开通数据库审计服务。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -6737,17 +8122,19 @@ func NewOpenClusterPasswordComplexityRequest() (request *OpenClusterPasswordComp
 func NewOpenClusterPasswordComplexityResponse() (response *OpenClusterPasswordComplexityResponse) {
     response = &OpenClusterPasswordComplexityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenClusterPasswordComplexity
-// 本接口（OpenClusterPasswordComplexity）用于开启集群密码复杂度
+// 本接口（OpenClusterPasswordComplexity）用于开启自定义密码复杂度功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
@@ -6758,12 +8145,13 @@ func (c *Client) OpenClusterPasswordComplexity(request *OpenClusterPasswordCompl
 }
 
 // OpenClusterPasswordComplexity
-// 本接口（OpenClusterPasswordComplexity）用于开启集群密码复杂度
+// 本接口（OpenClusterPasswordComplexity）用于开启自定义密码复杂度功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
@@ -6785,6 +8173,128 @@ func (c *Client) OpenClusterPasswordComplexityWithContext(ctx context.Context, r
     return
 }
 
+func NewOpenClusterReadOnlyInstanceGroupAccessRequest() (request *OpenClusterReadOnlyInstanceGroupAccessRequest) {
+    request = &OpenClusterReadOnlyInstanceGroupAccessRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "OpenClusterReadOnlyInstanceGroupAccess")
+    
+    
+    return
+}
+
+func NewOpenClusterReadOnlyInstanceGroupAccessResponse() (response *OpenClusterReadOnlyInstanceGroupAccessResponse) {
+    response = &OpenClusterReadOnlyInstanceGroupAccessResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// OpenClusterReadOnlyInstanceGroupAccess
+// 本接口（OpenClusterReadOnlyInstanceGroupAccess）用于开启只读实例组接入。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenClusterReadOnlyInstanceGroupAccess(request *OpenClusterReadOnlyInstanceGroupAccessRequest) (response *OpenClusterReadOnlyInstanceGroupAccessResponse, err error) {
+    return c.OpenClusterReadOnlyInstanceGroupAccessWithContext(context.Background(), request)
+}
+
+// OpenClusterReadOnlyInstanceGroupAccess
+// 本接口（OpenClusterReadOnlyInstanceGroupAccess）用于开启只读实例组接入。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenClusterReadOnlyInstanceGroupAccessWithContext(ctx context.Context, request *OpenClusterReadOnlyInstanceGroupAccessRequest) (response *OpenClusterReadOnlyInstanceGroupAccessResponse, err error) {
+    if request == nil {
+        request = NewOpenClusterReadOnlyInstanceGroupAccessRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenClusterReadOnlyInstanceGroupAccess require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenClusterReadOnlyInstanceGroupAccessResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewOpenClusterTransparentEncryptRequest() (request *OpenClusterTransparentEncryptRequest) {
+    request = &OpenClusterTransparentEncryptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "OpenClusterTransparentEncrypt")
+    
+    
+    return
+}
+
+func NewOpenClusterTransparentEncryptResponse() (response *OpenClusterTransparentEncryptResponse) {
+    response = &OpenClusterTransparentEncryptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// OpenClusterTransparentEncrypt
+// 开通集群透明加密
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenClusterTransparentEncrypt(request *OpenClusterTransparentEncryptRequest) (response *OpenClusterTransparentEncryptResponse, err error) {
+    return c.OpenClusterTransparentEncryptWithContext(context.Background(), request)
+}
+
+// OpenClusterTransparentEncrypt
+// 开通集群透明加密
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenClusterTransparentEncryptWithContext(ctx context.Context, request *OpenClusterTransparentEncryptRequest) (response *OpenClusterTransparentEncryptResponse, err error) {
+    if request == nil {
+        request = NewOpenClusterTransparentEncryptRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenClusterTransparentEncrypt require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenClusterTransparentEncryptResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewOpenReadOnlyInstanceExclusiveAccessRequest() (request *OpenReadOnlyInstanceExclusiveAccessRequest) {
     request = &OpenReadOnlyInstanceExclusiveAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6799,12 +8309,13 @@ func NewOpenReadOnlyInstanceExclusiveAccessRequest() (request *OpenReadOnlyInsta
 func NewOpenReadOnlyInstanceExclusiveAccessResponse() (response *OpenReadOnlyInstanceExclusiveAccessResponse) {
     response = &OpenReadOnlyInstanceExclusiveAccessResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenReadOnlyInstanceExclusiveAccess
-// 开通只读实例独有访问接入组
+// 本接口（OpenReadOnlyInstanceExclusiveAccess）用于开通只读实例独有访问接入组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6818,7 +8329,7 @@ func (c *Client) OpenReadOnlyInstanceExclusiveAccess(request *OpenReadOnlyInstan
 }
 
 // OpenReadOnlyInstanceExclusiveAccess
-// 开通只读实例独有访问接入组
+// 本接口（OpenReadOnlyInstanceExclusiveAccess）用于开通只读实例独有访问接入组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6857,12 +8368,13 @@ func NewOpenWanRequest() (request *OpenWanRequest) {
 func NewOpenWanResponse() (response *OpenWanResponse) {
     response = &OpenWanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenWan
-// 本接口（OpenWan）用于开通外网
+// 本接口（OpenWan）用于开通外网。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6881,7 +8393,7 @@ func (c *Client) OpenWan(request *OpenWanRequest) (response *OpenWanResponse, er
 }
 
 // OpenWan
-// 本接口（OpenWan）用于开通外网
+// 本接口（OpenWan）用于开通外网。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -6925,12 +8437,13 @@ func NewPauseServerlessRequest() (request *PauseServerlessRequest) {
 func NewPauseServerlessResponse() (response *PauseServerlessResponse) {
     response = &PauseServerlessResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PauseServerless
-// 暂停serverless集群
+// 本接口（PauseServerless）用于暂停 serverless 集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -6940,12 +8453,13 @@ func NewPauseServerlessResponse() (response *PauseServerlessResponse) {
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) PauseServerless(request *PauseServerlessRequest) (response *PauseServerlessResponse, err error) {
     return c.PauseServerlessWithContext(context.Background(), request)
 }
 
 // PauseServerless
-// 暂停serverless集群
+// 本接口（PauseServerless）用于暂停 serverless 集群。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -6955,6 +8469,7 @@ func (c *Client) PauseServerless(request *PauseServerlessRequest) (response *Pau
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) PauseServerlessWithContext(ctx context.Context, request *PauseServerlessRequest) (response *PauseServerlessResponse, err error) {
     if request == nil {
         request = NewPauseServerlessRequest()
@@ -6985,12 +8500,13 @@ func NewRefundResourcePackageRequest() (request *RefundResourcePackageRequest) {
 func NewRefundResourcePackageResponse() (response *RefundResourcePackageResponse) {
     response = &RefundResourcePackageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RefundResourcePackage
-// 退款资源包
+// 本接口（RefundResourcePackage）用于资源包退款。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REFUNDSOURCEPACKAGEERROR = "FailedOperation.RefundSourcePackageError"
@@ -7002,7 +8518,7 @@ func (c *Client) RefundResourcePackage(request *RefundResourcePackageRequest) (r
 }
 
 // RefundResourcePackage
-// 退款资源包
+// 本接口（RefundResourcePackage）用于资源包退款。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REFUNDSOURCEPACKAGEERROR = "FailedOperation.RefundSourcePackageError"
@@ -7039,26 +8555,31 @@ func NewReloadBalanceProxyNodeRequest() (request *ReloadBalanceProxyNodeRequest)
 func NewReloadBalanceProxyNodeResponse() (response *ReloadBalanceProxyNodeResponse) {
     response = &ReloadBalanceProxyNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReloadBalanceProxyNode
-// 负载均衡数据库代理
+// 本接口（ReloadBalanceProxyNode）用于负载均衡数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ReloadBalanceProxyNode(request *ReloadBalanceProxyNodeRequest) (response *ReloadBalanceProxyNodeResponse, err error) {
     return c.ReloadBalanceProxyNodeWithContext(context.Background(), request)
 }
 
 // ReloadBalanceProxyNode
-// 负载均衡数据库代理
+// 本接口（ReloadBalanceProxyNode）用于负载均衡数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ReloadBalanceProxyNodeWithContext(ctx context.Context, request *ReloadBalanceProxyNodeRequest) (response *ReloadBalanceProxyNodeResponse, err error) {
     if request == nil {
         request = NewReloadBalanceProxyNodeRequest()
@@ -7089,16 +8610,18 @@ func NewRemoveClusterSlaveZoneRequest() (request *RemoveClusterSlaveZoneRequest)
 func NewRemoveClusterSlaveZoneResponse() (response *RemoveClusterSlaveZoneResponse) {
     response = &RemoveClusterSlaveZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveClusterSlaveZone
-// 删除从可用区
+// 本接口（RemoveClusterSlaveZone）用于关闭集群多可用区部署。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -7107,11 +8630,12 @@ func (c *Client) RemoveClusterSlaveZone(request *RemoveClusterSlaveZoneRequest) 
 }
 
 // RemoveClusterSlaveZone
-// 删除从可用区
+// 本接口（RemoveClusterSlaveZone）用于关闭集群多可用区部署。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -7131,6 +8655,79 @@ func (c *Client) RemoveClusterSlaveZoneWithContext(ctx context.Context, request 
     return
 }
 
+func NewRenewClustersRequest() (request *RenewClustersRequest) {
+    request = &RenewClustersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "RenewClusters")
+    
+    
+    return
+}
+
+func NewRenewClustersResponse() (response *RenewClustersResponse) {
+    response = &RenewClustersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RenewClusters
+// 续费集群
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) RenewClusters(request *RenewClustersRequest) (response *RenewClustersResponse, err error) {
+    return c.RenewClustersWithContext(context.Background(), request)
+}
+
+// RenewClusters
+// 续费集群
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) RenewClustersWithContext(ctx context.Context, request *RenewClustersRequest) (response *RenewClustersResponse, err error) {
+    if request == nil {
+        request = NewRenewClustersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewClusters require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenewClustersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewResetAccountPasswordRequest() (request *ResetAccountPasswordRequest) {
     request = &ResetAccountPasswordRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7145,12 +8742,13 @@ func NewResetAccountPasswordRequest() (request *ResetAccountPasswordRequest) {
 func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) {
     response = &ResetAccountPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetAccountPassword
-// 本接口(ResetAccountPassword)用于重置实例的数据库账号密码。
+// 本接口（ResetAccountPassword）用于修改数据库账号密码。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7174,7 +8772,7 @@ func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (res
 }
 
 // ResetAccountPassword
-// 本接口(ResetAccountPassword)用于重置实例的数据库账号密码。
+// 本接口（ResetAccountPassword）用于修改数据库账号密码。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7223,12 +8821,13 @@ func NewRestartInstanceRequest() (request *RestartInstanceRequest) {
 func NewRestartInstanceResponse() (response *RestartInstanceResponse) {
     response = &RestartInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartInstance
-// 重启实例
+// 本接口（RestartInstance）用于重启实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -7272,7 +8871,7 @@ func (c *Client) RestartInstance(request *RestartInstanceRequest) (response *Res
 }
 
 // RestartInstance
-// 重启实例
+// 本接口（RestartInstance）用于重启实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -7341,12 +8940,13 @@ func NewResumeServerlessRequest() (request *ResumeServerlessRequest) {
 func NewResumeServerlessResponse() (response *ResumeServerlessResponse) {
     response = &ResumeServerlessResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResumeServerless
-// 恢复serverless集群
+// 本接口（ResumeServerless）用于恢复 serverless 集群（启动暂停的集群）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7365,7 +8965,7 @@ func (c *Client) ResumeServerless(request *ResumeServerlessRequest) (response *R
 }
 
 // ResumeServerless
-// 恢复serverless集群
+// 本接口（ResumeServerless）用于恢复 serverless 集群（启动暂停的集群）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7409,12 +9009,13 @@ func NewRevokeAccountPrivilegesRequest() (request *RevokeAccountPrivilegesReques
 func NewRevokeAccountPrivilegesResponse() (response *RevokeAccountPrivilegesResponse) {
     response = &RevokeAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RevokeAccountPrivileges
-// 批量回收账号权限
+// 本接口（RevokeAccountPrivileges）用于批量回收账号权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7458,7 +9059,7 @@ func (c *Client) RevokeAccountPrivileges(request *RevokeAccountPrivilegesRequest
 }
 
 // RevokeAccountPrivileges
-// 批量回收账号权限
+// 本接口（RevokeAccountPrivileges）用于批量回收账号权限。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7527,12 +9128,13 @@ func NewRollBackClusterRequest() (request *RollBackClusterRequest) {
 func NewRollBackClusterResponse() (response *RollBackClusterResponse) {
     response = &RollBackClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RollBackCluster
-// 本接口（RollBackCluster）用于回档集群
+// 本接口（RollBackCluster）用于集群回档。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -7549,7 +9151,7 @@ func (c *Client) RollBackCluster(request *RollBackClusterRequest) (response *Rol
 }
 
 // RollBackCluster
-// 本接口（RollBackCluster）用于回档集群
+// 本接口（RollBackCluster）用于集群回档。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -7577,6 +9179,103 @@ func (c *Client) RollBackClusterWithContext(ctx context.Context, request *RollBa
     return
 }
 
+func NewRollbackToNewClusterRequest() (request *RollbackToNewClusterRequest) {
+    request = &RollbackToNewClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "RollbackToNewCluster")
+    
+    
+    return
+}
+
+func NewRollbackToNewClusterResponse() (response *RollbackToNewClusterResponse) {
+    response = &RollbackToNewClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RollbackToNewCluster
+// 本接口（RollbackToNewCluster）用于回档到新集群。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
+//  OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
+//  UNAUTHORIZEDOPERATION_NOTREALNAMEACCOUNT = "UnauthorizedOperation.NotRealNameAccount"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) RollbackToNewCluster(request *RollbackToNewClusterRequest) (response *RollbackToNewClusterResponse, err error) {
+    return c.RollbackToNewClusterWithContext(context.Background(), request)
+}
+
+// RollbackToNewCluster
+// 本接口（RollbackToNewCluster）用于回档到新集群。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
+//  OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
+//  UNAUTHORIZEDOPERATION_NOTREALNAMEACCOUNT = "UnauthorizedOperation.NotRealNameAccount"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) RollbackToNewClusterWithContext(ctx context.Context, request *RollbackToNewClusterRequest) (response *RollbackToNewClusterResponse, err error) {
+    if request == nil {
+        request = NewRollbackToNewClusterRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RollbackToNewCluster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRollbackToNewClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSearchClusterDatabasesRequest() (request *SearchClusterDatabasesRequest) {
     request = &SearchClusterDatabasesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7591,12 +9290,13 @@ func NewSearchClusterDatabasesRequest() (request *SearchClusterDatabasesRequest)
 func NewSearchClusterDatabasesResponse() (response *SearchClusterDatabasesResponse) {
     response = &SearchClusterDatabasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SearchClusterDatabases
-// 本接口(SearchClusterDatabases)搜索集群database列表
+// 本接口（SearchClusterDatabases）用于搜索集群数据库列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7608,7 +9308,7 @@ func (c *Client) SearchClusterDatabases(request *SearchClusterDatabasesRequest) 
 }
 
 // SearchClusterDatabases
-// 本接口(SearchClusterDatabases)搜索集群database列表
+// 本接口（SearchClusterDatabases）用于搜索集群数据库列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7645,12 +9345,13 @@ func NewSearchClusterTablesRequest() (request *SearchClusterTablesRequest) {
 func NewSearchClusterTablesResponse() (response *SearchClusterTablesResponse) {
     response = &SearchClusterTablesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SearchClusterTables
-// 本接口(SearchClusterTables)搜索集群数据表列表
+// 本接口（SearchClusterTables）用于搜索集群数据表列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7662,7 +9363,7 @@ func (c *Client) SearchClusterTables(request *SearchClusterTablesRequest) (respo
 }
 
 // SearchClusterTables
-// 本接口(SearchClusterTables)搜索集群数据表列表
+// 本接口（SearchClusterTables）用于搜索集群数据表列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7699,12 +9400,13 @@ func NewSetRenewFlagRequest() (request *SetRenewFlagRequest) {
 func NewSetRenewFlagResponse() (response *SetRenewFlagResponse) {
     response = &SetRenewFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetRenewFlag
-// SetRenewFlag设置实例的自动续费功能
+// 本接口（SetRenewFlag）用于设置实例的自动续费功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7728,7 +9430,7 @@ func (c *Client) SetRenewFlag(request *SetRenewFlagRequest) (response *SetRenewF
 }
 
 // SetRenewFlag
-// SetRenewFlag设置实例的自动续费功能
+// 本接口（SetRenewFlag）用于设置实例的自动续费功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7763,6 +9465,106 @@ func (c *Client) SetRenewFlagWithContext(ctx context.Context, request *SetRenewF
     return
 }
 
+func NewStartCLSDeliveryRequest() (request *StartCLSDeliveryRequest) {
+    request = &StartCLSDeliveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "StartCLSDelivery")
+    
+    
+    return
+}
+
+func NewStartCLSDeliveryResponse() (response *StartCLSDeliveryResponse) {
+    response = &StartCLSDeliveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartCLSDelivery
+// 本接口（StartCLSDelivery）用于开启日志投递功能。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) StartCLSDelivery(request *StartCLSDeliveryRequest) (response *StartCLSDeliveryResponse, err error) {
+    return c.StartCLSDeliveryWithContext(context.Background(), request)
+}
+
+// StartCLSDelivery
+// 本接口（StartCLSDelivery）用于开启日志投递功能。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) StartCLSDeliveryWithContext(ctx context.Context, request *StartCLSDeliveryRequest) (response *StartCLSDeliveryResponse, err error) {
+    if request == nil {
+        request = NewStartCLSDeliveryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartCLSDelivery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartCLSDeliveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopCLSDeliveryRequest() (request *StopCLSDeliveryRequest) {
+    request = &StopCLSDeliveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "StopCLSDelivery")
+    
+    
+    return
+}
+
+func NewStopCLSDeliveryResponse() (response *StopCLSDeliveryResponse) {
+    response = &StopCLSDeliveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopCLSDelivery
+// 本接口（StopCLSDelivery）用于停止日志投递功能。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) StopCLSDelivery(request *StopCLSDeliveryRequest) (response *StopCLSDeliveryResponse, err error) {
+    return c.StopCLSDeliveryWithContext(context.Background(), request)
+}
+
+// StopCLSDelivery
+// 本接口（StopCLSDelivery）用于停止日志投递功能。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) StopCLSDeliveryWithContext(ctx context.Context, request *StopCLSDeliveryRequest) (response *StopCLSDeliveryResponse, err error) {
+    if request == nil {
+        request = NewStopCLSDeliveryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopCLSDelivery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopCLSDeliveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSwitchClusterVpcRequest() (request *SwitchClusterVpcRequest) {
     request = &SwitchClusterVpcRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7777,12 +9579,13 @@ func NewSwitchClusterVpcRequest() (request *SwitchClusterVpcRequest) {
 func NewSwitchClusterVpcResponse() (response *SwitchClusterVpcResponse) {
     response = &SwitchClusterVpcResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchClusterVpc
-// 更换集群vpc
+// 本接口（SwitchClusterVpc）用于更换集群vpc。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7797,7 +9600,7 @@ func (c *Client) SwitchClusterVpc(request *SwitchClusterVpcRequest) (response *S
 }
 
 // SwitchClusterVpc
-// 更换集群vpc
+// 本接口（SwitchClusterVpc）用于更换集群vpc。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7837,12 +9640,13 @@ func NewSwitchClusterZoneRequest() (request *SwitchClusterZoneRequest) {
 func NewSwitchClusterZoneResponse() (response *SwitchClusterZoneResponse) {
     response = &SwitchClusterZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchClusterZone
-// 切换到从可用区
+// 本接口（SwitchClusterZone）用于切换集群的主备可用区。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -7855,7 +9659,7 @@ func (c *Client) SwitchClusterZone(request *SwitchClusterZoneRequest) (response 
 }
 
 // SwitchClusterZone
-// 切换到从可用区
+// 本接口（SwitchClusterZone）用于切换集群的主备可用区。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
@@ -7893,12 +9697,13 @@ func NewSwitchProxyVpcRequest() (request *SwitchProxyVpcRequest) {
 func NewSwitchProxyVpcResponse() (response *SwitchProxyVpcResponse) {
     response = &SwitchProxyVpcResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchProxyVpc
-// 本接口(SwitchProxyVpc)更换数据库代理vpc
+// 本接口（SwitchProxyVpc）用于更换数据库代理vpc。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7914,7 +9719,7 @@ func (c *Client) SwitchProxyVpc(request *SwitchProxyVpcRequest) (response *Switc
 }
 
 // SwitchProxyVpc
-// 本接口(SwitchProxyVpc)更换数据库代理vpc
+// 本接口（SwitchProxyVpc）用于更换数据库代理vpc。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -7955,12 +9760,13 @@ func NewUnbindClusterResourcePackagesRequest() (request *UnbindClusterResourcePa
 func NewUnbindClusterResourcePackagesResponse() (response *UnbindClusterResourcePackagesResponse) {
     response = &UnbindClusterResourcePackagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnbindClusterResourcePackages
-// cynos解绑资源包
+// 本接口（UnbindClusterResourcePackages）用于解除资源包与集群之间的绑定关系。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYSOURCEPACKAGEERROR = "FailedOperation.QuerySourcePackageError"
@@ -7975,7 +9781,7 @@ func (c *Client) UnbindClusterResourcePackages(request *UnbindClusterResourcePac
 }
 
 // UnbindClusterResourcePackages
-// cynos解绑资源包
+// 本接口（UnbindClusterResourcePackages）用于解除资源包与集群之间的绑定关系。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYSOURCEPACKAGEERROR = "FailedOperation.QuerySourcePackageError"
@@ -8015,12 +9821,13 @@ func NewUpgradeClusterVersionRequest() (request *UpgradeClusterVersionRequest) {
 func NewUpgradeClusterVersionResponse() (response *UpgradeClusterVersionResponse) {
     response = &UpgradeClusterVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeClusterVersion
-// 更新集群Cynos内核版本
+// 本接口（UpgradeClusterVersion）用于更新内核小版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -8064,7 +9871,7 @@ func (c *Client) UpgradeClusterVersion(request *UpgradeClusterVersionRequest) (r
 }
 
 // UpgradeClusterVersion
-// 更新集群Cynos内核版本
+// 本接口（UpgradeClusterVersion）用于更新内核小版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
@@ -8133,12 +9940,13 @@ func NewUpgradeInstanceRequest() (request *UpgradeInstanceRequest) {
 func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
     response = &UpgradeInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeInstance
-// 升级实例
+// 本接口（UpgradeInstance）用于实例变配。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
@@ -8152,6 +9960,7 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *UpgradeInstanceResponse, err error) {
@@ -8159,7 +9968,7 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 }
 
 // UpgradeInstance
-// 升级实例
+// 本接口（UpgradeInstance）用于实例变配。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
@@ -8173,6 +9982,7 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) UpgradeInstanceWithContext(ctx context.Context, request *UpgradeInstanceRequest) (response *UpgradeInstanceResponse, err error) {
@@ -8205,28 +10015,49 @@ func NewUpgradeProxyRequest() (request *UpgradeProxyRequest) {
 func NewUpgradeProxyResponse() (response *UpgradeProxyResponse) {
     response = &UpgradeProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeProxy
-// 升级数据库代理配置
+// 本接口（UpgradeProxy）用于升级数据库代理配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_SPECNOTFOUNDERROR = "FailedOperation.SpecNotFoundError"
+//  OPERATIONDENIED_GETPROXYGROUPFAILEDERROR = "OperationDenied.GetProxyGroupFailedError"
+//  OPERATIONDENIED_PROXYCONNECTCOUNTCHECKERROR = "OperationDenied.ProxyConnectCountCheckError"
+//  OPERATIONDENIED_PROXYNODECOUNTCHECKERROR = "OperationDenied.ProxyNodeCountCheckError"
+//  OPERATIONDENIED_PROXYNOTRUNNINGERROR = "OperationDenied.ProxyNotRunningError"
+//  OPERATIONDENIED_PROXYSALEZONECHECKERROR = "OperationDenied.ProxySaleZoneCheckError"
+//  OPERATIONDENIED_PROXYVERSIONCHECKERROR = "OperationDenied.ProxyVersionCheckError"
+//  OPERATIONDENIED_PROXYZONECHECKERROR = "OperationDenied.ProxyZoneCheckError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) UpgradeProxy(request *UpgradeProxyRequest) (response *UpgradeProxyResponse, err error) {
     return c.UpgradeProxyWithContext(context.Background(), request)
 }
 
 // UpgradeProxy
-// 升级数据库代理配置
+// 本接口（UpgradeProxy）用于升级数据库代理配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_SPECNOTFOUNDERROR = "FailedOperation.SpecNotFoundError"
+//  OPERATIONDENIED_GETPROXYGROUPFAILEDERROR = "OperationDenied.GetProxyGroupFailedError"
+//  OPERATIONDENIED_PROXYCONNECTCOUNTCHECKERROR = "OperationDenied.ProxyConnectCountCheckError"
+//  OPERATIONDENIED_PROXYNODECOUNTCHECKERROR = "OperationDenied.ProxyNodeCountCheckError"
+//  OPERATIONDENIED_PROXYNOTRUNNINGERROR = "OperationDenied.ProxyNotRunningError"
+//  OPERATIONDENIED_PROXYSALEZONECHECKERROR = "OperationDenied.ProxySaleZoneCheckError"
+//  OPERATIONDENIED_PROXYVERSIONCHECKERROR = "OperationDenied.ProxyVersionCheckError"
+//  OPERATIONDENIED_PROXYZONECHECKERROR = "OperationDenied.ProxyZoneCheckError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) UpgradeProxyWithContext(ctx context.Context, request *UpgradeProxyRequest) (response *UpgradeProxyResponse, err error) {
     if request == nil {
         request = NewUpgradeProxyRequest()
@@ -8257,28 +10088,31 @@ func NewUpgradeProxyVersionRequest() (request *UpgradeProxyVersionRequest) {
 func NewUpgradeProxyVersionResponse() (response *UpgradeProxyVersionResponse) {
     response = &UpgradeProxyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeProxyVersion
-// 升级数据库代理版本
+// 本接口（UpgradeProxyVersion）用于升级数据库代理版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 func (c *Client) UpgradeProxyVersion(request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
     return c.UpgradeProxyVersionWithContext(context.Background(), request)
 }
 
 // UpgradeProxyVersion
-// 升级数据库代理版本
+// 本接口（UpgradeProxyVersion）用于升级数据库代理版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 func (c *Client) UpgradeProxyVersionWithContext(ctx context.Context, request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
     if request == nil {
         request = NewUpgradeProxyVersionRequest()

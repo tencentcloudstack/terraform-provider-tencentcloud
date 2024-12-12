@@ -41,6 +41,9 @@ const (
 	// 创建资源包失败
 	FAILEDOPERATION_CREATESOURCEPACKAGEERROR = "FailedOperation.CreateSourcePackageError"
 
+	// 设置备份策略失败，请稍后重试。如果持续不成功，请联系客服进行处理。
+	FAILEDOPERATION_CYNOSDBMYSQLSETBACKUPSTRATEGY = "FailedOperation.CynosdbMysqlSetBackupStrategy"
+
 	// 数据库访问失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 
@@ -65,6 +68,9 @@ const (
 	// 账号余额不足。
 	FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 
+	// 修改资源包抵扣优先级失败，请检查参数并稍后重试
+	FAILEDOPERATION_MODIFYDEDUCTIONPRIORITYERROR = "FailedOperation.ModifyDeductionPriorityError"
+
 	// 操作失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 
@@ -80,6 +86,12 @@ const (
 	// 资源包退款失败
 	FAILEDOPERATION_REFUNDSOURCEPACKAGEERROR = "FailedOperation.RefundSourcePackageError"
 
+	// 修改策略失败。
+	FAILEDOPERATION_SERVERLESSSETSTRATEGYERROR = "FailedOperation.ServerlessSetStrategyError"
+
+	// 规格信息{{1}}搜索失败
+	FAILEDOPERATION_SPECNOTFOUNDERROR = "FailedOperation.SpecNotFoundError"
+
 	// 创建并支付订单失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
 
@@ -91,6 +103,9 @@ const (
 
 	// 查询数据库失败。
 	INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+
+	// 客户未授权
+	INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 
 	// 获取安全组信息失败。
 	INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
@@ -215,6 +230,9 @@ const (
 	// 预付费类型不允许该操作。
 	INVALIDPARAMETERVALUE_PREPAYPAYMODEERROR = "InvalidParameterValue.PrePayPayModeError"
 
+	// 找不到该ProjectId
+	INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
+
 	// 所选地域和可用区不可用。
 	INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
 
@@ -242,6 +260,9 @@ const (
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
+	// 审计规则不存在
+	OPERATIONDENIED_AUDITPOLICYNOTEXISTERROR = "OperationDenied.AuditPolicyNotExistError"
+
 	// 权限校验失败。
 	OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 
@@ -250,6 +271,9 @@ const (
 
 	// 集群当前状态不允许该操作。
 	OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+
+	// 获取proxy失败
+	OPERATIONDENIED_GETPROXYGROUPFAILEDERROR = "OperationDenied.GetProxyGroupFailedError"
 
 	// 您没有权限操作资源。
 	OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
@@ -262,6 +286,24 @@ const (
 
 	// 账号余额不足。
 	OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
+
+	// proxy节点支持的可创建的连接数量不匹配,可支持的创建连接数{{1}},当前连接数{{2}}
+	OPERATIONDENIED_PROXYCONNECTCOUNTCHECKERROR = "OperationDenied.ProxyConnectCountCheckError"
+
+	// 代理节点数量检查失败
+	OPERATIONDENIED_PROXYNODECOUNTCHECKERROR = "OperationDenied.ProxyNodeCountCheckError"
+
+	// 非运行的proxy
+	OPERATIONDENIED_PROXYNOTRUNNINGERROR = "OperationDenied.ProxyNotRunningError"
+
+	// 可用区不存在
+	OPERATIONDENIED_PROXYSALEZONECHECKERROR = "OperationDenied.ProxySaleZoneCheckError"
+
+	// 代理版本检查失败
+	OPERATIONDENIED_PROXYVERSIONCHECKERROR = "OperationDenied.ProxyVersionCheckError"
+
+	// proxy可用区校验失败
+	OPERATIONDENIED_PROXYZONECHECKERROR = "OperationDenied.ProxyZoneCheckError"
 
 	// serverless集群当前状态不允许该操作。
 	OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
