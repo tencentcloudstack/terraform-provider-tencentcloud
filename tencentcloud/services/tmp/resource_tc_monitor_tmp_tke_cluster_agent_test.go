@@ -147,9 +147,10 @@ const testClusterAgentYaml_basic = testClusterAgentYamlVar + `
 resource "tencentcloud_monitor_tmp_tke_cluster_agent" "basic" {
   instance_id = var.prometheus_id
   agents {
-    region          = var.default_region
-    cluster_type    = var.agent_cluster_type
-    cluster_id      = var.agent_cluster_id
-    enable_external = false
+    region              = var.default_region
+    cluster_type        = var.agent_cluster_type
+    cluster_id          = var.agent_cluster_id
+    enable_external     = false
+    open_default_record = true
   }
 }`
