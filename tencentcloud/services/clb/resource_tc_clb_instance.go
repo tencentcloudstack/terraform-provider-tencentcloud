@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -218,6 +219,11 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				Description: "If create dynamic vip CLB instance, `true` or `false`.",
 			},
+			"eip_address_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.",
+			},
 			"domain": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -404,6 +410,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("dynamic_vip"); ok {
 		request.DynamicVip = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("eip_address_id"); ok {
+		request.EipAddressId = helper.String(v.(string))
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -675,6 +685,40 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("snat_pro", instance.SnatPro)
 	}
 
+	if *instance.LoadBalancerType == "INTERNAL" {
+		request := vpc.NewDescribeAddressesRequest()
+		request.Filters = []*vpc.Filter{
+			{
+				Name:   helper.String("instance-id"),
+				Values: helper.Strings([]string{clbId}),
+			},
+		}
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeAddresses(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil || result.Response.AddressSet == nil {
+				e = fmt.Errorf("Describe CLB instance EIP failed")
+				return resource.NonRetryableError(e)
+			}
+
+			if len(result.Response.AddressSet) == 1 {
+				if result.Response.AddressSet[0].AddressId != nil {
+					_ = d.Set("eip_address_id", result.Response.AddressSet[0].AddressId)
+				}
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s Describe CLB instance EIP failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "clb", "clb", tcClient.Region, d.Id())
@@ -929,6 +973,102 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			log.Printf("[CRITAL]%s update CLB instance project_id failed, reason:%+v", logId, err)
 			return err
+		}
+	}
+
+	if d.HasChange("eip_address_id") {
+		oldEip, newEip := d.GetChange("eip_address_id")
+		oldEipStr := oldEip.(string)
+		newEipStr := newEip.(string)
+		// delete old first
+		if oldEipStr != "" {
+			request := vpc.NewDisassociateAddressRequest()
+			request.AddressId = helper.String(oldEipStr)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DisassociateAddress(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s Disassociate EIP failed, reason:%+v", logId, err)
+				return err
+			}
+
+			// wait
+			eipRequest := vpc.NewDescribeAddressesRequest()
+			eipRequest.AddressIds = helper.Strings([]string{oldEipStr})
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeAddresses(eipRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+
+				if result == nil || result.Response == nil || result.Response.AddressSet == nil || len(result.Response.AddressSet) != 1 {
+					e = fmt.Errorf("Describe CLB instance EIP failed")
+					return resource.NonRetryableError(e)
+				}
+
+				if *result.Response.AddressSet[0].AddressStatus != "UNBIND" {
+					return resource.RetryableError(fmt.Errorf("EIP status is still %s", *result.Response.AddressSet[0].AddressStatus))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s Describe CLB instance EIP failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+
+		// attach new
+		if newEipStr != "" {
+			request := vpc.NewAssociateAddressRequest()
+			request.AddressId = helper.String(newEipStr)
+			request.InstanceId = helper.String(clbId)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().AssociateAddress(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s Associate EIP failed, reason:%+v", logId, err)
+				return err
+			}
+
+			// wait
+			eipRequest := vpc.NewDescribeAddressesRequest()
+			eipRequest.AddressIds = helper.Strings([]string{newEipStr})
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeAddresses(eipRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+
+				if result == nil || result.Response == nil || result.Response.AddressSet == nil || len(result.Response.AddressSet) != 1 {
+					e = fmt.Errorf("Describe CLB instance EIP failed")
+					return resource.NonRetryableError(e)
+				}
+
+				if *result.Response.AddressSet[0].AddressStatus != "BIND" {
+					return resource.RetryableError(fmt.Errorf("EIP status is still %s", *result.Response.AddressSet[0].AddressStatus))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s Describe CLB instance EIP failed, reason:%+v", logId, err)
+				return err
+			}
 		}
 	}
 

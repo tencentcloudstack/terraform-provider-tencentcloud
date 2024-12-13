@@ -49,6 +49,43 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
+### Create CLB with eip_address_id, Only support INTERNAL CLB
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create clb
+resource "tencentcloud_clb_instance" "example" {
+  network_type   = "INTERNAL"
+  clb_name       = "tf-example"
+  project_id     = 0
+  vpc_id         = tencentcloud_vpc.vpc.id
+  subnet_id      = tencentcloud_subnet.subnet.id
+  eip_address_id = "eip-lt0w6jhq"
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ### Create dedicated cluster clb
 
 ```hcl
@@ -486,6 +523,7 @@ The following arguments are supported:
 * `cluster_id` - (Optional, String, ForceNew) Cluster ID.
 * `delete_protect` - (Optional, Bool) Whether to enable delete protection.
 * `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
+* `eip_address_id` - (Optional, String) The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.
 * `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
 * `internet_charge_type` - (Optional, String) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional, Bool) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
