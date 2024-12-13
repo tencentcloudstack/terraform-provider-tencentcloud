@@ -427,6 +427,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							ForceNew:    true,
+							Computed:    true,
 							Description: "Tag pairs.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
