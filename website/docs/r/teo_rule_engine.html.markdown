@@ -199,6 +199,7 @@ The `and` object of `or` supports the following:
   - `client_country`: Country/Region of the client.
   - `query_string`: Query string in the request URL.
   - `request_header`: HTTP request header.
+  - `client_ip`: Client IP.
 * `ignore_case` - (Optional, Bool) Whether the parameter value is case insensitive. Default value: false.
 * `name` - (Optional, String) The parameter name of the match type. This field is required only when `Target=query_string/request_header`.
   - `query_string`: Name of the query string, such as "lang" and "version" in "lang=cn&version=1".
@@ -229,6 +230,7 @@ The `and` object of `or` supports the following:
   - `url`: Partial URL under the current site.  - `client_country`: Country/Region of the client.
   - `query_string`: Query string in the request URL.
   - `request_header`: HTTP request header.
+  - `client_ip`: Client IP.
 * `ignore_case` - (Optional, Bool) Whether the parameter value is case insensitive. Default value: false.
 * `name` - (Optional, String) The parameter name of the match type. This field is required only when `Target=query_string/request_header`.
   - `query_string`: Name of the query string, such as "lang" and "version" in "lang=cn&version=1".
