@@ -1167,8 +1167,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				diskSize := int64(value["data_disk_size"].(int))
 				deleteWithInstance := value["delete_with_instance"].(bool)
 				encrypt := value["encrypt"].(bool)
-				if v, ok := value["data_disk_name"].(string); ok && v != "" {
-					diskName = v
+				if tmpV, ok := value["data_disk_name"].(string); ok && tmpV != "" {
+					diskName = tmpV
 				}
 
 				diskObj := diskHash{
@@ -1231,7 +1231,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		// has disk name first
+		// has set disk name first
 		for _, disk := range instance.DataDisks {
 			for _, hashItem := range dDiskHash {
 				diskName := *disk.DiskName
@@ -1243,7 +1243,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				})
 
 				// get disk name
-				if _, ok := hashItem[diskName]; ok {
+				if v, ok := hashItem[diskName].(string); ok && v != "" {
 					// check hash and flag
 					if tmpHash == hashItem[diskName] && hashItem["flag"] == 0 {
 						dataDisk := make(map[string]interface{}, 5)
@@ -1263,7 +1263,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		// no disk name last
+		// no set disk name last
 		for _, disk := range instance.DataDisks {
 			for index, hashItem := range dDiskHash {
 				tmpHash := getDataDiskHash(diskHash{
