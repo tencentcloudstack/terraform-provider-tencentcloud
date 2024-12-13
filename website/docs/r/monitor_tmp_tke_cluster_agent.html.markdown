@@ -188,6 +188,7 @@ The `agents` object supports the following:
 * `in_cluster_pod_config` - (Optional, List) Pod configuration for components deployed in the cluster.
 * `not_install_basic_scrape` - (Optional, Bool) Whether to install the default collection configuration.
 * `not_scrape` - (Optional, Bool) Whether to collect indicators, true means drop all indicators, false means collect default indicators.
+* `open_default_record` - (Optional, Bool) Whether to enable the default pre-aggregation rule.
 
 The `external_labels` object of `agents` supports the following:
 
