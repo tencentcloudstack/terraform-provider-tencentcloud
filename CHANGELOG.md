@@ -1,3 +1,13 @@
+## 1.81.148 (December 13 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: spport `eip_address_id` ([#3009](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3009))
+* resource/tencentcloud_cynosdb_cluster: support `instance_init_infos` ([#3015](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3015))
+* resource/tencentcloud_kubernetes_scale_worker: support `tags` ([#3010](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3010))
+* resource/tencentcloud_monitor_tmp_tke_cluster_agent: support `open_default_record` field. ([#3018](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3018))
+* resource/tencentcloud_teo_rule_engine: Add enumeration to the `target` field. ([#3008](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3008))
+
 ## 1.81.147 (December 11 , 2024)
 
 FEATURES:
