@@ -61,8 +61,9 @@ func TestAccTencentCloudMonitorClusterAgent_basic(t *testing.T) {
 				Config: testClusterAgentYaml_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClusterAgentExists("tencentcloud_monitor_tmp_tke_cluster_agent.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.cluster_id", "cls-9ae9qo9k"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.cluster_type", "eks"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.cluster_id", tcacctest.TkeClusterIdAgent),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.cluster_type", tcacctest.TkeClusterTypeAgent),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.open_default_record", "true"),
 				),
 			},
 		},
