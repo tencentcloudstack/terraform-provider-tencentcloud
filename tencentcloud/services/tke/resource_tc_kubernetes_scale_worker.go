@@ -423,6 +423,29 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							ForceNew:    true,
 							Description: "User data provided to instances, needs to be encoded in base64, and the maximum supported data size is 16KB.",
 						},
+						"tags": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
+							Description: "Tag pairs.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"key": {
+										Type:        schema.TypeString,
+										Required:    true,
+										ForceNew:    true,
+										Description: "Tag key.",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Required:    true,
+										ForceNew:    true,
+										Description: "Tag value.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},

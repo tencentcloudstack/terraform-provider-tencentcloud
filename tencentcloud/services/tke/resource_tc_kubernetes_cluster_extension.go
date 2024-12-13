@@ -1981,6 +1981,26 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		request.HpcClusterId = helper.String(v.(string))
 	}
 
+	if v, ok := dMap["tags"].([]interface{}); ok && len(v) != 0 {
+		tmpTagSpec := cvm.TagSpecification{}
+		tmpTagSpec.ResourceType = helper.String("instance")
+		for _, item := range v {
+			value := item.(map[string]interface{})
+			tmpTag := cvm.Tag{}
+			if v, ok := value["key"].(string); ok && v != "" {
+				tmpTag.Key = &v
+			}
+
+			if v, ok := value["value"].(string); ok && v != "" {
+				tmpTag.Value = &v
+			}
+
+			tmpTagSpec.Tags = append(tmpTagSpec.Tags, &tmpTag)
+		}
+
+		request.TagSpecification = append(request.TagSpecification, &tmpTagSpec)
+	}
+
 	cvmJson = request.ToJsonString()
 
 	cvmJson = strings.Replace(cvmJson, `"Password":"",`, "", -1)
