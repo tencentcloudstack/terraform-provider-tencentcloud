@@ -1119,6 +1119,39 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			})
 		}
 
+		// get data disk name
+		finalDiskIds := make([]*string, 0, len(dataDiskList))
+		for _, item := range dataDiskList {
+			diskId := item["data_disk_id"].(*string)
+			finalDiskIds = append(finalDiskIds, diskId)
+		}
+
+		if len(finalDiskIds) != 0 {
+			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				disks, err := cbsService.DescribeDiskList(ctx, finalDiskIds)
+				if err != nil {
+					return resource.NonRetryableError(err)
+				}
+
+				for _, disk := range disks {
+					diskId := disk.DiskId
+					for _, v := range dataDiskList {
+						tmpDiskId := v["data_disk_id"].(*string)
+						if *diskId == *tmpDiskId {
+							v["data_disk_name"] = disk.DiskName
+							break
+						}
+					}
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+
 		_ = d.Set("data_disks", dataDiskList)
 	} else if len(instance.DataDisks) > 0 && hasDataDisksName {
 		// scene with no disks name
