@@ -1,3 +1,18 @@
+## 1.81.148 (December 16 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_classic_elastic_public_ipv6s` ([#3021](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3021))
+* **New Data Source:** `tencentcloud_elastic_public_ipv6s` ([#3021](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3021))
+* **New Resource:** `tencentcloud_classic_elastic_public_ipv6` ([#3021](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3021))
+* **New Resource:** `tencentcloud_elastic_public_ipv6` ([#3021](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3021))
+* **New Resource:** `tencentcloud_elastic_public_ipv6_attachment` ([#3021](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3021))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_storage: update `tag` ([#3020](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3020))
+* resource/tencentcloud_instance: update unit test ([#3019](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3019))
+
 ## 1.81.148 (December 13 , 2024)
 
 ENHANCEMENTS:
