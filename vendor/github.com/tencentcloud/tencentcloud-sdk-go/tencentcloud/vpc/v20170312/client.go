@@ -606,6 +606,87 @@ func (c *Client) AllocateAddressesWithContext(ctx context.Context, request *Allo
     return
 }
 
+func NewAllocateIPv6AddressesRequest() (request *AllocateIPv6AddressesRequest) {
+    request = &AllocateIPv6AddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "AllocateIPv6Addresses")
+    
+    
+    return
+}
+
+func NewAllocateIPv6AddressesResponse() (response *AllocateIPv6AddressesResponse) {
+    response = &AllocateIPv6AddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AllocateIPv6Addresses
+// 本接口（AllocateIPv6Addresses）用于申请一个或多个弹性公网IPv6（简称EIPv6）实例。
+//
+// 
+//
+// - EIPv6 是您在腾讯云某个地域可以独立申请和持有的，固定不变的公网 IPv6 地址，提供与弹性公网 IPv4 一致的产品体验。
+//
+// - 通过弹性公网 IPv6，您可以快速将 EIPv6 实例绑定到云资源的内网 IPv6 地址上，实现为云资源快速开通 IPv6 公网带宽。
+//
+// - 您还可以按需将 EIPv6 实例绑定到其他云资源上，从而屏蔽实例故障。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BANDWIDTHOUTOFRANGE = "InvalidParameterValue.BandwidthOutOfRange"
+//  INVALIDPARAMETERVALUE_BANDWIDTHTOOSMALL = "InvalidParameterValue.BandwidthTooSmall"
+//  INVALIDPARAMETERVALUE_COMBINATION = "InvalidParameterValue.Combination"
+//  INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
+//  LIMITEXCEEDED_BANDWIDTHPACKAGERESOURCEQUOTA = "LimitExceeded.BandwidthPackageResourceQuota"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_ACCOUNTNOTSUPPORTED = "UnsupportedOperation.AccountNotSupported"
+func (c *Client) AllocateIPv6Addresses(request *AllocateIPv6AddressesRequest) (response *AllocateIPv6AddressesResponse, err error) {
+    return c.AllocateIPv6AddressesWithContext(context.Background(), request)
+}
+
+// AllocateIPv6Addresses
+// 本接口（AllocateIPv6Addresses）用于申请一个或多个弹性公网IPv6（简称EIPv6）实例。
+//
+// 
+//
+// - EIPv6 是您在腾讯云某个地域可以独立申请和持有的，固定不变的公网 IPv6 地址，提供与弹性公网 IPv4 一致的产品体验。
+//
+// - 通过弹性公网 IPv6，您可以快速将 EIPv6 实例绑定到云资源的内网 IPv6 地址上，实现为云资源快速开通 IPv6 公网带宽。
+//
+// - 您还可以按需将 EIPv6 实例绑定到其他云资源上，从而屏蔽实例故障。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_BANDWIDTHOUTOFRANGE = "InvalidParameterValue.BandwidthOutOfRange"
+//  INVALIDPARAMETERVALUE_BANDWIDTHTOOSMALL = "InvalidParameterValue.BandwidthTooSmall"
+//  INVALIDPARAMETERVALUE_COMBINATION = "InvalidParameterValue.Combination"
+//  INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
+//  LIMITEXCEEDED_BANDWIDTHPACKAGERESOURCEQUOTA = "LimitExceeded.BandwidthPackageResourceQuota"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_ACCOUNTNOTSUPPORTED = "UnsupportedOperation.AccountNotSupported"
+func (c *Client) AllocateIPv6AddressesWithContext(ctx context.Context, request *AllocateIPv6AddressesRequest) (response *AllocateIPv6AddressesResponse, err error) {
+    if request == nil {
+        request = NewAllocateIPv6AddressesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AllocateIPv6Addresses require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAllocateIPv6AddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAllocateIp6AddressesBandwidthRequest() (request *AllocateIp6AddressesBandwidthRequest) {
     request = &AllocateIp6AddressesBandwidthRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -626,7 +707,13 @@ func NewAllocateIp6AddressesBandwidthResponse() (response *AllocateIp6AddressesB
 }
 
 // AllocateIp6AddressesBandwidth
-// 该接口用于给IPv6地址初次分配公网带宽
+// 本接口（AllocateIp6AddressesBandwidth）用于为传统弹性公网 IPv6 实例开通 IPv6 公网带宽。
+//
+// 
+//
+// - 传统弹性公网 IPv6 实例默认仅具备 IPv6 内网通信能力，需为 IPv6 地址分配公网带宽后，才具备 IPv6 公网通信能力。
+//
+// - 支持为一个或多个传统弹性公网 IPv6 实例开通公网带宽。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
@@ -651,7 +738,13 @@ func (c *Client) AllocateIp6AddressesBandwidth(request *AllocateIp6AddressesBand
 }
 
 // AllocateIp6AddressesBandwidth
-// 该接口用于给IPv6地址初次分配公网带宽
+// 本接口（AllocateIp6AddressesBandwidth）用于为传统弹性公网 IPv6 实例开通 IPv6 公网带宽。
+//
+// 
+//
+// - 传统弹性公网 IPv6 实例默认仅具备 IPv6 内网通信能力，需为 IPv6 地址分配公网带宽后，才具备 IPv6 公网通信能力。
+//
+// - 支持为一个或多个传统弹性公网 IPv6 实例开通公网带宽。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
@@ -1306,6 +1399,91 @@ func (c *Client) AssociateDirectConnectGatewayNatGatewayWithContext(ctx context.
     request.SetContext(ctx)
     
     response = NewAssociateDirectConnectGatewayNatGatewayResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAssociateIPv6AddressRequest() (request *AssociateIPv6AddressRequest) {
+    request = &AssociateIPv6AddressRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "AssociateIPv6Address")
+    
+    
+    return
+}
+
+func NewAssociateIPv6AddressResponse() (response *AssociateIPv6AddressResponse) {
+    response = &AssociateIPv6AddressResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AssociateIPv6Address
+// 本接口（AssociateIPv6Address）用于将弹性公网IPv6（简称EIPv6）实例绑定到 CVM 或弹性网卡配置的内网 IPv6 地址上。
+//
+// 
+//
+// - 将 EIPv6 绑定到 CVM 上，其本质是将 EIPv6 绑定到 CVM 弹性网卡所配置的内网 IPv6 地址上。
+//
+// - 将 EIPv6 绑定到指定网卡的内网 IPv6 时，需确保该内网 IPv6 地址为未绑定状态，才能执行绑定操作。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  INVALIDPARAMETERVALUE_ADDRESSNOTAPPLICABLE = "InvalidParameterValue.AddressNotApplicable"
+//  INVALIDPARAMETERVALUE_MISSINGASSOCIATEENTITY = "InvalidParameterValue.MissingAssociateEntity"
+//  INVALIDPARAMETERVALUE_NETWORKINTERFACEINSTANCENOTSUPPORT = "InvalidParameterValue.NetworkInterfaceInstanceNotSupport"
+//  INVALIDPARAMETERVALUE_NETWORKINTERFACENOTFOUND = "InvalidParameterValue.NetworkInterfaceNotFound"
+//  INVALIDPRIVATEIPADDRESS_ALREADYBINDEIP = "InvalidPrivateIpAddress.AlreadyBindEip"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) AssociateIPv6Address(request *AssociateIPv6AddressRequest) (response *AssociateIPv6AddressResponse, err error) {
+    return c.AssociateIPv6AddressWithContext(context.Background(), request)
+}
+
+// AssociateIPv6Address
+// 本接口（AssociateIPv6Address）用于将弹性公网IPv6（简称EIPv6）实例绑定到 CVM 或弹性网卡配置的内网 IPv6 地址上。
+//
+// 
+//
+// - 将 EIPv6 绑定到 CVM 上，其本质是将 EIPv6 绑定到 CVM 弹性网卡所配置的内网 IPv6 地址上。
+//
+// - 将 EIPv6 绑定到指定网卡的内网 IPv6 时，需确保该内网 IPv6 地址为未绑定状态，才能执行绑定操作。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  INVALIDPARAMETERVALUE_ADDRESSNOTAPPLICABLE = "InvalidParameterValue.AddressNotApplicable"
+//  INVALIDPARAMETERVALUE_MISSINGASSOCIATEENTITY = "InvalidParameterValue.MissingAssociateEntity"
+//  INVALIDPARAMETERVALUE_NETWORKINTERFACEINSTANCENOTSUPPORT = "InvalidParameterValue.NetworkInterfaceInstanceNotSupport"
+//  INVALIDPARAMETERVALUE_NETWORKINTERFACENOTFOUND = "InvalidParameterValue.NetworkInterfaceNotFound"
+//  INVALIDPRIVATEIPADDRESS_ALREADYBINDEIP = "InvalidPrivateIpAddress.AlreadyBindEip"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) AssociateIPv6AddressWithContext(ctx context.Context, request *AssociateIPv6AddressRequest) (response *AssociateIPv6AddressResponse, err error) {
+    if request == nil {
+        request = NewAssociateIPv6AddressRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateIPv6Address require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAssociateIPv6AddressResponse()
     err = c.Send(request, response)
     return
 }
@@ -6975,6 +7153,7 @@ func NewCreateVpnGatewaySslClientResponse() (response *CreateVpnGatewaySslClient
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
@@ -6989,6 +7168,7 @@ func (c *Client) CreateVpnGatewaySslClient(request *CreateVpnGatewaySslClientReq
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
@@ -12324,6 +12504,79 @@ func (c *Client) DescribeHighPriorityRoutesWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeIPv6AddressesRequest() (request *DescribeIPv6AddressesRequest) {
+    request = &DescribeIPv6AddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeIPv6Addresses")
+    
+    
+    return
+}
+
+func NewDescribeIPv6AddressesResponse() (response *DescribeIPv6AddressesResponse) {
+    response = &DescribeIPv6AddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIPv6Addresses
+// 本接口（DescribeIPv6Addresses）用于查询一个或多个弹性公网 IPv6（简称 EIPv6）实例的详细信息。
+//
+// 
+//
+// - 支持查询您在指定地域的弹性公网 IPv6 和传统弹性公网 IPv6 实例信息
+//
+// - 如果参数为空，返回当前用户一定数量（Limit所指定的数量，默认为20）的 EIPv6。
+//
+// 可能返回的错误码:
+//  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeIPv6Addresses(request *DescribeIPv6AddressesRequest) (response *DescribeIPv6AddressesResponse, err error) {
+    return c.DescribeIPv6AddressesWithContext(context.Background(), request)
+}
+
+// DescribeIPv6Addresses
+// 本接口（DescribeIPv6Addresses）用于查询一个或多个弹性公网 IPv6（简称 EIPv6）实例的详细信息。
+//
+// 
+//
+// - 支持查询您在指定地域的弹性公网 IPv6 和传统弹性公网 IPv6 实例信息
+//
+// - 如果参数为空，返回当前用户一定数量（Limit所指定的数量，默认为20）的 EIPv6。
+//
+// 可能返回的错误码:
+//  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeIPv6AddressesWithContext(ctx context.Context, request *DescribeIPv6AddressesRequest) (response *DescribeIPv6AddressesResponse, err error) {
+    if request == nil {
+        request = NewDescribeIPv6AddressesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIPv6Addresses require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIPv6AddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeIp6AddressesRequest() (request *DescribeIp6AddressesRequest) {
     request = &DescribeIp6AddressesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -12344,7 +12597,7 @@ func NewDescribeIp6AddressesResponse() (response *DescribeIp6AddressesResponse) 
 }
 
 // DescribeIp6Addresses
-// 该接口用于查询IPV6地址信息
+// 本接口（DescribeIp6Addresses）用于查询一个或多个传统弹性公网 IPv6 实例的详细信息。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -12362,7 +12615,7 @@ func (c *Client) DescribeIp6Addresses(request *DescribeIp6AddressesRequest) (res
 }
 
 // DescribeIp6Addresses
-// 该接口用于查询IPV6地址信息
+// 本接口（DescribeIp6Addresses）用于查询一个或多个传统弹性公网 IPv6 实例的详细信息。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -15218,6 +15471,55 @@ func (c *Client) DescribeTrafficPackagesWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribeTrafficQosPolicyRequest() (request *DescribeTrafficQosPolicyRequest) {
+    request = &DescribeTrafficQosPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeTrafficQosPolicy")
+    
+    
+    return
+}
+
+func NewDescribeTrafficQosPolicyResponse() (response *DescribeTrafficQosPolicyResponse) {
+    response = &DescribeTrafficQosPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTrafficQosPolicy
+// 查询流量调度规则
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeTrafficQosPolicy(request *DescribeTrafficQosPolicyRequest) (response *DescribeTrafficQosPolicyResponse, err error) {
+    return c.DescribeTrafficQosPolicyWithContext(context.Background(), request)
+}
+
+// DescribeTrafficQosPolicy
+// 查询流量调度规则
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeTrafficQosPolicyWithContext(ctx context.Context, request *DescribeTrafficQosPolicyRequest) (response *DescribeTrafficQosPolicyResponse, err error) {
+    if request == nil {
+        request = NewDescribeTrafficQosPolicyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTrafficQosPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTrafficQosPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeUsedIpAddressRequest() (request *DescribeUsedIpAddressRequest) {
     request = &DescribeUsedIpAddressRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -17261,6 +17563,75 @@ func (c *Client) DisassociateDirectConnectGatewayNatGatewayWithContext(ctx conte
     return
 }
 
+func NewDisassociateIPv6AddressRequest() (request *DisassociateIPv6AddressRequest) {
+    request = &DisassociateIPv6AddressRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DisassociateIPv6Address")
+    
+    
+    return
+}
+
+func NewDisassociateIPv6AddressResponse() (response *DisassociateIPv6AddressResponse) {
+    response = &DisassociateIPv6AddressResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisassociateIPv6Address
+// 本接口（DisassociateIPv6Address）用于解绑弹性公网 IPv6（简称EIPv6）实例。
+//
+// 
+//
+// - 支持对 CVM、弹性网卡绑定的 EIPv6 实例进行解绑操作。
+//
+// - 只有状态为 BIND 和 BIND_ENI 的 EIPv6 实例才能进行解绑操作。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ADDRESSENIINFONOTFOUND = "FailedOperation.AddressEniInfoNotFound"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) DisassociateIPv6Address(request *DisassociateIPv6AddressRequest) (response *DisassociateIPv6AddressResponse, err error) {
+    return c.DisassociateIPv6AddressWithContext(context.Background(), request)
+}
+
+// DisassociateIPv6Address
+// 本接口（DisassociateIPv6Address）用于解绑弹性公网 IPv6（简称EIPv6）实例。
+//
+// 
+//
+// - 支持对 CVM、弹性网卡绑定的 EIPv6 实例进行解绑操作。
+//
+// - 只有状态为 BIND 和 BIND_ENI 的 EIPv6 实例才能进行解绑操作。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ADDRESSENIINFONOTFOUND = "FailedOperation.AddressEniInfoNotFound"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) DisassociateIPv6AddressWithContext(ctx context.Context, request *DisassociateIPv6AddressRequest) (response *DisassociateIPv6AddressResponse, err error) {
+    if request == nil {
+        request = NewDisassociateIPv6AddressRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateIPv6Address require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisassociateIPv6AddressResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDisassociateNatGatewayAddressRequest() (request *DisassociateNatGatewayAddressRequest) {
     request = &DisassociateNatGatewayAddressRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -18537,8 +18908,6 @@ func NewLockCcnsResponse() (response *LockCcnsResponse) {
 //
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
 //
-// 
-//
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -18558,8 +18927,6 @@ func (c *Client) LockCcns(request *LockCcnsRequest) (response *LockCcnsResponse,
 // 
 //
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
-//
-// 
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
@@ -20236,6 +20603,128 @@ func (c *Client) ModifyHighPriorityRouteTableAttributeWithContext(ctx context.Co
     return
 }
 
+func NewModifyIPv6AddressesAttributesRequest() (request *ModifyIPv6AddressesAttributesRequest) {
+    request = &ModifyIPv6AddressesAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyIPv6AddressesAttributes")
+    
+    
+    return
+}
+
+func NewModifyIPv6AddressesAttributesResponse() (response *ModifyIPv6AddressesAttributesResponse) {
+    response = &ModifyIPv6AddressesAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyIPv6AddressesAttributes
+// 本接口（ModifyIPv6AddressesAttributes）用于修改弹性公网 IPv6（简称EIPv6）实例名称。
+//
+// 
+//
+// - 支持对弹性公网 IPv6 和传统弹性公网 IPv6 实例名称进行修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  MISSINGPARAMETER_MULTIMISSINGPARAMETER = "MissingParameter.MultiMissingParameter"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) ModifyIPv6AddressesAttributes(request *ModifyIPv6AddressesAttributesRequest) (response *ModifyIPv6AddressesAttributesResponse, err error) {
+    return c.ModifyIPv6AddressesAttributesWithContext(context.Background(), request)
+}
+
+// ModifyIPv6AddressesAttributes
+// 本接口（ModifyIPv6AddressesAttributes）用于修改弹性公网 IPv6（简称EIPv6）实例名称。
+//
+// 
+//
+// - 支持对弹性公网 IPv6 和传统弹性公网 IPv6 实例名称进行修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  MISSINGPARAMETER_MULTIMISSINGPARAMETER = "MissingParameter.MultiMissingParameter"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) ModifyIPv6AddressesAttributesWithContext(ctx context.Context, request *ModifyIPv6AddressesAttributesRequest) (response *ModifyIPv6AddressesAttributesResponse, err error) {
+    if request == nil {
+        request = NewModifyIPv6AddressesAttributesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyIPv6AddressesAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyIPv6AddressesAttributesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyIPv6AddressesBandwidthRequest() (request *ModifyIPv6AddressesBandwidthRequest) {
+    request = &ModifyIPv6AddressesBandwidthRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyIPv6AddressesBandwidth")
+    
+    
+    return
+}
+
+func NewModifyIPv6AddressesBandwidthResponse() (response *ModifyIPv6AddressesBandwidthResponse) {
+    response = &ModifyIPv6AddressesBandwidthResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyIPv6AddressesBandwidth
+// 本接口（ModifyIPv6AddressesBandwidth）用于调整弹性公网 IPv6（简称EIPv6）实例的带宽上限。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) ModifyIPv6AddressesBandwidth(request *ModifyIPv6AddressesBandwidthRequest) (response *ModifyIPv6AddressesBandwidthResponse, err error) {
+    return c.ModifyIPv6AddressesBandwidthWithContext(context.Background(), request)
+}
+
+// ModifyIPv6AddressesBandwidth
+// 本接口（ModifyIPv6AddressesBandwidth）用于调整弹性公网 IPv6（简称EIPv6）实例的带宽上限。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) ModifyIPv6AddressesBandwidthWithContext(ctx context.Context, request *ModifyIPv6AddressesBandwidthRequest) (response *ModifyIPv6AddressesBandwidthResponse, err error) {
+    if request == nil {
+        request = NewModifyIPv6AddressesBandwidthRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyIPv6AddressesBandwidth require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyIPv6AddressesBandwidthResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyIp6AddressesBandwidthRequest() (request *ModifyIp6AddressesBandwidthRequest) {
     request = &ModifyIp6AddressesBandwidthRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -20256,7 +20745,13 @@ func NewModifyIp6AddressesBandwidthResponse() (response *ModifyIp6AddressesBandw
 }
 
 // ModifyIp6AddressesBandwidth
-// 该接口用于修改IPV6地址访问internet的带宽
+// 本接口（ModifyIp6AddressesBandwidth）用于调整传统弹性公网 IPv6 实例的带宽上限。
+//
+// 
+//
+// - 仅支持对传统弹性公网 IPv6 实例的带宽上限进行调整。
+//
+// - 如需调整弹性公网 IPv6 实例的带宽上限，请使用 ModifyIPv6AddressesBandwidth 接口。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -20281,7 +20776,13 @@ func (c *Client) ModifyIp6AddressesBandwidth(request *ModifyIp6AddressesBandwidt
 }
 
 // ModifyIp6AddressesBandwidth
-// 该接口用于修改IPV6地址访问internet的带宽
+// 本接口（ModifyIp6AddressesBandwidth）用于调整传统弹性公网 IPv6 实例的带宽上限。
+//
+// 
+//
+// - 仅支持对传统弹性公网 IPv6 实例的带宽上限进行调整。
+//
+// - 如需调整弹性公网 IPv6 实例的带宽上限，请使用 ModifyIPv6AddressesBandwidth 接口。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -23109,6 +23610,73 @@ func (c *Client) ReleaseAddressesWithContext(ctx context.Context, request *Relea
     return
 }
 
+func NewReleaseIPv6AddressesRequest() (request *ReleaseIPv6AddressesRequest) {
+    request = &ReleaseIPv6AddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ReleaseIPv6Addresses")
+    
+    
+    return
+}
+
+func NewReleaseIPv6AddressesResponse() (response *ReleaseIPv6AddressesResponse) {
+    response = &ReleaseIPv6AddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ReleaseIPv6Addresses
+// 本接口（ReleaseIPv6Addresses）用于释放一个或多个弹性公网IPv6（简称EIPv6）实例。
+//
+// 
+//
+// - 支持对已申请到的弹性公网 IPv6 实例进行释放操作，如需再次使用，请重新申请。
+//
+// - 只有状态为 UNBIND 的 EIPv6 实例才能进行释放操作。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) ReleaseIPv6Addresses(request *ReleaseIPv6AddressesRequest) (response *ReleaseIPv6AddressesResponse, err error) {
+    return c.ReleaseIPv6AddressesWithContext(context.Background(), request)
+}
+
+// ReleaseIPv6Addresses
+// 本接口（ReleaseIPv6Addresses）用于释放一个或多个弹性公网IPv6（简称EIPv6）实例。
+//
+// 
+//
+// - 支持对已申请到的弹性公网 IPv6 实例进行释放操作，如需再次使用，请重新申请。
+//
+// - 只有状态为 UNBIND 的 EIPv6 实例才能进行释放操作。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
+func (c *Client) ReleaseIPv6AddressesWithContext(ctx context.Context, request *ReleaseIPv6AddressesRequest) (response *ReleaseIPv6AddressesResponse, err error) {
+    if request == nil {
+        request = NewReleaseIPv6AddressesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReleaseIPv6Addresses require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReleaseIPv6AddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewReleaseIp6AddressesBandwidthRequest() (request *ReleaseIp6AddressesBandwidthRequest) {
     request = &ReleaseIp6AddressesBandwidthRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -23129,7 +23697,13 @@ func NewReleaseIp6AddressesBandwidthResponse() (response *ReleaseIp6AddressesBan
 }
 
 // ReleaseIp6AddressesBandwidth
-// 该接口用于给弹性公网IPv6地址释放带宽。
+// 本接口（ReleaseIp6AddressesBandwidth）用于为传统弹性公网 IPv6 实例关闭 IPv6 公网带宽。
+//
+// 
+//
+// - 传统弹性公网 IPv6 实例关闭公网带宽后，仍具备 IPv6 内网通信能力。
+//
+// - 如需再次开通 IPv6 公网带宽，请使用 AllocateIp6AddressesBandwidth 接口进行开通。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TASKFAILED = "FailedOperation.TaskFailed"
@@ -23148,7 +23722,13 @@ func (c *Client) ReleaseIp6AddressesBandwidth(request *ReleaseIp6AddressesBandwi
 }
 
 // ReleaseIp6AddressesBandwidth
-// 该接口用于给弹性公网IPv6地址释放带宽。
+// 本接口（ReleaseIp6AddressesBandwidth）用于为传统弹性公网 IPv6 实例关闭 IPv6 公网带宽。
+//
+// 
+//
+// - 传统弹性公网 IPv6 实例关闭公网带宽后，仍具备 IPv6 内网通信能力。
+//
+// - 如需再次开通 IPv6 公网带宽，请使用 AllocateIp6AddressesBandwidth 接口进行开通。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TASKFAILED = "FailedOperation.TaskFailed"
@@ -24376,9 +24956,7 @@ func NewResetRoutesResponse() (response *ResetRoutesResponse) {
 }
 
 // ResetRoutes
-// 本接口（ResetRoutes）用于对某个路由表名称和所有路由策略（Route）进行重新设置。<br />
-//
-// 注意: 调用本接口是先删除当前路由表中所有路由策略, 再保存新提交的路由策略内容, 会引起网络中断。
+// 本接口（ResetRoutes）用于对某个路由表名称和所有路由策略（Route）进行重新设置。<br /> 注意: 调用本接口时先删除当前路由表中所有路由策略, 再保存新提交的路由策略内容, 会引起网络中断。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -24398,9 +24976,7 @@ func (c *Client) ResetRoutes(request *ResetRoutesRequest) (response *ResetRoutes
 }
 
 // ResetRoutes
-// 本接口（ResetRoutes）用于对某个路由表名称和所有路由策略（Route）进行重新设置。<br />
-//
-// 注意: 调用本接口是先删除当前路由表中所有路由策略, 再保存新提交的路由策略内容, 会引起网络中断。
+// 本接口（ResetRoutes）用于对某个路由表名称和所有路由策略（Route）进行重新设置。<br /> 注意: 调用本接口时先删除当前路由表中所有路由策略, 再保存新提交的路由策略内容, 会引起网络中断。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -25201,8 +25777,6 @@ func NewUnlockCcnsResponse() (response *UnlockCcnsResponse) {
 //
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
 //
-// 
-//
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -25222,8 +25796,6 @@ func (c *Client) UnlockCcns(request *UnlockCcnsRequest) (response *UnlockCcnsRes
 // 
 //
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
-//
-// 
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"

@@ -1231,6 +1231,8 @@ Virtual Private Cloud(VPC)
     tencentcloud_nat_dc_route
     tencentcloud_vpc_bandwidth_package_quota
     tencentcloud_vpc_bandwidth_package_bill_usage
+    tencentcloud_classic_elastic_public_ipv6s
+    tencentcloud_elastic_public_ipv6s
 
   Resource
     tencentcloud_eni
@@ -1279,6 +1281,9 @@ Virtual Private Cloud(VPC)
     tencentcloud_vpc_bandwidth_package_attachment
     tencentcloud_ipv6_address_bandwidth
     tencentcloud_reserve_ip_address
+    tencentcloud_elastic_public_ipv6
+    tencentcloud_classic_elastic_public_ipv6
+    tencentcloud_elastic_public_ipv6_attachment
 
 Private Link(PLS)
   Resource
