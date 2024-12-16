@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"log"
 	"sort"
@@ -1243,17 +1242,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		a, _ := json.Marshal(instance.DataDisks)
-		b, _ := json.Marshal(dDiskHash)
-		fmt.Println(1111111111111)
-		fmt.Println(1111111111111)
-		fmt.Printf("%+v\n", string(a))
-		fmt.Println(1111111111111)
-		fmt.Println(1111111111111)
-		fmt.Printf("%+v\n", string(b))
-		fmt.Println(1111111111111)
-		fmt.Println(1111111111111)
-
 		// has set disk name first
 		for v := range sourceDataDisks {
 			for i := range dDiskHash {
@@ -1294,15 +1282,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		c, _ := json.Marshal(sourceDataDisks)
-		c1, _ := json.Marshal(dDiskHash)
-		fmt.Println(2222222222222)
-		fmt.Println(2222222222222)
-		fmt.Printf("%+v\n", string(c))
-		fmt.Printf("%+v\n", string(c1))
-		fmt.Println(2222222222222)
-		fmt.Println(2222222222222)
-
 		// no set disk name last
 		for v := range sourceDataDisks {
 			for i := range dDiskHash {
@@ -1338,15 +1317,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				}
 			}
 		}
-
-		e, _ := json.Marshal(sourceDataDisks)
-		e1, _ := json.Marshal(dDiskHash)
-		fmt.Println(3333333333333)
-		fmt.Println(3333333333333)
-		fmt.Printf("%+v\n", string(e))
-		fmt.Printf("%+v\n", string(e1))
-		fmt.Println(3333333333333)
-		fmt.Println(3333333333333)
 
 		keys := make([]int, 0, len(tmpDataDiskMap))
 		for k := range tmpDataDiskMap {
