@@ -539,6 +539,7 @@ resource "tencentcloud_instance" "foo" {
         delete_with_instance = true
     }
     disable_security_service = true
+    disable_automation_service = true
     
     lifecycle {
         ignore_changes = [instance_type]
@@ -591,6 +592,7 @@ resource "tencentcloud_instance" "foo" {
         data_disk_type = "CLOUD_PREMIUM"
     }
     disable_security_service = true
+    disable_automation_service = true
     
     lifecycle {
         ignore_changes = [instance_type]
@@ -2140,6 +2142,7 @@ resource "tencentcloud_instance" "foo" {
 
   disable_security_service = true
   disable_monitor_service  = true
+  disable_automation_service = true
   lifecycle {
 	ignore_changes = [instance_type]
   }
@@ -2240,6 +2243,7 @@ resource "tencentcloud_instance" "foo" {
 
   disable_security_service = true
   disable_monitor_service  = true
+  disable_automation_service = true
   lifecycle {
 	ignore_changes = [instance_type]
   }
