@@ -195,17 +195,6 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if v := helper.GetTags(d, "tags"); len(v) > 0 {
-		for tagKey, tagValue := range v {
-			tag := cbs.Tag{
-				Key:   helper.String(tagKey),
-				Value: helper.String(tagValue),
-			}
-
-			request.Tags = append(request.Tags, &tag)
-		}
-	}
-
 	storageId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().CreateDisks(request)
