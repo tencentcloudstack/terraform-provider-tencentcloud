@@ -8147,3 +8147,182 @@ func (me *VpcService) DescribeReserveIpAddressesById(ctx context.Context, reserv
 	ret = response.Response
 	return
 }
+
+func (me *VpcService) DescribeElasticPublicIpv6ById(ctx context.Context, ipId string) (ret *vpc.DescribeIPv6AddressesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeIPv6AddressesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeIPv6Addresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *VpcService) DescribeClassicElasticPublicIpv6ById(ctx context.Context, ipId string) (ret *vpc.DescribeIp6AddressesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeIp6AddressesRequest()
+	request.Ip6AddressIds = []*string{&ipId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeIp6Addresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *VpcService) DescribeElasticPublicIpv6AttachmentById(ctx context.Context, ipId string) (ret *vpc.DescribeIPv6AddressesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeIPv6AddressesRequest()
+	request.IPv6AddressIds = []*string{&ipId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeIPv6Addresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *VpcService) DescribeClassicElasticPublicIpv6sByFilter(ctx context.Context, param map[string]interface{}) (ret []*vpc.Address, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeIp6AddressesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Ip6AddressIds" {
+			request.Ip6AddressIds = v.([]*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*vpc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeIp6Addresses(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AddressSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.AddressSet...)
+		if len(response.Response.AddressSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeElasticPublicIpv6sByFilter(ctx context.Context, param map[string]interface{}) (ret []*vpc.Address, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeIPv6AddressesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "IPv6AddressIds" {
+			request.IPv6AddressIds = v.([]*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*vpc.Filter)
+		}
+		if k == "Traditional" {
+			request.Traditional = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeIPv6Addresses(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AddressSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.AddressSet...)
+		if len(response.Response.AddressSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
