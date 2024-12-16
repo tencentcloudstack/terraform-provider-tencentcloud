@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"log"
 	"sort"
@@ -1221,76 +1222,131 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 
-		// update instance DataDisks
+		// make data disks data
+		sourceDataDisks := make([]*map[string]interface{}, 0)
 		for _, cvmDisk := range instance.DataDisks {
 			for _, cbsDisk := range cbsDisks {
 				if *cvmDisk.DiskId == *cbsDisk.DiskId {
-					dName := *cbsDisk.DiskName
-					cvmDisk.DiskName = &dName
+					dataDisk := make(map[string]interface{}, 10)
+					dataDisk["data_disk_id"] = cvmDisk.DiskId
+					dataDisk["data_disk_size"] = cvmDisk.DiskSize
+					dataDisk["data_disk_name"] = cbsDisk.DiskName
+					dataDisk["data_disk_type"] = cvmDisk.DiskType
+					dataDisk["data_disk_snapshot_id"] = cvmDisk.SnapshotId
+					dataDisk["delete_with_instance"] = cvmDisk.DeleteWithInstance
+					dataDisk["encrypt"] = cvmDisk.Encrypt
+					dataDisk["throughput_performance"] = cvmDisk.ThroughputPerformance
+					dataDisk["flag"] = 0
+					sourceDataDisks = append(sourceDataDisks, &dataDisk)
 					break
 				}
 			}
 		}
 
+		a, _ := json.Marshal(instance.DataDisks)
+		b, _ := json.Marshal(dDiskHash)
+		fmt.Println(1111111111111)
+		fmt.Println(1111111111111)
+		fmt.Printf("%+v\n", string(a))
+		fmt.Println(1111111111111)
+		fmt.Println(1111111111111)
+		fmt.Printf("%+v\n", string(b))
+		fmt.Println(1111111111111)
+		fmt.Println(1111111111111)
+
 		// has set disk name first
-		for _, disk := range instance.DataDisks {
-			for _, hashItem := range dDiskHash {
-				diskName := *disk.DiskName
+		for v := range sourceDataDisks {
+			for i := range dDiskHash {
+				disk := *sourceDataDisks[v]
+				diskFlag := disk["flag"].(int)
+				diskName := disk["data_disk_name"].(*string)
+				diskType := disk["data_disk_type"].(*string)
+				diskSize := disk["data_disk_size"].(*int64)
+				deleteWithInstance := disk["delete_with_instance"].(*bool)
+				encrypt := disk["encrypt"].(*bool)
 				tmpHash := getDataDiskHash(diskHash{
-					diskType:           *disk.DiskType,
-					diskSize:           *disk.DiskSize,
-					deleteWithInstance: *disk.DeleteWithInstance,
-					encrypt:            *disk.Encrypt,
+					diskType:           *diskType,
+					diskSize:           *diskSize,
+					deleteWithInstance: *deleteWithInstance,
+					encrypt:            *encrypt,
 				})
 
 				// get disk name
-				if v, ok := hashItem[diskName].(string); ok && v != "" {
+				hashItem := dDiskHash[i]
+				if _, ok := hashItem[*diskName]; ok {
 					// check hash and flag
-					if tmpHash == hashItem[diskName] && hashItem["flag"] == 0 {
-						dataDisk := make(map[string]interface{}, 5)
-						dataDisk["data_disk_id"] = disk.DiskId
-						dataDisk["data_disk_size"] = disk.DiskSize
-						dataDisk["data_disk_name"] = disk.DiskName
-						dataDisk["data_disk_type"] = disk.DiskType
-						dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
-						dataDisk["delete_with_instance"] = disk.DeleteWithInstance
-						dataDisk["encrypt"] = disk.Encrypt
-						dataDisk["throughput_performance"] = disk.ThroughputPerformance
+					if hashItem["flag"] == 0 && diskFlag == 0 && tmpHash == hashItem[*diskName] {
+						dataDisk := make(map[string]interface{}, 8)
+						dataDisk["data_disk_id"] = disk["data_disk_id"]
+						dataDisk["data_disk_size"] = disk["data_disk_size"]
+						dataDisk["data_disk_name"] = disk["data_disk_name"]
+						dataDisk["data_disk_type"] = disk["data_disk_type"]
+						dataDisk["data_disk_snapshot_id"] = disk["data_disk_snapshot_id"]
+						dataDisk["delete_with_instance"] = disk["delete_with_instance"]
+						dataDisk["encrypt"] = disk["encrypt"]
+						dataDisk["throughput_performance"] = disk["throughput_performance"]
 						tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
 						hashItem["flag"] = 1
+						disk["flag"] = 1
 						break
 					}
 				}
 			}
 		}
 
+		c, _ := json.Marshal(sourceDataDisks)
+		c1, _ := json.Marshal(dDiskHash)
+		fmt.Println(2222222222222)
+		fmt.Println(2222222222222)
+		fmt.Printf("%+v\n", string(c))
+		fmt.Printf("%+v\n", string(c1))
+		fmt.Println(2222222222222)
+		fmt.Println(2222222222222)
+
 		// no set disk name last
-		for _, disk := range instance.DataDisks {
-			for index, hashItem := range dDiskHash {
+		for v := range sourceDataDisks {
+			for i := range dDiskHash {
+				disk := *sourceDataDisks[v]
+				diskFlag := disk["flag"].(int)
+				diskType := disk["data_disk_type"].(*string)
+				diskSize := disk["data_disk_size"].(*int64)
+				deleteWithInstance := disk["delete_with_instance"].(*bool)
+				encrypt := disk["encrypt"].(*bool)
 				tmpHash := getDataDiskHash(diskHash{
-					diskType:           *disk.DiskType,
-					diskSize:           *disk.DiskSize,
-					deleteWithInstance: *disk.DeleteWithInstance,
-					encrypt:            *disk.Encrypt,
+					diskType:           *diskType,
+					diskSize:           *diskSize,
+					deleteWithInstance: *deleteWithInstance,
+					encrypt:            *encrypt,
 				})
 
 				// check hash and flag
-				if tmpHash == hashItem[strconv.Itoa(index)] && hashItem["flag"] == 0 {
-					dataDisk := make(map[string]interface{}, 5)
-					dataDisk["data_disk_id"] = disk.DiskId
-					dataDisk["data_disk_size"] = disk.DiskSize
-					dataDisk["data_disk_name"] = disk.DiskName
-					dataDisk["data_disk_type"] = disk.DiskType
-					dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
-					dataDisk["delete_with_instance"] = disk.DeleteWithInstance
-					dataDisk["encrypt"] = disk.Encrypt
-					dataDisk["throughput_performance"] = disk.ThroughputPerformance
+				hashItem := dDiskHash[i]
+				if hashItem["flag"] == 0 && diskFlag == 0 && tmpHash == hashItem[strconv.Itoa(i)] {
+					dataDisk := make(map[string]interface{}, 8)
+					dataDisk["data_disk_id"] = disk["data_disk_id"]
+					dataDisk["data_disk_size"] = disk["data_disk_size"]
+					dataDisk["data_disk_name"] = disk["data_disk_name"]
+					dataDisk["data_disk_type"] = disk["data_disk_type"]
+					dataDisk["data_disk_snapshot_id"] = disk["data_disk_snapshot_id"]
+					dataDisk["delete_with_instance"] = disk["delete_with_instance"]
+					dataDisk["encrypt"] = disk["encrypt"]
+					dataDisk["throughput_performance"] = disk["throughput_performance"]
 					tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
 					hashItem["flag"] = 1
+					disk["flag"] = 1
 					break
 				}
 			}
 		}
+
+		e, _ := json.Marshal(sourceDataDisks)
+		e1, _ := json.Marshal(dDiskHash)
+		fmt.Println(3333333333333)
+		fmt.Println(3333333333333)
+		fmt.Printf("%+v\n", string(e))
+		fmt.Printf("%+v\n", string(e1))
+		fmt.Println(3333333333333)
+		fmt.Println(3333333333333)
 
 		keys := make([]int, 0, len(tmpDataDiskMap))
 		for k := range tmpDataDiskMap {
