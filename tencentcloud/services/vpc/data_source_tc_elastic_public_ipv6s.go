@@ -18,7 +18,7 @@ func DataSourceTencentCloudElasticPublicIpv6s() *schema.Resource {
 			"ipv6_address_ids": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Unique ID column that identifies IPv6.\n  - Traditional Elastic IPv6 unique ID is like: `eip-11112222`\n  - Elastic IPv6 unique ID is like: `eipv6 -11112222`\nNote: Parameters do not support specifying both IPv6AddressIds and Filters.",
+				Description: "Unique ID column that identifies IPv6.\n\t- Traditional Elastic IPv6 unique ID is like: `eip-11112222`\n\t- Elastic IPv6 unique ID is like: `eipv6 -11112222`\nNote: Parameters do not support specifying both IPv6AddressIds and Filters.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -27,7 +27,7 @@ func DataSourceTencentCloudElasticPublicIpv6s() *schema.Resource {
 			"filters": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "The detailed filter conditions are as follows:\n  -address-id-String-required: no-(filter condition) filter by the unique ID of the elastic public network IPv6.\n  -public-ipv6-address-String-required: no-(filter condition) filter by the IP address of the public network IPv6.\n  -charge-type-String-required: no-(filter condition) filter by billing type.\n  -private-ipv6-address-String-required: no-(filter condition) filter by bound private network IPv6 address.\n  -egress-String-required: no-(filter condition) filter by exit.\n  -address-type-String-required: no-(filter condition) filter by IPv6 type.\n  -address-isp-String-required: no-(filter condition) filter by operator type.\n  The status includes: 'CREATING','BINDING','BIND','UNBINDING','UNBIND','OFFLINING','BIND_ENI','PRIVATE'.\n  -address-name-String-required: no-(filter condition) filter by EIP name. Blur filtering is not supported.\n  -tag-key-String-required: no-(filter condition) filter by label key.\n  -tag-value-String-required: no-(filter condition) filter by tag value.\n  -tag:tag-key-String-required: no-(filter condition) filter by label key value pair. Tag-key is replaced with a specific label key.",
+				Description: "The detailed filter conditions are as follows:\n\t- address-id-String-required: no-(filter condition) filter by the unique ID of the elastic public network IPv6.\n\t- public-ipv6-address-String-required: no-(filter condition) filter by the IP address of the public network IPv6.\n\t- charge-type-String-required: no-(filter condition) filter by billing type.\n\t- private-ipv6-address-String-required: no-(filter condition) filter by bound private network IPv6 address.\n\t- egress-String-required: no-(filter condition) filter by exit.\n\t- address-type-String-required: no-(filter condition) filter by IPv6 type.\n\t- address-isp-String-required: no-(filter condition) filter by operator type.\n  The status includes: 'CREATING','BINDING','BIND','UNBINDING','UNBIND','OFFLINING','BIND_ENI','PRIVATE'.\n\t- address-name-String-required: no-(filter condition) filter by EIP name. Blur filtering is not supported.\n\t- tag-key-String-required: no-(filter condition) filter by label key.\n\t- tag-value-String-required: no-(filter condition) filter by tag value.\n\t- tag:tag-key-String-required: no-(filter condition) filter by label key value pair. Tag-key is replaced with a specific label key.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -206,7 +206,7 @@ func DataSourceTencentCloudElasticPublicIpv6s() *schema.Resource {
 						"renew_flag": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether the current EIP is automatically renewed, this field will be displayed only for EIP prepaid by monthly bandwidth. Examples of specific values are as follows:\n  - NOTIFY_AND_MANUAL_RENEW: Normal renewal\n  - NOTIFY_AND_AUTO_RENEW: Automatic renewal\n  - DISABLE_NOTIFY_AND_MANUAL_RENEW: No renewal after expiration.",
+							Description: "Whether the current EIP is automatically renewed, this field will be displayed only for EIP prepaid by monthly bandwidth. Examples of specific values are as follows:\n\t- NOTIFY_AND_MANUAL_RENEW: Normal renewal\n\t- NOTIFY_AND_AUTO_RENEW: Automatic renewal\n\t- DISABLE_NOTIFY_AND_MANUAL_RENEW: No renewal after expiration.",
 						},
 						"bandwidth_package_id": {
 							Type:        schema.TypeString,

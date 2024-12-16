@@ -36,28 +36,28 @@ func ResourceTencentCloudElasticPublicIpv6() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Elastic IPv6 type, optional values:\n- EIPv6: Ordinary IPv6\n- HighQualityEIPv6: Premium IPv6\nNote: You need to contact the product to open a premium IPv6 white list, and only some regions support premium IPv6\nDefault value: EIPv6.",
+				Description: "Elastic IPv6 type, optional values:\n\t- EIPv6: Ordinary IPv6\n\t- HighQualityEIPv6: Premium IPv6\nNote: You need to contact the product to open a premium IPv6 white list, and only some regions support premium IPv6\nDefault value: EIPv6.",
 			},
 
 			"internet_charge_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Elastic IPv6 charging method, optional values:\n- BANDWIDTH_PACKAGE: Payment for Shared Bandwidth Package\n- TRAFFIC_POSTPAID_BY_HOUR: Traffic is paid by the hour\nDefault value: TRAFFIC_POSTPAID_BY_HOUR.",
+				Description: "Elastic IPv6 charging method, optional values:\n\t- BANDWIDTH_PACKAGE: Payment for Shared Bandwidth Package\n\t- TRAFFIC_POSTPAID_BY_HOUR: Traffic is paid by the hour\nDefault value: TRAFFIC_POSTPAID_BY_HOUR.",
 			},
 
 			"internet_service_provider": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Elastic IPv6 line type, default value: BGP.\nFor users who have activated a static single-line IP whitelist, selectable values:\n- CMCC: China Mobile\n- CTCC: China Telecom\n- CUCC: China Unicom\nNote: Static single-wire IP is only supported in some regions.",
+				Description: "Elastic IPv6 line type, default value: BGP.\nFor users who have activated a static single-line IP whitelist, selectable values:\n\t- CMCC: China Mobile\n\t- CTCC: China Telecom\n\t- CUCC: China Unicom\nNote: Static single-wire IP is only supported in some regions.",
 			},
 
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Elastic IPv6 bandwidth limit in Mbps.\nThe range of selectable values depends on the EIP billing method:\n- BANDWIDTH_PACKAGE: 1 Mbps to 2000 Mbps\n- TRAFFIC_POSTPAID_BY_HOUR: 1 Mbps to 100 Mbps\nDefault value: 1 Mbps.",
+				Description: "Elastic IPv6 bandwidth limit in Mbps.\nThe range of selectable values depends on the EIP billing method:\n\t- BANDWIDTH_PACKAGE: 1 Mbps to 2000 Mbps\n\t- TRAFFIC_POSTPAID_BY_HOUR: 1 Mbps to 100 Mbps\nDefault value: 1 Mbps.",
 			},
 
 			"bandwidth_package_id": {
@@ -77,7 +77,7 @@ func ResourceTencentCloudElasticPublicIpv6() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Elastic IPv6 network exit, optional values:\n- CENTER_EGRESS_1: Center Exit 1\n- CENTER_EGRESS_2: Center Exit 2\n- CENTER_EGRESS_3: Center Exit 3\nNote: Network exports corresponding to different operators or resource types need to contact the product for clarification\nDefault value: CENTER_EGRESS_1.",
+				Description: "Elastic IPv6 network exit, optional values:\n\t- CENTER_EGRESS_1: Center Exit 1\n\t- CENTER_EGRESS_2: Center Exit 2\n\t- CENTER_EGRESS_3: Center Exit 3\nNote: Network exports corresponding to different operators or resource types need to contact the product for clarification\nDefault value: CENTER_EGRESS_1.",
 			},
 
 			"address_ip": {

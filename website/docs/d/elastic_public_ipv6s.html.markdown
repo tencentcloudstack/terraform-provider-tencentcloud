@@ -24,21 +24,21 @@ data "tencentcloud_elastic_public_ipv6s" "elastic_public_ipv6s" {
 The following arguments are supported:
 
 * `filters` - (Optional, List) The detailed filter conditions are as follows:
-  -address-id-String-required: no-(filter condition) filter by the unique ID of the elastic public network IPv6.
-  -public-ipv6-address-String-required: no-(filter condition) filter by the IP address of the public network IPv6.
-  -charge-type-String-required: no-(filter condition) filter by billing type.
-  -private-ipv6-address-String-required: no-(filter condition) filter by bound private network IPv6 address.
-  -egress-String-required: no-(filter condition) filter by exit.
-  -address-type-String-required: no-(filter condition) filter by IPv6 type.
-  -address-isp-String-required: no-(filter condition) filter by operator type.
+	- address-id-String-required: no-(filter condition) filter by the unique ID of the elastic public network IPv6.
+	- public-ipv6-address-String-required: no-(filter condition) filter by the IP address of the public network IPv6.
+	- charge-type-String-required: no-(filter condition) filter by billing type.
+	- private-ipv6-address-String-required: no-(filter condition) filter by bound private network IPv6 address.
+	- egress-String-required: no-(filter condition) filter by exit.
+	- address-type-String-required: no-(filter condition) filter by IPv6 type.
+	- address-isp-String-required: no-(filter condition) filter by operator type.
   The status includes: 'CREATING','BINDING','BIND','UNBINDING','UNBIND','OFFLINING','BIND_ENI','PRIVATE'.
-  -address-name-String-required: no-(filter condition) filter by EIP name. Blur filtering is not supported.
-  -tag-key-String-required: no-(filter condition) filter by label key.
-  -tag-value-String-required: no-(filter condition) filter by tag value.
-  -tag:tag-key-String-required: no-(filter condition) filter by label key value pair. Tag-key is replaced with a specific label key.
+	- address-name-String-required: no-(filter condition) filter by EIP name. Blur filtering is not supported.
+	- tag-key-String-required: no-(filter condition) filter by label key.
+	- tag-value-String-required: no-(filter condition) filter by tag value.
+	- tag:tag-key-String-required: no-(filter condition) filter by label key value pair. Tag-key is replaced with a specific label key.
 * `ipv6_address_ids` - (Optional, Set: [`String`]) Unique ID column that identifies IPv6.
-  - Traditional Elastic IPv6 unique ID is like: `eip-11112222`
-  - Elastic IPv6 unique ID is like: `eipv6 -11112222`
+	- Traditional Elastic IPv6 unique ID is like: `eip-11112222`
+	- Elastic IPv6 unique ID is like: `eipv6 -11112222`
 Note: Parameters do not support specifying both IPv6AddressIds and Filters.
 * `result_output_file` - (Optional, String) Used to save results.
 * `traditional` - (Optional, Bool) Whether to query traditional IPv6 address information.
