@@ -103,7 +103,7 @@ func TestAccTencentCloudInstanceResourceBasic(t *testing.T) {
 			{
 				ResourceName:            "tencentcloud_instance.cvm_basic",
 				ImportState:             true,
-				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "force_delete"},
+				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "disable_automation_service", "hostname", "password", "force_delete"},
 			},
 		},
 	})
