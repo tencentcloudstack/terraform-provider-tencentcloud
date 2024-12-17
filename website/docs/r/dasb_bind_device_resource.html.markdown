@@ -20,7 +20,7 @@ resource "tencentcloud_dasb_bind_device_resource" "example" {
 }
 ```
 
-### parameters
+### Or custom domain_id parameters
 
 ```hcl
 resource "tencentcloud_dasb_bind_device_resource" "example" {
