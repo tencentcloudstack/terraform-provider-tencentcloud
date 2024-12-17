@@ -505,6 +505,51 @@ func (me *DasbService) DescribeDasbDeviceById(ctx context.Context, deviceId stri
 	return
 }
 
+func (me *DasbService) DescribeDasbDeviceByResourceId(ctx context.Context, resourceId string) (deviceSet []*dasb.Device, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dasb.NewDescribeDevicesRequest()
+	request.ResourceIdSet = common.StringPtrs([]string{resourceId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDasbClient().DescribeDevices(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DeviceSet) < 1 {
+			break
+		}
+
+		deviceSet = append(deviceSet, response.Response.DeviceSet...)
+		if len(response.Response.DeviceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *DasbService) DeleteDasbDeviceById(ctx context.Context, deviceId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
