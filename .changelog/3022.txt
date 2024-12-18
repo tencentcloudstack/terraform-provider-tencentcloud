@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_dasb_bind_device_resource: support `read`, `update` and `delete`
+```
