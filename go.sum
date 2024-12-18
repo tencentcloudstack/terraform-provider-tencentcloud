@@ -972,6 +972,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760 h1:IKP2LFgJ
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760/go.mod h1:pSQXTeuC6BahiUIfssVqvL1/BoXccLkyD7nJ+tKgygw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1004 h1:PbKCgIXZSwX0eraNZGG+AqVjgLZwW/C+up/6mL9FP3o=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1004/go.mod h1:6H1XZ2TIVV6VHdjkdQQl611NsIJkeTqugZ1jaUfPop4=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1055 h1:CAxiWYRFmvpcDMkpoF7E0HZXgpM2BPYE+uyrS92LPQE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1055/go.mod h1:tmcOt09PyU+2nQgdbz0Lwe8aS8/Sb1spemL9kxusCPU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777 h1:G1eX/DkiznhSjNVF97BAQyycFXOiPHxeTxgOadp5J/o=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777/go.mod h1:ehbc9eaNknF/VU/kPTFLZbIUmkL06vQ/JYydu6yeXp4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970 h1:Z82LbcEnE2m4CGvcOY024N7REhAN++xdEyE88HG2YBA=

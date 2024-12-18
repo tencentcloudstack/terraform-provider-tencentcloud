@@ -1,0 +1,7 @@
+```release-note:deprecation
+resource/tencentcloud_lite_hbase_instance
+```
+
+```release-note:new-resource
+tencentcloud_serverless_hbase_instance
+```

@@ -2190,6 +2190,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_thpc_workspaces":                thpc.ResourceTencentCloudThpcWorkspaces(),
 			"tencentcloud_kubernetes_health_check_policy": tke.ResourceTencentCloudKubernetesHealthCheckPolicy(),
 			"tencentcloud_lite_hbase_instance":            emr.ResourceTencentCloudLiteHbaseInstance(),
+			"tencentcloud_serverless_hbase_instance":      emr.ResourceTencentCloudServerlessHbaseInstance(),
 			"tencentcloud_kubernetes_log_config":          tke.ResourceTencentCloudKubernetesLogConfig(),
 			"tencentcloud_tcss_image_registry":            tcss.ResourceTencentCloudTcssImageRegistry(),
 		},

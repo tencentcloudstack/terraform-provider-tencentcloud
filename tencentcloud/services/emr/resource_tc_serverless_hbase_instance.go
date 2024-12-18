@@ -15,13 +15,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func ResourceTencentCloudLiteHbaseInstance() *schema.Resource {
+func ResourceTencentCloudServerlessHbaseInstance() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource will been deprecated in Terraform TencentCloud provider later version. Please use `tencentcloud_serverless_hbase_instance` instead.",
-		Create:             resourceTencentCloudLiteHbaseInstanceCreate,
-		Read:               resourceTencentCloudLiteHbaseInstanceRead,
-		Update:             resourceTencentCloudLiteHbaseInstanceUpdate,
-		Delete:             resourceTencentCloudLiteHbaseInstanceDelete,
+		Create: resourceTencentCloudServerlessHbaseInstanceCreate,
+		Read:   resourceTencentCloudServerlessHbaseInstanceRead,
+		Update: resourceTencentCloudServerlessHbaseInstanceUpdate,
+		Delete: resourceTencentCloudServerlessHbaseInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -136,8 +135,8 @@ func ResourceTencentCloudLiteHbaseInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudLiteHbaseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.create")()
+func resourceTencentCloudServerlessHbaseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_serverless_hbase_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -243,7 +242,7 @@ func resourceTencentCloudLiteHbaseInstanceCreate(d *schema.ResourceData, meta in
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create lite hbase instance failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create serverless hbase instance failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -258,11 +257,11 @@ func resourceTencentCloudLiteHbaseInstanceCreate(d *schema.ResourceData, meta in
 		return e
 	}
 
-	return resourceTencentCloudLiteHbaseInstanceRead(d, meta)
+	return resourceTencentCloudServerlessHbaseInstanceRead(d, meta)
 }
 
-func resourceTencentCloudLiteHbaseInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.read")()
+func resourceTencentCloudServerlessHbaseInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_serverless_hbase_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -284,13 +283,13 @@ func resourceTencentCloudLiteHbaseInstanceRead(d *schema.ResourceData, meta inte
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update lite hbase instance failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update serverless hbase instance failed, reason:%+v", logId, err)
 		return err
 	}
 
 	if response.Response == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `lite_hbase_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `serverless_hbase_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 	respData := response.Response
@@ -369,8 +368,8 @@ func resourceTencentCloudLiteHbaseInstanceRead(d *schema.ResourceData, meta inte
 	return nil
 }
 
-func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.update")()
+func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_serverless_hbase_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -429,7 +428,7 @@ func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta in
 				return nil
 			})
 			if err != nil {
-				log.Printf("[CRITAL]%s update lite hbase instance failed, reason:%+v", logId, err)
+				log.Printf("[CRITAL]%s update serverless hbase instance failed, reason:%+v", logId, err)
 				return err
 			}
 			emrService := EMRService{
@@ -443,11 +442,11 @@ func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta in
 	}
 
 	_ = instanceId
-	return resourceTencentCloudLiteHbaseInstanceRead(d, meta)
+	return resourceTencentCloudServerlessHbaseInstanceRead(d, meta)
 }
 
-func resourceTencentCloudLiteHbaseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_lite_hbase_instance.delete")()
+func resourceTencentCloudServerlessHbaseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_serverless_hbase_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -473,7 +472,7 @@ func resourceTencentCloudLiteHbaseInstanceDelete(d *schema.ResourceData, meta in
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete lite hbase instance failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete serverless hbase instance failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -498,7 +497,7 @@ func resourceTencentCloudLiteHbaseInstanceDelete(d *schema.ResourceData, meta in
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s delete lite hbase instance failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s delete serverless hbase instance failed, reason:%+v", logId, err)
 			return err
 		}
 	}

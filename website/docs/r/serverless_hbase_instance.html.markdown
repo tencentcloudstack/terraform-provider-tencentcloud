@@ -1,20 +1,20 @@
 ---
 subcategory: "MapReduce(EMR)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_lite_hbase_instance"
-sidebar_current: "docs-tencentcloud-resource-lite_hbase_instance"
+page_title: "TencentCloud: tencentcloud_serverless_hbase_instance"
+sidebar_current: "docs-tencentcloud-resource-serverless_hbase_instance"
 description: |-
-  Provides a resource to create a emr lite_hbase_instance
+  Provides a resource to create a emr serverless_hbase_instance
 ---
 
-# tencentcloud_lite_hbase_instance
+# tencentcloud_serverless_hbase_instance
 
-Provides a resource to create a emr lite_hbase_instance
+Provides a resource to create a emr serverless_hbase_instance
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_lite_hbase_instance" "lite_hbase_instance" {
+resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance" {
   instance_name = "tf-test"
   pay_mode      = 0
   disk_type     = "CLOUD_HSSD"
@@ -76,9 +76,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-emr lite_hbase_instance can be imported using the id, e.g.
+emr serverless_hbase_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_lite_hbase_instance.lite_hbase_instance lite_hbase_instance_id
+terraform import tencentcloud_serverless_hbase_instance.serverless_hbase_instance serverless_hbase_instance_id
 ```
 
