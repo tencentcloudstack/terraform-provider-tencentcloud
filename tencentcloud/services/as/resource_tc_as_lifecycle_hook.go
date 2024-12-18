@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -160,19 +162,35 @@ func resourceTencentCloudAsLifecycleHookCreate(d *schema.ResourceData, meta inte
 		request.LifecycleCommand = &lifecycleCommand
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLifecycleHook(request)
+	var lifecycleHookId string
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLifecycleHook(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(e.GetCode(), "LimitExceeded.QuotaNotEnough") {
+					return resource.RetryableError(err)
+				}
+			}
+
+			return tccommon.RetryError(err)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || response.Response == nil || response.Response.LifecycleHookId == nil {
+			return resource.NonRetryableError(fmt.Errorf("AS LifecycleHook not exists"))
+		}
+
+		lifecycleHookId = *response.Response.LifecycleHookId
+		return nil
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		log.Printf("[CRITAL]%s create AS LifecycleHook failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response.Response.LifecycleHookId == nil {
-		return fmt.Errorf("lifecycle hook id is nil")
-	}
-	d.SetId(*response.Response.LifecycleHookId)
+	d.SetId(lifecycleHookId)
 
 	return resourceTencentCloudAsLifecycleHookRead(d, meta)
 }
