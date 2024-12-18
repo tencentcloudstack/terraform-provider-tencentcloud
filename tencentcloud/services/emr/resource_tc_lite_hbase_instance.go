@@ -52,7 +52,7 @@ func ResourceTencentCloudLiteHbaseInstance() *schema.Resource {
 
 			"node_type": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "Instance node type, can be filled in as 4C16G, 8C32G, 16C64G, 32C128G, case insensitive.",
 			},
 
