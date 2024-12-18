@@ -1741,7 +1741,7 @@ func (me *CamService) DescribeCamRolePermissionBoundaryAttachmentById(ctx contex
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if response == nil || response.Response == nil {
+	if response == nil || response.Response == nil || response.Response.PolicyId == nil {
 		return
 	}
 	if *response.Response.PolicyId != helper.StrToInt64(policyId) {
