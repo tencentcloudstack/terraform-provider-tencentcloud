@@ -67,7 +67,7 @@ resource "tencentcloud_as_lifecycle_hook" "example" {
 }
 ```
 
-
+### If notification_target_type is CMQ_QUEUE
 
 ```hcl
 resource "tencentcloud_as_lifecycle_hook" "example" {
@@ -82,7 +82,7 @@ resource "tencentcloud_as_lifecycle_hook" "example" {
 }
 ```
 
-
+### Or notification_target_type is CMQ_TOPIC
 
 ```hcl
 resource "tencentcloud_as_lifecycle_hook" "example" {
@@ -147,6 +147,6 @@ In addition to all arguments above, the following attributes are exported:
 lifecycle hook can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_as_lifecycle_hook.example lifecycle_hook_id
+terraform import tencentcloud_as_lifecycle_hook.example ash-ahg67203
 ```
 
