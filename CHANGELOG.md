@@ -1,3 +1,17 @@
+## 1.81.150 (December 18 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_serverless_hbase_instance` ([#3002](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3002))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_lifecycle_hook: update create function ([#3024](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3024))
+* resource/tencentcloud_cam_role_permission_boundary_attachment: fix code panic ([#3026](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3026))
+* resource/tencentcloud_dasb_bind_device_resource: support `read`, `update` and `delete` ([#3022](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3022))
+* resource/tencentcloud_mongodb_instance: remove RequiredWith on `availability_zone_list` and `hidden_zone` ([#3025](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3025))
+* resource/tencentcloud_mongodb_sharding_instance: remove RequiredWith on `availability_zone_list` and `hidden_zone` ([#3025](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3025))
+
 ## 1.81.149 (December 16 , 2024)
 
 FEATURES:
