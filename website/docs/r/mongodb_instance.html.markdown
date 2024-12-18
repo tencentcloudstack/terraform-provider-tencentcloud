@@ -46,7 +46,7 @@ The following arguments are supported:
 			- Read-only disaster recovery instances are not supported.
 			- Basic network cannot be selected.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
-* `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.
+* `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.
 * `maintenance_end` - (Optional, String) Maintenance window end time.
 	- The value range is any full point or half point from `00:00-23:00`, and the maintenance time duration is at least 30 minutes and at most 3 hours.
 	- The end time must be based on the start time backwards.
