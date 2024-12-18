@@ -195,6 +195,17 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := cbs.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	storageId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().CreateDisks(request)
@@ -222,15 +233,6 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	if v, ok := d.GetOk("disk_backup_quota"); ok {
 		err = cbsService.ModifyDiskBackupQuota(ctx, storageId, v.(int))
 		if err != nil {
-			return err
-		}
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(tcClient)
-		resourceName := tccommon.BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
