@@ -1114,9 +1114,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		// set data disk delete_with_instance_prepaid
 		for i := range dataDiskList {
 			dataDiskList[i]["delete_with_instance_prepaid"] = false
-			tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
-			if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
-				dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+			if hasDataDisks {
+				tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
+				if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
+					dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+				}
 			}
 		}
 
@@ -1334,9 +1336,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			tmpDataDisks := v.([]interface{})
 			for i := range tmpDataDisks {
 				dataDiskList[i]["delete_with_instance_prepaid"] = false
-				tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
-				if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
-					dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+				if hasDataDisks {
+					tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
+					if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
+						dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+					}
 				}
 			}
 		}
