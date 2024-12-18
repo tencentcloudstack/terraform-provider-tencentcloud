@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: remove RequiredWith on `availability_zone_list` and `hidden_zone`
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: remove RequiredWith on `availability_zone_list` and `hidden_zone`
+```
