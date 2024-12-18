@@ -52,7 +52,7 @@ The following arguments are supported:
 			- Read-only disaster recovery instances are not supported.
 			- Basic network cannot be selected.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
-* `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.
+* `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.
 * `mongos_cpu` - (Optional, Int) Number of mongos cpu.
 * `mongos_memory` - (Optional, Int) Mongos memory size in GB.
 * `mongos_node_num` - (Optional, Int) Number of mongos.

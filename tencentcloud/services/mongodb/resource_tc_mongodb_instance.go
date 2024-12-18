@@ -109,7 +109,6 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
-			RequiredWith: []string{"hidden_zone"},
 			Description: `A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
 			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
 			- Version 4.2 and above are not supported.
@@ -117,11 +116,10 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			- Basic network cannot be selected.`,
 		},
 		"hidden_zone": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			Computed:     true,
-			RequiredWith: []string{"availability_zone_list"},
-			Description:  "The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.",
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.",
 		},
 		"maintenance_start": {
 			Type:        schema.TypeString,
