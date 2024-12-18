@@ -1086,22 +1086,13 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			tmpDataDisks = v.([]interface{})
 		}
 
-		for index, disk := range instance.DataDisks {
+		for _, disk := range instance.DataDisks {
 			dataDisk := make(map[string]interface{}, 5)
 			dataDisk["data_disk_id"] = disk.DiskId
 			if disk.DiskId == nil {
 				dataDisk["data_disk_size"] = disk.DiskSize
 			} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
 				dataDisk["data_disk_size"] = size
-			}
-
-			dataDisk["delete_with_instance_prepaid"] = false
-			if len(tmpDataDisks) == len(instance.DataDisks) {
-				tmpDataDisk := tmpDataDisks[index].(map[string]interface{})
-				if deleteWithInstancePrepaid, ok := tmpDataDisk["delete_with_instance_prepaid"]; ok {
-					deleteWithInstancePrepaidBool := deleteWithInstancePrepaid.(bool)
-					dataDisk["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
-				}
 			}
 
 			dataDisk["data_disk_type"] = disk.DiskType
@@ -1120,7 +1111,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			})
 		}
 
-		// get data disk name
+		// set data disk delete_with_instance_prepaid
+		for i := range dataDiskList {
+			dataDiskList[i]["delete_with_instance_prepaid"] = false
+			tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
+			if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
+				dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+			}
+		}
+
+		// set data disk name
 		finalDiskIds := make([]*string, 0, len(dataDiskList))
 		for _, item := range dataDiskList {
 			diskId := item["data_disk_id"].(*string)
@@ -1327,6 +1327,18 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		for _, v := range keys {
 			tmpDataDisk := tmpDataDiskMap[v].(map[string]interface{})
 			dataDiskList = append(dataDiskList, tmpDataDisk)
+		}
+
+		// set data disk delete_with_instance_prepaid
+		if v, ok := d.GetOk("data_disks"); ok {
+			tmpDataDisks := v.([]interface{})
+			for i := range tmpDataDisks {
+				dataDiskList[i]["delete_with_instance_prepaid"] = false
+				tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
+				if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
+					dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+				}
+			}
 		}
 
 		_ = d.Set("data_disks", dataDiskList)
