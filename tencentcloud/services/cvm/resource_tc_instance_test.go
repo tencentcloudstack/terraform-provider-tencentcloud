@@ -527,16 +527,19 @@ resource "tencentcloud_instance" "foo" {
     image_id = data.tencentcloud_images.default.images.0.image_id
     instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
     system_disk_size = 100
+    system_disk_name = "sys_cbs_test1"
     
     data_disks {
         delete_with_instance = true
         data_disk_type = "CLOUD_PREMIUM"
         data_disk_size = 100
+        data_disk_name = "data_cbs_test1"
     }
     data_disks {
         data_disk_type = "CLOUD_PREMIUM"
         data_disk_size = 100
         delete_with_instance = true
+        data_disk_name = "data_cbs_test2"
     }
     disable_security_service = true
     disable_automation_service = true
@@ -580,16 +583,19 @@ resource "tencentcloud_instance" "foo" {
     image_id = data.tencentcloud_images.default.images.0.image_id
     instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
     system_disk_size = 100
+    system_disk_name = "sys_cbs_test1"
     
     data_disks {
         data_disk_size = 150
         delete_with_instance = true
         data_disk_type = "CLOUD_PREMIUM"
+        data_disk_name = "data_cbs_test1_update"
     }
     data_disks {
         data_disk_size = 150
         delete_with_instance = true
         data_disk_type = "CLOUD_PREMIUM"
+        data_disk_name = "data_cbs_test2_update"
     }
     disable_security_service = true
     disable_automation_service = true
