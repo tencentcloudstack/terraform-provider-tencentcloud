@@ -375,15 +375,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 				findFlag = true
 				break
 			} else if len(domains) > 0 {
-				tmpRef := true
-				for i := range domains {
-					if *domains[i] != *rule.Domains[i] {
-						tmpRef = false
-						break
-					}
-				}
-
-				if tmpRef {
+				if helper.StringPtrSlicesEqual(domains, rule.Domains) {
 					ruleOutput = *rule
 					findFlag = true
 					break

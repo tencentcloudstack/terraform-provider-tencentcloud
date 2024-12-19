@@ -297,3 +297,45 @@ func CheckElementsExist(slice1 []string, slice2 []string) (bool, []string) {
 	}
 	return exist, diff
 }
+
+func StringSlicesEqual(slice1, slice2 []string) bool {
+	if len(slice1) != len(slice2) {
+		return false
+	}
+
+	count := make(map[string]int)
+
+	for _, value := range slice1 {
+		count[value]++
+	}
+
+	for _, value := range slice2 {
+		count[value]--
+		if count[value] < 0 {
+			return false
+		}
+	}
+
+	return true
+}
+
+func StringPtrSlicesEqual(slice1, slice2 []*string) bool {
+	if len(slice1) != len(slice2) {
+		return false
+	}
+
+	count := make(map[string]int)
+
+	for _, value := range slice1 {
+		count[*value]++
+	}
+
+	for _, value := range slice2 {
+		count[*value]--
+		if count[*value] < 0 {
+			return false
+		}
+	}
+
+	return true
+}
