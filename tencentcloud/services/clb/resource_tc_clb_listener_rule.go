@@ -47,7 +47,7 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Description:   "Domain name of the listener rule. Single domain rules are passed to `domain`, and multi domain rules are passed to `domains`.",
 			},
 			"domains": {
-				Type:          schema.TypeList,
+				Type:          schema.TypeSet,
 				Optional:      true,
 				Computed:      true,
 				ForceNew:      true,
@@ -272,7 +272,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	}
 
 	if v, ok := d.GetOk("domains"); ok {
-		tmpDomains := v.([]interface{})
+		tmpDomains := v.(*schema.Set).List()
 		domains = make([]*string, 0, len(tmpDomains))
 		for _, value := range tmpDomains {
 			tmpDomain := value.(string)
