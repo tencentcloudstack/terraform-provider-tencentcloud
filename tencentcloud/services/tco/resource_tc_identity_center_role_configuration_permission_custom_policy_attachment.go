@@ -171,6 +171,11 @@ func resourceTencentCloudIdentityCenterRoleConfigurationPermissionCustomPolicyAt
 			}
 		}
 
+		if rolePolicie == nil {
+			log.Printf("[WARN]%s resource `identity_center_role_configuration_permission_policy_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			return fmt.Errorf("RolePolicy %s is not exist", d.Id())
+		}
+
 		if rolePolicie.RolePolicyName != nil {
 			_ = d.Set("role_policy_name", rolePolicie.RolePolicyName)
 		}
