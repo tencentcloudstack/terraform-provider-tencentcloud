@@ -165,17 +165,42 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 			d.SetId("")
 			return nil
 		}
-		_ = d.Set("scaling_group_id", *scalingPolicy.AutoScalingGroupId)
-		_ = d.Set("policy_name", *scalingPolicy.ScalingPolicyName)
-		_ = d.Set("adjustment_type", *scalingPolicy.AdjustmentType)
-		_ = d.Set("adjustment_value", *scalingPolicy.AdjustmentValue)
-		_ = d.Set("comparison_operator", *scalingPolicy.MetricAlarm.ComparisonOperator)
-		_ = d.Set("metric_name", *scalingPolicy.MetricAlarm.MetricName)
-		_ = d.Set("threshold", *scalingPolicy.MetricAlarm.Threshold)
-		_ = d.Set("period", *scalingPolicy.MetricAlarm.Period)
-		_ = d.Set("continuous_time", *scalingPolicy.MetricAlarm.ContinuousTime)
-		_ = d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
-		_ = d.Set("cooldown", *scalingPolicy.Cooldown)
+
+		if scalingPolicy.AutoScalingGroupId != nil {
+			_ = d.Set("scaling_group_id", *scalingPolicy.AutoScalingGroupId)
+		}
+		if scalingPolicy.ScalingPolicyName != nil {
+			_ = d.Set("policy_name", *scalingPolicy.ScalingPolicyName)
+		}
+		if scalingPolicy.AdjustmentType != nil {
+			_ = d.Set("adjustment_type", *scalingPolicy.AdjustmentType)
+		}
+		if scalingPolicy.AdjustmentValue != nil {
+			_ = d.Set("adjustment_value", *scalingPolicy.AdjustmentValue)
+		}
+		if scalingPolicy.MetricAlarm != nil {
+			if scalingPolicy.MetricAlarm.ComparisonOperator != nil {
+				_ = d.Set("comparison_operator", *scalingPolicy.MetricAlarm.ComparisonOperator)
+			}
+			if scalingPolicy.MetricAlarm.MetricName != nil {
+				_ = d.Set("metric_name", *scalingPolicy.MetricAlarm.MetricName)
+			}
+			if scalingPolicy.MetricAlarm.Threshold != nil {
+				_ = d.Set("threshold", *scalingPolicy.MetricAlarm.Threshold)
+			}
+			if scalingPolicy.MetricAlarm.Period != nil {
+				_ = d.Set("period", *scalingPolicy.MetricAlarm.Period)
+			}
+			if scalingPolicy.MetricAlarm.ContinuousTime != nil {
+				_ = d.Set("continuous_time", *scalingPolicy.MetricAlarm.ContinuousTime)
+			}
+			if scalingPolicy.MetricAlarm.Statistic != nil {
+				_ = d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
+			}
+		}
+		if scalingPolicy.Cooldown != nil {
+			_ = d.Set("cooldown", *scalingPolicy.Cooldown)
+		}
 		if scalingPolicy.NotificationUserGroupIds != nil {
 			_ = d.Set("notification_user_group_ids", helper.StringsInterfaces(scalingPolicy.NotificationUserGroupIds))
 		}
