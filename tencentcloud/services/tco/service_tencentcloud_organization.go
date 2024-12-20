@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1977,5 +1978,219 @@ func (me *OrganizationService) DescribeIdentityCenterScimSynchronizationStatusBy
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ret = response.Response
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitResourceById(ctx context.Context, unitId string, area string, shareResourceType string, productResourceId string) (ret *organization.ShareUnitResource, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribeShareUnitResourcesRequest()
+	request.UnitId = helper.String(unitId)
+	request.Area = helper.String(area)
+	request.SearchKey = helper.String(productResourceId)
+	request.Type = helper.String(shareResourceType)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		limit  uint64 = 50
+		offset uint64 = 0
+	)
+	request.Limit = &limit
+	request.Offset = &offset
+
+	for {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseOrganizationClient().DescribeShareUnitResources(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return
+		}
+
+		for _, item := range response.Response.Items {
+			if *item.ProductResourceId == productResourceId {
+				ret = item
+				return
+			}
+		}
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+
+	}
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitResourcesByFilter(ctx context.Context, param map[string]interface{}) (ret []*organization.ShareUnitResource, errRet error) {
+	var (
+		logId   = common.GetLogId(ctx)
+		request = organization.NewDescribeShareUnitResourcesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "UnitId" {
+			request.UnitId = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 50
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeShareUnitResources(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitsByFilter(ctx context.Context, param map[string]interface{}) (ret []*organization.ManagerShareUnit, errRet error) {
+	var (
+		logId   = common.GetLogId(ctx)
+		request = organization.NewDescribeShareUnitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeShareUnits(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitMembersByFilter(ctx context.Context, param map[string]interface{}) (ret []*organization.ShareUnitMember, errRet error) {
+	var (
+		logId   = common.GetLogId(ctx)
+		request = organization.NewDescribeShareUnitMembersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "UnitId" {
+			request.UnitId = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 50
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeShareUnitMembers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
 	return
 }
