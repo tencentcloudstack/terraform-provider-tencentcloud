@@ -1010,24 +1010,65 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// set data_disks
-	var hasDataDisks, isCombineDataDisks, hasDataDisksName bool
+	var hasDataDisks, isCombineDataDisks, hasDataDisksId, hasDataDisksName bool
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	diskSizeMap := map[string]*uint64{}
 	diskOrderMap := make(map[string]int)
+	dataDiskIds := make([]*string, 0, len(instance.DataDisks))
+	refreshDataDisks := make([]interface{}, 0, len(instance.DataDisks))
 
 	if v, ok := d.GetOk("data_disks"); ok {
 		hasDataDisks = true
-		// check has data disk name
+		// check has data disk id and name
 		dataDisks := v.([]interface{})
 		for _, item := range dataDisks {
 			value := item.(map[string]interface{})
+			if v, ok := value["data_disk_id"]; ok && v != nil {
+				diskId := v.(string)
+				if diskId != "" {
+					dataDiskIds = append(dataDiskIds, &diskId)
+					hasDataDisksId = true
+				}
+			}
+
 			if v, ok := value["data_disk_name"]; ok && v != nil {
 				diskName := v.(string)
 				if diskName != "" {
 					hasDataDisksName = true
-					break
 				}
 			}
+		}
+	}
+
+	// refresh data disk name and size
+	if hasDataDisksId && len(dataDiskIds) > 0 {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			disks, err := cbsService.DescribeDiskList(ctx, dataDiskIds)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+
+			if v, ok := d.GetOk("data_disks"); ok {
+				dataDisks := v.([]interface{})
+				for _, item := range dataDisks {
+					value := item.(map[string]interface{})
+					for _, item := range disks {
+						if value["data_disk_id"].(string) == *item.DiskId {
+							value["data_disk_name"] = *item.DiskName
+							value["data_disk_size"] = int(*item.DiskSize)
+							break
+						}
+					}
+				}
+
+				refreshDataDisks = dataDisks
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
 		}
 	}
 
@@ -1162,6 +1203,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		// get source disk hash
 		if v, ok := d.GetOk("data_disks"); ok {
 			dataDisks := v.([]interface{})
+			if hasDataDisksId {
+				dataDisks = refreshDataDisks
+			}
+
 			for index, item := range dataDisks {
 				value := item.(map[string]interface{})
 				tmpMap := make(map[string]interface{})
