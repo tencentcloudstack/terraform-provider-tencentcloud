@@ -1,3 +1,21 @@
+## 1.81.151 (December 20 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_organization_org_share_unit_members` ([#3029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3029))
+* **New Data Source:** `tencentcloud_organization_org_share_unit_resources` ([#3029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3029))
+* **New Data Source:** `tencentcloud_organization_org_share_units` ([#3029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3029))
+* **New Resource:** `tencentcloud_accept_join_share_unit_invitation_operation` ([#3029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3029))
+* **New Resource:** `tencentcloud_organization_org_share_unit_resource` ([#3029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3029))
+* **New Resource:** `tencentcloud_reject_join_share_unit_invitation_operation` ([#3029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3029))
+
+ENHANCEMENTS:
+
+* provider: support `allowed_account_ids` and `forbidden_account_ids` ([#3030](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3030))
+* resource/tencentcloud_as_scaling_policy: add nil check ([#3032](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3032))
+* resource/tencentcloud_clb_listener_rule: fix error with `domains` ([#3028](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3028))
+* resource/tencentcloud_identity_center_role_configuration_permission_custom_policy_attachment: fix code panic ([#3031](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3031))
+
 ## 1.81.150 (December 18 , 2024)
 
 FEATURES:
