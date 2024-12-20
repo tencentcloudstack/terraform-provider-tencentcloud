@@ -121,6 +121,28 @@ provider "tencentcloud" {
 }
 ```
 
+Use `allowed_account_ids` or `forbidden_account_ids`
+
+```hcl
+provider "tencentcloud" {
+  secret_id  = "my-secret-id"
+  secret_key = "my-secret-key"
+  region     = "ap-guangzhou"
+
+  allowed_account_ids   = ["100023201586", "100023201349"]
+}
+```
+
+```hcl
+provider "tencentcloud" {
+  secret_id  = "my-secret-id"
+  secret_key = "my-secret-key"
+  region     = "ap-guangzhou"
+
+  forbidden_account_ids = ["100023201223"]
+}
+```
+
 ### Environment variables
 
 You can provide your credentials via `TENCENTCLOUD_SECRET_ID` and `TENCENTCLOUD_SECRET_KEY` environment variables,
@@ -359,6 +381,8 @@ In addition to generic provider arguments (e.g. alias and version), the followin
 * `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.
 * `domain` - (Optional, Available in 1.37.0+) The root domain of the API request, Default is `tencentcloudapi.com`. 
 * `cam_role_name` - (Optional, Available in 1.81.117+) The name of the CVM instance CAM role. It can be sourced from the `TENCENTCLOUD_CAM_ROLE_NAME` environment variable. 
+* `allowed_account_ids` - (Optional) List of allowed TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `forbidden_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.
+* `forbidden_account_ids` - (Optional) List of forbidden TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `allowed_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.
 
 The nested `assume_role` block supports the following:
 * `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.

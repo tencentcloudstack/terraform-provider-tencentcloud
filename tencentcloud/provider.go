@@ -14,6 +14,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	commonJson "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+	sdkprofile "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	sdksts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -369,6 +370,20 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_CAM_ROLE_NAME, nil),
 				Description: "The name of the CVM instance CAM role. It can be sourced from the `TENCENTCLOUD_CAM_ROLE_NAME` environment variable.",
+			},
+			"allowed_account_ids": {
+				Type:          schema.TypeSet,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Optional:      true,
+				ConflictsWith: []string{"forbidden_account_ids", "assume_role_with_saml", "assume_role_with_web_identity"},
+				Description:   "List of allowed TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `forbidden_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.",
+			},
+			"forbidden_account_ids": {
+				Type:          schema.TypeSet,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Optional:      true,
+				ConflictsWith: []string{"allowed_account_ids", "assume_role_with_saml", "assume_role_with_web_identity"},
+				Description:   "List of forbidden TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `allowed_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.",
 			},
 		},
 
@@ -2211,17 +2226,20 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	var (
-		secretId      string
-		secretKey     string
-		securityToken string
-		region        string
-		protocol      string
-		domain        string
-		cosDomain     string
-		camRoleName   string
+		secretId            string
+		secretKey           string
+		securityToken       string
+		region              string
+		protocol            string
+		domain              string
+		cosDomain           string
+		camRoleName         string
+		allowedAccountIds   []string
+		forbiddenAccountIds []string
+		needSecret          = true
+		needAccountFilter   = false
 	)
 
-	needSecret := true
 	if v, ok := d.GetOk("secret_id"); ok {
 		secretId = v.(string)
 	}
@@ -2279,6 +2297,22 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Protocol:  protocol,
 		Domain:    domain,
 		CosDomain: cosDomain,
+	}
+
+	if v, ok := d.GetOk("allowed_account_ids"); ok && v.(*schema.Set).Len() > 0 {
+		for _, v := range v.(*schema.Set).List() {
+			allowedAccountIds = append(allowedAccountIds, v.(string))
+		}
+
+		needAccountFilter = true
+	}
+
+	if v, ok := d.GetOk("forbidden_account_ids"); ok && v.(*schema.Set).Len() > 0 {
+		for _, v := range v.(*schema.Set).List() {
+			forbiddenAccountIds = append(forbiddenAccountIds, v.(string))
+		}
+
+		needAccountFilter = true
 	}
 
 	// get auth from CAM role name
@@ -2422,6 +2456,20 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if needSecret && (secretId == "" || secretKey == "") {
 		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.\n")
+	}
+
+	if needAccountFilter {
+		// get indentity
+		indentity, err := getCallerIdentity(&tcClient)
+		if err != nil {
+			return nil, err
+		}
+
+		// account filter
+		err = verifyAccountIDAllowed(indentity, allowedAccountIds, forbiddenAccountIds)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &tcClient, nil
@@ -2632,6 +2680,56 @@ func genClientWithPodOidc(tcClient *TencentCloudClient) error {
 		assumeResp.GetSecretKey(),
 		assumeResp.GetToken(),
 	)
+
+	return nil
+}
+
+func getCallerIdentity(tcClient *TencentCloudClient) (indentity *sdksts.GetCallerIdentityResponseParams, err error) {
+	ak := tcClient.apiV3Conn.Credential.SecretId
+	sk := tcClient.apiV3Conn.Credential.SecretKey
+	token := tcClient.apiV3Conn.Credential.Token
+	region := tcClient.apiV3Conn.Region
+	credential := sdkcommon.NewTokenCredential(ak, sk, token)
+	cpf := sdkprofile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = "sts.tencentcloudapi.com"
+	client, _ := sdksts.NewClient(credential, region, cpf)
+	request := sdksts.NewGetCallerIdentityRequest()
+	response, err := client.GetCallerIdentity(request)
+	if err != nil {
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return nil, fmt.Errorf("get GetCallerIdentity failed")
+	}
+
+	indentity = response.Response
+	return
+}
+
+func verifyAccountIDAllowed(indentity *sdksts.GetCallerIdentityResponseParams, allowedAccountIds, forbiddenAccountIds []string) error {
+	accountId := *indentity.AccountId
+	if len(allowedAccountIds) > 0 {
+		found := false
+		for _, allowedAccountID := range allowedAccountIds {
+			if accountId == allowedAccountID {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			return fmt.Errorf("TencentCloud account ID not allowed: %s", accountId)
+		}
+	}
+
+	if len(forbiddenAccountIds) > 0 {
+		for _, forbiddenAccountID := range forbiddenAccountIds {
+			if accountId == forbiddenAccountID {
+				return fmt.Errorf("TencentCloud account ID not allowed: %s", accountId)
+			}
+		}
+	}
 
 	return nil
 }
