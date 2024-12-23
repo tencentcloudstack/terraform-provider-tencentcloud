@@ -79,7 +79,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 10
     public_ip_assigned         = true
-    password                   = "test123#"
+    password                   = "Password@123"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
     host_name                  = "12.123.0.0"
@@ -144,7 +144,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 10
     public_ip_assigned         = true
-    password                   = "test123#"
+    password                   = "Password@123"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
   }
@@ -152,6 +152,56 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
   labels = {
     "test1" = "test1",
     "test2" = "test2"
+  }
+}
+```
+
+### If instance_type is CBM
+
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
+  cluster_id               = "cls-23ieal0c"
+  max_size                 = 100
+  min_size                 = 1
+  vpc_id                   = "vpc-i5yyodl9"
+  subnet_ids               = ["subnet-d4umunpy"]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  enable_auto_scale        = true
+  multi_zone_subnet_policy = "EQUALITY"
+  node_os                  = "img-eb30mz89"
+  delete_keep_instance     = false
+
+  node_config {
+    data_disk {
+      disk_type    = "LOCAL_NVME"
+      disk_size    = 3570
+      file_system  = "ext4"
+      mount_target = "/var/lib/data1"
+    }
+
+    data_disk {
+      disk_type    = "LOCAL_NVME"
+      disk_size    = 3570
+      file_system  = "ext4"
+      mount_target = "/var/lib/data2"
+    }
+  }
+
+  auto_scaling_config {
+    instance_type              = "BMI5.24XLARGE384"
+    system_disk_type           = "LOCAL_BASIC"
+    system_disk_size           = "440"
+    orderly_security_group_ids = ["sg-4z20n68d"]
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "Password@123"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    host_name                  = "example"
+    host_name_style            = "ORIGINAL"
   }
 }
 ```
@@ -294,7 +344,7 @@ The `auto_scaling_config` object supports the following:
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
-* `system_disk_type` - (Optional, String) Type of a CVM disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`. Default is `CLOUD_PREMIUM`.
+* `system_disk_type` - (Optional, String) Type of a CVM disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD`, `CLOUD_BSSD` and `LOCAL_NVME`. Default is `CLOUD_PREMIUM`.
 
 The `data_disk` object of `auto_scaling_config` supports the following:
 
@@ -310,7 +360,7 @@ The `data_disk` object of `node_config` supports the following:
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD`, `CLOUD_BSSD` and `LOCAL_NVME`.
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 
