@@ -200,65 +200,6 @@ func (c *Client) BindingPolicyTagWithContext(ctx context.Context, request *Bindi
     return
 }
 
-func NewCheckIsPrometheusNewUserRequest() (request *CheckIsPrometheusNewUserRequest) {
-    request = &CheckIsPrometheusNewUserRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("monitor", APIVersion, "CheckIsPrometheusNewUser")
-    
-    
-    return
-}
-
-func NewCheckIsPrometheusNewUserResponse() (response *CheckIsPrometheusNewUserResponse) {
-    response = &CheckIsPrometheusNewUserResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CheckIsPrometheusNewUser
-// 判断用户是否为云原生监控新用户，即在任何地域下均未创建过监控实例的用户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-func (c *Client) CheckIsPrometheusNewUser(request *CheckIsPrometheusNewUserRequest) (response *CheckIsPrometheusNewUserResponse, err error) {
-    return c.CheckIsPrometheusNewUserWithContext(context.Background(), request)
-}
-
-// CheckIsPrometheusNewUser
-// 判断用户是否为云原生监控新用户，即在任何地域下均未创建过监控实例的用户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-func (c *Client) CheckIsPrometheusNewUserWithContext(ctx context.Context, request *CheckIsPrometheusNewUserRequest) (response *CheckIsPrometheusNewUserResponse, err error) {
-    if request == nil {
-        request = NewCheckIsPrometheusNewUserRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CheckIsPrometheusNewUser require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCheckIsPrometheusNewUserResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewCleanGrafanaInstanceRequest() (request *CleanGrafanaInstanceRequest) {
     request = &CleanGrafanaInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -436,6 +377,65 @@ func (c *Client) CreateAlarmPolicyWithContext(ctx context.Context, request *Crea
     return
 }
 
+func NewCreateAlarmShieldRequest() (request *CreateAlarmShieldRequest) {
+    request = &CreateAlarmShieldRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CreateAlarmShield")
+    
+    
+    return
+}
+
+func NewCreateAlarmShieldResponse() (response *CreateAlarmShieldResponse) {
+    response = &CreateAlarmShieldResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAlarmShield
+// 创建告警屏蔽规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAlarmShield(request *CreateAlarmShieldRequest) (response *CreateAlarmShieldResponse, err error) {
+    return c.CreateAlarmShieldWithContext(context.Background(), request)
+}
+
+// CreateAlarmShield
+// 创建告警屏蔽规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAlarmShieldWithContext(ctx context.Context, request *CreateAlarmShieldRequest) (response *CreateAlarmShieldResponse, err error) {
+    if request == nil {
+        request = NewCreateAlarmShieldRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAlarmShield require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAlarmShieldResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateAlertRuleRequest() (request *CreateAlertRuleRequest) {
     request = &CreateAlertRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -550,6 +550,7 @@ func NewCreateExporterIntegrationResponse() (response *CreateExporterIntegration
 //  FAILEDOPERATION_RESOURCEOPERATING = "FailedOperation.ResourceOperating"
 //  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) CreateExporterIntegration(request *CreateExporterIntegrationRequest) (response *CreateExporterIntegrationResponse, err error) {
     return c.CreateExporterIntegrationWithContext(context.Background(), request)
 }
@@ -570,6 +571,7 @@ func (c *Client) CreateExporterIntegration(request *CreateExporterIntegrationReq
 //  FAILEDOPERATION_RESOURCEOPERATING = "FailedOperation.ResourceOperating"
 //  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) CreateExporterIntegrationWithContext(ctx context.Context, request *CreateExporterIntegrationRequest) (response *CreateExporterIntegrationResponse, err error) {
     if request == nil {
         request = NewCreateExporterIntegrationRequest()
@@ -3515,6 +3517,131 @@ func (c *Client) DescribeAlarmPolicyWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDescribeAlarmSmsQuotaRequest() (request *DescribeAlarmSmsQuotaRequest) {
+    request = &DescribeAlarmSmsQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmSmsQuota")
+    
+    
+    return
+}
+
+func NewDescribeAlarmSmsQuotaResponse() (response *DescribeAlarmSmsQuotaResponse) {
+    response = &DescribeAlarmSmsQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAlarmSmsQuota
+// 获取告警短信配额
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DIVISIONBYZERO = "FailedOperation.DivisionByZero"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DRUIDTABLENOTFOUND = "FailedOperation.DruidTableNotFound"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmSmsQuota(request *DescribeAlarmSmsQuotaRequest) (response *DescribeAlarmSmsQuotaResponse, err error) {
+    return c.DescribeAlarmSmsQuotaWithContext(context.Background(), request)
+}
+
+// DescribeAlarmSmsQuota
+// 获取告警短信配额
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DIVISIONBYZERO = "FailedOperation.DivisionByZero"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DRUIDTABLENOTFOUND = "FailedOperation.DruidTableNotFound"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmSmsQuotaWithContext(ctx context.Context, request *DescribeAlarmSmsQuotaRequest) (response *DescribeAlarmSmsQuotaResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmSmsQuotaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAlarmSmsQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAlarmSmsQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAlertRulesRequest() (request *DescribeAlertRulesRequest) {
     request = &DescribeAlertRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4572,6 +4699,55 @@ func (c *Client) DescribeInstalledPluginsWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeMonitorResourceInfoRequest() (request *DescribeMonitorResourceInfoRequest) {
+    request = &DescribeMonitorResourceInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeMonitorResourceInfo")
+    
+    
+    return
+}
+
+func NewDescribeMonitorResourceInfoResponse() (response *DescribeMonitorResourceInfoResponse) {
+    response = &DescribeMonitorResourceInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeMonitorResourceInfo
+// 获取资源消耗页概览
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeMonitorResourceInfo(request *DescribeMonitorResourceInfoRequest) (response *DescribeMonitorResourceInfoResponse, err error) {
+    return c.DescribeMonitorResourceInfoWithContext(context.Background(), request)
+}
+
+// DescribeMonitorResourceInfo
+// 获取资源消耗页概览
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeMonitorResourceInfoWithContext(ctx context.Context, request *DescribeMonitorResourceInfoRequest) (response *DescribeMonitorResourceInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeMonitorResourceInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeMonitorResourceInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeMonitorResourceInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeMonitorTypesRequest() (request *DescribeMonitorTypesRequest) {
     request = &DescribeMonitorTypesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4623,6 +4799,57 @@ func (c *Client) DescribeMonitorTypesWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribePhoneAlarmFlowTotalCountRequest() (request *DescribePhoneAlarmFlowTotalCountRequest) {
+    request = &DescribePhoneAlarmFlowTotalCountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribePhoneAlarmFlowTotalCount")
+    
+    
+    return
+}
+
+func NewDescribePhoneAlarmFlowTotalCountResponse() (response *DescribePhoneAlarmFlowTotalCountResponse) {
+    response = &DescribePhoneAlarmFlowTotalCountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePhoneAlarmFlowTotalCount
+// 查询周期内电话流水总数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePhoneAlarmFlowTotalCount(request *DescribePhoneAlarmFlowTotalCountRequest) (response *DescribePhoneAlarmFlowTotalCountResponse, err error) {
+    return c.DescribePhoneAlarmFlowTotalCountWithContext(context.Background(), request)
+}
+
+// DescribePhoneAlarmFlowTotalCount
+// 查询周期内电话流水总数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePhoneAlarmFlowTotalCountWithContext(ctx context.Context, request *DescribePhoneAlarmFlowTotalCountRequest) (response *DescribePhoneAlarmFlowTotalCountResponse, err error) {
+    if request == nil {
+        request = NewDescribePhoneAlarmFlowTotalCountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePhoneAlarmFlowTotalCount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePhoneAlarmFlowTotalCountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribePluginOverviewsRequest() (request *DescribePluginOverviewsRequest) {
     request = &DescribePluginOverviewsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4643,20 +4870,20 @@ func NewDescribePluginOverviewsResponse() (response *DescribePluginOverviewsResp
 }
 
 // DescribePluginOverviews
-// 列出可安装的所有 Grafana 插件
+// 列出可安装的所有 Grafana 插件。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribePluginOverviews(request *DescribePluginOverviewsRequest) (response *DescribePluginOverviewsResponse, err error) {
     return c.DescribePluginOverviewsWithContext(context.Background(), request)
 }
 
 // DescribePluginOverviews
-// 列出可安装的所有 Grafana 插件
+// 列出可安装的所有 Grafana 插件。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribePluginOverviewsWithContext(ctx context.Context, request *DescribePluginOverviewsRequest) (response *DescribePluginOverviewsResponse, err error) {
     if request == nil {
@@ -5875,7 +6102,7 @@ func NewDescribePrometheusInstanceUsageResponse() (response *DescribePrometheusI
 }
 
 // DescribePrometheusInstanceUsage
-//  查询Prometheus按量实例用量
+// 查询Prometheus按量实例用量
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5894,7 +6121,7 @@ func (c *Client) DescribePrometheusInstanceUsage(request *DescribePrometheusInst
 }
 
 // DescribePrometheusInstanceUsage
-//  查询Prometheus按量实例用量
+// 查询Prometheus按量实例用量
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6066,77 +6293,6 @@ func (c *Client) DescribePrometheusInstancesOverviewWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewDescribePrometheusInstancesOverviewResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribePrometheusRecordRuleYamlRequest() (request *DescribePrometheusRecordRuleYamlRequest) {
-    request = &DescribePrometheusRecordRuleYamlRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("monitor", APIVersion, "DescribePrometheusRecordRuleYaml")
-    
-    
-    return
-}
-
-func NewDescribePrometheusRecordRuleYamlResponse() (response *DescribePrometheusRecordRuleYamlResponse) {
-    response = &DescribePrometheusRecordRuleYamlResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribePrometheusRecordRuleYaml
-// 拉取Prometheus聚合规则yaml列表
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
-//  FAILEDOPERATION_KUBECLIENTCONF = "FailedOperation.KubeClientConf"
-//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
-//  INTERNALERROR_PARAM = "InternalError.Param"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
-//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
-func (c *Client) DescribePrometheusRecordRuleYaml(request *DescribePrometheusRecordRuleYamlRequest) (response *DescribePrometheusRecordRuleYamlResponse, err error) {
-    return c.DescribePrometheusRecordRuleYamlWithContext(context.Background(), request)
-}
-
-// DescribePrometheusRecordRuleYaml
-// 拉取Prometheus聚合规则yaml列表
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
-//  FAILEDOPERATION_KUBECLIENTCONF = "FailedOperation.KubeClientConf"
-//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
-//  INTERNALERROR_PARAM = "InternalError.Param"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
-//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
-func (c *Client) DescribePrometheusRecordRuleYamlWithContext(ctx context.Context, request *DescribePrometheusRecordRuleYamlRequest) (response *DescribePrometheusRecordRuleYamlResponse, err error) {
-    if request == nil {
-        request = NewDescribePrometheusRecordRuleYamlRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribePrometheusRecordRuleYaml require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribePrometheusRecordRuleYamlResponse()
     err = c.Send(request, response)
     return
 }
@@ -6358,7 +6514,7 @@ func NewDescribePrometheusTargetsTMPResponse() (response *DescribePrometheusTarg
 }
 
 // DescribePrometheusTargetsTMP
-// 获取targets信息
+// 获取targets信息，在过滤条件中指定job名称时返回targets详情，否则仅返回数量
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -6378,7 +6534,7 @@ func (c *Client) DescribePrometheusTargetsTMP(request *DescribePrometheusTargets
 }
 
 // DescribePrometheusTargetsTMP
-// 获取targets信息
+// 获取targets信息，在过滤条件中指定job名称时返回targets详情，否则仅返回数量
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -6549,7 +6705,7 @@ func NewDescribePrometheusZonesResponse() (response *DescribePrometheusZonesResp
 }
 
 // DescribePrometheusZones
-// 列出 Prometheus 服务可用区
+// 列出 Prometheus 服务可用区。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6562,7 +6718,7 @@ func (c *Client) DescribePrometheusZones(request *DescribePrometheusZonesRequest
 }
 
 // DescribePrometheusZones
-// 列出 Prometheus 服务可用区
+// 列出 Prometheus 服务可用区。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6651,6 +6807,67 @@ func (c *Client) DescribeRecordingRulesWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeRecordingRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRemoteURLsRequest() (request *DescribeRemoteURLsRequest) {
+    request = &DescribeRemoteURLsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeRemoteURLs")
+    
+    
+    return
+}
+
+func NewDescribeRemoteURLsResponse() (response *DescribeRemoteURLsResponse) {
+    response = &DescribeRemoteURLsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRemoteURLs
+// 获取多写配置详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
+//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
+func (c *Client) DescribeRemoteURLs(request *DescribeRemoteURLsRequest) (response *DescribeRemoteURLsResponse, err error) {
+    return c.DescribeRemoteURLsWithContext(context.Background(), request)
+}
+
+// DescribeRemoteURLs
+// 获取多写配置详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
+//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
+func (c *Client) DescribeRemoteURLsWithContext(ctx context.Context, request *DescribeRemoteURLsRequest) (response *DescribeRemoteURLsResponse, err error) {
+    if request == nil {
+        request = NewDescribeRemoteURLsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRemoteURLs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRemoteURLsResponse()
     err = c.Send(request, response)
     return
 }
@@ -8048,7 +8265,7 @@ func NewModifyPrometheusConfigResponse() (response *ModifyPrometheusConfigRespon
 }
 
 // ModifyPrometheusConfig
-// 修改prometheus配置，如果配置项不存在，则会新增
+// 修改prometheus采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -8067,7 +8284,7 @@ func (c *Client) ModifyPrometheusConfig(request *ModifyPrometheusConfigRequest) 
 }
 
 // ModifyPrometheusConfig
-// 修改prometheus配置，如果配置项不存在，则会新增
+// 修改prometheus采集配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
@@ -8341,6 +8558,61 @@ func (c *Client) ModifyPrometheusTempWithContext(ctx context.Context, request *M
     return
 }
 
+func NewModifyRemoteURLsRequest() (request *ModifyRemoteURLsRequest) {
+    request = &ModifyRemoteURLsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "ModifyRemoteURLs")
+    
+    
+    return
+}
+
+func NewModifyRemoteURLsResponse() (response *ModifyRemoteURLsResponse) {
+    response = &ModifyRemoteURLsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRemoteURLs
+// 修改多写配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_RESOURCECONFLICT = "FailedOperation.ResourceConflict"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ModifyRemoteURLs(request *ModifyRemoteURLsRequest) (response *ModifyRemoteURLsResponse, err error) {
+    return c.ModifyRemoteURLsWithContext(context.Background(), request)
+}
+
+// ModifyRemoteURLs
+// 修改多写配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_RESOURCECONFLICT = "FailedOperation.ResourceConflict"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ModifyRemoteURLsWithContext(ctx context.Context, request *ModifyRemoteURLsRequest) (response *ModifyRemoteURLsResponse, err error) {
+    if request == nil {
+        request = NewModifyRemoteURLsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRemoteURLs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRemoteURLsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewResumeGrafanaInstanceRequest() (request *ResumeGrafanaInstanceRequest) {
     request = &ResumeGrafanaInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8364,12 +8636,10 @@ func NewResumeGrafanaInstanceResponse() (response *ResumeGrafanaInstanceResponse
 // 本接口（ResumeGrafanaInstance）用于 Grafana 包年包月实例的停服续费，调用后按原版本续费一个月。仍在运行中的实例无法使用该接口进行续费。
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_PARAM = "InternalError.Param"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_RESOURCECONFLICT = "FailedOperation.ResourceConflict"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-//  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ResumeGrafanaInstance(request *ResumeGrafanaInstanceRequest) (response *ResumeGrafanaInstanceResponse, err error) {
     return c.ResumeGrafanaInstanceWithContext(context.Background(), request)
 }
@@ -8378,12 +8648,10 @@ func (c *Client) ResumeGrafanaInstance(request *ResumeGrafanaInstanceRequest) (r
 // 本接口（ResumeGrafanaInstance）用于 Grafana 包年包月实例的停服续费，调用后按原版本续费一个月。仍在运行中的实例无法使用该接口进行续费。
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DB = "InternalError.Db"
-//  INTERNALERROR_PARAM = "InternalError.Param"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_RESOURCECONFLICT = "FailedOperation.ResourceConflict"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
-//  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ResumeGrafanaInstanceWithContext(ctx context.Context, request *ResumeGrafanaInstanceRequest) (response *ResumeGrafanaInstanceResponse, err error) {
     if request == nil {
         request = NewResumeGrafanaInstanceRequest()
@@ -8451,71 +8719,6 @@ func (c *Client) RunPrometheusInstanceWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewRunPrometheusInstanceResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewSendCustomAlarmMsgRequest() (request *SendCustomAlarmMsgRequest) {
-    request = &SendCustomAlarmMsgRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("monitor", APIVersion, "SendCustomAlarmMsg")
-    
-    
-    return
-}
-
-func NewSendCustomAlarmMsgResponse() (response *SendCustomAlarmMsgResponse) {
-    response = &SendCustomAlarmMsgResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// SendCustomAlarmMsg
-// 发送自定义消息告警
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
-//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) SendCustomAlarmMsg(request *SendCustomAlarmMsgRequest) (response *SendCustomAlarmMsgResponse, err error) {
-    return c.SendCustomAlarmMsgWithContext(context.Background(), request)
-}
-
-// SendCustomAlarmMsg
-// 发送自定义消息告警
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
-//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) SendCustomAlarmMsgWithContext(ctx context.Context, request *SendCustomAlarmMsgRequest) (response *SendCustomAlarmMsgResponse, err error) {
-    if request == nil {
-        request = NewSendCustomAlarmMsgRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("SendCustomAlarmMsg require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewSendCustomAlarmMsgResponse()
     err = c.Send(request, response)
     return
 }

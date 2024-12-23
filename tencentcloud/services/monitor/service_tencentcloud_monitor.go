@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	monitorv20180724 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"gopkg.in/yaml.v2"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -2605,5 +2606,31 @@ func (me *MonitorService) DescribeMonitorTmpInstancesByFilter(ctx context.Contex
 		offset += limit
 	}
 
+	return
+}
+
+func (me *MonitorService) DescribeMonitorTmpMultipleWritesById(ctx context.Context, instanceId string, url string) (ret *monitorv20180724.DescribeRemoteURLsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitorv20180724.NewDescribeRemoteURLsRequest()
+	request.InstanceId = helper.String(instanceId)
+	request.RemoteURLs = []*string{helper.String(url)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorV20180724Client().DescribeRemoteURLs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }
