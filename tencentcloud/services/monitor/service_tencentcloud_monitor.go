@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	monitorv20180724 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"gopkg.in/yaml.v2"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -2605,5 +2606,44 @@ func (me *MonitorService) DescribeMonitorTmpInstancesByFilter(ctx context.Contex
 		offset += limit
 	}
 
+	return
+}
+
+func (me *MonitorService) DescribeMonitorTmpMultipleWritesById(ctx context.Context, instanceId string, url string) (ret *monitorv20180724.DescribeRemoteURLsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitorv20180724.NewDescribeRemoteURLsRequest()
+	response := monitorv20180724.NewDescribeRemoteURLsResponse()
+	request.InstanceId = helper.String(instanceId)
+	request.RemoteURLs = []*string{helper.String(url)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMonitorV20180724Client().DescribeRemoteURLs(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil {
+			e = fmt.Errorf("tmp `DescribeRemoteURLs` response not exists")
+			return resource.NonRetryableError(e)
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
 	return
 }

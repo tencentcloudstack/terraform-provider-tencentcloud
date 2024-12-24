@@ -225,6 +225,7 @@ type TencentCloudClient struct {
 	wafv20180125Conn        *waf.Client
 	camv20190116Conn        *cam.Client
 	clsv20201016Conn        *cls.Client
+	monitor20180724Conn     *monitor.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2001,4 +2002,18 @@ func (me *TencentCloudClient) UseClsV20201016Client() *cls.Client {
 	me.clsv20201016Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.clsv20201016Conn
+}
+
+// UseMonitorV20180724Client returns MONITOR client for service
+func (me *TencentCloudClient) UseMonitorV20180724Client() *monitor.Client {
+	if me.monitor20180724Conn != nil {
+		return me.monitor20180724Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.monitor20180724Conn, _ = monitor.NewClient(me.Credential, me.Region, cpf)
+	me.monitor20180724Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.monitor20180724Conn
 }
