@@ -100,6 +100,8 @@ var retryableErrorCode = []string{
 	"UnsupportedOperation.UnsupportedDeleteService",
 	// gaap
 	"FailedOperation.ListenerHasTask",
+	// clb
+	"FailedOperation.ResourceInOperating",
 }
 
 // retryableCosErrorCode is retryable error code for COS/CI SDK
