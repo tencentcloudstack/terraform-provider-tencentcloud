@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	"runtime"
@@ -2653,7 +2652,7 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 		providerConfig = make(map[string]interface{})
 		_, err = os.Stat(credentialPath)
 		if !os.IsNotExist(err) {
-			data, err := ioutil.ReadFile(credentialPath)
+			data, err := os.ReadFile(credentialPath)
 			if err != nil {
 				return nil, err
 			}
@@ -2673,7 +2672,7 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 
 		_, err = os.Stat(configurePath)
 		if !os.IsNotExist(err) {
-			data, err := ioutil.ReadFile(configurePath)
+			data, err := os.ReadFile(configurePath)
 			if err != nil {
 				return nil, err
 			}
