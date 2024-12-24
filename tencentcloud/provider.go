@@ -2245,6 +2245,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		forbiddenAccountIds []string
 		needSecret          = true
 		needAccountFilter   = false
+		err                 error
 	)
 
 	if v, ok := d.GetOk("secret_id"); ok {
@@ -2325,7 +2326,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	// get auth from CAM role name
 	if camRoleName != "" {
 		needSecret = false
-		err := genClientWithCAM(&tcClient, camRoleName)
+		err = genClientWithCAM(&tcClient, camRoleName)
 		if err != nil {
 			return nil, fmt.Errorf("Get auth from CAM role name failed. Reason: %s", err.Error())
 		}
@@ -2350,7 +2351,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
 		assumeRoleSessionDuration = 7200
-		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
+		err = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
+		if err != nil {
+			return nil, fmt.Errorf("Get auth from assume role by credential failed. Reason: %s", err.Error())
+		}
 	}
 
 	// get assume role from env
@@ -2379,19 +2383,30 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
 			// use assume role
-			_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "", assumeRoleExternalId)
+			err = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "", assumeRoleExternalId)
+			if err != nil {
+				return nil, fmt.Errorf("Get auth from assume role by env failed. Reason: %s", err.Error())
+			}
 		} else if envSamlAssertion != "" && envPrincipalArn != "" && envWebIdentityToken != "" {
-			return nil, fmt.Errorf("can not set `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`, `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` at the same time.\n")
+			return nil, fmt.Errorf("Can not set `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`, `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` at the same time.\n")
 		} else if envSamlAssertion != "" && envPrincipalArn != "" {
 			// use assume role with saml
-			_ = genClientWithSamlSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envSamlAssertion, envPrincipalArn)
+			err = genClientWithSamlSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envSamlAssertion, envPrincipalArn)
+			if err != nil {
+				return nil, fmt.Errorf("Get auth from assume role with SAML by env failed. Reason: %s", err.Error())
+			}
+
 			needSecret = false
 		} else if envWebIdentityToken != "" {
 			// use assume role with oidc
-			_ = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken)
+			err = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken)
+			if err != nil {
+				return nil, fmt.Errorf("Get auth from assume role with OIDC by env failed. Reason: %s", err.Error())
+			}
+
 			needSecret = false
 		} else {
-			return nil, fmt.Errorf("get `assume_role` from env error.\n")
+			return nil, fmt.Errorf("Get `assume_role` from env error.\n")
 		}
 	}
 
@@ -2406,7 +2421,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRolePolicy = assumeRole["policy"].(string)
 			assumeRoleExternalId = assumeRole["external_id"].(string)
 
-			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
+			err = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
+			if err != nil {
+				return nil, fmt.Errorf("Get auth from assume role failed. Reason: %s", err.Error())
+			}
+
 			if camRoleName != "" {
 				needSecret = false
 			} else {
@@ -2432,7 +2451,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionName = assumeRoleWithSaml["session_name"].(string)
 			assumeRoleSessionDuration = assumeRoleWithSaml["session_duration"].(int)
 
-			_ = genClientWithSamlSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleSamlAssertion, assumeRolePrincipalArn)
+			err = genClientWithSamlSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleSamlAssertion, assumeRolePrincipalArn)
+			if err != nil {
+				return nil, fmt.Errorf("Get auth from assume role with SAML failed. Reason: %s", err.Error())
+			}
+
 			needSecret = false
 		}
 	}
@@ -2447,7 +2470,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
 			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
 
-			_ = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken)
+			err = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken)
+			if err != nil {
+				return nil, fmt.Errorf("Get auth from assume role with OIDC failed. Reason: %s", err.Error())
+			}
+
 			needSecret = false
 		}
 	}
@@ -2710,7 +2737,7 @@ func getCallerIdentity(tcClient *TencentCloudClient) (indentity *sdksts.GetCalle
 	}
 
 	if response == nil || response.Response == nil {
-		return nil, fmt.Errorf("get GetCallerIdentity failed")
+		return nil, fmt.Errorf("get GetCallerIdentity failed.")
 	}
 
 	indentity = response.Response
