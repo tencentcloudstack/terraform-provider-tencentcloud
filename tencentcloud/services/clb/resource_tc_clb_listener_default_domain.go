@@ -100,7 +100,7 @@ func resourceTencentCloudClbListenerDefaultDomainCreate(d *schema.ResourceData, 
 		}
 
 		if result == nil || result.Response == nil || response.Response.RequestId == nil {
-			return resource.NonRetryableError(fmt.Errorf("modify domain attributes failed"))
+			return resource.NonRetryableError(fmt.Errorf("Modify domain attributes failed, Response is nil."))
 		}
 
 		response = result
@@ -230,7 +230,7 @@ func resourceTencentCloudClbListenerDefaultDomainUpdate(d *schema.ResourceData, 
 			}
 
 			if result == nil || result.Response == nil || response.Response.RequestId == nil {
-				return resource.NonRetryableError(fmt.Errorf("modify domain attributes failed"))
+				return resource.NonRetryableError(fmt.Errorf("Modify domain attributes failed, Response is nil."))
 			}
 
 			response = result

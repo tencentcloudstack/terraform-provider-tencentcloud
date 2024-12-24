@@ -346,7 +346,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 			if response == nil || response.Response == nil || response.Response.RequestId == nil {
-				return resource.NonRetryableError(fmt.Errorf("create CLB listener rule failed"))
+				return resource.NonRetryableError(fmt.Errorf("Create CLB listener rule failed, Response is nil."))
 			}
 
 			requestId = *response.Response.RequestId
@@ -406,7 +406,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				if response == nil || response.Response == nil || response.Response.RequestId == nil {
-					return resource.NonRetryableError(fmt.Errorf("modify domain attributes failed"))
+					return resource.NonRetryableError(fmt.Errorf("Modify domain attributes failed, Response is nil."))
 				}
 
 				requestId := *response.Response.RequestId
@@ -444,7 +444,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				if response == nil || response.Response == nil || response.Response.RequestId == nil {
-					return resource.NonRetryableError(fmt.Errorf("modify rule failed"))
+					return resource.NonRetryableError(fmt.Errorf("Modify rule failed, Response is nil."))
 				}
 
 				requestId := *response.Response.RequestId
@@ -694,7 +694,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				if response == nil || response.Response == nil || response.Response.RequestId == nil {
-					return resource.NonRetryableError(fmt.Errorf("modify rule failed"))
+					return resource.NonRetryableError(fmt.Errorf("Modify rule failed, Response is nil."))
 				}
 
 				requestId := *response.Response.RequestId
@@ -768,7 +768,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				if response == nil || response.Response == nil || response.Response.RequestId == nil {
-					return resource.NonRetryableError(fmt.Errorf("modify domain attributes failed"))
+					return resource.NonRetryableError(fmt.Errorf("Modify domain attributes failed, Response is nil."))
 				}
 
 				requestId := *response.Response.RequestId
