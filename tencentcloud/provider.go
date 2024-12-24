@@ -2482,8 +2482,9 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		if os.Getenv(POD_OIDC_TKE_REGION) != "" && os.Getenv(POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE) != "" && os.Getenv(POD_OIDC_TKE_PROVIDER_ID) != "" && os.Getenv(POD_OIDC_TKE_ROLE_ARN) != "" {
 			err := genClientWithPodOidc(&tcClient)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("Get auth from enable pod OIDC failed. Reason: %s", err.Error())
 			}
+
 			needSecret = false
 		} else {
 			return nil, fmt.Errorf("Can not get `TKE_REGION`, `TKE_WEB_IDENTITY_TOKEN_FILE`, `TKE_PROVIDER_ID`, `TKE_ROLE_ARN`. Must config serviceAccountName for pod.\n")
