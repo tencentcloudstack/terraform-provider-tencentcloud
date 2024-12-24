@@ -345,6 +345,10 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			if response == nil || response.Response == nil || response.Response.RequestId == nil {
+				return resource.NonRetryableError(fmt.Errorf("create CLB listener rule failed"))
+			}
+
 			requestId = *response.Response.RequestId
 			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 			if retryErr != nil {
@@ -401,6 +405,10 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				if response == nil || response.Response == nil || response.Response.RequestId == nil {
+					return resource.NonRetryableError(fmt.Errorf("modify domain attributes failed"))
+				}
+
 				requestId := *response.Response.RequestId
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
@@ -435,6 +443,10 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				if response == nil || response.Response == nil || response.Response.RequestId == nil {
+					return resource.NonRetryableError(fmt.Errorf("modify rule failed"))
+				}
+
 				requestId := *response.Response.RequestId
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
@@ -681,6 +693,10 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				if response == nil || response.Response == nil || response.Response.RequestId == nil {
+					return resource.NonRetryableError(fmt.Errorf("modify rule failed"))
+				}
+
 				requestId := *response.Response.RequestId
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
@@ -751,6 +767,10 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				if response == nil || response.Response == nil || response.Response.RequestId == nil {
+					return resource.NonRetryableError(fmt.Errorf("modify domain attributes failed"))
+				}
+
 				requestId := *response.Response.RequestId
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
