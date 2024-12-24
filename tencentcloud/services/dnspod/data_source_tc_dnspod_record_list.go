@@ -264,6 +264,95 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 					},
 				},
 			},
+			"instance_list": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "List of records.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Computed:    true,
+							Type:        schema.TypeString,
+							Description: "ID.",
+						},
+						"domain": {
+							Computed:    true,
+							Type:        schema.TypeString,
+							Description: "Domain.",
+						},
+						"record_id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Record ID.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record value.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record status, enabled: ENABLE, paused: DISABLE.",
+						},
+						"updated_on": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Update time.",
+						},
+						"sub_domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Host header.",
+						},
+						"record_line": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record line.",
+						},
+						"line_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Line ID.",
+						},
+						"record_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record type.",
+						},
+						"weight": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Record weight, used for load balancing records. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"monitor_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record monitoring status, normal: OK, alarm: WARN, downtime: DOWN, empty if monitoring is not set or paused.",
+						},
+						"remark": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record remark description.",
+						},
+						"ttl": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Record cache time.",
+						},
+						"mx": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "MX value, only available for MX records Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"default_ns": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether it is the default NS record.",
+						},
+					},
+				},
+			},
 
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -281,10 +370,11 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
+	var domain string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("domain"); ok {
-		paramMap["Domain"] = helper.String(v.(string))
+		domain = v.(string)
+		paramMap["Domain"] = helper.String(domain)
 	}
 
 	if v, ok := d.GetOkExists("domain_id"); ok {
@@ -396,71 +486,90 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 
 	ids := make([]string, 0, len(recordList))
 	tmpList := make([]map[string]interface{}, 0, len(recordList))
+	instanceList := make([]map[string]interface{}, 0, len(recordList))
 	if recordList != nil {
 		for _, recordListItem := range recordList {
 			recordListItemMap := map[string]interface{}{}
-
+			instanceListItemMap := map[string]interface{}{}
+			instanceListItemMap["domain"] = domain
 			if recordListItem.RecordId != nil {
 				recordListItemMap["record_id"] = recordListItem.RecordId
+				instanceListItemMap["record_id"] = recordListItem.RecordId
+				instanceListItemMap["id"] = domain + tccommon.FILED_SP + helper.UInt64ToStr(*recordListItem.RecordId)
 			}
 
 			if recordListItem.Value != nil {
 				recordListItemMap["value"] = recordListItem.Value
+				instanceListItemMap["value"] = recordListItem.Value
 			}
 
 			if recordListItem.Status != nil {
 				recordListItemMap["status"] = recordListItem.Status
+				instanceListItemMap["status"] = recordListItem.Status
 			}
 
 			if recordListItem.UpdatedOn != nil {
 				recordListItemMap["updated_on"] = recordListItem.UpdatedOn
+				instanceListItemMap["updated_on"] = recordListItem.UpdatedOn
 			}
 
 			if recordListItem.Name != nil {
 				recordListItemMap["name"] = recordListItem.Name
+				instanceListItemMap["sub_domain"] = recordListItem.Name
 			}
 
 			if recordListItem.Line != nil {
 				recordListItemMap["line"] = recordListItem.Line
+				instanceListItemMap["record_line"] = recordListItem.Line
 			}
 
 			if recordListItem.LineId != nil {
 				recordListItemMap["line_id"] = recordListItem.LineId
+				instanceListItemMap["line_id"] = recordListItem.LineId
 			}
 
 			if recordListItem.Type != nil {
 				recordListItemMap["type"] = recordListItem.Type
+				instanceListItemMap["record_type"] = recordListItem.Type
 			}
 
 			if recordListItem.Weight != nil {
 				recordListItemMap["weight"] = recordListItem.Weight
+				instanceListItemMap["weight"] = recordListItem.Weight
 			}
 
 			if recordListItem.MonitorStatus != nil {
 				recordListItemMap["monitor_status"] = recordListItem.MonitorStatus
+				instanceListItemMap["monitor_status"] = recordListItem.MonitorStatus
 			}
 
 			if recordListItem.Remark != nil {
 				recordListItemMap["remark"] = recordListItem.Remark
+				instanceListItemMap["remark"] = recordListItem.Remark
 			}
 
 			if recordListItem.TTL != nil {
 				recordListItemMap["ttl"] = recordListItem.TTL
+				instanceListItemMap["ttl"] = recordListItem.TTL
 			}
 
 			if recordListItem.MX != nil {
 				recordListItemMap["mx"] = recordListItem.MX
+				instanceListItemMap["mx"] = recordListItem.MX
 			}
 
 			if recordListItem.DefaultNS != nil {
 				recordListItemMap["default_ns"] = recordListItem.DefaultNS
+				instanceListItemMap["default_ns"] = recordListItem.DefaultNS
 			}
 
 			ids = append(ids, helper.UInt64ToStr(*recordListItem.RecordId))
 			tmpList = append(tmpList, recordListItemMap)
+			instanceList = append(instanceList, instanceListItemMap)
 		}
 
 		_ = d.Set("record_list", tmpList)
+		_ = d.Set("instance_list", instanceList)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

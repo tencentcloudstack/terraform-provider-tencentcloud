@@ -72,6 +72,23 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `instance_list` - List of records.
+  * `default_ns` - Whether it is the default NS record.
+  * `domain` - Domain.
+  * `id` - ID.
+  * `line_id` - Line ID.
+  * `monitor_status` - Record monitoring status, normal: OK, alarm: WARN, downtime: DOWN, empty if monitoring is not set or paused.
+  * `mx` - MX value, only available for MX records Note: This field may return null, indicating that no valid value can be obtained.
+  * `record_id` - Record ID.
+  * `record_line` - Record line.
+  * `record_type` - Record type.
+  * `remark` - Record remark description.
+  * `status` - Record status, enabled: ENABLE, paused: DISABLE.
+  * `sub_domain` - Host header.
+  * `ttl` - Record cache time.
+  * `updated_on` - Update time.
+  * `value` - Record value.
+  * `weight` - Record weight, used for load balancing records. Note: This field may return null, indicating that no valid value can be obtained.
 * `record_count_info` - Statistics of the number of records.
   * `list_count` - Number of records returned in the list.
   * `subdomain_count` - Number of subdomains.
