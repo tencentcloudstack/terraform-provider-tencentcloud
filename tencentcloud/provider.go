@@ -271,13 +271,13 @@ func Provider() *schema.Provider {
 							Type:        schema.TypeString,
 							Required:    true,
 							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SAML_ASSERTION, nil),
-							Description: "SAML assertion information encoded in base64. It can be sourced from the `PROVIDER_ASSUME_ROLE_SAML_ASSERTION`.",
+							Description: "SAML assertion information encoded in base64. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`.",
 						},
 						"principal_arn": {
 							Type:        schema.TypeString,
 							Required:    true,
 							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN, nil),
-							Description: "Player Access Description Name. It can be sourced from the `PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN`.",
+							Description: "Player Access Description Name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`.",
 						},
 						"role_arn": {
 							Type:        schema.TypeString,
@@ -323,7 +323,7 @@ func Provider() *schema.Provider {
 							Type:        schema.TypeString,
 							Required:    true,
 							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN, nil),
-							Description: "OIDC token issued by IdP. It can be sourced from the `PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.",
+							Description: "OIDC token issued by IdP. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.",
 						},
 						"role_arn": {
 							Type:        schema.TypeString,
@@ -2340,12 +2340,12 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	)
 
 	// get assume role from credential
-	if providerConfig["role-arn"] != nil {
-		assumeRoleArn = providerConfig["role-arn"].(string)
+	if v, ok := providerConfig["role-arn"].(string); ok && v != "" {
+		assumeRoleArn = v
 	}
 
-	if providerConfig["role-session-name"] != nil {
-		assumeRoleSessionName = providerConfig["role-session-name"].(string)
+	if v, ok := providerConfig["role-session-name"].(string); ok && v != "" {
+		assumeRoleSessionName = v
 	}
 
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
