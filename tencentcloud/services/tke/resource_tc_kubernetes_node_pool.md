@@ -68,7 +68,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 10
     public_ip_assigned         = true
-    password                   = "test123#"
+    password                   = "Password@123"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
     host_name                  = "12.123.0.0"
@@ -133,7 +133,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 10
     public_ip_assigned         = true
-    password                   = "test123#"
+    password                   = "Password@123"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
   }
@@ -141,6 +141,56 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
   labels = {
     "test1" = "test1",
     "test2" = "test2"
+  }
+}
+```
+
+If instance_type is CBM
+
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
+  cluster_id               = "cls-23ieal0c"
+  max_size                 = 100
+  min_size                 = 1
+  vpc_id                   = "vpc-i5yyodl9"
+  subnet_ids               = ["subnet-d4umunpy"]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  enable_auto_scale        = true
+  multi_zone_subnet_policy = "EQUALITY"
+  node_os                  = "img-eb30mz89"
+  delete_keep_instance     = false
+
+  node_config {
+    data_disk {
+      disk_type    = "LOCAL_NVME"
+      disk_size    = 3570
+      file_system  = "ext4"
+      mount_target = "/var/lib/data1"
+    }
+
+    data_disk {
+      disk_type    = "LOCAL_NVME"
+      disk_size    = 3570
+      file_system  = "ext4"
+      mount_target = "/var/lib/data2"
+    }
+  }
+
+  auto_scaling_config {
+    instance_type              = "BMI5.24XLARGE384"
+    system_disk_type           = "LOCAL_BASIC"
+    system_disk_size           = "440"
+    orderly_security_group_ids = ["sg-4z20n68d"]
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "Password@123"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    host_name                  = "example"
+    host_name_style            = "ORIGINAL"
   }
 }
 ```

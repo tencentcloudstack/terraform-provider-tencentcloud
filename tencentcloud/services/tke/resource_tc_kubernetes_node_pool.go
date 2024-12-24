@@ -168,7 +168,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 										Optional:     true,
 										ForceNew:     true,
 										Default:      "CLOUD_PREMIUM",
-										Description:  "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
+										Description:  "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD`, `CLOUD_BSSD` and `LOCAL_NVME`.",
 										ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
 									},
 									"disk_size": {
@@ -311,7 +311,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      "CLOUD_PREMIUM",
-							Description:  "Type of a CVM disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`. Default is `CLOUD_PREMIUM`.",
+							Description:  "Type of a CVM disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD`, `CLOUD_BSSD` and `LOCAL_NVME`. Default is `CLOUD_PREMIUM`.",
 							ValidateFunc: tccommon.ValidateAllowedStringValue(svcas.SYSTEM_DISK_ALLOW_TYPE),
 						},
 						"system_disk_size": {
