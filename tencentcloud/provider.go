@@ -2736,7 +2736,7 @@ func getCallerIdentity(tcClient *TencentCloudClient) (indentity *sdksts.GetCalle
 	}
 
 	if response == nil || response.Response == nil {
-		return nil, fmt.Errorf("get GetCallerIdentity failed.")
+		return nil, fmt.Errorf("Get GetCallerIdentity failed, Response is nil.")
 	}
 
 	indentity = response.Response
