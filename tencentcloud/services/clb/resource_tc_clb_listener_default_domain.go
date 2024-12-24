@@ -99,7 +99,7 @@ func resourceTencentCloudClbListenerDefaultDomainCreate(d *schema.ResourceData, 
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil {
+		if result == nil || result.Response == nil || response.Response.RequestId == nil {
 			e = fmt.Errorf("modify domain failed")
 			return resource.NonRetryableError(e)
 		}
@@ -230,7 +230,7 @@ func resourceTencentCloudClbListenerDefaultDomainUpdate(d *schema.ResourceData, 
 					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 
-			if result == nil {
+			if result == nil || result.Response == nil || response.Response.RequestId == nil {
 				e = fmt.Errorf("modify domain failed")
 				return resource.NonRetryableError(e)
 			}
