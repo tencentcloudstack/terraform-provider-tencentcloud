@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_clb_listener_default_domain: support retry
+```
+
+```release-note:enhancement
+resource/tencentcloud_clb_listener_rule: support retry
+```
