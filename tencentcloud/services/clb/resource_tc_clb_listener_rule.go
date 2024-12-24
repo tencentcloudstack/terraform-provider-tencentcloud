@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -390,6 +391,12 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyDomainAttributes(domainRequest)
 			if e != nil {
+				if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "FailedOperation.ResourceInOperating" {
+						return resource.RetryableError(e)
+					}
+				}
+
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",

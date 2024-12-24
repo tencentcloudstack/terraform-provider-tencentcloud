@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -86,6 +87,12 @@ func resourceTencentCloudClbListenerDefaultDomainCreate(d *schema.ResourceData, 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := client.ModifyDomainAttributes(request)
 		if e != nil {
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation.ResourceInOperating" {
+					return resource.RetryableError(e)
+				}
+			}
+
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -211,6 +218,12 @@ func resourceTencentCloudClbListenerDefaultDomainUpdate(d *schema.ResourceData, 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := client.ModifyDomainAttributes(request)
 			if e != nil {
+				if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "FailedOperation.ResourceInOperating" {
+						return resource.RetryableError(e)
+					}
+				}
+
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
