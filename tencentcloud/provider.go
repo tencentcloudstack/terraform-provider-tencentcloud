@@ -2325,7 +2325,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	// get auth from CAM role name
 	if camRoleName != "" {
 		needSecret = false
-		_ = genClientWithCAM(&tcClient, camRoleName)
+		err := genClientWithCAM(&tcClient, camRoleName)
+		if err != nil {
+			return nil, fmt.Errorf("Get auth from CAM role name failed. Reason: %s", err.Error())
+		}
 	}
 
 	var (
