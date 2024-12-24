@@ -2613,6 +2613,7 @@ func (me *MonitorService) DescribeMonitorTmpMultipleWritesById(ctx context.Conte
 	logId := tccommon.GetLogId(ctx)
 
 	request := monitorv20180724.NewDescribeRemoteURLsRequest()
+	response := monitorv20180724.NewDescribeRemoteURLsResponse()
 	request.InstanceId = helper.String(instanceId)
 	request.RemoteURLs = []*string{helper.String(url)}
 
@@ -2624,7 +2625,19 @@ func (me *MonitorService) DescribeMonitorTmpMultipleWritesById(ctx context.Conte
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseMonitorV20180724Client().DescribeRemoteURLs(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMonitorV20180724Client().DescribeRemoteURLs(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil {
+			e = fmt.Errorf("tmp `DescribeRemoteURLs` response not exists")
+			return resource.NonRetryableError(e)
+		}
+
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
