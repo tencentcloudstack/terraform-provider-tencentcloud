@@ -134,6 +134,12 @@ func ResourceTencentCloudVpnGateway() *schema.Resource {
 				Optional:    true,
 				Description: "A list of tags used to associate different resources.",
 			},
+			"bgp_asn": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "BGP ASN. Value range: 1 - 4294967295. Using BGP requires configuring ASN.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -196,6 +202,10 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 		request.MaxConnection = helper.IntUint64(v.(int))
 	}
 
+	if v, ok := d.GetOkExists("bgp_asn"); ok {
+		request.BgpAsn = helper.IntUint64(v.(int))
+	}
+
 	var response *vpc.CreateVpnGatewayResponse
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().CreateVpnGateway(request)
@@ -204,17 +214,24 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return tccommon.RetryError(e)
 		}
+
+		if result == nil || result.Response == nil || result.Response.VpnGateway == nil {
+			return resource.NonRetryableError(fmt.Errorf("create VPN gateway failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create VPN gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
-	if response.Response.VpnGateway == nil {
+	if response.Response.VpnGateway.VpnGatewayId == nil {
 		return fmt.Errorf("VPN gateway id is nil")
 	}
+
 	gatewayId := *response.Response.VpnGateway.VpnGatewayId
 	d.SetId(gatewayId)
 
@@ -229,14 +246,18 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 			return tccommon.RetryError(e)
 		} else {
 			//if not, quit
-			if len(result.Response.VpnGatewaySet) != 1 {
-				return resource.NonRetryableError(fmt.Errorf("creating error"))
-			} else {
-				if *result.Response.VpnGatewaySet[0].State == svcvpc.VPN_STATE_AVAILABLE {
-					return nil
+			if result != nil && result.Response != nil && result.Response.VpnGatewaySet != nil {
+				if len(result.Response.VpnGatewaySet) != 1 {
+					return resource.NonRetryableError(fmt.Errorf("creating error"))
 				} else {
-					return resource.RetryableError(fmt.Errorf("State is not available: %s, wait for state to be AVAILABLE.", *result.Response.VpnGatewaySet[0].State))
+					if *result.Response.VpnGatewaySet[0].State == svcvpc.VPN_STATE_AVAILABLE {
+						return nil
+					} else {
+						return resource.RetryableError(fmt.Errorf("State is not available: %s, wait for state to be AVAILABLE.", *result.Response.VpnGatewaySet[0].State))
+					}
 				}
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("Describe Vpn Gateways failed, Response is nil."))
 			}
 		}
 	})
@@ -300,6 +321,10 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("zone", gateway.Zone)
 	_ = d.Set("cdc_id", gateway.CdcId)
 	_ = d.Set("max_connection", gateway.MaxConnection)
+	if gateway.BgpAsn != nil {
+		_ = d.Set("bgp_asn", gateway.BgpAsn)
+	}
+
 	//tags
 	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
@@ -386,7 +411,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if d.HasChange("name") || d.HasChange("charge_type") {
+	if d.HasChange("name") || d.HasChange("charge_type") || d.HasChange("bgp_asn") {
 		//check that the charge type change is valid
 		//only pre-paid --> post-paid is valid
 		oldInterface, newInterface := d.GetChange("charge_type")
@@ -395,6 +420,9 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		request := vpc.NewModifyVpnGatewayAttributeRequest()
 		request.VpnGatewayId = &gatewayId
 		request.VpnGatewayName = helper.String(d.Get("name").(string))
+		if v, ok := d.GetOkExists("bgp_asn"); ok {
+			request.BgpAsn = helper.IntUint64(v.(int))
+		}
 		if oldChargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID && newChargeType == svcvpc.VPN_CHARGE_TYPE_POSTPAID_BY_HOUR {
 			request.InstanceChargeType = &newChargeType
 		} else if oldChargeType == svcvpc.VPN_CHARGE_TYPE_POSTPAID_BY_HOUR && newChargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID {
@@ -479,26 +507,30 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			//if deleted, quit
-			if len(result.Response.VpnGatewaySet) == 0 {
-				return nil
-			}
-			if result.Response.VpnGatewaySet[0].ExpiredTime != nil && *result.Response.VpnGatewaySet[0].InstanceChargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID {
-				expiredTime := *result.Response.VpnGatewaySet[0].ExpiredTime
-				if expiredTime != "0000-00-00 00:00:00" {
-					t, err := time.Parse("2006-01-02 15:04:05", expiredTime)
-					if err != nil {
-						return resource.NonRetryableError(fmt.Errorf("Error format expired time.%x %s", expiredTime, err))
-					}
-					if time.Until(t) > 0 {
-						return resource.NonRetryableError(fmt.Errorf("Delete operation is unsupport when VPN gateway is not expired."))
+			if result != nil && result.Response != nil && result.Response.VpnGatewaySet != nil {
+				//if deleted, quit
+				if len(result.Response.VpnGatewaySet) == 0 {
+					return nil
+				}
+				if result.Response.VpnGatewaySet[0].ExpiredTime != nil && *result.Response.VpnGatewaySet[0].InstanceChargeType == svcvpc.VPN_CHARGE_TYPE_PREPAID {
+					expiredTime := *result.Response.VpnGatewaySet[0].ExpiredTime
+					if expiredTime != "0000-00-00 00:00:00" {
+						t, err := time.Parse("2006-01-02 15:04:05", expiredTime)
+						if err != nil {
+							return resource.NonRetryableError(fmt.Errorf("Error format expired time.%x %s", expiredTime, err))
+						}
+						if time.Until(t) > 0 {
+							return resource.NonRetryableError(fmt.Errorf("Delete operation is unsupport when VPN gateway is not expired."))
+						}
 					}
 				}
+				if *result.Response.VpnGatewaySet[0].Type == svcvpc.GATE_WAY_TYPE_CCN && *result.Response.VpnGatewaySet[0].NetworkInstanceId != "" {
+					return resource.NonRetryableError(fmt.Errorf("Delete operation is unsupported when VPN gateway is attached to CCN instance."))
+				}
+				return nil
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("Describe Vpn Gateways failed, Response is nil."))
 			}
-			if *result.Response.VpnGatewaySet[0].Type == svcvpc.GATE_WAY_TYPE_CCN && *result.Response.VpnGatewaySet[0].NetworkInstanceId != "" {
-				return resource.NonRetryableError(fmt.Errorf("Delete operation is unsupported when VPN gateway is attached to CCN instance."))
-			}
-			return nil
 		}
 	})
 	if vpngwErr != nil {
@@ -534,10 +566,14 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 				logId, tRequest.GetAction(), tRequest.ToJsonString(), e.Error())
 			return tccommon.RetryError(e)
 		} else {
-			if len(result.Response.VpnConnectionSet) == 0 {
-				return nil
+			if result != nil && result.Response != nil && result.Response.VpnConnectionSet != nil {
+				if len(result.Response.VpnConnectionSet) == 0 {
+					return nil
+				} else {
+					return resource.NonRetryableError(fmt.Errorf("There is associated tunnel exists, please delete associated tunnels first."))
+				}
 			} else {
-				return resource.NonRetryableError(fmt.Errorf("There is associated tunnel exists, please delete associated tunnels first."))
+				return resource.NonRetryableError(fmt.Errorf("Describe Vpn Connections failed, Response is nil."))
 			}
 		}
 	})
@@ -582,12 +618,16 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 				return tccommon.RetryError(e)
 			}
 		} else {
-			//if not, quit
-			if len(result.Response.VpnGatewaySet) == 0 {
-				return nil
+			if result != nil && result.Response != nil && result.Response.VpnGatewaySet != nil {
+				//if not, quit
+				if len(result.Response.VpnGatewaySet) == 0 {
+					return nil
+				}
+				//else consider delete fail
+				return resource.RetryableError(fmt.Errorf("deleting retry"))
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("Describe Vpn Gateways failed, Response is nil."))
 			}
-			//else consider delete fail
-			return resource.RetryableError(fmt.Errorf("deleting retry"))
 		}
 	})
 	if err != nil {

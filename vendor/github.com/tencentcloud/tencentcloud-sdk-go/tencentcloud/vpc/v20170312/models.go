@@ -695,6 +695,13 @@ type AllocateAddressesRequestParams struct {
 	// CDC唯一ID
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 
+	// 是否使用独占资源池，默认值：True
+	// - True：表示使用独占资源池
+	// - False：表示使用共享资源池
+	// 
+	// 说明：如需使用独占资源池，请 提交工单(https://console.cloud.tencent.com/workorder/category) 咨询，具体费用请咨询商务经理。
+	IsDedicatedAddressPool *bool `json:"IsDedicatedAddressPool,omitnil,omitempty" name:"IsDedicatedAddressPool"`
+
 	// 网络出口，当前仅支持精品BGP、静态单线，这2种IP 地址类型的指定出口传入，默认值：center_egress1，其它可选值：center_egress2、center_egress3
 	Egress *string `json:"Egress,omitnil,omitempty" name:"Egress"`
 
@@ -767,6 +774,13 @@ type AllocateAddressesRequest struct {
 	// CDC唯一ID
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 
+	// 是否使用独占资源池，默认值：True
+	// - True：表示使用独占资源池
+	// - False：表示使用共享资源池
+	// 
+	// 说明：如需使用独占资源池，请 提交工单(https://console.cloud.tencent.com/workorder/category) 咨询，具体费用请咨询商务经理。
+	IsDedicatedAddressPool *bool `json:"IsDedicatedAddressPool,omitnil,omitempty" name:"IsDedicatedAddressPool"`
+
 	// 网络出口，当前仅支持精品BGP、静态单线，这2种IP 地址类型的指定出口传入，默认值：center_egress1，其它可选值：center_egress2、center_egress3
 	Egress *string `json:"Egress,omitnil,omitempty" name:"Egress"`
 
@@ -802,6 +816,7 @@ func (r *AllocateAddressesRequest) FromJsonString(s string) error {
 	delete(f, "BandwidthPackageId")
 	delete(f, "AddressName")
 	delete(f, "DedicatedClusterId")
+	delete(f, "IsDedicatedAddressPool")
 	delete(f, "Egress")
 	delete(f, "AntiDDoSPackageId")
 	delete(f, "ClientToken")
@@ -2438,11 +2453,9 @@ type CCN struct {
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
 	// 付费类型，PREPAID为预付费，POSTPAID为后付费。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
 	// 限速类型，`INTER_REGION_LIMIT` 为地域间限速；`OUTER_REGION_LIMIT` 为地域出口限速。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BandwidthLimitType *string `json:"BandwidthLimitType,omitnil,omitempty" name:"BandwidthLimitType"`
 
 	// 标签键值对。
@@ -2452,51 +2465,39 @@ type CCN struct {
 	RoutePriorityFlag *bool `json:"RoutePriorityFlag,omitnil,omitempty" name:"RoutePriorityFlag"`
 
 	// 实例关联的路由表个数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteTableCount *uint64 `json:"RouteTableCount,omitnil,omitempty" name:"RouteTableCount"`
 
 	// 是否开启云联网多路由表特性。`False`：未开启，`True`：开启。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteTableFlag *bool `json:"RouteTableFlag,omitnil,omitempty" name:"RouteTableFlag"`
 
 	// `true`：实例已被封禁，流量不通，`false`:解封禁。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSecurityLock *bool `json:"IsSecurityLock,omitnil,omitempty" name:"IsSecurityLock"`
 
 	// 是否开启云联网路由传播策略。`False` 未开启，`True` 开启。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteBroadcastPolicyFlag *bool `json:"RouteBroadcastPolicyFlag,omitnil,omitempty" name:"RouteBroadcastPolicyFlag"`
 
 	// 是否开启等价路由功能。`False` 未开启，`True` 开启。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteECMPFlag *bool `json:"RouteECMPFlag,omitnil,omitempty" name:"RouteECMPFlag"`
 
 	// 是否开启路由重叠功能。`False` 未开启，`True` 开启。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteOverlapFlag *bool `json:"RouteOverlapFlag,omitnil,omitempty" name:"RouteOverlapFlag"`
 
 	// 是否开启QOS。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrafficMarkingPolicyFlag *bool `json:"TrafficMarkingPolicyFlag,omitnil,omitempty" name:"TrafficMarkingPolicyFlag"`
 
 	// 是否开启路由表选择策略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteSelectPolicyFlag *bool `json:"RouteSelectPolicyFlag,omitnil,omitempty" name:"RouteSelectPolicyFlag"`
 
 	// 是否开启二层云联网通道。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DirectConnectAccelerateChannelFlag *bool `json:"DirectConnectAccelerateChannelFlag,omitnil,omitempty" name:"DirectConnectAccelerateChannelFlag"`
 
 	// 是否支持ipv6路由表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ipv6Flag *bool `json:"Ipv6Flag,omitnil,omitempty" name:"Ipv6Flag"`
 
 	// 是否支持路由表聚合策略
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MrtbAggregatePolicyFlag *bool `json:"MrtbAggregatePolicyFlag,omitnil,omitempty" name:"MrtbAggregatePolicyFlag"`
 
 	// 是否支持策略值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MrtbPolicyValueFlag *bool `json:"MrtbPolicyValueFlag,omitnil,omitempty" name:"MrtbPolicyValueFlag"`
 }
 
@@ -7773,6 +7774,9 @@ type CreateVpnGatewayRequestParams struct {
 
 	// SSL VPN连接数设置，可选规格：5, 10, 20, 50, 100, 200, 500, 1000；单位：个。仅 SSL / SSL_CCN 类型需要选这个参数。
 	MaxConnection *uint64 `json:"MaxConnection,omitnil,omitempty" name:"MaxConnection"`
+
+	// BGP ASN。
+	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
 }
 
 type CreateVpnGatewayRequest struct {
@@ -7807,6 +7811,9 @@ type CreateVpnGatewayRequest struct {
 
 	// SSL VPN连接数设置，可选规格：5, 10, 20, 50, 100, 200, 500, 1000；单位：个。仅 SSL / SSL_CCN 类型需要选这个参数。
 	MaxConnection *uint64 `json:"MaxConnection,omitnil,omitempty" name:"MaxConnection"`
+
+	// BGP ASN。
+	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
 }
 
 func (r *CreateVpnGatewayRequest) ToJsonString() string {
@@ -7831,6 +7838,7 @@ func (r *CreateVpnGatewayRequest) FromJsonString(s string) error {
 	delete(f, "Tags")
 	delete(f, "CdcId")
 	delete(f, "MaxConnection")
+	delete(f, "BgpAsn")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewayRequest has unknown keys!", "")
 	}
@@ -32570,6 +32578,9 @@ type VpnGateway struct {
 
 	// SSL-VPN 客户端连接数。
 	MaxConnection *uint64 `json:"MaxConnection,omitnil,omitempty" name:"MaxConnection"`
+
+	// Bgp ASN
+	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
 }
 
 type VpnGatewayQuota struct {
