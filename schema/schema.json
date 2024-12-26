@@ -1,0 +1,174 @@
+{
+    "format_version": "1.0",
+    "provider_schemas": {
+        "tencentcloudstack/tencentcloud": {
+            "provider": {
+                "version": 0,
+                "block": {
+                    "attributes": {
+                        "domain": {
+                            "type": "string",
+                            "description": "API 请求的根域名, 默认为 'tencentcloudapi.com'.",
+                            "description_kind": "plain",
+                            "optional": true
+                        },
+                        "profile": {
+                            "type": "string",
+                            "description": "在共享凭证中设置的配置文件名称, 也可以从 'TENCENTCLOUD_PROFILE' 环境变量中获取。如果未设置, 则使用通过 'tccli configure' 创建的默认配置文件.",
+                            "description_kind": "plain",
+                            "optional": true
+                        },
+                        "protocol": {
+                            "type": "string",
+                            "description": "API 请求的协议, 有效值为 'HTTP' 和 'HTTPS'。默认为 'HTTPS'.",
+                            "description_kind": "plain",
+                            "optional": true
+                        },
+                        "secret_id": {
+                            "type": "string",
+                            "description": "腾讯云访问密钥, 必须提供, 也可以从 'TENCENTCLOUD_SECRET_ID' 环境变量中获取.",
+                            "description_kind": "plain",
+                            "required": true
+                        },
+                        "secret_key": {
+                            "type": "string",
+                            "description": "腾讯云密钥, 必须提供, 也可以从 'TENCENTCLOUD_SECRET_KEY' 环境变量中获取.",
+                            "description_kind": "plain",
+                            "required": true
+                        },
+                        "security_token": {
+                            "type": "string",
+                            "description": "临时访问凭证的腾讯云安全令牌, 可以从 'TENCENTCLOUD_SECURITY_TOKEN' 环境变量中获取, 注意：对于支持的产品，请参考：临时密钥支持的产品(https://intl.cloud.tencent.com/document/product/598/10588).",
+                            "description_kind": "plain",
+                            "optional": true
+                        },
+                        "shared_credentials_dir": {
+                            "type": "string",
+                            "description": "共享凭证的目录, 也可以从 'TENCENTCLOUD_SHARED_CREDENTIALS_DIR' 环境变量中获取, 如果未设置, 则默认为 ~/.tccli.",
+                            "description_kind": "plain",
+                            "optional": true
+                        }
+                    },
+                    "block_types": {
+                        "assume_role": {
+                            "nesting_mode": "set",
+                            "block": {
+                                "attributes": {
+                                    "policy": {
+                                        "type": "string",
+                                        "description": "在进行 AssumeRole 调用时使用的更严格的策略, 其内容不能包含 'principal' 元素, 注意：更多语法参考, 请参考:(https://intl.cloud.tencent.com/document/product/598/10603).",
+                                        "description_kind": "plain",
+                                        "optional": true
+                                    },
+                                    "role_arn": {
+                                        "type": "string",
+                                        "description": "要扮演的角色的 ARN, 可以从 'TENCENTCLOUD_ASSUME_ROLE_ARN' 中获取.",
+                                        "description_kind": "plain",
+                                        "required": true
+                                    },
+                                    "session_duration": {
+                                        "type": "number",
+                                        "description": "进行 AssumeRole 调用时的会话持续时间, 其值范围为 0 到 43200（秒）, 默认为 7200 秒, 可以从 'TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION' 中获取.",
+                                        "description_kind": "plain",
+                                        "optional": true
+                                    },
+                                    "session_name": {
+                                        "type": "string",
+                                        "description": "进行 AssumeRole 调用时要使用的会话名称, 可以从 'TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME' 中获取.",
+                                        "description_kind": "plain",
+                                        "required": true
+                                    }
+                                },
+                                "description": "'assume_role' 块, 如果提供, Terraform 将尝试使用提供的凭证扮演此角色.",
+                                "description_kind": "plain"
+                            },
+                            "max_items": 1
+                        }
+                    },
+                    "description_kind": "plain"
+                }
+            },
+            "resource_schemas": {
+                "tencentcloud_dnspod_record": {
+                    "version": 0,
+                    "block": {
+                        "attributes": {
+                            "domain": {
+                                "type": "string",
+                                "description": "域名.",
+                                "description_kind": "plain",
+                                "required": true
+                            },
+                            "id": {
+                                "type": "string",
+                                "description_kind": "plain",
+                                "computed": true
+                            },
+                            "monitor_status": {
+                                "type": "string",
+                                "description": "记录的监控状态.",
+                                "description_kind": "plain",
+                                "computed": true
+                            },
+                            "mx": {
+                                "type": "number",
+                                "description": "MX 优先级, 仅当记录类型为 MX 时有效, 范围为 1-20, 注意：当记录类型为 MX 时必须设置.",
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "record_line": {
+                                "type": "string",
+                                "description": "记录线路, 依赖domain(域名), secret_id, secret_key.",
+                                "description_kind": "plain",
+                                "required": true
+                            },
+                            "record_type": {
+                                "type": "string",
+                                "description": "记录类型, 依赖domain(域名), secret_id, secret_key.",
+                                "description_kind": "plain",
+                                "required": true
+                            },
+                            "remark": {
+                                "type": "string",
+                                "description": "记录备注.",
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "status": {
+                                "type": "string",
+                                "description": "记录的初始状态, 取值范围为 ENABLE 和 DISABLE, 默认为 ENABLE，如果传入 DISABLE, 则解析不会生效, 负载均衡的限制也不会被验证.",
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "sub_domain": {
+                                "type": "string",
+                                "description": "主机记录, 默认值为 '@'.",
+                                "description_kind": "plain",
+                                "required": true
+                            },
+                            "ttl": {
+                                "type": "number",
+                                "description": "TTL, 范围为 1-604800, 不同级别的域名最小值不同, 默认为 600.",
+                                "description_kind": "plain",
+                                "optional": true
+                            },
+                            "value": {
+                                "type": "string",
+                                "description": "记录值.",
+                                "description_kind": "plain",
+                                "required": true
+                            },
+                            "weight": {
+                                "type": "number",
+                                "description": "权重信息, 取值范围为 0-100, 仅适用于企业 VIP 域名, 0 表示关闭, 不传该参数表示未设置权重信息, 默认为 0.",
+                                "description_kind": "plain",
+                                "optional": true
+                            }
+                        },
+                        "description_kind": "plain"
+                    }
+                }
+            }
+        }
+    }
+}
