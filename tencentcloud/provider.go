@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -2513,7 +2514,21 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 }
 
 func genClientWithCAM(tcClient *TencentCloudClient, roleName string) error {
-	camResp, err := tccommon.GetAuthFromCAM(roleName)
+	var camResp *tccommon.CAMResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := tccommon.GetAuthFromCAM(roleName)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get cam failed, Response is nil."))
+		}
+
+		camResp = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -2531,6 +2546,7 @@ func genClientWithCAM(tcClient *TencentCloudClient, roleName string) error {
 func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string, assumeRoleExternalId string) error {
 	// applying STS credentials
 	request := sdksts.NewAssumeRoleRequest()
+	response := sdksts.NewAssumeRoleResponse()
 	request.RoleArn = helper.String(assumeRoleArn)
 	request.RoleSessionName = helper.String(assumeRoleSessionName)
 	request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
@@ -2542,10 +2558,27 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 		request.ExternalId = helper.String(assumeRoleExternalId)
 	}
 
-	ratelimit.Check(request.GetAction())
-	response, err := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Credentials == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get Assume Role failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		return err
+	}
+
+	if response.Response.Credentials.TmpSecretId == nil || response.Response.Credentials.TmpSecretKey == nil || response.Response.Credentials.Token == nil {
+		return fmt.Errorf("Get Assume Role failed, Credentials is nil.")
 	}
 
 	// using STS credentials
@@ -2561,18 +2594,35 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 func genClientWithSamlSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRoleSamlAssertion, assumeRolePrincipalArn string) error {
 	// applying STS credentials
 	request := sdksts.NewAssumeRoleWithSAMLRequest()
+	response := sdksts.NewAssumeRoleWithSAMLResponse()
 	request.RoleArn = helper.String(assumeRoleArn)
 	request.RoleSessionName = helper.String(assumeRoleSessionName)
 	request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
 	request.SAMLAssertion = helper.String(assumeRoleSamlAssertion)
 	request.PrincipalArn = helper.String(assumeRolePrincipalArn)
-
-	ratelimit.Check(request.GetAction())
 	var stsExtInfo connectivity.StsExtInfo
 	stsExtInfo.Authorization = "SKIP"
-	response, err := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithSAML(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithSAML(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Credentials == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get Assume Role with SAML failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		return err
+	}
+
+	if response.Response.Credentials.TmpSecretId == nil || response.Response.Credentials.TmpSecretKey == nil || response.Response.Credentials.Token == nil {
+		return fmt.Errorf("Get Assume Role failed, Credentials is nil.")
 	}
 
 	// using STS credentials
@@ -2588,18 +2638,35 @@ func genClientWithSamlSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRol
 func genClientWithOidcSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {
 	// applying STS credentials
 	request := sdksts.NewAssumeRoleWithWebIdentityRequest()
+	response := sdksts.NewAssumeRoleWithWebIdentityResponse()
 	request.ProviderId = helper.String("OIDC")
 	request.RoleArn = helper.String(assumeRoleArn)
 	request.RoleSessionName = helper.String(assumeRoleSessionName)
 	request.DurationSeconds = helper.IntInt64(assumeRoleSessionDuration)
 	request.WebIdentityToken = helper.String(assumeRolePolicy)
-
-	ratelimit.Check(request.GetAction())
 	var stsExtInfo connectivity.StsExtInfo
 	stsExtInfo.Authorization = "SKIP"
-	response, err := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithWebIdentity(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := tcClient.apiV3Conn.UseStsClient(stsExtInfo).AssumeRoleWithWebIdentity(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Credentials == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get Assume Role with OIDC failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		return err
+	}
+
+	if response.Response.Credentials.TmpSecretId == nil || response.Response.Credentials.TmpSecretKey == nil || response.Response.Credentials.Token == nil {
+		return fmt.Errorf("Get Assume Role failed, Credentials is nil.")
 	}
 
 	// using STS credentials
@@ -2707,6 +2774,7 @@ func genClientWithPodOidc(tcClient *TencentCloudClient) error {
 	if err != nil {
 		return err
 	}
+
 	assumeResp, err := provider.GetCredential()
 	if err != nil {
 		return err
@@ -2731,13 +2799,23 @@ func getCallerIdentity(tcClient *TencentCloudClient) (indentity *sdksts.GetCalle
 	cpf.HttpProfile.Endpoint = "sts.tencentcloudapi.com"
 	client, _ := sdksts.NewClient(credential, region, cpf)
 	request := sdksts.NewGetCallerIdentityRequest()
-	response, err := client.GetCallerIdentity(request)
+	response := sdksts.NewGetCallerIdentityResponse()
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := client.GetCallerIdentity(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get caller identity failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		return
-	}
-
-	if response == nil || response.Response == nil {
-		return nil, fmt.Errorf("Get GetCallerIdentity failed, Response is nil.")
 	}
 
 	indentity = response.Response
@@ -2745,7 +2823,13 @@ func getCallerIdentity(tcClient *TencentCloudClient) (indentity *sdksts.GetCalle
 }
 
 func verifyAccountIDAllowed(indentity *sdksts.GetCallerIdentityResponseParams, allowedAccountIds, forbiddenAccountIds []string) error {
-	accountId := *indentity.AccountId
+	var accountId string
+	if indentity.AccountId != nil {
+		accountId = *indentity.AccountId
+	} else {
+		return fmt.Errorf("Caller identity accountId is illegal, The value is nil.")
+	}
+
 	if len(allowedAccountIds) > 0 {
 		found := false
 		for _, allowedAccountID := range allowedAccountIds {
