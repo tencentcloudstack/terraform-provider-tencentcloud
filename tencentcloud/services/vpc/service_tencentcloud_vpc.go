@@ -3042,6 +3042,10 @@ func (me *VpcService) describeEnis(
 				return tccommon.RetryError(err)
 			}
 
+			if response == nil && response.Response == nil && response.Response.NetworkInterfaceSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Read eni list failed, Response is nil."))
+			}
+
 			eniSet := response.Response.NetworkInterfaceSet
 			count = len(eniSet)
 			enis = append(enis, eniSet...)
@@ -3295,21 +3299,33 @@ func (me *VpcService) AttachEniToCvm(ctx context.Context, eniId, cvmId string) e
 	client := me.client.UseVpcClient()
 
 	attachRequest := vpc.NewAttachNetworkInterfaceRequest()
+	attachResponse := vpc.NewAttachNetworkInterfaceResponse()
 	attachRequest.NetworkInterfaceId = &eniId
 	attachRequest.InstanceId = &cvmId
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(attachRequest.GetAction())
-
-		if _, err := client.AttachNetworkInterface(attachRequest); err != nil {
+		result, err := client.AttachNetworkInterface(attachRequest)
+		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, attachRequest.GetAction(), attachRequest.ToJsonString(), err)
 			return tccommon.RetryError(err)
 		}
 
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Attach eni to instance failed, Response is nil."))
+		}
+
+		attachResponse = result
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s attach eni to instance failed, reason: %v", logId, err)
+		return err
+	}
+
+	// wait
+	err := me.DescribeVpcTaskResult(ctx, attachResponse.Response.RequestId)
+	if err != nil {
 		return err
 	}
 
@@ -3390,13 +3406,14 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 	client := me.client.UseVpcClient()
 
 	request := vpc.NewDetachNetworkInterfaceRequest()
+	response := vpc.NewDetachNetworkInterfaceResponse()
 	request.NetworkInterfaceId = &eniId
 	request.InstanceId = &cvmId
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-
-		if _, err := client.DetachNetworkInterface(request); err != nil {
+		result, err := client.DetachNetworkInterface(request)
+		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				switch sdkError.Code {
 				case "UnsupportedOperation.InvalidState":
@@ -3413,9 +3430,20 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 			return tccommon.RetryError(err)
 		}
 
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Detach eni from instance failed, Response is nil."))
+		}
+
+		response = result
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s detach eni from instance failed, reason: %v", logId, err)
+		return err
+	}
+
+	// wait
+	err := me.DescribeVpcTaskResult(ctx, response.Response.RequestId)
+	if err != nil {
 		return err
 	}
 
@@ -5001,7 +5029,6 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 }
 
 func (me *VpcService) DescribeVpcTaskResult(ctx context.Context, taskId *string) (err error) {
-
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeVpcTaskResultRequest()
 	defer func() {
@@ -5009,6 +5036,7 @@ func (me *VpcService) DescribeVpcTaskResult(ctx context.Context, taskId *string)
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), err.Error())
 		}
 	}()
+
 	request.TaskId = taskId
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -5016,14 +5044,18 @@ func (me *VpcService) DescribeVpcTaskResult(ctx context.Context, taskId *string)
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
+
 		if response.Response.Status != nil && *response.Response.Status == VPN_TASK_STATUS_RUNNING {
 			return resource.RetryableError(errors.New("VPN task is running"))
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return
 }
 
