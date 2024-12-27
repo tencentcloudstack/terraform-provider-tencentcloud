@@ -863,27 +863,27 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		healthCheck.HealthSwitch = &healthSwitch
 	}
 	if IsHealthCheckEnable(healthSwitch) {
-		if v, ok := d.GetOk("health_check_time_out"); ok {
+		if v, ok := d.GetOkExists("health_check_time_out"); ok {
 			healthSetFlag = true
 			vv := int64(v.(int))
 			healthCheck.TimeOut = &vv
 		}
-		if v, ok := d.GetOk("health_check_interval_time"); ok {
+		if v, ok := d.GetOkExists("health_check_interval_time"); ok {
 			healthSetFlag = true
 			vv := int64(v.(int))
 			healthCheck.IntervalTime = &vv
 		}
-		if v, ok := d.GetOk("health_check_health_num"); ok {
+		if v, ok := d.GetOkExists("health_check_health_num"); ok {
 			healthSetFlag = true
 			vv := int64(v.(int))
 			healthCheck.HealthNum = &vv
 		}
-		if v, ok := d.GetOk("health_check_unhealth_num"); ok {
+		if v, ok := d.GetOkExists("health_check_unhealth_num"); ok {
 			healthSetFlag = true
 			vv := int64(v.(int))
 			healthCheck.UnHealthNum = &vv
 		}
-		if v, ok := d.GetOk("health_check_port"); ok {
+		if v, ok := d.GetOkExists("health_check_port"); ok {
 			healthSetFlag = true
 			healthCheck.CheckPort = helper.Int64(int64(v.(int)))
 		}
@@ -893,7 +893,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 			checkType = v.(string)
 			healthCheck.CheckType = &checkType
 		}
-		if v, ok := d.GetOk("health_check_http_code"); ok {
+		if v, ok := d.GetOkExists("health_check_http_code"); ok {
 			if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS ||
 				(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_HTTP)) {
 				healthSetFlag = false
@@ -978,7 +978,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 			healthCheck.RecvContext = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("health_source_ip_type"); ok {
+		if v, ok := d.GetOkExists("health_source_ip_type"); ok {
 			healthSetFlag = true
 			healthCheck.SourceIpType = helper.Int64(int64(v.(int)))
 		}

@@ -89,6 +89,12 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				ValidateFunc: tccommon.ValidateIntegerInRange(2, 10),
 				Description:  "Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
 			},
+			"health_check_port": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Customize detection related parameters. Health check port, defaults to the port of the backend service, unless you want to specify a specific port, it is recommended to leave it blank. (Applicable only to TCP/UDP listeners).",
+			},
 			"health_check_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -299,7 +305,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		rule.Scheduler = helper.String(scheduler)
 	}
 
-	if v, ok := d.GetOk("session_expire_time"); ok {
+	if v, ok := d.GetOkExists("session_expire_time"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			return fmt.Errorf("[CHECK][CLB listener rule][Create] check: session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
 		}
@@ -368,6 +374,11 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		if ruleErr != nil {
 			return tccommon.RetryError(errors.WithStack(ruleErr))
 		}
+
+		if ruleInstance == nil || ruleInstance.LocationId == nil {
+			return resource.NonRetryableError(fmt.Errorf("read CLB listener rule failed, Response is nil."))
+		}
+
 		locationId = *ruleInstance.LocationId
 		return nil
 	})
@@ -377,7 +388,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	}
 
 	//this ID style changes since terraform 1.47.0
-	d.SetId(clbId + tccommon.FILED_SP + listenerId + tccommon.FILED_SP + locationId)
+	d.SetId(strings.Join([]string{clbId, listenerId, locationId}, tccommon.FILED_SP))
 
 	// set http2
 	if v, ok := d.GetOkExists("http2_switch"); ok {
@@ -559,6 +570,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
 		_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
 		_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
+		_ = d.Set("health_check_port", instance.HealthCheck.CheckPort)
 		_ = d.Set("health_check_type", instance.HealthCheck.CheckType)
 		_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
 	}
