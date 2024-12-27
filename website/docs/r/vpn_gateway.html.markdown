@@ -18,15 +18,15 @@ Provides a resource to create a VPN gateway.
 ### VPC SSL VPN gateway
 
 ```hcl
-resource "tencentcloud_vpn_gateway" "my_cgw" {
-  name      = "test"
+resource "tencentcloud_vpn_gateway" "example" {
+  name      = "tf-example"
   bandwidth = 5
   zone      = "ap-guangzhou-3"
   type      = "SSL"
   vpc_id    = "vpc-86v957zb"
 
   tags = {
-    test = "test"
+    createBy = "terraform"
   }
 }
 ```
@@ -34,14 +34,14 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 ### CCN IPSEC VPN gateway
 
 ```hcl
-resource "tencentcloud_vpn_gateway" "my_cgw" {
-  name      = "test"
+resource "tencentcloud_vpn_gateway" "example" {
+  name      = "tf-example"
   bandwidth = 5
   zone      = "ap-guangzhou-3"
   type      = "IPSEC"
 
   tags = {
-    test = "test"
+    createBy = "terraform"
   }
 }
 ```
@@ -49,14 +49,29 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 ### CCN SSL VPN gateway
 
 ```hcl
-resource "tencentcloud_vpn_gateway" "my_cgw" {
-  name      = "test"
+resource "tencentcloud_vpn_gateway" "example" {
+  name      = "tf-example"
   bandwidth = 5
   zone      = "ap-guangzhou-3"
   type      = "SSL_CCN"
 
   tags = {
-    test = "test"
+    createBy = "terraform"
+  }
+}
+```
+
+### CCN VPN gateway
+
+```hcl
+resource "tencentcloud_vpn_gateway" "example" {
+  name      = "tf-example"
+  bandwidth = 200
+  type      = "CCN"
+  bgp_asn   = 9000
+
+  tags = {
+    createBy = "terraform"
   }
 }
 ```
@@ -64,14 +79,14 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 ### POSTPAID_BY_HOUR VPN gateway
 
 ```hcl
-resource "tencentcloud_vpn_gateway" "my_cgw" {
-  name      = "test"
+resource "tencentcloud_vpn_gateway" "example" {
+  name      = "tf-example"
   vpc_id    = "vpc-dk8zmwuf"
   bandwidth = 5
   zone      = "ap-guangzhou-3"
 
   tags = {
-    test = "test"
+    createBy = "terraform"
   }
 }
 ```
@@ -79,8 +94,8 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 ### PREPAID VPN gateway
 
 ```hcl
-resource "tencentcloud_vpn_gateway" "my_cgw" {
-  name           = "test"
+resource "tencentcloud_vpn_gateway" "example" {
+  name           = "tf-example"
   vpc_id         = "vpc-dk8zmwuf"
   bandwidth      = 5
   zone           = "ap-guangzhou-3"
@@ -88,7 +103,7 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
   prepaid_period = 1
 
   tags = {
-    test = "test"
+    createBy = "terraform"
   }
 }
 ```
@@ -99,6 +114,7 @@ The following arguments are supported:
 
 * `name` - (Required, String) Name of the VPN gateway. The length of character is limited to 1-60.
 * `bandwidth` - (Optional, Int) The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100,200,500,1000. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.
+* `bgp_asn` - (Optional, Int) BGP ASN. Value range: 1 - 4294967295. Using BGP requires configuring ASN.
 * `cdc_id` - (Optional, String) CDC instance ID.
 * `charge_type` - (Optional, String) Charge Type of the VPN gateway. Valid value: `PREPAID`, `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.
 * `max_connection` - (Optional, Int) Maximum number of connected clients allowed for the SSL VPN gateway. Valid values: [5, 10, 20, 50, 100]. This parameter is only required for SSL VPN gateways.
@@ -128,6 +144,6 @@ In addition to all arguments above, the following attributes are exported:
 VPN gateway can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_vpn_gateway.foo vpngw-8ccsnclt
+$ terraform import tencentcloud_vpn_gateway.example vpngw-8ccsnclt
 ```
 
