@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_role_configuration_provisionings
+```
+
+```release-note:new-resource
+tencentcloud_provision_role_configuration_operation
+```
