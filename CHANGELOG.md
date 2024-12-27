@@ -1,3 +1,31 @@
+## 1.81.155 (December 27 , 2024)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_role_configuration_provisionings` ([#3046](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3046))
+* **New Resource:** `tencentcloud_provision_role_configuration_operation` ([#3046](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3046))
+
+ENHANCEMENTS:
+
+* provider: STS auth support retry ([#3044](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3044))
+* resource/tencentcloud_clb_listener_rule: support `health_check_port` ([#3045](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3045))
+* resource/tencentcloud_eni_attachment: support retry ([#3043](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3043))
+* resource/tencentcloud_vpn_gateway: support `bgp_asn` ([#3041](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3041))
+
+## 1.81.154 (December 24 , 2024)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_monitor_tmp_multiple_writes` ([#3036](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3036))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dnspod_record_list: add param `instance_list` ([#3035](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3035))
+* provider: update provider auth ([#3039](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3039))
+* resource/tencentcloud_clb_listener_default_domain: support retry ([#3038](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3038))
+* resource/tencentcloud_clb_listener_rule: support retry ([#3038](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3038))
+* resource/tencentcloud_kubernetes_node_pool: support CBM for `instance_type` ([#3034](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3034))
+
 ## 1.81.153 (December 24 , 2024)
 
 FEATURES:
