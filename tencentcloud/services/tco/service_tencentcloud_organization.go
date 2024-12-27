@@ -2194,3 +2194,59 @@ func (me *OrganizationService) DescribeOrganizationOrgShareUnitMembersByFilter(c
 
 	return
 }
+
+func (me *OrganizationService) DescribeRoleConfigurationProvisioningsByFilter(ctx context.Context, param map[string]interface{}) (roleConfigurationProvisionings []*organization.RoleConfigurationProvisionings, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = organization.NewListRoleConfigurationProvisioningsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "RoleConfigurationId" {
+			request.RoleConfigurationId = v.(*string)
+		}
+		if k == "TargetType" {
+			request.TargetType = v.(*string)
+		}
+		if k == "TargetUin" {
+			request.TargetUin = v.(*int64)
+		}
+		if k == "DeploymentStatus" {
+			request.DeploymentStatus = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.(*string)
+		}
+	}
+
+	request.MaxResults = helper.IntInt64(100)
+	for {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseOrganizationClient().ListRoleConfigurationProvisionings(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		roleConfigurationProvisionings = append(roleConfigurationProvisionings, response.Response.RoleConfigurationProvisionings...)
+
+		if response.Response.IsTruncated != nil && *response.Response.IsTruncated {
+			request.NextToken = response.Response.NextToken
+		} else {
+			break
+		}
+	}
+
+	return
+}
