@@ -42,10 +42,11 @@ func TencentKmsBasicInfo() map[string]*schema.Schema {
 			Description:   "Specify whether to archive key. Default value is `false`. This field is conflict with `is_enabled`, valid when key_state is `Enabled`, `Disabled`, `Archived`.",
 		},
 		"pending_delete_window_in_days": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Default:     7,
-			Description: "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 7 days.",
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Default:      7,
+			ValidateFunc: tccommon.ValidateIntegerInRange(7, 30),
+			Description:  "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 7 days.",
 		},
 		"tags": {
 			Type:        schema.TypeMap,
