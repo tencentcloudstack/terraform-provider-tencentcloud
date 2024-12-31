@@ -1,3 +1,11 @@
+## 1.81.156 (December 31 , 2024)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_group: support `replace_mode`, `desired_capacity_sync_with_max_min_size` params ([#3048](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3048))
+* resource/tencentcloud_cam_role: support update `session_duration` ([#3049](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3049))
+* resource/tencentcloud_kms_key: support check `pending_delete_window_in_days` params ([#3047](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3047))
+
 ## 1.81.155 (December 27 , 2024)
 
 FEATURES:
