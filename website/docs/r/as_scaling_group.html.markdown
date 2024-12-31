@@ -89,17 +89,22 @@ resource "tencentcloud_clb_listener_rule" "example" {
 }
 
 resource "tencentcloud_as_scaling_group" "example" {
-  scaling_group_name   = "tf-example"
-  configuration_id     = tencentcloud_as_scaling_config.example.id
-  max_size             = 1
-  min_size             = 0
-  vpc_id               = tencentcloud_vpc.vpc.id
-  subnet_ids           = [tencentcloud_subnet.subnet.id]
-  project_id           = 0
-  default_cooldown     = 400
-  desired_capacity     = 1
-  termination_policies = ["NEWEST_INSTANCE"]
-  retry_policy         = "INCREMENTAL_INTERVALS"
+  scaling_group_name                      = "tf-example"
+  configuration_id                        = tencentcloud_as_scaling_config.example.id
+  max_size                                = 1
+  min_size                                = 0
+  vpc_id                                  = tencentcloud_vpc.vpc.id
+  subnet_ids                              = [tencentcloud_subnet.subnet.id]
+  project_id                              = 0
+  default_cooldown                        = 400
+  desired_capacity                        = 1
+  replace_monitor_unhealthy               = false
+  scaling_mode                            = "CLASSIC_SCALING"
+  replace_load_balancer_unhealthy         = false
+  replace_mode                            = "RECREATE"
+  desired_capacity_sync_with_max_min_size = false
+  termination_policies                    = ["NEWEST_INSTANCE"]
+  retry_policy                            = "INCREMENTAL_INTERVALS"
 
   forward_balancer_ids {
     load_balancer_id = tencentcloud_clb_instance.example.id
@@ -113,7 +118,7 @@ resource "tencentcloud_as_scaling_group" "example" {
   }
 
   tags = {
-    "createBy" = "tfExample"
+    createBy = "tfExample"
   }
 }
 ```
@@ -128,6 +133,7 @@ The following arguments are supported:
 * `scaling_group_name` - (Required, String) Name of a scaling group.
 * `vpc_id` - (Required, String) ID of VPC network.
 * `default_cooldown` - (Optional, Int) Default cooldown time in second, and default value is `300`.
+* `desired_capacity_sync_with_max_min_size` - (Optional, Bool) The expected number of instances is synchronized with the maximum and minimum values. The default value is `False`. This parameter is effective only in the scenario where the expected number is not passed in when modifying the scaling group interface. True: When modifying the maximum or minimum value, if there is a conflict with the current expected number, the expected number is adjusted synchronously. For example, when modifying, if the minimum value 2 is passed in and the current expected number is 1, the expected number is adjusted synchronously to 2; False: When modifying the maximum or minimum value, if there is a conflict with the current expected number, an error message is displayed indicating that the modification is not allowed.
 * `desired_capacity` - (Optional, Int) Desired volume of CVM instances, which is between `max_size` and `min_size`.
 * `forward_balancer_ids` - (Optional, Set) List of application load balancers, which can't be specified with `load_balancer_ids` together.
 * `health_check_type` - (Optional, String) Health check type of instances in a scaling group.<br><li>CVM: confirm whether an instance is healthy based on the network status. If the pinged instance is unreachable, the instance will be considered unhealthy. For more information, see [Instance Health Check](https://intl.cloud.tencent.com/document/product/377/8553?from_cn_redirect=1)<br><li>CLB: confirm whether an instance is healthy based on the CLB health check status. For more information, see [Health Check Overview](https://intl.cloud.tencent.com/document/product/214/6097?from_cn_redirect=1).<br>If the parameter is set to `CLB`, the scaling group will check both the network status and the CLB health check status. If the network check indicates unhealthy, the `HealthStatus` field will return `UNHEALTHY`. If the CLB health check indicates unhealthy, the `HealthStatus` field will return `CLB_UNHEALTHY`. If both checks indicate unhealthy, the `HealthStatus` field will return `UNHEALTHY|CLB_UNHEALTHY`. Default value: `CLB`.
@@ -136,6 +142,7 @@ The following arguments are supported:
 * `multi_zone_subnet_policy` - (Optional, String) Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.
 * `project_id` - (Optional, Int) Specifies to which project the scaling group belongs.
 * `replace_load_balancer_unhealthy` - (Optional, Bool) Enable unhealthy instance replacement. If set to `true`, AS will replace instances that are found unhealthy in the CLB health check.
+* `replace_mode` - (Optional, String) Replace mode of unhealthy replacement service. Valid values: RECREATE: Rebuild an instance to replace the original unhealthy instance. RESET: Performing a system reinstallation on unhealthy instances to keep information such as data disks, private IP addresses, and instance IDs unchanged. The instance login settings, HostName, enhanced services, and UserData will remain consistent with the current launch configuration. Default value: RECREATE. Note: This field may return null, indicating that no valid values can be obtained.
 * `replace_monitor_unhealthy` - (Optional, Bool) Enables unhealthy instance replacement. If set to `true`, AS will replace instances that are flagged as unhealthy by Cloud Monitor.
 * `retry_policy` - (Optional, String) Available values for retry policies. Valid values: IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
 * `scaling_mode` - (Optional, String) Indicates scaling mode which creates and terminates instances (classic method), or method first tries to start stopped instances (wake up stopped) to perform scaling operations. Available values: `CLASSIC_SCALING`, `WAKE_UP_STOPPED_SCALING`. Default: `CLASSIC_SCALING`.
@@ -171,6 +178,6 @@ In addition to all arguments above, the following attributes are exported:
 AutoScaling Groups can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_as_scaling_group.scaling_group asg-n32ymck2
+$ terraform import tencentcloud_as_scaling_group.example asg-n32ymck2
 ```
 

@@ -118,6 +118,9 @@ func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGr
 		errRet = err
 		return
 	}
+	if response == nil || response.Response == nil || response.Response.AutoScalingGroupSet == nil {
+		return
+	}
 	has = len(response.Response.AutoScalingGroupSet)
 	if has < 1 {
 		return

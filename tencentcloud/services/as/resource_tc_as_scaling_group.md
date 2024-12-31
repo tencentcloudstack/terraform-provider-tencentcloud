@@ -78,17 +78,22 @@ resource "tencentcloud_clb_listener_rule" "example" {
 }
 
 resource "tencentcloud_as_scaling_group" "example" {
-  scaling_group_name   = "tf-example"
-  configuration_id     = tencentcloud_as_scaling_config.example.id
-  max_size             = 1
-  min_size             = 0
-  vpc_id               = tencentcloud_vpc.vpc.id
-  subnet_ids           = [tencentcloud_subnet.subnet.id]
-  project_id           = 0
-  default_cooldown     = 400
-  desired_capacity     = 1
-  termination_policies = ["NEWEST_INSTANCE"]
-  retry_policy         = "INCREMENTAL_INTERVALS"
+  scaling_group_name                      = "tf-example"
+  configuration_id                        = tencentcloud_as_scaling_config.example.id
+  max_size                                = 1
+  min_size                                = 0
+  vpc_id                                  = tencentcloud_vpc.vpc.id
+  subnet_ids                              = [tencentcloud_subnet.subnet.id]
+  project_id                              = 0
+  default_cooldown                        = 400
+  desired_capacity                        = 1
+  replace_monitor_unhealthy               = false
+  scaling_mode                            = "CLASSIC_SCALING"
+  replace_load_balancer_unhealthy         = false
+  replace_mode                            = "RECREATE"
+  desired_capacity_sync_with_max_min_size = false
+  termination_policies                    = ["NEWEST_INSTANCE"]
+  retry_policy                            = "INCREMENTAL_INTERVALS"
 
   forward_balancer_ids {
     load_balancer_id = tencentcloud_clb_instance.example.id
@@ -102,7 +107,7 @@ resource "tencentcloud_as_scaling_group" "example" {
   }
 
   tags = {
-    "createBy" = "tfExample"
+    createBy = "tfExample"
   }
 }
 ```
@@ -112,5 +117,5 @@ Import
 AutoScaling Groups can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_as_scaling_group.scaling_group asg-n32ymck2
+$ terraform import tencentcloud_as_scaling_group.example asg-n32ymck2
 ```
