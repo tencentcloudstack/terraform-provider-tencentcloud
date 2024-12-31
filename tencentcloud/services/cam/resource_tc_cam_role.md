@@ -11,18 +11,14 @@ locals {
   uin = data.tencentcloud_user_info.info.owner_uin
 }
 
-output "uin" {
-  value = local.uin
-}
-
-resource "tencentcloud_cam_role" "foo" {
-  name     = "cam-role-test"
+resource "tencentcloud_cam_role" "example" {
+  name = "tf-example"
   document = jsonencode(
     {
       statement = [
         {
-          action    = "name/sts:AssumeRole"
-          effect    = "allow"
+          action = "name/sts:AssumeRole"
+          effect = "allow"
           principal = {
             qcs = [
               "qcs::cam::uin/${local.uin}:root",
@@ -36,13 +32,47 @@ resource "tencentcloud_cam_role" "foo" {
   console_login    = true
   description      = "test"
   session_duration = 7200
-  tags             = {
-    test  = "tf-cam-role"
+  tags = {
+    createBy = "Terraform"
   }
 }
 
+output "uin" {
+  value = local.uin
+}
+
 output "arn" {
-  value = tencentcloud_cam_role.foo.role_arn
+  value = tencentcloud_cam_role.example.role_arn
+}
+```
+
+Or use service
+
+```hcl
+resource "tencentcloud_cam_role" "example" {
+  name = "tf-example"
+  document = jsonencode(
+    {
+      statement = [
+        {
+          action = "name/sts:AssumeRole"
+          effect = "allow"
+          principal = {
+            service = [
+              "scf.qcloud.com",
+            ]
+          }
+        },
+      ]
+      version = "2.0"
+    }
+  )
+  console_login    = true
+  description      = "test"
+  session_duration = 7200
+  tags = {
+    createBy = "Terraform"
+  }
 }
 ```
 
@@ -53,15 +83,15 @@ variable "saml-provider" {
   default = "example"
 }
 
+data "tencentcloud_user_info" "info" {}
+
 locals {
-  uin = data.tencentcloud_user_info.info.uin
+  uin           = data.tencentcloud_user_info.info.uin
   saml_provider = var.saml-provider
 }
 
-data "tencentcloud_user_info" "info" {}
-
-resource "tencentcloud_cam_role" "boo" {
-  name          = "tf_cam_role"
+resource "tencentcloud_cam_role" "example" {
+  name          = "tf-example"
   document      = <<EOF
 {
   "version": "2.0",
@@ -80,7 +110,7 @@ resource "tencentcloud_cam_role" "boo" {
   ]
 }
 EOF
-  description   = "tf_test"
+  description   = "terraform demo"
   console_login = true
 }
 ```
@@ -90,5 +120,5 @@ Import
 CAM role can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cam_role.foo 4611686018427733635
+$ terraform import tencentcloud_cam_role.example 4611686018427733635
 ```
