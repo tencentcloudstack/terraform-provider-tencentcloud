@@ -22,8 +22,8 @@ locals {
   uin = data.tencentcloud_user_info.info.owner_uin
 }
 
-resource "tencentcloud_cam_role" "example1" {
-  name = "tf-example1"
+resource "tencentcloud_cam_role" "example" {
+  name = "tf-example"
   document = jsonencode(
     {
       statement = [
@@ -48,8 +48,20 @@ resource "tencentcloud_cam_role" "example1" {
   }
 }
 
-resource "tencentcloud_cam_role" "example2" {
-  name = "tf-example2"
+output "uin" {
+  value = local.uin
+}
+
+output "arn" {
+  value = tencentcloud_cam_role.example.role_arn
+}
+```
+
+### Or use service
+
+```hcl
+resource "tencentcloud_cam_role" "example" {
+  name = "tf-example"
   document = jsonencode(
     {
       statement = [
@@ -72,14 +84,6 @@ resource "tencentcloud_cam_role" "example2" {
   tags = {
     createBy = "Terraform"
   }
-}
-
-output "uin" {
-  value = local.uin
-}
-
-output "arn" {
-  value = tencentcloud_cam_role.example.role_arn
 }
 ```
 
