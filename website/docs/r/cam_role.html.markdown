@@ -22,8 +22,8 @@ locals {
   uin = data.tencentcloud_user_info.info.owner_uin
 }
 
-resource "tencentcloud_cam_role" "example" {
-  name = "tf-example"
+resource "tencentcloud_cam_role" "example1" {
+  name = "tf-example1"
   document = jsonencode(
     {
       statement = [
@@ -33,6 +33,32 @@ resource "tencentcloud_cam_role" "example" {
           principal = {
             qcs = [
               "qcs::cam::uin/${local.uin}:root",
+            ]
+          }
+        },
+      ]
+      version = "2.0"
+    }
+  )
+  console_login    = true
+  description      = "test"
+  session_duration = 7200
+  tags = {
+    createBy = "Terraform"
+  }
+}
+
+resource "tencentcloud_cam_role" "example2" {
+  name = "tf-example2"
+  document = jsonencode(
+    {
+      statement = [
+        {
+          action = "name/sts:AssumeRole"
+          effect = "allow"
+          principal = {
+            service = [
+              "scf.qcloud.com",
             ]
           }
         },
