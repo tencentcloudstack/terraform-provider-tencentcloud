@@ -17,13 +17,14 @@ Provide a resource to create a KMS key.
 
 ```hcl
 resource "tencentcloud_kms_key" "example" {
-  alias                = "tf-example-kms-key"
-  description          = "example of kms key"
-  key_rotation_enabled = false
-  is_enabled           = true
+  alias                         = "tf-example-kms-key"
+  description                   = "example of kms key"
+  key_rotation_enabled          = false
+  is_enabled                    = true
+  pending_delete_window_in_days = 7
 
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```
@@ -31,7 +32,7 @@ resource "tencentcloud_kms_key" "example" {
 ### Specify the Key Usage as an asymmetry method.
 
 ```hcl
-resource "tencentcloud_kms_key" "example2" {
+resource "tencentcloud_kms_key" "example" {
   alias       = "tf-example-kms-key"
   description = "example of kms key"
   key_usage   = "ASYMMETRIC_DECRYPT_RSA_2048"
@@ -42,14 +43,14 @@ resource "tencentcloud_kms_key" "example2" {
 ### Disable the kms key instance.
 
 ```hcl
-resource "tencentcloud_kms_key" "example3" {
+resource "tencentcloud_kms_key" "example" {
   alias                = "tf-example-kms-key"
   description          = "example of kms key"
   key_rotation_enabled = false
   is_enabled           = false
 
   tags = {
-    "test-tag" = "unit-test"
+    createdBy = "Terraform"
   }
 }
 ```
@@ -80,6 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 KMS keys can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_kms_key.foo 287e8f40-7cbb-11eb-9a3a-5254004f7f94
+$ terraform import tencentcloud_kms_key.example 287e8f40-7cbb-11eb-9a3a-5254004f7f94
 ```
 
