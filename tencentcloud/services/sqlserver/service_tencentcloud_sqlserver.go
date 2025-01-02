@@ -554,6 +554,38 @@ func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx co
 	return
 }
 
+func (me *SqlserverService) DescribeReadOnlyGroupListById(ctx context.Context, masterInstanceId, readOnlyGroupId string) (readOnlyGroup *sqlserver.ReadOnlyGroup, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := sqlserver.NewDescribeReadOnlyGroupListRequest()
+	request.InstanceId = &masterInstanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeReadOnlyGroupList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.ReadOnlyGroupSet == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	for _, item := range response.Response.ReadOnlyGroupSet {
+		if *item.ReadOnlyGroupId == readOnlyGroupId {
+			readOnlyGroup = item
+			break
+		}
+	}
+
+	return
+}
+
 func (me *SqlserverService) CreateSqlserverAccount(ctx context.Context, instanceId string, userName string, password string, remark string, isAdmin bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := sqlserver.NewCreateAccountRequest()
