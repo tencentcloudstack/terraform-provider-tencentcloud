@@ -59,8 +59,9 @@ func NewAuthorizeTokenRequest() (request *AuthorizeTokenRequest) {
 func NewAuthorizeTokenResponse() (response *AuthorizeTokenResponse) {
     response = &AuthorizeTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AuthorizeToken
@@ -115,8 +116,9 @@ func NewBatchCreateAclRequest() (request *BatchCreateAclRequest) {
 func NewBatchCreateAclResponse() (response *BatchCreateAclResponse) {
     response = &BatchCreateAclResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchCreateAcl
@@ -167,8 +169,9 @@ func NewBatchModifyGroupOffsetsRequest() (request *BatchModifyGroupOffsetsReques
 func NewBatchModifyGroupOffsetsResponse() (response *BatchModifyGroupOffsetsResponse) {
     response = &BatchModifyGroupOffsetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchModifyGroupOffsets
@@ -225,8 +228,9 @@ func NewBatchModifyTopicAttributesRequest() (request *BatchModifyTopicAttributes
 func NewBatchModifyTopicAttributesResponse() (response *BatchModifyTopicAttributesResponse) {
     response = &BatchModifyTopicAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchModifyTopicAttributes
@@ -287,8 +291,9 @@ func NewCancelAuthorizationTokenRequest() (request *CancelAuthorizationTokenRequ
 func NewCancelAuthorizationTokenResponse() (response *CancelAuthorizationTokenResponse) {
     response = &CancelAuthorizationTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelAuthorizationToken
@@ -343,8 +348,9 @@ func NewCheckCdcClusterRequest() (request *CheckCdcClusterRequest) {
 func NewCheckCdcClusterResponse() (response *CheckCdcClusterResponse) {
     response = &CheckCdcClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckCdcCluster
@@ -399,8 +405,9 @@ func NewCreateAclRequest() (request *CreateAclRequest) {
 func NewCreateAclResponse() (response *CreateAclResponse) {
     response = &CreateAclResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAcl
@@ -473,8 +480,9 @@ func NewCreateAclRuleRequest() (request *CreateAclRuleRequest) {
 func NewCreateAclRuleResponse() (response *CreateAclRuleResponse) {
     response = &CreateAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAclRule
@@ -549,8 +557,9 @@ func NewCreateCdcClusterRequest() (request *CreateCdcClusterRequest) {
 func NewCreateCdcClusterResponse() (response *CreateCdcClusterResponse) {
     response = &CreateCdcClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCdcCluster
@@ -625,8 +634,9 @@ func NewCreateConnectResourceRequest() (request *CreateConnectResourceRequest) {
 func NewCreateConnectResourceResponse() (response *CreateConnectResourceResponse) {
     response = &CreateConnectResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateConnectResource
@@ -687,8 +697,9 @@ func NewCreateConsumerRequest() (request *CreateConsumerRequest) {
 func NewCreateConsumerResponse() (response *CreateConsumerResponse) {
     response = &CreateConsumerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateConsumer
@@ -747,8 +758,9 @@ func NewCreateDatahubTaskRequest() (request *CreateDatahubTaskRequest) {
 func NewCreateDatahubTaskResponse() (response *CreateDatahubTaskResponse) {
     response = &CreateDatahubTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDatahubTask
@@ -811,12 +823,13 @@ func NewCreateDatahubTopicRequest() (request *CreateDatahubTopicRequest) {
 func NewCreateDatahubTopicResponse() (response *CreateDatahubTopicResponse) {
     response = &CreateDatahubTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDatahubTopic
-// 创建Datahub主题
+// 创建DIP主题
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -840,7 +853,7 @@ func (c *Client) CreateDatahubTopic(request *CreateDatahubTopicRequest) (respons
 }
 
 // CreateDatahubTopic
-// 创建Datahub主题
+// 创建DIP主题
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -889,8 +902,9 @@ func NewCreateInstancePostRequest() (request *CreateInstancePostRequest) {
 func NewCreateInstancePostResponse() (response *CreateInstancePostResponse) {
     response = &CreateInstancePostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstancePost
@@ -965,12 +979,13 @@ func NewCreateInstancePreRequest() (request *CreateInstancePreRequest) {
 func NewCreateInstancePreResponse() (response *CreateInstancePreResponse) {
     response = &CreateInstancePreResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstancePre
-// 创建实例(预付费包年包月)
+// 创建实例(预付费包年包月),  仅支持创建专业版实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -993,7 +1008,7 @@ func (c *Client) CreateInstancePre(request *CreateInstancePreRequest) (response 
 }
 
 // CreateInstancePre
-// 创建实例(预付费包年包月)
+// 创建实例(预付费包年包月),  仅支持创建专业版实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1041,8 +1056,9 @@ func NewCreatePartitionRequest() (request *CreatePartitionRequest) {
 func NewCreatePartitionResponse() (response *CreatePartitionResponse) {
     response = &CreatePartitionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePartition
@@ -1117,8 +1133,9 @@ func NewCreatePostPaidInstanceRequest() (request *CreatePostPaidInstanceRequest)
 func NewCreatePostPaidInstanceResponse() (response *CreatePostPaidInstanceResponse) {
     response = &CreatePostPaidInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePostPaidInstance
@@ -1179,6 +1196,73 @@ func (c *Client) CreatePostPaidInstanceWithContext(ctx context.Context, request 
     return
 }
 
+func NewCreatePrometheusRequest() (request *CreatePrometheusRequest) {
+    request = &CreatePrometheusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "CreatePrometheus")
+    
+    
+    return
+}
+
+func NewCreatePrometheusResponse() (response *CreatePrometheusResponse) {
+    response = &CreatePrometheusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreatePrometheus
+// 添加普罗米修斯监控1
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) CreatePrometheus(request *CreatePrometheusRequest) (response *CreatePrometheusResponse, err error) {
+    return c.CreatePrometheusWithContext(context.Background(), request)
+}
+
+// CreatePrometheus
+// 添加普罗米修斯监控1
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) CreatePrometheusWithContext(ctx context.Context, request *CreatePrometheusRequest) (response *CreatePrometheusResponse, err error) {
+    if request == nil {
+        request = NewCreatePrometheusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePrometheus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreatePrometheusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateRouteRequest() (request *CreateRouteRequest) {
     request = &CreateRouteRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1193,8 +1277,9 @@ func NewCreateRouteRequest() (request *CreateRouteRequest) {
 func NewCreateRouteResponse() (response *CreateRouteResponse) {
     response = &CreateRouteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRoute
@@ -1275,8 +1360,9 @@ func NewCreateTokenRequest() (request *CreateTokenRequest) {
 func NewCreateTokenResponse() (response *CreateTokenResponse) {
     response = &CreateTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateToken
@@ -1331,8 +1417,9 @@ func NewCreateTopicRequest() (request *CreateTopicRequest) {
 func NewCreateTopicResponse() (response *CreateTopicResponse) {
     response = &CreateTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTopic
@@ -1346,6 +1433,7 @@ func NewCreateTopicResponse() (response *CreateTopicResponse) {
 //  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
 //  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
 //  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_TOPICNAMEALREADYEXIST = "InvalidParameterValue.TopicNameAlreadyExist"
 //  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
 //  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
@@ -1370,6 +1458,7 @@ func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopic
 //  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
 //  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
 //  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_TOPICNAMEALREADYEXIST = "InvalidParameterValue.TopicNameAlreadyExist"
 //  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
 //  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
@@ -1409,8 +1498,9 @@ func NewCreateTopicIpWhiteListRequest() (request *CreateTopicIpWhiteListRequest)
 func NewCreateTopicIpWhiteListResponse() (response *CreateTopicIpWhiteListResponse) {
     response = &CreateTopicIpWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTopicIpWhiteList
@@ -1483,8 +1573,9 @@ func NewCreateUserRequest() (request *CreateUserRequest) {
 func NewCreateUserResponse() (response *CreateUserResponse) {
     response = &CreateUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateUser
@@ -1557,8 +1648,9 @@ func NewDeleteAclRequest() (request *DeleteAclRequest) {
 func NewDeleteAclResponse() (response *DeleteAclResponse) {
     response = &DeleteAclResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAcl
@@ -1631,8 +1723,9 @@ func NewDeleteAclRuleRequest() (request *DeleteAclRuleRequest) {
 func NewDeleteAclRuleResponse() (response *DeleteAclRuleResponse) {
     response = &DeleteAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAclRule
@@ -1707,8 +1800,9 @@ func NewDeleteConnectResourceRequest() (request *DeleteConnectResourceRequest) {
 func NewDeleteConnectResourceResponse() (response *DeleteConnectResourceResponse) {
     response = &DeleteConnectResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteConnectResource
@@ -1769,12 +1863,13 @@ func NewDeleteDatahubTaskRequest() (request *DeleteDatahubTaskRequest) {
 func NewDeleteDatahubTaskResponse() (response *DeleteDatahubTaskResponse) {
     response = &DeleteDatahubTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDatahubTask
-// 删除Datahub任务
+// 删除Dip任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1788,7 +1883,7 @@ func (c *Client) DeleteDatahubTask(request *DeleteDatahubTaskRequest) (response 
 }
 
 // DeleteDatahubTask
-// 删除Datahub任务
+// 删除Dip任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1827,12 +1922,13 @@ func NewDeleteDatahubTopicRequest() (request *DeleteDatahubTopicRequest) {
 func NewDeleteDatahubTopicResponse() (response *DeleteDatahubTopicResponse) {
     response = &DeleteDatahubTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDatahubTopic
-// 删除Datahub主题
+// 删除DIP主题
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1856,7 +1952,7 @@ func (c *Client) DeleteDatahubTopic(request *DeleteDatahubTopicRequest) (respons
 }
 
 // DeleteDatahubTopic
-// 删除Datahub主题
+// 删除DIP主题
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1905,8 +2001,9 @@ func NewDeleteGroupRequest() (request *DeleteGroupRequest) {
 func NewDeleteGroupResponse() (response *DeleteGroupResponse) {
     response = &DeleteGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteGroup
@@ -1977,8 +2074,9 @@ func NewDeleteInstancePostRequest() (request *DeleteInstancePostRequest) {
 func NewDeleteInstancePostResponse() (response *DeleteInstancePostResponse) {
     response = &DeleteInstancePostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstancePost
@@ -2051,12 +2149,13 @@ func NewDeleteInstancePreRequest() (request *DeleteInstancePreRequest) {
 func NewDeleteInstancePreResponse() (response *DeleteInstancePreResponse) {
     response = &DeleteInstancePreResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstancePre
-// 删除预付费实例
+// 删除预付费实例，该接口会对实例执行隔离并删除的动作，执行成功后实例会被直接删除销毁
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2066,7 +2165,7 @@ func (c *Client) DeleteInstancePre(request *DeleteInstancePreRequest) (response 
 }
 
 // DeleteInstancePre
-// 删除预付费实例
+// 删除预付费实例，该接口会对实例执行隔离并删除的动作，执行成功后实例会被直接删除销毁
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2101,8 +2200,9 @@ func NewDeleteRouteRequest() (request *DeleteRouteRequest) {
 func NewDeleteRouteResponse() (response *DeleteRouteResponse) {
     response = &DeleteRouteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRoute
@@ -2179,8 +2279,9 @@ func NewDeleteRouteTriggerTimeRequest() (request *DeleteRouteTriggerTimeRequest)
 func NewDeleteRouteTriggerTimeResponse() (response *DeleteRouteTriggerTimeResponse) {
     response = &DeleteRouteTriggerTimeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRouteTriggerTime
@@ -2235,8 +2336,9 @@ func NewDeleteTopicRequest() (request *DeleteTopicRequest) {
 func NewDeleteTopicResponse() (response *DeleteTopicResponse) {
     response = &DeleteTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTopic
@@ -2258,6 +2360,7 @@ func NewDeleteTopicResponse() (response *DeleteTopicResponse) {
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_FREQUENCYTOPICDELETEOPERATE = "UnsupportedOperation.FrequencyTopicDeleteOperate"
 //  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
 func (c *Client) DeleteTopic(request *DeleteTopicRequest) (response *DeleteTopicResponse, err error) {
     return c.DeleteTopicWithContext(context.Background(), request)
@@ -2282,6 +2385,7 @@ func (c *Client) DeleteTopic(request *DeleteTopicRequest) (response *DeleteTopic
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_FREQUENCYTOPICDELETEOPERATE = "UnsupportedOperation.FrequencyTopicDeleteOperate"
 //  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
 func (c *Client) DeleteTopicWithContext(ctx context.Context, request *DeleteTopicRequest) (response *DeleteTopicResponse, err error) {
     if request == nil {
@@ -2313,8 +2417,9 @@ func NewDeleteTopicIpWhiteListRequest() (request *DeleteTopicIpWhiteListRequest)
 func NewDeleteTopicIpWhiteListResponse() (response *DeleteTopicIpWhiteListResponse) {
     response = &DeleteTopicIpWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTopicIpWhiteList
@@ -2387,8 +2492,9 @@ func NewDeleteUserRequest() (request *DeleteUserRequest) {
 func NewDeleteUserResponse() (response *DeleteUserResponse) {
     response = &DeleteUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteUser
@@ -2461,8 +2567,9 @@ func NewDescribeACLRequest() (request *DescribeACLRequest) {
 func NewDescribeACLResponse() (response *DescribeACLResponse) {
     response = &DescribeACLResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeACL
@@ -2535,8 +2642,9 @@ func NewDescribeAclRuleRequest() (request *DescribeAclRuleRequest) {
 func NewDescribeAclRuleResponse() (response *DescribeAclRuleResponse) {
     response = &DescribeAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAclRule
@@ -2609,8 +2717,9 @@ func NewDescribeAppInfoRequest() (request *DescribeAppInfoRequest) {
 func NewDescribeAppInfoResponse() (response *DescribeAppInfoResponse) {
     response = &DescribeAppInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAppInfo
@@ -2681,8 +2790,9 @@ func NewDescribeCkafkaZoneRequest() (request *DescribeCkafkaZoneRequest) {
 func NewDescribeCkafkaZoneResponse() (response *DescribeCkafkaZoneResponse) {
     response = &DescribeCkafkaZoneResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCkafkaZone
@@ -2757,8 +2867,9 @@ func NewDescribeConnectResourceRequest() (request *DescribeConnectResourceReques
 func NewDescribeConnectResourceResponse() (response *DescribeConnectResourceResponse) {
     response = &DescribeConnectResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeConnectResource
@@ -2819,8 +2930,9 @@ func NewDescribeConnectResourcesRequest() (request *DescribeConnectResourcesRequ
 func NewDescribeConnectResourcesResponse() (response *DescribeConnectResourcesResponse) {
     response = &DescribeConnectResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeConnectResources
@@ -2881,8 +2993,9 @@ func NewDescribeConsumerGroupRequest() (request *DescribeConsumerGroupRequest) {
 func NewDescribeConsumerGroupResponse() (response *DescribeConsumerGroupResponse) {
     response = &DescribeConsumerGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeConsumerGroup
@@ -2955,8 +3068,9 @@ func NewDescribeDatahubGroupOffsetsRequest() (request *DescribeDatahubGroupOffse
 func NewDescribeDatahubGroupOffsetsResponse() (response *DescribeDatahubGroupOffsetsResponse) {
     response = &DescribeDatahubGroupOffsetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatahubGroupOffsets
@@ -3029,8 +3143,9 @@ func NewDescribeDatahubTaskRequest() (request *DescribeDatahubTaskRequest) {
 func NewDescribeDatahubTaskResponse() (response *DescribeDatahubTaskResponse) {
     response = &DescribeDatahubTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatahubTask
@@ -3085,12 +3200,13 @@ func NewDescribeDatahubTasksRequest() (request *DescribeDatahubTasksRequest) {
 func NewDescribeDatahubTasksResponse() (response *DescribeDatahubTasksResponse) {
     response = &DescribeDatahubTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatahubTasks
-// 查询Datahub任务列表 
+// 查询Datahub任务列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3105,7 +3221,7 @@ func (c *Client) DescribeDatahubTasks(request *DescribeDatahubTasksRequest) (res
 }
 
 // DescribeDatahubTasks
-// 查询Datahub任务列表 
+// 查询Datahub任务列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3145,12 +3261,13 @@ func NewDescribeDatahubTopicRequest() (request *DescribeDatahubTopicRequest) {
 func NewDescribeDatahubTopicResponse() (response *DescribeDatahubTopicResponse) {
     response = &DescribeDatahubTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatahubTopic
-// 获取Datahub主题属性
+// 获取DIP主题属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3173,7 +3290,7 @@ func (c *Client) DescribeDatahubTopic(request *DescribeDatahubTopicRequest) (res
 }
 
 // DescribeDatahubTopic
-// 获取Datahub主题属性
+// 获取DIP主题属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3221,8 +3338,9 @@ func NewDescribeDatahubTopicsRequest() (request *DescribeDatahubTopicsRequest) {
 func NewDescribeDatahubTopicsResponse() (response *DescribeDatahubTopicsResponse) {
     response = &DescribeDatahubTopicsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatahubTopics
@@ -3297,8 +3415,9 @@ func NewDescribeGroupRequest() (request *DescribeGroupRequest) {
 func NewDescribeGroupResponse() (response *DescribeGroupResponse) {
     response = &DescribeGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGroup
@@ -3371,8 +3490,9 @@ func NewDescribeGroupInfoRequest() (request *DescribeGroupInfoRequest) {
 func NewDescribeGroupInfoResponse() (response *DescribeGroupInfoResponse) {
     response = &DescribeGroupInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGroupInfo
@@ -3445,8 +3565,9 @@ func NewDescribeGroupOffsetsRequest() (request *DescribeGroupOffsetsRequest) {
 func NewDescribeGroupOffsetsResponse() (response *DescribeGroupOffsetsResponse) {
     response = &DescribeGroupOffsetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGroupOffsets
@@ -3519,12 +3640,13 @@ func NewDescribeInstanceAttributesRequest() (request *DescribeInstanceAttributes
 func NewDescribeInstanceAttributesResponse() (response *DescribeInstanceAttributesResponse) {
     response = &DescribeInstanceAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceAttributes
-// 获取实例属性 
+// 获取实例属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3537,6 +3659,7 @@ func NewDescribeInstanceAttributesResponse() (response *DescribeInstanceAttribut
 //  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
 //  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3547,7 +3670,7 @@ func (c *Client) DescribeInstanceAttributes(request *DescribeInstanceAttributesR
 }
 
 // DescribeInstanceAttributes
-// 获取实例属性 
+// 获取实例属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3560,6 +3683,7 @@ func (c *Client) DescribeInstanceAttributes(request *DescribeInstanceAttributesR
 //  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
 //  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3595,8 +3719,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -3663,8 +3788,9 @@ func NewDescribeInstancesDetailRequest() (request *DescribeInstancesDetailReques
 func NewDescribeInstancesDetailResponse() (response *DescribeInstancesDetailResponse) {
     response = &DescribeInstancesDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesDetail
@@ -3725,6 +3851,73 @@ func (c *Client) DescribeInstancesDetailWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribePrometheusRequest() (request *DescribePrometheusRequest) {
+    request = &DescribePrometheusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribePrometheus")
+    
+    
+    return
+}
+
+func NewDescribePrometheusResponse() (response *DescribePrometheusResponse) {
+    response = &DescribePrometheusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePrometheus
+// 获取实例Prometheus信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) DescribePrometheus(request *DescribePrometheusRequest) (response *DescribePrometheusResponse, err error) {
+    return c.DescribePrometheusWithContext(context.Background(), request)
+}
+
+// DescribePrometheus
+// 获取实例Prometheus信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) DescribePrometheusWithContext(ctx context.Context, request *DescribePrometheusRequest) (response *DescribePrometheusResponse, err error) {
+    if request == nil {
+        request = NewDescribePrometheusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePrometheus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePrometheusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRegionRequest() (request *DescribeRegionRequest) {
     request = &DescribeRegionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3739,8 +3932,9 @@ func NewDescribeRegionRequest() (request *DescribeRegionRequest) {
 func NewDescribeRegionResponse() (response *DescribeRegionResponse) {
     response = &DescribeRegionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRegion
@@ -3813,8 +4007,9 @@ func NewDescribeRouteRequest() (request *DescribeRouteRequest) {
 func NewDescribeRouteResponse() (response *DescribeRouteResponse) {
     response = &DescribeRouteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRoute
@@ -3831,6 +4026,7 @@ func NewDescribeRouteResponse() (response *DescribeRouteResponse) {
 //  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
 //  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3854,6 +4050,7 @@ func (c *Client) DescribeRoute(request *DescribeRouteRequest) (response *Describ
 //  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
 //  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3889,8 +4086,9 @@ func NewDescribeTaskStatusRequest() (request *DescribeTaskStatusRequest) {
 func NewDescribeTaskStatusResponse() (response *DescribeTaskStatusResponse) {
     response = &DescribeTaskStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskStatus
@@ -3963,8 +4161,9 @@ func NewDescribeTopicRequest() (request *DescribeTopicRequest) {
 func NewDescribeTopicResponse() (response *DescribeTopicResponse) {
     response = &DescribeTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopic
@@ -4043,8 +4242,9 @@ func NewDescribeTopicAttributesRequest() (request *DescribeTopicAttributesReques
 func NewDescribeTopicAttributesResponse() (response *DescribeTopicAttributesResponse) {
     response = &DescribeTopicAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopicAttributes
@@ -4119,8 +4319,9 @@ func NewDescribeTopicDetailRequest() (request *DescribeTopicDetailRequest) {
 func NewDescribeTopicDetailResponse() (response *DescribeTopicDetailResponse) {
     response = &DescribeTopicDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopicDetail
@@ -4187,8 +4388,9 @@ func NewDescribeTopicFlowRankingRequest() (request *DescribeTopicFlowRankingRequ
 func NewDescribeTopicFlowRankingResponse() (response *DescribeTopicFlowRankingResponse) {
     response = &DescribeTopicFlowRankingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopicFlowRanking
@@ -4247,8 +4449,9 @@ func NewDescribeTopicProduceConnectionRequest() (request *DescribeTopicProduceCo
 func NewDescribeTopicProduceConnectionResponse() (response *DescribeTopicProduceConnectionResponse) {
     response = &DescribeTopicProduceConnectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopicProduceConnection
@@ -4305,8 +4508,9 @@ func NewDescribeTopicSubscribeGroupRequest() (request *DescribeTopicSubscribeGro
 func NewDescribeTopicSubscribeGroupResponse() (response *DescribeTopicSubscribeGroupResponse) {
     response = &DescribeTopicSubscribeGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopicSubscribeGroup
@@ -4389,8 +4593,9 @@ func NewDescribeTopicSyncReplicaRequest() (request *DescribeTopicSyncReplicaRequ
 func NewDescribeTopicSyncReplicaResponse() (response *DescribeTopicSyncReplicaResponse) {
     response = &DescribeTopicSyncReplicaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopicSyncReplica
@@ -4447,8 +4652,9 @@ func NewDescribeUserRequest() (request *DescribeUserRequest) {
 func NewDescribeUserResponse() (response *DescribeUserResponse) {
     response = &DescribeUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUser
@@ -4521,8 +4727,9 @@ func NewFetchDatahubMessageByOffsetRequest() (request *FetchDatahubMessageByOffs
 func NewFetchDatahubMessageByOffsetResponse() (response *FetchDatahubMessageByOffsetResponse) {
     response = &FetchDatahubMessageByOffsetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FetchDatahubMessageByOffset
@@ -4569,8 +4776,9 @@ func NewFetchLatestDatahubMessageListRequest() (request *FetchLatestDatahubMessa
 func NewFetchLatestDatahubMessageListResponse() (response *FetchLatestDatahubMessageListResponse) {
     response = &FetchLatestDatahubMessageListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FetchLatestDatahubMessageList
@@ -4619,8 +4827,9 @@ func NewFetchMessageByOffsetRequest() (request *FetchMessageByOffsetRequest) {
 func NewFetchMessageByOffsetResponse() (response *FetchMessageByOffsetResponse) {
     response = &FetchMessageByOffsetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FetchMessageByOffset
@@ -4667,8 +4876,9 @@ func NewFetchMessageListByOffsetRequest() (request *FetchMessageListByOffsetRequ
 func NewFetchMessageListByOffsetResponse() (response *FetchMessageListByOffsetResponse) {
     response = &FetchMessageListByOffsetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FetchMessageListByOffset
@@ -4703,6 +4913,57 @@ func (c *Client) FetchMessageListByOffsetWithContext(ctx context.Context, reques
     return
 }
 
+func NewFetchMessageListByTimestampRequest() (request *FetchMessageListByTimestampRequest) {
+    request = &FetchMessageListByTimestampRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "FetchMessageListByTimestamp")
+    
+    
+    return
+}
+
+func NewFetchMessageListByTimestampResponse() (response *FetchMessageListByTimestampResponse) {
+    response = &FetchMessageListByTimestampResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// FetchMessageListByTimestamp
+// 根据时间戳查询消息列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+func (c *Client) FetchMessageListByTimestamp(request *FetchMessageListByTimestampRequest) (response *FetchMessageListByTimestampResponse, err error) {
+    return c.FetchMessageListByTimestampWithContext(context.Background(), request)
+}
+
+// FetchMessageListByTimestamp
+// 根据时间戳查询消息列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+func (c *Client) FetchMessageListByTimestampWithContext(ctx context.Context, request *FetchMessageListByTimestampRequest) (response *FetchMessageListByTimestampResponse, err error) {
+    if request == nil {
+        request = NewFetchMessageListByTimestampRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("FetchMessageListByTimestamp require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewFetchMessageListByTimestampResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewInquireCkafkaPriceRequest() (request *InquireCkafkaPriceRequest) {
     request = &InquireCkafkaPriceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4717,8 +4978,9 @@ func NewInquireCkafkaPriceRequest() (request *InquireCkafkaPriceRequest) {
 func NewInquireCkafkaPriceResponse() (response *InquireCkafkaPriceResponse) {
     response = &InquireCkafkaPriceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquireCkafkaPrice
@@ -4775,8 +5037,9 @@ func NewInstanceScalingDownRequest() (request *InstanceScalingDownRequest) {
 func NewInstanceScalingDownResponse() (response *InstanceScalingDownResponse) {
     response = &InstanceScalingDownResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InstanceScalingDown
@@ -4833,12 +5096,13 @@ func NewModifyAclRuleRequest() (request *ModifyAclRuleRequest) {
 func NewModifyAclRuleResponse() (response *ModifyAclRuleResponse) {
     response = &ModifyAclRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAclRule
-// 修改AC策略，目前只支持预设规则的是否应用到新增topic这一项的修改
+// 修改ACL策略，目前只支持预设规则的是否应用到新增topic这一项的修改
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -4851,7 +5115,7 @@ func (c *Client) ModifyAclRule(request *ModifyAclRuleRequest) (response *ModifyA
 }
 
 // ModifyAclRule
-// 修改AC策略，目前只支持预设规则的是否应用到新增topic这一项的修改
+// 修改ACL策略，目前只支持预设规则的是否应用到新增topic这一项的修改
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -4889,8 +5153,9 @@ func NewModifyConnectResourceRequest() (request *ModifyConnectResourceRequest) {
 func NewModifyConnectResourceResponse() (response *ModifyConnectResourceResponse) {
     response = &ModifyConnectResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyConnectResource
@@ -4951,8 +5216,9 @@ func NewModifyDatahubTaskRequest() (request *ModifyDatahubTaskRequest) {
 func NewModifyDatahubTaskResponse() (response *ModifyDatahubTaskResponse) {
     response = &ModifyDatahubTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDatahubTask
@@ -5011,12 +5277,13 @@ func NewModifyDatahubTopicRequest() (request *ModifyDatahubTopicRequest) {
 func NewModifyDatahubTopicResponse() (response *ModifyDatahubTopicResponse) {
     response = &ModifyDatahubTopicResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDatahubTopic
-// 修改Datahub主题属性
+// 修改DIP主题属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5038,7 +5305,7 @@ func (c *Client) ModifyDatahubTopic(request *ModifyDatahubTopicRequest) (respons
 }
 
 // ModifyDatahubTopic
-// 修改Datahub主题属性
+// 修改DIP主题属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5085,8 +5352,9 @@ func NewModifyGroupOffsetsRequest() (request *ModifyGroupOffsetsRequest) {
 func NewModifyGroupOffsetsResponse() (response *ModifyGroupOffsetsResponse) {
     response = &ModifyGroupOffsetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyGroupOffsets
@@ -5159,8 +5427,9 @@ func NewModifyInstanceAttributesRequest() (request *ModifyInstanceAttributesRequ
 func NewModifyInstanceAttributesResponse() (response *ModifyInstanceAttributesResponse) {
     response = &ModifyInstanceAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceAttributes
@@ -5235,8 +5504,9 @@ func NewModifyInstancePreRequest() (request *ModifyInstancePreRequest) {
 func NewModifyInstancePreResponse() (response *ModifyInstancePreResponse) {
     response = &ModifyInstancePreResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancePre
@@ -5307,8 +5577,9 @@ func NewModifyPasswordRequest() (request *ModifyPasswordRequest) {
 func NewModifyPasswordResponse() (response *ModifyPasswordResponse) {
     response = &ModifyPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPassword
@@ -5367,6 +5638,81 @@ func (c *Client) ModifyPasswordWithContext(ctx context.Context, request *ModifyP
     return
 }
 
+func NewModifyRoutineMaintenanceTaskRequest() (request *ModifyRoutineMaintenanceTaskRequest) {
+    request = &ModifyRoutineMaintenanceTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "ModifyRoutineMaintenanceTask")
+    
+    
+    return
+}
+
+func NewModifyRoutineMaintenanceTaskResponse() (response *ModifyRoutineMaintenanceTaskResponse) {
+    response = &ModifyRoutineMaintenanceTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRoutineMaintenanceTask
+// 设置自动化运维属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) ModifyRoutineMaintenanceTask(request *ModifyRoutineMaintenanceTaskRequest) (response *ModifyRoutineMaintenanceTaskResponse, err error) {
+    return c.ModifyRoutineMaintenanceTaskWithContext(context.Background(), request)
+}
+
+// ModifyRoutineMaintenanceTask
+// 设置自动化运维属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) ModifyRoutineMaintenanceTaskWithContext(ctx context.Context, request *ModifyRoutineMaintenanceTaskRequest) (response *ModifyRoutineMaintenanceTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyRoutineMaintenanceTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRoutineMaintenanceTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRoutineMaintenanceTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyTopicAttributesRequest() (request *ModifyTopicAttributesRequest) {
     request = &ModifyTopicAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5381,8 +5727,9 @@ func NewModifyTopicAttributesRequest() (request *ModifyTopicAttributesRequest) {
 func NewModifyTopicAttributesResponse() (response *ModifyTopicAttributesResponse) {
     response = &ModifyTopicAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTopicAttributes
@@ -5455,8 +5802,9 @@ func NewRenewCkafkaInstanceRequest() (request *RenewCkafkaInstanceRequest) {
 func NewRenewCkafkaInstanceResponse() (response *RenewCkafkaInstanceResponse) {
     response = &RenewCkafkaInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewCkafkaInstance
@@ -5511,8 +5859,9 @@ func NewSendMessageRequest() (request *SendMessageRequest) {
 func NewSendMessageResponse() (response *SendMessageResponse) {
     response = &SendMessageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SendMessage
