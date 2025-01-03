@@ -1,3 +1,11 @@
+## 1.81.157 (January 3 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_images: update code ([#3052](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3052))
+* resource/tencentcloud_sqlserver_readonly_instance: support import ([#3050](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3050))
+* resource/tencentcloud_vpc_end_point: update `end_point_vip` params ([#3053](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3053))
+
 ## 1.81.156 (December 31 , 2024)
 
 ENHANCEMENTS:
