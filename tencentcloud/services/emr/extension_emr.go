@@ -228,6 +228,17 @@ func validateMultiDisks(r map[string]interface{}) error {
 	return nil
 }
 
+func translateDiskType(diskType int64) (diskTypeStr string) {
+	switch diskType {
+	case 4:
+		diskTypeStr = "CLOUD_SSD"
+	case 5:
+		diskTypeStr = "CLOUD_PREMIUM"
+	case 6:
+		diskTypeStr = "CLOUD_HSSD"
+	}
+	return
+}
 func fetchMultiDisks(v *emr.NodeHardwareInfo, r *emr.OutterResource) (multiDisks []interface{}) {
 	var inputDataDiskTag string
 	if r.DiskType != nil && r.DiskSize != nil {
@@ -238,15 +249,7 @@ func fetchMultiDisks(v *emr.NodeHardwareInfo, r *emr.OutterResource) (multiDisks
 		multiDisk := make(map[string]interface{})
 		if item.Type != nil {
 			var diskType string
-			if *item.Type == 4 {
-				diskType = "CLOUD_SSD"
-			}
-			if *item.Type == 5 {
-				diskType = "CLOUD_PREMIUM"
-			}
-			if *item.Type == 6 {
-				diskType = "CLOUD_HSSD"
-			}
+			diskType = translateDiskType(*item.Type)
 			multiDisk["disk_type"] = diskType
 			outputDataDiskTag = diskType
 		}
