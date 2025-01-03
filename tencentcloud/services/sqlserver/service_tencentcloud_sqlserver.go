@@ -557,6 +557,7 @@ func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx co
 func (me *SqlserverService) DescribeReadOnlyGroupListById(ctx context.Context, masterInstanceId, readOnlyGroupId string) (readOnlyGroup *sqlserver.ReadOnlyGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := sqlserver.NewDescribeReadOnlyGroupListRequest()
+	response := sqlserver.NewDescribeReadOnlyGroupListResponse()
 	request.InstanceId = &masterInstanceId
 	defer func() {
 		if errRet != nil {
@@ -564,16 +565,23 @@ func (me *SqlserverService) DescribeReadOnlyGroupListById(ctx context.Context, m
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseSqlserverClient().DescribeReadOnlyGroupList(request)
-	if err != nil {
-		errRet = err
-		return
-	}
+	outErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseSqlserverClient().DescribeReadOnlyGroupList(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
 
-	if response == nil || response.Response == nil || response.Response.ReadOnlyGroupSet == nil {
-		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
-		return
+		if result == nil || result.Response == nil || result.Response.ReadOnlyGroupSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction()))
+		}
+
+		response = result
+		return nil
+	})
+
+	if outErr != nil {
+		return nil, outErr
 	}
 
 	for _, item := range response.Response.ReadOnlyGroupSet {
