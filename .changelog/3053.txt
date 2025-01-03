@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_vpc_end_point: update `end_point_vip` params
+```
