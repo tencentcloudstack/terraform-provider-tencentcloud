@@ -51,6 +51,7 @@ func ResourceTencentCloudVpcEndPoint() *schema.Resource {
 
 			"end_point_vip": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "VIP of endpoint ip.",
 			},
@@ -128,13 +129,24 @@ func resourceTencentCloudVpcEndPointCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil || result.Response.EndPoint == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create vpc endPoint failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create vpc endPoint failed, reason:%+v", logId, err)
 		return err
 	}
+
+	if response.Response.EndPoint.EndPointId == nil {
+		return fmt.Errorf("EndPointId is nil.")
+	}
+
 	endPointId = *response.Response.EndPoint.EndPointId
 	d.SetId(endPointId)
 
@@ -258,20 +270,22 @@ func resourceTencentCloudVpcEndPointUpdate(d *schema.ResourceData, meta interfac
 		if v, ok := d.GetOk("security_groups_ids"); ok {
 			request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
 		}
-	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyVpcEndPointAttribute(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyVpcEndPointAttribute(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create vpc endPoint failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create vpc endPoint failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudVpcEndPointRead(d, meta)
