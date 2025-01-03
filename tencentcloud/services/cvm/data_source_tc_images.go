@@ -202,8 +202,8 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 
 	if v, ok := d.GetOk("image_type"); ok {
 		for _, vv := range v.([]interface{}) {
-			if vv.(string) != "" {
-				imageType = append(imageType, vv.(string))
+			if vv, ok := vv.(string); ok && vv != "" {
+				imageType = append(imageType, vv)
 			}
 		}
 		if len(imageType) > 0 {
