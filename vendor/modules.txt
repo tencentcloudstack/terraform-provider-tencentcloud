@@ -1151,7 +1151,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.748
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.1073
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1034
@@ -1163,7 +1163,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1046
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1071
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1073
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
