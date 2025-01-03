@@ -36,25 +36,18 @@ resource "tencentcloud_security_group" "security_group" {
   description = "desc."
 }
 
-resource "tencentcloud_sqlserver_basic_instance" "example" {
-  name                   = "tf-example"
-  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = tencentcloud_vpc.vpc.id
-  subnet_id              = tencentcloud_subnet.subnet.id
-  project_id             = 0
-  memory                 = 4
-  storage                = 100
-  cpu                    = 2
-  machine_type           = "CLOUD_PREMIUM"
-  maintenance_week_set   = [1, 2, 3]
-  maintenance_start_time = "09:00"
-  maintenance_time_span  = 3
-  security_groups        = [tencentcloud_security_group.security_group.id]
-
-  tags = {
-    "test" = "test"
-  }
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  multi_zones       = true
+  charge_type       = "POSTPAID_BY_HOUR"
+  engine_version    = "2019"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 16
+  storage           = 20
+  security_groups   = [tencentcloud_security_group.security_group.id]
 }
 
 resource "tencentcloud_sqlserver_readonly_instance" "example" {
@@ -65,11 +58,11 @@ resource "tencentcloud_sqlserver_readonly_instance" "example" {
   subnet_id           = tencentcloud_subnet.subnet.id
   memory              = 4
   storage             = 20
-  master_instance_id  = tencentcloud_sqlserver_basic_instance.example.id
+  master_instance_id  = tencentcloud_sqlserver_instance.example.id
   readonly_group_type = 1
   force_upgrade       = true
   tags = {
-    "test" = "test"
+    CreateBy = "Terraform"
   }
 }
 ```
@@ -106,6 +99,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the SQL Server instance.
+* `engine_version` - Version of the SQL Server database engine.
+* `ha_type` - Instance type.
+* `project_id` - Project ID.
 * `ro_flag` - Readonly flag. `RO` (read-only instance), `MASTER` (primary instance with read-only instances). If it is left empty, it refers to an instance which is not read-only and has no RO group.
 * `status` - Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.
 * `vip` - IP for private access.

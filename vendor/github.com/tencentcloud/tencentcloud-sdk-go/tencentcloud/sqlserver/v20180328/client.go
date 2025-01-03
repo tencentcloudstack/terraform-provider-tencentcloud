@@ -678,7 +678,7 @@ func NewCreateBasicDBInstancesResponse() (response *CreateBasicDBInstancesRespon
 }
 
 // CreateBasicDBInstances
-// 本接口（CreateBasicDBInstances）用于创建SQL server基础版实例。
+// 本接口（CreateBasicDBInstances）用于创建基础版实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -700,7 +700,7 @@ func (c *Client) CreateBasicDBInstances(request *CreateBasicDBInstancesRequest) 
 }
 
 // CreateBasicDBInstances
-// 本接口（CreateBasicDBInstances）用于创建SQL server基础版实例。
+// 本接口（CreateBasicDBInstances）用于创建基础版实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -753,7 +753,7 @@ func NewCreateBusinessDBInstancesResponse() (response *CreateBusinessDBInstances
 }
 
 // CreateBusinessDBInstances
-// 本接口（CreateBusinessDBInstances）用于创建商业智能服务实例。
+// 本接口（CreateBusinessDBInstances）用于创建商业智能服务实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -776,7 +776,7 @@ func (c *Client) CreateBusinessDBInstances(request *CreateBusinessDBInstancesReq
 }
 
 // CreateBusinessDBInstances
-// 本接口（CreateBusinessDBInstances）用于创建商业智能服务实例。
+// 本接口（CreateBusinessDBInstances）用于创建商业智能服务实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -887,7 +887,7 @@ func NewCreateCloudDBInstancesResponse() (response *CreateCloudDBInstancesRespon
 }
 
 // CreateCloudDBInstances
-// 本接口（CreateCloudDBInstances）用于创建高可用实例(虚拟机版本)。
+// 本接口（CreateCloudDBInstances）用于创建高可用实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -910,7 +910,7 @@ func (c *Client) CreateCloudDBInstances(request *CreateCloudDBInstancesRequest) 
 }
 
 // CreateCloudDBInstances
-// 本接口（CreateCloudDBInstances）用于创建高可用实例(虚拟机版本)。
+// 本接口（CreateCloudDBInstances）用于创建高可用实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -964,7 +964,7 @@ func NewCreateCloudReadOnlyDBInstancesResponse() (response *CreateCloudReadOnlyD
 }
 
 // CreateCloudReadOnlyDBInstances
-// 本接口（CreateCloudReadOnlyDBInstances）用于添加只读副本实例(虚拟机版本)。
+// 本接口（CreateCloudReadOnlyDBInstances）用于创建只读实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -990,7 +990,7 @@ func (c *Client) CreateCloudReadOnlyDBInstances(request *CreateCloudReadOnlyDBIn
 }
 
 // CreateCloudReadOnlyDBInstances
-// 本接口（CreateCloudReadOnlyDBInstances）用于添加只读副本实例(虚拟机版本)。
+// 本接口（CreateCloudReadOnlyDBInstances）用于创建只读实例 (云盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -1128,7 +1128,7 @@ func NewCreateDBInstancesResponse() (response *CreateDBInstancesResponse) {
 }
 
 // CreateDBInstances
-// 本接口（CreateDBInstances）用于创建实例。
+// 本接口（CreateDBInstances）用于创建高可用实例 (本地盘)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -1151,7 +1151,7 @@ func (c *Client) CreateDBInstances(request *CreateDBInstancesRequest) (response 
 }
 
 // CreateDBInstances
-// 本接口（CreateDBInstances）用于创建实例。
+// 本接口（CreateDBInstances）用于创建高可用实例 (本地盘)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -1426,7 +1426,7 @@ func NewCreateReadOnlyDBInstancesResponse() (response *CreateReadOnlyDBInstances
 }
 
 // CreateReadOnlyDBInstances
-// 本接口（CreateReadOnlyDBInstances）用于添加只读副本实例。
+// 本接口（CreateReadOnlyDBInstances）用于创建只读实例 (本地盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -1450,7 +1450,7 @@ func (c *Client) CreateReadOnlyDBInstances(request *CreateReadOnlyDBInstancesReq
 }
 
 // CreateReadOnlyDBInstances
-// 本接口（CreateReadOnlyDBInstances）用于添加只读副本实例。
+// 本接口（CreateReadOnlyDBInstances）用于创建只读实例 (本地盘)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -1481,6 +1481,65 @@ func (c *Client) CreateReadOnlyDBInstancesWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewCreateReadOnlyDBInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCutXEventsRequest() (request *CutXEventsRequest) {
+    request = &CutXEventsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "CutXEvents")
+    
+    
+    return
+}
+
+func NewCutXEventsResponse() (response *CutXEventsResponse) {
+    response = &CutXEventsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CutXEvents
+// 本接口（CutXEvents）用于手动切割阻塞日志和死锁日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
+//  FAILEDOPERATION_NOTSUPPORT = "FailedOperation.NotSupport"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CutXEvents(request *CutXEventsRequest) (response *CutXEventsResponse, err error) {
+    return c.CutXEventsWithContext(context.Background(), request)
+}
+
+// CutXEvents
+// 本接口（CutXEvents）用于手动切割阻塞日志和死锁日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
+//  FAILEDOPERATION_NOTSUPPORT = "FailedOperation.NotSupport"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CutXEventsWithContext(ctx context.Context, request *CutXEventsRequest) (response *CutXEventsResponse, err error) {
+    if request == nil {
+        request = NewCutXEventsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CutXEvents require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCutXEventsResponse()
     err = c.Send(request, response)
     return
 }
@@ -2288,7 +2347,7 @@ func NewDescribeBackupFilesResponse() (response *DescribeBackupFilesResponse) {
 }
 
 // DescribeBackupFiles
-// 本接口(DescribeBackupFiles)用于查询单库备份明细
+// 本接口（DescribeBackupFiles）用于查询单库备份明细。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -2307,7 +2366,7 @@ func (c *Client) DescribeBackupFiles(request *DescribeBackupFilesRequest) (respo
 }
 
 // DescribeBackupFiles
-// 本接口(DescribeBackupFiles)用于查询单库备份明细
+// 本接口（DescribeBackupFiles）用于查询单库备份明细。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -3314,6 +3373,7 @@ func NewDescribeDBRestoreTimeResponse() (response *DescribeDBRestoreTimeResponse
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeDBRestoreTime(request *DescribeDBRestoreTimeRequest) (response *DescribeDBRestoreTimeResponse, err error) {
     return c.DescribeDBRestoreTimeWithContext(context.Background(), request)
 }
@@ -3326,6 +3386,7 @@ func (c *Client) DescribeDBRestoreTime(request *DescribeDBRestoreTimeRequest) (r
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeDBRestoreTimeWithContext(ctx context.Context, request *DescribeDBRestoreTimeRequest) (response *DescribeDBRestoreTimeResponse, err error) {
     if request == nil {
         request = NewDescribeDBRestoreTimeRequest()
@@ -3796,6 +3857,7 @@ func NewDescribeHASwitchLogResponse() (response *DescribeHASwitchLogResponse) {
 // 本接口(DescribeHASwitchLog)用于手动主备切换。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeHASwitchLog(request *DescribeHASwitchLogRequest) (response *DescribeHASwitchLogResponse, err error) {
     return c.DescribeHASwitchLogWithContext(context.Background(), request)
@@ -3805,6 +3867,7 @@ func (c *Client) DescribeHASwitchLog(request *DescribeHASwitchLogRequest) (respo
 // 本接口(DescribeHASwitchLog)用于手动主备切换。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeHASwitchLogWithContext(ctx context.Context, request *DescribeHASwitchLogRequest) (response *DescribeHASwitchLogResponse, err error) {
     if request == nil {
@@ -4206,7 +4269,7 @@ func NewDescribeInstanceTradeParameterResponse() (response *DescribeInstanceTrad
 }
 
 // DescribeInstanceTradeParameter
-// 本接口（DescribeInstanceTradeParameter）用于查询实例的计费参数，当前接口默认返回创建实例时需要的计费参数。内部接口用于活动页售卖场景。
+// 本接口（DescribeInstanceTradeParameter）用于查询实例的计费参数
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -4229,7 +4292,7 @@ func (c *Client) DescribeInstanceTradeParameter(request *DescribeInstanceTradePa
 }
 
 // DescribeInstanceTradeParameter
-// 本接口（DescribeInstanceTradeParameter）用于查询实例的计费参数，当前接口默认返回创建实例时需要的计费参数。内部接口用于活动页售卖场景。
+// 本接口（DescribeInstanceTradeParameter）用于查询实例的计费参数
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -5185,6 +5248,7 @@ func NewDescribeRestoreTaskResponse() (response *DescribeRestoreTaskResponse) {
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeRestoreTask(request *DescribeRestoreTaskRequest) (response *DescribeRestoreTaskResponse, err error) {
     return c.DescribeRestoreTaskWithContext(context.Background(), request)
 }
@@ -5197,6 +5261,7 @@ func (c *Client) DescribeRestoreTask(request *DescribeRestoreTaskRequest) (respo
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeRestoreTaskWithContext(ctx context.Context, request *DescribeRestoreTaskRequest) (response *DescribeRestoreTaskResponse, err error) {
     if request == nil {
         request = NewDescribeRestoreTaskRequest()
@@ -5209,6 +5274,65 @@ func (c *Client) DescribeRestoreTaskWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeRestoreTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRestoreTimeRangeRequest() (request *DescribeRestoreTimeRangeRequest) {
+    request = &DescribeRestoreTimeRangeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeRestoreTimeRange")
+    
+    
+    return
+}
+
+func NewDescribeRestoreTimeRangeResponse() (response *DescribeRestoreTimeRangeResponse) {
+    response = &DescribeRestoreTimeRangeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRestoreTimeRange
+// 本接口(DescribeRestoreTimeRange)用于查询按照时间点可回档的时间范围。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeRestoreTimeRange(request *DescribeRestoreTimeRangeRequest) (response *DescribeRestoreTimeRangeResponse, err error) {
+    return c.DescribeRestoreTimeRangeWithContext(context.Background(), request)
+}
+
+// DescribeRestoreTimeRange
+// 本接口(DescribeRestoreTimeRange)用于查询按照时间点可回档的时间范围。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeRestoreTimeRangeWithContext(ctx context.Context, request *DescribeRestoreTimeRangeRequest) (response *DescribeRestoreTimeRangeResponse, err error) {
+    if request == nil {
+        request = NewDescribeRestoreTimeRangeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRestoreTimeRange require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRestoreTimeRangeResponse()
     err = c.Send(request, response)
     return
 }
@@ -6477,6 +6601,7 @@ func NewModifyDBEncryptAttributesResponse() (response *ModifyDBEncryptAttributes
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  FAILEDOPERATION_NOTSUPPORT = "FailedOperation.NotSupport"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCENOTFOUND_PARAMSNOTFOUND = "ResourceNotFound.ParamsNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -6494,6 +6619,7 @@ func (c *Client) ModifyDBEncryptAttributes(request *ModifyDBEncryptAttributesReq
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  FAILEDOPERATION_NOTSUPPORT = "FailedOperation.NotSupport"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCENOTFOUND_PARAMSNOTFOUND = "ResourceNotFound.ParamsNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -7106,6 +7232,67 @@ func (c *Client) ModifyDBRemarkWithContext(ctx context.Context, request *ModifyD
     return
 }
 
+func NewModifyDReadableRequest() (request *ModifyDReadableRequest) {
+    request = &ModifyDReadableRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDReadable")
+    
+    
+    return
+}
+
+func NewModifyDReadableResponse() (response *ModifyDReadableResponse) {
+    response = &ModifyDReadableResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDReadable
+// 本接口（ModifyDReadable）用于开通或者关闭备机只读
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
+//  FAILEDOPERATION_NOTSUPPORT = "FailedOperation.NotSupport"
+//  RESOURCENOTFOUND_PARAMSNOTFOUND = "ResourceNotFound.ParamsNotFound"
+//  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
+func (c *Client) ModifyDReadable(request *ModifyDReadableRequest) (response *ModifyDReadableResponse, err error) {
+    return c.ModifyDReadableWithContext(context.Background(), request)
+}
+
+// ModifyDReadable
+// 本接口（ModifyDReadable）用于开通或者关闭备机只读
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
+//  FAILEDOPERATION_NOTSUPPORT = "FailedOperation.NotSupport"
+//  RESOURCENOTFOUND_PARAMSNOTFOUND = "ResourceNotFound.ParamsNotFound"
+//  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
+func (c *Client) ModifyDReadableWithContext(ctx context.Context, request *ModifyDReadableRequest) (response *ModifyDReadableResponse, err error) {
+    if request == nil {
+        request = NewModifyDReadableRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDReadable require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDReadableResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDatabaseCDCRequest() (request *ModifyDatabaseCDCRequest) {
     request = &ModifyDatabaseCDCRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7295,6 +7482,75 @@ func (c *Client) ModifyDatabaseMdfWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyDatabaseMdfResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDatabasePrivilegeRequest() (request *ModifyDatabasePrivilegeRequest) {
+    request = &ModifyDatabasePrivilegeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDatabasePrivilege")
+    
+    
+    return
+}
+
+func NewModifyDatabasePrivilegeResponse() (response *ModifyDatabasePrivilegeResponse) {
+    response = &ModifyDatabasePrivilegeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDatabasePrivilege
+// 本接口（ModifyDatabasePrivilege）用于修改实例数据库权限。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DATAERROR = "InternalError.DataError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  INVALIDPARAMETER_INTERFACENAMENOTFOUND = "InvalidParameter.InterfaceNameNotFound"
+//  INVALIDPARAMETERVALUE_GRANTISILLEGAL = "InvalidParameterValue.GrantIsIllegal"
+//  RESOURCENOTFOUND_ACCOUNTNOTEXIST = "ResourceNotFound.AccountNotExist"
+//  RESOURCENOTFOUND_DBNOTEXIT = "ResourceNotFound.DBNotExit"
+//  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyDatabasePrivilege(request *ModifyDatabasePrivilegeRequest) (response *ModifyDatabasePrivilegeResponse, err error) {
+    return c.ModifyDatabasePrivilegeWithContext(context.Background(), request)
+}
+
+// ModifyDatabasePrivilege
+// 本接口（ModifyDatabasePrivilege）用于修改实例数据库权限。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DATAERROR = "InternalError.DataError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  INVALIDPARAMETER_INTERFACENAMENOTFOUND = "InvalidParameter.InterfaceNameNotFound"
+//  INVALIDPARAMETERVALUE_GRANTISILLEGAL = "InvalidParameterValue.GrantIsIllegal"
+//  RESOURCENOTFOUND_ACCOUNTNOTEXIST = "ResourceNotFound.AccountNotExist"
+//  RESOURCENOTFOUND_DBNOTEXIT = "ResourceNotFound.DBNotExit"
+//  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyDatabasePrivilegeWithContext(ctx context.Context, request *ModifyDatabasePrivilegeRequest) (response *ModifyDatabasePrivilegeResponse, err error) {
+    if request == nil {
+        request = NewModifyDatabasePrivilegeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDatabasePrivilege require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDatabasePrivilegeResponse()
     err = c.Send(request, response)
     return
 }
@@ -8378,7 +8634,7 @@ func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) 
 }
 
 // ResetAccountPassword
-// 本接口（ResetAccountPassword）用于重置实例的账户密码。
+// 本接口（ResetAccountPassword）用于重置实例的账号密码。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
@@ -8397,7 +8653,7 @@ func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (res
 }
 
 // ResetAccountPassword
-// 本接口（ResetAccountPassword）用于重置实例的账户密码。
+// 本接口（ResetAccountPassword）用于重置实例的账号密码。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
@@ -9196,6 +9452,7 @@ func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETER_PAYORDERFAILED = "InvalidParameter.PayOrderFailed"
 //  INVALIDPARAMETERVALUE_ILLEGALSPEC = "InvalidParameterValue.IllegalSpec"
+//  INVALIDPARAMETERVALUE_PARAMETERTYPEERROR = "InvalidParameterValue.ParameterTypeError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) UpgradeDBInstance(request *UpgradeDBInstanceRequest) (response *UpgradeDBInstanceResponse, err error) {
@@ -9215,6 +9472,7 @@ func (c *Client) UpgradeDBInstance(request *UpgradeDBInstanceRequest) (response 
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETER_PAYORDERFAILED = "InvalidParameter.PayOrderFailed"
 //  INVALIDPARAMETERVALUE_ILLEGALSPEC = "InvalidParameterValue.IllegalSpec"
+//  INVALIDPARAMETERVALUE_PARAMETERTYPEERROR = "InvalidParameterValue.ParameterTypeError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) UpgradeDBInstanceWithContext(ctx context.Context, request *UpgradeDBInstanceRequest) (response *UpgradeDBInstanceResponse, err error) {
