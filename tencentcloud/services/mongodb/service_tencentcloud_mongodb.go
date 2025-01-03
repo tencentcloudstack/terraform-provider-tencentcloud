@@ -923,3 +923,57 @@ func (me *MongodbService) SetInstanceMaintenance(ctx context.Context, instanceId
 
 	return nil
 }
+
+func (me *MongodbService) DescribeMongodbInstanceParamValues(ctx context.Context, instanceId string, paramNames []string) (res map[string]string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewDescribeInstanceParamsRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeInstanceParams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	res = make(map[string]string)
+	for _, param := range response.Response.InstanceEnumParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+	for _, param := range response.Response.InstanceIntegerParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+	for _, param := range response.Response.InstanceMultiParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+	for _, param := range response.Response.InstanceTextParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+
+	return
+}
