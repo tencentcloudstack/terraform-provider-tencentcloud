@@ -10,9 +10,9 @@ resource "tencentcloud_private_dns_extend_end_point" "example" {
   end_point_region = "ap-jakarta"
   forward_ip {
     access_type       = "CLB"
-    host              = "43.129.59.30"
-    port              = 8080
-    vpc_id            = "vpc-2qjckjg2"
+    host              = "10.0.1.12"
+    port              = 9000
+    vpc_id            = "vpc-1v2i79fc"
   }
 }
 ```
