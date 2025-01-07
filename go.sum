@@ -818,6 +818,10 @@ github.com/tdakkota/asciicheck v0.2.0 h1:o8jvnUANo0qXtnslk2d3nMKTFNlOnJjRrNcj0j9
 github.com/tdakkota/asciicheck v0.2.0/go.mod h1:Qb7Y9EgjCLJGup51gDHFzbI08/gbGhL/UVhYIPWG2rg=
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.646+incompatible h1:C6knK+5LOkVTypyHsPj3njTYub6StITj6n4wmMBPS+8=
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.646+incompatible/go.mod h1:72Wo6Gt6F8d8V+njrAmduVoT9QjPwCyXktpqCWr7PUc=
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1113+incompatible h1:Vfzv2LeRMKRU3BGxFMnfaG7KvjLZP6fhwsM/i+FIovY=
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1113+incompatible/go.mod h1:72Wo6Gt6F8d8V+njrAmduVoT9QjPwCyXktpqCWr7PUc=
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1114+incompatible h1:Qo2u4QpYzsrrTedOFmNyDIghJMsFSa/Dn3HfnTWtTfs=
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1114+incompatible/go.mod h1:72Wo6Gt6F8d8V+njrAmduVoT9QjPwCyXktpqCWr7PUc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.799 h1:u49r1bGFDY0CeAF46iotNnLtc5yplPf9XXa7W7zJ4fE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.799/go.mod h1:JQa/Ess7Kkn/BuAugq0Tt5GJR7ZQAY47ypP9LjEn/DE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285 h1:gFmukRGLtYiXVBVvg/5DP/0fM1+dKpwDjT+khtDVLmc=
