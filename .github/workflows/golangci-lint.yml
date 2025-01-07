@@ -37,7 +37,7 @@ jobs:
       - name: Get list of changed files
         id: getDiffFile
         run: |
-          echo "::set-output name=files::$(git diff --name-only origin/master | grep '\.go$' | xargs)"
+          echo "::set-output name=files::$(git diff --name-only origin/master | grep '^tencentcloud/.*\.go$' | xargs)"
         shell: bash
 
       - name: Check for changed Go files
