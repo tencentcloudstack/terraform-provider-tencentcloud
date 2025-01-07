@@ -58,5 +58,6 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.63.4
+          working-directory: .
           args: --new-from-rev=origin/master -v ${{ steps.getDiffFile.outputs.files }} 
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
