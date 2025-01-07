@@ -40,6 +40,14 @@ jobs:
           echo "::set-output name=files::$(git diff --name-only origin/master | grep '\.go$' | xargs)"
         shell: bash
 
+      - name: Check for changed Go files
+        id: checkDiffFile
+        run: |
+          if [ -z "${{ steps.getDiffFile.outputs.files }}" ]; then
+            echo "No Go files changed."
+            exit 0
+          fi
+
       - name: Print changed files
         id: showDiffFile
         run: |
