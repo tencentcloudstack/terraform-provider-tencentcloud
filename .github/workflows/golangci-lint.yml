@@ -59,6 +59,6 @@ jobs:
         with:
           version: v1.63.4
           #version: v1.54
-          working-directory: ./tencentcloud
+          # working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v ${{ steps.getDiffFile.outputs.files }} 
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
