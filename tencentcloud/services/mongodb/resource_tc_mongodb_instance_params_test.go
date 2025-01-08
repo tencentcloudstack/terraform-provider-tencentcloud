@@ -38,7 +38,7 @@ func TestAccTencentCloudMongodbInstanceParamsResource_basic(t *testing.T) {
 
 const testAccMongodbInstanceParams = `
 resource "tencentcloud_mongodb_instance_params" "mongodb_instance_params" {
-  instance_id = "cmgo-kisd0kzx"
+  instance_id = "cmgo-c6k2v891"
   instance_params {
     key = "cmgo.crossZoneLoadBalancing"
     value = "on"
@@ -48,7 +48,7 @@ resource "tencentcloud_mongodb_instance_params" "mongodb_instance_params" {
 
 const testAccMongodbInstanceParamsUpdate = `
 resource "tencentcloud_mongodb_instance_params" "mongodb_instance_params" {
-  instance_id = "cmgo-kisd0kzx"
+  instance_id = "cmgo-c6k2v891"
   instance_params {
     key = "cmgo.crossZoneLoadBalancing"
     value = "off"
