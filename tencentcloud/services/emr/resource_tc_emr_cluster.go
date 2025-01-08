@@ -665,11 +665,13 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				masterResourceSpec["cpu"] = v.CpuNum
 				if instance.Config.MasterResource != nil {
 					masterResource := instance.Config.MasterResource
-					masterResourceSpec["disk_size"] = *masterResource.DiskSize
+					masterResourceSpec["disk_size"] = masterResource.DiskSize
 					masterResourceSpec["multi_disks"] = fetchMultiDisks(v, masterResource)
 
 				}
-				masterResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				if v.StorageType != nil {
+					masterResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
 				masterResourceSpec["spec"] = v.Spec
 				masterResourceSpec["storage_type"] = v.RootStorageType
 				masterResourceSpec["root_size"] = v.RootSize
@@ -685,10 +687,12 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				coreResourceSpec["cpu"] = v.CpuNum
 				if instance.Config.CoreResource != nil {
 					coreResource := instance.Config.CoreResource
-					coreResourceSpec["disk_size"] = *coreResource.DiskSize
+					coreResourceSpec["disk_size"] = coreResource.DiskSize
 					coreResourceSpec["multi_disks"] = fetchMultiDisks(v, coreResource)
 				}
-				coreResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				if v.StorageType != nil {
+					coreResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
 				coreResourceSpec["spec"] = v.Spec
 				coreResourceSpec["storage_type"] = v.RootStorageType
 				coreResourceSpec["root_size"] = v.RootSize
@@ -704,10 +708,12 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				taskResourceSpec["cpu"] = v.CpuNum
 				if instance.Config.TaskResource != nil {
 					taskResource := instance.Config.TaskResource
-					taskResourceSpec["disk_size"] = *taskResource.DiskSize
+					taskResourceSpec["disk_size"] = taskResource.DiskSize
 					taskResourceSpec["multi_disks"] = fetchMultiDisks(v, taskResource)
 				}
-				taskResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				if v.StorageType != nil {
+					taskResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
 				taskResourceSpec["spec"] = v.Spec
 				taskResourceSpec["storage_type"] = v.RootStorageType
 				taskResourceSpec["root_size"] = v.RootSize
@@ -723,10 +729,12 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				comResourceSpec["cpu"] = v.CpuNum
 				if instance.Config.ComResource != nil {
 					comResource := instance.Config.ComResource
-					comResourceSpec["disk_size"] = *comResource.DiskSize
+					comResourceSpec["disk_size"] = comResource.DiskSize
 					comResourceSpec["multi_disks"] = fetchMultiDisks(v, comResource)
 				}
-				comResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				if v.StorageType != nil {
+					comResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
 				comResourceSpec["spec"] = v.Spec
 				comResourceSpec["storage_type"] = v.RootStorageType
 				comResourceSpec["root_size"] = v.RootSize
