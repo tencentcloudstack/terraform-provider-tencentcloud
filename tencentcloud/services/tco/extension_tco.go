@@ -14,4 +14,7 @@ const (
 
 	DescribeTargetTypeNode   = "Node"
 	DescribeTargetTypeMember = "User"
+
+	TASK_STATUS_SUCCESS = "Success"
+	TASK_STATUS_FAILED  = "Failed"
 )
