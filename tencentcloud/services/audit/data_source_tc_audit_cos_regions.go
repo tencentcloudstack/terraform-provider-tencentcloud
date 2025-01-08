@@ -21,12 +21,12 @@ func DataSourceTencentCloudAuditCosRegions() *schema.Resource {
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "123Used to save results.",
 			},
 			"audit_cos_region_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "List of available regions supported by audit cos.",
+				Description: "123List of available regions supported by audit cos.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cos_region": {
