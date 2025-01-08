@@ -271,7 +271,7 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 			"elastic_bandwidth_switch": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Elastic bandwidth switch 0 not turned on 1 turned on (0 default).",
+				Description: "Elastic bandwidth switch 0 not turned on 1 turned on (0 default). This takes effect only when the instance is created.",
 			},
 			"vip": {
 				Type:        schema.TypeString,
