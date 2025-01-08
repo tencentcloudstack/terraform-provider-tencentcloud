@@ -291,6 +291,7 @@ func (me *PrivatednsService) DescribePrivateDnsExtendEndPointById(ctx context.Co
 	logId := tccommon.GetLogId(ctx)
 
 	request := privatednsIntlv20201028.NewDescribeExtendEndpointListRequest()
+	response := privatednsIntlv20201028.NewDescribeExtendEndpointListResponse()
 	filter := &privatednsIntlv20201028.Filter{
 		Name:   helper.String("EndpointId"),
 		Values: []*string{helper.String(endPointId)},
@@ -304,8 +305,16 @@ func (me *PrivatednsService) DescribePrivateDnsExtendEndPointById(ctx context.Co
 	}()
 
 	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeExtendEndpointList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UsePrivatednsIntlV20201028Client().DescribeExtendEndpointList(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return

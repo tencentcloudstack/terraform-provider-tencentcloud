@@ -54,11 +54,11 @@ The following arguments are supported:
 
 The `forward_ip` object supports the following:
 
-* `access_type` - (Required, String) Forwarding target IP network access type. CLB: The forwarding IP is the internal CLB VIP. CCN: Forwarding IP through CCN routing.
-* `host` - (Required, String) Forwarding target IP address.
-* `port` - (Required, Int) Specifies the forwarding IP port number.
-* `vpc_id` - (Required, String) Unique VPC ID.
-* `access_gateway_id` - (Optional, String) CCN id. Required when the access type is CCN.
+* `access_type` - (Required, String, ForceNew) Forwarding target IP network access type. CLB: The forwarding IP is the internal CLB VIP. CCN: Forwarding IP through CCN routing.
+* `host` - (Required, String, ForceNew) Forwarding target IP address.
+* `port` - (Required, Int, ForceNew) Specifies the forwarding IP port number.
+* `vpc_id` - (Required, String, ForceNew) Unique VPC ID.
+* `access_gateway_id` - (Optional, String, ForceNew) CCN id. Required when the access type is CCN.
 
 ## Attributes Reference
 

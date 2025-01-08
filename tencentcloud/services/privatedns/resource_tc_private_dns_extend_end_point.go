@@ -45,16 +45,19 @@ func ResourceTencentCloudPrivateDnsExtendEndPoint() *schema.Resource {
 						"access_type": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Forwarding target IP network access type. CLB: The forwarding IP is the internal CLB VIP. CCN: Forwarding IP through CCN routing.",
 						},
 						"host": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Forwarding target IP address.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Specifies the forwarding IP port number.",
 						},
 						// "ip_num": {
@@ -65,6 +68,7 @@ func ResourceTencentCloudPrivateDnsExtendEndPoint() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Unique VPC ID.",
 						},
 						// "subnet_id": {
@@ -75,6 +79,7 @@ func ResourceTencentCloudPrivateDnsExtendEndPoint() *schema.Resource {
 						"access_gateway_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "CCN id. Required when the access type is CCN.",
 						},
 						// computed
