@@ -201,18 +201,26 @@ func resourceTencentCloudIdentityCenterRoleAssignmentRead(d *schema.ResourceData
 
 	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	respData, err := service.DescribeIdentityCenterRoleAssignmentById(ctx, d.Id())
+	var roleAssignmentsResponseParams *organization.ListRoleAssignmentsResponseParams
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeIdentityCenterRoleAssignmentById(ctx, d.Id())
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		roleAssignmentsResponseParams = result
+		return nil
+	})
 	if err != nil {
 		return err
 	}
 
-	if respData == nil {
+	if roleAssignmentsResponseParams == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `identity_center_role_assignment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if len(respData.RoleAssignments) > 0 {
-		roleAssignment := respData.RoleAssignments[0]
+	if len(roleAssignmentsResponseParams.RoleAssignments) > 0 {
+		roleAssignment := roleAssignmentsResponseParams.RoleAssignments[0]
 		if roleAssignment.RoleConfigurationId != nil {
 			_ = d.Set("role_configuration_id", roleAssignment.RoleConfigurationId)
 		}
