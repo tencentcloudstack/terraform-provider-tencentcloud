@@ -142,7 +142,7 @@ func resourceTencentCloudMongodbInstanceParamsUpdate(d *schema.ResourceData, met
 		request.InstanceId = helper.String(d.Get("instance_id").(string))
 
 		if v, ok := d.GetOk("instance_params"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				instanceParamsMap := item.(map[string]interface{})
 				modifyMongoDBParamType := mongodb.ModifyMongoDBParamType{}
 				if v, ok := instanceParamsMap["key"]; ok {
@@ -174,7 +174,7 @@ func resourceTencentCloudMongodbInstanceParamsUpdate(d *schema.ResourceData, met
 		}
 
 		service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		instanceParams := d.Get("instance_params").([]interface{})
+		instanceParams := d.Get("instance_params").(*schema.Set).List()
 		paramMap := make(map[string]string)
 		paramNames := make([]string, 0)
 
