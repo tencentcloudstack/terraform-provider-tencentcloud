@@ -3,11 +3,12 @@ package privatedns
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	privatednsv20201028 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+	privatednsIntlv20201028 "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -75,8 +76,8 @@ func resourceTencentCloudPrivateDnsEndPointCreate(d *schema.ResourceData, meta i
 		endPointId string
 	)
 	var (
-		request  = privatednsv20201028.NewCreateEndPointRequest()
-		response = privatednsv20201028.NewCreateEndPointResponse()
+		request  = privatednsIntlv20201028.NewCreateEndPointRequest()
+		response = privatednsIntlv20201028.NewCreateEndPointResponse()
 	)
 
 	if v, ok := d.GetOk("end_point_name"); ok {
@@ -96,18 +97,27 @@ func resourceTencentCloudPrivateDnsEndPointCreate(d *schema.ResourceData, meta i
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsV20201028Client().CreateEndPointWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsIntlV20201028Client().CreateEndPointWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create private dns end point failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create private dns end point failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.EndPointId == nil {
+		return fmt.Errorf("EndPointId is nil.")
 	}
 
 	endPointId = *response.Response.EndPointId
@@ -156,14 +166,14 @@ func resourceTencentCloudPrivateDnsEndPointDelete(d *schema.ResourceData, meta i
 	endPointId := d.Id()
 
 	var (
-		request  = privatednsv20201028.NewDeleteEndPointRequest()
-		response = privatednsv20201028.NewDeleteEndPointResponse()
+		request  = privatednsIntlv20201028.NewDeleteEndPointRequest()
+		response = privatednsIntlv20201028.NewDeleteEndPointResponse()
 	)
 
 	request.EndPointId = helper.String(endPointId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsV20201028Client().DeleteEndPointWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsIntlV20201028Client().DeleteEndPointWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {

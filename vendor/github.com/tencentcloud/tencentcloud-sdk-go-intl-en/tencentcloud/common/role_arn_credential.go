@@ -13,7 +13,7 @@ type RoleArnCredential struct {
 	token           string
 	tmpSecretId     string
 	tmpSecretKey    string
-	source          *RoleArnProvider
+	source          Provider
 }
 
 func (c *RoleArnCredential) GetSecretId() string {
@@ -38,6 +38,13 @@ func (c *RoleArnCredential) GetToken() string {
 	return c.token
 }
 
+func (c *RoleArnCredential) GetCredential() (string, string, string) {
+	if c.needRefresh() {
+		c.refresh()
+	}
+	return c.tmpSecretId, c.tmpSecretKey, c.token
+}
+
 func (c *RoleArnCredential) needRefresh() bool {
 	if c.tmpSecretKey == "" || c.tmpSecretId == "" || c.token == "" || c.expiredTime <= time.Now().Unix() {
 		return true
@@ -49,6 +56,7 @@ func (c *RoleArnCredential) refresh() {
 	newCre, err := c.source.GetCredential()
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	*c = *newCre.(*RoleArnCredential)
 }

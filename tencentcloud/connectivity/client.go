@@ -16,6 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
+	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
@@ -212,20 +213,21 @@ type TencentCloudClient struct {
 	controlcenterConn *controlcenter.Client
 	thpcConn          *thpc.Client
 	//omit nil client
-	omitNilConn             *common.Client
-	emrv20190103Conn        *emr.Client
-	teov20220901Conn        *teo.Client
-	sslv20191205Conn        *sslCertificate.Client
-	postgresv20170312Conn   *postgre.Client
-	cfwv20190904Conn        *cfw.Client
-	ccnv20170312Conn        *vpc.Client
-	tcssv20201101Conn       *tcss.Client
-	cloudauditv20190319Conn *audit.Client
-	privatednsv20201028Conn *privatedns.Client
-	wafv20180125Conn        *waf.Client
-	camv20190116Conn        *cam.Client
-	clsv20201016Conn        *cls.Client
-	monitor20180724Conn     *monitor.Client
+	omitNilConn                 *common.Client
+	emrv20190103Conn            *emr.Client
+	teov20220901Conn            *teo.Client
+	sslv20191205Conn            *sslCertificate.Client
+	postgresv20170312Conn       *postgre.Client
+	cfwv20190904Conn            *cfw.Client
+	ccnv20170312Conn            *vpc.Client
+	tcssv20201101Conn           *tcss.Client
+	cloudauditv20190319Conn     *audit.Client
+	privatednsv20201028Conn     *privatedns.Client
+	privatednsIntlv20201028Conn *privatednsIntl.Client
+	wafv20180125Conn            *waf.Client
+	camv20190116Conn            *cam.Client
+	clsv20201016Conn            *cls.Client
+	monitor20180724Conn         *monitor.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1963,6 +1965,19 @@ func (me *TencentCloudClient) UsePrivatednsV20201028Client() *privatedns.Client 
 	me.privatednsv20201028Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.privatednsv20201028Conn
+}
+
+// UsePrivatednsV20201028Client return PRIVATEDNS Intl client for service
+func (me *TencentCloudClient) UsePrivatednsIntlV20201028Client() *privatednsIntl.Client {
+	if me.privatednsIntlv20201028Conn != nil {
+		return me.privatednsIntlv20201028Conn
+	}
+	cpf := me.NewClientIntlProfile(300)
+	cpf.Language = "zh-CN"
+	me.privatednsIntlv20201028Conn, _ = privatednsIntl.NewClient(me.Credential, me.Region, cpf)
+	me.privatednsIntlv20201028Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.privatednsIntlv20201028Conn
 }
 
 // UseWafV20180125Client return WAF client for service

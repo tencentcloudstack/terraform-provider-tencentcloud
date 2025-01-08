@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 
-	privatednsv20201028 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+	privatednsIntlv20201028 "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
-func resourceTencentCloudPrivateDnsEndPointReadPreHandleResponse0(ctx context.Context, resp *privatednsv20201028.DescribeEndPointListResponseParams) error {
+func resourceTencentCloudPrivateDnsEndPointReadPreHandleResponse0(ctx context.Context, resp *privatednsIntlv20201028.DescribeEndPointListResponseParams) error {
 	logId := tccommon.GetLogId(ctx)
 	d := tccommon.ResourceDataFromContext(ctx)
 	if d == nil {

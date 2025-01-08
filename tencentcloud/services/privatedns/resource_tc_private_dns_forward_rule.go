@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	privatednsv20201028 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+	privatednsIntlv20201028 "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -63,8 +63,8 @@ func resourceTencentCloudPrivateDnsForwardRuleCreate(d *schema.ResourceData, met
 		ruleId string
 	)
 	var (
-		request  = privatednsv20201028.NewCreateForwardRuleRequest()
-		response = privatednsv20201028.NewCreateForwardRuleResponse()
+		request  = privatednsIntlv20201028.NewCreateForwardRuleRequest()
+		response = privatednsIntlv20201028.NewCreateForwardRuleResponse()
 	)
 
 	if v, ok := d.GetOk("rule_name"); ok {
@@ -84,18 +84,28 @@ func resourceTencentCloudPrivateDnsForwardRuleCreate(d *schema.ResourceData, met
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsV20201028Client().CreateForwardRuleWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsIntlV20201028Client().CreateForwardRuleWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create private dns forward rule failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create private dns forward rule failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.RuleId == nil {
+		return fmt.Errorf("RuleId is nil.")
 	}
 
 	ruleId = *response.Response.RuleId
@@ -172,7 +182,7 @@ func resourceTencentCloudPrivateDnsForwardRuleUpdate(d *schema.ResourceData, met
 	}
 
 	if needChange {
-		request := privatednsv20201028.NewModifyForwardRuleRequest()
+		request := privatednsIntlv20201028.NewModifyForwardRuleRequest()
 
 		request.RuleId = helper.String(ruleId)
 
@@ -185,7 +195,7 @@ func resourceTencentCloudPrivateDnsForwardRuleUpdate(d *schema.ResourceData, met
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsV20201028Client().ModifyForwardRuleWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsIntlV20201028Client().ModifyForwardRuleWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -212,14 +222,14 @@ func resourceTencentCloudPrivateDnsForwardRuleDelete(d *schema.ResourceData, met
 	ruleId := d.Id()
 
 	var (
-		request  = privatednsv20201028.NewDeleteForwardRuleRequest()
-		response = privatednsv20201028.NewDeleteForwardRuleResponse()
+		request  = privatednsIntlv20201028.NewDeleteForwardRuleRequest()
+		response = privatednsIntlv20201028.NewDeleteForwardRuleResponse()
 	)
 
 	request.RuleIdSet = []*string{helper.String(ruleId)}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsV20201028Client().DeleteForwardRuleWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsIntlV20201028Client().DeleteForwardRuleWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
