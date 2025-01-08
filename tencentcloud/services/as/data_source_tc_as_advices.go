@@ -22,13 +22,13 @@ func DataSourceTencentCloudAsAdvices() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "List of scaling groups to be queried. Upper limit: 100.",
+				Description: "123List of scaling groups to be queried. Upper limit: 100.",
 			},
 
 			"auto_scaling_advice_set": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "A collection of suggestions for scaling group configurations.",
+				Description: "123A collection of suggestions for scaling group configurations.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_scaling_group_id": {
