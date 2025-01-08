@@ -1403,13 +1403,14 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 		request := s3.DeleteBucketWebsiteInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).DeleteBucketWebsite(&request)
 
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).DeleteBucketWebsite(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket website", request.String(), err.Error())
 			return fmt.Errorf("cos delete bucket website error: %s, bucket: %s", err.Error(), bucket)
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, "delete bucket website", request.String(), response.String())
 	} else {
@@ -1423,40 +1424,41 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 		} else {
 			w = make(map[string]interface{})
 		}
-		var indexDocument, errorDocument string
-		var redirectAllRequestsTo = "http"
-		if v, ok := w["index_document"]; ok {
-			indexDocument = v.(string)
-		}
-		if v, ok := w["error_document"]; ok {
-			errorDocument = v.(string)
-		}
-		if v, ok := w["redirect_all_requests_to"]; ok && v != "" {
-			redirectAllRequestsTo = v.(string)
-		}
-		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
-		request := s3.PutBucketWebsiteInput{
-			Bucket: aws.String(bucket),
-			WebsiteConfiguration: &s3.WebsiteConfiguration{
-				IndexDocument: &s3.IndexDocument{
-					Suffix: aws.String(indexDocument),
-				},
-				ErrorDocument: &s3.ErrorDocument{
-					Key: aws.String(errorDocument),
-				},
-				RedirectAllRequestsTo: &s3.RedirectAllRequestsTo{
-					HostName: aws.String(endPointUrl),
-					Protocol: aws.String(redirectAllRequestsTo),
-				},
-			},
-		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).PutBucketWebsite(&request)
 
+		websiteConfiguration := &s3.WebsiteConfiguration{}
+		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
+		var redirectAllRequestsTo = "http"
+		if v, ok := w["index_document"].(string); ok && v != "" {
+			websiteConfiguration.IndexDocument = &s3.IndexDocument{
+				Suffix: aws.String(v),
+			}
+		}
+
+		if v, ok := w["error_document"].(string); ok && v != "" {
+			websiteConfiguration.ErrorDocument = &s3.ErrorDocument{
+				Key: aws.String(v),
+			}
+		}
+
+		if v, ok := w["redirect_all_requests_to"].(string); ok && v != "" {
+			websiteConfiguration.RedirectAllRequestsTo = &s3.RedirectAllRequestsTo{
+				HostName: aws.String(endPointUrl),
+				Protocol: aws.String(redirectAllRequestsTo),
+			}
+		}
+
+		request := s3.PutBucketWebsiteInput{
+			Bucket:               aws.String(bucket),
+			WebsiteConfiguration: websiteConfiguration,
+		}
+
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).PutBucketWebsite(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "put bucket website", request.String(), err.Error())
 			return fmt.Errorf("cos put bucket website error: %s, bucket: %s", err.Error(), bucket)
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, "put bucket website", request.String(), response.String())
 	}

@@ -247,7 +247,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
   website {
     index_document           = "index.html"
     error_document           = "error.html"
-    redirect_all_requests_to = "https"
+    redirect_all_requests_to = "http"
   }
 }
 
