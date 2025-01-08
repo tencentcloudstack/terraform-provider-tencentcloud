@@ -28,7 +28,7 @@ func ResourceTencentCloudMongodbInstanceParams() *schema.Resource {
 			},
 
 			"instance_params": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "Specify the parameter name and value to be modified.",
 				Elem: &schema.Resource{
@@ -89,7 +89,7 @@ func resourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, meta 
 
 	_ = d.Set("instance_id", instanceId)
 
-	instanceParams := d.Get("instance_params").([]interface{})
+	instanceParams := d.Get("instance_params").(*schema.Set).List()
 	paramNames := make([]string, 0)
 	for _, instanceParam := range instanceParams {
 		instanceParamMap := instanceParam.(map[string]interface{})

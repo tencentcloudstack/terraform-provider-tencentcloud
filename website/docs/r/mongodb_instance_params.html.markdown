@@ -28,7 +28,7 @@ resource "tencentcloud_mongodb_instance_params" "mongodb_instance_params" {
 The following arguments are supported:
 
 * `instance_id` - (Required, String, ForceNew) Instance id.
-* `instance_params` - (Required, List) Specify the parameter name and value to be modified.
+* `instance_params` - (Required, Set) Specify the parameter name and value to be modified.
 * `modify_type` - (Optional, String) Operation types, including:
 	- IMMEDIATELY: Adjust immediately;
 	- DELAY: Delay adjustment;
