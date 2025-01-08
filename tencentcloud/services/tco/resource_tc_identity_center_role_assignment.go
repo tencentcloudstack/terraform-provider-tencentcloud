@@ -164,6 +164,19 @@ func resourceTencentCloudIdentityCenterRoleAssignmentCreate(d *schema.ResourceDa
 
 	if len(response.Response.Tasks) > 0 {
 		task := response.Response.Tasks[0]
+		if task == nil {
+			return fmt.Errorf("task is nil")
+		}
+		if task.Status != nil && *task.Status == "Failed" {
+			if task.FailureReason != nil {
+				return fmt.Errorf("CreateRoleAssignment failed, failure reason:%s", *task.FailureReason)
+			}
+			return fmt.Errorf("CreateRoleAssignment failed")
+		}
+
+		if task.TaskId == nil {
+			return fmt.Errorf("task id is nil")
+		}
 		taskId := *task.TaskId
 		roleConfigurationId := *task.RoleConfigurationId
 		conf := tccommon.BuildStateChangeConf([]string{}, []string{"Success"}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, taskId, []string{}))
@@ -292,8 +305,21 @@ func resourceTencentCloudIdentityCenterRoleAssignmentDelete(d *schema.ResourceDa
 		return err
 	}
 
-	if deleteRoleAssignmentResponse.Response != nil && deleteRoleAssignmentResponse.Response.Task != nil && deleteRoleAssignmentResponse.Response.Task.TaskId != nil {
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{"Success"}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, *deleteRoleAssignmentResponse.Response.Task.TaskId, []string{}))
+	if deleteRoleAssignmentResponse == nil || deleteRoleAssignmentResponse.Response == nil {
+		return fmt.Errorf("delete role assignment response is nil")
+	}
+	if deleteRoleAssignmentResponse.Response.Task == nil {
+		return fmt.Errorf("delete role assignment task is nil")
+	}
+	task := deleteRoleAssignmentResponse.Response.Task
+	if task.Status != nil && *task.Status == "Failed" {
+		if task.FailureReason != nil {
+			return fmt.Errorf("DeleteRoleAssignment failed, failure reason:%s", *task.FailureReason)
+		}
+		return fmt.Errorf("DeleteRoleAssignment failed")
+	}
+	if task.TaskId != nil {
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"Success"}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, *task.TaskId, []string{}))
 		if _, e := conf.WaitForState(); e != nil {
 			return e
 		}
