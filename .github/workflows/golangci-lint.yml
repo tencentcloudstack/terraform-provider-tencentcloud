@@ -33,17 +33,17 @@ jobs:
           go-version-file: .go-version
           #go-version: '1.21'
           cache: false 
+
+      - name: Get root path
+        id: getRootPath
+        run: |
+          echo "::set-output path=$(pwd)"
+        shell: bash
       
       - name: Get list of changed files
         id: getDiffFile
         run: |
-          prefix=$(pwd)
-          files=$(git diff --name-only origin/master | grep '^tencentcloud/.*\.go$' | xargs)
-          files_with_prefix=""
-          for file in $files; do
-            files_with_prefix="$files_with_prefix $prefix/$file"
-          done
-          echo "::set-output name=files::$files_with_prefix"
+          echo "::set-output name=files::$(git diff --name-only origin/master | grep '^tencentcloud/.*\.go$' | xargs)"
         shell: bash
 
       - name: Check for changed Go files
@@ -64,6 +64,6 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.63.4
-          # working-directory: .
+          working-directory: ${{ steps.getRootPath.outputs.path }} 
           args: --new-from-rev=origin/master -v ${{ steps.getDiffFile.outputs.files }} 
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
