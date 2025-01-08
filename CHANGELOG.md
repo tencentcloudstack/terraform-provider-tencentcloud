@@ -1,3 +1,16 @@
+## 1.81.158 (January 8 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mongodb_instance_params` ([#3055](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3055))
+* **New Resource:** `tencentcloud_private_dns_extend_end_point` ([#3057](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3057))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: support param `elastic_bandwidth_switch` ([#3051](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3051))
+* resource/tencentcloud_cos_bucket: update `website` params ([#3061](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3061))
+* resource/tencentcloud_emr_cluster: update read ([#3054](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3054))
+
 ## 1.81.157 (January 3 , 2025)
 
 ENHANCEMENTS:
