@@ -66,6 +66,11 @@ func ResourceTencentCloudAsStartInstanceRefresh() *schema.Resource {
 										Optional:    true,
 										Description: "Maximum Extra Quantity. After setting this parameter, a batch of pay-as-you-go extra instances will be created according to the launch configuration before the rolling update starts, and the extra instances will be destroyed after the rolling update is completed.",
 									},
+									"fail_process": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Failure Handling Policy. The default value is `AUTO_PAUSE`. The values are as follows, `AUTO_PAUSE`: Pause after refresh fails; `AUTO_ROLLBACK`: Roll back after refresh fails; `AUTO_CANCEL`: Cancel after refresh fails.",
+									},
 								},
 							},
 						},
@@ -117,6 +122,10 @@ func resourceTencentCloudAsStartInstanceRefreshCreate(d *schema.ResourceData, me
 
 			if v, ok := rollingUpdateSettingsMap["max_surge"]; ok {
 				rollingUpdateSettings.MaxSurge = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := rollingUpdateSettingsMap["fail_process"]; ok {
+				rollingUpdateSettings.FailProcess = helper.String(v.(string))
 			}
 
 			refreshSettings.RollingUpdateSettings = &rollingUpdateSettings
