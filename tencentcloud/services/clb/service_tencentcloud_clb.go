@@ -1515,8 +1515,15 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 		ratelimit.Check(request.GetAction())
 		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
 		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if e.GetCode() == "FailedOperation.ResourceInOperating" {
+					return resource.RetryableError(fmt.Errorf("ModifyTargetGroupInstancesWeight is waitting retry..."))
+				}
+			}
+
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	})
 
