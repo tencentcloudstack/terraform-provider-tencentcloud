@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
+	postgresv20170312 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -2184,5 +2185,35 @@ func (me *PostgresqlService) DescribePostgresqlDedicatedClustersByFilter(ctx con
 	}
 
 	ret = response.Response.DedicatedClusterSet
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlTimeWindowById(ctx context.Context, dBInstanceId string) (ret *postgresv20170312.DescribeMaintainTimeWindowResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresv20170312.NewDescribeMaintainTimeWindowRequest()
+	response := postgresv20170312.NewDescribeMaintainTimeWindowResponse()
+	request.DBInstanceId = helper.String(dBInstanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	errRet = resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresV20170312Client().DescribeMaintainTimeWindow(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+
+	ret = response.Response
 	return
 }
