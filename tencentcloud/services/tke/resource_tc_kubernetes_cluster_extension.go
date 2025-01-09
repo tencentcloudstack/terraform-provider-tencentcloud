@@ -500,7 +500,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 	}
 
 	if _, ok := d.GetOk("auth_options"); ok {
-		request := tkeGetAuthOptions(d)
+		request := tkeGetAuthOptions(d, id)
 		if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
 			return err
 		}
@@ -1397,7 +1397,7 @@ func resourceTencentCloudKubernetesClusterUpdateOnExit(ctx context.Context) erro
 	id := d.Id()
 
 	if d.HasChange("auth_options") {
-		request := tkeGetAuthOptions(d)
+		request := tkeGetAuthOptions(d, id)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr := tkeService.ModifyClusterAuthenticationOptions(ctx, request)
 			if inErr != nil {
@@ -2275,12 +2275,12 @@ func tkeGetNodePoolGlobalConfig(d *schema.ResourceData) *tke.ModifyClusterAsGrou
 	return request
 }
 
-func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationOptionsRequest {
+func tkeGetAuthOptions(d *schema.ResourceData, clusterId string) *tke.ModifyClusterAuthenticationOptionsRequest {
 	raw, ok := d.GetOk("auth_options")
 	options := raw.([]interface{})
 
 	request := tke.NewModifyClusterAuthenticationOptionsRequest()
-	request.ClusterId = helper.String(d.Id())
+	request.ClusterId = helper.String(clusterId)
 	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
 		AutoCreateDiscoveryAnonymousAuth: helper.Bool(false),
 	}
