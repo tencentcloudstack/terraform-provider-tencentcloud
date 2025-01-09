@@ -1613,8 +1613,15 @@ func (me *OrganizationService) AssignmentTaskStatusStateRefreshFunc(zoneId, task
 	return func() (interface{}, string, error) {
 		ctx := tccommon.ContextNil
 
-		object, err := me.GetAssignmentTaskStatus(ctx, zoneId, taskId)
-
+		var object *organization.TaskStatus
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.GetAssignmentTaskStatus(ctx, zoneId, taskId)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			object = result
+			return nil
+		})
 		if err != nil {
 			return nil, "", err
 		}
