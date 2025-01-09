@@ -1,3 +1,12 @@
+## 1.81.159 (January 9 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_start_instance_refresh: support `fail_process` ([#3071](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3071))
+* resource/tencentcloud_cbs_snapshot: update code and support `tags` ([#3070](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3070))
+* resource/tencentcloud_clb_target_group_instance_attachment: update function support retry ([#3069](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3069))
+* resource/tencentcloud_kubernetes_cluster: update code ([#3066](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3066))
+
 ## 1.81.158 (January 8 , 2025)
 
 FEATURES:
