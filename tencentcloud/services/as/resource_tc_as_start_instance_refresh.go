@@ -116,7 +116,7 @@ func resourceTencentCloudAsStartInstanceRefreshCreate(d *schema.ResourceData, me
 				rollingUpdateSettings.BatchNumber = helper.IntUint64(v.(int))
 			}
 
-			if v, ok := rollingUpdateSettingsMap["batch_pause"]; ok {
+			if v, ok := rollingUpdateSettingsMap["batch_pause"]; ok && v != "" {
 				rollingUpdateSettings.BatchPause = helper.String(v.(string))
 			}
 
@@ -124,7 +124,7 @@ func resourceTencentCloudAsStartInstanceRefreshCreate(d *schema.ResourceData, me
 				rollingUpdateSettings.MaxSurge = helper.IntInt64(v.(int))
 			}
 
-			if v, ok := rollingUpdateSettingsMap["fail_process"]; ok {
+			if v, ok := rollingUpdateSettingsMap["fail_process"]; ok && v != "" {
 				rollingUpdateSettings.FailProcess = helper.String(v.(string))
 			}
 
