@@ -169,19 +169,24 @@ func resourceTencentCloudIdentityCenterRoleAssignmentCreate(d *schema.ResourceDa
 		}
 		if task.Status != nil && *task.Status == TASK_STATUS_FAILED {
 			if task.FailureReason != nil {
-				return fmt.Errorf("CreateRoleAssignment failed, failure reason:%s", *task.FailureReason)
+				return fmt.Errorf("create role assignment task failed, failure reason:%s", *task.FailureReason)
 			}
-			return fmt.Errorf("CreateRoleAssignment failed")
+			return fmt.Errorf("create role assignment task failed")
 		}
 
 		if task.TaskId == nil {
-			return fmt.Errorf("task id is nil")
+			return fmt.Errorf("create role assignment task id is nil")
 		}
 		taskId := *task.TaskId
 		roleConfigurationId := *task.RoleConfigurationId
 		conf := tccommon.BuildStateChangeConf([]string{}, []string{TASK_STATUS_SUCCESS, TASK_STATUS_FAILED}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, taskId, []string{}))
-		if _, e := conf.WaitForState(); e != nil {
+		if object, e := conf.WaitForState(); e != nil {
 			return e
+		} else {
+			taskStatus := object.(*organization.TaskStatus)
+			if taskStatus.Status != nil && *taskStatus.Status == TASK_STATUS_FAILED {
+				return fmt.Errorf("create role assignment task failed")
+			}
 		}
 
 		targetUinString := strconv.FormatInt(targetUin, 10)
@@ -322,14 +327,20 @@ func resourceTencentCloudIdentityCenterRoleAssignmentDelete(d *schema.ResourceDa
 	task := deleteRoleAssignmentResponse.Response.Task
 	if task.Status != nil && *task.Status == TASK_STATUS_FAILED {
 		if task.FailureReason != nil {
-			return fmt.Errorf("DeleteRoleAssignment failed, failure reason:%s", *task.FailureReason)
+			return fmt.Errorf("delete role assignment failed, failure reason:%s", *task.FailureReason)
 		}
-		return fmt.Errorf("DeleteRoleAssignment failed")
+		return fmt.Errorf("delete role assignment failed")
 	}
-	if task.TaskId != nil {
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{"Success"}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, *task.TaskId, []string{}))
-		if _, e := conf.WaitForState(); e != nil {
-			return e
+	if task.TaskId == nil {
+		return fmt.Errorf("delete role assignment task id is nil")
+	}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{TASK_STATUS_SUCCESS, TASK_STATUS_FAILED}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, *task.TaskId, []string{}))
+	if object, e := conf.WaitForState(); e != nil {
+		return e
+	} else {
+		taskStatus := object.(*organization.TaskStatus)
+		if taskStatus.Status != nil && *taskStatus.Status == TASK_STATUS_FAILED {
+			return fmt.Errorf("delete role assignment failed")
 		}
 	}
 
@@ -352,10 +363,28 @@ func resourceTencentCloudIdentityCenterRoleAssignmentDelete(d *schema.ResourceDa
 		return err
 	}
 
-	if dismantleRoleConfigurationResponse.Response != nil && dismantleRoleConfigurationResponse.Response.Task != nil && dismantleRoleConfigurationResponse.Response.Task.TaskId != nil {
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{TASK_STATUS_SUCCESS, TASK_STATUS_FAILED}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, *dismantleRoleConfigurationResponse.Response.Task.TaskId, []string{}))
-		if _, e := conf.WaitForState(); e != nil {
-			return e
+	if dismantleRoleConfigurationResponse == nil || dismantleRoleConfigurationResponse.Response == nil {
+		return fmt.Errorf("dismantle role assignment response is nil")
+	}
+	if dismantleRoleConfigurationResponse.Response.Task == nil {
+		return fmt.Errorf("dismantle role assignment task is nil")
+	}
+	dismantleTask := dismantleRoleConfigurationResponse.Response.Task
+
+	if dismantleTask.TaskStatus != nil && *dismantleTask.TaskStatus == TASK_STATUS_FAILED {
+		return fmt.Errorf("dismantle role assignment task failed")
+	}
+
+	if dismantleTask.TaskId == nil {
+		return fmt.Errorf("dismantle role assignment task id is nil")
+	}
+	conf = tccommon.BuildStateChangeConf([]string{}, []string{TASK_STATUS_SUCCESS, TASK_STATUS_FAILED}, 2*tccommon.ReadRetryTimeout, time.Second, service.AssignmentTaskStatusStateRefreshFunc(zoneId, *dismantleTask.TaskId, []string{}))
+	if object, e := conf.WaitForState(); e != nil {
+		return e
+	} else {
+		taskStatus := object.(*organization.TaskStatus)
+		if taskStatus.Status != nil && *taskStatus.Status == TASK_STATUS_FAILED {
+			return fmt.Errorf("dismantle role assignment task failed")
 		}
 	}
 
