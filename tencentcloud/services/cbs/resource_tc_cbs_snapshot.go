@@ -41,7 +41,6 @@ func ResourceTencentCloudCbsSnapshot() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Deprecated:  "cbs snapshot do not support tag now.",
 				Description: "The available tags within this CBS Snapshot.",
 			},
 			"storage_size": {
@@ -81,20 +80,12 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 
 	storageId := d.Get("storage_id").(string)
 	snapshotName := d.Get("snapshot_name").(string)
-
-	var tags map[string]string
-
-	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
-		tags = temp
-	}
-	cbsService := CbsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	cbsService := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	snapshotId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		var e error
-		snapshotId, e = cbsService.CreateSnapshot(ctx, storageId, snapshotName, tags)
+		snapshotId, e = cbsService.CreateSnapshot(ctx, storageId, snapshotName)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -104,15 +95,6 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		log.Printf("[CRITAL]%s create cbs snapshot failed, reason:%s\n ", logId, err.Error())
 		return err
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(tcClient)
-		resourceName := tccommon.BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 
 	err = resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -134,6 +116,15 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		log.Printf("[CRITAL]%s create cbs snapshot failed, reason:%s\n ", logId, err.Error())
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		resourceName := tccommon.BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudCbsSnapshotRead(d, meta)

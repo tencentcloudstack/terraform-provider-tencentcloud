@@ -14,9 +14,12 @@ Provides a resource to create a CBS snapshot.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cbs_snapshot" "snapshot" {
-  snapshot_name = "unnamed"
-  storage_id    = "disk-kdt0sq6m"
+resource "tencentcloud_cbs_snapshot" "example" {
+  snapshot_name = "tf-example"
+  storage_id    = "disk-alc1r5sw"
+  tags = {
+    createBy = "Terraform"
+  }
 }
 ```
 
@@ -26,7 +29,7 @@ The following arguments are supported:
 
 * `snapshot_name` - (Required, String) Name of the snapshot.
 * `storage_id` - (Required, String, ForceNew) ID of the the CBS which this snapshot created from.
-* `tags` - (Optional, Map, **Deprecated**) cbs snapshot do not support tag now. The available tags within this CBS Snapshot.
+* `tags` - (Optional, Map) The available tags within this CBS Snapshot.
 
 ## Attributes Reference
 
@@ -45,6 +48,6 @@ In addition to all arguments above, the following attributes are exported:
 CBS snapshot can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cbs_snapshot.snapshot snap-3sa3f39b
+$ terraform import tencentcloud_cbs_snapshot.example snap-3sa3f39b
 ```
 
