@@ -23,6 +23,7 @@ resource "tencentcloud_as_start_instance_refresh" "example" {
       batch_number = 1
       batch_pause  = "AUTOMATIC"
       max_surge    = 1
+      fail_process = "AUTO_PAUSE"
     }
   }
 
@@ -49,6 +50,7 @@ The `rolling_update_settings` object of `refresh_settings` supports the followin
 
 * `batch_number` - (Required, Int) Batch quantity. The batch quantity should be a positive integer greater than 0, but cannot exceed the total number of instances pending refresh.
 * `batch_pause` - (Optional, String) Pause policy between batches. Default value: Automatic. Valid values: <br><li>FIRST_BATCH_PAUSE: Pause after the first batch update completes.</li> <li>BATCH_INTERVAL_PAUSE: Pause between each batch update.</li> <li>AUTOMATIC: No pauses.
+* `fail_process` - (Optional, String) Failure Handling Policy. The default value is `AUTO_PAUSE`. The values are as follows, `AUTO_PAUSE`: Pause after refresh fails; `AUTO_ROLLBACK`: Roll back after refresh fails; `AUTO_CANCEL`: Cancel after refresh fails.
 * `max_surge` - (Optional, Int) Maximum Extra Quantity. After setting this parameter, a batch of pay-as-you-go extra instances will be created according to the launch configuration before the rolling update starts, and the extra instances will be destroyed after the rolling update is completed.
 
 ## Attributes Reference
