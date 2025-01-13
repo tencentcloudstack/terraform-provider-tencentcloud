@@ -987,7 +987,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			disks, err := cbsService.DescribeDiskList(ctx, []*string{instance.SystemDisk.DiskId})
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			for i := range disks {
@@ -1045,7 +1045,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			disks, err := cbsService.DescribeDiskList(ctx, dataDiskIds)
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			if v, ok := d.GetOk("data_disks"); ok {
@@ -1092,7 +1092,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			disks, err := cbsService.DescribeDiskList(ctx, diskIds)
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			for i := range disks {
@@ -1174,7 +1174,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				disks, err := cbsService.DescribeDiskList(ctx, finalDiskIds)
 				if err != nil {
-					return resource.NonRetryableError(err)
+					return tccommon.RetryError(err)
 				}
 
 				for _, disk := range disks {
@@ -1251,7 +1251,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			cbsDisks, err = cbsService.DescribeDiskList(ctx, diskIds)
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			for i := range cbsDisks {
