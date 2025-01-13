@@ -752,6 +752,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
 	}
 
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
+
 	instanceId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check("create")
@@ -764,7 +767,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				return resource.RetryableError(fmt.Errorf("cvm create error: %s, retrying", e.Error()))
 			}
 
-			return resource.NonRetryableError(err)
+			return tccommon.RetryError(err)
 		}
 
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -1790,7 +1793,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			instance, err := cvmService.DescribeInstanceById(ctx, instanceId)
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			if instance != nil && instance.LatestOperationState != nil {
