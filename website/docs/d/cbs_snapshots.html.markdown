@@ -23,7 +23,8 @@ data "tencentcloud_cbs_snapshots" "snapshots" {}
 
 ```hcl
 data "tencentcloud_cbs_snapshots" "snapshots" {
-  snapshot_id = "snap-hibh08s3"
+  snapshot_id        = "snap-hibh08s3"
+  result_output_file = "my_snapshots"
 }
 
 data "tencentcloud_cbs_snapshots" "snapshots" {
