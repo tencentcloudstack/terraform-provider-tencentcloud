@@ -51,7 +51,6 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				Computed:      true,
-				ForceNew:      true,
 				ConflictsWith: []string{"domain"},
 				ExactlyOneOf:  []string{"domain", "domains"},
 				Elem:          &schema.Schema{Type: schema.TypeString},
@@ -731,6 +730,24 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		domainChanged = true
 		domainRequest.Domain = helper.String(old.(string))
 		domainRequest.NewDomain = helper.String(new.(string))
+	} else if d.HasChange("domains") {
+		old, new := d.GetChange("domains")
+		domainChanged = true
+		oldDomains := old.(*schema.Set).List()
+		newDomains := new.(*schema.Set).List()
+
+		if len(oldDomains) < 1 || len(newDomains) < 1 {
+			return fmt.Errorf("Params `domains` cant not be empty.")
+		}
+
+		domainRequest.Domain = helper.String(oldDomains[0].(string))
+		tmpDomains := make([]*string, 0, len(newDomains))
+		for _, value := range newDomains {
+			domain := value.(string)
+			tmpDomains = append(tmpDomains, &domain)
+		}
+
+		domainRequest.NewDomains = tmpDomains
 	} else {
 		domainRequest.Domain = helper.String(d.Get("domain").(string))
 	}
@@ -778,7 +795,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+					logId, domainRequest.GetAction(), domainRequest.ToJsonString(), response.ToJsonString())
 				if response == nil || response.Response == nil || response.Response.RequestId == nil {
 					return resource.NonRetryableError(fmt.Errorf("Modify domain attributes failed, Response is nil."))
 				}
