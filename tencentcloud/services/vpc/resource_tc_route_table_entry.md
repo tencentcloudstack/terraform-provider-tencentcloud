@@ -13,6 +13,12 @@ resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
 }
 
+# create route table
+resource "tencentcloud_route_table" "example" {
+  vpc_id = tencentcloud_vpc.vpc.id
+  name   = "tf-example"
+}
+
 # create subnet
 resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
@@ -22,19 +28,13 @@ resource "tencentcloud_subnet" "subnet" {
   route_table_id    = tencentcloud_route_table.example.id
 }
 
-# create route table
-resource "tencentcloud_route_table" "example" {
-  vpc_id = tencentcloud_vpc.vpc.id
-  name   = "tf-example"
-}
-
 # create route table entry
 resource "tencentcloud_route_table_entry" "example" {
   route_table_id         = tencentcloud_route_table.example.id
-  destination_cidr_block = "10.4.4.0/24"
+  destination_cidr_block = "10.12.12.0/24"
   next_type              = "EIP"
   next_hub               = "0"
-  description            = "describe"
+  description            = "Terraform test."
 }
 
 # output

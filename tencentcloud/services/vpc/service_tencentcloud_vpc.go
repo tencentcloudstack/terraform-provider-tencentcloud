@@ -1144,6 +1144,7 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewCreateRoutesRequest()
+	response := vpc.NewCreateRoutesResponse()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -1155,6 +1156,7 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 		errRet = fmt.Errorf("CreateRoutes can not invoke by empty routeTableId.")
 		return
 	}
+
 	request.RouteTableId = &routeTableId
 	var route vpc.Route
 	route.DestinationCidrBlock = &destinationCidrBlock
@@ -1163,22 +1165,23 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 	route.GatewayId = &nextHub
 	route.Enabled = &enabled
 	request.Routes = []*vpc.Route{&route}
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().CreateRoutes(request)
-	errRet = err
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	} else {
-		return
-	}
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().CreateRoutes(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	if response == nil {
-		return
-	}
+		if result == nil || result.Response == nil || result.Response.RouteTableSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("CreateRoutes failed, Response is nil."))
+		}
 
-	if *response.Response.TotalCount != 1 {
-		errRet = fmt.Errorf("CreateRoutes return %d routeTable. but we only request 1.\n", *response.Response.TotalCount)
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
 		return
 	}
 
@@ -1187,7 +1190,7 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 		return
 	}
 
-	if len(response.Response.RouteTableSet[0].RouteSet) != 1 {
+	if response.Response.RouteTableSet[0].RouteSet != nil && len(response.Response.RouteTableSet[0].RouteSet) != 1 {
 		errRet = fmt.Errorf("CreateRoutes return %d routeTableSet info. but we only create 1.\n", len(response.Response.RouteTableSet[0].RouteSet))
 		return
 	}
@@ -1220,16 +1223,21 @@ func (me *VpcService) EnableRoutes(ctx context.Context, request *vpc.EnableRoute
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().EnableRoutes(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVpcClient().EnableRoutes(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -1242,16 +1250,21 @@ func (me *VpcService) DisableRoutes(ctx context.Context, request *vpc.DisableRou
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DisableRoutes(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVpcClient().DisableRoutes(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
