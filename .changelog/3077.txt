@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_route_table_entry: `next_type` support new type
+```
