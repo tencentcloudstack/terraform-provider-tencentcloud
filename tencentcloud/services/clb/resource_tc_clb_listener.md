@@ -37,6 +37,7 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
 ```
 
 TCP/UDP Listener with tcp health check
+
 ```hcl
 resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
@@ -56,6 +57,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 ```
 
 TCP/UDP Listener with http health check
+
 ```hcl
 resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
@@ -79,6 +81,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 ```
 
 TCP/UDP Listener with customer health check
+
 ```hcl
 resource "tencentcloud_clb_listener" "listener_tcp"{
   clb_id                     = tencentcloud_clb_instance.clb_basic.id

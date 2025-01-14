@@ -249,6 +249,12 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Enable H2C switch for intranet HTTP listener.",
 			},
+			"snat_enable": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "Whether to enable SNAT.",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -361,6 +367,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		request.H2cSwitch = helper.Bool(v.(bool))
 	}
 
+	if v, ok := d.GetOkExists("snat_enable"); ok {
+		request.SnatEnable = helper.Bool(v.(bool))
+	}
+
 	var response *clb.CreateListenerResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().CreateListener(request)
@@ -369,12 +379,18 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result == nil || result.Response == nil || result.Response.RequestId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Create CLB listener failed, Response si nil."))
+			}
+
 			requestId := *result.Response.RequestId
 			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 			if retryErr != nil {
 				return resource.NonRetryableError(errors.WithStack(retryErr))
 			}
 		}
+
 		response = result
 		return nil
 	})
@@ -382,7 +398,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s create CLB listener failed, reason:%+v", logId, err)
 		return err
 	}
-	if len(response.Response.ListenerIds) < 1 {
+	if response.Response.ListenerIds == nil || len(response.Response.ListenerIds) < 1 {
 		return fmt.Errorf("[CHECK][CLB listener][Create] check: Response error, listener id is null")
 	}
 	listenerId := *response.Response.ListenerIds[0]
@@ -529,26 +545,21 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("end_port", instance.EndPort)
 	}
 
-	var clbIns *clb.LoadBalancer
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := clbService.DescribeLoadBalancerById(ctx, clbId)
-		if e != nil {
-			return tccommon.RetryError(e)
+	if instance.AttrFlags != nil && len(instance.AttrFlags) > 0 {
+		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "H2cSwitch") {
+			_ = d.Set("h2c_switch", true)
+		} else {
+			_ = d.Set("h2c_switch", false)
 		}
 
-		clbIns = result
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s read CLB instance failed, reason:%+v", logId, err)
-		return err
-	}
-
-	if clbIns.AttributeFlags != nil && len(clbIns.AttributeFlags) != 0 {
-		_ = d.Set("h2c_switch", true)
+		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "SnatEnable") {
+			_ = d.Set("snat_enable", true)
+		} else {
+			_ = d.Set("snat_enable", false)
+		}
 	} else {
 		_ = d.Set("h2c_switch", false)
+		_ = d.Set("snat_enable", false)
 	}
 
 	return nil
@@ -644,6 +655,13 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		request.KeepaliveEnable = helper.IntInt64(keepaliveEnable)
 	}
 
+	if d.HasChange("snat_enable") {
+		changed = true
+		if v, ok := d.GetOkExists("snat_enable"); ok {
+			request.SnatEnable = helper.Bool(v.(bool))
+		}
+	}
+
 	if changed {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyListener(request)
@@ -652,6 +670,11 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+				if response == nil || response.Response == nil || response.Response.RequestId == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify CLB listener failed, Response si nil."))
+				}
+
 				requestId := *response.Response.RequestId
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {
