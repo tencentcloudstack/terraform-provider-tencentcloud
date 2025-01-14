@@ -1441,3 +1441,36 @@ func (me *ClsService) DescribeClsNoticeContentById(ctx context.Context, noticeCo
 	ret = response.Response.NoticeContents[0]
 	return
 }
+
+func (me *ClsService) DescribeClsWebCallbackById(ctx context.Context, webCallbackId string) (ret *cls.WebCallbackInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeWebCallbacksRequest()
+	filter := &cls.Filter{
+		Key:    helper.String("webCallbackId"),
+		Values: []*string{helper.String(webCallbackId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsV20201016Client().DescribeWebCallbacks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.WebCallbacks) < 1 {
+		return
+	}
+
+	ret = response.Response.WebCallbacks[0]
+	return
+}
