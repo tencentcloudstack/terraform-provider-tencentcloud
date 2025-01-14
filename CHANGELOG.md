@@ -1,3 +1,20 @@
+## 1.81.160 (January 14 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cls_web_callback` ([#3068](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3068))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_cbs_snapshots: update code ([#3078](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3078))
+* resource/tencentcloud_clb_listener: support `snat_enable` ([#3076](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3076))
+* resource/tencentcloud_clb_listener_rule: params `domains` support modify ([#3079](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3079))
+* resource/tencentcloud_cls_logset: update code ([#3074](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3074))
+* resource/tencentcloud_identity_center_role_assignment: process failed task status ([#3064](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3064))
+* resource/tencentcloud_instance: create support idempotent ([#3075](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3075))
+* resource/tencentcloud_instance: retry reading cbs ([#3072](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3072))
+* resource/tencentcloud_route_table_entry: `next_type` support new type ([#3077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3077))
+
 ## 1.81.159 (January 9 , 2025)
 
 ENHANCEMENTS:
