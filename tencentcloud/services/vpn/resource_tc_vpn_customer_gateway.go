@@ -50,8 +50,7 @@ func ResourceTencentCloudVpnCustomerGateway() *schema.Resource {
 			"bgp_asn": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Computed:    true,
-				Description: "BGP ASN. Value range: 1 - 4294967295. Using BGP requires configuring ASN.",
+				Description: "BGP ASN. Value range: 1 - 4294967295. Using BGP requires configuring ASN. 139341, 45090, and 58835 are not available.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -214,7 +213,7 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 		_ = d.Set("public_ip_address", gateway.IpAddress)
 	}
 
-	if gateway.BgpAsn != nil {
+	if gateway.BgpAsn != nil && *gateway.BgpAsn != 0 {
 		_ = d.Set("bgp_asn", gateway.BgpAsn)
 	}
 
@@ -321,6 +320,10 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 				logId, tRequest.GetAction(), tRequest.ToJsonString(), e.Error())
 			return tccommon.RetryError(e)
 		} else {
+			if result == nil || result.Response == nil || result.Response.VpnConnectionSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Read VPN connections failed, Response is nil."))
+			}
+
 			if len(result.Response.VpnConnectionSet) == 0 {
 				return nil
 			} else {
@@ -368,6 +371,10 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 				return tccommon.RetryError(e)
 			}
 		} else {
+			if result == nil || result.Response == nil || result.Response.CustomerGatewaySet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Read VPN customer gateways failed, Response is nil."))
+			}
+
 			//if not, quit
 			if len(result.Response.CustomerGatewaySet) == 0 {
 				return nil
