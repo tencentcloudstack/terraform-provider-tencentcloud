@@ -1090,6 +1090,37 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 	}
 	return
 }
+
+func checkMultiCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta interface{}) (multiCertificateSetFlag bool, multiCertPara *clb.MultiCertInfo, errRet error) {
+	multiCertificateSetFlag = false
+	var multiCertInfo clb.MultiCertInfo
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "multi_cert_info"); ok {
+		if tmp, ok := dMap["ssl_mode"].(string); ok {
+			multiCertInfo.SSLMode = helper.String(tmp)
+		}
+
+		if tmp, ok := dMap["cert_id_list"]; ok {
+			tmpList := tmp.(*schema.Set).List()
+			if len(tmpList) < 1 {
+				errRet = fmt.Errorf("`cert_id_list` cannot be empty.")
+				return
+			}
+
+			for _, item := range tmpList {
+				var certInfo clb.CertInfo
+				certInfo.CertId = helper.String(item.(string))
+				multiCertInfo.CertList = append(multiCertInfo.CertList, &certInfo)
+			}
+		}
+
+		multiCertificateSetFlag = true
+		multiCertPara = &multiCertInfo
+	}
+
+	return
+}
+
 func processRetryErrMsg(err error) *resource.RetryError {
 	if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 		for _, msg := range []string{
