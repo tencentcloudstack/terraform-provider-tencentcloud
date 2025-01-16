@@ -1,3 +1,11 @@
+## 1.81.161 (January 16 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_listener: support `multi_cert_info` ([#3081](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3081))
+* resource/tencentcloud_clb_listener_rule: update code ([#3080](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3080))
+* resource/tencentcloud_vpn_customer_gateway: support `bgp_asn` ([#3073](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3073))
+
 ## 1.81.160 (January 14 , 2025)
 
 FEATURES:
