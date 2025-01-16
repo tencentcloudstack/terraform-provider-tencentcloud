@@ -114,7 +114,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 }
 ```
 
-### HTTPS Listener
+### HTTPS Listener with sigle certificate
 
 ```hcl
 resource "tencentcloud_clb_listener" "HTTPS_listener" {
@@ -126,6 +126,26 @@ resource "tencentcloud_clb_listener" "HTTPS_listener" {
   certificate_id       = "VjANRdz8"
   certificate_ca_id    = "VfqO4zkB"
   sni_switch           = true
+}
+```
+
+### HTTPS Listener with multi certificates
+
+```hcl
+resource "tencentcloud_clb_listener" "HTTPS_listener" {
+  clb_id        = "lb-l6cp6jt4"
+  listener_name = "test_listener"
+  port          = "80"
+  protocol      = "HTTPS"
+  sni_switch    = true
+
+  multi_cert_info {
+    ssl_mode = "UNIDIRECTIONAL"
+    cert_id_list = [
+      "LCYouprI",
+      "JVO1alRN"
+    ]
+  }
 }
 ```
 
@@ -199,6 +219,7 @@ The following arguments are supported:
 * `health_check_unhealth_num` - (Optional, Int) Unhealthy threshold of health check, and the default is `3`. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is [2-10]. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `health_source_ip_type` - (Optional, Int) Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.
 * `keepalive_enable` - (Optional, Int) Whether to enable a persistent connection. This parameter is applicable only to HTTP and HTTPS listeners. Valid values: 0 (disable; default value) and 1 (enable).
+* `multi_cert_info` - (Optional, List) Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.
 * `port` - (Optional, Int, ForceNew) Port of the CLB listener.
 * `scheduler` - (Optional, String) Scheduling method of the CLB listener, and available values are 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of `HTTP` and `HTTPS` protocol additionally supports the `IP Hash` method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `session_expire_time` - (Optional, Int) Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
@@ -206,6 +227,11 @@ The following arguments are supported:
 * `snat_enable` - (Optional, Bool) Whether to enable SNAT.
 * `sni_switch` - (Optional, Bool, ForceNew) Indicates whether SNI is enabled, and only supported with protocol `HTTPS`. If enabled, you can set a certificate for each rule in `tencentcloud_clb_listener_rule`, otherwise all rules have a certificate.
 * `target_type` - (Optional, String) Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group. NOTES: TCP/UDP/TCP_SSL listener must configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
+
+The `multi_cert_info` object supports the following:
+
+* `cert_id_list` - (Required, Set) List of server certificate ID.
+* `ssl_mode` - (Required, String) Authentication type. Values: UNIDIRECTIONAL (one-way authentication), MUTUAL (two-way authentication).
 
 ## Attributes Reference
 
