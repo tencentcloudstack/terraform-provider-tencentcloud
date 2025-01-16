@@ -91,7 +91,6 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 			"health_check_port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Computed:    true,
 				Description: "Customize detection related parameters. Health check port, defaults to the port of the backend service, unless you want to specify a specific port, it is recommended to leave it blank. (Applicable only to TCP/UDP listeners).",
 			},
 			"health_check_type": {
@@ -569,7 +568,9 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
 		_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
 		_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
-		_ = d.Set("health_check_port", instance.HealthCheck.CheckPort)
+		if instance.HealthCheck.CheckPort != nil {
+			_ = d.Set("health_check_port", instance.HealthCheck.CheckPort)
+		}
 		_ = d.Set("health_check_type", instance.HealthCheck.CheckType)
 		_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
 	}
