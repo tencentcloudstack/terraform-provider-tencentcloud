@@ -66,7 +66,7 @@ func ResourceTencentCloudClbLogSet() *schema.Resource {
 }
 
 func resourceTencentCloudClbLogSetCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_clb_logset.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_clb_log_set.create")()
 	defer clbActionMu.Unlock()
 	clbActionMu.Lock()
 
@@ -130,7 +130,7 @@ func resourceTencentCloudClbLogSetCreate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_clb_logset.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_clb_log_set.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -167,7 +167,7 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudClbLogSetDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_clb_logset.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_clb_log_set.delete")()
 
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
