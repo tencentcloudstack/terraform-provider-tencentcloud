@@ -15,5 +15,5 @@ Import
 CLB log set can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_logset.example 4eb9e3a8-9c42-4b32-9ddf-e215e9c92764
+$ terraform import tencentcloud_clb_logset.example.example 4eb9e3a8-9c42-4b32-9ddf-e215e9c92764
 ```
