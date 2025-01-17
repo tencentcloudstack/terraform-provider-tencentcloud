@@ -76,8 +76,8 @@ The following arguments are supported:
 * `clb_id` - (Required, String) ID of CLB instance.
 * `listener_id` - (Required, String, ForceNew) ID of CLB listener.
 * `url` - (Required, String) Url of the listener rule.
-* `certificate_ca_id` - (Optional, String, ForceNew) ID of the client certificate. NOTES: Only supports listeners of HTTPS protocol.
-* `certificate_id` - (Optional, String, ForceNew) ID of the server certificate. NOTES: Only supports listeners of HTTPS protocol.
+* `certificate_ca_id` - (Optional, String) ID of the client certificate. NOTES: Only supports listeners of HTTPS protocol.
+* `certificate_id` - (Optional, String) ID of the server certificate. NOTES: Only supports listeners of HTTPS protocol.
 * `certificate_ssl_mode` - (Optional, String, ForceNew) Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of HTTPS protocol.
 * `domain` - (Optional, String) Domain name of the listener rule. Single domain rules are passed to `domain`, and multi domain rules are passed to `domains`.
 * `domains` - (Optional, Set: [`String`]) Domain name list of the listener rule. Single domain rules are passed to `domain`, and multi domain rules are passed to `domains`.
@@ -94,7 +94,7 @@ The following arguments are supported:
 * `health_check_type` - (Optional, String) Type of health check. Valid value is `CUSTOM`, `PING`, `TCP`, `HTTP`, `HTTPS`, `GRPC`, `GRPCS`.
 * `health_check_unhealth_num` - (Optional, Int) Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `http2_switch` - (Optional, Bool) Indicate to apply HTTP2.0 protocol or not.
-* `multi_cert_info` - (Optional, List, ForceNew) Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.
+* `multi_cert_info` - (Optional, List) Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.
 * `oauth` - (Optional, List) OAuth configuration information.
 * `quic` - (Optional, Bool) Whether to enable QUIC. Note: QUIC can be enabled only for HTTPS domain names.
 * `scheduler` - (Optional, String) Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is `WRR`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
@@ -103,7 +103,7 @@ The following arguments are supported:
 
 The `multi_cert_info` object supports the following:
 
-* `cert_id_list` - (Required, Set, ForceNew) List of server certificate ID.
+* `cert_id_list` - (Required, Set) List of server certificate ID.
 * `ssl_mode` - (Required, String, ForceNew) Authentication type. Values: UNIDIRECTIONAL (one-way authentication), MUTUAL (two-way authentication).
 
 The `oauth` object supports the following:

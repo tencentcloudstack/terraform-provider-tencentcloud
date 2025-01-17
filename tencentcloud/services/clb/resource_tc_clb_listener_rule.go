@@ -144,21 +144,18 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 			"certificate_id": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ForceNew:      true,
 				ConflictsWith: []string{"multi_cert_info"},
 				Description:   "ID of the server certificate. NOTES: Only supports listeners of HTTPS protocol.",
 			},
 			"certificate_ca_id": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ForceNew:      true,
 				ConflictsWith: []string{"multi_cert_info"},
 				Description:   "ID of the client certificate. NOTES: Only supports listeners of HTTPS protocol.",
 			},
 			"multi_cert_info": {
 				Type:          schema.TypeList,
 				Optional:      true,
-				ForceNew:      true,
 				MaxItems:      1,
 				ConflictsWith: []string{"certificate_ssl_mode", "certificate_id", "certificate_ca_id"},
 				Description:   "Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.",
@@ -174,7 +171,6 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 						"cert_id_list": {
 							Type:        schema.TypeSet,
 							Required:    true,
-							ForceNew:    true,
 							Description: "List of server certificate ID.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
@@ -372,7 +368,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		rule.MultiCertInfo = multiCertInput
 	} else {
 		if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS")
 		}
 	}
 
@@ -831,6 +827,22 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 				return fmt.Errorf("[CHECK][CLB listener rule][Create] check: certificate para can only be set with rule of linstener with protocol 'HTTPS'")
 			}
 			domainRequest.Certificate = certificateInput
+		}
+	}
+
+	if d.HasChange("multi_cert_info") {
+		domainChanged = true
+		multiCertificateSetFlag, multiCertInput, certErr := checkMultiCertificateInputPara(ctx, d, meta)
+		if certErr != nil {
+			return certErr
+		}
+
+		if multiCertificateSetFlag {
+			domainRequest.MultiCertInfo = multiCertInput
+		} else {
+			if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+				return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS")
+			}
 		}
 	}
 
