@@ -1449,7 +1449,7 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 		}
 
 		reqBytes, _ := json.Marshal(request)
-		respBytes, _ := json.Marshal(response)
+		respBytes, _ := json.Marshal(response.Response.Body)
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "put bucket website", string(reqBytes), string(respBytes))
 	}
 
