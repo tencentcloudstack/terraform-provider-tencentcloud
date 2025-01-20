@@ -15,9 +15,9 @@
 package v20180317
 
 import (
-	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 // Predefined struct for user
@@ -28,14 +28,14 @@ type AssociateTargetGroupsRequestParams struct {
 
 type AssociateTargetGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 绑定的关系数组。一次请求最多支持20个。
 	Associations []*TargetGroupAssociation `json:"Associations,omitnil,omitempty" name:"Associations"`
 }
 
 func (r *AssociateTargetGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -64,8 +64,8 @@ type AssociateTargetGroupsResponse struct {
 }
 
 func (r *AssociateTargetGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -126,7 +126,7 @@ type AutoRewriteRequestParams struct {
 
 type AutoRewriteRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -144,8 +144,8 @@ type AutoRewriteRequest struct {
 }
 
 func (r *AutoRewriteRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -178,8 +178,8 @@ type AutoRewriteResponse struct {
 }
 
 func (r *AutoRewriteResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -245,7 +245,7 @@ type BatchDeregisterTargetsRequestParams struct {
 
 type BatchDeregisterTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -254,8 +254,8 @@ type BatchDeregisterTargetsRequest struct {
 }
 
 func (r *BatchDeregisterTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -288,8 +288,8 @@ type BatchDeregisterTargetsResponse struct {
 }
 
 func (r *BatchDeregisterTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -309,7 +309,7 @@ type BatchModifyTargetTagRequestParams struct {
 
 type BatchModifyTargetTagRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -318,8 +318,8 @@ type BatchModifyTargetTagRequest struct {
 }
 
 func (r *BatchModifyTargetTagRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -349,8 +349,8 @@ type BatchModifyTargetTagResponse struct {
 }
 
 func (r *BatchModifyTargetTagResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -370,7 +370,7 @@ type BatchModifyTargetWeightRequestParams struct {
 
 type BatchModifyTargetWeightRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -379,8 +379,8 @@ type BatchModifyTargetWeightRequest struct {
 }
 
 func (r *BatchModifyTargetWeightRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -410,8 +410,8 @@ type BatchModifyTargetWeightResponse struct {
 }
 
 func (r *BatchModifyTargetWeightResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -431,7 +431,7 @@ type BatchRegisterTargetsRequestParams struct {
 
 type BatchRegisterTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -440,8 +440,8 @@ type BatchRegisterTargetsRequest struct {
 }
 
 func (r *BatchRegisterTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -477,8 +477,8 @@ type BatchRegisterTargetsResponse struct {
 }
 
 func (r *BatchRegisterTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -807,7 +807,7 @@ type CloneLoadBalancerRequestParams struct {
 
 type CloneLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -870,8 +870,8 @@ type CloneLoadBalancerRequest struct {
 }
 
 func (r *CloneLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -918,8 +918,8 @@ type CloneLoadBalancerResponse struct {
 }
 
 func (r *CloneLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1111,7 +1111,7 @@ type CreateClsLogSetRequestParams struct {
 
 type CreateClsLogSetRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志集的名字，不能和cls其他日志集重名。不填默认为clb_logset。
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
@@ -1123,8 +1123,8 @@ type CreateClsLogSetRequest struct {
 }
 
 func (r *CreateClsLogSetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1158,8 +1158,8 @@ type CreateClsLogSetResponse struct {
 }
 
 func (r *CreateClsLogSetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1240,7 +1240,7 @@ type CreateListenerRequestParams struct {
 
 type CreateListenerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -1310,8 +1310,8 @@ type CreateListenerRequest struct {
 }
 
 func (r *CreateListenerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1364,8 +1364,8 @@ type CreateListenerResponse struct {
 }
 
 func (r *CreateListenerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1475,7 +1475,7 @@ type CreateLoadBalancerRequestParams struct {
 
 type CreateLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例的网络类型：
 	// OPEN：公网属性， INTERNAL：内网属性。
 	LoadBalancerType *string `json:"LoadBalancerType,omitnil,omitempty" name:"LoadBalancerType"`
@@ -1574,8 +1574,8 @@ type CreateLoadBalancerRequest struct {
 }
 
 func (r *CreateLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1642,8 +1642,8 @@ type CreateLoadBalancerResponse struct {
 }
 
 func (r *CreateLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1666,7 +1666,7 @@ type CreateLoadBalancerSnatIpsRequestParams struct {
 
 type CreateLoadBalancerSnatIpsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡唯一性ID，例如：lb-12345678。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -1678,8 +1678,8 @@ type CreateLoadBalancerSnatIpsRequest struct {
 }
 
 func (r *CreateLoadBalancerSnatIpsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1710,8 +1710,8 @@ type CreateLoadBalancerSnatIpsResponse struct {
 }
 
 func (r *CreateLoadBalancerSnatIpsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1734,7 +1734,7 @@ type CreateRuleRequestParams struct {
 
 type CreateRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -1746,8 +1746,8 @@ type CreateRuleRequest struct {
 }
 
 func (r *CreateRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1781,8 +1781,8 @@ type CreateRuleResponse struct {
 }
 
 func (r *CreateRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1808,7 +1808,7 @@ type CreateTargetGroupRequestParams struct {
 
 type CreateTargetGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组名称，限定50个字符
 	TargetGroupName *string `json:"TargetGroupName,omitnil,omitempty" name:"TargetGroupName"`
 
@@ -1823,8 +1823,8 @@ type CreateTargetGroupRequest struct {
 }
 
 func (r *CreateTargetGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1859,8 +1859,8 @@ type CreateTargetGroupResponse struct {
 }
 
 func (r *CreateTargetGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1889,7 +1889,7 @@ type CreateTopicRequestParams struct {
 
 type CreateTopicRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题的名称。
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
@@ -1907,8 +1907,8 @@ type CreateTopicRequest struct {
 }
 
 func (r *CreateTopicRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1944,8 +1944,8 @@ type CreateTopicResponse struct {
 }
 
 func (r *CreateTopicResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1993,7 +1993,7 @@ type DeleteListenerRequestParams struct {
 
 type DeleteListenerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2002,8 +2002,8 @@ type DeleteListenerRequest struct {
 }
 
 func (r *DeleteListenerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2033,8 +2033,8 @@ type DeleteListenerResponse struct {
 }
 
 func (r *DeleteListenerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2054,7 +2054,7 @@ type DeleteLoadBalancerListenersRequestParams struct {
 
 type DeleteLoadBalancerListenersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2063,8 +2063,8 @@ type DeleteLoadBalancerListenersRequest struct {
 }
 
 func (r *DeleteLoadBalancerListenersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2094,8 +2094,8 @@ type DeleteLoadBalancerListenersResponse struct {
 }
 
 func (r *DeleteLoadBalancerListenersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2112,14 +2112,14 @@ type DeleteLoadBalancerRequestParams struct {
 
 type DeleteLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要删除的负载均衡实例 ID数组，数组大小最大支持20。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 }
 
 func (r *DeleteLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2148,8 +2148,8 @@ type DeleteLoadBalancerResponse struct {
 }
 
 func (r *DeleteLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2169,7 +2169,7 @@ type DeleteLoadBalancerSnatIpsRequestParams struct {
 
 type DeleteLoadBalancerSnatIpsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡唯一ID，例如：lb-12345678。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2178,8 +2178,8 @@ type DeleteLoadBalancerSnatIpsRequest struct {
 }
 
 func (r *DeleteLoadBalancerSnatIpsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2209,8 +2209,8 @@ type DeleteLoadBalancerSnatIpsResponse struct {
 }
 
 func (r *DeleteLoadBalancerSnatIpsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2236,7 +2236,7 @@ type DeleteRewriteRequestParams struct {
 
 type DeleteRewriteRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2251,8 +2251,8 @@ type DeleteRewriteRequest struct {
 }
 
 func (r *DeleteRewriteRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2284,8 +2284,8 @@ type DeleteRewriteResponse struct {
 }
 
 func (r *DeleteRewriteResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2317,7 +2317,7 @@ type DeleteRuleRequestParams struct {
 
 type DeleteRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2338,8 +2338,8 @@ type DeleteRuleRequest struct {
 }
 
 func (r *DeleteRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2373,8 +2373,8 @@ type DeleteRuleResponse struct {
 }
 
 func (r *DeleteRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2391,14 +2391,14 @@ type DeleteTargetGroupsRequestParams struct {
 
 type DeleteTargetGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组的ID数组。
 	TargetGroupIds []*string `json:"TargetGroupIds,omitnil,omitempty" name:"TargetGroupIds"`
 }
 
 func (r *DeleteTargetGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2427,8 +2427,8 @@ type DeleteTargetGroupsResponse struct {
 }
 
 func (r *DeleteTargetGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2460,7 +2460,7 @@ type DeregisterFunctionTargetsRequestParams struct {
 
 type DeregisterFunctionTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2481,8 +2481,8 @@ type DeregisterFunctionTargetsRequest struct {
 }
 
 func (r *DeregisterFunctionTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2516,8 +2516,8 @@ type DeregisterFunctionTargetsResponse struct {
 }
 
 func (r *DeregisterFunctionTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2537,7 +2537,7 @@ type DeregisterTargetGroupInstancesRequestParams struct {
 
 type DeregisterTargetGroupInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组ID。
 	TargetGroupId *string `json:"TargetGroupId,omitnil,omitempty" name:"TargetGroupId"`
 
@@ -2546,8 +2546,8 @@ type DeregisterTargetGroupInstancesRequest struct {
 }
 
 func (r *DeregisterTargetGroupInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2577,8 +2577,8 @@ type DeregisterTargetGroupInstancesResponse struct {
 }
 
 func (r *DeregisterTargetGroupInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2598,7 +2598,7 @@ type DeregisterTargetsFromClassicalLBRequestParams struct {
 
 type DeregisterTargetsFromClassicalLBRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2607,8 +2607,8 @@ type DeregisterTargetsFromClassicalLBRequest struct {
 }
 
 func (r *DeregisterTargetsFromClassicalLBRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2638,8 +2638,8 @@ type DeregisterTargetsFromClassicalLBResponse struct {
 }
 
 func (r *DeregisterTargetsFromClassicalLBResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2671,7 +2671,7 @@ type DeregisterTargetsRequestParams struct {
 
 type DeregisterTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID，格式如 lb-12345678。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2692,8 +2692,8 @@ type DeregisterTargetsRequest struct {
 }
 
 func (r *DeregisterTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2727,8 +2727,8 @@ type DeregisterTargetsResponse struct {
 }
 
 func (r *DeregisterTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2751,7 +2751,7 @@ type DescribeBlockIPListRequestParams struct {
 
 type DescribeBlockIPListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2763,8 +2763,8 @@ type DescribeBlockIPListRequest struct {
 }
 
 func (r *DescribeBlockIPListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2804,8 +2804,8 @@ type DescribeBlockIPListResponse struct {
 }
 
 func (r *DescribeBlockIPListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2822,14 +2822,14 @@ type DescribeBlockIPTaskRequestParams struct {
 
 type DescribeBlockIPTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// ModifyBlockIPList 接口返回的异步任务的ID。
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 func (r *DescribeBlockIPTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2861,8 +2861,8 @@ type DescribeBlockIPTaskResponse struct {
 }
 
 func (r *DescribeBlockIPTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2879,14 +2879,14 @@ type DescribeClassicalLBByInstanceIdRequestParams struct {
 
 type DescribeClassicalLBByInstanceIdRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 后端实例ID列表。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 }
 
 func (r *DescribeClassicalLBByInstanceIdRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2918,8 +2918,8 @@ type DescribeClassicalLBByInstanceIdResponse struct {
 }
 
 func (r *DescribeClassicalLBByInstanceIdResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2939,7 +2939,7 @@ type DescribeClassicalLBHealthStatusRequestParams struct {
 
 type DescribeClassicalLBHealthStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -2948,8 +2948,8 @@ type DescribeClassicalLBHealthStatusRequest struct {
 }
 
 func (r *DescribeClassicalLBHealthStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2983,8 +2983,8 @@ type DescribeClassicalLBHealthStatusResponse struct {
 }
 
 func (r *DescribeClassicalLBHealthStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3013,7 +3013,7 @@ type DescribeClassicalLBListenersRequestParams struct {
 
 type DescribeClassicalLBListenersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -3031,8 +3031,8 @@ type DescribeClassicalLBListenersRequest struct {
 }
 
 func (r *DescribeClassicalLBListenersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3069,8 +3069,8 @@ type DescribeClassicalLBListenersResponse struct {
 }
 
 func (r *DescribeClassicalLBListenersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3087,14 +3087,14 @@ type DescribeClassicalLBTargetsRequestParams struct {
 
 type DescribeClassicalLBTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 }
 
 func (r *DescribeClassicalLBTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3127,8 +3127,8 @@ type DescribeClassicalLBTargetsResponse struct {
 }
 
 func (r *DescribeClassicalLBTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3139,15 +3139,17 @@ func (r *DescribeClassicalLBTargetsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClsLogSetRequestParams struct {
+
 }
 
 type DescribeClsLogSetRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeClsLogSetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3157,7 +3159,7 @@ func (r *DescribeClsLogSetRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClsLogSetRequest has unknown keys!", "")
 	}
@@ -3182,8 +3184,8 @@ type DescribeClsLogSetResponse struct {
 }
 
 func (r *DescribeClsLogSetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3210,7 +3212,7 @@ type DescribeClusterResourcesRequestParams struct {
 
 type DescribeClusterResourcesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 返回集群中资源列表数目，默认为20，最大值为100。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
@@ -3226,8 +3228,8 @@ type DescribeClusterResourcesRequest struct {
 }
 
 func (r *DescribeClusterResourcesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3264,8 +3266,8 @@ type DescribeClusterResourcesResponse struct {
 }
 
 func (r *DescribeClusterResourcesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3292,7 +3294,7 @@ type DescribeCrossTargetsRequestParams struct {
 
 type DescribeCrossTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 返回后端服务列表数目，默认20，最大值100。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
@@ -3308,8 +3310,8 @@ type DescribeCrossTargetsRequest struct {
 }
 
 func (r *DescribeCrossTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3346,8 +3348,8 @@ type DescribeCrossTargetsResponse struct {
 }
 
 func (r *DescribeCrossTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3373,7 +3375,7 @@ type DescribeCustomizedConfigAssociateListRequestParams struct {
 
 type DescribeCustomizedConfigAssociateListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 配置ID
 	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
 
@@ -3388,8 +3390,8 @@ type DescribeCustomizedConfigAssociateListRequest struct {
 }
 
 func (r *DescribeCustomizedConfigAssociateListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3427,8 +3429,8 @@ type DescribeCustomizedConfigAssociateListResponse struct {
 }
 
 func (r *DescribeCustomizedConfigAssociateListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3462,7 +3464,7 @@ type DescribeCustomizedConfigListRequestParams struct {
 
 type DescribeCustomizedConfigListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 配置类型:CLB 负载均衡维度。 SERVER 域名维度。 LOCATION 规则维度。
 	ConfigType *string `json:"ConfigType,omitnil,omitempty" name:"ConfigType"`
 
@@ -3485,8 +3487,8 @@ type DescribeCustomizedConfigListRequest struct {
 }
 
 func (r *DescribeCustomizedConfigListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3526,8 +3528,8 @@ type DescribeCustomizedConfigListResponse struct {
 }
 
 func (r *DescribeCustomizedConfigListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3559,7 +3561,7 @@ type DescribeExclusiveClustersRequestParams struct {
 
 type DescribeExclusiveClustersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 返回集群列表数目，默认值为20，最大值为100。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
@@ -3580,8 +3582,8 @@ type DescribeExclusiveClustersRequest struct {
 }
 
 func (r *DescribeExclusiveClustersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3618,8 +3620,8 @@ type DescribeExclusiveClustersResponse struct {
 }
 
 func (r *DescribeExclusiveClustersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3642,7 +3644,7 @@ type DescribeIdleLoadBalancersRequestParams struct {
 
 type DescribeIdleLoadBalancersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 数据偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -3654,8 +3656,8 @@ type DescribeIdleLoadBalancersRequest struct {
 }
 
 func (r *DescribeIdleLoadBalancersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3693,8 +3695,8 @@ type DescribeIdleLoadBalancersResponse struct {
 }
 
 func (r *DescribeIdleLoadBalancersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3711,14 +3713,14 @@ type DescribeLBListenersRequestParams struct {
 
 type DescribeLBListenersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要查询的内网ip列表
 	Backends []*LbRsItem `json:"Backends,omitnil,omitempty" name:"Backends"`
 }
 
 func (r *DescribeLBListenersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3750,8 +3752,8 @@ type DescribeLBListenersResponse struct {
 }
 
 func (r *DescribeLBListenersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3777,7 +3779,7 @@ type DescribeListenersRequestParams struct {
 
 type DescribeListenersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -3792,8 +3794,8 @@ type DescribeListenersRequest struct {
 }
 
 func (r *DescribeListenersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3832,8 +3834,8 @@ type DescribeListenersResponse struct {
 }
 
 func (r *DescribeListenersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3850,14 +3852,14 @@ type DescribeLoadBalancerListByCertIdRequestParams struct {
 
 type DescribeLoadBalancerListByCertIdRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 服务端证书的ID，或客户端证书的ID
 	CertIds []*string `json:"CertIds,omitnil,omitempty" name:"CertIds"`
 }
 
 func (r *DescribeLoadBalancerListByCertIdRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3889,8 +3891,8 @@ type DescribeLoadBalancerListByCertIdResponse struct {
 }
 
 func (r *DescribeLoadBalancerListByCertIdResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3901,15 +3903,17 @@ func (r *DescribeLoadBalancerListByCertIdResponse) FromJsonString(s string) erro
 
 // Predefined struct for user
 type DescribeLoadBalancerOverviewRequestParams struct {
+
 }
 
 type DescribeLoadBalancerOverviewRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeLoadBalancerOverviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3919,7 +3923,7 @@ func (r *DescribeLoadBalancerOverviewRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLoadBalancerOverviewRequest has unknown keys!", "")
 	}
@@ -3950,8 +3954,8 @@ type DescribeLoadBalancerOverviewResponse struct {
 }
 
 func (r *DescribeLoadBalancerOverviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3968,14 +3972,14 @@ type DescribeLoadBalancerTrafficRequestParams struct {
 
 type DescribeLoadBalancerTrafficRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡所在地域，不传默认返回所有地域负载均衡。
 	LoadBalancerRegion *string `json:"LoadBalancerRegion,omitnil,omitempty" name:"LoadBalancerRegion"`
 }
 
 func (r *DescribeLoadBalancerTrafficRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4008,8 +4012,8 @@ type DescribeLoadBalancerTrafficResponse struct {
 }
 
 func (r *DescribeLoadBalancerTrafficResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4048,7 +4052,7 @@ type DescribeLoadBalancersDetailRequestParams struct {
 
 type DescribeLoadBalancersDetailRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 返回负载均衡列表数目，默认20，最大值100。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
@@ -4076,8 +4080,8 @@ type DescribeLoadBalancersDetailRequest struct {
 }
 
 func (r *DescribeLoadBalancersDetailRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4117,8 +4121,8 @@ type DescribeLoadBalancersDetailResponse struct {
 }
 
 func (r *DescribeLoadBalancersDetailResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4199,7 +4203,7 @@ type DescribeLoadBalancersRequestParams struct {
 
 type DescribeLoadBalancersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。实例ID数量上限为20个。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
@@ -4269,8 +4273,8 @@ type DescribeLoadBalancersRequest struct {
 }
 
 func (r *DescribeLoadBalancersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4323,8 +4327,8 @@ type DescribeLoadBalancersResponse struct {
 }
 
 func (r *DescribeLoadBalancersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4335,15 +4339,17 @@ func (r *DescribeLoadBalancersResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeQuotaRequestParams struct {
+
 }
 
 type DescribeQuotaRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeQuotaRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4353,7 +4359,7 @@ func (r *DescribeQuotaRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeQuotaRequest has unknown keys!", "")
 	}
@@ -4375,8 +4381,8 @@ type DescribeQuotaResponse struct {
 }
 
 func (r *DescribeQuotaResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4401,7 +4407,7 @@ type DescribeResourcesRequestParams struct {
 
 type DescribeResourcesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 返回可用区资源列表数目，默认20，最大值100。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
@@ -4415,8 +4421,8 @@ type DescribeResourcesRequest struct {
 }
 
 func (r *DescribeResourcesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4453,8 +4459,8 @@ type DescribeResourcesResponse struct {
 }
 
 func (r *DescribeResourcesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4477,7 +4483,7 @@ type DescribeRewriteRequestParams struct {
 
 type DescribeRewriteRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -4489,8 +4495,8 @@ type DescribeRewriteRequest struct {
 }
 
 func (r *DescribeRewriteRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4524,8 +4530,8 @@ type DescribeRewriteResponse struct {
 }
 
 func (r *DescribeRewriteResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4548,7 +4554,7 @@ type DescribeTargetGroupInstancesRequestParams struct {
 
 type DescribeTargetGroupInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 过滤条件，当前仅支持TargetGroupId，BindIP，InstanceId过滤。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -4560,8 +4566,8 @@ type DescribeTargetGroupInstancesRequest struct {
 }
 
 func (r *DescribeTargetGroupInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4601,8 +4607,8 @@ type DescribeTargetGroupInstancesResponse struct {
 }
 
 func (r *DescribeTargetGroupInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4628,7 +4634,7 @@ type DescribeTargetGroupListRequestParams struct {
 
 type DescribeTargetGroupListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组ID数组。
 	TargetGroupIds []*string `json:"TargetGroupIds,omitnil,omitempty" name:"TargetGroupIds"`
 
@@ -4643,8 +4649,8 @@ type DescribeTargetGroupListRequest struct {
 }
 
 func (r *DescribeTargetGroupListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4682,8 +4688,8 @@ type DescribeTargetGroupListResponse struct {
 }
 
 func (r *DescribeTargetGroupListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4709,7 +4715,7 @@ type DescribeTargetGroupsRequestParams struct {
 
 type DescribeTargetGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组ID，与Filters互斥。
 	TargetGroupIds []*string `json:"TargetGroupIds,omitnil,omitempty" name:"TargetGroupIds"`
 
@@ -4724,8 +4730,8 @@ type DescribeTargetGroupsRequest struct {
 }
 
 func (r *DescribeTargetGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4763,8 +4769,8 @@ type DescribeTargetGroupsResponse struct {
 }
 
 func (r *DescribeTargetGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4781,14 +4787,14 @@ type DescribeTargetHealthRequestParams struct {
 
 type DescribeTargetHealthRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要查询的负载均衡实例ID列表。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 }
 
 func (r *DescribeTargetHealthRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4821,8 +4827,8 @@ type DescribeTargetHealthResponse struct {
 }
 
 func (r *DescribeTargetHealthResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4854,7 +4860,7 @@ type DescribeTargetsRequestParams struct {
 
 type DescribeTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -4875,8 +4881,8 @@ type DescribeTargetsRequest struct {
 }
 
 func (r *DescribeTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4913,8 +4919,8 @@ type DescribeTargetsResponse struct {
 }
 
 func (r *DescribeTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4935,7 +4941,7 @@ type DescribeTaskStatusRequestParams struct {
 
 type DescribeTaskStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 请求ID，即接口返回的 RequestId 参数。
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -4945,8 +4951,8 @@ type DescribeTaskStatusRequest struct {
 }
 
 func (r *DescribeTaskStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4983,8 +4989,8 @@ type DescribeTaskStatusResponse struct {
 }
 
 func (r *DescribeTaskStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5001,14 +5007,14 @@ type DisassociateTargetGroupsRequestParams struct {
 
 type DisassociateTargetGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 待解绑的规则关系数组。
 	Associations []*TargetGroupAssociation `json:"Associations,omitnil,omitempty" name:"Associations"`
 }
 
 func (r *DisassociateTargetGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5037,8 +5043,8 @@ type DisassociateTargetGroupsResponse struct {
 }
 
 func (r *DisassociateTargetGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5236,7 +5242,7 @@ type InquiryPriceCreateLoadBalancerRequestParams struct {
 
 type InquiryPriceCreateLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 询价的负载均衡类型，OPEN为公网类型，INTERNAL为内网类型
 	LoadBalancerType *string `json:"LoadBalancerType,omitnil,omitempty" name:"LoadBalancerType"`
 
@@ -5268,8 +5274,8 @@ type InquiryPriceCreateLoadBalancerRequest struct {
 }
 
 func (r *InquiryPriceCreateLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5309,8 +5315,8 @@ type InquiryPriceCreateLoadBalancerResponse struct {
 }
 
 func (r *InquiryPriceCreateLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5330,7 +5336,7 @@ type InquiryPriceModifyLoadBalancerRequestParams struct {
 
 type InquiryPriceModifyLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -5339,8 +5345,8 @@ type InquiryPriceModifyLoadBalancerRequest struct {
 }
 
 func (r *InquiryPriceModifyLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5373,8 +5379,8 @@ type InquiryPriceModifyLoadBalancerResponse struct {
 }
 
 func (r *InquiryPriceModifyLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5391,14 +5397,14 @@ type InquiryPriceRefundLoadBalancerRequestParams struct {
 
 type InquiryPriceRefundLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 }
 
 func (r *InquiryPriceRefundLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5430,8 +5436,8 @@ type InquiryPriceRefundLoadBalancerResponse struct {
 }
 
 func (r *InquiryPriceRefundLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5451,7 +5457,7 @@ type InquiryPriceRenewLoadBalancerRequestParams struct {
 
 type InquiryPriceRenewLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -5460,8 +5466,8 @@ type InquiryPriceRenewLoadBalancerRequest struct {
 }
 
 func (r *InquiryPriceRenewLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5494,8 +5500,8 @@ type InquiryPriceRenewLoadBalancerResponse struct {
 }
 
 func (r *InquiryPriceRenewLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5526,7 +5532,7 @@ type ItemPrice struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnitPrice *float64 `json:"UnitPrice,omitnil,omitempty" name:"UnitPrice"`
 
-	// 后续计价单元，可取值范围：
+	// 后续计价单元，可取值范围： 
 	// HOUR：表示计价单元是按每小时来计算。当前涉及该计价单元的场景有：实例按小时后付费（POSTPAID_BY_HOUR）、带宽按小时后付费（BANDWIDTH_POSTPAID_BY_HOUR）；
 	// GB：表示计价单元是按每GB来计算。当前涉及该计价单元的场景有：流量按小时后付费（TRAFFIC_POSTPAID_BY_HOUR）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -6147,7 +6153,7 @@ type LoadBalancerDetail struct {
 	AttributeFlags []*string `json:"AttributeFlags,omitnil,omitempty" name:"AttributeFlags"`
 
 	// 负载均衡实例的规格类型信息<ul><li> clb.c1.small：简约型规格 </li><li>clb.c2.medium：标准型规格 </li><li> clb.c3.small：高阶型1规格 </li><li> clb.c3.medium：高阶型2规格 </li><li> clb.c4.small：超强型1规格 </li><li> clb.c4.medium：超强型2规格 </li><li> clb.c4.large：超强型3规格 </li><li> clb.c4.xlarge：超强型4规格 </li><li>""：非性能容量型实例</li></ul>
-	//
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaType *string `json:"SlaType,omitnil,omitempty" name:"SlaType"`
 
@@ -6207,7 +6213,7 @@ type ManualRewriteRequestParams struct {
 
 type ManualRewriteRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -6222,8 +6228,8 @@ type ManualRewriteRequest struct {
 }
 
 func (r *ManualRewriteRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6255,8 +6261,8 @@ type ManualRewriteResponse struct {
 }
 
 func (r *ManualRewriteResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6276,7 +6282,7 @@ type MigrateClassicalLoadBalancersRequestParams struct {
 
 type MigrateClassicalLoadBalancersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 传统型负载均衡ID数组
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
@@ -6285,8 +6291,8 @@ type MigrateClassicalLoadBalancersRequest struct {
 }
 
 func (r *MigrateClassicalLoadBalancersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6316,8 +6322,8 @@ type MigrateClassicalLoadBalancersResponse struct {
 }
 
 func (r *MigrateClassicalLoadBalancersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6355,7 +6361,7 @@ type ModifyBlockIPListRequestParams struct {
 
 type ModifyBlockIPListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
@@ -6382,8 +6388,8 @@ type ModifyBlockIPListRequest struct {
 }
 
 func (r *ModifyBlockIPListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6420,8 +6426,8 @@ type ModifyBlockIPListResponse struct {
 }
 
 func (r *ModifyBlockIPListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6468,7 +6474,7 @@ type ModifyDomainAttributesRequestParams struct {
 
 type ModifyDomainAttributesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -6504,8 +6510,8 @@ type ModifyDomainAttributesRequest struct {
 }
 
 func (r *ModifyDomainAttributesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6544,8 +6550,8 @@ type ModifyDomainAttributesResponse struct {
 }
 
 func (r *ModifyDomainAttributesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6571,7 +6577,7 @@ type ModifyDomainRequestParams struct {
 
 type ModifyDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -6586,8 +6592,8 @@ type ModifyDomainRequest struct {
 }
 
 func (r *ModifyDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6619,8 +6625,8 @@ type ModifyDomainResponse struct {
 }
 
 func (r *ModifyDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6652,7 +6658,7 @@ type ModifyFunctionTargetsRequestParams struct {
 
 type ModifyFunctionTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -6673,8 +6679,8 @@ type ModifyFunctionTargetsRequest struct {
 }
 
 func (r *ModifyFunctionTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6708,8 +6714,8 @@ type ModifyFunctionTargetsResponse struct {
 }
 
 func (r *ModifyFunctionTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6778,7 +6784,7 @@ type ModifyListenerRequestParams struct {
 
 type ModifyListenerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -6836,8 +6842,8 @@ type ModifyListenerRequest struct {
 }
 
 func (r *ModifyListenerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6882,8 +6888,8 @@ type ModifyListenerResponse struct {
 }
 
 func (r *ModifyListenerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6921,7 +6927,7 @@ type ModifyLoadBalancerAttributesRequestParams struct {
 
 type ModifyLoadBalancerAttributesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡的唯一ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -6948,8 +6954,8 @@ type ModifyLoadBalancerAttributesRequest struct {
 }
 
 func (r *ModifyLoadBalancerAttributesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6989,8 +6995,8 @@ type ModifyLoadBalancerAttributesResponse struct {
 }
 
 func (r *ModifyLoadBalancerAttributesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7010,7 +7016,7 @@ type ModifyLoadBalancerMixIpTargetRequestParams struct {
 
 type ModifyLoadBalancerMixIpTargetRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID数组。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
@@ -7019,8 +7025,8 @@ type ModifyLoadBalancerMixIpTargetRequest struct {
 }
 
 func (r *ModifyLoadBalancerMixIpTargetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7050,8 +7056,8 @@ type ModifyLoadBalancerMixIpTargetResponse struct {
 }
 
 func (r *ModifyLoadBalancerMixIpTargetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7071,7 +7077,7 @@ type ModifyLoadBalancerSlaRequestParams struct {
 
 type ModifyLoadBalancerSlaRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例信息。
 	LoadBalancerSla []*SlaUpdateParam `json:"LoadBalancerSla,omitnil,omitempty" name:"LoadBalancerSla"`
 
@@ -7080,8 +7086,8 @@ type ModifyLoadBalancerSlaRequest struct {
 }
 
 func (r *ModifyLoadBalancerSlaRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7111,8 +7117,8 @@ type ModifyLoadBalancerSlaResponse struct {
 }
 
 func (r *ModifyLoadBalancerSlaResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7132,7 +7138,7 @@ type ModifyLoadBalancersProjectRequestParams struct {
 
 type ModifyLoadBalancersProjectRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 一个或多个待操作的负载均衡实例ID。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
@@ -7141,8 +7147,8 @@ type ModifyLoadBalancersProjectRequest struct {
 }
 
 func (r *ModifyLoadBalancersProjectRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7172,8 +7178,8 @@ type ModifyLoadBalancersProjectResponse struct {
 }
 
 func (r *ModifyLoadBalancersProjectResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7221,7 +7227,7 @@ type ModifyRuleRequestParams struct {
 
 type ModifyRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -7258,8 +7264,8 @@ type ModifyRuleRequest struct {
 }
 
 func (r *ModifyRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7298,8 +7304,8 @@ type ModifyRuleResponse struct {
 }
 
 func (r *ModifyRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7322,7 +7328,7 @@ type ModifyTargetGroupAttributeRequestParams struct {
 
 type ModifyTargetGroupAttributeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组的ID。
 	TargetGroupId *string `json:"TargetGroupId,omitnil,omitempty" name:"TargetGroupId"`
 
@@ -7334,8 +7340,8 @@ type ModifyTargetGroupAttributeRequest struct {
 }
 
 func (r *ModifyTargetGroupAttributeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7366,8 +7372,8 @@ type ModifyTargetGroupAttributeResponse struct {
 }
 
 func (r *ModifyTargetGroupAttributeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7387,7 +7393,7 @@ type ModifyTargetGroupInstancesPortRequestParams struct {
 
 type ModifyTargetGroupInstancesPortRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组ID。
 	TargetGroupId *string `json:"TargetGroupId,omitnil,omitempty" name:"TargetGroupId"`
 
@@ -7396,8 +7402,8 @@ type ModifyTargetGroupInstancesPortRequest struct {
 }
 
 func (r *ModifyTargetGroupInstancesPortRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7427,8 +7433,8 @@ type ModifyTargetGroupInstancesPortResponse struct {
 }
 
 func (r *ModifyTargetGroupInstancesPortResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7448,7 +7454,7 @@ type ModifyTargetGroupInstancesWeightRequestParams struct {
 
 type ModifyTargetGroupInstancesWeightRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组ID。
 	TargetGroupId *string `json:"TargetGroupId,omitnil,omitempty" name:"TargetGroupId"`
 
@@ -7457,8 +7463,8 @@ type ModifyTargetGroupInstancesWeightRequest struct {
 }
 
 func (r *ModifyTargetGroupInstancesWeightRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7488,8 +7494,8 @@ type ModifyTargetGroupInstancesWeightResponse struct {
 }
 
 func (r *ModifyTargetGroupInstancesWeightResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7524,7 +7530,7 @@ type ModifyTargetPortRequestParams struct {
 
 type ModifyTargetPortRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -7548,8 +7554,8 @@ type ModifyTargetPortRequest struct {
 }
 
 func (r *ModifyTargetPortRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7584,8 +7590,8 @@ type ModifyTargetPortResponse struct {
 }
 
 func (r *ModifyTargetPortResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7620,7 +7626,7 @@ type ModifyTargetWeightRequestParams struct {
 
 type ModifyTargetWeightRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -7644,8 +7650,8 @@ type ModifyTargetWeightRequest struct {
 }
 
 func (r *ModifyTargetWeightRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7680,8 +7686,8 @@ type ModifyTargetWeightResponse struct {
 }
 
 func (r *ModifyTargetWeightResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7767,7 +7773,7 @@ type RegisterFunctionTargetsRequestParams struct {
 
 type RegisterFunctionTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -7788,8 +7794,8 @@ type RegisterFunctionTargetsRequest struct {
 }
 
 func (r *RegisterFunctionTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7823,8 +7829,8 @@ type RegisterFunctionTargetsResponse struct {
 }
 
 func (r *RegisterFunctionTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7844,7 +7850,7 @@ type RegisterTargetGroupInstancesRequestParams struct {
 
 type RegisterTargetGroupInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标组ID
 	TargetGroupId *string `json:"TargetGroupId,omitnil,omitempty" name:"TargetGroupId"`
 
@@ -7853,8 +7859,8 @@ type RegisterTargetGroupInstancesRequest struct {
 }
 
 func (r *RegisterTargetGroupInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7884,8 +7890,8 @@ type RegisterTargetGroupInstancesResponse struct {
 }
 
 func (r *RegisterTargetGroupInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7917,7 +7923,7 @@ type RegisterTargetsRequestParams struct {
 
 type RegisterTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -7938,8 +7944,8 @@ type RegisterTargetsRequest struct {
 }
 
 func (r *RegisterTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7973,8 +7979,8 @@ type RegisterTargetsResponse struct {
 }
 
 func (r *RegisterTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7994,7 +8000,7 @@ type RegisterTargetsWithClassicalLBRequestParams struct {
 
 type RegisterTargetsWithClassicalLBRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -8003,8 +8009,8 @@ type RegisterTargetsWithClassicalLBRequest struct {
 }
 
 func (r *RegisterTargetsWithClassicalLBRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8034,8 +8040,8 @@ type RegisterTargetsWithClassicalLBResponse struct {
 }
 
 func (r *RegisterTargetsWithClassicalLBResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8055,7 +8061,7 @@ type ReplaceCertForLoadBalancersRequestParams struct {
 
 type ReplaceCertForLoadBalancersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要被替换的证书的ID，可以是服务端证书或客户端证书
 	OldCertificateId *string `json:"OldCertificateId,omitnil,omitempty" name:"OldCertificateId"`
 
@@ -8064,8 +8070,8 @@ type ReplaceCertForLoadBalancersRequest struct {
 }
 
 func (r *ReplaceCertForLoadBalancersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8095,8 +8101,8 @@ type ReplaceCertForLoadBalancersResponse struct {
 }
 
 func (r *ReplaceCertForLoadBalancersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8419,7 +8425,7 @@ type SetCustomizedConfigForLoadBalancerRequestParams struct {
 
 type SetCustomizedConfigForLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 操作类型。
 	// - ADD：添加
 	// - DELETE：删除
@@ -8442,8 +8448,8 @@ type SetCustomizedConfigForLoadBalancerRequest struct {
 }
 
 func (r *SetCustomizedConfigForLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8479,8 +8485,8 @@ type SetCustomizedConfigForLoadBalancerResponse struct {
 }
 
 func (r *SetCustomizedConfigForLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8513,7 +8519,7 @@ type SetLoadBalancerClsLogRequestParams struct {
 
 type SetLoadBalancerClsLogRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -8535,8 +8541,8 @@ type SetLoadBalancerClsLogRequest struct {
 }
 
 func (r *SetLoadBalancerClsLogRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8568,8 +8574,8 @@ type SetLoadBalancerClsLogResponse struct {
 }
 
 func (r *SetLoadBalancerClsLogResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8589,7 +8595,7 @@ type SetLoadBalancerSecurityGroupsRequestParams struct {
 
 type SetLoadBalancerSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 负载均衡实例 ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
@@ -8598,8 +8604,8 @@ type SetLoadBalancerSecurityGroupsRequest struct {
 }
 
 func (r *SetLoadBalancerSecurityGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8629,8 +8635,8 @@ type SetLoadBalancerSecurityGroupsResponse struct {
 }
 
 func (r *SetLoadBalancerSecurityGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8653,7 +8659,7 @@ type SetLoadBalancerStartStatusRequestParams struct {
 
 type SetLoadBalancerStartStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 操作类型。Start：启动实例，Stop：停止实例。
 	OperationType *string `json:"OperationType,omitnil,omitempty" name:"OperationType"`
 
@@ -8665,8 +8671,8 @@ type SetLoadBalancerStartStatusRequest struct {
 }
 
 func (r *SetLoadBalancerStartStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8697,8 +8703,8 @@ type SetLoadBalancerStartStatusResponse struct {
 }
 
 func (r *SetLoadBalancerStartStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8722,7 +8728,7 @@ type SetSecurityGroupForLoadbalancersRequestParams struct {
 
 type SetSecurityGroupForLoadbalancersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 安全组ID，如 sg-12345678
 	SecurityGroup *string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
@@ -8735,8 +8741,8 @@ type SetSecurityGroupForLoadbalancersRequest struct {
 }
 
 func (r *SetSecurityGroupForLoadbalancersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8767,8 +8773,8 @@ type SetSecurityGroupForLoadbalancersResponse struct {
 }
 
 func (r *SetSecurityGroupForLoadbalancersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8804,7 +8810,7 @@ type SpecAvailability struct {
 	// 规格类型。
 	// <li>clb.c2.medium（标准型）</li><li>clb.c3.small（高阶型1）</li><li>clb.c3.medium（高阶型2）</li>
 	// <li>clb.c4.small（超强型1）</li><li>clb.c4.medium（超强型2）</li><li>clb.c4.large（超强型3）</li><li>clb.c4.xlarge（超强型4）</li><li>shared（共享型）</li>
-	//
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SpecType *string `json:"SpecType,omitnil,omitempty" name:"SpecType"`
 
