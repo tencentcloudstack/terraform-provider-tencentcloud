@@ -1425,42 +1425,32 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 			w = make(map[string]interface{})
 		}
 
-		websiteConfiguration := &s3.WebsiteConfiguration{}
-		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
-		var redirectAllRequestsTo = "http"
+		websiteConfiguration := cos.BucketPutWebsiteOptions{}
 		if v, ok := w["index_document"].(string); ok && v != "" {
-			websiteConfiguration.IndexDocument = &s3.IndexDocument{
-				Suffix: aws.String(v),
-			}
+			websiteConfiguration.Index = v
 		}
 
 		if v, ok := w["error_document"].(string); ok && v != "" {
-			websiteConfiguration.ErrorDocument = &s3.ErrorDocument{
-				Key: aws.String(v),
+			websiteConfiguration.Error = &cos.ErrorDocument{
+				Key: v,
 			}
 		}
 
 		if v, ok := w["redirect_all_requests_to"].(string); ok && v != "" {
-			websiteConfiguration.RedirectAllRequestsTo = &s3.RedirectAllRequestsTo{
-				HostName: aws.String(endPointUrl),
-				Protocol: aws.String(redirectAllRequestsTo),
+			websiteConfiguration.RedirectProtocol = &cos.RedirectRequestsProtocol{
+				Protocol: v,
 			}
 		}
 
-		request := s3.PutBucketWebsiteInput{
-			Bucket:               aws.String(bucket),
-			WebsiteConfiguration: websiteConfiguration,
-		}
-
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).PutBucketWebsite(&request)
+		request := websiteConfiguration
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClientNew(bucket, cdcId).Bucket.PutWebsite(ctx, &request)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "put bucket website", request.String(), err.Error())
 			return fmt.Errorf("cos put bucket website error: %s, bucket: %s", err.Error(), bucket)
 		}
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, "put bucket website", request.String(), response.String())
+		reqBytes, _ := json.Marshal(request)
+		respBytes, _ := json.Marshal(response.Response.Body)
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "put bucket website", string(reqBytes), string(respBytes))
 	}
 
 	return nil
