@@ -16,5 +16,5 @@ Import
 organization member email can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_organization_org_member_email.example 100037718139#132
+terraform import tencentcloud_organization_org_member_email.example 100033118139#132
 ```
