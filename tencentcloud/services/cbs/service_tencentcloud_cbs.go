@@ -311,12 +311,34 @@ func (me *CbsService) ResizeDisk(ctx context.Context, diskId string, diskSize in
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ResizeDisk(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		storage, e := me.DescribeDiskById(ctx, diskId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
+			return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
+		}
+
+		if *storage.DiskSize != uint64(diskSize) {
+			return resource.RetryableError(fmt.Errorf("waiting for cbs size changed to %d, now %d", diskSize, *storage.DiskSize))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s resize cbs failed, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
 	return nil
 }
 
