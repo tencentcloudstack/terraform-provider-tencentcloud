@@ -1680,6 +1680,75 @@ resource "tencentcloud_cbs_storage_attachment" "attachment_cbs_disk2" {
 
 `
 
+func TestAccTencentCloudInstanceResourceWithLocalDisk(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceResource_LocalDiskCreate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.local_disk"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.local_disk", "instance_status", "RUNNING")),
+			},
+		},
+	})
+}
+
+const testAccCvmInstanceResource_LocalDiskCreate = `
+data "tencentcloud_images" "default" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "subnet"
+  cidr_block        = "10.0.0.0/16"
+  availability_zone = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_instance" "local_disk" {
+  instance_name     = "tf-example"
+  availability_zone = "ap-guangzhou-6"
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = "IT5.4XLARGE64"
+  system_disk_type  = "LOCAL_BASIC"
+  system_disk_size  = 50
+  hostname          = "user"
+  project_id        = 0
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 50
+    encrypt        = false
+    data_disk_name = "tf-test1"
+  }
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 60
+    encrypt        = false
+    data_disk_name = "tf-test2"
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+`
+
 func TestAccTencentCloudNeedFixInstancePostpaidToPrepaid(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
