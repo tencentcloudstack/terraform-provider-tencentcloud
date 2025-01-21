@@ -256,7 +256,7 @@ func resourceTencentCloudIdentityCenterUserUpdate(d *schema.ResourceData, meta i
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"zone_id"}
+	immutableArgs := []string{"zone_id", "user_name"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
