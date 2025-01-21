@@ -1717,7 +1717,7 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = "ap-guangzhou-6"
 }
 
-resource "tencentcloud_instance" "example" {
+resource "tencentcloud_instance" "local_disk" {
   instance_name     = "tf-example"
   availability_zone = "ap-guangzhou-6"
   image_id          = data.tencentcloud_images.default.images.0.image_id
