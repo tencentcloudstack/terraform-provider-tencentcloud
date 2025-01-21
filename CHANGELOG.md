@@ -1,3 +1,14 @@
+## 1.81.162 (January 21 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_customized_config: update code ([#3085](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3085))
+* resource/tencentcloud_clb_listener_rule: support `multi_cert_info` ([#3082](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3082))
+* resource/tencentcloud_clb_target_group_attachment: update code ([#3090](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3090))
+* resource/tencentcloud_cos_bucket: update website param ([#3088](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3088))
+* resource/tencentcloud_instance: support local disks ([#3089](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3089))
+* resource/tencentcloud_nat_gateway: remove max limit of eips ([#3097](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3097))
+
 ## 1.81.161 (January 16 , 2025)
 
 ENHANCEMENTS:
