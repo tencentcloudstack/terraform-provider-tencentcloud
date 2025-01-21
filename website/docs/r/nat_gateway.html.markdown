@@ -114,7 +114,7 @@ resource "tencentcloud_nat_gateway" "example" {
 
 The following arguments are supported:
 
-* `assigned_eip_set` - (Required, Set: [`String`]) EIP IP address set bound to the gateway. The value of at least 1 and at most 10.
+* `assigned_eip_set` - (Required, Set: [`String`]) EIP IP address set bound to the gateway. The value of at least 1 and at most 10 if do not apply for a whitelist.
 * `name` - (Required, String) Name of the NAT gateway.
 * `vpc_id` - (Required, String, ForceNew) ID of the vpc.
 * `bandwidth` - (Optional, Int) The maximum public network output bandwidth of NAT gateway (unit: Mbps). Valid values: `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`. Default is `100`. When the value of parameter `nat_product_version` is 2, which is the standard NAT type, this parameter does not need to be filled in and defaults to `5000`.
