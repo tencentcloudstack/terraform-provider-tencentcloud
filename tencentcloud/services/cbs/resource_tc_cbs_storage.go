@@ -230,13 +230,6 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	d.SetId(storageId)
 
-	if v, ok := d.GetOk("disk_backup_quota"); ok {
-		err = cbsService.ModifyDiskBackupQuota(ctx, storageId, v.(int))
-		if err != nil {
-			return err
-		}
-	}
-
 	// must wait for finishing creating disk
 	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
@@ -253,6 +246,12 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	if err != nil {
 		return err
+	}
+	if v, ok := d.GetOk("disk_backup_quota"); ok {
+		err = cbsService.ModifyDiskBackupQuota(ctx, storageId, v.(int))
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudCbsStorageRead(d, meta)
