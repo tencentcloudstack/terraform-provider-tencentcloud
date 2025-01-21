@@ -3,8 +3,10 @@ package dc
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
+	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -44,12 +46,6 @@ func ResourceTencentCloudDcxInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Connection owner, who is the current customer by default. The developer account ID should be entered for shared connections.",
 			},
-			"network_region": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Network region.",
-			},
 			"network_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -58,11 +54,30 @@ func ResourceTencentCloudDcxInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(DC_NETWORK_TYPES),
 				Description:  "Type of the network. Valid value: `VPC`, `BMVPC` and `CCN`. The default value is `VPC`.",
 			},
+			"network_region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Network region.",
+			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
 				Description: "ID of the VPC or BMVPC.",
+			},
+			"dcg_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the DC Gateway. Currently only new in the console.",
+			},
+			"bandwidth": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Bandwidth of the DC.",
 			},
 			"route_type": {
 				Type:         schema.TypeString,
@@ -71,12 +86,6 @@ func ResourceTencentCloudDcxInstance() *schema.Resource {
 				Default:      DC_ROUTE_TYPE_BGP,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(DC_ROUTE_TYPES),
 				Description:  "Type of the route, and available values include BGP and STATIC. The default value is `BGP`.",
-			},
-			"dcg_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "ID of the DC Gateway. Currently only new in the console.",
 			},
 			"bgp_asn": {
 				Type:        schema.TypeInt,
@@ -122,13 +131,7 @@ func ResourceTencentCloudDcxInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Interconnect IP of the DC within client.",
 			},
-			"bandwidth": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				ForceNew:    true,
-				Description: "Bandwidth of the DC.",
-			},
+
 			// Computed values
 			"state": {
 				Type:        schema.TypeString,
@@ -147,92 +150,113 @@ func ResourceTencentCloudDcxInstance() *schema.Resource {
 func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_dcx.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
-		dcId                      = d.Get("dc_id").(string)
-		name                      = d.Get("name").(string)
-		dcOwnerAccount            = ""
-		networkType               = d.Get("network_type").(string)
-		networkRegion             = service.client.Region
-		vpcId                     = ""
-		routeType                 = strings.ToUpper(d.Get("route_type").(string))
-		bgpAsn              int64 = -1
-		bgpAuthKey                = ""
-		vlan                      = int64(d.Get("vlan").(int))
-		tencentAddress            = ""
-		customerAddress           = ""
-		bandwidth           int64 = -1
-		routeFilterPrefixes []string
-		dcgId               = d.Get("dcg_id").(string)
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request  = dc.NewCreateDirectConnectTunnelRequest()
+		response = dc.NewCreateDirectConnectTunnelResponse()
 	)
 
-	if temp, ok := d.GetOk("network_region"); ok {
-		networkRegion = temp.(string)
+	if v, ok := d.GetOk("dc_id"); ok {
+		request.DirectConnectId = helper.String(v.(string))
 	}
 
-	bgpAsnTemp, bgpAsnOk := d.GetOkExists("bgp_asn")
-	bgpKeyTemp, bgpKeyOk := d.GetOkExists("bgp_auth_key")
-	if bgpKeyOk && !bgpAsnOk {
-		return fmt.Errorf("bgp_auth_key need bgp_asn set")
-	}
-	if bgpAsnOk {
-		bgpAsn = int64(bgpAsnTemp.(int))
-	}
-	if bgpKeyOk {
-		bgpAuthKey = bgpKeyTemp.(string)
+	if v, ok := d.GetOk("name"); ok {
+		request.DirectConnectTunnelName = helper.String(v.(string))
 	}
 
-	if temp, ok := d.GetOk("dc_owner_account"); ok {
-		dcOwnerAccount = temp.(string)
+	if v, ok := d.GetOk("dc_owner_account"); ok {
+		request.DirectConnectOwnerAccount = helper.String(v.(string))
 	}
 
-	if temp, ok := d.GetOk("vpc_id"); ok {
-		vpcId = temp.(string)
+	if v, ok := d.GetOk("network_type"); ok {
+		request.NetworkType = helper.String(v.(string))
 	}
 
-	if temp, ok := d.GetOk("tencent_address"); ok {
-		tencentAddress = temp.(string)
-	}
-	if temp, ok := d.GetOk("customer_address"); ok {
-		customerAddress = temp.(string)
-	}
-	if temp, ok := d.GetOk("bandwidth"); ok {
-		bandwidth = int64(temp.(int))
+	if v, ok := d.GetOk("network_region"); ok {
+		request.NetworkRegion = helper.String(v.(string))
 	}
 
-	if temp, ok := d.GetOk("route_filter_prefixes"); ok {
-		for _, v := range temp.(*schema.Set).List() {
-			routeFilterPrefixes = append(routeFilterPrefixes, v.(string))
+	if v, ok := d.GetOk("vpc_id"); ok {
+		request.VpcId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("dcg_id"); ok {
+		request.DirectConnectGatewayId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("bandwidth"); ok {
+		request.Bandwidth = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("route_type"); ok {
+		request.RouteType = helper.String(v.(string))
+	}
+
+	var bgpPeer dc.BgpPeer
+	if v, ok := d.GetOkExists("bgp_asn"); ok {
+		bgpPeer.Asn = helper.IntInt64(v.(int))
+		request.BgpPeer = &bgpPeer
+	}
+
+	if v, ok := d.GetOk("bgp_auth_key"); ok {
+		bgpPeer.AuthKey = helper.String(v.(string))
+		request.BgpPeer = &bgpPeer
+	}
+
+	if v, ok := d.GetOk("route_filter_prefixes"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			var dcPrefix dc.RouteFilterPrefix
+			dcPrefix.Cidr = helper.String(item.(string))
+			request.RouteFilterPrefixes = append(request.RouteFilterPrefixes, &dcPrefix)
 		}
 	}
 
-	if routeType == DC_ROUTE_TYPE_BGP && len(routeFilterPrefixes) > 0 {
-		return fmt.Errorf("can not set `route_filter_prefixes` if `route_type` is '%s'", DC_ROUTE_TYPE_BGP)
+	if v, ok := d.GetOkExists("vlan"); ok {
+		request.Vlan = helper.IntInt64(v.(int))
 	}
 
-	if routeType != DC_ROUTE_TYPE_BGP && bgpAsn != -1 {
-		return fmt.Errorf("can not set `bgp_asn`,`bgp_auth_key` if  `route_type` is not '%s'", DC_ROUTE_TYPE_BGP)
+	if v, ok := d.GetOk("tencent_address"); ok {
+		request.TencentAddress = helper.String(v.(string))
 	}
 
-	dcxId, err := service.CreateDirectConnectTunnel(ctx, dcId, name, networkType,
-		networkRegion, vpcId, routeType,
-		bgpAuthKey, tencentAddress,
-		customerAddress, dcgId, dcOwnerAccount,
-		bgpAsn, vlan,
-		bandwidth, routeFilterPrefixes)
+	if v, ok := d.GetOk("customer_address"); ok {
+		request.CustomerAddress = helper.String(v.(string))
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().CreateDirectConnectTunnel(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.DirectConnectTunnelIdSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create direct connect tunnel failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
+		log.Printf("[CRITAL]%s Create direct connect tunnel failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	if len(response.Response.DirectConnectTunnelIdSet) < 1 {
+		return fmt.Errorf("DirectConnectTunnelIdSet is nil.")
+	}
+
+	dcxId := *response.Response.DirectConnectTunnelIdSet[0]
+	d.SetId(dcxId)
 
 	err = service.waitCreateDirectConnectTunnelAvailable(ctx, dcxId)
 	if err != nil {
 		return err
 	}
-	d.SetId(dcxId)
 
 	return resourceTencentCloudDcxInstanceRead(d, meta)
 }
@@ -241,14 +265,13 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 	defer tccommon.LogElapsed("resource.tencentcloud_dcx.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
-		dcxId = d.Id()
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		dcxId   = d.Id()
 	)
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		item, has, e := service.DescribeDirectConnectTunnel(ctx, dcxId)
 		if e != nil {
@@ -260,70 +283,126 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 			return nil
 		}
 
-		_ = d.Set("dc_id", service.strPt2str(item.DirectConnectId))
-		_ = d.Set("name", *item.DirectConnectTunnelName)
-		_ = d.Set("network_type", strings.ToUpper(service.strPt2str(item.NetworkType)))
-		_ = d.Set("network_region", service.strPt2str(item.NetworkRegion))
-		_ = d.Set("vpc_id", service.strPt2str(item.VpcId))
-		_ = d.Set("bandwidth", service.int64Pt2int64(item.Bandwidth))
-
-		var routeType = strings.ToUpper(service.strPt2str(item.RouteType))
-		_ = d.Set("route_type", routeType)
-
-		if routeType == DC_ROUTE_TYPE_BGP {
-			if item.BgpPeer == nil {
-				_ = d.Set("bgp_asn", 0)
-				_ = d.Set("bgp_auth_key", "")
-			} else {
-				_ = d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
-				_ = d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
-			}
-		} else {
-			var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
-			for _, v := range item.RouteFilterPrefixes {
-				if v.Cidr != nil {
-					routeFilterPrefixes = append(routeFilterPrefixes, *v.Cidr)
-				}
-			}
-			_ = d.Set("route_filter_prefixes", routeFilterPrefixes)
+		if item.DirectConnectId != nil {
+			_ = d.Set("dc_id", service.strPt2str(item.DirectConnectId))
 		}
 
-		_ = d.Set("vlan", service.int64Pt2int64(item.Vlan))
-		_ = d.Set("tencent_address", service.strPt2str(item.TencentAddress))
-		_ = d.Set("customer_address", service.strPt2str(item.CustomerAddress))
-		_ = d.Set("dcg_id", service.strPt2str(item.DirectConnectGatewayId))
+		if item.DirectConnectTunnelName != nil {
+			_ = d.Set("name", item.DirectConnectTunnelName)
+		}
 
-		_ = d.Set("state", strings.ToUpper(service.strPt2str(item.State)))
-		_ = d.Set("create_time", service.strPt2str(item.CreatedTime))
-		_ = d.Set("dc_owner_account", service.strPt2str(item.DirectConnectOwnerAccount))
+		if item.DirectConnectOwnerAccount != nil {
+			_ = d.Set("dc_owner_account", service.strPt2str(item.DirectConnectOwnerAccount))
+		}
+
+		if item.NetworkType != nil {
+			_ = d.Set("network_type", strings.ToUpper(service.strPt2str(item.NetworkType)))
+		}
+
+		if item.NetworkRegion != nil {
+			_ = d.Set("network_region", service.strPt2str(item.NetworkRegion))
+		}
+
+		if item.VpcId != nil {
+			_ = d.Set("vpc_id", service.strPt2str(item.VpcId))
+		}
+
+		if item.DirectConnectGatewayId != nil {
+			_ = d.Set("dcg_id", service.strPt2str(item.DirectConnectGatewayId))
+		}
+
+		if item.Bandwidth != nil {
+			_ = d.Set("bandwidth", service.int64Pt2int64(item.Bandwidth))
+		}
+
+		if item.RouteType != nil {
+			var routeType = strings.ToUpper(service.strPt2str(item.RouteType))
+			_ = d.Set("route_type", routeType)
+
+			if routeType == DC_ROUTE_TYPE_BGP {
+				if item.BgpPeer == nil {
+					_ = d.Set("bgp_asn", 0)
+					_ = d.Set("bgp_auth_key", "")
+				} else {
+					if item.BgpPeer.Asn != nil {
+						_ = d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
+					}
+
+					if item.BgpPeer.AuthKey != nil {
+						_ = d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
+					}
+				}
+			} else {
+				var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
+				for _, v := range item.RouteFilterPrefixes {
+					if v.Cidr != nil {
+						routeFilterPrefixes = append(routeFilterPrefixes, *v.Cidr)
+					}
+				}
+
+				_ = d.Set("route_filter_prefixes", routeFilterPrefixes)
+			}
+		}
+
+		if item.Vlan != nil {
+			_ = d.Set("vlan", service.int64Pt2int64(item.Vlan))
+		}
+
+		if item.TencentAddress != nil {
+			_ = d.Set("tencent_address", service.strPt2str(item.TencentAddress))
+		}
+
+		if item.CustomerAddress != nil {
+			_ = d.Set("customer_address", service.strPt2str(item.CustomerAddress))
+		}
+
+		if item.State != nil {
+			_ = d.Set("state", strings.ToUpper(service.strPt2str(item.State)))
+		}
+
+		if item.CreatedTime != nil {
+			_ = d.Set("create_time", service.strPt2str(item.CreatedTime))
+		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_dcx.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
 		dcxId = d.Id()
-		name  = ""
 	)
 
 	if d.HasChange("name") {
-		name = d.Get("name").(string)
-	}
+		request := dc.NewModifyDirectConnectTunnelAttributeRequest()
+		request.DirectConnectTunnelId = &dcxId
+		if v, ok := d.GetOk("name"); ok {
+			request.DirectConnectTunnelName = helper.String(v.(string))
+		}
 
-	err := service.ModifyDirectConnectTunnelAttribute(ctx, dcxId, name, "", "", "", -1, -1, nil)
-	if err != nil {
-		return err
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().ModifyDirectConnectTunnelAttribute(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return tccommon.RetryError(e)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s Modify direct connect tunnel failed, reason:%s\n", logId, err.Error())
+			return err
+		}
 	}
 
 	return resourceTencentCloudDcxInstanceRead(d, meta)
@@ -332,14 +411,27 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudDcxInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_dcx.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var (
-		dcxId = d.Id()
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		request = dc.NewDeleteDirectConnectTunnelRequest()
+		dcxId   = d.Id()
 	)
 
-	return service.DeleteDirectConnectTunnel(ctx, dcxId)
+	request.DirectConnectTunnelId = &dcxId
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().DeleteDirectConnectTunnel(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s Delete direct connect tunnel failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+
+	return nil
 }
