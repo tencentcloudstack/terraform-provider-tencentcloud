@@ -78,7 +78,6 @@ func init() {
 }
 
 func TestAccTencentCloudCbsStorageResource_basic(t *testing.T) {
-	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -106,7 +105,6 @@ func TestAccTencentCloudCbsStorageResource_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudCbsStorageResource_full(t *testing.T) {
-	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
