@@ -1389,7 +1389,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			// set data disk delete_with_instance_prepaid
 			if v, ok := d.GetOk("data_disks"); ok {
 				tmpDataDisks := v.([]interface{})
-				for i := range tmpDataDisks {
+				for i := range dataDiskList {
 					dataDiskList[i]["delete_with_instance_prepaid"] = false
 					if hasDataDisks {
 						tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
