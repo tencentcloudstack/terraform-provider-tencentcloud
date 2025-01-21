@@ -11,7 +11,7 @@ resource "tencentcloud_cam_user" "example" {
   use_api             = true
   need_reset_password = true
   password            = "Password@123"
-  phone_num           = "18634356789"
+  phone_num           = "18611111111"
   email               = "example@tencent.com"
   country_code        = "86"
   force_delete        = true
