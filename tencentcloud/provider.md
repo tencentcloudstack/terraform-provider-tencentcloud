@@ -2235,6 +2235,7 @@ CDC
     tencentcloud_cdc_dedicated_cluster_hosts
     tencentcloud_cdc_dedicated_cluster_instance_types
     tencentcloud_cdc_dedicated_cluster_orders
+    tencentcloud_cdc_dedicated_clusters
 
   Resource
     tencentcloud_cdc_site

@@ -252,3 +252,63 @@ func (me *CdcService) DescribeCdcDedicatedClusterOrdersByFilter(ctx context.Cont
 	dedicatedClusterOrders = response.Response.DedicatedClusterOrderSet
 	return
 }
+
+func (me *CdcService) DescribeCdcDedicatedClustersByFilter(ctx context.Context, param map[string]interface{}) (ret []*cdc.DedicatedCluster, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cdc.NewDescribeDedicatedClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DedicatedClusterIds" {
+			request.DedicatedClusterIds = v.([]*string)
+		}
+		if k == "Zones" {
+			request.Zones = v.([]*string)
+		}
+		if k == "SiteIds" {
+			request.SiteIds = v.([]*string)
+		}
+		if k == "LifecycleStatuses" {
+			request.LifecycleStatuses = v.([]*string)
+		}
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCdcV20201214Client().DescribeDedicatedClusters(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DedicatedClusterSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.DedicatedClusterSet...)
+		if len(response.Response.DedicatedClusterSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
