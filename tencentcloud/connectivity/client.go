@@ -228,6 +228,7 @@ type TencentCloudClient struct {
 	camv20190116Conn            *cam.Client
 	clsv20201016Conn            *cls.Client
 	monitor20180724Conn         *monitor.Client
+	cdcv20201214Conn            *cdc.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2031,4 +2032,17 @@ func (me *TencentCloudClient) UseMonitorV20180724Client() *monitor.Client {
 	me.monitor20180724Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.monitor20180724Conn
+}
+
+// UseCdcV20201214Client return CDC client for service
+func (me *TencentCloudClient) UseCdcV20201214Client() *cdc.Client {
+	if me.cdcv20201214Conn != nil {
+		return me.cdcv20201214Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cdcv20201214Conn, _ = cdc.NewClient(me.Credential, me.Region, cpf)
+	me.cdcv20201214Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdcv20201214Conn
 }
