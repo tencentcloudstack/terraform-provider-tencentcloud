@@ -79,16 +79,14 @@ func ResourceTencentCloudTatCommand() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: tccommon.ValidateNotEmpty,
-							Description:  "Tag key.",
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag key.",
 						},
 						"value": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: tccommon.ValidateNotEmpty,
-							Description:  "Tag value.",
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag value.",
 						},
 					},
 				},
