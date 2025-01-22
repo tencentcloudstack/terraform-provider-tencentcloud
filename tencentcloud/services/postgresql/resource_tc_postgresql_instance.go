@@ -166,7 +166,6 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			},
 			"root_user": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Default:     "root",
 				Description: "Instance root account name. This parameter is optional, Default value is `root`.",
@@ -1006,6 +1005,13 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		"voucher_ids",
 	); err != nil {
 		return err
+	}
+
+	immutableArgs := []string{"root_user"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("period") && !d.HasChange("charge_type") {
