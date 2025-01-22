@@ -1003,15 +1003,9 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		// "auto_renew_flag",
 		// "auto_voucher",
 		"voucher_ids",
+		"root_user",
 	); err != nil {
 		return err
-	}
-
-	immutableArgs := []string{"root_user"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
 	}
 
 	if d.HasChange("period") && !d.HasChange("charge_type") {
