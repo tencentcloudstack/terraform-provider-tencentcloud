@@ -63,7 +63,7 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 				Optional:     true,
 				Default:      "Terraform-CVM-Instance",
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 128),
-				Description:  "The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.",
+				Description:  "The name of the instance. The max length of instance_name is 128, and default value is `Terraform-CVM-Instance`.",
 			},
 			"instance_type": {
 				Type:         schema.TypeString,
