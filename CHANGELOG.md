@@ -1,3 +1,21 @@
+## 1.81.163 (January 22 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cdc_dedicated_clusters` ([#3099](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3099))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_ha_vips: fix the issue of failed filtering queries ([#3098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3098))
+* resource/tencentcloud_cam_group_membership: update doc ([#3093](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3093))
+* resource/tencentcloud_dcx: resource creation increases waiting time ([#3092](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3092))
+* resource/tencentcloud_identity_center_user: params user_name unsupport change ([#3094](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3094))
+* resource/tencentcloud_instance: update the length limit of `instance_name` ([#3101](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3101))
+* resource/tencentcloud_monitor_tmp_exporter_integration: update SDK information ([#3100](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3100))
+* resource/tencentcloud_organization_org_member_email: fix the issue of update function execution failure ([#3095](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3095))
+* resource/tencentcloud_postgresql_instance: update query interface limit count ([#3084](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3084))
+* resource/tencentcloud_tat_command: update code and doc ([#3083](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3083))
+
 ## 1.81.162 (January 21 , 2025)
 
 ENHANCEMENTS:
