@@ -10,8 +10,6 @@ import (
 	"strconv"
 	"strings"
 
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -101,10 +99,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 		request.ClusterId = helper.String(clusterId)
 	}
 
-	initStatus := tke.NewDescribePrometheusInstanceInitStatusRequest()
+	initStatus := monitor.NewDescribePrometheusInstanceInitStatusRequest()
 	initStatus.InstanceId = request.InstanceId
 	err := resource.Retry(8*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		results, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribePrometheusInstanceInitStatus(initStatus)
+		results, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribePrometheusInstanceInitStatus(initStatus)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
@@ -116,10 +114,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 			return nil
 		}
 		if *status == "uninitialized" {
-			iniRequest := tke.NewRunPrometheusInstanceRequest()
+			iniRequest := monitor.NewRunPrometheusInstanceRequest()
 			iniRequest.InstanceId = request.InstanceId
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().RunPrometheusInstance(iniRequest)
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().RunPrometheusInstance(iniRequest)
 				if e != nil {
 					return tccommon.RetryError(e)
 				} else {
