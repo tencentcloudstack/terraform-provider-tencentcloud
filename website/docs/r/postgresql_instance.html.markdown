@@ -326,7 +326,7 @@ The following arguments are supported:
 * `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. This field is valid only when creating a `PREPAID` type instance, or updating the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.
 * `project_id` - (Optional, Int) Project id, default value is `0`.
 * `public_access_switch` - (Optional, Bool) Indicates whether to enable the access to an instance from public network or not.
-* `root_user` - (Optional, String, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
+* `root_user` - (Optional, String) Instance root account name. This parameter is optional, Default value is `root`.
 * `security_groups` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `tags` - (Optional, Map) The available tags within this postgresql.
 * `voucher_ids` - (Optional, List: [`String`]) Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.

@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -824,30 +826,73 @@ func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instance
 
 func (me *PostgresqlService) DescribeRootUser(ctx context.Context, instanceId string) (accounts []*postgresql.AccountInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	orderBy := "createTime"
-	orderByType := "asc"
-
 	request := postgresql.NewDescribeAccountsRequest()
 	request.DBInstanceId = &instanceId
-	request.OrderBy = &orderBy
-	request.OrderByType = &orderByType
+	request.OrderByType = helper.String("asc")
+	request.OrderBy = helper.String("createTime")
+
 	var response *postgresql.DescribeAccountsResponse
-	errRet = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		response, errRet = me.client.UsePostgresqlClient().DescribeAccounts(request)
+	var tmpList []*postgresql.AccountInfo
+
+	var offset, limit int64 = 0, 100
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UsePostgresqlClient().DescribeAccounts(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s describe account failed, reason: %v", logId, e)
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil || result.Response.Details == nil {
+				errRet = fmt.Errorf("TencentCloud SDK return nil response, %+v, %s", result, request.GetAction())
+			}
+
+			response = result
+			return nil
+		})
+
 		if errRet != nil {
-			log.Printf("[CRITAL]%s describe account failed, reason: %v", logId, errRet)
-			return tccommon.RetryError(errRet)
+			return nil, errRet
 		}
-		return nil
+
+		tmpList = append(tmpList, response.Response.Details...)
+		if len(response.Response.Details) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	for _, item := range tmpList {
+		if item.CreateTime != nil && strings.Contains(*item.CreateTime, "0000-00-00") {
+			continue
+		}
+
+		accounts = append(accounts, item)
+	}
+
+	sort.Slice(accounts, func(i, j int) bool {
+		timeStrI := accounts[i].CreateTime
+		timeStrJ := accounts[j].CreateTime
+
+		timeI, errI := time.Parse(tccommon.TENCENTCLOUD_COMMON_TIME_LAYOUT, *timeStrI)
+		if errI != nil {
+			fmt.Printf("Error parsing time string %s: %v\n", *timeStrI, errI)
+			return false
+		}
+
+		timeJ, errJ := time.Parse(tccommon.TENCENTCLOUD_COMMON_TIME_LAYOUT, *timeStrJ)
+		if errJ != nil {
+			fmt.Printf("Error parsing time string %s: %v\n", *timeStrJ, errJ)
+			return false
+		}
+
+		return timeI.Before(timeJ)
 	})
-	if errRet != nil {
-		return nil, errRet
-	}
-	if response == nil || response.Response == nil || response.Response.Details == nil {
-		errRet = fmt.Errorf("TencentCloud SDK return nil response, %+v, %s", response, request.GetAction())
-	} else {
-		accounts = response.Response.Details
-	}
 
 	return accounts, errRet
 }

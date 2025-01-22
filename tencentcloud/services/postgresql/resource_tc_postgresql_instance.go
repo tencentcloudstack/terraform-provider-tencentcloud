@@ -166,7 +166,6 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			},
 			"root_user": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Default:     "root",
 				Description: "Instance root account name. This parameter is optional, Default value is `root`.",
@@ -1004,6 +1003,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		// "auto_renew_flag",
 		// "auto_voucher",
 		"voucher_ids",
+		"root_user",
 	); err != nil {
 		return err
 	}
