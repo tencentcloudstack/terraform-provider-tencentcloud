@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_organization_org_member_email: fix the issue of update function execution failure
+```
