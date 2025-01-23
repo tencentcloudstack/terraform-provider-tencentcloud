@@ -45,10 +45,23 @@ func resourceTencentCloudRedisParamCreate(d *schema.ResourceData, meta interface
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		instanceId string
 	)
+
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
+	}
+
+	resp, err := service.DescribeRedisInstanceById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if resp == nil || resp.InstanceId != nil || *resp.InstanceId != instanceId {
+		return fmt.Errorf("Illegal `instance_id`")
 	}
 
 	d.SetId(instanceId)
@@ -60,12 +73,12 @@ func resourceTencentCloudRedisParamRead(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_redis_param.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	param, err := service.DescribeRedisParamById(ctx, instanceId)
 	if err != nil {
@@ -88,6 +101,7 @@ func resourceTencentCloudRedisParamRead(d *schema.ResourceData, meta interface{}
 	} else {
 		instanceParamsMap = param
 	}
+
 	_ = d.Set("instance_params", instanceParamsMap)
 
 	return nil
@@ -97,21 +111,22 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_redis_param.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	request := redis.NewModifyInstanceParamsRequest()
 	response := redis.NewModifyInstanceParamsResponse()
-
-	instanceId := d.Id()
 	request.InstanceId = &instanceId
-
 	if v, ok := d.GetOk("instance_params"); ok {
-		service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		param, err := service.DescribeRedisParamById(ctx, instanceId)
 		if err != nil && len(param) == 0 {
 			return fmt.Errorf("[ERROR] resource `RedisParam` [%s] not found, please check if it has been deleted.\n", d.Id())
 		}
+
 		for k, v := range v.(map[string]interface{}) {
 			if value, ok := param[k]; ok {
 				if value != v {
@@ -137,15 +152,15 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s update redis param failed, reason:%+v", logId, err)
 		return err
 	}
-
-	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	taskId := *response.Response.TaskId
 	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
