@@ -247,7 +247,20 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
   website {
     index_document           = "index.html"
     error_document           = "error.html"
-    redirect_all_requests_to = "http"
+    redirect_all_requests_to = "https"
+    routing_rules {
+      rules {
+        condition_error_code        = "404"
+        redirect_protocol           = "https"
+        redirect_replace_key_prefix = "/test"
+      }
+
+      rules {
+        condition_prefix     = "/test"
+        redirect_protocol    = "https"
+        redirect_replace_key = "key"
+      }
+    }
   }
 }
 
@@ -496,6 +509,18 @@ The `replica_rules` object supports the following:
 * `id` - (Optional, String) Name of a specific rule.
 * `prefix` - (Optional, String) Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.
 
+The `routing_rules` object of `website` supports the following:
+
+* `rules` - (Required, List) Routing rule list.
+
+The `rules` object of `routing_rules` supports the following:
+
+* `condition_error_code` - (Optional, String) Specifies the error code as the match condition for the routing rule. Valid values: only 4xx return codes, such as 403 or 404.
+* `condition_prefix` - (Optional, String) Specifies the object key prefix as the match condition for the routing rule.
+* `redirect_protocol` - (Optional, String) Specifies the target protocol for the routing rule. Only HTTPS is supported.
+* `redirect_replace_key_prefix` - (Optional, String) Specifies the object key prefix to replace the original prefix in the request. You can set this parameter only if the condition is KeyPrefixEquals.
+* `redirect_replace_key` - (Optional, String) Specifies the target object key to replace the original object key in the request.
+
 The `transition` object of `lifecycle_rules` supports the following:
 
 * `storage_class` - (Required, String) Specifies the storage class to which you want the object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
@@ -507,6 +532,7 @@ The `website` object supports the following:
 * `error_document` - (Optional, String) An absolute path to the document to return in case of a 4XX error.
 * `index_document` - (Optional, String) COS returns this index document when requests are made to the root domain or any of the subfolders.
 * `redirect_all_requests_to` - (Optional, String) Redirects all request configurations. Valid values: http, https. Default is `http`.
+* `routing_rules` - (Optional, List) Routing rule configuration. A RoutingRules container can contain up to 100 RoutingRule elements.
 
 ## Attributes Reference
 

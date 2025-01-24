@@ -236,7 +236,20 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
   website {
     index_document           = "index.html"
     error_document           = "error.html"
-    redirect_all_requests_to = "http"
+    redirect_all_requests_to = "https"
+    routing_rules {
+      rules {
+        condition_error_code        = "404"
+        redirect_protocol           = "https"
+        redirect_replace_key_prefix = "/test"
+      }
+
+      rules {
+        condition_prefix            = "/test"
+        redirect_protocol           = "https"
+        redirect_replace_key        = "key"
+      }
+    }
   }
 }
 

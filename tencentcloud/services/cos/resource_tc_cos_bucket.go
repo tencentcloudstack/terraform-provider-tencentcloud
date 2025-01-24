@@ -484,6 +484,50 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"http", "https"}),
 							Description:  "Redirects all request configurations. Valid values: http, https. Default is `http`.",
 						},
+						"routing_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Routing rule configuration. A RoutingRules container can contain up to 100 RoutingRule elements.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rules": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Routing rule list.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"condition_error_code": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the error code as the match condition for the routing rule. Valid values: only 4xx return codes, such as 403 or 404.",
+												},
+												"condition_prefix": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the object key prefix as the match condition for the routing rule.",
+												},
+												"redirect_protocol": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the target protocol for the routing rule. Only HTTPS is supported.",
+												},
+												"redirect_replace_key": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the target object key to replace the original object key in the request.",
+												},
+												"redirect_replace_key_prefix": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the object key prefix to replace the original prefix in the request. You can set this parameter only if the condition is KeyPrefixEquals.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 						"endpoint": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -1440,6 +1484,45 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 			websiteConfiguration.RedirectProtocol = &cos.RedirectRequestsProtocol{
 				Protocol: v,
 			}
+		}
+
+		if v, ok := w["routing_rules"]; ok {
+			websiteRoutingRules := cos.WebsiteRoutingRules{}
+			for _, item := range v.([]interface{}) {
+				rules := item.(map[string]interface{})
+				if v, ok := rules["rules"]; ok {
+					wbRules := []cos.WebsiteRoutingRule{}
+					for _, rule := range v.([]interface{}) {
+						dMap := rule.(map[string]interface{})
+						wbRule := cos.WebsiteRoutingRule{}
+						if v, ok := dMap["condition_error_code"].(string); ok && v != "" {
+							wbRule.ConditionErrorCode = v
+						}
+
+						if v, ok := dMap["condition_prefix"].(string); ok && v != "" {
+							wbRule.ConditionPrefix = v
+						}
+
+						if v, ok := dMap["redirect_protocol"].(string); ok && v != "" {
+							wbRule.RedirectProtocol = v
+						}
+
+						if v, ok := dMap["redirect_replace_key"].(string); ok && v != "" {
+							wbRule.RedirectReplaceKey = v
+						}
+
+						if v, ok := dMap["redirect_replace_key_prefix"].(string); ok && v != "" {
+							wbRule.RedirectReplaceKeyPrefix = v
+						}
+
+						wbRules = append(wbRules, wbRule)
+					}
+
+					websiteRoutingRules.Rules = wbRules
+				}
+			}
+
+			websiteConfiguration.RoutingRules = &websiteRoutingRules
 		}
 
 		request := websiteConfiguration
