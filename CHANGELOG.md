@@ -1,3 +1,10 @@
+## 1.81.164 (January 24 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_listener: support update `listener_name` ([#3103](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3103))
+* resource/tencentcloud_cos_bucket: support routing_rules ([#3108](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3108))
+
 ## 1.81.163 (January 22 , 2025)
 
 FEATURES:
