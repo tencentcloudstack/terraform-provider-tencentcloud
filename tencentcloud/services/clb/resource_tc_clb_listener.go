@@ -651,6 +651,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	request.LoadBalancerId = helper.String(clbId)
 
 	if d.HasChange("listener_name") {
+		changed = true
 		listenerName = d.Get("listener_name").(string)
 		request.ListenerName = helper.String(listenerName)
 	}

@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clb_listener: support update `listener_name`
+```
