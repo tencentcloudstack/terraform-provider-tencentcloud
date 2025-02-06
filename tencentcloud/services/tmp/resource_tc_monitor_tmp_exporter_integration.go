@@ -174,11 +174,11 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 
-		status := results.Response.Status
-		if status == nil {
+		if results == nil || results.Response == nil || results.Response.Status == nil {
 			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
 		}
 
+		status := results.Response.Status
 		if *status == "running" {
 			return nil
 		}
