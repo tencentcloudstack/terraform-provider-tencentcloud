@@ -146,7 +146,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || response.Response.Names == nil {
+		if result == nil || result.Response == nil || result.Response.Names == nil {
 			return resource.NonRetryableError(fmt.Errorf("Create monitor tmpExporterIntegration failed, Response is nil."))
 		}
 
@@ -167,34 +167,11 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 
 	d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, strconv.Itoa(kubeType), clusterId, kind}, tccommon.FILED_SP))
 
-	// wait
-	err = resource.Retry(8*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		results, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribePrometheusInstanceInitStatus(initStatus)
-		if errRet != nil {
-			return tccommon.RetryError(errRet, tccommon.InternalError)
-		}
-
-		if results == nil || results.Response == nil || results.Response.Status == nil {
-			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
-		}
-
-		status := results.Response.Status
-		if *status == "running" {
-			return nil
-		}
-
-		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %s", *status))
-	})
-
-	if err != nil {
-		return err
-	}
-
 	return resourceTencentCloudMonitorTmpExporterIntegrationRead(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpExporterIntegrationRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmpExporterIntegration.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_exporter_integration.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
