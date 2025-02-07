@@ -231,7 +231,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		}
 		taskRequest := vpc.NewDescribeTaskResultRequest()
 		taskRequest.TaskId = &taskIdUint64
-		err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(taskRequest.GetAction())
 			taskResponse, err := client.UseVpcClient().DescribeTaskResult(taskRequest)
 			if err != nil {
@@ -250,7 +250,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
-	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
