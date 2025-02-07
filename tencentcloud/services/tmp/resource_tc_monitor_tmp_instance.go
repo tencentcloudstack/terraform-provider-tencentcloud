@@ -170,31 +170,6 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	// wait
-	initStatus := monitor.NewDescribePrometheusInstanceInitStatusRequest()
-	initStatus.InstanceId = &tmpInstanceId
-	err = resource.Retry(8*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribePrometheusInstanceInitStatus(initStatus)
-		if errRet != nil {
-			return tccommon.RetryError(errRet, tccommon.InternalError)
-		}
-
-		if result == nil || result.Response == nil || result.Response.Status == nil {
-			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
-		}
-
-		status := result.Response.Status
-		if *status == "running" {
-			return nil
-		}
-
-		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %s", *status))
-	})
-
-	if err != nil {
-		return err
-	}
-
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
