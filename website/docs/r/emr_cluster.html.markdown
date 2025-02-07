@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_emr_cluster"
 sidebar_current: "docs-tencentcloud-resource-emr_cluster"
 description: |-
-  Provide a resource to create a emr cluster.
+  Provide a resource to create an emr cluster.
 ---
 
 # tencentcloud_emr_cluster
 
-Provide a resource to create a emr cluster.
+Provide a resource to create an emr cluster.
 
 ## Example Usage
 
@@ -94,7 +94,7 @@ resource "tencentcloud_emr_cluster" "emr_cluster" {
   time_span = 3600
   time_unit = "s"
   pay_mode  = 0
-  placement_info = {
+  placement_info {
     zone       = var.availability_zone
     project_id = 0
   }

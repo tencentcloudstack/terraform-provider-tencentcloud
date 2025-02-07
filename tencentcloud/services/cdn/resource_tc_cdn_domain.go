@@ -634,7 +634,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"header_mode": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Http header setting method. The following types are supported: `add`: add a head, if a head already exists, there will be a duplicate head, `del`: delete the head.",
+										Description: "Http header setting method. The following types are supported: `set`: sets a value for an existing header parameter, a new header parameter, or multiple header parameters. Multiple header parameters will be merged into one; `del`: deletes a header parameter; `add`: adds a header parameter. By default, you can repeat the same action to add the same header parameter, which may affect browser response. Please consider the set operation first.",
 									},
 									"header_name": {
 										Type:         schema.TypeString,
