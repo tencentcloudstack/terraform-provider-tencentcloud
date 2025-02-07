@@ -1,3 +1,10 @@
+## 1.81.165 (February 7 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: `header_mode` support `set` ([#3113](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3113))
+* resource/tencentcloud_monitor_tmp_instance: set creation wait ([#3109](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3109))
+
 ## 1.81.164 (January 24 , 2025)
 
 ENHANCEMENTS:
