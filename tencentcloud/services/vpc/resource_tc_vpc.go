@@ -317,7 +317,6 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 
 		if addLen > 0 {
-			request.OldCidrBlocks = nil
 			request.NewCidrBlocks = helper.InterfacesStringsPoint(add)
 		}
 
