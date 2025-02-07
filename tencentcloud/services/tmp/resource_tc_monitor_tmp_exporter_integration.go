@@ -145,6 +145,11 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil || result.Response.Names == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create monitor tmpExporterIntegration failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -152,6 +157,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpExporterIntegration failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if len(response.Response.Names) < 1 {
+		return fmt.Errorf("Names is nil.")
 	}
 
 	tmpExporterIntegrationId := *response.Response.Names[0]
@@ -162,7 +171,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 }
 
 func resourceTencentCloudMonitorTmpExporterIntegrationRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmpExporterIntegration.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_exporter_integration.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)

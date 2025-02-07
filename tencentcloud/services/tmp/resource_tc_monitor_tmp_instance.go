@@ -128,6 +128,10 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create monitor tmpInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -135,6 +139,10 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpInstance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
 	}
 
 	tmpInstanceId := *response.Response.InstanceId
@@ -156,6 +164,31 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 		}
 
 		return resource.RetryableError(fmt.Errorf("tmpInstance status is %v, retry...", *instance.InstanceStatus))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	// wait
+	initStatus := monitor.NewDescribePrometheusInstanceInitStatusRequest()
+	initStatus.InstanceId = &tmpInstanceId
+	err = resource.Retry(8*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribePrometheusInstanceInitStatus(initStatus)
+		if errRet != nil {
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
+		}
+
+		status := result.Response.Status
+		if *status == "running" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %s", *status))
 	})
 
 	if err != nil {
