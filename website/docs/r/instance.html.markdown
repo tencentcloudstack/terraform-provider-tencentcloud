@@ -219,7 +219,7 @@ The following arguments are supported:
 * `image_id` - (Required, String) The image to use for the instance. Changing `image_id` will cause the instance reset.
 * `allocate_public_ip` - (Optional, Bool, ForceNew) Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.
 * `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
-* `cam_role_name` - (Optional, String, ForceNew) CAM role name authorized to access.
+* `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `cdh_host_id` - (Optional, String, ForceNew) Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `cdh_instance_type` - (Optional, String) Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.

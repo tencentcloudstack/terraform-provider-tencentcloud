@@ -417,7 +417,6 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			// role
 			"cam_role_name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "CAM role name authorized to access.",
 			},
@@ -1549,6 +1548,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	if d.HasChange("disable_api_termination") {
 		err := cvmService.ModifyDisableApiTermination(ctx, instanceId, d.Get("disable_api_termination").(bool))
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("cam_role_name") {
+		err := cvmService.ModifyCamRoleName(ctx, instanceId, d.Get("cam_role_name").(string))
 		if err != nil {
 			return err
 		}
