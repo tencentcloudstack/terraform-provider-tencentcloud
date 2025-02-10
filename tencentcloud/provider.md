@@ -850,6 +850,7 @@ Managed Service for Prometheus(TMP)
     tencentcloud_monitor_tmp_tke_basic_config
     tencentcloud_monitor_tmp_alert_group
     tencentcloud_monitor_tmp_multiple_writes
+    tencentcloud_monitor_tmp_multiple_writes_list
 
 TencentCloud Managed Service for Grafana(TCMG)
   Data Source
