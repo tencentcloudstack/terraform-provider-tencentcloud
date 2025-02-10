@@ -4,7 +4,7 @@ Provides a resource to create a monitor multiple writes
 
 ~> **NOTE:** When importing, the unique id is separated by the first `#`.
 
-~> **NOTE:** For the same instance of prometheus, resource `tencentcloud_monitor_tmp_multiple_writes` and resource `tencentcloud_monitor_tmp_multiple_writes_list` cannot be used simultaneously.
+~> **NOTE:** For the same instance of prometheus, resource `tencentcloud_monitor_tmp_multiple_writes` and resource `tencentcloud_monitor_tmp_multiple_writes_list` cannot be used simultaneously. This resource `tencentcloud_monitor_tmp_multiple_writes` is about to be abandoned, Please use resource `tencentcloud_monitor_tmp_multiple_writes_list` instead.
 
 Example Usage
 
