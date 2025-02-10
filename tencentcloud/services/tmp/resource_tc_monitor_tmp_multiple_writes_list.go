@@ -205,7 +205,7 @@ func resourceTencentCloudMonitorTmpMultipleWritesListCreate(d *schema.ResourceDa
 
 			return resource.RetryableError(fmt.Errorf("prometheusInstance initializing, retry..."))
 		}
-		
+
 		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %v, retry...", *status))
 	})
 
