@@ -17,10 +17,11 @@ import (
 
 func ResourceTencentCloudMonitorTmpMultipleWrites() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudMonitorTmpMultipleWritesCreate,
-		Read:   resourceTencentCloudMonitorTmpMultipleWritesRead,
-		Update: resourceTencentCloudMonitorTmpMultipleWritesUpdate,
-		Delete: resourceTencentCloudMonitorTmpMultipleWritesDelete,
+		DeprecationMessage: "This resource will been deprecated in Terraform TencentCloud provider version v1.81.166. Please use `tencentcloud_monitor_tmp_multiple_writes_list` instead.",
+		Create:             resourceTencentCloudMonitorTmpMultipleWritesCreate,
+		Read:               resourceTencentCloudMonitorTmpMultipleWritesRead,
+		Update:             resourceTencentCloudMonitorTmpMultipleWritesUpdate,
+		Delete:             resourceTencentCloudMonitorTmpMultipleWritesDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
