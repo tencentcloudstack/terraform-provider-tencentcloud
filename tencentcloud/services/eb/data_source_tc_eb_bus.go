@@ -247,7 +247,7 @@ func dataSourceTencentCloudEbBusRead(d *schema.ResourceData, meta interface{}) e
 					connectionBriefsList = append(connectionBriefsList, connectionBriefsMap)
 				}
 
-				eventBusMap["connection_briefs"] = []interface{}{connectionBriefsList}
+				eventBusMap["connection_briefs"] = connectionBriefsList
 			}
 
 			if eventBus.TargetBriefs != nil {
@@ -266,7 +266,7 @@ func dataSourceTencentCloudEbBusRead(d *schema.ResourceData, meta interface{}) e
 					targetBriefsList = append(targetBriefsList, targetBriefsMap)
 				}
 
-				eventBusMap["target_briefs"] = []interface{}{targetBriefsList}
+				eventBusMap["target_briefs"] = targetBriefsList
 			}
 
 			ids = append(ids, *eventBus.EventBusId)
