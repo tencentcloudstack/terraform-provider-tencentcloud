@@ -1,3 +1,17 @@
+## 1.81.165 (February 11 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_monitor_tmp_multiple_writes_list` ([#3115](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3115))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_security_groups: update doc ([#3117](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3117))
+* resource/tencentcloud_clb_attachment: fix the diff in the `targets` field ([#3110](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3110))
+* resource/tencentcloud_instance: `cam_role_name` support update ([#3114](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3114))
+* resource/tencentcloud_kubernetes_charts: update doc ([#3116](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3116))
+* resource/tencentcloud_monitor_tmp_multiple_writes: resource will be deprecated in version v1.81.166 ([#3115](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3115))
+
 ## 1.81.165 (February 7 , 2025)
 
 ENHANCEMENTS:
