@@ -1,27 +1,23 @@
 ---
 subcategory: "Managed Service for Prometheus(TMP)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_monitor_tmp_multiple_writes"
-sidebar_current: "docs-tencentcloud-resource-monitor_tmp_multiple_writes"
+page_title: "TencentCloud: tencentcloud_monitor_tmp_multiple_writes_list"
+sidebar_current: "docs-tencentcloud-resource-monitor_tmp_multiple_writes_list"
 description: |-
-  Provides a resource to create a monitor multiple writes
+  Provides a resource to create a monitor multiple writes list
 ---
 
-# tencentcloud_monitor_tmp_multiple_writes
+# tencentcloud_monitor_tmp_multiple_writes_list
 
-Provides a resource to create a monitor multiple writes
+Provides a resource to create a monitor multiple writes list
 
 ~> **NOTE:** For the same instance of prometheus, resource `tencentcloud_monitor_tmp_multiple_writes` and resource `tencentcloud_monitor_tmp_multiple_writes_list` cannot be used simultaneously. Resource `tencentcloud_monitor_tmp_multiple_writes` will been deprecated in version v1.81.166, Please use resource `tencentcloud_monitor_tmp_multiple_writes_list` instead.
-
-~> **NOTE:** When using `<<EOT`, please pay attention to spaces, line breaks, indentation, etc.
-
-~> **NOTE:** When importing, the unique id is separated by the first `#`.
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_multiple_writes" "example" {
-  instance_id = "prom-l9cl1ptk"
+resource "tencentcloud_monitor_tmp_multiple_writes_list" "example" {
+  instance_id = "prom-gzg3f1em"
 
   remote_writes {
     url = "http://172.16.0.111:9090/api/v1/prom/write"
@@ -40,6 +36,15 @@ resource "tencentcloud_monitor_tmp_multiple_writes" "example" {
       value = "Value"
     }
   }
+
+  remote_writes {
+    url                = "http://172.16.0.111:8080/api/v1/prom/write"
+    url_relabel_config = "# 添加 label\n#- target_label: key\n#  replacement: value\n# 丢弃指标\n#- source_labels: [__name__]\n#  regex: kubelet_.+;\n#  action: drop"
+    headers {
+      key   = "Key"
+      value = "Value"
+    }
+  }
 }
 ```
 
@@ -48,7 +53,7 @@ resource "tencentcloud_monitor_tmp_multiple_writes" "example" {
 The following arguments are supported:
 
 * `instance_id` - (Required, String) Instance id.
-* `remote_writes` - (Optional, List) Data multiple write configuration.
+* `remote_writes` - (Optional, Set) Data multiple write configuration.
 
 The `basic_auth` object of `remote_writes` supports the following:
 
@@ -79,9 +84,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-monitor multiple writes can be imported using the id, e.g.
+monitor multiple writes list can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_monitor_tmp_multiple_writes.example prom-l9cl1ptk#http://172.16.0.111:9090/api/v1/prom/write
+terraform import tencentcloud_monitor_tmp_multiple_writes_list.example prom-gzg3f1em
 ```
 

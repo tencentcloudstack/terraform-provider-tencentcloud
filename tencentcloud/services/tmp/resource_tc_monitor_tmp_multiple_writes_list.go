@@ -5,23 +5,21 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitorv20180724 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 )
 
-func ResourceTencentCloudMonitorTmpMultipleWrites() *schema.Resource {
+func ResourceTencentCloudMonitorTmpMultipleWritesList() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource will been deprecated in Terraform TencentCloud provider version v1.81.166. Please use `tencentcloud_monitor_tmp_multiple_writes_list` instead.",
-		Create:             resourceTencentCloudMonitorTmpMultipleWritesCreate,
-		Read:               resourceTencentCloudMonitorTmpMultipleWritesRead,
-		Update:             resourceTencentCloudMonitorTmpMultipleWritesUpdate,
-		Delete:             resourceTencentCloudMonitorTmpMultipleWritesDelete,
+		Create: resourceTencentCloudMonitorTmpMultipleWritesListCreate,
+		Read:   resourceTencentCloudMonitorTmpMultipleWritesListRead,
+		Update: resourceTencentCloudMonitorTmpMultipleWritesListUpdate,
+		Delete: resourceTencentCloudMonitorTmpMultipleWritesListDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -33,9 +31,8 @@ func ResourceTencentCloudMonitorTmpMultipleWrites() *schema.Resource {
 			},
 
 			"remote_writes": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
-				MaxItems:    1,
 				Description: "Data multiple write configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -105,8 +102,8 @@ func ResourceTencentCloudMonitorTmpMultipleWrites() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudMonitorTmpMultipleWritesCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes.create")()
+func resourceTencentCloudMonitorTmpMultipleWritesListCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes_list.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -115,7 +112,6 @@ func resourceTencentCloudMonitorTmpMultipleWritesCreate(d *schema.ResourceData, 
 
 	var (
 		instanceId string
-		url        string
 	)
 	var (
 		request  = monitorv20180724.NewModifyRemoteURLsRequest()
@@ -129,12 +125,11 @@ func resourceTencentCloudMonitorTmpMultipleWritesCreate(d *schema.ResourceData, 
 	request.InstanceId = helper.String(instanceId)
 
 	if v, ok := d.GetOk("remote_writes"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			remoteWritesMap := item.(map[string]interface{})
 			remoteWrite := monitorv20180724.RemoteWrite{}
 			if v, ok := remoteWritesMap["url"].(string); ok && v != "" {
 				remoteWrite.URL = helper.String(v)
-				url = v
 			}
 			if v, ok := remoteWritesMap["url_relabel_config"].(string); ok && v != "" {
 				remoteWrite.URLRelabelConfig = helper.String(v)
@@ -179,13 +174,16 @@ func resourceTencentCloudMonitorTmpMultipleWritesCreate(d *schema.ResourceData, 
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		status := results.Response.Status
 		if status == nil {
 			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
 		}
+
 		if *status == "running" {
 			return nil
 		}
+
 		if *status == "uninitialized" {
 			iniRequest := monitorv20180724.NewRunPrometheusInstanceRequest()
 			iniRequest.InstanceId = request.InstanceId
@@ -197,15 +195,20 @@ func resourceTencentCloudMonitorTmpMultipleWritesCreate(d *schema.ResourceData, 
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
+
 				return nil
 			})
+
 			if err != nil {
 				return resource.RetryableError(fmt.Errorf("prometheusInstanceInit error %v, operate failed", err))
 			}
+
 			return resource.RetryableError(fmt.Errorf("prometheusInstance initializing, retry..."))
 		}
+
 		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %v, retry...", *status))
 	})
+
 	if err != nil {
 		return err
 	}
@@ -221,44 +224,39 @@ func resourceTencentCloudMonitorTmpMultipleWritesCreate(d *schema.ResourceData, 
 		return nil
 	})
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s create monitor tmp multiple writes failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s create monitor tmp multiple writes list failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
 	_ = response
 
-	d.SetId(strings.Join([]string{instanceId, url}, tccommon.FILED_SP))
+	d.SetId(instanceId)
 
-	return resourceTencentCloudMonitorTmpMultipleWritesRead(d, meta)
+	return resourceTencentCloudMonitorTmpMultipleWritesListRead(d, meta)
 }
 
-func resourceTencentCloudMonitorTmpMultipleWritesRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes.read")()
+func resourceTencentCloudMonitorTmpMultipleWritesListRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes_list.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	service := MonitorService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.SplitN(d.Id(), tccommon.FILED_SP, 2)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	instanceId := idSplit[0]
-	url := idSplit[1]
+	instanceId := d.Id()
 
 	_ = d.Set("instance_id", instanceId)
 
-	respData, err := service.DescribeMonitorTmpMultipleWritesById(ctx, instanceId, url)
+	respData, err := service.DescribeMonitorTmpMultipleWritesListById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
 	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `monitor_tmp_multiple_writes` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `monitor_tmp_multiple_writes_list` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 	remoteWritesList := make([]map[string]interface{}, 0, len(respData.RemoteWrites))
@@ -268,7 +266,6 @@ func resourceTencentCloudMonitorTmpMultipleWritesRead(d *schema.ResourceData, me
 
 			if remoteWrites.URL != nil {
 				remoteWritesMap["url"] = remoteWrites.URL
-				url = *remoteWrites.URL
 			}
 
 			if remoteWrites.URLRelabelConfig != nil {
@@ -324,8 +321,8 @@ func resourceTencentCloudMonitorTmpMultipleWritesRead(d *schema.ResourceData, me
 	return nil
 }
 
-func resourceTencentCloudMonitorTmpMultipleWritesUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes.update")()
+func resourceTencentCloudMonitorTmpMultipleWritesListUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes_list.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -338,12 +335,7 @@ func resourceTencentCloudMonitorTmpMultipleWritesUpdate(d *schema.ResourceData, 
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
-	idSplit := strings.SplitN(d.Id(), tccommon.FILED_SP, 2)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	instanceId := idSplit[0]
-	url := idSplit[1]
+	instanceId := d.Id()
 
 	needChange := false
 	mutableArgs := []string{"remote_writes"}
@@ -360,10 +352,12 @@ func resourceTencentCloudMonitorTmpMultipleWritesUpdate(d *schema.ResourceData, 
 		request.InstanceId = helper.String(instanceId)
 
 		if v, ok := d.GetOk("remote_writes"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				remoteWritesMap := item.(map[string]interface{})
 				remoteWrite := monitorv20180724.RemoteWrite{}
-				remoteWrite.URL = helper.String(url)
+				if v, ok := remoteWritesMap["url"].(string); ok && v != "" {
+					remoteWrite.URL = helper.String(v)
+				}
 				if v, ok := remoteWritesMap["url_relabel_config"].(string); ok && v != "" {
 					remoteWrite.URLRelabelConfig = helper.String(v)
 				}
@@ -410,27 +404,22 @@ func resourceTencentCloudMonitorTmpMultipleWritesUpdate(d *schema.ResourceData, 
 			return nil
 		})
 		if reqErr != nil {
-			log.Printf("[CRITAL]%s update monitor tmp multiple writes failed, reason:%+v", logId, reqErr)
+			log.Printf("[CRITAL]%s update monitor tmp multiple writes list failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}
 
-	return resourceTencentCloudMonitorTmpMultipleWritesRead(d, meta)
+	return resourceTencentCloudMonitorTmpMultipleWritesListRead(d, meta)
 }
 
-func resourceTencentCloudMonitorTmpMultipleWritesDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes.delete")()
+func resourceTencentCloudMonitorTmpMultipleWritesListDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_multiple_writes_list.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	idSplit := strings.SplitN(d.Id(), tccommon.FILED_SP, 2)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	instanceId := idSplit[0]
-	url := idSplit[1]
+	instanceId := d.Id()
 
 	var (
 		request  = monitorv20180724.NewModifyRemoteURLsRequest()
@@ -450,11 +439,10 @@ func resourceTencentCloudMonitorTmpMultipleWritesDelete(d *schema.ResourceData, 
 		return nil
 	})
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s delete monitor tmp multiple writes failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s delete monitor tmp multiple writes list failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
 	_ = response
-	_ = url
 	return nil
 }
