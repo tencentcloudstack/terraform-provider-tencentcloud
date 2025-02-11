@@ -5750,6 +5750,55 @@ func (me *VpcService) DescribeVpcFlowLogById(ctx context.Context, flowLogId, vpc
 	return
 }
 
+func (me *VpcService) DescribeVpcFlowLogsById(ctx context.Context, flowLogId, vpcId string) (FlowLog *vpc.FlowLog, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeFlowLogsRequest()
+	response := vpc.NewDescribeFlowLogsResponse()
+	request.FlowLogId = &flowLogId
+
+	if vpcId != "" {
+		request.VpcId = &vpcId
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeFlowLogs(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc flowLogs failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s Describe vpc flowLogs failed, reason:%+v", logId, err)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.FlowLog) < 1 {
+		return
+	}
+
+	FlowLog = response.Response.FlowLog[0]
+	return
+}
+
 func (me *VpcService) DeleteVpcFlowLogById(ctx context.Context, flowLogId, vpcId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
