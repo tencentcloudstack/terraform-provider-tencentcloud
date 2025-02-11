@@ -81,7 +81,7 @@ In addition to all arguments above, the following attributes are exported:
   * `availability_zone` - The available zone that the CVM instance locates at.
   * `cbs_configs` - CBS config. The cbs_configs is populated when the cbs_filter is added.
     * `available` - Whether the configuration is available.
-    * `device_class` - Example model.
+    * `device_class` - Device class.
     * `disk_charge_type` - Payment model. Value range:
 	- PREPAID: Prepaid;
 	- POSTPAID_BY_HOUR: Post-payment.
@@ -90,11 +90,11 @@ In addition to all arguments above, the following attributes are exported:
 	- CLOUD_PREMIUM: Represents high-performance Cloud Block Storage;
 	- CLOUD_SSD: Represents SSD Cloud Block Storage;
 	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.
-    * `disk_usage` - System disk or data disk. Value range:
+    * `disk_usage` - Cloud disk type. Value range:
 	- SYSTEM_DISK: Represents the system disk;
 	- DATA_DISK: Represents the data disk.
-    * `extra_performance_range` - Additional performance ranges.
-    * `instance_family` - Example model series.
+    * `extra_performance_range` - Extra performance range.
+    * `instance_family` - Instance family.
     * `max_disk_size` - The maximum configurable cloud disk size, in GB.
     * `min_disk_size` - The minimum configurable cloud disk size, in GB.
     * `step_size` - Minimum step size change in cloud disk size, in GB.

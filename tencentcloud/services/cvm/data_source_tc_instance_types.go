@@ -181,7 +181,7 @@ func DataSourceTencentCloudInstanceTypes() *schema.Resource {
 									"instance_family": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Example model series.",
+										Description: "Instance family.",
 									},
 									"disk_type": {
 										Type:     schema.TypeString,
@@ -201,17 +201,17 @@ func DataSourceTencentCloudInstanceTypes() *schema.Resource {
 										Computed:    true,
 										Type:        schema.TypeList,
 										Elem:        &schema.Schema{Type: schema.TypeInt},
-										Description: "Additional performance ranges.",
+										Description: "Extra performance range.",
 									},
 									"device_class": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Example model.",
+										Description: "Device class.",
 									},
 									"disk_usage": {
 										Type:     schema.TypeString,
 										Computed: true,
-										Description: "System disk or data disk. Value range:\n" +
+										Description: "Cloud disk type. Value range:\n" +
 											"	- SYSTEM_DISK: Represents the system disk;\n" +
 											"	- DATA_DISK: Represents the data disk.",
 									},
