@@ -913,3 +913,39 @@ func (me *CbsService) ApplyDiskBackup(ctx context.Context, diskBackupId, diskId 
 	}
 	return
 }
+
+func (me *CbsService) DescribeDiskConfigQuota(ctx context.Context, cvmInfo map[string]interface{}) (diskConfigSet []*cbs.DiskConfig, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cbs.NewDescribeDiskConfigQuotaRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InquiryType = helper.String("INQUIRY_CVM_CONFIG")
+	request.Zones = helper.Strings([]string{cvmInfo["availability_zone"].(string)})
+	request.CPU = helper.Int64Uint64(cvmInfo["cpu_core_count"].(int64))
+	request.Memory = helper.Int64Uint64(cvmInfo["memory_size"].(int64))
+	request.InstanceFamilies = helper.Strings([]string{cvmInfo["family"].(string)})
+	request.DiskTypes = helper.Strings(cvmInfo["disk_types"].([]string))
+	request.DiskChargeType = helper.String(cvmInfo["disk_charge_type"].(string))
+	request.DiskUsage = helper.String(cvmInfo["disk_usage"].(string))
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCbsClient().DescribeDiskConfigQuota(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		diskConfigSet = result.Response.DiskConfigSet
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		log.Printf("[CRITAL]%s create cbs DiskBackup failed, reason:%+v", logId, err)
+		return
+	}
+	return
+}
