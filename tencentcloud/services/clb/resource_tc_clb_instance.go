@@ -107,6 +107,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 			"security_groups": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.",
 			},
