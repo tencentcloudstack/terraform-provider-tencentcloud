@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_as_scaling_config: update `instance_types` to limit the number of input parameters
+```
