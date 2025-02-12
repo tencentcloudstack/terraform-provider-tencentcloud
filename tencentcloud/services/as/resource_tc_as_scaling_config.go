@@ -54,7 +54,7 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
-				MaxItems:    5,
+				MaxItems:    10,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Specified types of CVM instances.",
 			},
