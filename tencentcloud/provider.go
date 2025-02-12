@@ -582,6 +582,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instance_current_op":                  mongodb.DataSourceTencentCloudMongodbInstanceCurrentOp(),
 			"tencentcloud_mongodb_instance_params":                      mongodb.DataSourceTencentCloudMongodbInstanceParams(),
 			"tencentcloud_mongodb_instance_slow_log":                    mongodb.DataSourceTencentCloudMongodbInstanceSlowLog(),
+			"tencentcloud_mongodb_instance_urls":                        mongodb.DataSourceTencentCloudMongodbInstanceUrls(),
 			"tencentcloud_dayu_cc_https_policies":                       dayu.DataSourceTencentCloudDayuCCHttpsPolicies(),
 			"tencentcloud_dayu_cc_http_policies":                        dayu.DataSourceTencentCloudDayuCCHttpPolicies(),
 			"tencentcloud_dayu_ddos_policies":                           dayu.DataSourceTencentCloudDayuDdosPolicies(),
