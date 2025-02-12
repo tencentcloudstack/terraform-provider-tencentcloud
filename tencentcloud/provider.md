@@ -718,6 +718,7 @@ TencentDB for MongoDB(mongodb)
     tencentcloud_mongodb_instance_current_op
     tencentcloud_mongodb_instance_params
     tencentcloud_mongodb_instance_slow_log
+    tencentcloud_mongodb_instance_urls
 
   Resource
     tencentcloud_mongodb_instance

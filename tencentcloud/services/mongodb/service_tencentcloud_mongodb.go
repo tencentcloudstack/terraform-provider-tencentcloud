@@ -977,3 +977,30 @@ func (me *MongodbService) DescribeMongodbInstanceParamValues(ctx context.Context
 
 	return
 }
+
+func (me *MongodbService) DescribeMongodbInstanceUrls(ctx context.Context, instanceId string) (ret []*mongodb.DbURL, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = mongodb.NewDescribeDBInstanceURLRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = helper.String(instanceId)
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeDBInstanceURL(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response.Urls
+	return
+}

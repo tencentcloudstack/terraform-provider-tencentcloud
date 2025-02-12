@@ -173,7 +173,7 @@ const (
 	// 设置的磁盘大小不得低于已用磁盘的1.2倍。
 	INVALIDPARAMETERVALUE_SETDISKLESSTHANUSED = "InvalidParameterValue.SetDiskLessThanUsed"
 
-	// slowMS参数取值范围[100, 。
+	// slowMS参数取值范围[100,65536]。
 	INVALIDPARAMETERVALUE_SLOWMSBELOWLIMIT = "InvalidParameterValue.SlowMSBelowLimit"
 
 	// 购买规格错误。
@@ -199,6 +199,9 @@ const (
 
 	// 无效的可用区。
 	INVALIDPARAMETERVALUE_ZONEERROR = "InvalidParameterValue.ZoneError"
+
+	// 请求太过频繁，触发接口频限。
+	LIMITEXCEEDED_TOOMANYREQUESTS = "LimitExceeded.TooManyRequests"
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
