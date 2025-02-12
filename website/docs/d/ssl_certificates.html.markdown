@@ -4,18 +4,34 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ssl_certificates"
 sidebar_current: "docs-tencentcloud-datasource-ssl_certificates"
 description: |-
-  Use this data source to query SSL certificate.
+  Use this data source to query SSL certificates.
 ---
 
 # tencentcloud_ssl_certificates
 
-Use this data source to query SSL certificate.
+Use this data source to query SSL certificates.
 
 ## Example Usage
 
+### Query all SSL certificates
+
 ```hcl
-data "tencentcloud_ssl_certificates" "foo" {
-  name = "certificate"
+data "tencentcloud_ssl_certificates" "example" {}
+```
+
+### Query SSL certificates by filter
+
+```hcl
+data "tencentcloud_ssl_certificates" "example" {
+  name = "tf-example"
+}
+
+data "tencentcloud_ssl_certificates" "example" {
+  type = "CA"
+}
+
+data "tencentcloud_ssl_certificates" "example" {
+  id = "LCYouprI"
 }
 ```
 
