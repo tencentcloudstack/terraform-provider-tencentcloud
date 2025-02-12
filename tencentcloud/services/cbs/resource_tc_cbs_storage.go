@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -228,6 +229,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
+	time.Sleep(5 * time.Second)
 	d.SetId(storageId)
 
 	if v, ok := d.GetOk("disk_backup_quota"); ok {
