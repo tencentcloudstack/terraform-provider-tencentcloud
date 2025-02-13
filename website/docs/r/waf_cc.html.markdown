@@ -36,12 +36,12 @@ resource "tencentcloud_waf_cc" "example" {
 The following arguments are supported:
 
 * `action_type` - (Required, String) Rule Action, 20 log, 21 captcha, 22 deny, 23 accurate deny.
-* `advance` - (Required, String) Session match mode, 0 use session, 1 use ip.
+* `advance` - (Required, String) Session match mode, 0 use ip, 1 use session.
 * `domain` - (Required, String) Domain.
 * `edition` - (Required, String) WAF edition. clb-waf means clb-waf, sparta-waf means saas-waf.
 * `interval` - (Required, String) Interval.
 * `limit` - (Required, String) CC detection threshold.
-* `match_func` - (Required, Int) Match method, 0 equal, 1 contains, 2 prefix.
+* `match_func` - (Required, Int) Match method, 0 equal, 1 prefix, 2 contains.
 * `name` - (Required, String) Rule Name.
 * `priority` - (Required, Int) Rule Priority.
 * `status` - (Required, Int) Rule Status, 0 rule close, 1 rule open.

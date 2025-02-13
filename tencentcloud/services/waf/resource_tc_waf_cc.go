@@ -42,7 +42,7 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"advance": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Session match mode, 0 use session, 1 use ip.",
+				Description: "Session match mode, 0 use ip, 1 use session.",
 			},
 			"limit": {
 				Required:    true,
@@ -62,7 +62,7 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"match_func": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Match method, 0 equal, 1 contains, 2 prefix.",
+				Description: "Match method, 0 equal, 1 prefix, 2 contains.",
 			},
 			"action_type": {
 				Required:    true,
