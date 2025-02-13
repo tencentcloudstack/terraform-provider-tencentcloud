@@ -62,7 +62,7 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"match_func": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Match method, 0 equal, 1 contains, 2 prefix.",
+				Description: "Match method, 0 equal, 1 prefix, 2 contains.",
 			},
 			"action_type": {
 				Required:    true,

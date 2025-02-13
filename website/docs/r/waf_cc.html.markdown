@@ -41,7 +41,7 @@ The following arguments are supported:
 * `edition` - (Required, String) WAF edition. clb-waf means clb-waf, sparta-waf means saas-waf.
 * `interval` - (Required, String) Interval.
 * `limit` - (Required, String) CC detection threshold.
-* `match_func` - (Required, Int) Match method, 0 equal, 1 contains, 2 prefix.
+* `match_func` - (Required, Int) Match method, 0 equal, 1 prefix, 2 contains.
 * `name` - (Required, String) Rule Name.
 * `priority` - (Required, Int) Rule Priority.
 * `status` - (Required, Int) Rule Status, 0 rule close, 1 rule open.
