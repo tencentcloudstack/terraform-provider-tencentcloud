@@ -36,7 +36,7 @@ resource "tencentcloud_waf_cc" "example" {
 The following arguments are supported:
 
 * `action_type` - (Required, String) Rule Action, 20 log, 21 captcha, 22 deny, 23 accurate deny.
-* `advance` - (Required, String) Session match mode, 1 use session, 0 use ip.
+* `advance` - (Required, String) Session match mode, 0 use ip, 1 use session.
 * `domain` - (Required, String) Domain.
 * `edition` - (Required, String) WAF edition. clb-waf means clb-waf, sparta-waf means saas-waf.
 * `interval` - (Required, String) Interval.
