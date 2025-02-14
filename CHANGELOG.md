@@ -1,3 +1,30 @@
+## 1.81.167 (February 14 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_mongodb_instance_urls` ([#3124](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3124))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_eb_bus: fix `connection_briefs` and `target_briefs` write to state failed ([#3105](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3105))
+* datasource/tencentcloud_instance_types: support `cbs_filter` and `cbs_configs` ([#3118](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3118))
+* datasource/tencentcloud_ssl_certificates: update doc ([#3121](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3121))
+* resource/tencentcloud_as_scaling_config: fix the issue of changing password ([#3122](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3122))
+* resource/tencentcloud_as_scaling_config: update `instance_types` to limit the number of input parameters ([#3123](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3123))
+* resource/tencentcloud_cam_saml_provider: update doc ([#3120](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3120))
+* resource/tencentcloud_cbs_disk_backup: update resource creation error message ([#3129](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3129))
+* resource/tencentcloud_cbs_storage: fix `disk_backup_quota` update failed ([#3096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3096))
+* resource/tencentcloud_ckafka_topic: fix the issue with default values for params ([#3107](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3107))
+* resource/tencentcloud_clb_security_group_attachment: update doc ([#3119](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3119))
+* resource/tencentcloud_dc_gateway: update code ([#3091](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3091))
+* resource/tencentcloud_dc_instance: update field properties and doc ([#3130](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3130))
+* resource/tencentcloud_eb_put_events: update doc ([#3125](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3125))
+* resource/tencentcloud_eip: fix of creating `BANDWIDTH_PREPAID_BY_MONTH` eip ([#3111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3111))
+* resource/tencentcloud_vpc: fix the issue where field `assistant_cidrs` cannot be modified correctly ([#3102](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3102))
+* resource/tencentcloud_vpc_flow_log: support CCN type ([#3106](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3106))
+* resource/tencentcloud_waf_cc: Update doc ([#3127](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3127))
+* resource/tencentcloud_waf_ip_access_control_v2: Fix the issue of unable to query properly ([#3127](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3127))
+
 ## 1.81.166 (February 11 , 2025)
 
 FEATURES:
