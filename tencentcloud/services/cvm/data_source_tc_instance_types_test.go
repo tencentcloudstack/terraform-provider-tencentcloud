@@ -50,6 +50,27 @@ func TestAccTencentCloudCvmInstanceTypesDataSource_Sell(t *testing.T) {
 		},
 	})
 }
+func TestAccTencentCloudCvmInstanceTypesDataSource_WithCbsFilter(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers: acctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceTypesDataSource_WithCbsFilter,
+				Check: resource.ComposeTestCheckFunc(
+					acctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_instance_types.with_cbs_filter"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instance_types.with_cbs_filter", "instance_types.0.cbs_configs.#"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.with_cbs_filter", "instance_types.0.cbs_configs.0.disk_type", "CLOUD_SSD"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.with_cbs_filter", "instance_types.0.cbs_configs.0.disk_charge_type", "PREPAID"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.with_cbs_filter", "instance_types.0.cbs_configs.0.disk_usage", "SYSTEM_DISK"),
+				),
+			},
+		},
+	})
+}
 
 const testAccCvmInstanceTypesDataSource_SellCreate = `
 
@@ -68,4 +89,27 @@ data "tencentcloud_instance_types" "example" {
     }
 }
 
+`
+
+const testAccCvmInstanceTypesDataSource_WithCbsFilter = `
+
+data "tencentcloud_instance_types" "with_cbs_filter" {
+    cpu_core_count = 2
+    memory_size = 2
+    exclude_sold_out = true
+    
+    filter {
+        name = "instance-family"
+        values = ["S6"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-6"]
+    }
+	cbs_filter {
+        disk_types = ["CLOUD_SSD"]
+        disk_charge_type = "PREPAID"
+        disk_usage = "SYSTEM_DISK"
+    }
+}
 `
