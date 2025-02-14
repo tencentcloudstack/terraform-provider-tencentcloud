@@ -851,6 +851,7 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("password") || d.HasChange("key_ids") || d.HasChange("keep_image_login") {
+		request.LoginSettings = &as.LoginSettings{}
 		if v, ok := d.GetOk("password"); ok {
 			request.LoginSettings.Password = helper.String(v.(string))
 		}
