@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_eb_bus: fix `connection_briefs` and `target_briefs` write to state failed
+```
