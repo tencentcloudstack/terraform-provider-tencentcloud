@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_eip: fix of creating `BANDWIDTH_PREPAID_BY_MONTH` eip
+```
