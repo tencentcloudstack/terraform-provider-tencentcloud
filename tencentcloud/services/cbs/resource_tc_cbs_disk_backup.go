@@ -60,7 +60,7 @@ func resourceTencentCloudCbsDiskBackupCreate(d *schema.ResourceData, meta interf
 	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	diskBackupId, err := service.CreateDiskBackup(ctx, diskId, diskBackupName)
 	if err != nil {
-		return nil
+		return err
 	}
 	d.SetId(diskBackupId)
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
