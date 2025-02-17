@@ -24,6 +24,8 @@ const (
 	CFS_USER_PERMISSION_NO_ALL_SQUASH  = "no_all_squash"
 	CFS_USER_PERMISSION_ROOT_SQUASH    = "root_squash"
 	CFS_USER_PERMISSION_NO_ROOT_SQUASH = "no_root_squash"
+
+	FAILED_OPERATION_PGROUP_IS_UPDATING_ERROR = "FailedOperation.PgroupIsUpdating"
 )
 
 var CFS_STORAGETYPE = []string{

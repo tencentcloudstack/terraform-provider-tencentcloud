@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -76,6 +77,11 @@ func resourceTencentCloudCfsAccessRuleCreate(d *schema.ResourceData, meta interf
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if e.GetCode() == FAILED_OPERATION_PGROUP_IS_UPDATING_ERROR {
+					return resource.RetryableError(err)
+				}
+			}
 			return tccommon.RetryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -162,6 +168,11 @@ func resourceTencentCloudCfsAccessRuleUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if e.GetCode() == FAILED_OPERATION_PGROUP_IS_UPDATING_ERROR {
+					return resource.RetryableError(err)
+				}
+			}
 			return tccommon.RetryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -188,6 +199,11 @@ func resourceTencentCloudCfsAccessRuleDelete(d *schema.ResourceData, meta interf
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cfsService.DeleteAccessRule(ctx, groupId, ruleId)
 		if errRet != nil {
+			if e, ok := errRet.(*sdkErrors.TencentCloudSDKError); ok {
+				if e.GetCode() == FAILED_OPERATION_PGROUP_IS_UPDATING_ERROR {
+					return resource.RetryableError(errRet)
+				}
+			}
 			return tccommon.RetryError(errRet)
 		}
 		return nil
