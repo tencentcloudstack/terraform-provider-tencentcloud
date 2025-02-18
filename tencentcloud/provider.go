@@ -394,6 +394,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr_nodes":                                    emr.DataSourceTencentCloudEmrNodes(),
 			"tencentcloud_emr_cvm_quota":                                emr.DataSourceTencentCloudEmrCvmQuota(),
 			"tencentcloud_emr_auto_scale_records":                       emr.DataSourceTencentCloudEmrAutoScaleRecords(),
+			"tencentcloud_serverless_hbase_instances":                   emr.DataSourceTencentCloudServerlessHbaseInstances(),
 			"tencentcloud_availability_zones":                           common.DataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":                common.DataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_projects":                                     project.DataSourceTencentCloudProjects(),

@@ -110,17 +110,42 @@ func TestAccTencentCloudServerlessHbaseInstanceResource_multiZone(t *testing.T) 
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "disk_size", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "node_type", "4C16G"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.zone", "ap-shanghai-2"),
-					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.vpc_settings.0.vpc_id", "vpc-muytmxhk"),
-					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.vpc_settings.0.subnet_id", "subnet-9ye3xm5v"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.vpc_settings.0.vpc_id", "vpc-jcy9nxgi"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.vpc_settings.0.subnet_id", "subnet-q1tbmknp"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.zone", "ap-shanghai-5"),
-					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.vpc_settings.0.vpc_id", "vpc-muytmxhk"),
-					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.vpc_settings.0.subnet_id", "subnet-1ppkfg6t"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.vpc_settings.0.vpc_id", "vpc-jcy9nxgi"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.vpc_settings.0.subnet_id", "subnet-o787f1oz"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.zone", "ap-shanghai-8"),
-					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.vpc_settings.0.vpc_id", "vpc-muytmxhk"),
-					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.vpc_settings.0.subnet_id", "subnet-1tup7mn1"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.vpc_settings.0.vpc_id", "vpc-jcy9nxgi"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.vpc_settings.0.subnet_id", "subnet-huc1agnt"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.node_num", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "tags.0.tag_key", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "tags.0.tag_value", "test"),
+				),
+			},
+			{
+				Config: testAccServerlessHbaseInstanceMultiZoneUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "instance_name", "tf-test-multi-zone"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "pay_mode", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "disk_type", "CLOUD_HSSD"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "disk_size", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "node_type", "4C16G"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.zone", "ap-shanghai-2"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.vpc_settings.0.vpc_id", "vpc-jcy9nxgi"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.vpc_settings.0.subnet_id", "subnet-q1tbmknp"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.0.node_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.zone", "ap-shanghai-5"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.vpc_settings.0.vpc_id", "vpc-jcy9nxgi"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.vpc_settings.0.subnet_id", "subnet-o787f1oz"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.1.node_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.zone", "ap-shanghai-8"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.vpc_settings.0.vpc_id", "vpc-jcy9nxgi"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.vpc_settings.0.subnet_id", "subnet-huc1agnt"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "zone_settings.2.node_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "tags.0.tag_key", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_multi_zone", "tags.0.tag_value", "test"),
 				),
@@ -208,26 +233,64 @@ resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance_mul
   zone_settings {
     zone = "ap-shanghai-2"
     vpc_settings {
-      vpc_id = "vpc-muytmxhk"
-      subnet_id = "subnet-9ye3xm5v"
+      vpc_id = "vpc-jcy9nxgi"
+      subnet_id = "subnet-q1tbmknp"
     }
     node_num = 1
   }
   zone_settings {
     zone = "ap-shanghai-5"
     vpc_settings {
-      vpc_id = "vpc-muytmxhk"
-      subnet_id = "subnet-1ppkfg6t"
+      vpc_id = "vpc-jcy9nxgi"
+      subnet_id = "subnet-o787f1oz"
     }
     node_num = 1
   }
   zone_settings {
     zone = "ap-shanghai-8"
     vpc_settings {
-      vpc_id = "vpc-muytmxhk"
-      subnet_id = "subnet-1tup7mn1"
+      vpc_id = "vpc-jcy9nxgi"
+      subnet_id = "subnet-huc1agnt"
     }
     node_num = 1
+  }
+  tags {
+    tag_key = "test"
+    tag_value = "test"
+  }
+}
+`
+
+const testAccServerlessHbaseInstanceMultiZoneUpdate = `
+resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance_multi_zone" {
+  instance_name = "tf-test-multi-zone"
+  pay_mode = 0
+  disk_type = "CLOUD_HSSD"
+  disk_size = 100
+  node_type = "4C16G"
+  zone_settings {
+    zone = "ap-shanghai-2"
+    vpc_settings {
+      vpc_id = "vpc-jcy9nxgi"
+      subnet_id = "subnet-q1tbmknp"
+    }
+    node_num = 2
+  }
+  zone_settings {
+    zone = "ap-shanghai-5"
+    vpc_settings {
+      vpc_id = "vpc-jcy9nxgi"
+      subnet_id = "subnet-o787f1oz"
+    }
+    node_num = 2
+  }
+  zone_settings {
+    zone = "ap-shanghai-8"
+    vpc_settings {
+      vpc_id = "vpc-jcy9nxgi"
+      subnet_id = "subnet-huc1agnt"
+    }
+    node_num = 2
   }
   tags {
     tag_key = "test"

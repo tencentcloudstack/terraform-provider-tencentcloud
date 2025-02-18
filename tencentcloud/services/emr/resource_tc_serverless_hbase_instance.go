@@ -249,6 +249,8 @@ func resourceTencentCloudServerlessHbaseInstanceCreate(d *schema.ResourceData, m
 	instanceId := *response.Response.InstanceId
 	d.SetId(instanceId)
 
+	time.Sleep(10 * time.Second)
+
 	emrService := EMRService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
@@ -431,6 +433,9 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 				log.Printf("[CRITAL]%s update serverless hbase instance failed, reason:%+v", logId, err)
 				return err
 			}
+
+			time.Sleep(10 * time.Second)
+
 			emrService := EMRService{
 				client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 			}

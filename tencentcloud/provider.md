@@ -1329,6 +1329,7 @@ MapReduce(EMR)
     tencentcloud_emr_nodes
     tencentcloud_emr_cvm_quota
     tencentcloud_lite_hbase_instances
+    tencentcloud_serverless_hbase_instances
 
   Resource
     tencentcloud_emr_cluster
