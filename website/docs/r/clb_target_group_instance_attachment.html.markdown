@@ -66,7 +66,7 @@ resource "tencentcloud_instance" "example" {
   }
 }
 
-data "tencentcloud_instances" "foo" {
+data "tencentcloud_instances" "instances" {
   instance_id = tencentcloud_instance.example.id
 }
 
@@ -77,7 +77,7 @@ resource "tencentcloud_clb_target_group" "example" {
 
 resource "tencentcloud_clb_target_group_instance_attachment" "example" {
   target_group_id = tencentcloud_clb_target_group.example.id
-  bind_ip         = data.tencentcloud_instances.foo.instance_list[0].private_ip
+  bind_ip         = data.tencentcloud_instances.instances.instance_list[0].private_ip
   port            = 8080
   weight          = 10
 }
