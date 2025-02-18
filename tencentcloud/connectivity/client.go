@@ -67,6 +67,7 @@ import (
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
+	mqtt "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt/v20240516"
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -229,6 +230,7 @@ type TencentCloudClient struct {
 	clsv20201016Conn            *cls.Client
 	monitor20180724Conn         *monitor.Client
 	cdcv20201214Conn            *cdc.Client
+	mqttv20240516Conn           *mqtt.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2045,4 +2047,17 @@ func (me *TencentCloudClient) UseCdcV20201214Client() *cdc.Client {
 	me.cdcv20201214Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cdcv20201214Conn
+}
+
+// UseMqttV20240516Client return MQTT client for service
+func (me *TencentCloudClient) UseMqttV20240516Client() *mqtt.Client {
+	if me.mqttv20240516Conn != nil {
+		return me.mqttv20240516Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.mqttv20240516Conn, _ = mqtt.NewClient(me.Credential, me.Region, cpf)
+	me.mqttv20240516Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mqttv20240516Conn
 }

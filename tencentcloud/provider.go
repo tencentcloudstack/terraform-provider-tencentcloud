@@ -78,6 +78,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mps"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mqtt"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pls"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
@@ -2223,6 +2224,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_serverless_hbase_instance":      emr.ResourceTencentCloudServerlessHbaseInstance(),
 			"tencentcloud_kubernetes_log_config":          tke.ResourceTencentCloudKubernetesLogConfig(),
 			"tencentcloud_tcss_image_registry":            tcss.ResourceTencentCloudTcssImageRegistry(),
+			"tencentcloud_mqtt_instance":                  mqtt.ResourceTencentCloudMqttInstance(),
+			"tencentcloud_mqtt_instance_public_endpoint":  mqtt.ResourceTencentCloudMqttInstancePublicEndpoint(),
+			"tencentcloud_mqtt_topic":                     mqtt.ResourceTencentCloudMqttTopic(),
 		},
 
 		ConfigureFunc: providerConfigure,
