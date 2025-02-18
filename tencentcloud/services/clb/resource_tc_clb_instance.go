@@ -102,7 +102,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.",
+				Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is Mbps.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
