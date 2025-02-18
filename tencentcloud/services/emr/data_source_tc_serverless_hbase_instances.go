@@ -10,10 +10,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func DataSourceTencentCloudLiteHbaseInstances() *schema.Resource {
+func DataSourceTencentCloudServerlessHbaseInstances() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This data source will been deprecated in Terraform TencentCloud provider later version. Please use `tencentcloud_serverless_hbase_instances` instead.",
-		Read:               dataSourceTencentCloudLiteHbaseInstancesRead,
+		Read: dataSourceTencentCloudServerlessHbaseRead,
 		Schema: map[string]*schema.Schema{
 			"display_strategy": {
 				Type:     schema.TypeString,
@@ -205,8 +204,8 @@ func DataSourceTencentCloudLiteHbaseInstances() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudLiteHbaseInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("data_source.tencentcloud_lite_hbase_instances.read")()
+func dataSourceTencentCloudServerlessHbaseRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_serverless_hbase_instances.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
