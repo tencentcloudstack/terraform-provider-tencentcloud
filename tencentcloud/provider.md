@@ -2261,3 +2261,9 @@ THPC
 Tencent Container Security Service(TCSS)
   Resource
     tencentcloud_tcss_image_registry
+
+TDMQ for MQTT(MQTT)
+  Resource
+    tencentcloud_mqtt_instance
+    tencentcloud_mqtt_instance_public_endpoint
+    tencentcloud_mqtt_topic

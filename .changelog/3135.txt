@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_mqtt_instance
+```
+
+```release-note:new-resource
+tencentcloud_mqtt_instance_public_endpoint
+```
+
+```release-note:new-resource
+tencentcloud_mqtt_topic
+```
