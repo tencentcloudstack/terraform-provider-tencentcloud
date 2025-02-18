@@ -1,3 +1,20 @@
+## 1.81.168 (February 18 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_serverless_hbase_instances` ([#3140](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3140))
+* **New Resource:** `tencentcloud_mqtt_instance` ([#3135](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3135))
+* **New Resource:** `tencentcloud_mqtt_instance_public_endpoint` ([#3135](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3135))
+* **New Resource:** `tencentcloud_mqtt_topic` ([#3135](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3135))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: update doc ([#3137](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3137))
+* resource/tencentcloud_clb_target_group_instance_attachment: Query module update returns weight field ([#3138](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3138))
+* resource/tencentcloud_clb_target_group_instance_attachment: operation increases status query ([#3139](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3139))
+* resource/tencentcloud_invite_organization_member_operation: update doc ([#3136](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3136))
+* resource/tencentcloud_serverless_hbase_instance: fixed a delay in status updates ([#3140](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3140))
+
 ## 1.81.167 (February 14 , 2025)
 
 FEATURES:
