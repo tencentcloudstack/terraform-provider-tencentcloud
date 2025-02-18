@@ -1277,15 +1277,28 @@ func (me *ClbService) RegisterTargetInstances(ctx context.Context, targetGroupId
 			Weight: &weight,
 		},
 	}
+
+	var requestId string
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		_, err := me.client.UseClbClient().RegisterTargetGroupInstances(request)
+		result, err := me.client.UseClbClient().RegisterTargetGroupInstances(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Register target group instance failed, Response is nil."))
+		}
+
+		requestId = *result.Response.RequestId
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
+	if retryErr != nil {
+		return retryErr
 	}
 
 	return nil
@@ -1301,15 +1314,27 @@ func (me *ClbService) DeregisterTargetInstances(ctx context.Context, targetGroup
 		},
 	}
 
+	var requestId string
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		_, err := me.client.UseClbClient().DeregisterTargetGroupInstances(request)
+		result, err := me.client.UseClbClient().DeregisterTargetGroupInstances(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Deregister target group instance failed, Response is nil."))
+		}
+
+		requestId = *result.Response.RequestId
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
+	if retryErr != nil {
+		return retryErr
 	}
 
 	return nil
@@ -1542,9 +1567,10 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 	request.TargetGroupId = &targetGroupId
 	request.TargetGroupInstances = []*clb.TargetGroupInstance{&instance}
 
+	var requestId string
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
+		result, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
 		if err != nil {
 			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				if e.GetCode() == "FailedOperation.ResourceInOperating" {
@@ -1555,12 +1581,23 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Modify target group instance weight failed, Response is nil."))
+		}
+
+		requestId = *result.Response.RequestId
 		return nil
 	})
 
 	if err != nil {
 		return err
 	}
+
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
+	if retryErr != nil {
+		return retryErr
+	}
+
 	return nil
 }
 
