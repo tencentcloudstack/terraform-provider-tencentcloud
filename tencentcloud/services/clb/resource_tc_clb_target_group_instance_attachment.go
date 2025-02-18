@@ -120,6 +120,9 @@ func resourceTencentCloudClbTGAttachmentInstanceRead(d *schema.ResourceData, met
 			_ = d.Set("target_group_id", idSplit[0])
 			_ = d.Set("bind_ip", idSplit[1])
 			_ = d.Set("port", helper.StrToInt64(idSplit[2]))
+			if tgInstance.Weight != nil {
+				_ = d.Set("weight", *tgInstance.Weight)
+			}
 			return nil
 		}
 	}
