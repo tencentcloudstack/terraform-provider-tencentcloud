@@ -37,12 +37,13 @@ resource "tencentcloud_waf_custom_rule" "example" {
 
 The following arguments are supported:
 
-* `bypass` - (Required, String) Details of bypass.
+* `action_type` - (Required, String) Action type, 1 represents blocking, 2 represents captcha, 3 represents observation, and 4 represents redirection.
 * `domain` - (Required, String) Domain name that needs to add policy.
 * `expire_time` - (Required, String) Expiration time, measured in seconds, such as 1677254399, which means the expiration time is 2023-02-24 23:59:59 0 means never expires.
 * `name` - (Required, String) Rule Name.
-* `sort_id` - (Required, String) Priority, value range 1-100, The smaller the number, the higher the execution priority of this rule.
+* `sort_id` - (Required, String) Priority, value range 0-100.
 * `strategies` - (Required, List) Strategies detail.
+* `redirect` - (Optional, String) If the action is a redirect, it represents the redirect address; Other situations can be left blank.
 * `status` - (Optional, String) The status of the switch, 1 is on, 0 is off, default 1.
 
 The `strategies` object supports the following:
