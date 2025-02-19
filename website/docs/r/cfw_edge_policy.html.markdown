@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfw_edge_policy"
 sidebar_current: "docs-tencentcloud-resource-cfw_edge_policy"
 description: |-
-  Provides a resource to create a cfw edge_policy
+  Provides a resource to create a CFW edge policy
 ---
 
 # tencentcloud_cfw_edge_policy
 
-Provides a resource to create a cfw edge_policy
+Provides a resource to create a CFW edge policy
 
 ## Example Usage
 
@@ -61,6 +61,7 @@ The following arguments are supported:
 * `target_type` - (Required, String) Access purpose type: For inbound rules, the type can be net, instance, tag, template, group; for outbound rules, it can be net, location, vendor, template.
 * `description` - (Optional, String) Description.
 * `enable` - (Optional, String) Rule status, true means enabled, false means disabled. Default is true.
+* `param_template_id` - (Optional, String) Parameter template id.
 * `scope` - (Optional, String) Effective range. serial: serial; side: bypass; all: global, Default is all.
 
 ## Attributes Reference
@@ -68,15 +69,14 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `param_template_id` - Parameter template id.
 * `uuid` - The unique id corresponding to the rule, no need to fill in when creating the rule.
 
 
 ## Import
 
-cfw edge_policy can be imported using the id, e.g.
+CFW edge policy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfw_edge_policy.example edge_policy_id
+terraform import tencentcloud_cfw_edge_policy.example 1859582
 ```
 
