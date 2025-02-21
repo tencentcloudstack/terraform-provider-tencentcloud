@@ -1,4 +1,4 @@
-Provides a resource to create a cfw nat_policy
+Provides a resource to create a CFW nat policy
 
 Example Usage
 
@@ -14,13 +14,14 @@ resource "tencentcloud_cfw_nat_policy" "example" {
   direction      = 1
   enable         = "true"
   description    = "policy description."
+  scope          = "ALL"
 }
 ```
 
 Import
 
-cfw nat_policy can be imported using the id, e.g.
+CFW nat policy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfw_nat_policy.example nat_policy_id
+terraform import tencentcloud_cfw_nat_policy.example 134123
 ```

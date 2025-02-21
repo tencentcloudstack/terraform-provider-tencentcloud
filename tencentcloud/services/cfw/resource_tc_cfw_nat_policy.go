@@ -85,8 +85,20 @@ func ResourceTencentCloudCfwNatPolicy() *schema.Resource {
 			},
 			"param_template_id": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
 				Description: "Parameter template id. Note: This field may return null, indicating that no valid value can be obtained.",
+			},
+			"internal_uuid": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Internal ID.",
+			},
+			"scope": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Scope of effective rules. ALL: Global effectiveness; ap-guangzhou: Effective territory; cfwnat-xxx: Effectiveness based on instance dimension.",
 			},
 		},
 	}
@@ -142,6 +154,14 @@ func resourceTencentCloudCfwNatPolicyCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("description"); ok {
 		createNatRuleItem.Description = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("param_template_id"); ok {
+		createNatRuleItem.ParamTemplateId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("scope"); ok {
+		createNatRuleItem.Scope = helper.String(v.(string))
 	}
 
 	request.Rules = append(request.Rules, &createNatRuleItem)
@@ -212,6 +232,10 @@ func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface
 		_ = d.Set("protocol", natPolicy.Protocol)
 	}
 
+	if natPolicy.RuleAction != nil {
+		_ = d.Set("rule_action", natPolicy.RuleAction)
+	}
+
 	if natPolicy.Port != nil {
 		_ = d.Set("port", natPolicy.Port)
 	}
@@ -238,6 +262,10 @@ func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface
 
 	if natPolicy.ParamTemplateId != nil {
 		_ = d.Set("param_template_id", natPolicy.ParamTemplateId)
+	}
+
+	if natPolicy.InternalUuid != nil {
+		_ = d.Set("internal_uuid", natPolicy.InternalUuid)
 	}
 
 	return nil
@@ -303,6 +331,14 @@ func resourceTencentCloudCfwNatPolicyUpdate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("description"); ok {
 		modifyRuleItem.Description = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("param_template_id"); ok {
+		modifyRuleItem.ParamTemplateId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("scope"); ok {
+		modifyRuleItem.Scope = helper.String(v.(string))
 	}
 
 	request.Rules = append(request.Rules, &modifyRuleItem)
