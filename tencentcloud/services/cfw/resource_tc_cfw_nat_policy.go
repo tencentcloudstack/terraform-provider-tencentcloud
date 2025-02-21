@@ -97,7 +97,7 @@ func ResourceTencentCloudCfwNatPolicy() *schema.Resource {
 			"scope": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     "ALL",
+				Computed:    true,
 				Description: "Scope of effective rules. ALL: Global effectiveness; ap-guangzhou: Effective territory; cfwnat-xxx: Effectiveness based on instance dimension.",
 			},
 		},

@@ -88,7 +88,7 @@ func ResourceTencentCloudCfwEdgePolicy() *schema.Resource {
 			"scope": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      POLICY_SCOPE_ALL,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(POLICY_SCOPE),
 				Description:  "Effective range. serial: serial; side: bypass; all: global, Default is all.",
 			},
