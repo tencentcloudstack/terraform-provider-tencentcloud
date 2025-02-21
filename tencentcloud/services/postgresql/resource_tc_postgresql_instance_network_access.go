@@ -2,10 +2,10 @@ package postgresql
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,7 +21,7 @@ func ResourceTencentCloudPostgresqlInstanceNetworkAccess() *schema.Resource {
 		Read:   resourceTencentCloudPostgresqlInstanceNetworkAccessRead,
 		Delete: resourceTencentCloudPostgresqlInstanceNetworkAccessDelete,
 		Importer: &schema.ResourceImporter{
-			StateContext: networkAccessCustomResourceImporter,
+			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
@@ -43,13 +43,6 @@ func ResourceTencentCloudPostgresqlInstanceNetworkAccess() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "Subnet ID.",
-			},
-
-			"is_assign_vip": {
-				Type:        schema.TypeBool,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Whether to manually assign the VIP. Valid values: `true` (manually assign), `false` (automatically assign).",
 			},
 
 			"vip": {
@@ -93,12 +86,11 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessCreate(d *schema.Resourc
 		subnetId = v.(string)
 	}
 
-	if v, ok := d.GetOkExists("is_assign_vip"); ok {
-		request.IsAssignVip = helper.Bool(v.(bool))
-	}
+	request.IsAssignVip = helper.Bool(false)
 
 	if v, ok := d.GetOk("vip"); ok {
 		request.Vip = helper.String(v.(string))
+		request.IsAssignVip = helper.Bool(true)
 		vip = v.(string)
 	}
 
@@ -128,22 +120,41 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessCreate(d *schema.Resourc
 	}
 
 	// wait & get vip
+	flowId := *response.Response.FlowId
 	flowRequest := postgresqlv20170312.NewDescribeTasksRequest()
-	flowRequest.TaskId = response.Response.FlowId
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client().DescribeTasksWithContext(ctx, request)
+	flowRequest.TaskId = helper.Int64Uint64(flowId)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client().DescribeTasksWithContext(ctx, flowRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create postgresql instance network access failed, Response is nil."))
+		if result == nil || result.Response == nil || result.Response.TaskSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tasks failed, Response is nil."))
 		}
 
-		response = result
-		return nil
+		if len(result.Response.TaskSet) == 0 {
+			return resource.RetryableError(fmt.Errorf("wait TaskSet init."))
+		}
+
+		if result.Response.TaskSet[0].Status != nil && *result.Response.TaskSet[0].Status == "Success" {
+			if result.Response.TaskSet[0].TaskDetail != nil && result.Response.TaskSet[0].TaskDetail.Output != nil {
+				outPutObj := make(map[string]interface{})
+				outputStr := *result.Response.TaskSet[0].TaskDetail.Output
+				e := json.Unmarshal([]byte(outputStr), &outPutObj)
+				if e != nil {
+					return resource.NonRetryableError(fmt.Errorf("Json unmarshall output error: %s.", e.Error()))
+				}
+
+				dBInstanceNetInfo := outPutObj["DBInstanceNetInfo"].(map[string]interface{})
+				vip = dBInstanceNetInfo["Ip"].(string)
+				return nil
+			}
+		}
+
+		return resource.RetryableError(fmt.Errorf("postgresql instance network access is running, status is %s.", *result.Response.TaskSet[0].Status))
 	})
 
 	if err != nil {
@@ -160,16 +171,17 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessRead(d *schema.ResourceD
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_instance_network_access.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	dbInsntaceId := idSplit[0]
 	vpcId := idSplit[1]
 	subnetId := idSplit[2]
@@ -191,8 +203,9 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessRead(d *schema.ResourceD
 		log.Printf("[WARN]%s resource `postgresql_instance_network_access` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if err := resourceTencentCloudPostgresqlInstanceNetworkAccessReadPreHandleResponse0(ctx, respData); err != nil {
-		return err
+
+	if respData.DBInstanceId != nil {
+		_ = d.Set("db_instance_id", respData.DBInstanceId)
 	}
 
 	if respData.VpcId != nil {
@@ -203,13 +216,15 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessRead(d *schema.ResourceD
 		_ = d.Set("subnet_id", respData.SubnetId)
 	}
 
-	if respData.DBInstanceId != nil {
-		_ = d.Set("db_instance_id", respData.DBInstanceId)
+	if respData.DBInstanceNetInfo != nil && len(respData.DBInstanceNetInfo) > 0 {
+		for _, item := range respData.DBInstanceNetInfo {
+			if *item.Ip == vip {
+				_ = d.Set("vip", item.Ip)
+				break
+			}
+		}
 	}
 
-	_ = vpcId
-	_ = subnetId
-	_ = vip
 	return nil
 }
 
@@ -217,31 +232,27 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessDelete(d *schema.Resourc
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_instance_network_access.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request  = postgresqlv20170312.NewDeleteDBInstanceNetworkAccessRequest()
+		response = postgresqlv20170312.NewDeleteDBInstanceNetworkAccessResponse()
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	dbInsntaceId := idSplit[0]
 	vpcId := idSplit[1]
 	subnetId := idSplit[2]
 	vip := idSplit[3]
 
-	var (
-		request  = postgresqlv20170312.NewDeleteDBInstanceNetworkAccessRequest()
-		response = postgresqlv20170312.NewDeleteDBInstanceNetworkAccessResponse()
-	)
-
 	request.DBInstanceId = helper.String(dbInsntaceId)
-
 	request.VpcId = helper.String(vpcId)
-
 	request.SubnetId = helper.String(subnetId)
-
 	request.Vip = helper.String(vip)
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client().DeleteDBInstanceNetworkAccessWithContext(ctx, request)
 		if e != nil {
@@ -249,82 +260,51 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessDelete(d *schema.Resourc
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete postgresql instance network access failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete postgresql instance network access failed, reason:%+v", logId, err)
 		return err
 	}
 
-	_ = response
-	if _, err := (&resource.StateChangeConf{
-		Delay:      10 * time.Second,
-		MinTimeout: 3 * time.Second,
-		Pending:    []string{},
-		Refresh:    resourcePostgresqlInstanceNetworkAccessDeleteStateRefreshFunc_0_0(ctx, dbInsntaceId, vpcId, subnetId, vip),
-		Target:     []string{"Running"},
-		Timeout:    180 * time.Second,
-	}).WaitForStateContext(ctx); err != nil {
+	// wait
+	flowId := *response.Response.FlowId
+	flowRequest := postgresqlv20170312.NewDescribeTasksRequest()
+	flowRequest.TaskId = helper.Int64Uint64(flowId)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client().DescribeTasksWithContext(ctx, flowRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.TaskSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tasks failed, Response is nil."))
+		}
+
+		if len(result.Response.TaskSet) == 0 {
+			return resource.RetryableError(fmt.Errorf("wait TaskSet init."))
+		}
+
+		if result.Response.TaskSet[0].Status != nil && *result.Response.TaskSet[0].Status == "Success" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("postgresql instance network access is running, status is %s.", *result.Response.TaskSet[0].Status))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete postgresql instance network access failed, reason:%+v", logId, err)
 		return err
 	}
+
 	return nil
-}
-
-func resourcePostgresqlInstanceNetworkAccessCreateStateRefreshFunc_0_0(ctx context.Context, dbInsntaceId string, vpcId string, subnetId string, vip string) resource.StateRefreshFunc {
-	var req *postgresqlv20170312.DescribeDBInstanceAttributeRequest
-	return func() (interface{}, string, error) {
-		meta := tccommon.ProviderMetaFromContext(ctx)
-		if meta == nil {
-			return nil, "", fmt.Errorf("resource data can not be nil")
-		}
-		if req == nil {
-			d := tccommon.ResourceDataFromContext(ctx)
-			if d == nil {
-				return nil, "", fmt.Errorf("resource data can not be nil")
-			}
-			_ = d
-			req = postgresqlv20170312.NewDescribeDBInstanceAttributeRequest()
-			req.DBInstanceId = helper.String(dbInsntaceId)
-
-		}
-		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client().DescribeDBInstanceAttributeWithContext(ctx, req)
-		if err != nil {
-			return nil, "", err
-		}
-		if resp == nil || resp.Response == nil {
-			return nil, "", nil
-		}
-		state := fmt.Sprintf("%v", *resp.Response.DBInstance.DBInstanceStatus)
-		return resp.Response, state, nil
-	}
-}
-
-func resourcePostgresqlInstanceNetworkAccessDeleteStateRefreshFunc_0_0(ctx context.Context, dbInsntaceId string, vpcId string, subnetId string, vip string) resource.StateRefreshFunc {
-	var req *postgresqlv20170312.DescribeDBInstanceAttributeRequest
-	return func() (interface{}, string, error) {
-		meta := tccommon.ProviderMetaFromContext(ctx)
-		if meta == nil {
-			return nil, "", fmt.Errorf("resource data can not be nil")
-		}
-		if req == nil {
-			d := tccommon.ResourceDataFromContext(ctx)
-			if d == nil {
-				return nil, "", fmt.Errorf("resource data can not be nil")
-			}
-			_ = d
-			req = postgresqlv20170312.NewDescribeDBInstanceAttributeRequest()
-			req.DBInstanceId = helper.String(dbInsntaceId)
-
-		}
-		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client().DescribeDBInstanceAttributeWithContext(ctx, req)
-		if err != nil {
-			return nil, "", err
-		}
-		if resp == nil || resp.Response == nil {
-			return nil, "", nil
-		}
-		state := fmt.Sprintf("%v", *resp.Response.DBInstance.DBInstanceStatus)
-		return resp.Response, state, nil
-	}
 }

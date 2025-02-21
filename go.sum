@@ -941,6 +941,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1096 h1:DMo
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1096/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1099 h1:4fQ53ORk6Eayw1H2kg43PoBnUuhGR6WRG6rtec/i3oI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1099/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1103 h1:iXN1f1GxuX9wdluA+knK8xKsAWsOlz29V19fVcuuv9g=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1103/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.0.993 h1:WlPgXldQCxt7qi5Xrc6j6zTrsXWzN5BcOGs7Irq7fwQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.0.993/go.mod h1:Z9U8zNtyuyKhjS0698wqsrG/kLx1TQ5CEixXBwVe7xY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860 h1:F3esKBIT3HW9+7Gt8cVgf8X06VdGIczpgLBUECzSEzU=
@@ -1001,6 +1003,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.1038 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.1038/go.mod h1:ZcauOIKWXstNwe6IlD3iBBxzljEWdQjZbTc6PfwsPxQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.1010 h1:lx554ZfB++mge+/Gk7LnDUI5Dwm9r+DgGNN9C/DqhE4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.1010/go.mod h1:GGhAf2ehV2/jwKf3Sezr2x/soJ3nDuefJFlcoZnlflA=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.1103 h1:lJW5ID6x9DS2xZzzALJVpY9zhNfqhBl/e2YDUkbzBcg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.1103/go.mod h1:PI4OqbnLLCWw6u/vNHnVVZeV/awmB9+zpLdhjYhWbKs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.1038 h1:4rzyVxkDB27v73jDXPr5eGAwjN859R7SsqniCt+46XE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.1038/go.mod h1:TAHhxxDVV36Pe4P4Gel3dgX4kHUfQO7f27GzRf8DAro=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762 h1:rZDKucVVtTnmnbZFDyh6t47dHswkb2oSuOxOHTTkygA=
