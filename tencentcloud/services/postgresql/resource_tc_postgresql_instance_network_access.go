@@ -204,25 +204,19 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessRead(d *schema.ResourceD
 		return nil
 	}
 
-	if respData.DBInstanceId != nil {
-		_ = d.Set("db_instance_id", respData.DBInstanceId)
-	}
-
-	if respData.VpcId != nil {
-		_ = d.Set("vpc_id", respData.VpcId)
-	}
-
-	if respData.SubnetId != nil {
-		_ = d.Set("subnet_id", respData.SubnetId)
-	}
-
+	var checkFlag bool
 	if respData.DBInstanceNetInfo != nil && len(respData.DBInstanceNetInfo) > 0 {
 		for _, item := range respData.DBInstanceNetInfo {
 			if *item.Ip == vip {
 				_ = d.Set("vip", item.Ip)
+				checkFlag = true
 				break
 			}
 		}
+	}
+
+	if checkFlag == false {
+		return fmt.Errorf("Not found vip %s, please check if it has been deleted.", vip)
 	}
 
 	return nil
