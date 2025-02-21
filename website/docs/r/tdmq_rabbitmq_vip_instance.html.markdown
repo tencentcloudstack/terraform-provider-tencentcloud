@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdmq_rabbitmq_vip_instance"
 sidebar_current: "docs-tencentcloud-resource-tdmq_rabbitmq_vip_instance"
 description: |-
-  Provides a resource to create a tdmq rabbitmq_vip_instance
+  Provides a resource to create a TDMQ rabbitmq vip instance
 ---
 
 # tencentcloud_tdmq_rabbitmq_vip_instance
 
-Provides a resource to create a tdmq rabbitmq_vip_instance
+Provides a resource to create a TDMQ rabbitmq vip instance
 
 ## Example Usage
 
@@ -73,7 +73,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-tdmq rabbitmq_vip_instance can be imported using the id, e.g.
+TDMQ rabbitmq vip instance can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_tdmq_rabbitmq_vip_instance.example amqp-mok52gmn
