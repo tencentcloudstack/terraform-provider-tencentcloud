@@ -27,7 +27,7 @@ resource "tencentcloud_dc_instance" "example" {
 ### Or
 
 ```hcl
-resource "tencentcloud_dc_instance" "instance" {
+resource "tencentcloud_dc_instance" "example" {
   direct_connect_name     = "tf-example"
   access_point_id         = "ap-shenzhen-b-ft"
   line_operator           = "In-houseWiring"
