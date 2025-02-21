@@ -59,7 +59,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1055
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1103
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
