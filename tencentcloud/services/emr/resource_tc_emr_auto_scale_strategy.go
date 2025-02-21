@@ -41,7 +41,6 @@ func ResourceTencentCloudEmrAutoScaleStrategy() *schema.Resource {
 				ConflictsWith: []string{"time_auto_scale_strategy"},
 				Optional:      true,
 				Computed:      true,
-				MaxItems:      1,
 				Description:   "Expansion rules based on load.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -201,7 +200,6 @@ func ResourceTencentCloudEmrAutoScaleStrategy() *schema.Resource {
 				Type:          schema.TypeList,
 				ConflictsWith: []string{"load_auto_scale_strategy"},
 				Optional:      true,
-				MaxItems:      1,
 				Description:   "Rules for scaling up and down over time.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -440,268 +438,283 @@ func resourceTencentCloudEmrAutoScaleStrategyCreate(d *schema.ResourceData, meta
 		instanceId   string
 		strategyType int64
 	)
-	var (
-		request  = emr.NewAddMetricScaleStrategyRequest()
-		response = emr.NewAddMetricScaleStrategyResponse()
-	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
-		request.InstanceId = helper.String(instanceId)
 	}
 
 	if v, ok := d.GetOkExists("strategy_type"); ok {
 		strategyType = int64(v.(int))
-		request.StrategyType = helper.IntInt64(v.(int))
 	}
 
-	if loadAutoScaleStrategyMap, ok := helper.InterfacesHeadMap(d, "load_auto_scale_strategy"); ok && strategyType == 1 {
-		loadAutoScaleStrategy := emr.LoadAutoScaleStrategy{}
-		if v, ok := loadAutoScaleStrategyMap["strategy_id"]; ok {
-			loadAutoScaleStrategy.StrategyId = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["strategy_name"]; ok {
-			loadAutoScaleStrategy.StrategyName = helper.String(v.(string))
-		}
-		if v, ok := loadAutoScaleStrategyMap["calm_down_time"]; ok {
-			loadAutoScaleStrategy.CalmDownTime = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["scale_action"]; ok {
-			loadAutoScaleStrategy.ScaleAction = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["scale_num"]; ok {
-			loadAutoScaleStrategy.ScaleNum = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["process_method"]; ok {
-			loadAutoScaleStrategy.ProcessMethod = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["priority"]; ok {
-			loadAutoScaleStrategy.Priority = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["strategy_status"]; ok {
-			loadAutoScaleStrategy.StrategyStatus = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["yarn_node_label"]; ok {
-			loadAutoScaleStrategy.YarnNodeLabel = helper.String(v.(string))
-		}
-		if v, ok := loadAutoScaleStrategyMap["period_valid"]; ok {
-			loadAutoScaleStrategy.PeriodValid = helper.String(v.(string))
-		}
-		if v, ok := loadAutoScaleStrategyMap["grace_down_flag"]; ok {
-			loadAutoScaleStrategy.GraceDownFlag = helper.Bool(v.(bool))
-		}
-		if v, ok := loadAutoScaleStrategyMap["grace_down_time"]; ok {
-			loadAutoScaleStrategy.GraceDownTime = helper.IntInt64(v.(int))
-		}
-		if v, ok := loadAutoScaleStrategyMap["tags"]; ok {
-			for _, item := range v.([]interface{}) {
-				tagsMap := item.(map[string]interface{})
-				tag := emr.Tag{}
-				if v, ok := tagsMap["tag_key"]; ok {
-					tag.TagKey = helper.String(v.(string))
+	if v, ok := d.GetOk("load_auto_scale_strategy"); ok && strategyType == 1 {
+		for _, loadAutoScaleStrategy := range v.([]interface{}) {
+			request := emr.NewAddMetricScaleStrategyRequest()
+			request.InstanceId = helper.String(instanceId)
+			request.StrategyType = helper.Int64(strategyType)
+			loadAutoScaleStrategyMap := loadAutoScaleStrategy.(map[string]interface{})
+			loadAutoScaleStrategy := emr.LoadAutoScaleStrategy{}
+			if v, ok := loadAutoScaleStrategyMap["strategy_id"]; ok {
+				loadAutoScaleStrategy.StrategyId = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["strategy_name"]; ok {
+				loadAutoScaleStrategy.StrategyName = helper.String(v.(string))
+			}
+			if v, ok := loadAutoScaleStrategyMap["calm_down_time"]; ok {
+				loadAutoScaleStrategy.CalmDownTime = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["scale_action"]; ok {
+				loadAutoScaleStrategy.ScaleAction = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["scale_num"]; ok {
+				loadAutoScaleStrategy.ScaleNum = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["process_method"]; ok {
+				loadAutoScaleStrategy.ProcessMethod = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["priority"]; ok {
+				loadAutoScaleStrategy.Priority = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["strategy_status"]; ok {
+				loadAutoScaleStrategy.StrategyStatus = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["yarn_node_label"]; ok {
+				loadAutoScaleStrategy.YarnNodeLabel = helper.String(v.(string))
+			}
+			if v, ok := loadAutoScaleStrategyMap["period_valid"]; ok {
+				loadAutoScaleStrategy.PeriodValid = helper.String(v.(string))
+			}
+			if v, ok := loadAutoScaleStrategyMap["grace_down_flag"]; ok {
+				loadAutoScaleStrategy.GraceDownFlag = helper.Bool(v.(bool))
+			}
+			if v, ok := loadAutoScaleStrategyMap["grace_down_time"]; ok {
+				loadAutoScaleStrategy.GraceDownTime = helper.IntInt64(v.(int))
+			}
+			if v, ok := loadAutoScaleStrategyMap["tags"]; ok {
+				for _, item := range v.([]interface{}) {
+					tagsMap := item.(map[string]interface{})
+					tag := emr.Tag{}
+					if v, ok := tagsMap["tag_key"]; ok {
+						tag.TagKey = helper.String(v.(string))
+					}
+					if v, ok := tagsMap["tag_value"]; ok {
+						tag.TagValue = helper.String(v.(string))
+					}
+					loadAutoScaleStrategy.Tags = append(loadAutoScaleStrategy.Tags, &tag)
 				}
-				if v, ok := tagsMap["tag_value"]; ok {
-					tag.TagValue = helper.String(v.(string))
+			}
+			if v, ok := loadAutoScaleStrategyMap["config_group_assigned"]; ok {
+				loadAutoScaleStrategy.ConfigGroupAssigned = helper.String(v.(string))
+			}
+			if v, ok := loadAutoScaleStrategyMap["measure_method"]; ok {
+				loadAutoScaleStrategy.MeasureMethod = helper.String(v.(string))
+			}
+			if loadMetricsConditionsMap, ok := helper.ConvertInterfacesHeadToMap(loadAutoScaleStrategyMap["load_metrics_conditions"]); ok {
+				loadMetricsConditions := emr.LoadMetricsConditions{}
+				if v, ok := loadMetricsConditionsMap["load_metrics"]; ok {
+					for _, item := range v.([]interface{}) {
+						loadMetricsMap := item.(map[string]interface{})
+						loadMetricsCondition := emr.LoadMetricsCondition{}
+						if v, ok := loadMetricsMap["statistic_period"]; ok {
+							loadMetricsCondition.StatisticPeriod = helper.IntInt64(v.(int))
+						}
+						if v, ok := loadMetricsMap["trigger_threshold"]; ok {
+							loadMetricsCondition.TriggerThreshold = helper.IntInt64(v.(int))
+						}
+						if v, ok := loadMetricsMap["load_metrics"]; ok {
+							loadMetricsCondition.LoadMetrics = helper.String(v.(string))
+						}
+						if v, ok := loadMetricsMap["metric_id"]; ok {
+							loadMetricsCondition.MetricId = helper.IntInt64(v.(int))
+						}
+						if v, ok := loadMetricsMap["conditions"]; ok {
+							for _, item := range v.([]interface{}) {
+								conditionsMap := item.(map[string]interface{})
+								triggerCondition := emr.TriggerCondition{}
+								if v, ok := conditionsMap["compare_method"]; ok {
+									triggerCondition.CompareMethod = helper.IntInt64(v.(int))
+								}
+								if v, ok := conditionsMap["threshold"]; ok {
+									triggerCondition.Threshold = helper.Float64(v.(float64))
+								}
+								loadMetricsCondition.Conditions = append(loadMetricsCondition.Conditions, &triggerCondition)
+							}
+						}
+						loadMetricsConditions.LoadMetrics = append(loadMetricsConditions.LoadMetrics, &loadMetricsCondition)
+					}
 				}
-				loadAutoScaleStrategy.Tags = append(loadAutoScaleStrategy.Tags, &tag)
+				loadAutoScaleStrategy.LoadMetricsConditions = &loadMetricsConditions
+			}
+			request.LoadAutoScaleStrategy = &loadAutoScaleStrategy
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().AddMetricScaleStrategyWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s create emr auto scale strategy failed, reason:%+v", logId, err)
+				return err
 			}
 		}
-		if v, ok := loadAutoScaleStrategyMap["config_group_assigned"]; ok {
-			loadAutoScaleStrategy.ConfigGroupAssigned = helper.String(v.(string))
-		}
-		if v, ok := loadAutoScaleStrategyMap["measure_method"]; ok {
-			loadAutoScaleStrategy.MeasureMethod = helper.String(v.(string))
-		}
-		if loadMetricsConditionsMap, ok := helper.ConvertInterfacesHeadToMap(loadAutoScaleStrategyMap["load_metrics_conditions"]); ok {
-			loadMetricsConditions := emr.LoadMetricsConditions{}
-			if v, ok := loadMetricsConditionsMap["load_metrics"]; ok {
-				for _, item := range v.([]interface{}) {
-					loadMetricsMap := item.(map[string]interface{})
-					loadMetricsCondition := emr.LoadMetricsCondition{}
-					if v, ok := loadMetricsMap["statistic_period"]; ok {
-						loadMetricsCondition.StatisticPeriod = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("time_auto_scale_strategy"); ok && strategyType == 2 {
+		for _, timeAutoScaleStrategy := range v.([]interface{}) {
+			request := emr.NewAddMetricScaleStrategyRequest()
+			request.InstanceId = helper.String(instanceId)
+			request.StrategyType = helper.Int64(strategyType)
+			timeAutoScaleStrategyMap := timeAutoScaleStrategy.(map[string]interface{})
+			timeAutoScaleStrategy := emr.TimeAutoScaleStrategy{}
+			if v, ok := timeAutoScaleStrategyMap["strategy_name"]; ok {
+				timeAutoScaleStrategy.StrategyName = helper.String(v.(string))
+			}
+			if v, ok := timeAutoScaleStrategyMap["interval_time"]; ok {
+				timeAutoScaleStrategy.IntervalTime = helper.IntUint64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["scale_action"]; ok {
+				timeAutoScaleStrategy.ScaleAction = helper.IntUint64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["scale_num"]; ok {
+				timeAutoScaleStrategy.ScaleNum = helper.IntUint64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["strategy_status"]; ok {
+				timeAutoScaleStrategy.StrategyStatus = helper.IntUint64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["priority"]; ok {
+				timeAutoScaleStrategy.Priority = helper.IntUint64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["retry_valid_time"]; ok {
+				timeAutoScaleStrategy.RetryValidTime = helper.IntUint64(v.(int))
+			}
+			if repeatStrategyMap, ok := helper.ConvertInterfacesHeadToMap(timeAutoScaleStrategyMap["repeat_strategy"]); ok {
+				repeatStrategy := emr.RepeatStrategy{}
+				if v, ok := repeatStrategyMap["repeat_type"]; ok {
+					repeatStrategy.RepeatType = helper.String(v.(string))
+				}
+				if dayRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["day_repeat"]); ok {
+					dayRepeatStrategy := emr.DayRepeatStrategy{}
+					if v, ok := dayRepeatMap["execute_at_time_of_day"]; ok {
+						dayRepeatStrategy.ExecuteAtTimeOfDay = helper.String(v.(string))
 					}
-					if v, ok := loadMetricsMap["trigger_threshold"]; ok {
-						loadMetricsCondition.TriggerThreshold = helper.IntInt64(v.(int))
+					if v, ok := dayRepeatMap["step"]; ok {
+						dayRepeatStrategy.Step = helper.IntUint64(v.(int))
 					}
-					if v, ok := loadMetricsMap["load_metrics"]; ok {
-						loadMetricsCondition.LoadMetrics = helper.String(v.(string))
+					repeatStrategy.DayRepeat = &dayRepeatStrategy
+				}
+				if weekRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["week_repeat"]); ok {
+					weekRepeatStrategy := emr.WeekRepeatStrategy{}
+					if v, ok := weekRepeatMap["execute_at_time_of_day"]; ok {
+						weekRepeatStrategy.ExecuteAtTimeOfDay = helper.String(v.(string))
 					}
-					if v, ok := loadMetricsMap["metric_id"]; ok {
-						loadMetricsCondition.MetricId = helper.IntInt64(v.(int))
-					}
-					if v, ok := loadMetricsMap["conditions"]; ok {
-						for _, item := range v.([]interface{}) {
-							conditionsMap := item.(map[string]interface{})
-							triggerCondition := emr.TriggerCondition{}
-							if v, ok := conditionsMap["compare_method"]; ok {
-								triggerCondition.CompareMethod = helper.IntInt64(v.(int))
-							}
-							if v, ok := conditionsMap["threshold"]; ok {
-								triggerCondition.Threshold = helper.Float64(v.(float64))
-							}
-							loadMetricsCondition.Conditions = append(loadMetricsCondition.Conditions, &triggerCondition)
+					if v, ok := weekRepeatMap["days_of_week"]; ok {
+						daysOfWeekSet := v.(*schema.Set).List()
+						for i := range daysOfWeekSet {
+							daysOfWeek := daysOfWeekSet[i].(int)
+							weekRepeatStrategy.DaysOfWeek = append(weekRepeatStrategy.DaysOfWeek, helper.IntUint64(daysOfWeek))
 						}
 					}
-					loadMetricsConditions.LoadMetrics = append(loadMetricsConditions.LoadMetrics, &loadMetricsCondition)
+					repeatStrategy.WeekRepeat = &weekRepeatStrategy
 				}
-			}
-			loadAutoScaleStrategy.LoadMetricsConditions = &loadMetricsConditions
-		}
-		request.LoadAutoScaleStrategy = &loadAutoScaleStrategy
-	}
-
-	if timeAutoScaleStrategyMap, ok := helper.InterfacesHeadMap(d, "time_auto_scale_strategy"); ok && strategyType == 2 {
-		timeAutoScaleStrategy := emr.TimeAutoScaleStrategy{}
-		if v, ok := timeAutoScaleStrategyMap["strategy_name"]; ok {
-			timeAutoScaleStrategy.StrategyName = helper.String(v.(string))
-		}
-		if v, ok := timeAutoScaleStrategyMap["interval_time"]; ok {
-			timeAutoScaleStrategy.IntervalTime = helper.IntUint64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["scale_action"]; ok {
-			timeAutoScaleStrategy.ScaleAction = helper.IntUint64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["scale_num"]; ok {
-			timeAutoScaleStrategy.ScaleNum = helper.IntUint64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["strategy_status"]; ok {
-			timeAutoScaleStrategy.StrategyStatus = helper.IntUint64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["priority"]; ok {
-			timeAutoScaleStrategy.Priority = helper.IntUint64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["retry_valid_time"]; ok {
-			timeAutoScaleStrategy.RetryValidTime = helper.IntUint64(v.(int))
-		}
-		if repeatStrategyMap, ok := helper.ConvertInterfacesHeadToMap(timeAutoScaleStrategyMap["repeat_strategy"]); ok {
-			repeatStrategy := emr.RepeatStrategy{}
-			if v, ok := repeatStrategyMap["repeat_type"]; ok {
-				repeatStrategy.RepeatType = helper.String(v.(string))
-			}
-			if dayRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["day_repeat"]); ok {
-				dayRepeatStrategy := emr.DayRepeatStrategy{}
-				if v, ok := dayRepeatMap["execute_at_time_of_day"]; ok {
-					dayRepeatStrategy.ExecuteAtTimeOfDay = helper.String(v.(string))
-				}
-				if v, ok := dayRepeatMap["step"]; ok {
-					dayRepeatStrategy.Step = helper.IntUint64(v.(int))
-				}
-				repeatStrategy.DayRepeat = &dayRepeatStrategy
-			}
-			if weekRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["week_repeat"]); ok {
-				weekRepeatStrategy := emr.WeekRepeatStrategy{}
-				if v, ok := weekRepeatMap["execute_at_time_of_day"]; ok {
-					weekRepeatStrategy.ExecuteAtTimeOfDay = helper.String(v.(string))
-				}
-				if v, ok := weekRepeatMap["days_of_week"]; ok {
-					daysOfWeekSet := v.(*schema.Set).List()
-					for i := range daysOfWeekSet {
-						daysOfWeek := daysOfWeekSet[i].(int)
-						weekRepeatStrategy.DaysOfWeek = append(weekRepeatStrategy.DaysOfWeek, helper.IntUint64(daysOfWeek))
+				if monthRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["month_repeat"]); ok {
+					monthRepeatStrategy := emr.MonthRepeatStrategy{}
+					if v, ok := monthRepeatMap["execute_at_time_of_day"]; ok {
+						monthRepeatStrategy.ExecuteAtTimeOfDay = helper.String(v.(string))
 					}
-				}
-				repeatStrategy.WeekRepeat = &weekRepeatStrategy
-			}
-			if monthRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["month_repeat"]); ok {
-				monthRepeatStrategy := emr.MonthRepeatStrategy{}
-				if v, ok := monthRepeatMap["execute_at_time_of_day"]; ok {
-					monthRepeatStrategy.ExecuteAtTimeOfDay = helper.String(v.(string))
-				}
-				if v, ok := monthRepeatMap["days_of_month_range"]; ok {
-					daysOfMonthRangeSet := v.(*schema.Set).List()
-					for i := range daysOfMonthRangeSet {
-						daysOfMonthRange := daysOfMonthRangeSet[i].(int)
-						monthRepeatStrategy.DaysOfMonthRange = append(monthRepeatStrategy.DaysOfMonthRange, helper.IntUint64(daysOfMonthRange))
+					if v, ok := monthRepeatMap["days_of_month_range"]; ok {
+						daysOfMonthRangeSet := v.(*schema.Set).List()
+						for i := range daysOfMonthRangeSet {
+							daysOfMonthRange := daysOfMonthRangeSet[i].(int)
+							monthRepeatStrategy.DaysOfMonthRange = append(monthRepeatStrategy.DaysOfMonthRange, helper.IntUint64(daysOfMonthRange))
+						}
 					}
+					repeatStrategy.MonthRepeat = &monthRepeatStrategy
 				}
-				repeatStrategy.MonthRepeat = &monthRepeatStrategy
-			}
-			if notRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["not_repeat"]); ok {
-				notRepeatStrategy := emr.NotRepeatStrategy{}
-				if v, ok := notRepeatMap["execute_at"]; ok {
-					notRepeatStrategy.ExecuteAt = helper.String(v.(string))
+				if notRepeatMap, ok := helper.ConvertInterfacesHeadToMap(repeatStrategyMap["not_repeat"]); ok {
+					notRepeatStrategy := emr.NotRepeatStrategy{}
+					if v, ok := notRepeatMap["execute_at"]; ok {
+						notRepeatStrategy.ExecuteAt = helper.String(v.(string))
+					}
+					repeatStrategy.NotRepeat = &notRepeatStrategy
 				}
-				repeatStrategy.NotRepeat = &notRepeatStrategy
-			}
-			if v, ok := repeatStrategyMap["expire"]; ok {
-				repeatStrategy.Expire = helper.String(v.(string))
-			}
-			timeAutoScaleStrategy.RepeatStrategy = &repeatStrategy
-		}
-		if v, ok := timeAutoScaleStrategyMap["strategy_id"]; ok {
-			timeAutoScaleStrategy.StrategyId = helper.IntUint64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["grace_down_flag"]; ok {
-			timeAutoScaleStrategy.GraceDownFlag = helper.Bool(v.(bool))
-		}
-		if v, ok := timeAutoScaleStrategyMap["grace_down_time"]; ok {
-			timeAutoScaleStrategy.GraceDownTime = helper.IntInt64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["tags"]; ok {
-			for _, item := range v.([]interface{}) {
-				tagsMap := item.(map[string]interface{})
-				tag := emr.Tag{}
-				if v, ok := tagsMap["tag_key"]; ok {
-					tag.TagKey = helper.String(v.(string))
+				if v, ok := repeatStrategyMap["expire"]; ok {
+					repeatStrategy.Expire = helper.String(v.(string))
 				}
-				if v, ok := tagsMap["tag_value"]; ok {
-					tag.TagValue = helper.String(v.(string))
+				timeAutoScaleStrategy.RepeatStrategy = &repeatStrategy
+			}
+			if v, ok := timeAutoScaleStrategyMap["strategy_id"]; ok {
+				timeAutoScaleStrategy.StrategyId = helper.IntUint64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["grace_down_flag"]; ok {
+				timeAutoScaleStrategy.GraceDownFlag = helper.Bool(v.(bool))
+			}
+			if v, ok := timeAutoScaleStrategyMap["grace_down_time"]; ok {
+				timeAutoScaleStrategy.GraceDownTime = helper.IntInt64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["tags"]; ok {
+				for _, item := range v.([]interface{}) {
+					tagsMap := item.(map[string]interface{})
+					tag := emr.Tag{}
+					if v, ok := tagsMap["tag_key"]; ok {
+						tag.TagKey = helper.String(v.(string))
+					}
+					if v, ok := tagsMap["tag_value"]; ok {
+						tag.TagValue = helper.String(v.(string))
+					}
+					timeAutoScaleStrategy.Tags = append(timeAutoScaleStrategy.Tags, &tag)
 				}
-				timeAutoScaleStrategy.Tags = append(timeAutoScaleStrategy.Tags, &tag)
+			}
+			if v, ok := timeAutoScaleStrategyMap["config_group_assigned"]; ok {
+				timeAutoScaleStrategy.ConfigGroupAssigned = helper.String(v.(string))
+			}
+			if v, ok := timeAutoScaleStrategyMap["measure_method"]; ok {
+				timeAutoScaleStrategy.MeasureMethod = helper.String(v.(string))
+			}
+			if v, ok := timeAutoScaleStrategyMap["terminate_policy"]; ok {
+				timeAutoScaleStrategy.TerminatePolicy = helper.String(v.(string))
+			}
+			if v, ok := timeAutoScaleStrategyMap["max_use"]; ok {
+				timeAutoScaleStrategy.MaxUse = helper.IntInt64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["soft_deploy_info"]; ok {
+				softDeployInfoSet := v.(*schema.Set).List()
+				for i := range softDeployInfoSet {
+					softDeployInfo := softDeployInfoSet[i].(int)
+					timeAutoScaleStrategy.SoftDeployInfo = append(timeAutoScaleStrategy.SoftDeployInfo, helper.IntInt64(softDeployInfo))
+				}
+			}
+			if v, ok := timeAutoScaleStrategyMap["service_node_info"]; ok {
+				serviceNodeInfoSet := v.(*schema.Set).List()
+				for i := range serviceNodeInfoSet {
+					serviceNodeInfo := serviceNodeInfoSet[i].(int)
+					timeAutoScaleStrategy.ServiceNodeInfo = append(timeAutoScaleStrategy.ServiceNodeInfo, helper.IntInt64(serviceNodeInfo))
+				}
+			}
+			if v, ok := timeAutoScaleStrategyMap["compensate_flag"]; ok {
+				timeAutoScaleStrategy.CompensateFlag = helper.IntInt64(v.(int))
+			}
+			if v, ok := timeAutoScaleStrategyMap["group_id"]; ok {
+				timeAutoScaleStrategy.GroupId = helper.IntInt64(v.(int))
+			}
+			request.TimeAutoScaleStrategy = &timeAutoScaleStrategy
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().AddMetricScaleStrategyWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s create emr auto scale strategy failed, reason:%+v", logId, err)
+				return err
 			}
 		}
-		if v, ok := timeAutoScaleStrategyMap["config_group_assigned"]; ok {
-			timeAutoScaleStrategy.ConfigGroupAssigned = helper.String(v.(string))
-		}
-		if v, ok := timeAutoScaleStrategyMap["measure_method"]; ok {
-			timeAutoScaleStrategy.MeasureMethod = helper.String(v.(string))
-		}
-		if v, ok := timeAutoScaleStrategyMap["terminate_policy"]; ok {
-			timeAutoScaleStrategy.TerminatePolicy = helper.String(v.(string))
-		}
-		if v, ok := timeAutoScaleStrategyMap["max_use"]; ok {
-			timeAutoScaleStrategy.MaxUse = helper.IntInt64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["soft_deploy_info"]; ok {
-			softDeployInfoSet := v.(*schema.Set).List()
-			for i := range softDeployInfoSet {
-				softDeployInfo := softDeployInfoSet[i].(int)
-				timeAutoScaleStrategy.SoftDeployInfo = append(timeAutoScaleStrategy.SoftDeployInfo, helper.IntInt64(softDeployInfo))
-			}
-		}
-		if v, ok := timeAutoScaleStrategyMap["service_node_info"]; ok {
-			serviceNodeInfoSet := v.(*schema.Set).List()
-			for i := range serviceNodeInfoSet {
-				serviceNodeInfo := serviceNodeInfoSet[i].(int)
-				timeAutoScaleStrategy.ServiceNodeInfo = append(timeAutoScaleStrategy.ServiceNodeInfo, helper.IntInt64(serviceNodeInfo))
-			}
-		}
-		if v, ok := timeAutoScaleStrategyMap["compensate_flag"]; ok {
-			timeAutoScaleStrategy.CompensateFlag = helper.IntInt64(v.(int))
-		}
-		if v, ok := timeAutoScaleStrategyMap["group_id"]; ok {
-			timeAutoScaleStrategy.GroupId = helper.IntInt64(v.(int))
-		}
-		request.TimeAutoScaleStrategy = &timeAutoScaleStrategy
 	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().AddMetricScaleStrategyWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create emr auto scale strategy failed, reason:%+v", logId, err)
-		return err
-	}
-
-	_ = response
 
 	d.SetId(strings.Join([]string{instanceId, helper.Int64ToStr(strategyType)}, tccommon.FILED_SP))
 
