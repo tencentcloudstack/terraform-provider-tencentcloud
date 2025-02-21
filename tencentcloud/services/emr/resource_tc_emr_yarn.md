@@ -4,10 +4,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_emr_yarn" "emr_yarn" {
-  instance_id = "emr-xxxxxx"
-  items {
-    key = "enableResourceSchedule"
-    value = true
+  instance_id = "emr-rzrochgp"
+  enable_resource_schedule = true
+  scheduler = "fair"
+  fair_global_config {
+    user_max_apps_default = 1000
   }
 }
 ```

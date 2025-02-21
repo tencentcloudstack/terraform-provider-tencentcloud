@@ -162,7 +162,7 @@ func resourceTencentCloudEmrYarnRead(d *schema.ResourceData, meta interface{}) e
 	service := EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
-
+	_ = d.Set("instance_id", instanceId)
 	respData, err := service.DescribeEmrYarnById(ctx, instanceId)
 	if err != nil {
 		return err
