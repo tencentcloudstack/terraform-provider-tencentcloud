@@ -25,6 +25,7 @@ func ResourceTencentCloudPostgresqlParameters() *schema.Resource {
 			"db_instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance ID.",
 			},
 

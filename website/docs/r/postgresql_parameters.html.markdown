@@ -60,7 +60,7 @@ resource "tencentcloud_postgresql_parameters" "postgresql_parameters" {
 
 The following arguments are supported:
 
-* `db_instance_id` - (Required, String) Instance ID.
+* `db_instance_id` - (Required, String, ForceNew) Instance ID.
 * `param_list` - (Required, List) Parameters to be modified and expected values.
 
 The `param_list` object supports the following:
