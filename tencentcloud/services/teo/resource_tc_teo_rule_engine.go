@@ -85,7 +85,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 												"operator": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "Operator. Valid values:\n  - `equals`: Equals.\n  - `notEquals`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
+													Description: "Operator. Valid values:\n  - `equal`: Equal.\n  - `notEqual`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
 												},
 												"target": {
 													Type:        schema.TypeString,
@@ -281,7 +281,7 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 																		"operator": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "Operator. Valid values:\n  - `equals`: Equals.\n  - `notEquals`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
+																			Description: "Operator. Valid values:\n  - `equal`: Equal.\n  - `notEqual`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
 																		},
 																		"target": {
 																			Type:        schema.TypeString,
