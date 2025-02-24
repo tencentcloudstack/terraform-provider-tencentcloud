@@ -1331,12 +1331,17 @@ MapReduce(EMR)
     tencentcloud_emr_cvm_quota
     tencentcloud_lite_hbase_instances
     tencentcloud_serverless_hbase_instances
+    tencentcloud_emr_job_status_detail
+    tencentcloud_emr_service_node_infos
 
   Resource
     tencentcloud_emr_cluster
     tencentcloud_emr_user_manager
     tencentcloud_lite_hbase_instance
     tencentcloud_serverless_hbase_instance
+    tencentcloud_emr_yarn
+    tencentcloud_emr_deploy_yarn_operation
+    tencentcloud_emr_auto_scale_strategy
 
 DNSPOD
   Resource
