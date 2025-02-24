@@ -186,8 +186,8 @@ Note: This field may return null, indicating that no valid values can be obtaine
 The `and` object of `or` supports the following:
 
 * `operator` - (Required, String) Operator. Valid values:
-  - `equals`: Equals.
-  - `notEquals`: Does not equal.
+  - `equal`: Equal.
+  - `notEqual`: Does not equal.
   - `exist`: Exists.
   - `notexist`: Does not exist.
 * `target` - (Required, String) The match type. Values:
@@ -218,8 +218,8 @@ The `and` object of `or` supports the following:
 The `and` object of `or` supports the following:
 
 * `operator` - (Required, String) Operator. Valid values:
-  - `equals`: Equals.
-  - `notEquals`: Does not equal.
+  - `equal`: Equal.
+  - `notEqual`: Does not equal.
   - `exist`: Exists.
   - `notexist`: Does not exist.
 * `target` - (Required, String) The match type. Values:
