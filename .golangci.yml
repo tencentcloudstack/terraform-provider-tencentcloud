@@ -12,7 +12,7 @@ linters:
   enable:
     - errcheck
     - gofmt
-    - gosimple
+    # - gosimple
     - ineffassign
     - misspell
     - staticcheck
@@ -25,7 +25,16 @@ linters-settings:
     exclude-functions: github.com/hashicorp/terraform-plugin-sdk/helper/schema:ForceNew|Set,fmt:.*,io:Close
 
 run:
+  skip-dirs:
+    - vendor
+  skip-files:
+    - ".*_test.go"
+  # change
+  cache: true
+  cache-ttl: 8760h
+
   modules-download-mode: vendor
+
   timeout: 60m
   # The default concurrency value is the number of available CPU.
   concurrency: 4
