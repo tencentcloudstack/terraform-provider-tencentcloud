@@ -101,6 +101,34 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
+### Using DisasterRecoverGroupIds
+
+```hcl
+resource "tencentcloud_as_scaling_config" "example" {
+  image_family                      = "business-daily-update"
+  configuration_name                = "as-test-config"
+  disk_type_policy                  = "ORIGINAL"
+  enhanced_monitor_service          = false
+  enhanced_security_service         = false
+  enhanced_automation_tools_service = false
+  disaster_recover_group_ids        = ["ps-e2u4ew"]
+  instance_tags                     = {}
+  instance_types = [
+    "S5.SMALL2",
+  ]
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 0
+  key_ids                    = []
+  project_id                 = 0
+  public_ip_assigned         = false
+  security_group_ids = [
+    "sg-5275dorp",
+  ]
+  system_disk_size = 50
+  system_disk_type = "CLOUD_BSSD"
+}
+```
+
 ### Create a CDC configuration
 
 ```hcl
@@ -153,6 +181,7 @@ The following arguments are supported:
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `dedicated_cluster_id` - (Optional, String) Dedicated Cluster ID.
+* `disaster_recover_group_ids` - (Optional, List: [`String`]) Placement group ID. Only one is allowed.
 * `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
 * `enhanced_automation_tools_service` - (Optional, Bool) To specify whether to enable cloud automation tools service.
 * `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
