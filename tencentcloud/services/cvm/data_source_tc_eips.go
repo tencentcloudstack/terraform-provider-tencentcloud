@@ -34,6 +34,7 @@ func DataSourceTencentCloudEips() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The elastic ip address.",
+				Deprecated:  "Field 'public_ip' is deprecated.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,

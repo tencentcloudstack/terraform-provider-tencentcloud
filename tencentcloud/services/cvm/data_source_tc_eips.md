@@ -24,14 +24,6 @@ data "tencentcloud_eips" "example" {
 }
 ```
 
-Query eip instances by public ip
-
-```hcl
-data "tencentcloud_eips" "example" {
-  public_ip = "1.12.62.3"
-}
-```
-
 Query eip instances by tags
 
 ```hcl
