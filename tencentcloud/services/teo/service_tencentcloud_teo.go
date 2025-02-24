@@ -1523,7 +1523,15 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTeoV20220901Client().DescribeL4ProxyRules(request)
+		response := teo.NewDescribeL4ProxyRulesResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoClient().DescribeL4ProxyRules(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
 		if err != nil {
 			errRet = err
 			return
@@ -1541,10 +1549,10 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 		offset = offset + uint64(limit)
 	}
 
-	if len(instances) > 1 {
-		errRet = fmt.Errorf("resource not exists")
+	if len(instances) < 1 {
 		return
 	}
+
 	ret = instances[0]
 	return
 }
