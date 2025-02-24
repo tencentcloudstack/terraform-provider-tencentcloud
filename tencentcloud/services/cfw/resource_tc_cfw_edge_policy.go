@@ -88,12 +88,13 @@ func ResourceTencentCloudCfwEdgePolicy() *schema.Resource {
 			"scope": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      POLICY_SCOPE_ALL,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(POLICY_SCOPE),
 				Description:  "Effective range. serial: serial; side: bypass; all: global, Default is all.",
 			},
 			"param_template_id": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
 				Description: "Parameter template id.",
 			},
@@ -155,6 +156,10 @@ func resourceTencentCloudCfwEdgePolicyCreate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOk("scope"); ok {
 		createRuleItem.Scope = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("param_template_id"); ok {
+		createRuleItem.ParamTemplateId = helper.String(v.(string))
 	}
 
 	request.Rules = append(request.Rules, &createRuleItem)
@@ -249,6 +254,10 @@ func resourceTencentCloudCfwEdgePolicyRead(d *schema.ResourceData, meta interfac
 
 	if edgePolicy.Protocol != nil {
 		_ = d.Set("protocol", edgePolicy.Protocol)
+	}
+
+	if edgePolicy.RuleAction != nil {
+		_ = d.Set("rule_action", edgePolicy.RuleAction)
 	}
 
 	if edgePolicy.Port != nil {
@@ -346,6 +355,10 @@ func resourceTencentCloudCfwEdgePolicyUpdate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOk("scope"); ok {
 		modifyRuleItem.Scope = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("param_template_id"); ok {
+		modifyRuleItem.ParamTemplateId = helper.String(v.(string))
 	}
 
 	request.Rules = append(request.Rules, &modifyRuleItem)
