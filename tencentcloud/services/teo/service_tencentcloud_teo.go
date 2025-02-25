@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1491,5 +1492,67 @@ func (me *TeoService) DescribeTeoFunctionRuntimeEnvironmentById(ctx context.Cont
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ret = response.Response
+	return
+}
+
+func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId string, proxyId string, ruleId string) (ret *teov20220901.L4ProxyRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeL4ProxyRulesRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProxyId = helper.String(proxyId)
+	filter := &teo.Filter{
+		Name:   helper.String("rule-id"),
+		Values: []*string{helper.String(ruleId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  int64  = 20
+	)
+	var instances []*teov20220901.L4ProxyRule
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response := teo.NewDescribeL4ProxyRulesResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoClient().DescribeL4ProxyRules(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.L4ProxyRules) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.L4ProxyRules...)
+		if len(response.Response.L4ProxyRules) < int(limit) {
+			break
+		}
+
+		offset = offset + uint64(limit)
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	ret = instances[0]
 	return
 }

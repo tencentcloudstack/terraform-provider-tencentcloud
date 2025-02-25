@@ -90,7 +90,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.955
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.1013
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.1103
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1038
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.947
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.857
