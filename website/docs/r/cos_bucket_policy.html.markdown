@@ -14,9 +14,19 @@ Provides a COS resource to create a COS bucket policy and set its attributes.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cos_bucket_policy" "cos_policy" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
 
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket = "private-bucket-${local.app_id}"
+  acl    = "private"
+}
+
+resource "tencentcloud_cos_bucket_policy" "example" {
+  bucket = tencentcloud_cos_bucket.example.id
   policy = <<EOF
 {
   "version": "2.0",
@@ -33,7 +43,7 @@ resource "tencentcloud_cos_bucket_policy" "cos_policy" {
       ],
       "Effect": "allow",
       "Resource": [
-        "qcs::cos:<bucket region>:uid/<your-account-id>:<bucket name>/*"
+        "qcs::cos:<bucket region>:uid/<your-appid-id>:<your-bucket-name>/*"
       ]
     }
   ]
@@ -62,6 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 COS bucket policy can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_cos_bucket_policy.bucket bucket-name
+$ terraform import tencentcloud_cos_bucket_policy.example private-bucket-1309118521
 ```
 
