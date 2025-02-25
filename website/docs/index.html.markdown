@@ -240,6 +240,7 @@ Usage:
 ```hcl
 provider "tencentcloud" {
   assume_role_with_web_identity {
+    provider_id        = "OIDC"
     role_arn           = "my-role-arn"
     session_name       = "my-session-name"
     session_duration   = 3600
@@ -248,7 +249,7 @@ provider "tencentcloud" {
 }
 ```
 
-The `role_arn`, `session_name`, `session_duration`, `web_identity_token` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` and `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` environment variables.
+The `provider_id`, `role_arn`, `session_name`, `session_duration`, `web_identity_token` can also provided via `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` and `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` environment variables.
 
 Usage:
 
@@ -257,6 +258,7 @@ $ export TENCENTCLOUD_SECRET_ID="my-secret-id"
 $ export TENCENTCLOUD_SECRET_KEY="my-secret-key"
 $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
 $ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN="my-web-identity-token"
+$ export TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID="OIDC"
 $ terraform plan
 ```
 
@@ -322,8 +324,8 @@ locals {
 
 provider "tencentcloud" {
   region     = local.region
-  secret_id  = "xxxxxx"
-  secret_key = "xxxxxx"
+  secret_id  = "my-secret-id"
+  secret_key = "my-secret-key"
   cos_domain = "https://${local.cdc_id}.cos-cdc.${local.region}.myqcloud.com/"
 }
 ```
@@ -399,6 +401,7 @@ The nested `assume_role_with_saml` block supports the following:
 * `principal_arn` - (Required) Player Access Description Name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`.
 
 The nested `assume_role_with_web_identity` block supports the following:
+* `provider_id` - (Optional) Identity provider name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, Default is OIDC.
 * `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.
 * `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
 * `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
