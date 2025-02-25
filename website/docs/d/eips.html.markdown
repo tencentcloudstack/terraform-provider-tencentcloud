@@ -35,14 +35,6 @@ data "tencentcloud_eips" "example" {
 }
 ```
 
-### Query eip instances by public ip
-
-```hcl
-data "tencentcloud_eips" "example" {
-  public_ip = "1.12.62.3"
-}
-```
-
 ### Query eip instances by tags
 
 ```hcl
@@ -59,7 +51,7 @@ The following arguments are supported:
 
 * `eip_id` - (Optional, String) ID of the EIP to be queried.
 * `eip_name` - (Optional, String) Name of the EIP to be queried.
-* `public_ip` - (Optional, String) The elastic ip address.
+* `public_ip` - (Optional, String, **Deprecated**) Field 'public_ip' is deprecated. The elastic ip address.
 * `result_output_file` - (Optional, String) Used to save results.
 * `tags` - (Optional, Map) The tags of EIP.
 
