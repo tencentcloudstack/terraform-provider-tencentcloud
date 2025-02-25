@@ -143,6 +143,13 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 				Computed:    true,
 				Description: "The private IP to be assigned to this instance, must be in the provided subnet and available.",
 			},
+			"private_ip_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional:    true,
+				Computed:    true,
+				Description: "Private network subnet IP array, which can be used when creating an instance or modifying instance vpc attributes. Currently, only batch creation of multiple instances supports passing in multiple IPs of the same subnet. Cannot be set at the same time as `private_ip`.",
+			},
 			// security group
 			"security_groups": {
 				Type:        schema.TypeSet,
@@ -414,7 +421,16 @@ func doResourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interf
 
 		if v, ok = d.GetOk("private_ip"); ok {
 			request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
+		} else if v, ok = d.GetOk("private_ip_addresses"); ok {
+			addresses := v.([]interface{})
+			addressList := make([]*string, 0, len(addresses))
+			for _, ip := range addresses {
+				address := ip.(string)
+				addressList = append(addressList, &address)
+			}
+			request.VirtualPrivateCloud.PrivateIpAddresses = addressList
 		}
+
 	}
 
 	if v, ok := d.GetOk("security_groups"); ok {
@@ -566,6 +582,9 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 
 	if len(instance.PrivateIpAddresses) > 0 {
 		_ = d.Set("private_ip", instance.PrivateIpAddresses[0])
+	}
+	if len(instance.PrivateIpAddresses) > 0 {
+		_ = d.Set("private_ip_addresses", instance.PrivateIpAddresses)
 	}
 	if len(instance.PublicIpAddresses) > 0 {
 		_ = d.Set("public_ip", instance.PublicIpAddresses[0])
