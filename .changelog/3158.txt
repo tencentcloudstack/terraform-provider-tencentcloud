@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_tdmq_rabbitmq_vip_instance: Add `pay_mode`, `cluster_version`, `public_access_endpoint` and `vpcs`
+```
