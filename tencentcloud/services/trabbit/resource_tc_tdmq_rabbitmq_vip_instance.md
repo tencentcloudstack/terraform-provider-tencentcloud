@@ -35,6 +35,22 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   auto_renew_flag                       = true
   time_span                             = 1
 }
+
+# create postpaid rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  pay_mode                              = 0
+  cluster_version                       = "3.11.8"
+}
 ```
 
 Import
