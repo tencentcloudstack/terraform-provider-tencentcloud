@@ -48,6 +48,7 @@ func ResourceTencentCloudVpcBandwidthPackageAttachment() *schema.Resource {
 			"resource_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Resource types, including `Address`, `LoadBalance`.",
 			},
