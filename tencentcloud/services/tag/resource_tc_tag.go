@@ -10,6 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -28,14 +29,14 @@ func ResourceTencentCloudTag() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "tag key.",
+				Description: "Tag key.",
 			},
 
 			"tag_value": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "tag value.",
+				Description: "Tag value.",
 			},
 		},
 	}
@@ -65,6 +66,12 @@ func resourceTencentCloudTagResourceCreate(d *schema.ResourceData, meta interfac
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTagClient().CreateTag(request)
 		if e != nil {
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceInUse.TagDuplicate" {
+					return resource.NonRetryableError(e)
+				}
+			}
+
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
