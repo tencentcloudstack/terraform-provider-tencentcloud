@@ -76,6 +76,52 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Purchase duration, the default is 1 (month).",
 			},
+			"pay_mode": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Payment method: 0 indicates postpaid; 1 indicates prepaid. Default: prepaid.",
+			},
+			"cluster_version": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30` and `3.11.8`.",
+			},
+			"public_access_endpoint": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Public Network Access Point.",
+			},
+			"vpcs": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of VPC Access Points.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vpc_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "VPC ID.",
+						},
+						"subnet_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Subnet ID.",
+						},
+						"vpc_endpoint": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "VPC Endpoint.",
+						},
+						"vpc_data_stream_endpoint_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Status Of Vpc Endpoint.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -137,6 +183,14 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 		request.TimeSpan = helper.IntInt64(v.(int))
 	}
 
+	if v, ok := d.GetOkExists("pay_mode"); ok {
+		request.PayMode = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("cluster_version"); ok {
+		request.ClusterVersion = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().CreateRabbitMQVipInstance(request)
 		if e != nil {
@@ -179,7 +233,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 		}
 
 		if *result[0].Status == svctdmq.RabbitMQVipInstanceRunning {
-			return resource.RetryableError(fmt.Errorf("rabbitmq_vip_instance status is running"))
+			return resource.RetryableError(fmt.Errorf("rabbitmq_vip_instance status is creating"))
 		} else if *result[0].Status == svctdmq.RabbitMQVipInstanceSuccess {
 			return nil
 		} else {
@@ -236,6 +290,14 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("storage_size", rabbitmqVipInstance.ClusterSpecInfo.MaxStorage)
 	}
 
+	if rabbitmqVipInstance.ClusterInfo.PayMode != nil {
+		_ = d.Set("pay_mode", rabbitmqVipInstance.ClusterInfo.PayMode)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo.ClusterVersion != nil {
+		_ = d.Set("cluster_version", rabbitmqVipInstance.ClusterInfo.ClusterVersion)
+	}
+
 	paramMap := make(map[string]interface{})
 	tmpSet := make([]*tdmq.Filter, 0)
 	filter := tdmq.Filter{}
@@ -263,7 +325,31 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			} else {
 				_ = d.Set("auto_renew_flag", false)
 			}
+		}
 
+		if result[0].PublicAccessEndpoint != nil {
+			_ = d.Set("public_access_endpoint", result[0].PublicAccessEndpoint)
+		}
+
+		if result[0].Vpcs != nil {
+			tmpList := make([]map[string]interface{}, 0, len(result[0].Vpcs))
+			for _, vpc := range result[0].Vpcs {
+				vpcMap := map[string]interface{}{}
+				if vpc.VpcId != nil {
+					vpcMap["vpc_id"] = vpc.VpcId
+				}
+				if vpc.SubnetId != nil {
+					vpcMap["subnet_id"] = vpc.SubnetId
+				}
+				if vpc.VpcEndpoint != nil {
+					vpcMap["vpc_endpoint"] = vpc.VpcEndpoint
+				}
+				if vpc.VpcDataStreamEndpointStatus != nil {
+					vpcMap["vpc_data_stream_endpoint_status"] = vpc.VpcDataStreamEndpointStatus
+				}
+				tmpList = append(tmpList, vpcMap)
+			}
+			_ = d.Set("vpcs", tmpList)
 		}
 
 		return nil
@@ -288,7 +374,11 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		instanceId = d.Id()
 	)
 
-	immutableArgs := []string{"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num", "storage_size", "enable_create_default_ha_mirror_queue", "auto_renew_flag", "time_span"}
+	immutableArgs := []string{
+		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
+		"storage_size", "enable_create_default_ha_mirror_queue",
+		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
+	}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
