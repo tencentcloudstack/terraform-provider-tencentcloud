@@ -137,6 +137,7 @@ const (
 	PROVIDER_ASSUME_ROLE_SAML_ASSERTION     = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
 	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN      = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
 	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
+	PROVIDER_ASSUME_ROLE_PROVIDER_ID        = "TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID"
 	PROVIDER_SHARED_CREDENTIALS_DIR         = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
 	PROVIDER_PROFILE                        = "TENCENTCLOUD_PROFILE"
 	PROVIDER_CAM_ROLE_NAME                  = "TENCENTCLOUD_CAM_ROLE_NAME"
@@ -321,6 +322,12 @@ func Provider() *schema.Provider {
 				Description:   "The `assume_role_with_web_identity` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"provider_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_PROVIDER_ID, nil),
+							Description: "Identity provider name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, Default is OIDC.",
+						},
 						"web_identity_token": {
 							Type:        schema.TypeString,
 							Required:    true,
@@ -2400,6 +2407,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		envPrincipalArn := os.Getenv(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN)
 		// get assume role with web identity from env
 		envWebIdentityToken := os.Getenv(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN)
+		envProviderId := os.Getenv(PROVIDER_ASSUME_ROLE_PROVIDER_ID)
 
 		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
 			// use assume role
@@ -2419,7 +2427,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			needSecret = false
 		} else if envWebIdentityToken != "" {
 			// use assume role with oidc
-			err = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken)
+			err = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken, envProviderId)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role with OIDC by env failed. Reason: %s", err.Error())
 			}
@@ -2458,6 +2466,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		assumeRoleSamlAssertion    string
 		assumeRolePrincipalArn     string
 		assumeRoleWebIdentityToken string
+		assumeRoleProviderId       string
 	)
 
 	// get assume role with saml from tf
@@ -2489,8 +2498,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleArn = assumeRoleWithWebIdentity["role_arn"].(string)
 			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
 			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
-
-			err = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken)
+			assumeRoleProviderId = assumeRoleWithWebIdentity["provider_id"].(string)
+			err = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken, assumeRoleProviderId)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role with OIDC failed. Reason: %s", err.Error())
 			}
@@ -2655,15 +2664,18 @@ func genClientWithSamlSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRol
 	return nil
 }
 
-func genClientWithOidcSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {
+func genClientWithOidcSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy, assumeRoleProviderId string) error {
 	// applying STS credentials
 	request := sdksts.NewAssumeRoleWithWebIdentityRequest()
 	response := sdksts.NewAssumeRoleWithWebIdentityResponse()
-	request.ProviderId = helper.String("OIDC")
+	if assumeRoleProviderId == "" {
+		assumeRoleProviderId = "OIDC"
+	}
 	request.RoleArn = helper.String(assumeRoleArn)
 	request.RoleSessionName = helper.String(assumeRoleSessionName)
 	request.DurationSeconds = helper.IntInt64(assumeRoleSessionDuration)
 	request.WebIdentityToken = helper.String(assumeRolePolicy)
+	request.ProviderId = helper.String(assumeRoleProviderId)
 	var stsExtInfo connectivity.StsExtInfo
 	stsExtInfo.Authorization = "SKIP"
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
