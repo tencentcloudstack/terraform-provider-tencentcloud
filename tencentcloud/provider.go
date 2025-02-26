@@ -2406,7 +2406,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		envPrincipalArn := os.Getenv(PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN)
 		// get assume role with web identity from env
 		envWebIdentityToken := os.Getenv(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN)
-		assumeRoleProviderId := os.Getenv(PROVIDER_ASSUME_ROLE_PROVIDER_ID)
+		envProviderId := os.Getenv(PROVIDER_ASSUME_ROLE_PROVIDER_ID)
 
 		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
 			// use assume role
@@ -2426,7 +2426,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			needSecret = false
 		} else if envWebIdentityToken != "" {
 			// use assume role with oidc
-			err = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken, assumeRoleProviderId)
+			err = genClientWithOidcSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, envWebIdentityToken, envProviderId)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role with OIDC by env failed. Reason: %s", err.Error())
 			}
