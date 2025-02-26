@@ -40,8 +40,7 @@ resource "tencentcloud_teo_l4_proxy_rule" "teo_l4_proxy_rule" {
 
 The following arguments are supported:
 
-* `l4_proxy_rules` - (Required, List) List of forwarding rules. A single request supports up to 200 forwarding rules.
-Note: When L4ProxyRule is used here, Protocol, PortRange, OriginType, OriginValue, and OriginPortRange are required fields; ClientIPPassThroughMode, SessionPersist, SessionPersistTime, and RuleTag are optional fields; do not fill in RuleId and Status.
+* `l4_proxy_rules` - (Required, List) List of forwarding rules. Note: When L4ProxyRule is used here, Protocol, PortRange, OriginType, OriginValue, and OriginPortRange are required fields; ClientIPPassThroughMode, SessionPersist, SessionPersistTime, and RuleTag are optional fields; do not fill in RuleId and Status.
 * `proxy_id` - (Required, String, ForceNew) Layer 4 proxy instance ID.
 * `zone_id` - (Required, String, ForceNew) Zone ID.
 
@@ -82,6 +81,11 @@ Note: This parameter is optional when L4ProxyRule is used as an input parameter 
 <li>on: Enable;</li>
 <li>off: Disable.</li>
 Note: This parameter is optional when L4ProxyRule is used as an input parameter in Createl4ProxyRule, and if not specified, the default value off will be used; it is optional when L4ProxyRule is used as an input parameter in Modifyl4ProxyRule. If not specified, it will retain its existing value.
+* `status` - (Optional, String) Rule status. Valid values:<li>online: Enabled;</li>
+<li>offline: Disabled;</li>
+<li>progress: Deploying;</li>
+<li>stopping: Disabling;</li>
+<li>fail: Failed to deploy or disable.</li>.
 
 ## Attributes Reference
 

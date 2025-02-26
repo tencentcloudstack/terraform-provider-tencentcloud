@@ -41,8 +41,8 @@ func ResourceTencentCloudTeoL4ProxyRule() *schema.Resource {
 			"l4_proxy_rules": {
 				Type:        schema.TypeList,
 				Required:    true,
-				MinItems:    1,
-				Description: "List of forwarding rules. A single request supports up to 200 forwarding rules.\nNote: When L4ProxyRule is used here, Protocol, PortRange, OriginType, OriginValue, and OriginPortRange are required fields; ClientIPPassThroughMode, SessionPersist, SessionPersistTime, and RuleTag are optional fields; do not fill in RuleId and Status.",
+				MaxItems:    1,
+				Description: "List of forwarding rules. Note: When L4ProxyRule is used here, Protocol, PortRange, OriginType, OriginValue, and OriginPortRange are required fields; ClientIPPassThroughMode, SessionPersist, SessionPersistTime, and RuleTag are optional fields; do not fill in RuleId and Status.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_id": {
@@ -103,6 +103,7 @@ func ResourceTencentCloudTeoL4ProxyRule() *schema.Resource {
 						},
 						"status": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
 							Description: "Rule status. Valid values:<li>online: Enabled;</li>\n<li>offline: Disabled;</li>\n<li>progress: Deploying;</li>\n<li>stopping: Disabling;</li>\n<li>fail: Failed to deploy or disable.</li>.",
 						},
