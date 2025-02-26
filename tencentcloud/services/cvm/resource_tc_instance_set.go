@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"time"
 
@@ -147,7 +148,7 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 				Description: "The private IP to be assigned to this instance, must be in the provided subnet and available. Cannot be set at the same time as `private_ip_addresses`.",
 			},
 			"private_ip_addresses": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 				Computed: true,
@@ -436,7 +437,18 @@ func doResourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interf
 				address := ip.(string)
 				addressList = append(addressList, &address)
 			}
+			sort.SliceStable(addressList, func(i, j int) bool {
+				return *addressList[i] < *addressList[j]
+			})
 			request.VirtualPrivateCloud.PrivateIpAddresses = addressList
+		}
+
+		if v, ok := d.GetOk("private_ip_addresses"); ok {
+			addressListSet := v.(*schema.Set).List()
+			for i := range addressListSet {
+				addressList := addressListSet[i].(string)
+				request.VirtualPrivateCloud.PrivateIpAddresses = append(request.VirtualPrivateCloud.PrivateIpAddresses, &addressList)
+			}
 		}
 
 	}
@@ -591,9 +603,6 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 	if len(instance.PrivateIpAddresses) > 0 {
 		_ = d.Set("private_ip", instance.PrivateIpAddresses[0])
 	}
-	if len(instance.PrivateIpAddresses) > 0 {
-		_ = d.Set("private_ip_addresses", instance.PrivateIpAddresses)
-	}
 	if len(instance.PublicIpAddresses) > 0 {
 		_ = d.Set("public_ip", instance.PublicIpAddresses[0])
 	}
@@ -605,6 +614,14 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 	if instance.LoginSettings.KeepImageLogin != nil {
 		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
 	}
+
+	privateIpAddresses := []*string{}
+	for _, v := range instanceSet {
+		if len(v.PrivateIpAddresses) > 0 {
+			privateIpAddresses = append(privateIpAddresses, v.PrivateIpAddresses...)
+		}
+	}
+	_ = d.Set("private_ip_addresses", privateIpAddresses)
 
 	return nil
 }
