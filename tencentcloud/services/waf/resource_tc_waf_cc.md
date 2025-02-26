@@ -17,5 +17,15 @@ resource "tencentcloud_waf_cc" "example" {
   valid_time  = 600
   edition     = "sparta-waf"
   type        = 1
+  options_arr = jsonencode(
+    [
+      {
+        "key" : "Method",
+        "args" : ["=R0VU"],
+        "match" : "0",
+        "encodeflag" : true
+      }
+    ]
+  )
 }
 ```
