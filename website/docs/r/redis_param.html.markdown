@@ -14,7 +14,7 @@ Provides a resource to create a redis param
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_redis_param" "param" {
+resource "tencentcloud_redis_param" "example" {
   instance_id = "crs-c1nl9rpv"
   instance_params = {
     "cluster-node-timeout"          = "15000"
@@ -59,6 +59,6 @@ In addition to all arguments above, the following attributes are exported:
 redis param can be imported using the instanceId, e.g.
 
 ```
-terraform import tencentcloud_redis_param.param crs-c1nl9rpv
+terraform import tencentcloud_redis_param.example crs-c1nl9rpv
 ```
 
