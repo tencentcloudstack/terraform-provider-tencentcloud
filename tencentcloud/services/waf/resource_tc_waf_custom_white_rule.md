@@ -1,5 +1,7 @@
 Provides a resource to create a waf custom white rule
 
+-> **NOTE:** If `job_type` is `TimedJob`, Then `expire_time` must select the maximum time value of the `end_date_time` in the parameter list `timed`.
+
 Example Usage
 
 Create a standard custom white rule
