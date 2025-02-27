@@ -54,14 +54,14 @@ resource "tencentcloud_clb_customized_config_attachment" "example" {
   bind_list {
     load_balancer_id = "lb-g1miv1ok"
     listener_id      = "lbl-9bsa90io"
-    domain           = "test2.com"
+    domain           = "demo1.com"
     location_id      = "loc-5he3og2u"
   }
 
   bind_list {
     load_balancer_id = "lb-g1miv1ok"
     listener_id      = "lbl-qfljudr4"
-    domain           = "test.com"
+    domain           = "demo2.com"
     location_id      = "loc-0oxl4lfw"
   }
 }
