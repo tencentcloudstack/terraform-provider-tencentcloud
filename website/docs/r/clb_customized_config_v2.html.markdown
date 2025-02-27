@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_customized_config_v2"
 sidebar_current: "docs-tencentcloud-resource-clb_customized_config_v2"
 description: |-
-  Provides a resource to create a CLB customized V2 config.
+  Provides a resource to create a CLB customized config which type is `SERVER` or `LOCATION`.
 ---
 
 # tencentcloud_clb_customized_config_v2
 
-Provides a resource to create a CLB customized V2 config.
+Provides a resource to create a CLB customized config which type is `SERVER` or `LOCATION`.
 
 ## Example Usage
 

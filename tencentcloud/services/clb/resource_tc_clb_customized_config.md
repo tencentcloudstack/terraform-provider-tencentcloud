@@ -1,4 +1,4 @@
-Provides a resource to create a CLB customized config.
+Provides a resource to create a CLB customized config which type is `CLB`.
 
 Example Usage
 
