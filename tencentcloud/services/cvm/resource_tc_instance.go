@@ -60,7 +60,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"instance_count": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				Deprecated:   "It has been deprecated from version 1.59.18.",
+				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead. https://developer.hashicorp.com/terraform/language/meta-arguments/count.",
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 100),
 				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
 			},
