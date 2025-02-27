@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
-	"sort"
 	"strconv"
 	"time"
 
@@ -428,19 +427,6 @@ func doResourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interf
 
 		if v, ok = d.GetOk("private_ip"); ok {
 			request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
-		}
-
-		if v, ok = d.GetOk("private_ip_addresses"); ok {
-			addresses := v.([]interface{})
-			addressList := make([]*string, 0, len(addresses))
-			for _, ip := range addresses {
-				address := ip.(string)
-				addressList = append(addressList, &address)
-			}
-			sort.SliceStable(addressList, func(i, j int) bool {
-				return *addressList[i] < *addressList[j]
-			})
-			request.VirtualPrivateCloud.PrivateIpAddresses = addressList
 		}
 
 		if v, ok := d.GetOk("private_ip_addresses"); ok {
