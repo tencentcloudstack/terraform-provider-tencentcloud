@@ -39,7 +39,7 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 				Type:          schema.TypeSet,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				ConflictsWith: []string{"sub_domain"},
-				Description:   "Sub domains",
+				Description:   "Sub domains.",
 			},
 
 			"record_type": {
