@@ -1,4 +1,4 @@
-Provides a resource to create a CLB customized V2 config.
+Provides a resource to create a CLB customized config which type is `SERVER` or `LOCATION`.
 
 Example Usage
 
