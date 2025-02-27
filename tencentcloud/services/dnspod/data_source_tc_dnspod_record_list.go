@@ -2,6 +2,7 @@ package dnspod
 
 import (
 	"context"
+	"fmt"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -488,8 +489,7 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 
 	var recordList []*dnspod.RecordListItem
 
-	for _, subDomain := range subDomains {
-		paramMap["SubDomain"] = helper.String(subDomain)
+	if len(subDomains) == 0 {
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := service.DescribeDnspodRecordListByFilter(ctx, paramMap)
 			if e != nil {
@@ -500,6 +500,34 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 		})
 		if err != nil {
 			return err
+		}
+	} else {
+		recordIds := map[uint64]struct{}{}
+
+		for _, subDomain := range subDomains {
+			paramMap["SubDomain"] = helper.String(subDomain)
+			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				result, e := service.DescribeDnspodRecordListByFilter(ctx, paramMap)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+				for _, resultItem := range result {
+					if resultItem.RecordId == nil {
+						return resource.NonRetryableError(fmt.Errorf("record id is nil"))
+					}
+					if _, ok := recordIds[*resultItem.RecordId]; ok {
+						continue
+					} else {
+						recordIds[*resultItem.RecordId] = struct{}{}
+						recordList = append(recordList, resultItem)
+					}
+				}
+
+				return nil
+			})
+			if err != nil {
+				return err
+			}
 		}
 	}
 
