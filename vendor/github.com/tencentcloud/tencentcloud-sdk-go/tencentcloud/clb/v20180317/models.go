@@ -21,6 +21,138 @@ import (
 )
 
 // Predefined struct for user
+type AddCustomizedConfigRequestParams struct {
+	// 配置名字
+	ConfigName *string `json:"ConfigName,omitnil,omitempty" name:"ConfigName"`
+
+	// 配置类型，取值范围["CLB", "SERVER", "LOCATION"]，分别表示CLB配置，server配置，location配置。
+	ConfigType *string `json:"ConfigType,omitnil,omitempty" name:"ConfigType"`
+
+	// 配置内容
+	ConfigContent *string `json:"ConfigContent,omitnil,omitempty" name:"ConfigContent"`
+}
+
+type AddCustomizedConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置名字
+	ConfigName *string `json:"ConfigName,omitnil,omitempty" name:"ConfigName"`
+
+	// 配置类型，取值范围["CLB", "SERVER", "LOCATION"]，分别表示CLB配置，server配置，location配置。
+	ConfigType *string `json:"ConfigType,omitnil,omitempty" name:"ConfigType"`
+
+	// 配置内容
+	ConfigContent *string `json:"ConfigContent,omitnil,omitempty" name:"ConfigContent"`
+}
+
+func (r *AddCustomizedConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddCustomizedConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigName")
+	delete(f, "ConfigType")
+	delete(f, "ConfigContent")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddCustomizedConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AddCustomizedConfigResponseParams struct {
+	// 配置ID
+	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type AddCustomizedConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *AddCustomizedConfigResponseParams `json:"Response"`
+}
+
+func (r *AddCustomizedConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddCustomizedConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AssociateCustomizedConfigRequestParams struct {
+	// 配置ID
+	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
+
+	// 关联的server或location
+	BindList []*BindItem `json:"BindList,omitnil,omitempty" name:"BindList"`
+}
+
+type AssociateCustomizedConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置ID
+	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
+
+	// 关联的server或location
+	BindList []*BindItem `json:"BindList,omitnil,omitempty" name:"BindList"`
+}
+
+func (r *AssociateCustomizedConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AssociateCustomizedConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "UconfigId")
+	delete(f, "BindList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssociateCustomizedConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AssociateCustomizedConfigResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type AssociateCustomizedConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *AssociateCustomizedConfigResponseParams `json:"Response"`
+}
+
+func (r *AssociateCustomizedConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AssociateCustomizedConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type AssociateTargetGroupsRequestParams struct {
 	// 绑定的关系数组。一次请求最多支持20个。
 	Associations []*TargetGroupAssociation `json:"Associations,omitnil,omitempty" name:"Associations"`
@@ -104,6 +236,10 @@ type AssociationItem struct {
 
 	// 监听器名称
 	ListenerName *string `json:"ListenerName,omitnil,omitempty" name:"ListenerName"`
+
+	// 关联目标组的权重， 该参数只有v2新版目标组生效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 // Predefined struct for user
@@ -189,7 +325,7 @@ func (r *AutoRewriteResponse) FromJsonString(s string) error {
 }
 
 type Backend struct {
-	// 后端服务的类型，可取：CVM、ENI、CCN
+	// 后端服务的类型，可取：CVM、ENI、CCN、EVM、GLOBALROUTE、NAT、SRV等
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 后端服务的唯一 ID，如 ins-abcd1234
@@ -232,6 +368,9 @@ type BasicTargetGroupInfo struct {
 
 	// 目标组名称
 	TargetGroupName *string `json:"TargetGroupName,omitnil,omitempty" name:"TargetGroupName"`
+
+	// 权重
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 // Predefined struct for user
@@ -277,6 +416,10 @@ func (r *BatchDeregisterTargetsRequest) FromJsonString(s string) error {
 type BatchDeregisterTargetsResponseParams struct {
 	// 解绑失败的监听器ID。
 	FailListenerIdSet []*string `json:"FailListenerIdSet,omitnil,omitempty" name:"FailListenerIdSet"`
+
+	// 解绑失败错误原因信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -546,6 +689,23 @@ type BindDetailItem struct {
 	// 配置ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
+}
+
+type BindItem struct {
+	// 配置绑定的CLB ID
+	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
+
+	// 配置绑定的监听器ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ListenerId *string `json:"ListenerId,omitnil,omitempty" name:"ListenerId"`
+
+	// 配置绑定的域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 配置绑定的规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocationId *string `json:"LocationId,omitnil,omitempty" name:"LocationId"`
 }
 
 type BlockedIP struct {
@@ -1022,6 +1182,10 @@ type Cluster struct {
 	// IP版本
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPVersion *string `json:"IPVersion,omitnil,omitempty" name:"IPVersion"`
+
+	// 标签信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tag []*TagInfo `json:"Tag,omitnil,omitempty" name:"Tag"`
 }
 
 type ClusterItem struct {
@@ -1185,7 +1349,13 @@ type CreateListenerRequestParams struct {
 	// 健康检查相关参数，此参数仅适用于TCP/UDP/TCP_SSL/QUIC监听器。
 	HealthCheck *HealthCheck `json:"HealthCheck,omitnil,omitempty" name:"HealthCheck"`
 
-	// 证书相关信息，此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。此参数和MultiCertInfo不能同时传入。
+	// 证书相关信息。参数限制如下：
+	// <li>
+	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
+	// </li>
+	// <li>
+	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数MultiCertInfo至少需要传一个， 但不能同时传入。
+	// </li>
 	Certificate *CertificateInput `json:"Certificate,omitnil,omitempty" name:"Certificate"`
 
 	// 会话保持时间，单位：秒。可选值：30~3600，默认 0，表示不开启。此参数仅适用于TCP/UDP监听器。
@@ -1213,7 +1383,13 @@ type CreateListenerRequestParams struct {
 	// 解绑后端目标时，是否发RST给客户端，此参数仅适用于TCP监听器。
 	DeregisterTargetRst *bool `json:"DeregisterTargetRst,omitnil,omitempty" name:"DeregisterTargetRst"`
 
-	// 证书信息，支持同时传入不同算法类型的多本服务端证书；此参数仅适用于未开启SNI特性的HTTPS监听器。此参数和Certificate不能同时传入。
+	// 证书信息，支持同时传入不同算法类型的多本服务端证书，参数限制如下：
+	// <li>
+	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
+	// </li>
+	// <li>
+	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数Certificate至少需要传一个， 但不能同时传入。
+	// </li>
 	MultiCertInfo *MultiCertInfo `json:"MultiCertInfo,omitnil,omitempty" name:"MultiCertInfo"`
 
 	// 监听器最大连接数，当前仅性能容量型实例且仅TCP/UDP/TCP_SSL/QUIC监听器支持，不传或者传-1表示监听器维度不限速。基础网络实例不支持该参数。
@@ -1256,7 +1432,13 @@ type CreateListenerRequest struct {
 	// 健康检查相关参数，此参数仅适用于TCP/UDP/TCP_SSL/QUIC监听器。
 	HealthCheck *HealthCheck `json:"HealthCheck,omitnil,omitempty" name:"HealthCheck"`
 
-	// 证书相关信息，此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。此参数和MultiCertInfo不能同时传入。
+	// 证书相关信息。参数限制如下：
+	// <li>
+	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
+	// </li>
+	// <li>
+	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数MultiCertInfo至少需要传一个， 但不能同时传入。
+	// </li>
 	Certificate *CertificateInput `json:"Certificate,omitnil,omitempty" name:"Certificate"`
 
 	// 会话保持时间，单位：秒。可选值：30~3600，默认 0，表示不开启。此参数仅适用于TCP/UDP监听器。
@@ -1284,7 +1466,13 @@ type CreateListenerRequest struct {
 	// 解绑后端目标时，是否发RST给客户端，此参数仅适用于TCP监听器。
 	DeregisterTargetRst *bool `json:"DeregisterTargetRst,omitnil,omitempty" name:"DeregisterTargetRst"`
 
-	// 证书信息，支持同时传入不同算法类型的多本服务端证书；此参数仅适用于未开启SNI特性的HTTPS监听器。此参数和Certificate不能同时传入。
+	// 证书信息，支持同时传入不同算法类型的多本服务端证书，参数限制如下：
+	// <li>
+	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
+	// </li>
+	// <li>
+	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数Certificate至少需要传一个， 但不能同时传入。
+	// </li>
 	MultiCertInfo *MultiCertInfo `json:"MultiCertInfo,omitnil,omitempty" name:"MultiCertInfo"`
 
 	// 监听器最大连接数，当前仅性能容量型实例且仅TCP/UDP/TCP_SSL/QUIC监听器支持，不传或者传-1表示监听器维度不限速。基础网络实例不支持该参数。
@@ -1387,7 +1575,7 @@ type CreateLoadBalancerRequestParams struct {
 	// 注意：如果名称与系统中已有负载均衡实例的名称相同，则系统将会自动生成此次创建的负载均衡实例的名称。
 	LoadBalancerName *string `json:"LoadBalancerName,omitnil,omitempty" name:"LoadBalancerName"`
 
-	// 负载均衡后端目标设备所属的网络 ID，如vpc-12345678，可以通过 [DescribeVpcEx](https://cloud.tencent.com/document/product/215/1372) 接口获取。 不填此参数则默认为DefaultVPC。创建内网负载均衡实例时，此参数必填。
+	// 负载均衡后端目标设备所属的网络 ID，如vpc-12345678，可以通过 [DescribeVpcs](https://cloud.tencent.com/document/product/215/15778) 接口获取。 不填此参数则默认为DefaultVPC。创建内网负载均衡实例时，此参数必填。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 在私有网络内购买内网负载均衡实例的情况下，必须指定子网 ID，内网负载均衡实例的 VIP 将从这个子网中产生。创建内网负载均衡实例时，此参数必填，创建公网IPv4负载均衡实例时，不支持指定该参数。
@@ -1402,11 +1590,11 @@ type CreateLoadBalancerRequestParams struct {
 	// 创建负载均衡的个数，默认值 1。
 	Number *uint64 `json:"Number,omitnil,omitempty" name:"Number"`
 
-	// 仅适用于公网负载均衡。设置跨可用区容灾时的主可用区ID，例如 100001 或 ap-guangzhou-1
-	// 注：主可用区是需要承载流量的可用区，备可用区默认不承载流量，主可用区不可用时才使用备可用区。目前仅广州、上海、南京、北京、成都、深圳金融、中国香港、首尔、法兰克福、新加坡地域的 IPv4 版本的 CLB 支持主备可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主可用区的列表。
+	// 仅适用于公网且IP版本为IPv4的负载均衡。设置跨可用区容灾时的主可用区ID，例如 100001 或 ap-guangzhou-1
+	// 注：主可用区是需要承载流量的可用区，备可用区默认不承载流量，主可用区不可用时才使用备可用区。目前仅广州、上海、南京、北京、成都、深圳金融、中国香港、首尔、法兰克福、新加坡地域的 IPv4 版本的 CLB 支持主备可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主可用区的列表。【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】
 	MasterZoneId *string `json:"MasterZoneId,omitnil,omitempty" name:"MasterZoneId"`
 
-	// 仅适用于公网负载均衡。可用区ID，指定可用区以创建负载均衡实例。如：ap-guangzhou-1。
+	// 仅适用于公网且IP版本为IPv4的负载均衡。可用区ID，指定可用区以创建负载均衡实例。如：ap-guangzhou-1。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 网络计费模式，最大出带宽。仅对内网属性的性能容量型实例和公网属性的所有实例生效。
@@ -1447,8 +1635,8 @@ type CreateLoadBalancerRequestParams struct {
 	// Stgw独占集群的标签。
 	ClusterTag *string `json:"ClusterTag,omitnil,omitempty" name:"ClusterTag"`
 
-	// 仅适用于公网负载均衡。设置跨可用区容灾时的备可用区ID，例如 100001 或 ap-guangzhou-1
-	// 注：备可用区是主可用区故障后，需要承载流量的可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主/备可用区的列表。
+	// 仅适用于公网且IP版本为IPv4的负载均衡。设置跨可用区容灾时的备可用区ID，例如 100001 或 ap-guangzhou-1
+	// 注：备可用区是主可用区故障后，需要承载流量的可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主/备可用区的列表。【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】
 	SlaveZoneId *string `json:"SlaveZoneId,omitnil,omitempty" name:"SlaveZoneId"`
 
 	// EIP 的唯一 ID，形如：eip-11112222，仅适用于内网负载均衡绑定EIP。
@@ -1487,7 +1675,7 @@ type CreateLoadBalancerRequest struct {
 	// 注意：如果名称与系统中已有负载均衡实例的名称相同，则系统将会自动生成此次创建的负载均衡实例的名称。
 	LoadBalancerName *string `json:"LoadBalancerName,omitnil,omitempty" name:"LoadBalancerName"`
 
-	// 负载均衡后端目标设备所属的网络 ID，如vpc-12345678，可以通过 [DescribeVpcEx](https://cloud.tencent.com/document/product/215/1372) 接口获取。 不填此参数则默认为DefaultVPC。创建内网负载均衡实例时，此参数必填。
+	// 负载均衡后端目标设备所属的网络 ID，如vpc-12345678，可以通过 [DescribeVpcs](https://cloud.tencent.com/document/product/215/15778) 接口获取。 不填此参数则默认为DefaultVPC。创建内网负载均衡实例时，此参数必填。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 在私有网络内购买内网负载均衡实例的情况下，必须指定子网 ID，内网负载均衡实例的 VIP 将从这个子网中产生。创建内网负载均衡实例时，此参数必填，创建公网IPv4负载均衡实例时，不支持指定该参数。
@@ -1502,11 +1690,11 @@ type CreateLoadBalancerRequest struct {
 	// 创建负载均衡的个数，默认值 1。
 	Number *uint64 `json:"Number,omitnil,omitempty" name:"Number"`
 
-	// 仅适用于公网负载均衡。设置跨可用区容灾时的主可用区ID，例如 100001 或 ap-guangzhou-1
-	// 注：主可用区是需要承载流量的可用区，备可用区默认不承载流量，主可用区不可用时才使用备可用区。目前仅广州、上海、南京、北京、成都、深圳金融、中国香港、首尔、法兰克福、新加坡地域的 IPv4 版本的 CLB 支持主备可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主可用区的列表。
+	// 仅适用于公网且IP版本为IPv4的负载均衡。设置跨可用区容灾时的主可用区ID，例如 100001 或 ap-guangzhou-1
+	// 注：主可用区是需要承载流量的可用区，备可用区默认不承载流量，主可用区不可用时才使用备可用区。目前仅广州、上海、南京、北京、成都、深圳金融、中国香港、首尔、法兰克福、新加坡地域的 IPv4 版本的 CLB 支持主备可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主可用区的列表。【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】
 	MasterZoneId *string `json:"MasterZoneId,omitnil,omitempty" name:"MasterZoneId"`
 
-	// 仅适用于公网负载均衡。可用区ID，指定可用区以创建负载均衡实例。如：ap-guangzhou-1。
+	// 仅适用于公网且IP版本为IPv4的负载均衡。可用区ID，指定可用区以创建负载均衡实例。如：ap-guangzhou-1。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 网络计费模式，最大出带宽。仅对内网属性的性能容量型实例和公网属性的所有实例生效。
@@ -1547,8 +1735,8 @@ type CreateLoadBalancerRequest struct {
 	// Stgw独占集群的标签。
 	ClusterTag *string `json:"ClusterTag,omitnil,omitempty" name:"ClusterTag"`
 
-	// 仅适用于公网负载均衡。设置跨可用区容灾时的备可用区ID，例如 100001 或 ap-guangzhou-1
-	// 注：备可用区是主可用区故障后，需要承载流量的可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主/备可用区的列表。
+	// 仅适用于公网且IP版本为IPv4的负载均衡。设置跨可用区容灾时的备可用区ID，例如 100001 或 ap-guangzhou-1
+	// 注：备可用区是主可用区故障后，需要承载流量的可用区。可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域的主/备可用区的列表。【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】
 	SlaveZoneId *string `json:"SlaveZoneId,omitnil,omitempty" name:"SlaveZoneId"`
 
 	// EIP 的唯一 ID，形如：eip-11112222，仅适用于内网负载均衡绑定EIP。
@@ -1804,6 +1992,19 @@ type CreateTargetGroupRequestParams struct {
 
 	// 目标组绑定的后端服务器
 	TargetGroupInstances []*TargetGroupInstance `json:"TargetGroupInstances,omitnil,omitempty" name:"TargetGroupInstances"`
+
+	// 目标组类型，当前支持v1(旧版目标组), v2(新版目标组), 默认为v1(旧版目标组)。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 标签。
+	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 后端服务默认权重。
+	// <ul>
+	//     <li>取值范围[0, 100]</li>
+	//     <li>设置该值后，添加后端服务到目标组时， 若后端服务不单独设置权重， 则使用这里的默认权重。 </li>
+	// </ul>
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 type CreateTargetGroupRequest struct {
@@ -1820,6 +2021,19 @@ type CreateTargetGroupRequest struct {
 
 	// 目标组绑定的后端服务器
 	TargetGroupInstances []*TargetGroupInstance `json:"TargetGroupInstances,omitnil,omitempty" name:"TargetGroupInstances"`
+
+	// 目标组类型，当前支持v1(旧版目标组), v2(新版目标组), 默认为v1(旧版目标组)。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 标签。
+	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 后端服务默认权重。
+	// <ul>
+	//     <li>取值范围[0, 100]</li>
+	//     <li>设置该值后，添加后端服务到目标组时， 若后端服务不单独设置权重， 则使用这里的默认权重。 </li>
+	// </ul>
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 func (r *CreateTargetGroupRequest) ToJsonString() string {
@@ -1838,6 +2052,9 @@ func (r *CreateTargetGroupRequest) FromJsonString(s string) error {
 	delete(f, "VpcId")
 	delete(f, "Port")
 	delete(f, "TargetGroupInstances")
+	delete(f, "Type")
+	delete(f, "Tags")
+	delete(f, "Weight")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTargetGroupRequest has unknown keys!", "")
 	}
@@ -1980,6 +2197,60 @@ type CrossTargets struct {
 
 	// 子机或者网卡所属的地域。
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+}
+
+// Predefined struct for user
+type DeleteCustomizedConfigRequestParams struct {
+	// 删除的配置ID列表
+	UconfigIdList []*string `json:"UconfigIdList,omitnil,omitempty" name:"UconfigIdList"`
+}
+
+type DeleteCustomizedConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 删除的配置ID列表
+	UconfigIdList []*string `json:"UconfigIdList,omitnil,omitempty" name:"UconfigIdList"`
+}
+
+func (r *DeleteCustomizedConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCustomizedConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "UconfigIdList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCustomizedConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCustomizedConfigResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCustomizedConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCustomizedConfigResponseParams `json:"Response"`
+}
+
+func (r *DeleteCustomizedConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCustomizedConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -3552,7 +3823,7 @@ type DescribeExclusiveClustersRequestParams struct {
 	// <li> cluster-name - String - 是否必填：否 - （过滤条件）按照 集群 的名称过滤。</li>
 	// <li> cluster-tag - String - 是否必填：否 - （过滤条件）按照 集群 的标签过滤。（只有TGW/STGW集群有集群标签） </li>
 	// <li> vip - String - 是否必填：否 - （过滤条件）按照 集群 内的vip过滤。</li>
-	// <li> loadblancer-id - String - 是否必填：否 - （过滤条件）按照 集群 内的负载均衡唯一ID过滤。</li>
+	// <li> loadbalancer-id - String - 是否必填：否 - （过滤条件）按照 集群 内的负载均衡唯一ID过滤。</li>
 	// <li> network - String - 是否必填：否 - （过滤条件）按照 集群 的网络类型过滤，如："Public","Private"。</li>
 	// <li> zone - String - 是否必填：否 - （过滤条件）按照 集群 所在可用区过滤，如："ap-guangzhou-1"（广州一区）。</li>
 	// <li> isp -- String - 是否必填：否 - （过滤条件）按照TGW集群的 Isp 类型过滤，如："BGP","CMCC","CUCC","CTCC","INTERNAL"。</li>
@@ -3574,7 +3845,7 @@ type DescribeExclusiveClustersRequest struct {
 	// <li> cluster-name - String - 是否必填：否 - （过滤条件）按照 集群 的名称过滤。</li>
 	// <li> cluster-tag - String - 是否必填：否 - （过滤条件）按照 集群 的标签过滤。（只有TGW/STGW集群有集群标签） </li>
 	// <li> vip - String - 是否必填：否 - （过滤条件）按照 集群 内的vip过滤。</li>
-	// <li> loadblancer-id - String - 是否必填：否 - （过滤条件）按照 集群 内的负载均衡唯一ID过滤。</li>
+	// <li> loadbalancer-id - String - 是否必填：否 - （过滤条件）按照 集群 内的负载均衡唯一ID过滤。</li>
 	// <li> network - String - 是否必填：否 - （过滤条件）按照 集群 的网络类型过滤，如："Public","Private"。</li>
 	// <li> zone - String - 是否必填：否 - （过滤条件）按照 集群 所在可用区过滤，如："ap-guangzhou-1"（广州一区）。</li>
 	// <li> isp -- String - 是否必填：否 - （过滤条件）按照TGW集群的 Isp 类型过滤，如："BGP","CMCC","CUCC","CTCC","INTERNAL"。</li>
@@ -4189,16 +4460,12 @@ type DescribeLoadBalancersRequestParams struct {
 	// 主可用区ID，如 ："100001" （对应的是广州一区）。可通过[DescribeZones](https://cloud.tencent.com/document/product/213/15707)获取可用区列表。
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
 
-	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。<br/>`Filter.Name`和`Filter.Values`皆为必填项。详细的过滤条件如下：
-	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的实例计费模式过滤，包括"PREPAID","POSTPAID_BY_HOUR"。</li>
-	// <li> internet-charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的网络计费模式过滤，包括"BANDWIDTH_PREPAID","TRAFFIC_POSTPAID_BY_HOUR","BANDWIDTH_POSTPAID_BY_HOUR","BANDWIDTH_PACKAGE"。</li>
-	// <li> master-zone-id - String - 是否必填：否 - （过滤条件）按照 CLB 的主可用区ID过滤，如 ："100001" （对应的是广州一区）。</li>
-	// <li> tag-key - String - 是否必填：否 - （过滤条件）按照 CLB 标签的键过滤。</li>
-	// <li> tag:tag-key - String - 是否必填：否 - （过滤条件）按照CLB标签键值对进行过滤，tag-key使用具体的标签键进行替换。</li>
-	// <li> function-name - String - 是否必填：否 - （过滤条件）按照 CLB 后端绑定的SCF云函数的函数名称过滤。</li>
-	// <li> vip-isp - String - 是否必填：否 - （过滤条件）按照 CLB VIP的运营商类型过滤，如："BGP","INTERNAL","CMCC","CTCC","CUCC"等。</li>
-	// <li> sla-type - String - 是否必填：否 - （过滤条件）按照 CLB 的性能容量型规格过滤，包括"clb.c2.medium","clb.c3.small","clb.c3.medium","clb.c4.small","clb.c4.medium","clb.c4.large","clb.c4.xlarge"。</li>
+	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。<br/>`Filter.Name`和`Filter.Values`皆为必填项。详细的过滤条件如下：<li> charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的实例计费模式过滤，包括"PREPAID","POSTPAID_BY_HOUR"。</li><li> internet-charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的网络计费模式过滤，包括"BANDWIDTH_PREPAID","TRAFFIC_POSTPAID_BY_HOUR","BANDWIDTH_POSTPAID_BY_HOUR","BANDWIDTH_PACKAGE"。</li><li> master-zone-id - String - 是否必填：否 - （过滤条件）按照 CLB 的主可用区ID过滤，如 ："100001" （对应的是广州一区）。</li><li> tag-key - String - 是否必填：否 - （过滤条件）按照 CLB 标签的键过滤。</li><li> tag:tag-key - String - 是否必填：否 - （过滤条件）按照CLB标签键值对进行过滤，tag-key使用具体的标签键进行替换。</li><li> function-name - String - 是否必填：否 - （过滤条件）按照 CLB 后端绑定的SCF云函数的函数名称过滤。</li><li> vip-isp - String - 是否必填：否 - （过滤条件）按照 CLB VIP的运营商类型过滤，如："BGP","INTERNAL","CMCC","CTCC","CUCC"等。</li><li> sla-type - String - 是否必填：否 - （过滤条件）按照 CLB 的性能容量型规格过滤，包括"clb.c1.small","clb.c2.medium","clb.c3.small","clb.c3.medium","clb.c4.small","clb.c4.medium","clb.c4.large","clb.c4.xlarge","others"。</li><li> exclusive - uint64 - 是否必填：否 - （过滤条件）按照独占实例进行过滤。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 选择返回的扩充字段，不指定时，扩充字段默认不返回。详细支持的扩充字段如下：
+	// <li> TargetCount：绑定的后端服务数量</li>
+	AdditionalFields []*string `json:"AdditionalFields,omitnil,omitempty" name:"AdditionalFields"`
 }
 
 type DescribeLoadBalancersRequest struct {
@@ -4260,16 +4527,12 @@ type DescribeLoadBalancersRequest struct {
 	// 主可用区ID，如 ："100001" （对应的是广州一区）。可通过[DescribeZones](https://cloud.tencent.com/document/product/213/15707)获取可用区列表。
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
 
-	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。<br/>`Filter.Name`和`Filter.Values`皆为必填项。详细的过滤条件如下：
-	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的实例计费模式过滤，包括"PREPAID","POSTPAID_BY_HOUR"。</li>
-	// <li> internet-charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的网络计费模式过滤，包括"BANDWIDTH_PREPAID","TRAFFIC_POSTPAID_BY_HOUR","BANDWIDTH_POSTPAID_BY_HOUR","BANDWIDTH_PACKAGE"。</li>
-	// <li> master-zone-id - String - 是否必填：否 - （过滤条件）按照 CLB 的主可用区ID过滤，如 ："100001" （对应的是广州一区）。</li>
-	// <li> tag-key - String - 是否必填：否 - （过滤条件）按照 CLB 标签的键过滤。</li>
-	// <li> tag:tag-key - String - 是否必填：否 - （过滤条件）按照CLB标签键值对进行过滤，tag-key使用具体的标签键进行替换。</li>
-	// <li> function-name - String - 是否必填：否 - （过滤条件）按照 CLB 后端绑定的SCF云函数的函数名称过滤。</li>
-	// <li> vip-isp - String - 是否必填：否 - （过滤条件）按照 CLB VIP的运营商类型过滤，如："BGP","INTERNAL","CMCC","CTCC","CUCC"等。</li>
-	// <li> sla-type - String - 是否必填：否 - （过滤条件）按照 CLB 的性能容量型规格过滤，包括"clb.c2.medium","clb.c3.small","clb.c3.medium","clb.c4.small","clb.c4.medium","clb.c4.large","clb.c4.xlarge"。</li>
+	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。<br/>`Filter.Name`和`Filter.Values`皆为必填项。详细的过滤条件如下：<li> charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的实例计费模式过滤，包括"PREPAID","POSTPAID_BY_HOUR"。</li><li> internet-charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的网络计费模式过滤，包括"BANDWIDTH_PREPAID","TRAFFIC_POSTPAID_BY_HOUR","BANDWIDTH_POSTPAID_BY_HOUR","BANDWIDTH_PACKAGE"。</li><li> master-zone-id - String - 是否必填：否 - （过滤条件）按照 CLB 的主可用区ID过滤，如 ："100001" （对应的是广州一区）。</li><li> tag-key - String - 是否必填：否 - （过滤条件）按照 CLB 标签的键过滤。</li><li> tag:tag-key - String - 是否必填：否 - （过滤条件）按照CLB标签键值对进行过滤，tag-key使用具体的标签键进行替换。</li><li> function-name - String - 是否必填：否 - （过滤条件）按照 CLB 后端绑定的SCF云函数的函数名称过滤。</li><li> vip-isp - String - 是否必填：否 - （过滤条件）按照 CLB VIP的运营商类型过滤，如："BGP","INTERNAL","CMCC","CTCC","CUCC"等。</li><li> sla-type - String - 是否必填：否 - （过滤条件）按照 CLB 的性能容量型规格过滤，包括"clb.c1.small","clb.c2.medium","clb.c3.small","clb.c3.medium","clb.c4.small","clb.c4.medium","clb.c4.large","clb.c4.xlarge","others"。</li><li> exclusive - uint64 - 是否必填：否 - （过滤条件）按照独占实例进行过滤。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 选择返回的扩充字段，不指定时，扩充字段默认不返回。详细支持的扩充字段如下：
+	// <li> TargetCount：绑定的后端服务数量</li>
+	AdditionalFields []*string `json:"AdditionalFields,omitnil,omitempty" name:"AdditionalFields"`
 }
 
 func (r *DescribeLoadBalancersRequest) ToJsonString() string {
@@ -4303,6 +4566,7 @@ func (r *DescribeLoadBalancersRequest) FromJsonString(s string) error {
 	delete(f, "SecurityGroup")
 	delete(f, "MasterZone")
 	delete(f, "Filters")
+	delete(f, "AdditionalFields")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLoadBalancersRequest has unknown keys!", "")
 	}
@@ -4979,6 +5243,10 @@ type DescribeTaskStatusResponseParams struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
+	// 辅助描述信息，如失败原因等。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -4996,6 +5264,67 @@ func (r *DescribeTaskStatusResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTaskStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisassociateCustomizedConfigRequestParams struct {
+	// 配置ID
+	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
+
+	// 解绑的列表
+	BindList []*BindItem `json:"BindList,omitnil,omitempty" name:"BindList"`
+}
+
+type DisassociateCustomizedConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置ID
+	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
+
+	// 解绑的列表
+	BindList []*BindItem `json:"BindList,omitnil,omitempty" name:"BindList"`
+}
+
+func (r *DisassociateCustomizedConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisassociateCustomizedConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "UconfigId")
+	delete(f, "BindList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisassociateCustomizedConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisassociateCustomizedConfigResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DisassociateCustomizedConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DisassociateCustomizedConfigResponseParams `json:"Response"`
+}
+
+func (r *DisassociateCustomizedConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisassociateCustomizedConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5774,7 +6103,7 @@ type LoadBalancer struct {
 	LoadBalancerName *string `json:"LoadBalancerName,omitnil,omitempty" name:"LoadBalancerName"`
 
 	// 负载均衡实例的网络类型：
-	// OPEN：公网属性， INTERNAL：内网属性。
+	// OPEN：公网属性， INTERNAL：内网属性；对于内网属性的负载均衡，可通过绑定EIP出公网，具体可参考EIP文档。
 	LoadBalancerType *string `json:"LoadBalancerType,omitnil,omitempty" name:"LoadBalancerType"`
 
 	// 负载均衡类型标识，1：负载均衡，0：传统型负载均衡。
@@ -5989,6 +6318,9 @@ type LoadBalancer struct {
 	// 实例类型是否为独占型。1：独占型实例。0：非独占型实例。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Exclusive *uint64 `json:"Exclusive,omitnil,omitempty" name:"Exclusive"`
+
+	// 已绑定的后端服务数量。
+	TargetCount *uint64 `json:"TargetCount,omitnil,omitempty" name:"TargetCount"`
 }
 
 type LoadBalancerDetail struct {
@@ -5999,7 +6331,7 @@ type LoadBalancerDetail struct {
 	LoadBalancerName *string `json:"LoadBalancerName,omitnil,omitempty" name:"LoadBalancerName"`
 
 	// 负载均衡实例的网络类型：
-	// OPEN：公网属性，INTERNAL：内网属性。
+	// OPEN：公网属性，INTERNAL：内网属性；对于内网属性的负载均衡，可通过绑定EIP出公网，具体可参考EIP文档。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LoadBalancerType *string `json:"LoadBalancerType,omitnil,omitempty" name:"LoadBalancerType"`
 
@@ -6433,6 +6765,74 @@ func (r *ModifyBlockIPListResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyBlockIPListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCustomizedConfigRequestParams struct {
+	// 配置名字
+	ConfigName *string `json:"ConfigName,omitnil,omitempty" name:"ConfigName"`
+
+	// 配置ID
+	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
+
+	// 配置内容
+	ConfigContent *string `json:"ConfigContent,omitnil,omitempty" name:"ConfigContent"`
+}
+
+type ModifyCustomizedConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置名字
+	ConfigName *string `json:"ConfigName,omitnil,omitempty" name:"ConfigName"`
+
+	// 配置ID
+	UconfigId *string `json:"UconfigId,omitnil,omitempty" name:"UconfigId"`
+
+	// 配置内容
+	ConfigContent *string `json:"ConfigContent,omitnil,omitempty" name:"ConfigContent"`
+}
+
+func (r *ModifyCustomizedConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCustomizedConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigName")
+	delete(f, "UconfigId")
+	delete(f, "ConfigContent")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCustomizedConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCustomizedConfigResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCustomizedConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCustomizedConfigResponseParams `json:"Response"`
+}
+
+func (r *ModifyCustomizedConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCustomizedConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7324,6 +7724,13 @@ type ModifyTargetGroupAttributeRequestParams struct {
 
 	// 目标组的新默认端口。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
+
+	// 后端服务默认权重。
+	// <ul>
+	//     <li>取值范围[0, 100]</li>
+	//     <li>设置该值后，添加后端服务到目标组时， 若后端服务不单独设置权重， 则使用这里的默认权重。 </li> 
+	// </ul>
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 type ModifyTargetGroupAttributeRequest struct {
@@ -7337,6 +7744,13 @@ type ModifyTargetGroupAttributeRequest struct {
 
 	// 目标组的新默认端口。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
+
+	// 后端服务默认权重。
+	// <ul>
+	//     <li>取值范围[0, 100]</li>
+	//     <li>设置该值后，添加后端服务到目标组时， 若后端服务不单独设置权重， 则使用这里的默认权重。 </li> 
+	// </ul>
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 func (r *ModifyTargetGroupAttributeRequest) ToJsonString() string {
@@ -7354,6 +7768,7 @@ func (r *ModifyTargetGroupAttributeRequest) FromJsonString(s string) error {
 	delete(f, "TargetGroupId")
 	delete(f, "TargetGroupName")
 	delete(f, "Port")
+	delete(f, "Weight")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyTargetGroupAttributeRequest has unknown keys!", "")
 	}
@@ -8589,7 +9004,7 @@ type SetLoadBalancerSecurityGroupsRequestParams struct {
 	// 负载均衡实例 ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
-	// 安全组ID构成的数组，一个负载均衡实例最多可绑定50个安全组，如果要解绑所有安全组，可不传此参数，或传入空数组。
+	// 安全组ID构成的数组，一个负载均衡实例最多可绑定50个安全组，如果要解绑所有安全组，可不传此参数。
 	SecurityGroups []*string `json:"SecurityGroups,omitnil,omitempty" name:"SecurityGroups"`
 }
 
@@ -8599,7 +9014,7 @@ type SetLoadBalancerSecurityGroupsRequest struct {
 	// 负载均衡实例 ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitnil,omitempty" name:"LoadBalancerId"`
 
-	// 安全组ID构成的数组，一个负载均衡实例最多可绑定50个安全组，如果要解绑所有安全组，可不传此参数，或传入空数组。
+	// 安全组ID构成的数组，一个负载均衡实例最多可绑定50个安全组，如果要解绑所有安全组，可不传此参数。
 	SecurityGroups []*string `json:"SecurityGroups,omitnil,omitempty" name:"SecurityGroups"`
 }
 
@@ -8837,7 +9252,7 @@ type Target struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 绑定CVM时需要传入此参数，代表CVM的唯一 ID，可通过 DescribeInstances 接口返回字段中的 InstanceId 字段获取。表示绑定主网卡主IP。
+	// 绑定CVM时需要传入此参数，代表CVM的唯一 ID，可通过 DescribeInstances 接口返回字段中的 InstanceId 字段获取。表示绑定主网卡主IPv4地址；以下场景都不支持指定InstanceId：绑定非CVM，绑定CVM上的辅助网卡IP，通过跨域2.0绑定CVM，以及绑定CVM的IPv6地址等。
 	// 注意：参数 InstanceId、EniIp 有且只能传入其中一个参数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -8936,6 +9351,25 @@ type TargetGroupInfo struct {
 	// 关联到的规则数组。在DescribeTargetGroupList接口调用时无法获取到该参数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AssociatedRule []*AssociationItem `json:"AssociatedRule,omitnil,omitempty" name:"AssociatedRule"`
+
+	// 目标组类型，当前支持v1(旧版目标组), v2(新版目标组), gwlb(全局负载均衡目标组)。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TargetGroupType *string `json:"TargetGroupType,omitnil,omitempty" name:"TargetGroupType"`
+
+	// 目标组已关联的规则数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AssociatedRuleCount *int64 `json:"AssociatedRuleCount,omitnil,omitempty" name:"AssociatedRuleCount"`
+
+	// 目标组内的实例数量。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegisteredInstancesCount *int64 `json:"RegisteredInstancesCount,omitnil,omitempty" name:"RegisteredInstancesCount"`
+
+	// 标签。
+	Tag []*TagInfo `json:"Tag,omitnil,omitempty" name:"Tag"`
+
+	// 默认权重。只有v2类型目标组返回该字段。当返回为NULL时， 表示未设置默认权重。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 type TargetGroupInstance struct {
@@ -8965,13 +9399,17 @@ type TargetHealth struct {
 	// Target的实例ID，如 ins-12345678
 	TargetId *string `json:"TargetId,omitnil,omitempty" name:"TargetId"`
 
-	// 当前健康状态的详细信息。如：Alive、Dead、Unknown。Alive状态为健康，Dead状态为异常，Unknown状态包括尚未开始探测、探测中、状态未知。
+	// 当前健康状态的详细信息。如：Alive、Dead、Unknown、Close。Alive状态为健康，Dead状态为异常，Unknown状态包括尚未开始探测、探测中、状态未知，Close表示健康检查关闭或监听器状态停止。
 	HealthStatusDetail *string `json:"HealthStatusDetail,omitnil,omitempty" name:"HealthStatusDetail"`
 
 	// (**该参数对象即将下线，不推荐使用，请使用HealthStatusDetail获取健康详情**) 当前健康状态的详细信息。如：Alive、Dead、Unknown。Alive状态为健康，Dead状态为异常，Unknown状态包括尚未开始探测、探测中、状态未知。
 	//
 	// Deprecated: HealthStatusDetial is deprecated.
 	HealthStatusDetial *string `json:"HealthStatusDetial,omitnil,omitempty" name:"HealthStatusDetial"`
+
+	// 目标组唯一ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TargetGroupId *string `json:"TargetGroupId,omitnil,omitempty" name:"TargetGroupId"`
 }
 
 type TargetRegionInfo struct {
