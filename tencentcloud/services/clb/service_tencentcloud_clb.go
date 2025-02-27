@@ -2527,3 +2527,40 @@ func waitTaskReady(ctx context.Context, client *clb.Client, reqeustId string) er
 	}
 	return nil
 }
+
+func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx context.Context, configId string) (bindList []*clb.BindDetailItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := clb.NewDescribeCustomizedConfigAssociateListRequest()
+	request.UconfigId = helper.String(configId)
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClbClient().DescribeCustomizedConfigAssociateList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BindList) < 1 {
+			break
+		}
+
+		bindList = append(bindList, response.Response.BindList...)
+		if len(response.Response.BindList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

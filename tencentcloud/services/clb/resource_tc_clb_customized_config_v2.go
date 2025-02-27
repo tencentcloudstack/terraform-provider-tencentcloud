@@ -37,7 +37,7 @@ func ResourceTencentCloudClbCustomizedConfigV2() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"CLB", "SERVER", "LOCATION"}),
-				Description:  "Type of Customized Config. Valid values: `CLB`, `SERVER` and `LOCATION`.",
+				Description:  "Type of Customized Config. Valid values: `SERVER` and `LOCATION`.",
 			},
 			"config_content": {
 				Type:        schema.TypeString,
