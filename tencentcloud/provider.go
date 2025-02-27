@@ -1292,6 +1292,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_log_set":                                                              clb.ResourceTencentCloudClbLogSet(),
 			"tencentcloud_clb_log_topic":                                                            clb.ResourceTencentCloudClbLogTopic(),
 			"tencentcloud_clb_customized_config":                                                    clb.ResourceTencentCloudClbCustomizedConfig(),
+			"tencentcloud_clb_customized_config_v2":                                                 clb.ResourceTencentCloudClbCustomizedConfigV2(),
 			"tencentcloud_clb_snat_ip":                                                              clb.ResourceTencentCloudClbSnatIp(),
 			"tencentcloud_clb_function_targets_attachment":                                          clb.ResourceTencentCloudClbFunctionTargetsAttachment(),
 			"tencentcloud_clb_instance_mix_ip_target_config":                                        clb.ResourceTencentCloudClbInstanceMixIpTargetConfig(),

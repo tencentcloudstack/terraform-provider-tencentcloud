@@ -131,7 +131,7 @@ func resourceTencentCloudClbCustomizedConfigRead(d *schema.ResourceData, meta in
 
 	var config *clb.ConfigListItem
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := clbService.DescribeLbCustomizedConfigById(ctx, configId)
+		result, e := clbService.DescribeLbCustomizedConfigById(ctx, configId, "CLB")
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

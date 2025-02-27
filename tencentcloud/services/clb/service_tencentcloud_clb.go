@@ -1741,11 +1741,11 @@ func (me *ClbService) UpdateClsLogSet(ctx context.Context, request *cls.ModifyLo
 	return
 }
 
-func (me *ClbService) DescribeLbCustomizedConfigById(ctx context.Context, configId string) (customizedConfig *clb.ConfigListItem, errRet error) {
+func (me *ClbService) DescribeLbCustomizedConfigById(ctx context.Context, configId, configType string) (customizedConfig *clb.ConfigListItem, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := clb.NewDescribeCustomizedConfigListRequest()
 	request.UconfigIds = []*string{&configId}
-	request.ConfigType = helper.String("CLB")
+	request.ConfigType = helper.String(configType)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeCustomizedConfigList(request)
 	if err != nil {
