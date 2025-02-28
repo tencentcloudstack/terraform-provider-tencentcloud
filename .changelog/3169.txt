@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_teo_l7_acc_setting
+```
+
+```release-note:deprecation
+resource/tencentcloud_teo_zone_setting
+```
