@@ -242,7 +242,7 @@ func resourceTencentCloudClbCustomizedConfigV2Delete(d *schema.ResourceData, met
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			if result == nil || result.Response == nil || result.Response.RequestId == nil {
-				return resource.NonRetryableError(fmt.Errorf("Create CLB Customized Config Failed, Response is nil."))
+				return resource.NonRetryableError(fmt.Errorf("Delete CLB Customized Config Failed, Response is nil."))
 			}
 
 			requestId := *result.Response.RequestId
@@ -255,7 +255,7 @@ func resourceTencentCloudClbCustomizedConfigV2Delete(d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s Create CLB Customized Config Failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s Delete CLB Customized Config Failed, reason:%+v", logId, err)
 		return err
 	}
 	return nil
