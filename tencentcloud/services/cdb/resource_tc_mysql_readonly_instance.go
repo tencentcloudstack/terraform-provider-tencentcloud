@@ -33,7 +33,7 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Optional:    true,
-			Description: "The zone information of the primary instance is required when you purchase a disaster recovery instance.",
+			Description: "The region information of the master instance. This field is required when purchasing a cross-region subscription.",
 		},
 		"slave_deploy_mode": {
 			Type:         schema.TypeInt,
