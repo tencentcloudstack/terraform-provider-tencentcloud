@@ -83,7 +83,7 @@ func resourceTencentCloudDasbAssetSyncJobOperationCreate(d *schema.ResourceData,
 			return resource.NonRetryableError(fmt.Errorf("InProcess is nil."))
 		}
 
-		if *result.Response.Status.InProcess == false {
+		if !*result.Response.Status.InProcess {
 			return nil
 		}
 
