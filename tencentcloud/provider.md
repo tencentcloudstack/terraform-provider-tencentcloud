@@ -1481,6 +1481,7 @@ tencentcloud_teo_function
 tencentcloud_teo_function_rule
 tencentcloud_teo_function_rule_priority
 tencentcloud_teo_function_runtime_environment
+tencentcloud_teo_l7_acc_setting
 
 TencentCloud ServiceMesh(TCM)
 Data Source
