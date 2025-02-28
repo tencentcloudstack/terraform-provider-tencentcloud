@@ -40,6 +40,24 @@ func TestAccTencentCloudDnspodRecordListDataSource_subDomains(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudDnspodRecordListDataSource_withoutSubDomain(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDnspodRecordListDataSource_withoutSubDomain,
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_dnspod_record_list.subdomains"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dnspod_record_list.subdomains", "record_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dnspod_record_list.subdomains", "instance_list.#"),
+				),
+			},
+		},
+	})
+}
+
 const testAccDnspodRecordListDataSource = `
 
 data "tencentcloud_dnspod_record_list" "record_list" {
@@ -74,5 +92,12 @@ data "tencentcloud_dnspod_record_list" "subdomains" {
   domain              = "mikatong.xyz"
   is_exact_sub_domain = true
   sub_domains          = ["tes1029","tes103"]
+}
+`
+
+const testAccDnspodRecordListDataSource_withoutSubDomain = `
+data "tencentcloud_dnspod_record_list" "subdomains" {
+  domain              = "mikatong.xyz"
+  is_exact_sub_domain = true
 }
 `
