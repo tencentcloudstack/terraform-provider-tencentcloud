@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_accept_join_share_unit_invitation_operation: optimize unique ID
+```
+
+```release-note:enhancement
+resource/tencentcloud_reject_join_share_unit_invitation_operation: optimize unique ID
+```
