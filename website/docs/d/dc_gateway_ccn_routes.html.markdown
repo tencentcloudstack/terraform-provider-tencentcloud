@@ -13,6 +13,8 @@ Use this data source to query detailed information of direct connect gateway rou
 
 ## Example Usage
 
+### Complete example
+
 ```hcl
 resource "tencentcloud_ccn" "main" {
   name        = "ci-temp-test-ccn"
@@ -37,9 +39,19 @@ resource "tencentcloud_dc_gateway_ccn_route" "route2" {
   cidr_block = "192.1.1.0/32"
 }
 
-#You need to sleep for a few seconds because there is a cache on the server
+# You need to sleep for a few seconds because there is a cache on the server
 data "tencentcloud_dc_gateway_ccn_routes" "test" {
   dcg_id = tencentcloud_dc_gateway.ccn_main.id
+}
+```
+
+### Query routes by filters
+
+```hcl
+data "tencentcloud_dc_gateway_ccn_routes" "test" {
+  dcg_id         = tencentcloud_dc_gateway.ccn_main.id
+  ccn_route_type = "STATIC"
+  address_type   = "IPv4"
 }
 ```
 
@@ -48,6 +60,8 @@ data "tencentcloud_dc_gateway_ccn_routes" "test" {
 The following arguments are supported:
 
 * `dcg_id` - (Required, String) ID of the DCG to be queried.
+* `address_type` - (Optional, String) Address type, supports: IPv4, IPv6. Default is IPv4.
+* `ccn_route_type` - (Optional, String) Cloud networking routing learning type, optional values: BGP - Automatic Learning; STATIC - User configured. Default is STATIC.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
