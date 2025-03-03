@@ -32,6 +32,7 @@ func ResourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 
 			"policy_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Policy name.",
 			},
@@ -200,10 +201,8 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("policy_name") {
-		if v, ok := d.GetOk("policy_name"); ok {
-			request.PolicyName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("policy_name"); ok {
+		request.PolicyName = helper.String(v.(string))
 	}
 
 	if d.HasChange("alive_days") {
