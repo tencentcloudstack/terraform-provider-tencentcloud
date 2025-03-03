@@ -1963,9 +1963,14 @@ func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) (result bool) {
 	newOwnerId := newOwner.SelectElement("ID")
 	newOwnerName := newOwner.SelectElement("DisplayName")
 
+	if oldOwnerId == nil || newOwnerId == nil {
+		log.Println("[CRITAL]oldOwnerId or newOwnerId is nil: return false.")
+		return false
+	}
+
 	// diff: Owner element
-	if oldOwnerId.Text() != newOwnerId.Text() || oldOwnerName.Text() != newOwnerName.Text() {
-		log.Printf("[CRITAL]OwnerId[old:%s, new:%s] or OwnerName[old:%s, new:%s] not equal: return false.\n", oldOwnerId.Text(), newOwnerId.Text(), oldOwnerName.Text(), newOwnerName.Text())
+	if oldOwnerId.Text() != newOwnerId.Text() {
+		log.Printf("[CRITAL]OwnerId[old:%s, new:%s] not equal: return false.\n", oldOwnerId.Text(), newOwnerId.Text())
 		return false
 	}
 
