@@ -138,10 +138,23 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 				Description: "The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.",
 			},
 			"private_ip": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "The private IP to be assigned to this instance, must be in the provided subnet and available.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ConflictsWith: []string{
+					"private_ip_addresses",
+				},
+				Description: "The private IP to be assigned to this instance, must be in the provided subnet and available. Cannot be set at the same time as `private_ip_addresses`.",
+			},
+			"private_ip_addresses": {
+				Type:     schema.TypeSet,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Computed: true,
+				ConflictsWith: []string{
+					"private_ip",
+				},
+				Description: "Private network subnet IP array, which can be used when creating an instance or modifying instance vpc attributes. Currently, only batch creation of multiple instances supports passing in multiple IPs of the same subnet. Cannot be set at the same time as `private_ip`.",
 			},
 			// security group
 			"security_groups": {
@@ -415,6 +428,15 @@ func doResourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interf
 		if v, ok = d.GetOk("private_ip"); ok {
 			request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
 		}
+
+		if v, ok := d.GetOk("private_ip_addresses"); ok {
+			addressListSet := v.(*schema.Set).List()
+			for i := range addressListSet {
+				addressList := addressListSet[i].(string)
+				request.VirtualPrivateCloud.PrivateIpAddresses = append(request.VirtualPrivateCloud.PrivateIpAddresses, &addressList)
+			}
+		}
+
 	}
 
 	if v, ok := d.GetOk("security_groups"); ok {
@@ -578,6 +600,14 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 	if instance.LoginSettings.KeepImageLogin != nil {
 		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
 	}
+
+	privateIpAddresses := []*string{}
+	for _, v := range instanceSet {
+		if len(v.PrivateIpAddresses) > 0 {
+			privateIpAddresses = append(privateIpAddresses, v.PrivateIpAddresses...)
+		}
+	}
+	_ = d.Set("private_ip_addresses", privateIpAddresses)
 
 	return nil
 }

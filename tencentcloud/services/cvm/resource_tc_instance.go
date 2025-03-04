@@ -60,7 +60,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"instance_count": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead.",
+				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead. https://developer.hashicorp.com/terraform/language/meta-arguments/count.",
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 100),
 				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
 			},
@@ -98,7 +98,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"stopped_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.",
+				Description: "Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.Need to be used with the running_flag field set to `false`.",
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{
 					CVM_STOP_MODE_KEEP_CHARGING,
 					CVM_STOP_MODE_STOP_CHARGING,
@@ -622,9 +622,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.SystemDisk.DiskSize = &diskSize
 	}
 
-	if v, ok := d.GetOk("system_disk_id"); ok {
-		request.SystemDisk.DiskId = helper.String(v.(string))
-	}
+	// if v, ok := d.GetOk("system_disk_id"); ok {
+	// 	request.SystemDisk.DiskId = helper.String(v.(string))
+	// }
 
 	if v, ok := d.GetOk("system_disk_name"); ok {
 		request.SystemDisk.DiskName = helper.String(v.(string))
@@ -658,9 +658,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				}
 			}
 
-			if value["data_disk_id"] != "" {
-				dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
-			}
+			// if value["data_disk_id"] != "" {
+			// 	dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
+			// }
 
 			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
 				deleteWithInstanceBool := deleteWithInstance.(bool)
