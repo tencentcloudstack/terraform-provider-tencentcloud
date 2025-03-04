@@ -2209,6 +2209,7 @@ tencentcloud_dasb_user_group
 tencentcloud_dasb_reset_user
 tencentcloud_dasb_bind_device_account_private_key
 tencentcloud_dasb_bind_device_account_password
+tencentcloud_dasb_asset_sync_job_operation
 
 Cwp
 Data Source

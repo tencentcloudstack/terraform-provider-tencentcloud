@@ -2185,6 +2185,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dasb_reset_user":                                                          bh.ResourceTencentCloudDasbResetUser(),
 			"tencentcloud_dasb_bind_device_account_private_key":                                     bh.ResourceTencentCloudDasbBindDeviceAccountPrivateKey(),
 			"tencentcloud_dasb_bind_device_account_password":                                        bh.ResourceTencentCloudDasbBindDeviceAccountPassword(),
+			"tencentcloud_dasb_asset_sync_job_operation":                                            bh.ResourceTencentCloudDasbAssetSyncJobOperationOperation(),
 			"tencentcloud_ssl_check_certificate_chain_operation":                                    ssl.ResourceTencentCloudSslCheckCertificateChainOperation(),
 			"tencentcloud_ssl_complete_certificate_operation":                                       ssl.ResourceTencentCloudSslCompleteCertificateOperation(),
 			"tencentcloud_ssl_deploy_certificate_instance_operation":                                ssl.ResourceTencentCloudSslDeployCertificateInstanceOperation(),
