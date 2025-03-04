@@ -317,10 +317,9 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 							Description: "Region of cos bucket. if `type` is `cos`, `cos_region` is required.",
 						},
 						"type": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: tccommon.ValidateAllowedStringValue(SCF_TRIGGER_TYPES),
-							Description:  "Type of the SCF function trigger, support `cos`, `cls`, `timer`, `ckafka`, `http`, `apigw`, `cmq`.",
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Type of the SCF function trigger, support `timer`, `ckafka`, `custom_kafka`, `apigw`, `cmq`, `cos`, `mqtt`, `cls`, `clb`, `mps`, `vod`, `cm`, `eb`, `http`.",
 						},
 						"trigger_desc": {
 							Type:        schema.TypeString,
