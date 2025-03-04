@@ -46,6 +46,7 @@ func resourceTencentCloudRejectJoinShareUnitInvitationOperationCreate(d *schema.
 
 	if v, ok := d.GetOk("unit_id"); ok {
 		request.UnitId = helper.String(v.(string))
+		unitId = v.(string)
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
