@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_teo_l4_proxy_rule
+```
