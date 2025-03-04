@@ -2,6 +2,8 @@ Use this data source to query detailed information of direct connect gateway rou
 
 Example Usage
 
+Complete example
+
 ```hcl
 resource "tencentcloud_ccn" "main" {
   name        = "ci-temp-test-ccn"
@@ -26,8 +28,18 @@ resource "tencentcloud_dc_gateway_ccn_route" "route2" {
   cidr_block = "192.1.1.0/32"
 }
 
-#You need to sleep for a few seconds because there is a cache on the server
+# You need to sleep for a few seconds because there is a cache on the server
 data "tencentcloud_dc_gateway_ccn_routes" "test" {
   dcg_id = tencentcloud_dc_gateway.ccn_main.id
+}
+```
+
+Query routes by filters
+
+```hcl
+data "tencentcloud_dc_gateway_ccn_routes" "test" {
+  dcg_id         = tencentcloud_dc_gateway.ccn_main.id
+  ccn_route_type = "STATIC"
+  address_type   = "IPv4"
 }
 ```
