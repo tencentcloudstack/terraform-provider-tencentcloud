@@ -128,7 +128,7 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessCreate(d *schema.Resourc
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, flowRequest.GetAction(), flowRequest.ToJsonString(), result.ToJsonString())
 		}
 
 		if result == nil || result.Response == nil || result.Response.TaskSet == nil {
