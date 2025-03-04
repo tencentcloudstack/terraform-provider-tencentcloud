@@ -1,3 +1,33 @@
+## 1.81.170(March 3 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cynosdb_backup_config` ([#3181](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3181))
+* **New Resource:** `tencentcloud_dasb_asset_sync_job_operation` ([#3171](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3171))
+* **New Resource:** `tencentcloud_postgresql_instance_ssl_config` ([#3183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3183))
+* **New Resource:** `tencentcloud_teo_l4_proxy_rule` ([#3149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3149))
+* **New Resource:** `tencentcloud_teo_l7_acc_setting` ([#3169](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3169))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dnspod_record_list: add `sub_domains` param ([#3165](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3165))
+* resource/tencentcloud_accept_join_share_unit_invitation_operation: optimize unique ID ([#3174](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3174))
+* resource/tencentcloud_cfs_auto_snapshot_policy: update doc ([#3176](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3176))
+* resource/tencentcloud_cos_bucket: optimize `acl_body` verification logic ([#3177](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3177))
+* resource/tencentcloud_dc_gateway_ccn_routes: add new params ([#3178](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3178))
+* resource/tencentcloud_dc_internet_address_config: update doc ([#3179](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3179))
+* resource/tencentcloud_dc_share_dcx_config: update doc ([#3180](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3180))
+* resource/tencentcloud_mysql_readonly_instance: modify doc. ([#3172](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3172))
+* resource/tencentcloud_postgresql_instance: Support window period switching. ([#3167](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3167))
+* resource/tencentcloud_postgresql_readonly_instance: Support window period switching. ([#3167](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3167))
+* resource/tencentcloud_redis_instance: Optimize the change issue of the `replica_zone_ids` field in a single availability zone. ([#3160](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3160))
+* resource/tencentcloud_reject_join_share_unit_invitation_operation: optimize unique ID ([#3174](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3174))
+* resource/tencentcloud_scf_function: update doc ([#3182](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3182))
+* resource/tencentcloud_tse_cngw_service: modify field properties ([#3173](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3173))
+* resource/tencentcloud_vpc_ipv6_eni_address: Offline this document ([#3175](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3175))
+* resource/tencentcloud_waf_custom_rule: update doc ([#3166](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3166))
+* resource/tencentcloud_waf_custom_white_rule: update doc ([#3166](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3166))
+
 ## 1.81.169 (February 27 , 2025)
 
 FEATURES:
