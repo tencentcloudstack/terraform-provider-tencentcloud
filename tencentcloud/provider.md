@@ -916,6 +916,7 @@ tencentcloud_postgresql_apply_parameter_template_operation
 tencentcloud_postgresql_clone_db_instance
 tencentcloud_postgresql_instance_network_access
 tencentcloud_postgresql_parameters
+tencentcloud_postgresql_instance_ssl_config
 
 TencentDB for Redis(crs)
 Data Source
