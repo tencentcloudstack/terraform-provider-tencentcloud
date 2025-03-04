@@ -25,30 +25,24 @@ type Ability struct {
 	IsSupportSlaveZone *string `json:"IsSupportSlaveZone,omitnil,omitempty" name:"IsSupportSlaveZone"`
 
 	// 不支持从可用区的原因
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NonsupportSlaveZoneReason *string `json:"NonsupportSlaveZoneReason,omitnil,omitempty" name:"NonsupportSlaveZoneReason"`
 
 	// 是否支持RO实例
 	IsSupportRo *string `json:"IsSupportRo,omitnil,omitempty" name:"IsSupportRo"`
 
 	// 不支持RO实例的原因
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NonsupportRoReason *string `json:"NonsupportRoReason,omitnil,omitempty" name:"NonsupportRoReason"`
 
 	// 是否支持手动发起快照备份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSupportManualSnapshot *string `json:"IsSupportManualSnapshot,omitnil,omitempty" name:"IsSupportManualSnapshot"`
 
 	// 是否支持透明数据加密
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSupportTransparentDataEncryption *string `json:"IsSupportTransparentDataEncryption,omitnil,omitempty" name:"IsSupportTransparentDataEncryption"`
 
 	// 不支持透明数据加密原因
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NoSupportTransparentDataEncryptionReason *string `json:"NoSupportTransparentDataEncryptionReason,omitnil,omitempty" name:"NoSupportTransparentDataEncryptionReason"`
 
 	// 是否支持手动发起逻辑备份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSupportManualLogic *string `json:"IsSupportManualLogic,omitnil,omitempty" name:"IsSupportManualLogic"`
 }
 
@@ -566,7 +560,7 @@ type AuditLog struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LockWaitTime *int64 `json:"LockWaitTime,omitnil,omitempty" name:"LockWaitTime"`
 
-	// 事物持续等待时间，微秒。
+	// 事务持续等待时间，微秒。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrxLivingTime *int64 `json:"TrxLivingTime,omitnil,omitempty" name:"TrxLivingTime"`
 
@@ -597,15 +591,12 @@ type AuditLogFile struct {
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 文件大小，单位为 KB。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FileSize *int64 `json:"FileSize,omitnil,omitempty" name:"FileSize"`
 
 	// 审计日志下载地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DownloadUrl *string `json:"DownloadUrl,omitnil,omitempty" name:"DownloadUrl"`
 
 	// 错误信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
 }
 
@@ -983,6 +974,9 @@ type BizTaskInfo struct {
 	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceCLSDeliveryInfos []*InstanceCLSDeliveryInfo `json:"InstanceCLSDeliveryInfos,omitnil,omitempty" name:"InstanceCLSDeliveryInfos"`
+
+	// 任务进度信息
+	TaskProgressInfo *TaskProgressInfo `json:"TaskProgressInfo,omitnil,omitempty" name:"TaskProgressInfo"`
 }
 
 type BizTaskModifyInstanceParam struct {
@@ -3364,15 +3358,12 @@ type CynosdbClusterDetail struct {
 
 type CynosdbErrorLogItem struct {
 	// 日志时间戳
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Timestamp *int64 `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
 
 	// 日志等级
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
 
 	// 日志内容
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 }
 
@@ -3667,7 +3658,6 @@ type CynosdbInstanceDetail struct {
 	MaxCpu *float64 `json:"MaxCpu,omitnil,omitempty" name:"MaxCpu"`
 
 	// Db类型:<li>NORMAL</li><li>SERVERLESS</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbMode *string `json:"DbMode,omitnil,omitempty" name:"DbMode"`
 }
 
@@ -3690,7 +3680,7 @@ type CynosdbInstanceGroup struct {
 	// 状态
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 实例组类型。ha-ha组；ro-只读组
+	// 实例组（网络）类型。ha-ha组；ro-只读组；proxy-代理；singleRo-只读实例独占
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 更新时间
@@ -4776,7 +4766,7 @@ func (r *DescribeAuditLogFilesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAuditLogsRequestParams struct {
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 开始时间，格式为："2017-07-12 10:29:20"。
@@ -4801,6 +4791,7 @@ type DescribeAuditLogsRequestParams struct {
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 分页偏移量。
+	// 说明：Limit 和 Offset 的取值之和需小于等于65536。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 过滤条件。多个值之前是且的关系。
@@ -4810,7 +4801,7 @@ type DescribeAuditLogsRequestParams struct {
 type DescribeAuditLogsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 开始时间，格式为："2017-07-12 10:29:20"。
@@ -4835,6 +4826,7 @@ type DescribeAuditLogsRequest struct {
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 分页偏移量。
+	// 说明：Limit 和 Offset 的取值之和需小于等于65536。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 过滤条件。多个值之前是且的关系。
@@ -5108,6 +5100,10 @@ type DescribeBackupConfigResponseParams struct {
 	// 跨地域逻辑备份配置修改时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicCrossRegionsConfigUpdateTime *string `json:"LogicCrossRegionsConfigUpdateTime,omitnil,omitempty" name:"LogicCrossRegionsConfigUpdateTime"`
+
+	// 自动逻辑备份配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogicBackupConfig *LogicBackupConfigInfo `json:"LogicBackupConfig,omitnil,omitempty" name:"LogicBackupConfig"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -5697,6 +5693,102 @@ func (r *DescribeChangedParamsAfterUpgradeResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeChangedParamsAfterUpgradeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterDatabaseTablesRequestParams struct {
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 数据库名
+	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
+
+	// 偏移
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 个数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 数据表类型。
+	// "view"表示只返回 view，"base_table" 表示只返回基本表，"all" 表示返回 view 和表。默认为 all。
+	TableType *string `json:"TableType,omitnil,omitempty" name:"TableType"`
+}
+
+type DescribeClusterDatabaseTablesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 数据库名
+	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
+
+	// 偏移
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 个数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 数据表类型。
+	// "view"表示只返回 view，"base_table" 表示只返回基本表，"all" 表示返回 view 和表。默认为 all。
+	TableType *string `json:"TableType,omitnil,omitempty" name:"TableType"`
+}
+
+func (r *DescribeClusterDatabaseTablesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterDatabaseTablesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "Db")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "TableType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterDatabaseTablesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterDatabaseTablesResponseParams struct {
+	// 总条数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 分页偏移
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页限制数量
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 数据库表列表
+	Tables []*string `json:"Tables,omitnil,omitempty" name:"Tables"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeClusterDatabaseTablesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeClusterDatabaseTablesResponseParams `json:"Response"`
+}
+
+func (r *DescribeClusterDatabaseTablesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterDatabaseTablesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6458,22 +6550,22 @@ func (r *DescribeClustersResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBSecurityGroupsRequestParams struct {
-	// 实例ID
+	// 实例ID（InstanceId与InstanceGroupId必须任选一个传入）
 	//
 	// Deprecated: InstanceId is deprecated.
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例组ID
+	// 实例组ID（InstanceId与InstanceGroupId必须任选一个传入）
 	InstanceGroupId *string `json:"InstanceGroupId,omitnil,omitempty" name:"InstanceGroupId"`
 }
 
 type DescribeDBSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例ID（InstanceId与InstanceGroupId必须任选一个传入）
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例组ID
+	// 实例组ID（InstanceId与InstanceGroupId必须任选一个传入）
 	InstanceGroupId *string `json:"InstanceGroupId,omitnil,omitempty" name:"InstanceGroupId"`
 }
 
@@ -6930,6 +7022,9 @@ type DescribeInstanceSlowQueriesRequestParams struct {
 
 	// 排序类型，可选值：asc,desc
 	OrderByType *string `json:"OrderByType,omitnil,omitempty" name:"OrderByType"`
+
+	// sql语句
+	SqlText *string `json:"SqlText,omitnil,omitempty" name:"SqlText"`
 }
 
 type DescribeInstanceSlowQueriesRequest struct {
@@ -6964,6 +7059,9 @@ type DescribeInstanceSlowQueriesRequest struct {
 
 	// 排序类型，可选值：asc,desc
 	OrderByType *string `json:"OrderByType,omitnil,omitempty" name:"OrderByType"`
+
+	// sql语句
+	SqlText *string `json:"SqlText,omitnil,omitempty" name:"SqlText"`
 }
 
 func (r *DescribeInstanceSlowQueriesRequest) ToJsonString() string {
@@ -6988,6 +7086,7 @@ func (r *DescribeInstanceSlowQueriesRequest) FromJsonString(s string) error {
 	delete(f, "Database")
 	delete(f, "OrderBy")
 	delete(f, "OrderByType")
+	delete(f, "SqlText")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceSlowQueriesRequest has unknown keys!", "")
 	}
@@ -8963,7 +9062,7 @@ type ExportInstanceErrorLogsRequestParams struct {
 	// 可选值Timestamp
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// ASC或DESC
+	// 排序类型，ASC 或 DESC。
 	OrderByType *string `json:"OrderByType,omitnil,omitempty" name:"OrderByType"`
 }
 
@@ -8997,7 +9096,7 @@ type ExportInstanceErrorLogsRequest struct {
 	// 可选值Timestamp
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// ASC或DESC
+	// 排序类型，ASC 或 DESC。
 	OrderByType *string `json:"OrderByType,omitnil,omitempty" name:"OrderByType"`
 }
 
@@ -9714,7 +9813,7 @@ type InstanceAuditLogFilter struct {
 	// 
 	// 等于、不等于： sqlType - SQL类型； errCode - 错误码； threadId - 线程ID；
 	// 
-	// 范围搜索（时间类型统一为微秒）： execTime - 执行时间； lockWaitTime - 执行时间； ioWaitTime - IO等待时间； trxLivingTime - 事物持续时间； cpuTime - cpu时间； checkRows - 扫描行数； affectRows - 影响行数； sentRows - 返回行数。
+	// 范围搜索（时间类型统一为微秒）： execTime - 执行时间； lockWaitTime - 执行时间； ioWaitTime - IO等待时间； trxLivingTime - 事务持续时间； cpuTime - cpu时间； checkRows - 扫描行数； affectRows - 影响行数； sentRows - 返回行数。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 过滤条件。支持以下条件：
@@ -14907,6 +15006,9 @@ type RollbackToNewClusterRequestParams struct {
 
 	// 原ro实例信息
 	OriginalROInstanceList []*string `json:"OriginalROInstanceList,omitnil,omitempty" name:"OriginalROInstanceList"`
+
+	// 项目id
+	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
 type RollbackToNewClusterRequest struct {
@@ -14998,6 +15100,9 @@ type RollbackToNewClusterRequest struct {
 
 	// 原ro实例信息
 	OriginalROInstanceList []*string `json:"OriginalROInstanceList,omitnil,omitempty" name:"OriginalROInstanceList"`
+
+	// 项目id
+	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
 func (r *RollbackToNewClusterRequest) ToJsonString() string {
@@ -15038,6 +15143,7 @@ func (r *RollbackToNewClusterRequest) FromJsonString(s string) error {
 	delete(f, "RollbackDatabases")
 	delete(f, "RollbackTables")
 	delete(f, "OriginalROInstanceList")
+	delete(f, "ProjectId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RollbackToNewClusterRequest has unknown keys!", "")
 	}
@@ -16027,6 +16133,17 @@ type TaskMaintainInfo struct {
 	// 可以执行的时间，枚举值：["Mon","Tue","Wed","Thu","Fri", "Sat", "Sun"]
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaintainWeekDays []*string `json:"MaintainWeekDays,omitnil,omitempty" name:"MaintainWeekDays"`
+}
+
+type TaskProgressInfo struct {
+	// 当前步骤
+	CurrentStep *string `json:"CurrentStep,omitnil,omitempty" name:"CurrentStep"`
+
+	// 当前进度
+	CurrentStepProgress *int64 `json:"CurrentStepProgress,omitnil,omitempty" name:"CurrentStepProgress"`
+
+	// 预估时间
+	CurrentStepRemainingTime *string `json:"CurrentStepRemainingTime,omitnil,omitempty" name:"CurrentStepRemainingTime"`
 }
 
 type TemplateParamInfo struct {

@@ -287,6 +287,15 @@ const (
 	// 账号余额不足。
 	OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
 
+	// 响应大小超限制:{{1}}， 请减少查询数量。
+	OPERATIONDENIED_LENGTHOVERLIMIT = "OperationDenied.LengthOverLimit"
+
+	// 您没有权限操作该资源（进行该操作）。
+	OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+
+	// 暂停状态的serverless不允许修改多可用区。
+	OPERATIONDENIED_PAUSEDSLSNOTALLOWMODIFYSLAVE = "OperationDenied.PausedSlsNotAllowModifySlave"
+
 	// proxy节点支持的可创建的连接数量不匹配,可支持的创建连接数{{1}},当前连接数{{2}}
 	OPERATIONDENIED_PROXYCONNECTCOUNTCHECKERROR = "OperationDenied.ProxyConnectCountCheckError"
 

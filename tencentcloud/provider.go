@@ -1637,6 +1637,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_read_only_instance_exclusive_access":                              cynosdb.ResourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccess(),
 			"tencentcloud_cynosdb_proxy_end_point":                                                  cynosdb.ResourceTencentCloudCynosdbProxyEndPoint(),
 			"tencentcloud_cynosdb_upgrade_proxy_version":                                            cynosdb.ResourceTencentCloudCynosdbUpgradeProxyVersion(),
+			"tencentcloud_cynosdb_backup_config":                                                    cynosdb.ResourceTencentCloudCynosdbBackupConfig(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":                                  vod.ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_vod_image_sprite_template":                                                vod.ResourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                                                   vod.ResourceTencentCloudVodProcedureTemplate(),
