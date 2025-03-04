@@ -1,3 +1,39 @@
+## 1.81.169 (February 27 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_emr_job_status_detail` ([#3144](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3144))
+* **New Data Source:** `tencentcloud_emr_service_node_infos` ([#3144](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3144))
+* **New Resource:** `tencentcloud_clb_customized_config_attachment` ([#3163](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3163))
+* **New Resource:** `tencentcloud_clb_customized_config_v2` ([#3162](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3162))
+* **New Resource:** `tencentcloud_emr_auto_scale_strategy` ([#3144](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3144))
+* **New Resource:** `tencentcloud_emr_deploy_yarn_operation` ([#3144](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3144))
+* **New Resource:** `tencentcloud_emr_yarn` ([#3144](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3144))
+* **New Resource:** `tencentcloud_postgresql_instance_network_access` ([#3004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3004))
+* **New Resource:** `tencentcloud_postgresql_parameters` ([#3146](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3146))
+
+ENHANCEMENTS:
+
+* provider: OIDC auth support set `provider_id` ([#3152](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3152))
+* resource/tencentcloud_as_scaling_config: add `disaster_recover_group_ids` ([#3147](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3147))
+* resource/tencentcloud_cfw_edge_policy: Update resource fields and code logic ([#3142](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3142))
+* resource/tencentcloud_cfw_nat_policy: Update resource fields and code logic ([#3142](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3142))
+* resource/tencentcloud_cos_bucket_policy: update doc ([#3155](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3155))
+* resource/tencentcloud_dcx_extra_config: update field properties and doc ([#3143](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3143))
+* resource/tencentcloud_eip_public_address_adjust: update doc ([#3154](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3154))
+* resource/tencentcloud_tag: optimize the creation retry logic ([#3156](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3156))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: Add `pay_mode`, `cluster_version`, `public_access_endpoint` and `vpcs` ([#3158](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3158))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: update doc ([#3145](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3145))
+* resource/tencentcloud_teo_rule_engine: update doc ([#3148](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3148))
+* resource/tencentcloud_vpc_bandwidth_package_attachment: Mark `resource_type` as `Computed` ([#3159](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3159))
+* resource/tencentcloud_waf_anti_fake: update doc ([#3161](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3161))
+* resource/tencentcloud_waf_anti_info_leak: update doc ([#3161](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3161))
+* resource/tencentcloud_waf_cc: add new params and update doc ([#3161](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3161))
+* resource/tencentcloud_waf_cc_auto_status: update doc ([#3161](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3161))
+* resource/tencentcloud_waf_custom_rule: add new params and update doc ([#3161](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3161))
+* resource/tencentcloud_waf_custom_white_rule: add new params and update doc ([#3161](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3161))
+* resource/waf: Update WAF resource query logic ([#3141](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3141))
+
 ## 1.81.168 (February 18 , 2025)
 
 FEATURES:

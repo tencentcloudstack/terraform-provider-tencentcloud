@@ -90,6 +90,35 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
+Using DisasterRecoverGroupIds
+
+```hcl
+resource "tencentcloud_as_scaling_config" "example" {
+  image_family                      = "business-daily-update"
+  configuration_name                = "as-test-config"
+  disk_type_policy                  = "ORIGINAL"
+  enhanced_monitor_service          = false
+  enhanced_security_service         = false
+  enhanced_automation_tools_service = false
+  disaster_recover_group_ids        = ["ps-e2u4ew"]
+  instance_tags                     = {}
+  instance_types                    = [
+    "S5.SMALL2",
+  ]
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 0
+  key_ids                    = []
+  project_id                 = 0
+  public_ip_assigned         = false
+  security_group_ids         = [
+    "sg-5275dorp",
+  ]
+  system_disk_size = 50
+  system_disk_type = "CLOUD_BSSD"
+}
+
+```
+
 Create a CDC configuration
 
 ```hcl

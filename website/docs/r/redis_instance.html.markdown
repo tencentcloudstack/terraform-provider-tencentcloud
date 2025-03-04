@@ -286,7 +286,7 @@ resource "tencentcloud_redis_instance" "example" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, String, ForceNew) The available zone ID of an instance to be created, please refer to `tencentcloud_redis_zone_config.list`.
+* `availability_zone` - (Required, String, ForceNew) The available zone of an instance to be created, like `ap-beijing-7`, please refer to `tencentcloud_redis_zone_config.list`.
 * `mem_size` - (Required, Int) The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding. `512MB` is supported only in master-slave instance.
 * `auto_renew_flag` - (Optional, Int, ForceNew) Auto-renew flag. 0 - default state (manual renewal); 1 - automatic renewal; 2 - explicit no automatic renewal.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.

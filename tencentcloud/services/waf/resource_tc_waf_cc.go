@@ -42,7 +42,7 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"advance": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Session match mode, 0 use ip, 1 use session.",
+				Description: "Advanced mode (whether to use session detection). 0(disabled) 1(enabled).",
 			},
 			"limit": {
 				Required:    true,
@@ -52,17 +52,17 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"interval": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Interval.",
+				Description: "CC detection cycle.",
 			},
 			"url": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Check URL.",
+				Description: "Detection URL.",
 			},
 			"match_func": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Match method, 0 equal, 1 prefix, 2 contains.",
+				Description: "Match method, 0(equal), 1(prefix), 2(contains), 3(not equal), 6(suffix), 7(not contains).",
 			},
 			"action_type": {
 				Required:    true,
@@ -79,11 +79,19 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Action ValidTime, minute unit. Min: 60, Max: 604800.",
 			},
-			//"options_arr": {
-			//	Optional:    true,
-			//	Type:        schema.TypeString,
-			//	Description: "Option param.",
-			//},
+			"options_arr": {
+				Optional: true,
+				Type:     schema.TypeString,
+				Description: `JSON serialized string of CC matching conditions, example:[{\"key\":\"Method\",\"args\":[\"=R0VU\"],\"match\":\"0\",\"encodeflag\":true}]
+        Key optional values are Method, Post, Referer, Cookie, User-Agent, CustomHeader
+        Match optional values are, when Key is Method, optional values are 0 (equal), 3 (not equal).
+        When the key is Post, the optional values are 0 (equal to), 3 (not equal to), when the key is Cookie, the optional values are 0 (equal to), 2 (included), 3 (not equal to), 7 (not included),
+        When the key is Referer, the optional values are 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (included), 7 (not included), 12 (exists), 5 (not included), 4 (content is empty),
+        When the key is Cookie, the optional values are 0 (equal to), 3 (not equal to), 2 (included), 7 (not included),
+        When the key is User-Agent, the optional values are 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (included), 7 (not included), 12 (exists), 5 (not included), 4 (content is empty),
+        When the key is CustomHeader, the optional values are 0 (equal to), 3 (not equal to), 2 (included), 7 (not included), 12 (exists), 5 (not included), 4 (content is empty).
+        args is used to indicate the matching content. You need to set encodeflag to true. When the Key is Post, Cookie, or CustomHeader, use the equal sign = to concatenate the Key and Value, and encode them using Base64, similar to YWJj=YWJj. When the Key is Referer or User-Agent, use the equal sign = to concatenate the Value, similar to =YWJj.`,
+			},
 			"edition": {
 				Required:     true,
 				Type:         schema.TypeString,
@@ -104,7 +112,7 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeInt},
-				Description: "Advance mode use session id.",
+				Description: "Session ID that needs to be enabled for the rule.",
 			},
 			"rule_id": {
 				Computed:    true,
@@ -174,9 +182,9 @@ func resourceTencentCloudWafCcCreate(d *schema.ResourceData, meta interface{}) e
 		request.ValidTime = helper.IntInt64(v.(int))
 	}
 
-	//if v, ok := d.GetOk("options_arr"); ok {
-	//	request.OptionsArr = helper.String(v.(string))
-	//}
+	if v, ok := d.GetOk("options_arr"); ok {
+		request.OptionsArr = helper.String(v.(string))
+	}
 
 	if v, ok := d.GetOk("edition"); ok {
 		request.Edition = helper.String(v.(string))
@@ -302,9 +310,9 @@ func resourceTencentCloudWafCcRead(d *schema.ResourceData, meta interface{}) err
 		_ = d.Set("valid_time", cc.ValidTime)
 	}
 
-	//if cc.Options != nil {
-	//	_ = d.Set("options_arr", cc.Options)
-	//}
+	if cc.Options != nil {
+		_ = d.Set("options_arr", cc.Options)
+	}
 	//
 	//if cc.Edition != nil {
 	//	_ = d.Set("edition", cc.Edition)
@@ -396,9 +404,9 @@ func resourceTencentCloudWafCcUpdate(d *schema.ResourceData, meta interface{}) e
 		request.ValidTime = helper.IntInt64(v.(int))
 	}
 
-	//if v, ok := d.GetOk("options_arr"); ok {
-	//	request.OptionsArr = helper.String(v.(string))
-	//}
+	if v, ok := d.GetOk("options_arr"); ok {
+		request.OptionsArr = helper.String(v.(string))
+	}
 
 	if v, ok := d.GetOk("edition"); ok {
 		request.Edition = helper.String(v.(string))

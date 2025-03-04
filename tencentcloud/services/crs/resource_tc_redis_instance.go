@@ -45,7 +45,7 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "The available zone ID of an instance to be created, please refer to `tencentcloud_redis_zone_config.list`.",
+				Description: "The available zone of an instance to be created, like `ap-beijing-7`, please refer to `tencentcloud_redis_zone_config.list`.",
 			},
 			"name": {
 				Type:        schema.TypeString,
