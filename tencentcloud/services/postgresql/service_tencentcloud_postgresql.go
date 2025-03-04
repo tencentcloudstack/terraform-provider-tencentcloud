@@ -693,7 +693,7 @@ func (me *PostgresqlService) ModifyPostgresqlInstanceName(ctx context.Context, i
 	return err
 }
 
-func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int, cpu int) (errRet error) {
+func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int, cpu int, waitSwitch int) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewModifyDBInstanceSpecRequest()
 	defer func() {
@@ -707,6 +707,7 @@ func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, inst
 	if cpu != 0 {
 		request.Cpu = helper.IntUint64(cpu)
 	}
+	request.SwitchTag = helper.IntUint64(waitSwitch)
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ModifyDBInstanceSpec(request)

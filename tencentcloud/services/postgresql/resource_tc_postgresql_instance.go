@@ -293,6 +293,12 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Default:     false,
 				Description: "Whether to enable instance deletion protection. Default: false.",
 			},
+			"wait_switch": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY, POSTGRESQL_KERNEL_UPGRADE_MAINTAIN_WINDOW}),
+				Description:  "Switch time after instance configurations are modified. `0`: Switch immediately; `2`: Switch during maintenance time window. Default: `0`. Note: This only takes effect when updating the `memory`, `storage`, `cpu`, `db_node_set`, `db_kernel_version` fields.",
+			},
 			// Computed values
 			"public_access_host": {
 				Type:        schema.TypeString,
@@ -1008,6 +1014,11 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		return err
 	}
 
+	waitSwitch := POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY
+	if v, ok := d.GetOk("wait_switch"); ok {
+		waitSwitch = v.(int)
+	}
+
 	if d.HasChange("period") && !d.HasChange("charge_type") {
 		return fmt.Errorf("The `period` field can be changed only when updating the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.")
 	}
@@ -1213,7 +1224,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu)
+			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu, waitSwitch)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -1225,25 +1236,27 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return outErr
 		}
 
-		// Wait for status to processing
-		_ = resource.Retry(time.Second*10, func() *resource.RetryError {
-			instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
-			if err != nil {
-				return tccommon.RetryError(err)
+		if waitSwitch == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
+			// Wait for status to processing
+			_ = resource.Retry(time.Second*10, func() *resource.RetryError {
+				instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
+				if err != nil {
+					return tccommon.RetryError(err)
+				}
+
+				if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("waiting for upgrade status change"))
+				}
+
+				return nil
+			})
+
+			time.Sleep(time.Second * 5)
+			// check update storage and memory done
+			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, 60)
+			if checkErr != nil {
+				return checkErr
 			}
-
-			if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("waiting for upgrade status change"))
-			}
-
-			return nil
-		})
-
-		time.Sleep(time.Second * 5)
-		// check update storage and memory done
-		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, 60)
-		if checkErr != nil {
-			return checkErr
 		}
 	}
 
@@ -1368,7 +1381,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		nodeSet := d.Get("db_node_set").(*schema.Set).List()
 		request := postgresql.NewModifyDBInstanceDeploymentRequest()
 		request.DBInstanceId = helper.String(d.Id())
-		request.SwitchTag = helper.Int64(0)
+		request.SwitchTag = helper.IntInt64(waitSwitch)
 		for i := range nodeSet {
 			var (
 				node               = nodeSet[i].(map[string]interface{})
@@ -1402,21 +1415,23 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return err
 		}
 
-		err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
-			instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+		if waitSwitch == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
+			err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+				instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+				if err != nil {
+					return tccommon.RetryError(err)
+				}
+
+				if tccommon.IsContains(POSTGRESQL_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
+					return resource.RetryableError(fmt.Errorf("instance status is %s, retrying", *instance.DBInstanceStatus))
+				}
+
+				return nil
+			})
+
 			if err != nil {
-				return tccommon.RetryError(err)
+				return err
 			}
-
-			if tccommon.IsContains(POSTGRESQL_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
-				return resource.RetryableError(fmt.Errorf("instance status is %s, retrying", *instance.DBInstanceStatus))
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			return err
 		}
 	}
 
@@ -1431,10 +1446,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		// upgradeResponse:= postgresql.NewUpgradeDBInstanceKernelVersionResponse()
 		upgradeRequest.DBInstanceId = &instanceId
 		upgradeRequest.TargetDBKernelVersion = &upgradeVersion
-
-		// only support for the immediate upgrade policy
-		switchTag := POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY
-		upgradeRequest.SwitchTag = helper.IntUint64(switchTag)
+		upgradeRequest.SwitchTag = helper.IntUint64(waitSwitch)
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
@@ -1458,11 +1470,13 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return err
 		}
 
-		// only wait for immediately upgrade mode
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{"running", "isolated", "offline"}, 10*tccommon.ReadRetryTimeout, time.Second, postgresqlService.PostgresqlUpgradeKernelVersionRefreshFunc(d.Id(), []string{}))
+		if waitSwitch == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
+			// only wait for immediately upgrade mode
+			conf := tccommon.BuildStateChangeConf([]string{}, []string{"running", "isolated", "offline"}, 10*tccommon.ReadRetryTimeout, time.Second, postgresqlService.PostgresqlUpgradeKernelVersionRefreshFunc(d.Id(), []string{}))
 
-		if _, e := conf.WaitForState(); e != nil {
-			return e
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
 		}
 	}
 
