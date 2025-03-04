@@ -534,6 +534,7 @@ tencentcloud_cynosdb_cluster_slave_zone
 tencentcloud_cynosdb_read_only_instance_exclusive_access
 tencentcloud_cynosdb_proxy_end_point
 tencentcloud_cynosdb_upgrade_proxy_version
+tencentcloud_cynosdb_backup_config
 
 Direct Connect(DC)
 Data Source
@@ -916,6 +917,7 @@ tencentcloud_postgresql_apply_parameter_template_operation
 tencentcloud_postgresql_clone_db_instance
 tencentcloud_postgresql_instance_network_access
 tencentcloud_postgresql_parameters
+tencentcloud_postgresql_instance_ssl_config
 
 TencentDB for Redis(crs)
 Data Source
@@ -1258,7 +1260,6 @@ tencentcloud_vpc_net_detect
 tencentcloud_vpc_dhcp_ip
 tencentcloud_vpc_ipv6_cidr_block
 tencentcloud_vpc_ipv6_subnet_cidr_block
-tencentcloud_vpc_ipv6_eni_address
 tencentcloud_vpc_local_gateway
 tencentcloud_vpc_notify_routes
 tencentcloud_vpc_resume_snapshot_instance
@@ -1476,6 +1477,7 @@ tencentcloud_teo_ownership_verify
 tencentcloud_teo_certificate_config
 tencentcloud_teo_acceleration_domain
 tencentcloud_teo_l4_proxy
+tencentcloud_teo_l4_proxy_rule
 tencentcloud_teo_realtime_log_delivery
 tencentcloud_teo_function
 tencentcloud_teo_function_rule
@@ -2210,6 +2212,7 @@ tencentcloud_dasb_user_group
 tencentcloud_dasb_reset_user
 tencentcloud_dasb_bind_device_account_private_key
 tencentcloud_dasb_bind_device_account_password
+tencentcloud_dasb_asset_sync_job_operation
 
 Cwp
 Data Source

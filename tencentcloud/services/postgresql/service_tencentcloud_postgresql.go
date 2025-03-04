@@ -693,7 +693,7 @@ func (me *PostgresqlService) ModifyPostgresqlInstanceName(ctx context.Context, i
 	return err
 }
 
-func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int, cpu int) (errRet error) {
+func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int, cpu int, waitSwitch int) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewModifyDBInstanceSpecRequest()
 	defer func() {
@@ -707,6 +707,7 @@ func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, inst
 	if cpu != 0 {
 		request.Cpu = helper.IntUint64(cpu)
 	}
+	request.SwitchTag = helper.IntUint64(waitSwitch)
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ModifyDBInstanceSpec(request)
@@ -2277,6 +2278,31 @@ func (me *PostgresqlService) DescribePostgresqlParametersById(ctx context.Contex
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UsePostgresV20170312Client().DescribeDBInstanceParameters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlInstanceSslConfigById(ctx context.Context, dbInsntaceId string) (ret *postgresv20170312.DescribeDBInstanceSSLConfigResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresv20170312.NewDescribeDBInstanceSSLConfigRequest()
+	request.DBInstanceId = helper.String(dbInsntaceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlV20170312Client().DescribeDBInstanceSSLConfig(request)
 	if err != nil {
 		errRet = err
 		return

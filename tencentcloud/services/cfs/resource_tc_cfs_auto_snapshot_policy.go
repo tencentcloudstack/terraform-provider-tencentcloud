@@ -32,6 +32,7 @@ func ResourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 
 			"policy_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Policy name.",
 			},
@@ -105,12 +106,21 @@ func resourceTencentCloudCfsAutoSnapshotPolicyCreate(d *schema.ResourceData, met
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create cfs autoSnapshotPolicy failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create cfs autoSnapshotPolicy failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.AutoSnapshotPolicyId == nil {
+		return fmt.Errorf("AutoSnapshotPolicyId is nil.")
 	}
 
 	autoSnapshotPolicyId = *response.Response.AutoSnapshotPolicyId
@@ -191,10 +201,8 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("policy_name") {
-		if v, ok := d.GetOk("policy_name"); ok {
-			request.PolicyName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("policy_name"); ok {
+		request.PolicyName = helper.String(v.(string))
 	}
 
 	if d.HasChange("alive_days") {
