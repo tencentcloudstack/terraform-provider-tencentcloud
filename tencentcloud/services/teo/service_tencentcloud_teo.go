@@ -1586,10 +1586,11 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 	return
 }
 
-func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context) (ret *teov20220901.DescribeL7AccRulesResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId string) (ret *teov20220901.DescribeL7AccRulesResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teov20220901.NewDescribeL7AccRulesRequest()
+	request.ZoneId = helper.String(zoneId)
 
 	defer func() {
 		if errRet != nil {

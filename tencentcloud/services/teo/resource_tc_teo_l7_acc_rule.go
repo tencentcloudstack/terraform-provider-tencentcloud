@@ -19,6 +19,9 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 		Read:   resourceTencentCloudTeoL7AccRuleRead,
 		Update: resourceTencentCloudTeoL7AccRuleUpdate,
 		Delete: resourceTencentCloudTeoL7AccRuleDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -30,6 +33,7 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 			"rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Rules content.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -57,18 +61,19 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 							},
 						},
 						"rule_priority": {
-							Type:        schema.TypeInt,
-							Optional:    true,
+							Type: schema.TypeInt,
+							// Optional:    true,
+							Computed:    true,
 							Description: "Rule priority. only used as an output parameter.",
 						},
-						// "branches": {
-						// 	Type:        schema.TypeList,
-						// 	Optional:    true,
-						// 	Description: "Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.",
-						// 	Elem: &schema.Resource{
-						// 		Schema: TencentTeoL7RuleBranchBasicInfo(),
-						// 	},
-						// },
+						"branches": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.",
+							Elem: &schema.Resource{
+								Schema: TencentTeoL7RuleBranchBasicInfo(1),
+							},
+						},
 					},
 				},
 			},
@@ -94,9 +99,6 @@ func resourceTencentCloudTeoL7AccRuleCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-	}
-
-	if v, ok := d.GetOk("zone_id"); ok {
 		request.ZoneId = helper.String(v.(string))
 	}
 
@@ -117,9 +119,9 @@ func resourceTencentCloudTeoL7AccRuleCreate(d *schema.ResourceData, meta interfa
 					ruleEngineItem.Description = append(ruleEngineItem.Description, helper.String(description))
 				}
 			}
-			if v, ok := rulesMap["rule_priority"].(int); ok {
-				ruleEngineItem.RulePriority = helper.IntInt64(v)
-			}
+			// if v, ok := rulesMap["rule_priority"].(int); ok {
+			// 	ruleEngineItem.RulePriority = helper.IntInt64(v)
+			// }
 			if _, ok := rulesMap["branches"]; ok {
 				ruleEngineItem.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap)
 			}
@@ -163,7 +165,7 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 
 	_ = d.Set("zone_id", zoneId)
 
-	respData, err := service.DescribeTeoL7AccRuleById(ctx)
+	respData, err := service.DescribeTeoL7AccRuleById(ctx, zoneId)
 	if err != nil {
 		return err
 	}
@@ -256,10 +258,10 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 						ruleEngineItem.Description = append(ruleEngineItem.Description, helper.String(description))
 					}
 				}
-				if v, ok := rulesMap["rule_priority"].(int); ok {
-					ruleEngineItem.RulePriority = helper.IntInt64(v)
-				}
-				
+				// if v, ok := rulesMap["rule_priority"].(int); ok {
+				// 	ruleEngineItem.RulePriority = helper.IntInt64(v)
+				// }
+
 				if _, ok := rulesMap["branches"]; ok {
 					ruleEngineItem.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap)
 				}

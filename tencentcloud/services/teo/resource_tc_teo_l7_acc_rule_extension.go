@@ -7,8 +7,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func TencentTeoL7RuleBranchBasicInfo() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
+func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
+	schemaMap := map[string]*schema.Schema{
 		"condition": {
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -455,7 +455,7 @@ func TencentTeoL7RuleBranchBasicInfo() map[string]*schema.Schema {
 											"cache_time": {
 												Type:        schema.TypeInt,
 												Optional:    true,
-												Description: "Cache time value in seconds. value range: 0–31536000.",
+												Description: "Cache time value in seconds. value range: 0-31536000.",
 											},
 										},
 									},
@@ -892,7 +892,7 @@ func TencentTeoL7RuleBranchBasicInfo() map[string]*schema.Schema {
 								"response_timeout": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "HTTP response timeout in seconds. value range: 5–600.",
+									Description: "HTTP response timeout in seconds. value range: 5-600.",
 								},
 							},
 						},
@@ -1060,7 +1060,10 @@ func TencentTeoL7RuleBranchBasicInfo() map[string]*schema.Schema {
 				},
 			},
 		},
-		"sub_rules": {
+	}
+
+	if depth < 8 {
+		schemaMap["sub_rules"] = &schema.Schema{
 			Type:        schema.TypeList,
 			Optional:    true,
 			Description: "List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.",
@@ -1070,7 +1073,9 @@ func TencentTeoL7RuleBranchBasicInfo() map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						Description: "Sub-rule branch.",
-						Elem:        TencentTeoL7RuleBranchBasicInfo(),
+						Elem: &schema.Resource{
+							Schema: TencentTeoL7RuleBranchBasicInfo(depth + 1),
+						},
 					},
 					"description": {
 						Type:        schema.TypeList,
@@ -1082,8 +1087,10 @@ func TencentTeoL7RuleBranchBasicInfo() map[string]*schema.Schema {
 					},
 				},
 			},
-		},
+		}
 	}
+
+	return schemaMap
 }
 
 func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{}) []*teo.RuleBranch {
@@ -2439,7 +2446,7 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 					subRulesMap := map[string]interface{}{}
 
 					if subRules.Branches != nil {
-						subRulesMap["sub_rules"] = resourceTencentCloudTeoL7AccRuleSetBranchs(subRules.Branches)
+						subRulesMap["branches"] = resourceTencentCloudTeoL7AccRuleSetBranchs(subRules.Branches)
 					}
 
 					if subRules.Description != nil {
