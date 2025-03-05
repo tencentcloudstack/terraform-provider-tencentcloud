@@ -641,7 +641,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if info.NodeSet != nil && len(info.NodeSet) > 0 {
+	if info.NodeSet != nil {
 		var zoneIds []int
 		var nodeInfos []interface{}
 		for i := range info.NodeSet {
@@ -669,20 +669,6 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 		if !zoneIdsEqual {
 			_ = d.Set("replica_zone_ids", zoneIds)
-		}
-
-		if replicaZonesOk && zoneIdsEqual {
-			zoneIds := helper.InterfacesIntegers(replicaZones.([]interface{}))
-			zoneIsSet := true
-			for _, v := range zoneIds {
-				if v != int(*info.ZoneId) {
-					zoneIsSet = false
-					break
-				}
-			}
-			if zoneIsSet {
-				_ = d.Set("replica_zone_ids", replicaZones)
-			}
 		}
 	}
 	//internal version: replace resourceTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
