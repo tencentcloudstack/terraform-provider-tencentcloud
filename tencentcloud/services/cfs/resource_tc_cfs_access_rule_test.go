@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudCfsAccessRule(t *testing.T) {
+func TestAccTencentCloudCfsAccessRuleResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -97,10 +97,14 @@ func testAccCheckCfsAccessRuleExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCfsAccessRule = DefaultCfsAccessGroup + `
+const testAccCfsAccessRule = `
+resource "tencentcloud_cfs_access_group" "foo" {
+  name        = "testAccessRuleGroup"
+  description = "desc."
+}
 
 resource "tencentcloud_cfs_access_rule" "foo" {
-  access_group_id = local.cfs_access_group_id
+  access_group_id = tencentcloud_cfs_access_group.foo.id
   auth_client_ip = "10.11.1.0/24"
   priority = 1
 }
