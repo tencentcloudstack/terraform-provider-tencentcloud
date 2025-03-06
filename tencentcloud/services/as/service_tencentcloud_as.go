@@ -762,7 +762,7 @@ func (me *AsService) DescribeAsLoadBalancerById(ctx context.Context, autoScaling
 func (me *AsService) DeleteAsLoadBalancerById(ctx context.Context, autoScalingGroupId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := as.NewDetachLoadBalancersRequest()
+	request := as.NewModifyLoadBalancersRequest()
 	request.AutoScalingGroupId = &autoScalingGroupId
 
 	defer func() {
@@ -773,7 +773,7 @@ func (me *AsService) DeleteAsLoadBalancerById(ctx context.Context, autoScalingGr
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseAsClient().DetachLoadBalancers(request)
+	response, err := me.client.UseAsClient().ModifyLoadBalancers(request)
 	if err != nil {
 		errRet = err
 		return

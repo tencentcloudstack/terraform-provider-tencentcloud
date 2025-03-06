@@ -270,9 +270,11 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 						if v, ok := targetAttributesMap["port"]; ok {
 							targetAttribute.Port = helper.IntUint64(v.(int))
 						}
+
 						if v, ok := targetAttributesMap["weight"]; ok {
 							targetAttribute.Weight = helper.IntUint64(v.(int))
 						}
+
 						forwardLoadBalancer.TargetAttributes = append(forwardLoadBalancer.TargetAttributes, &targetAttribute)
 					}
 				}
@@ -296,6 +298,7 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
 

@@ -1,5 +1,9 @@
 Provides a resource to create a as load balancer
 
+~> **NOTE:** This resource must exclusive in one auto scaling group, do not declare additional rule resources of this auto scaling group elsewhere.
+
+~> **NOTE:** If the `auto_scaling_group_id` field of this resource comes from the `tencentcloud_as_scaling_group` resource, then the `forward_balancer_ids` field of the `tencentcloud_as_scaling_group` resource cannot be set simultaneously with this resource, which may result in conflicts
+
 ~> **NOTE:** `forward_load_balancers` List of application type load balancers, with a maximum of 100 bound application type load balancers for each scaling group.
 
 Example Usage
