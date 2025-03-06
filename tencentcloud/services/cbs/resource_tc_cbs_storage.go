@@ -327,6 +327,8 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
+	d.Partial(true)
+
 	//only support update prepaid_period when upgrade chargeType
 	if d.HasChange("prepaid_period") && (!d.HasChange("charge_type") && d.Get("charge_type").(string) == CBS_CHARGE_TYPE_PREPAID) {
 		return fmt.Errorf("tencentcloud_cbs_storage renew is not support yet")
@@ -336,7 +338,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("tencentcloud_cbs_storage do not support downgrade instance")
 	}
 
-	d.Partial(true)
 	storageId := d.Id()
 	storageName := ""
 	projectId := -1
@@ -553,7 +554,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 
 	d.Partial(false)
 
-	return nil
+	return resourceTencentCloudCbsStorageRead(d, meta)
 }
 
 func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface{}) error {
