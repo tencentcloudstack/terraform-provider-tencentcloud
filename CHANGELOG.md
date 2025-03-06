@@ -1,3 +1,10 @@
+## 1.81.171(March 6 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfs_access_rule: retry the FailedOperation.PgroupIsUpdating error ([#3134](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3134))
+* resource/tencentcloud_redis_instance: Restore the replica_zone_id logic ([#3184](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3184))
+
 ## 1.81.170(March 3 , 2025)
 
 FEATURES:
