@@ -1,59 +1,59 @@
-Provides a resource to create a cam policy_version
+Provides a resource to create a CAM policy version
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_cam_policy_version" "policy_version" {
-  policy_id = 171173780
+resource "tencentcloud_cam_policy_version" "example" {
+  policy_id      = 171173780
+  set_as_default = "false"
   policy_document = jsonencode({
-    "version": "2.0",
-    "statement": [
+    "version" : "3.0",
+    "statement" : [
       {
-        "effect": "allow",
-        "action": [
+        "effect" : "allow",
+        "action" : [
           "sts:AssumeRole"
         ],
-        "resource": [
+        "resource" : [
           "*"
         ]
       },
       {
-        "effect": "allow",
-        "action": [
+        "effect" : "allow",
+        "action" : [
           "cos:PutObject"
         ],
-        "resource": [
+        "resource" : [
           "*"
         ]
       },
       {
-        "effect": "deny",
-        "action": [
+        "effect" : "deny",
+        "action" : [
           "aa:*"
         ],
-        "resource": [
+        "resource" : [
           "*"
         ]
       },
       {
-        "effect": "deny",
-        "action": [
+        "effect" : "deny",
+        "action" : [
           "aa:*"
         ],
-        "resource": [
+        "resource" : [
           "*"
         ]
       }
     ]
   })
-  set_as_default = "false"
 }
 ```
 
 Import
 
-cam policy_version can be imported using the id, e.g.
+CAM policy version can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cam_policy_version.policy_version policy_version_id
+terraform import tencentcloud_cam_policy_version.example 234290251#3
 ```
