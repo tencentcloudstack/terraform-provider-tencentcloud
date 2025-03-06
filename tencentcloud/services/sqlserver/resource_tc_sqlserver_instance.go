@@ -124,6 +124,16 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 			Deprecated:  "It has been deprecated from version 1.81.2.",
 			Description: "The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.",
 		},
+		"dns_pod_domain": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Internet address domain name.",
+		},
+		"tgw_wan_vport": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "External port number.",
+		},
 	}
 
 	if !isROInstance {
@@ -614,6 +624,14 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 		}
 	} else {
 		_ = d.Set("charge_type", svcpostgresql.COMMON_PAYTYPE_POSTPAID)
+	}
+
+	if instance.DnsPodDomain != nil {
+		_ = d.Set("dns_pod_domain", instance.DnsPodDomain)
+	}
+
+	if instance.TgwWanVPort != nil {
+		_ = d.Set("tgw_wan_vport", instance.TgwWanVPort)
 	}
 
 	var securityGroup []string
