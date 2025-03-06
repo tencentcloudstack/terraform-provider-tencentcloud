@@ -77,6 +77,10 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 	logId := tccommon.GetLogId(ctx)
 	request := emr.NewCreateInstanceRequest()
 
+	if v, ok := d.GetOk("scene_name"); ok {
+		request.SceneName = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("auto_renew"); ok {
 		request.AutoRenew = common.Uint64Ptr((uint64)(v.(int)))
 	}

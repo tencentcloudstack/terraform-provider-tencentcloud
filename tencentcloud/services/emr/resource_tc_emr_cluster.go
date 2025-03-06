@@ -203,6 +203,16 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Optional:    true,
 				Description: "Access the external file system.",
 			},
+			"scene_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Scene-based value:\n" +
+					"	- Hadoop-Kudu\n" +
+					"	- Hadoop-Zookeeper\n" +
+					"	- Hadoop-Presto\n" +
+					"	- Hadoop-Hbase.",
+			},
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -632,6 +642,7 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	if instance != nil {
+		_ = d.Set("scene_name", instance.SceneName)
 		_ = d.Set("product_id", instance.ProductId)
 		_ = d.Set("vpc_settings", map[string]interface{}{
 			"vpc_id":    *instance.UniqVpcId,
