@@ -1537,6 +1537,57 @@ func (c *Client) DescribeCvmQuotaWithContext(ctx context.Context, request *Descr
     return
 }
 
+func NewDescribeDAGInfoRequest() (request *DescribeDAGInfoRequest) {
+    request = &DescribeDAGInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeDAGInfo")
+    
+    
+    return
+}
+
+func NewDescribeDAGInfoResponse() (response *DescribeDAGInfoResponse) {
+    response = &DescribeDAGInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDAGInfo
+// 查询DAG信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeDAGInfo(request *DescribeDAGInfoRequest) (response *DescribeDAGInfoResponse, err error) {
+    return c.DescribeDAGInfoWithContext(context.Background(), request)
+}
+
+// DescribeDAGInfo
+// 查询DAG信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeDAGInfoWithContext(ctx context.Context, request *DescribeDAGInfoRequest) (response *DescribeDAGInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeDAGInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDAGInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDAGInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeEmrApplicationStaticsRequest() (request *DescribeEmrApplicationStaticsRequest) {
     request = &DescribeEmrApplicationStaticsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4636,6 +4687,65 @@ func (c *Client) ModifySLInstanceWithContext(ctx context.Context, request *Modif
     request.SetContext(ctx)
     
     response = NewModifySLInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifySLInstanceBasicRequest() (request *ModifySLInstanceBasicRequest) {
+    request = &ModifySLInstanceBasicRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifySLInstanceBasic")
+    
+    
+    return
+}
+
+func NewModifySLInstanceBasicResponse() (response *ModifySLInstanceBasicResponse) {
+    response = &ModifySLInstanceBasicResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySLInstanceBasic
+// serverless hbase修改实例名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifySLInstanceBasic(request *ModifySLInstanceBasicRequest) (response *ModifySLInstanceBasicResponse, err error) {
+    return c.ModifySLInstanceBasicWithContext(context.Background(), request)
+}
+
+// ModifySLInstanceBasic
+// serverless hbase修改实例名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifySLInstanceBasicWithContext(ctx context.Context, request *ModifySLInstanceBasicRequest) (response *ModifySLInstanceBasicResponse, err error) {
+    if request == nil {
+        request = NewModifySLInstanceBasicRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySLInstanceBasic require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySLInstanceBasicResponse()
     err = c.Send(request, response)
     return
 }
