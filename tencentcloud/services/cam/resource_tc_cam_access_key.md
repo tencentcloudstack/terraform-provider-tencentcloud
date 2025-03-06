@@ -39,5 +39,5 @@ Import
 cam access key can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cam_access_key.example 100037718101#AKID7FC8ygBuijkoEzMWWIqCOTLOkItRgLmG
+terraform import tencentcloud_cam_access_key.example 100037718101#AKID7F******************
 ```
