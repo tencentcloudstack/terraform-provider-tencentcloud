@@ -4,22 +4,22 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cam_service_linked_role"
 sidebar_current: "docs-tencentcloud-resource-cam_service_linked_role"
 description: |-
-  Provides a resource to create a cam service_linked_role
+  Provides a resource to create a CAM service linked role
 ---
 
 # tencentcloud_cam_service_linked_role
 
-Provides a resource to create a cam service_linked_role
+Provides a resource to create a CAM service linked role
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cam_service_linked_role" "service_linked_role" {
+resource "tencentcloud_cam_service_linked_role" "example" {
   qcs_service_name = ["cvm.qcloud.com", "ekslog.tke.cloud.tencent.com"]
-  custom_suffix    = "tf"
-  description      = "desc cam"
+  custom_suffix    = "tf-example"
+  description      = "description."
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```
@@ -40,4 +40,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+
+## Import
+
+CAM service linked role can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cam_service_linked_role.example 4611686018441982195
+```
 

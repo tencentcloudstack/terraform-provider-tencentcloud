@@ -175,10 +175,18 @@ func resourceTencentCloudCamPolicyVersionRead(d *schema.ResourceData, meta inter
 
 		if policyVersion.Document != nil {
 			policyVersionMap["document"] = policyVersion.Document
+			_ = d.Set("policy_document", policyVersion.Document)
 		}
 
 		_ = d.Set("policy_version", []interface{}{policyVersionMap})
 
+		if policyVersion.IsDefaultVersion != nil {
+			if *policyVersion.IsDefaultVersion == 0 {
+				_ = d.Set("set_as_default", false)
+			} else {
+				_ = d.Set("set_as_default", true)
+			}
+		}
 	}
 
 	return nil

@@ -4,19 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cam_set_policy_version_config"
 sidebar_current: "docs-tencentcloud-resource-cam_set_policy_version_config"
 description: |-
-  Provides a resource to create a cam set_policy_version_config
+  Provides a resource to create a CAM set policy version config
 ---
 
 # tencentcloud_cam_set_policy_version_config
 
-Provides a resource to create a cam set_policy_version_config
+Provides a resource to create a CAM set policy version config
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cam_set_policy_version_config" "set_policy_version_config" {
-  policy_id  = 171162811
-  version_id = 2
+resource "tencentcloud_cam_set_policy_version_config" "example" {
+  policy_id  = 234290251
+  version_id = 3
 }
 ```
 
@@ -37,9 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cam set_policy_version_config can be imported using the id, e.g.
+CAM set policy version config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cam_set_policy_version_config.set_policy_version_config set_policy_version_config_id
+terraform import tencentcloud_cam_set_policy_version_config.example 234290251#3
 ```
 
