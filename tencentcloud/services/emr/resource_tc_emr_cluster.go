@@ -203,6 +203,16 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Optional:    true,
 				Description: "Access the external file system.",
 			},
+			"scene_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Scene-based value:\n" +
+					"	- Hadoop-Kudu\n" +
+					"	- Hadoop-Zookeeper\n" +
+					"	- Hadoop-Presto\n" +
+					"	- Hadoop-Hbase.",
+			},
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -307,7 +317,7 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	immutableFields := []string{"auto_renew", "placement", "placement_info", "display_strategy", "login_settings", "extend_fs_field"}
+	immutableFields := []string{"auto_renew", "placement", "placement_info", "display_strategy", "login_settings", "extend_fs_field", "scene_name"}
 	for _, f := range immutableFields {
 		if d.HasChange(f) {
 			return fmt.Errorf("cannot update argument `%s`", f)
@@ -632,6 +642,7 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	if instance != nil {
+		_ = d.Set("scene_name", instance.SceneName)
 		_ = d.Set("product_id", instance.ProductId)
 		_ = d.Set("vpc_settings", map[string]interface{}{
 			"vpc_id":    *instance.UniqVpcId,
