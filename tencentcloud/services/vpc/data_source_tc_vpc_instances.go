@@ -78,6 +78,22 @@ func DataSourceTencentCloudVpcInstances() *schema.Resource {
 							Computed:    true,
 							Description: "A network address block of a VPC CIDR.",
 						},
+						"common_assistant_cidr": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "common assistant CIDR block.",
+						},
+						"container_assistant_cidr": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "container assistant CIDR block.",
+						},
 						"is_default": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -180,6 +196,8 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 		infoMap["is_multicast"] = item.isMulticast
 		infoMap["dns_servers"] = item.dnsServers
 		infoMap["create_time"] = item.createTime
+		infoMap["common_assistant_cidr"] = item.assistantCidrs
+		infoMap["container_assistant_cidr"] = item.dockerAssistantCidrs
 
 		respTags := make(map[string]string, len(item.tags))
 		for _, tag := range item.tags {
