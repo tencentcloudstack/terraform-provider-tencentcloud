@@ -1,3 +1,21 @@
+## 1.81.172(March 7 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_as_load_balancer` ([#3186](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3186))
+* **New Resource:** `tencentcloud_teo_l7_acc_rule` ([#3185](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3185))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_vpc_instances: support `common_assistant_cidr` and `container_assistant_cidr` ([#3194](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3194))
+* resource/tencentcloud_cbs_storage: fix prepaid_period update ([#3187](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3187))
+* resource/tencentcloud_elasticsearch_instance: Modify kibana_public_access settings when creating ([#3191](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3191))
+* resource/tencentcloud_emr_cluster: support scene_name ([#3189](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3189))
+* resource/tencentcloud_mysql_instance: update `device_type` description ([#3193](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3193))
+* resource/tencentcloud_serverless_hbase_instance: support update instance_name and tags ([#3188](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3188))
+* resource/tencentcloud_teo_l7_acc_rule: Add retry query ([#3192](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3192))
+* resource/tencentcloud_teo_l7_acc_setting: Add retry query ([#3196](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3196))
+
 ## 1.81.171(March 6 , 2025)
 
 ENHANCEMENTS:
