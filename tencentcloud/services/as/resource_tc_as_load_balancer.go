@@ -30,19 +30,10 @@ func ResourceTencentCloudAsLoadBalancer() *schema.Resource {
 				Description: "ID of a scaling group.",
 			},
 
-			"load_balancer_ids": {
-				Optional: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "List of traditional load balancer IDs. The maximum number of traditional load balancers bound to each scaling group is 20. Both LoadBalancerIds and ForwardLoadBalancers can specify at most one at the same time.",
-			},
-
 			"forward_load_balancers": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "List of application load balancers. The maximum number of application-type load balancers bound to each scaling group is 100. Both LoadBalancerIds and ForwardLoadBalancers can specify at most one at the same time.",
+				Description: "List of application load balancers. The maximum number of application-type load balancers bound to each scaling group is 100.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"load_balancer_id": {
@@ -82,6 +73,7 @@ func ResourceTencentCloudAsLoadBalancer() *schema.Resource {
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Load balancer instance region. Default value is the region of current auto scaling group. The format is the same as the public parameter Region, for example: ap-guangzhou.",
 						},
 					},
@@ -95,23 +87,15 @@ func resourceTencentCloudAsLoadBalancerCreate(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_as_load_balancer.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
 		request            = as.NewAttachLoadBalancersRequest()
 		autoScalingGroupId string
 	)
-	if v, ok := d.GetOk("auto_scaling_group_id"); ok {
-		autoScalingGroupId = v.(string)
-		request.AutoScalingGroupId = helper.String(v.(string))
-	}
 
-	if v, ok := d.GetOk("load_balancer_ids"); ok {
-		loadBalancerIdsSet := v.(*schema.Set).List()
-		for i := range loadBalancerIdsSet {
-			loadBalancerIds := loadBalancerIdsSet[i].(string)
-			request.LoadBalancerIds = append(request.LoadBalancerIds, &loadBalancerIds)
-		}
+	if v, ok := d.GetOk("auto_scaling_group_id"); ok {
+		request.AutoScalingGroupId = helper.String(v.(string))
+		autoScalingGroupId = v.(string)
 	}
 
 	if v, ok := d.GetOk("forward_load_balancers"); ok {
@@ -121,9 +105,11 @@ func resourceTencentCloudAsLoadBalancerCreate(d *schema.ResourceData, meta inter
 			if v, ok := dMap["load_balancer_id"]; ok {
 				forwardLoadBalancer.LoadBalancerId = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["listener_id"]; ok {
 				forwardLoadBalancer.ListenerId = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["target_attributes"]; ok {
 				for _, item := range v.([]interface{}) {
 					targetAttributesMap := item.(map[string]interface{})
@@ -131,18 +117,23 @@ func resourceTencentCloudAsLoadBalancerCreate(d *schema.ResourceData, meta inter
 					if v, ok := targetAttributesMap["port"]; ok {
 						targetAttribute.Port = helper.IntUint64(v.(int))
 					}
+
 					if v, ok := targetAttributesMap["weight"]; ok {
 						targetAttribute.Weight = helper.IntUint64(v.(int))
 					}
+
 					forwardLoadBalancer.TargetAttributes = append(forwardLoadBalancer.TargetAttributes, &targetAttribute)
 				}
 			}
+
 			if v, ok := dMap["location_id"]; ok {
 				forwardLoadBalancer.LocationId = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["region"]; ok {
 				forwardLoadBalancer.Region = helper.String(v.(string))
 			}
+
 			request.ForwardLoadBalancers = append(request.ForwardLoadBalancers, &forwardLoadBalancer)
 		}
 	}
@@ -154,8 +145,10 @@ func resourceTencentCloudAsLoadBalancerCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create as loadBalancer failed, reason:%+v", logId, err)
 		return err
@@ -170,13 +163,12 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_as_load_balancer.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := AsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	autoScalingGroupId := d.Id()
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = AsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		autoScalingGroupId = d.Id()
+	)
 
 	loadBalancer, err := service.DescribeAsLoadBalancerById(ctx, autoScalingGroupId)
 	if err != nil {
@@ -193,15 +185,10 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("auto_scaling_group_id", loadBalancer.AutoScalingGroupId)
 	}
 
-	if loadBalancer.LoadBalancerIdSet != nil {
-		_ = d.Set("load_balancer_ids", loadBalancer.LoadBalancerIdSet)
-	}
-
 	if loadBalancer.ForwardLoadBalancerSet != nil {
-		forwardLoadBalancersList := []interface{}{}
+		forwardLoadBalancersList := make([]map[string]interface{}, 0, len(loadBalancer.ForwardLoadBalancerSet))
 		for _, forwardLoadBalancers := range loadBalancer.ForwardLoadBalancerSet {
 			forwardLoadBalancersMap := map[string]interface{}{}
-
 			if forwardLoadBalancers.LoadBalancerId != nil {
 				forwardLoadBalancersMap["load_balancer_id"] = forwardLoadBalancers.LoadBalancerId
 			}
@@ -211,10 +198,9 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 			}
 
 			if forwardLoadBalancers.TargetAttributes != nil {
-				targetAttributesList := []interface{}{}
+				targetAttributesList := make([]map[string]interface{}, 0, len(forwardLoadBalancers.TargetAttributes))
 				for _, targetAttributes := range forwardLoadBalancers.TargetAttributes {
 					targetAttributesMap := map[string]interface{}{}
-
 					if targetAttributes.Port != nil {
 						targetAttributesMap["port"] = targetAttributes.Port
 					}
@@ -226,7 +212,7 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 					targetAttributesList = append(targetAttributesList, targetAttributesMap)
 				}
 
-				forwardLoadBalancersMap["target_attributes"] = []interface{}{targetAttributesList}
+				forwardLoadBalancersMap["target_attributes"] = targetAttributesList
 			}
 
 			if forwardLoadBalancers.LocationId != nil {
@@ -241,7 +227,6 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 		}
 
 		_ = d.Set("forward_load_balancers", forwardLoadBalancersList)
-
 	}
 
 	return nil
@@ -251,16 +236,13 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_as_load_balancer.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		request            = as.NewModifyLoadBalancerTargetAttributesRequest()
+		autoScalingGroupId = d.Id()
+	)
 
-	request := as.NewModifyLoadBalancerTargetAttributesRequest()
-
-	autoScalingGroupId := d.Id()
-
-	request.AutoScalingGroupId = &autoScalingGroupId
-
-	immutableArgs := []string{"load_balancer_ids"}
-
+	immutableArgs := []string{"auto_scaling_group_id"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -268,6 +250,7 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("forward_load_balancers") {
+		request.AutoScalingGroupId = &autoScalingGroupId
 		if v, ok := d.GetOk("forward_load_balancers"); ok {
 			for _, item := range v.([]interface{}) {
 				forwardLoadBalancer := as.ForwardLoadBalancer{}
@@ -275,9 +258,11 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 				if v, ok := dMap["load_balancer_id"]; ok {
 					forwardLoadBalancer.LoadBalancerId = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["listener_id"]; ok {
 					forwardLoadBalancer.ListenerId = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["target_attributes"]; ok {
 					for _, item := range v.([]interface{}) {
 						targetAttributesMap := item.(map[string]interface{})
@@ -285,35 +270,42 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 						if v, ok := targetAttributesMap["port"]; ok {
 							targetAttribute.Port = helper.IntUint64(v.(int))
 						}
+
 						if v, ok := targetAttributesMap["weight"]; ok {
 							targetAttribute.Weight = helper.IntUint64(v.(int))
 						}
+
 						forwardLoadBalancer.TargetAttributes = append(forwardLoadBalancer.TargetAttributes, &targetAttribute)
 					}
 				}
+
 				if v, ok := dMap["location_id"]; ok {
 					forwardLoadBalancer.LocationId = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["region"]; ok {
 					forwardLoadBalancer.Region = helper.String(v.(string))
 				}
+
 				request.ForwardLoadBalancers = append(request.ForwardLoadBalancers, &forwardLoadBalancer)
 			}
 		}
-	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyLoadBalancerTargetAttributes(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyLoadBalancerTargetAttributes(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update as loadBalancer failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update as loadBalancer failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudAsLoadBalancerRead(d, meta)
@@ -323,11 +315,12 @@ func resourceTencentCloudAsLoadBalancerDelete(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_as_load_balancer.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := AsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	autoScalingGroupId := d.Id()
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = AsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		autoScalingGroupId = d.Id()
+	)
 
 	if err := service.DeleteAsLoadBalancerById(ctx, autoScalingGroupId); err != nil {
 		return err

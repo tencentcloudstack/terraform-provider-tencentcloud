@@ -630,6 +630,8 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 
 		if len(config.DisasterRecoverGroupIds) > 0 {
 			_ = d.Set("disaster_recover_group_ids", helper.StringsInterfaces(config.DisasterRecoverGroupIds))
+		} else {
+			_ = d.Set("disaster_recover_group_ids", []string{})
 		}
 
 		if config.DedicatedClusterId != nil {
