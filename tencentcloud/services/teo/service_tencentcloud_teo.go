@@ -1511,6 +1511,7 @@ func (me *TeoService) DescribeTeoL7AccSettingById(ctx context.Context, zoneId st
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeL7AccSettingRequest()
+	response := teo.NewDescribeL7AccSettingResponse()
 	request.ZoneId = helper.String(zoneId)
 
 	defer func() {
@@ -1521,14 +1522,22 @@ func (me *TeoService) DescribeTeoL7AccSettingById(ctx context.Context, zoneId st
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTeoV20220901Client().DescribeL7AccSetting(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoV20220901Client().DescribeL7AccSetting(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response.Response == nil {
+	if response == nil || response.Response == nil {
 		return
 	}
 
