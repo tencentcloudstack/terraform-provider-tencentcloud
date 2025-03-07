@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_vpc_instances: support `common_assistant_cidr` and `container_assistant_cidr`
+```
