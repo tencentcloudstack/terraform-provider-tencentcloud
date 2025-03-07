@@ -245,6 +245,7 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 			"cos_backup": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "COS automatic backup information.",
 				Elem: &schema.Resource{
