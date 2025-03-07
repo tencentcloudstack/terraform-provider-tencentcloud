@@ -129,6 +129,13 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *test
 		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessOpen,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+				),
+			},
+			{
 				Config: testAccElasticsearchInstanceKibanaPublicAccessClose,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
