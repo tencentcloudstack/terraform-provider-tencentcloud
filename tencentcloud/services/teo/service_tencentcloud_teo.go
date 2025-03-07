@@ -77,7 +77,7 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Zones) < 1 {
+		if response == nil || response.Response == nil || len(response.Response.Zones) < 1 {
 			break
 		}
 		instances = append(instances, response.Response.Zones...)
@@ -175,7 +175,7 @@ func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context,
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.OriginGroups) < 1 {
+		if response == nil || response.Response == nil || len(response.Response.OriginGroups) < 1 {
 			break
 		}
 		originGroups = append(originGroups, response.Response.OriginGroups...)
@@ -404,7 +404,7 @@ func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context,
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.ApplicationProxies) < 1 {
+		if response == nil || response.Response == nil || len(response.Response.ApplicationProxies) < 1 {
 			break
 		}
 		instances = append(instances, response.Response.ApplicationProxies...)
@@ -497,7 +497,7 @@ func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context,
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.ApplicationProxies) < 1 {
+	if response.Response == nil || len(response.Response.ApplicationProxies) < 1 {
 		return
 	}
 	for _, v := range response.Response.ApplicationProxies[0].ApplicationProxyRules {
@@ -570,6 +570,10 @@ func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
 	zoneSetting = response.Response.ZoneSetting
 	return
 }
@@ -622,7 +626,7 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context,
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.DefaultServerCertInfo) < 1 {
+		if response == nil || response.Response == nil || len(response.Response.DefaultServerCertInfo) < 1 {
 			break
 		}
 		certificates = append(certificates, response.Response.DefaultServerCertInfo...)
@@ -674,7 +678,7 @@ func (me *TeoService) DescribeTeoZoneAvailablePlansByFilter(ctx context.Context,
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.PlanInfo) < 1 {
+	if response.Response == nil || len(response.Response.PlanInfo) < 1 {
 		return
 	}
 
@@ -714,6 +718,10 @@ func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context,
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
 	ruleEnginePriority = response.Response.RuleItems
 	return
 }
@@ -747,7 +755,7 @@ func (me *TeoService) DescribeTeoRuleEngineSettingsByFilter(ctx context.Context,
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.Actions) < 1 {
+	if response.Response == nil || len(response.Response.Actions) < 1 {
 		return
 	}
 
@@ -868,6 +876,10 @@ func (me *TeoService) DescribeIdentifications(ctx context.Context, domain string
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response.Response == nil {
+		return nil, nil
+	}
+
 	identifications = response.Response.Identifications
 	return
 }
@@ -964,7 +976,7 @@ func (me *TeoService) DescribeTeoApplicationProxyRuleById(ctx context.Context, r
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	var tmpRet *teo.ApplicationProxy
-	if len(response.Response.ApplicationProxies) < 1 {
+	if response.Response == nil || len(response.Response.ApplicationProxies) < 1 {
 		return
 	}
 
@@ -1113,7 +1125,7 @@ func (me *TeoService) DescribeTeoRuleEngineById(ctx context.Context, zoneId stri
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.RuleItems) < 1 {
+	if response.Response == nil || len(response.Response.RuleItems) < 1 {
 		return
 	}
 
@@ -1215,7 +1227,7 @@ func (me *TeoService) DescribeTeoCertificateConfigById(ctx context.Context, zone
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.AccelerationDomains) < 1 {
+	if response.Response == nil || len(response.Response.AccelerationDomains) < 1 {
 		return
 	}
 
@@ -1257,7 +1269,7 @@ func (me *TeoService) DescribeTeoL4ProxyById(ctx context.Context, zoneId string,
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.L4Proxies) < 1 {
+	if response.Response == nil || len(response.Response.L4Proxies) < 1 {
 		return
 	}
 
@@ -1299,7 +1311,7 @@ func (me *TeoService) DescribeTeoRealtimeLogDeliveryById(ctx context.Context, zo
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.RealtimeLogDeliveryTasks) < 1 {
+	if response.Response == nil || len(response.Response.RealtimeLogDeliveryTasks) < 1 {
 		return
 	}
 
@@ -1371,7 +1383,7 @@ func (me *TeoService) DescribeTeoFunctionById(ctx context.Context, zoneId string
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.Functions) < 1 {
+	if response.Response == nil || len(response.Response.Functions) < 1 {
 		return
 	}
 
@@ -1415,7 +1427,7 @@ func (me *TeoService) DescribeTeoFunctionRuleById(ctx context.Context, zoneId st
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.FunctionRules) < 1 {
+	if response.Response == nil || len(response.Response.FunctionRules) < 1 {
 		return
 	}
 
@@ -1590,6 +1602,7 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 	logId := tccommon.GetLogId(ctx)
 
 	request := teov20220901.NewDescribeL7AccRulesRequest()
+	response := teov20220901.NewDescribeL7AccRulesResponse()
 	request.ZoneId = helper.String(zoneId)
 
 	defer func() {
@@ -1600,12 +1613,24 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTeoV20220901Client().DescribeL7AccRules(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoV20220901Client().DescribeL7AccRules(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
 
 	ret = response.Response
 	return
