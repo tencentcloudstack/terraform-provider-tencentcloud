@@ -32,6 +32,7 @@ resource "tencentcloud_security_group" "security_group" {
 }
 
 resource "tencentcloud_mysql_instance" "example" {
+  device_type       = "BASIC_V2"
   internet_service  = 1
   engine_version    = "5.7"
   charge_type       = "POSTPAID"

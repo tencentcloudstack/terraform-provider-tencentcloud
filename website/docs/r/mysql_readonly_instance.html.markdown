@@ -92,7 +92,13 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. NOTES: Only supported prepaid instance.
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cpu` - (Optional, Int) CPU cores.
-* `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
+* `device_type` - (Optional, String) Specify device type, available values:
+	- `UNIVERSAL` (default): universal instance,
+	- `EXCLUSIVE`: exclusive instance,
+	- `BASIC_V2`: ONTKE single-node instance,
+	- `CLOUD_NATIVE_CLUSTER`: cluster version standard type,
+	- `CLOUD_NATIVE_CLUSTER_EXCLUSIVE`: cluster version enhanced type.
+If it is not specified, it defaults to a universal instance.
 * `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
 * `force_delete` - (Optional, Bool) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `intranet_port` - (Optional, Int) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.
