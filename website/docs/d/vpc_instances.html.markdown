@@ -46,6 +46,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - The information list of the VPC.
   * `cidr_block` - A network address block of a VPC CIDR.
+  * `common_assistant_cidr` - common assistant CIDR block.
+  * `container_assistant_cidr` - container assistant CIDR block.
   * `create_time` - Creation time of VPC.
   * `dns_servers` - A list of DNS servers which can be used within the VPC.
   * `is_default` - Indicates whether it is the default VPC for this region.
