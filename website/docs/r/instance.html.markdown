@@ -222,6 +222,7 @@ The following arguments are supported:
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `cdh_host_id` - (Optional, String, ForceNew) Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `cdh_instance_type` - (Optional, String) Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.
+* `cpu_topology` - (Optional, List, ForceNew) Describes information about the instance CPU topology. If this parameter is not specified, it will be determined based on system resources.
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disable_api_termination` - (Optional, Bool) Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.
@@ -261,6 +262,14 @@ The following arguments are supported:
 * `user_data_raw` - (Optional, String, ForceNew) The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded.
 * `user_data` - (Optional, String, ForceNew) The user data to be injected into this instance. Must be base64 encoded and up to 16 KB.
 * `vpc_id` - (Optional, String) The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.
+
+The `cpu_topology` object supports the following:
+
+* `core_count` - (Optional, Int, ForceNew) Determines the number of CPU physical cores to enable.
+* `thread_per_core` - (Optional, Int, ForceNew) Number of threads per core. This parameter determines whether to turn Hyperthreading on or off.
+	- 1 means turn off hyperthreading,
+	- 2 means turn on hyperthreading,
+When not set, the instance uses the default hyper-threading policy.
 
 The `data_disks` object supports the following:
 
