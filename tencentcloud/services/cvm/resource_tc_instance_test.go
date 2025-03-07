@@ -111,11 +111,94 @@ func TestAccTencentCloudInstanceResourceBasic(t *testing.T) {
 			{
 				ResourceName:            "tencentcloud_instance.cvm_basic",
 				ImportState:             true,
-				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "disable_automation_service", "hostname", "password", "force_delete"},
+				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "disable_automation_service", "hostname", "password", "force_delete", "cpu_topology"},
 			},
 		},
 	})
 }
+
+func TestAccTencentCloudInstanceResource_CpuTopology(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers: acctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceResource_CpuTopology,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.cvm_cputopology"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_instance.cvm_cputopology",
+				ImportState:             true,
+				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "disable_automation_service", "hostname", "password", "force_delete", "cpu_topology"},
+			},
+		},
+	})
+}
+
+const testAccCvmInstanceResource_CpuTopology = `
+
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_type = ["PUBLIC_IMAGE"]
+    image_name_regex = "Final"
+}
+data "tencentcloud_images" "testing" {
+    image_type = ["PUBLIC_IMAGE"]
+}
+data "tencentcloud_instance_types" "default" {
+    memory_size = 2
+    exclude_sold_out = true
+    
+    filter {
+        name = "instance-family"
+        values = ["S1","S2","S3","S4","S5"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-7"]
+    }
+    cpu_core_count = 2
+}
+resource "tencentcloud_vpc" "vpc" {
+    name = "cvm-basic-vpc"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+    availability_zone = "ap-guangzhou-7"
+    vpc_id = tencentcloud_vpc.vpc.id
+    name = "cvm-basic-subnet"
+    cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_instance" "cvm_cputopology" {
+    instance_name = "tf-ci-test"
+    availability_zone = "ap-guangzhou-7"
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    vpc_id = tencentcloud_vpc.vpc.id
+    
+    tags = {
+        hostname = "tci"
+    }
+    
+    lifecycle {
+        ignore_changes = [instance_type]
+    }
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+    subnet_id = tencentcloud_subnet.subnet.id
+    system_disk_type = "CLOUD_PREMIUM"
+    project_id = 0
+    cpu_topology {
+        thread_per_core = 1
+        core_count = 1
+    }
+}
+
+`
 
 func testAccCheckCvmInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {

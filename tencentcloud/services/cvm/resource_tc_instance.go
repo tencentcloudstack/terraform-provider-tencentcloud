@@ -420,6 +420,32 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Description: "CAM role name authorized to access.",
 			},
+			"cpu_topology": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "Describes information about the instance CPU topology. If this parameter is not specified, it will be determined based on system resources.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"core_count": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Determines the number of CPU physical cores to enable.",
+						},
+						"thread_per_core": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							ForceNew: true,
+							Description: "Number of threads per core. This parameter determines whether to turn Hyperthreading on or off.\n" +
+								"	- 1 means turn off hyperthreading,\n" +
+								"	- 2 means turn on hyperthreading,\n" +
+								"When not set, the instance uses the default hyper-threading policy.",
+						},
+					},
+				},
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -475,6 +501,20 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	)
 
 	request := cvm.NewRunInstancesRequest()
+	if v, ok := d.GetOk("cpu_topology"); ok {
+		vList := v.([]interface{})
+		if len(vList) > 0 {
+			cpuTopologyMap := vList[0].(map[string]interface{})
+			cpuTopology := &cvm.CpuTopology{}
+			if coreCount, coreCountOk := cpuTopologyMap["core_count"].(int); coreCountOk {
+				cpuTopology.CoreCount = helper.IntInt64(coreCount)
+			}
+			if threadPerCore, threadPerCoreOk := cpuTopologyMap["thread_per_core"].(int); threadPerCoreOk {
+				cpuTopology.ThreadPerCore = helper.IntInt64(threadPerCore)
+			}
+			request.CpuTopology = cpuTopology
+		}
+	}
 	request.ImageId = helper.String(d.Get("image_id").(string))
 	request.Placement = &cvm.Placement{
 		Zone: helper.String(d.Get("availability_zone").(string)),
