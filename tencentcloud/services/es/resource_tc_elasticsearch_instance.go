@@ -461,8 +461,12 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	// KibanaPublicAccess
 	var kibanaPublicAccess string
 	if v, ok := d.GetOk("kibana_public_access"); ok {
-		kibanaPublicAccess = v.(string)
-		isUpdate = true
+		// The default value is OPEN when creating. If you call the modification interface again and change it to OPEN, the interface will report an error InvalidParameter.InvalidPublicAccess
+		publicAccess := v.(string)
+		if publicAccess != ES_KIBANA_PUBLIC_ACCESS_OPEN {
+			kibanaPublicAccess = publicAccess
+			isUpdate = true
+		}
 	}
 	if isUpdate {
 		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {

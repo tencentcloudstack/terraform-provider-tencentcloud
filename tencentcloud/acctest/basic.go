@@ -1148,8 +1148,8 @@ const (
 	DefaultEsInstanceId    = "es-5wn36he6"
 	DefaultEsSecurityGroup = "sg-edmur627"
 	DefaultEsLogstash      = "ls-kru90fkz"
-	DefaultEsVpcId         = "vpc-lrj71tt3"
-	DefaultEsSubnetId      = "subnet-kggvos8o"
+	DefaultEsVpcId         = "vpc-38vqkwq1"
+	DefaultEsSubnetId      = "subnet-qoyiqmn0"
 )
 
 const DefaultEsVariables = `
