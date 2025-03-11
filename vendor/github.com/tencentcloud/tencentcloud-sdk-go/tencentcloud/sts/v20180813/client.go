@@ -15,52 +15,52 @@
 package v20180813
 
 import (
-	"context"
-	"errors"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+    "context"
+    "errors"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 )
 
 const APIVersion = "2018-08-13"
 
 type Client struct {
-	common.Client
+    common.Client
 }
 
 // Deprecated
 func NewClientWithSecretId(secretId, secretKey, region string) (client *Client, err error) {
-	cpf := profile.NewClientProfile()
-	client = &Client{}
-	client.Init(region).WithSecretId(secretId, secretKey).WithProfile(cpf)
-	return
+    cpf := profile.NewClientProfile()
+    client = &Client{}
+    client.Init(region).WithSecretId(secretId, secretKey).WithProfile(cpf)
+    return
 }
 
 func NewClient(credential common.CredentialIface, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
-	client = &Client{}
-	client.Init(region).
-		WithCredential(credential).
-		WithProfile(clientProfile)
-	return
+    client = &Client{}
+    client.Init(region).
+        WithCredential(credential).
+        WithProfile(clientProfile)
+    return
 }
 
 
 func NewAssumeRoleRequest() (request *AssumeRoleRequest) {
-	request = &AssumeRoleRequest{
-		BaseRequest: &tchttp.BaseRequest{},
-	}
-
-	request.Init().WithApiInfo("sts", APIVersion, "AssumeRole")
-
-
-	return
+    request = &AssumeRoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sts", APIVersion, "AssumeRole")
+    
+    
+    return
 }
 
 func NewAssumeRoleResponse() (response *AssumeRoleResponse) {
-	response = &AssumeRoleResponse{
-		BaseResponse: &tchttp.BaseResponse{},
-	}
-	return
+    response = &AssumeRoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
 }
 
 // AssumeRole
@@ -91,7 +91,7 @@ func NewAssumeRoleResponse() (response *AssumeRoleResponse) {
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) AssumeRole(request *AssumeRoleRequest) (response *AssumeRoleResponse, err error) {
-	return c.AssumeRoleWithContext(context.Background(), request)
+    return c.AssumeRoleWithContext(context.Background(), request)
 }
 
 // AssumeRole
@@ -122,37 +122,37 @@ func (c *Client) AssumeRole(request *AssumeRoleRequest) (response *AssumeRoleRes
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) AssumeRoleWithContext(ctx context.Context, request *AssumeRoleRequest) (response *AssumeRoleResponse, err error) {
-	if request == nil {
-		request = NewAssumeRoleRequest()
-	}
+    if request == nil {
+        request = NewAssumeRoleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssumeRole require credential")
+    }
 
-	if c.GetCredential() == nil {
-		return nil, errors.New("AssumeRole require credential")
-	}
-
-	request.SetContext(ctx)
-
-	response = NewAssumeRoleResponse()
-	err = c.Send(request, response)
-	return
+    request.SetContext(ctx)
+    
+    response = NewAssumeRoleResponse()
+    err = c.Send(request, response)
+    return
 }
 
 func NewAssumeRoleWithSAMLRequest() (request *AssumeRoleWithSAMLRequest) {
-	request = &AssumeRoleWithSAMLRequest{
-		BaseRequest: &tchttp.BaseRequest{},
-	}
-	request.SetSkipSign(true)
-	request.Init().WithApiInfo("sts", APIVersion, "AssumeRoleWithSAML")
-
-
-	return
+    request = &AssumeRoleWithSAMLRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.SetSkipSign(true)
+    request.Init().WithApiInfo("sts", APIVersion, "AssumeRoleWithSAML")
+    
+    
+    return
 }
 
 func NewAssumeRoleWithSAMLResponse() (response *AssumeRoleWithSAMLResponse) {
-	response = &AssumeRoleWithSAMLResponse{
-		BaseResponse: &tchttp.BaseResponse{},
-	}
-	return
+    response = &AssumeRoleWithSAMLResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
 }
 
 // AssumeRoleWithSAML
@@ -181,7 +181,7 @@ func NewAssumeRoleWithSAMLResponse() (response *AssumeRoleWithSAMLResponse) {
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithSAML(request *AssumeRoleWithSAMLRequest) (response *AssumeRoleWithSAMLResponse, err error) {
-	return c.AssumeRoleWithSAMLWithContext(context.Background(), request)
+    return c.AssumeRoleWithSAMLWithContext(context.Background(), request)
 }
 
 // AssumeRoleWithSAML
@@ -210,33 +210,33 @@ func (c *Client) AssumeRoleWithSAML(request *AssumeRoleWithSAMLRequest) (respons
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithSAMLWithContext(ctx context.Context, request *AssumeRoleWithSAMLRequest) (response *AssumeRoleWithSAMLResponse, err error) {
-	if request == nil {
-		request = NewAssumeRoleWithSAMLRequest()
-	}
-
-	request.SetContext(ctx)
-
-	response = NewAssumeRoleWithSAMLResponse()
-	err = c.Send(request, response)
-	return
+    if request == nil {
+        request = NewAssumeRoleWithSAMLRequest()
+    }
+    
+    request.SetContext(ctx)
+    
+    response = NewAssumeRoleWithSAMLResponse()
+    err = c.Send(request, response)
+    return
 }
 
 func NewAssumeRoleWithWebIdentityRequest() (request *AssumeRoleWithWebIdentityRequest) {
-	request = &AssumeRoleWithWebIdentityRequest{
-		BaseRequest: &tchttp.BaseRequest{},
-	}
-	request.SetSkipSign(true)
-	request.Init().WithApiInfo("sts", APIVersion, "AssumeRoleWithWebIdentity")
-
-
-	return
+    request = &AssumeRoleWithWebIdentityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.SetSkipSign(true)
+    request.Init().WithApiInfo("sts", APIVersion, "AssumeRoleWithWebIdentity")
+    
+    
+    return
 }
 
 func NewAssumeRoleWithWebIdentityResponse() (response *AssumeRoleWithWebIdentityResponse) {
-	response = &AssumeRoleWithWebIdentityResponse{
-		BaseResponse: &tchttp.BaseResponse{},
-	}
-	return
+    response = &AssumeRoleWithWebIdentityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
 }
 
 // AssumeRoleWithWebIdentity
@@ -250,7 +250,7 @@ func NewAssumeRoleWithWebIdentityResponse() (response *AssumeRoleWithWebIdentity
 //  INVALIDPARAMETER_WEBIDENTITYTOKENERROR = "InvalidParameter.WebIdentityTokenError"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithWebIdentity(request *AssumeRoleWithWebIdentityRequest) (response *AssumeRoleWithWebIdentityResponse, err error) {
-	return c.AssumeRoleWithWebIdentityWithContext(context.Background(), request)
+    return c.AssumeRoleWithWebIdentityWithContext(context.Background(), request)
 }
 
 // AssumeRoleWithWebIdentity
@@ -264,33 +264,33 @@ func (c *Client) AssumeRoleWithWebIdentity(request *AssumeRoleWithWebIdentityReq
 //  INVALIDPARAMETER_WEBIDENTITYTOKENERROR = "InvalidParameter.WebIdentityTokenError"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithWebIdentityWithContext(ctx context.Context, request *AssumeRoleWithWebIdentityRequest) (response *AssumeRoleWithWebIdentityResponse, err error) {
-	if request == nil {
-		request = NewAssumeRoleWithWebIdentityRequest()
-	}
-
-	request.SetContext(ctx)
-
-	response = NewAssumeRoleWithWebIdentityResponse()
-	err = c.Send(request, response)
-	return
+    if request == nil {
+        request = NewAssumeRoleWithWebIdentityRequest()
+    }
+    
+    request.SetContext(ctx)
+    
+    response = NewAssumeRoleWithWebIdentityResponse()
+    err = c.Send(request, response)
+    return
 }
 
 func NewGetCallerIdentityRequest() (request *GetCallerIdentityRequest) {
-	request = &GetCallerIdentityRequest{
-		BaseRequest: &tchttp.BaseRequest{},
-	}
-
-	request.Init().WithApiInfo("sts", APIVersion, "GetCallerIdentity")
-
-
-	return
+    request = &GetCallerIdentityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sts", APIVersion, "GetCallerIdentity")
+    
+    
+    return
 }
 
 func NewGetCallerIdentityResponse() (response *GetCallerIdentityResponse) {
-	response = &GetCallerIdentityResponse{
-		BaseResponse: &tchttp.BaseResponse{},
-	}
-	return
+    response = &GetCallerIdentityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
 }
 
 // GetCallerIdentity
@@ -303,7 +303,7 @@ func NewGetCallerIdentityResponse() (response *GetCallerIdentityResponse) {
 //  INTERNALERROR_GETSEEDTOKENERROR = "InternalError.GetSeedTokenError"
 //  INVALIDPARAMETER_ACCESSKEYNOTSUPPORT = "InvalidParameter.AccessKeyNotSupport"
 func (c *Client) GetCallerIdentity(request *GetCallerIdentityRequest) (response *GetCallerIdentityResponse, err error) {
-	return c.GetCallerIdentityWithContext(context.Background(), request)
+    return c.GetCallerIdentityWithContext(context.Background(), request)
 }
 
 // GetCallerIdentity
@@ -316,37 +316,37 @@ func (c *Client) GetCallerIdentity(request *GetCallerIdentityRequest) (response 
 //  INTERNALERROR_GETSEEDTOKENERROR = "InternalError.GetSeedTokenError"
 //  INVALIDPARAMETER_ACCESSKEYNOTSUPPORT = "InvalidParameter.AccessKeyNotSupport"
 func (c *Client) GetCallerIdentityWithContext(ctx context.Context, request *GetCallerIdentityRequest) (response *GetCallerIdentityResponse, err error) {
-	if request == nil {
-		request = NewGetCallerIdentityRequest()
-	}
+    if request == nil {
+        request = NewGetCallerIdentityRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetCallerIdentity require credential")
+    }
 
-	if c.GetCredential() == nil {
-		return nil, errors.New("GetCallerIdentity require credential")
-	}
-
-	request.SetContext(ctx)
-
-	response = NewGetCallerIdentityResponse()
-	err = c.Send(request, response)
-	return
+    request.SetContext(ctx)
+    
+    response = NewGetCallerIdentityResponse()
+    err = c.Send(request, response)
+    return
 }
 
 func NewGetFederationTokenRequest() (request *GetFederationTokenRequest) {
-	request = &GetFederationTokenRequest{
-		BaseRequest: &tchttp.BaseRequest{},
-	}
-
-	request.Init().WithApiInfo("sts", APIVersion, "GetFederationToken")
-
-
-	return
+    request = &GetFederationTokenRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sts", APIVersion, "GetFederationToken")
+    
+    
+    return
 }
 
 func NewGetFederationTokenResponse() (response *GetFederationTokenResponse) {
-	response = &GetFederationTokenResponse{
-		BaseResponse: &tchttp.BaseResponse{},
-	}
-	return
+    response = &GetFederationTokenResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
 }
 
 // GetFederationToken
@@ -371,7 +371,7 @@ func NewGetFederationTokenResponse() (response *GetFederationTokenResponse) {
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) GetFederationToken(request *GetFederationTokenRequest) (response *GetFederationTokenResponse, err error) {
-	return c.GetFederationTokenWithContext(context.Background(), request)
+    return c.GetFederationTokenWithContext(context.Background(), request)
 }
 
 // GetFederationToken
@@ -396,37 +396,37 @@ func (c *Client) GetFederationToken(request *GetFederationTokenRequest) (respons
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) GetFederationTokenWithContext(ctx context.Context, request *GetFederationTokenRequest) (response *GetFederationTokenResponse, err error) {
-	if request == nil {
-		request = NewGetFederationTokenRequest()
-	}
+    if request == nil {
+        request = NewGetFederationTokenRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetFederationToken require credential")
+    }
 
-	if c.GetCredential() == nil {
-		return nil, errors.New("GetFederationToken require credential")
-	}
-
-	request.SetContext(ctx)
-
-	response = NewGetFederationTokenResponse()
-	err = c.Send(request, response)
-	return
+    request.SetContext(ctx)
+    
+    response = NewGetFederationTokenResponse()
+    err = c.Send(request, response)
+    return
 }
 
 func NewQueryApiKeyRequest() (request *QueryApiKeyRequest) {
-	request = &QueryApiKeyRequest{
-		BaseRequest: &tchttp.BaseRequest{},
-	}
-
-	request.Init().WithApiInfo("sts", APIVersion, "QueryApiKey")
-
-
-	return
+    request = &QueryApiKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sts", APIVersion, "QueryApiKey")
+    
+    
+    return
 }
 
 func NewQueryApiKeyResponse() (response *QueryApiKeyResponse) {
-	response = &QueryApiKeyResponse{
-		BaseResponse: &tchttp.BaseResponse{},
-	}
-	return
+    response = &QueryApiKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
 }
 
 // QueryApiKey
@@ -437,7 +437,7 @@ func NewQueryApiKeyResponse() (response *QueryApiKeyResponse) {
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 func (c *Client) QueryApiKey(request *QueryApiKeyRequest) (response *QueryApiKeyResponse, err error) {
-	return c.QueryApiKeyWithContext(context.Background(), request)
+    return c.QueryApiKeyWithContext(context.Background(), request)
 }
 
 // QueryApiKey
@@ -448,17 +448,17 @@ func (c *Client) QueryApiKey(request *QueryApiKeyRequest) (response *QueryApiKey
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 func (c *Client) QueryApiKeyWithContext(ctx context.Context, request *QueryApiKeyRequest) (response *QueryApiKeyResponse, err error) {
-	if request == nil {
-		request = NewQueryApiKeyRequest()
-	}
+    if request == nil {
+        request = NewQueryApiKeyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("QueryApiKey require credential")
+    }
 
-	if c.GetCredential() == nil {
-		return nil, errors.New("QueryApiKey require credential")
-	}
-
-	request.SetContext(ctx)
-
-	response = NewQueryApiKeyResponse()
-	err = c.Send(request, response)
-	return
+    request.SetContext(ctx)
+    
+    response = NewQueryApiKeyResponse()
+    err = c.Send(request, response)
+    return
 }
