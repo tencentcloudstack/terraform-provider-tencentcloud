@@ -97,7 +97,8 @@ The `resource_tags` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `dns_pod_domain` - Internet address domain name.
+* `tgw_wan_vport` - External port number.
 
 
 ## Import

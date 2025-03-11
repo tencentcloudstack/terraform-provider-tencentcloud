@@ -150,6 +150,16 @@ func ResourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 				Deprecated:  "It has been deprecated from version 1.81.2.",
 				Description: "Upgrade the high-availability architecture of sqlserver, upgrade from mirror disaster recovery to always on cluster disaster recovery, only support 2017 and above and support always on high-availability instances, do not support downgrading to mirror disaster recovery, CLUSTER-upgrade to always on capacity Disaster, if not filled, the high-availability architecture will not be modified.",
 			},
+			"dns_pod_domain": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Internet address domain name.",
+			},
+			"tgw_wan_vport": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "External port number.",
+			},
 		},
 	}
 }
@@ -410,6 +420,14 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 
 	if generalCloudInstance.TimeZone != nil {
 		_ = d.Set("time_zone", generalCloudInstance.TimeZone)
+	}
+
+	if generalCloudInstance.DnsPodDomain != nil {
+		_ = d.Set("dns_pod_domain", generalCloudInstance.DnsPodDomain)
+	}
+
+	if generalCloudInstance.TgwWanVPort != nil {
+		_ = d.Set("tgw_wan_vport", generalCloudInstance.TgwWanVPort)
 	}
 
 	maintenanceSpan, err := service.DescribeMaintenanceSpanById(ctx, instanceId)
