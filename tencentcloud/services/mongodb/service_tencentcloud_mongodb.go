@@ -118,6 +118,48 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 	return nil
 }
 
+func (me *MongodbService) ModifyMongosMemory(ctx context.Context, instanceId string, mongosMemory int) (dealId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewModifyDBInstanceSpecRequest()
+	request.InstanceId = &instanceId
+	request.MongosMemory = helper.String(helper.IntToStr(mongosMemory))
+
+	var response *mongodb.ModifyDBInstanceSpecResponse
+	tradeError := false
+	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().ModifyDBInstanceSpec(request)
+		if e != nil {
+			// request might be accepted between "InvalidParameterValue.InvalidTradeOperation" and "InvalidParameterValue.StatusAbnormal" error
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "InvalidParameterValue.InvalidTradeOperation" {
+					tradeError = true
+					return resource.RetryableError(e)
+				} else if ee.Code == "InvalidParameterValue.StatusAbnormal" && tradeError {
+					response = result
+					return nil
+				} else {
+					return resource.NonRetryableError(e)
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.NonRetryableError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil && response.Response.DealId != nil {
+		dealId = *response.Response.DealId
+	}
+	return
+}
 func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string, memory int, volume int, params map[string]interface{}) (dealId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewModifyDBInstanceSpecRequest()
