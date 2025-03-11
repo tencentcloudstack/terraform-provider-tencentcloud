@@ -304,9 +304,6 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   mongos_cpu = 1
   mongos_memory =  2
   mongos_node_num = 3
-  tags = {
-    test = "test"
-  }
   vpc_id = tencentcloud_vpc.vpc.id
   subnet_id = tencentcloud_subnet.subnet.id
 }
@@ -340,9 +337,6 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   mongos_cpu = 2
   mongos_memory =  4
   mongos_node_num = 3
-  tags = {
-    test = "test"
-  }
   vpc_id = tencentcloud_vpc.vpc.id
   subnet_id = tencentcloud_subnet.subnet.id
 }
