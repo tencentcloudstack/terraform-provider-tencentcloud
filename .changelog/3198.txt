@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_sqlserver_wan_ip_config
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_general_cloud_instance: add new params
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_basic_instance: add new params
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_instance: add new params
+```
