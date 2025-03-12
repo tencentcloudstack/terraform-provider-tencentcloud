@@ -1014,6 +1014,10 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		return err
 	}
 
+	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") {
+		return fmt.Errorf("Not support change params contact with data transparent encryption.")
+	}
+
 	waitSwitch := POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY
 	if v, ok := d.GetOk("wait_switch"); ok {
 		waitSwitch = v.(int)
@@ -1440,40 +1444,106 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("The `availability_zone` cannot be modified, please use `db_node_set` instead of it.")
 	}
 
-	if d.HasChange("db_kernel_version") {
-		upgradeVersion := d.Get("db_kernel_version").(string)
-		upgradeRequest := postgresql.NewUpgradeDBInstanceKernelVersionRequest()
-		// upgradeResponse:= postgresql.NewUpgradeDBInstanceKernelVersionResponse()
-		upgradeRequest.DBInstanceId = &instanceId
-		upgradeRequest.TargetDBKernelVersion = &upgradeVersion
-		upgradeRequest.SwitchTag = helper.IntUint64(waitSwitch)
+	if d.HasChange("db_kernel_version") || d.HasChange("db_major_vesion") || d.HasChange("db_major_version") || d.HasChange("engine_version") {
+		oldKVInterface, newKVInterface := d.GetChange("db_kernel_version")
+		oldMVInterface, newMVInterface := d.GetChange("db_major_vesion")
+		oldMVInterface, newMVInterface = d.GetChange("db_major_version")
+		oldEVInterface, newEVInterface := d.GetChange("engine_version")
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
-			if e != nil {
-				tcErr := e.(*sdkErrors.TencentCloudSDKError)
-				if tcErr.Code == "FailedOperation.FailedOperationError" {
-					// upgrade version invalid.
-					return resource.NonRetryableError(fmt.Errorf("Upgrade kernel version failed: %v", e.Error()))
+		oldKVValue := oldKVInterface.(string)
+		newKVValue := newKVInterface.(string)
+		oldMVValue := oldMVInterface.(string)
+		newMVValue := newMVInterface.(string)
+		oldEVValue := oldEVInterface.(string)
+		newEVValue := newEVInterface.(string)
+
+		// check old version value
+		oldParamMap := make(map[string]interface{})
+		oldParamMap["DBVersion"] = oldEVValue
+		oldParamMap["DBMajorVersion"] = oldMVValue
+		oldParamMap["DBKernelVersion"] = oldKVValue
+		oldResult, err := postgresqlService.DescribePostgresqlDbVersionsByFilter(ctx, oldParamMap)
+		if err != nil {
+			return err
+		}
+
+		if oldResult == nil || len(oldResult) == 0 {
+			return fmt.Errorf("Current postgresql instance engine_version: %s, db_major_version: %s and db_kernel_version: %s. has no available upgrade target verison.", oldEVValue, oldMVValue, oldKVValue)
+		}
+
+		// check new version value
+		newParamMap := make(map[string]interface{})
+		newParamMap["DBVersion"] = newEVValue
+		newParamMap["DBMajorVersion"] = newMVValue
+		newParamMap["DBKernelVersion"] = newKVValue
+		newResult, err := postgresqlService.DescribePostgresqlDbVersionsByFilter(ctx, newParamMap)
+		if err != nil {
+			return err
+		}
+
+		if newResult == nil || len(newResult) == 0 {
+			return fmt.Errorf("The expected modifications of engine_version: %s, db_major_version: %s and db_kernel_version: %s are illegal, available upgrade target verison cannot be found.", newEVValue, newMVValue, newKVValue)
+		}
+
+		if oldMVValue != newMVValue {
+			// use UpgradeDBInstanceMajorVersion
+			upgradeRequest := postgresql.NewUpgradeDBInstanceMajorVersionRequest()
+			upgradeRequest.DBInstanceId = &instanceId
+			upgradeRequest.TargetDBKernelVersion = &newKVValue
+			upgradeRequest.UpgradeTimeOption = helper.IntInt64(waitSwitch)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().UpgradeDBInstanceMajorVersion(upgradeRequest)
+				if e != nil {
+					tcErr := e.(*sdkErrors.TencentCloudSDKError)
+					if tcErr.Code == "FailedOperation.FailedOperationError" {
+						// upgrade version invalid.
+						return resource.NonRetryableError(fmt.Errorf("Upgrade major version failed: %v", e.Error()))
+					}
+
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
 				}
 
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s upgrade major version failed, reason:%+v", logId, err)
+				return err
 			}
+		} else {
+			// use UpgradeDBInstanceKernelVersion
+			upgradeRequest := postgresql.NewUpgradeDBInstanceKernelVersionRequest()
+			upgradeRequest.DBInstanceId = &instanceId
+			upgradeRequest.TargetDBKernelVersion = &newKVValue
+			upgradeRequest.SwitchTag = helper.IntUint64(waitSwitch)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
+				if e != nil {
+					tcErr := e.(*sdkErrors.TencentCloudSDKError)
+					if tcErr.Code == "FailedOperation.FailedOperationError" {
+						// upgrade version invalid.
+						return resource.NonRetryableError(fmt.Errorf("Upgrade kernel version failed: %v", e.Error()))
+					}
 
-			return nil
-		})
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
+				}
 
-		if err != nil {
-			log.Printf("[CRITAL]%s create dcdb dbInstance failed, reason:%+v", logId, err)
-			return err
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s upgrade kernel version failed, reason:%+v", logId, err)
+				return err
+			}
 		}
 
 		if waitSwitch == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
 			// only wait for immediately upgrade mode
 			conf := tccommon.BuildStateChangeConf([]string{}, []string{"running", "isolated", "offline"}, 10*tccommon.ReadRetryTimeout, time.Second, postgresqlService.PostgresqlUpgradeKernelVersionRefreshFunc(d.Id(), []string{}))
-
 			if _, e := conf.WaitForState(); e != nil {
 				return e
 			}
@@ -1508,18 +1578,6 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if v, ok := d.GetOkExists("max_standby_streaming_delay"); ok {
 			paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
 		}
-	}
-
-	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") {
-		return fmt.Errorf("Not support change db major version.")
-	}
-
-	if d.HasChange("engine_version") {
-		return fmt.Errorf("Not support change engine_version.")
-	}
-
-	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") {
-		return fmt.Errorf("Not support change params contact with data transparent encryption.")
 	}
 
 	if len(paramEntrys) != 0 {

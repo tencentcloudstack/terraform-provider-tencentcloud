@@ -2312,3 +2312,84 @@ func (me *PostgresqlService) DescribePostgresqlInstanceSslConfigById(ctx context
 	ret = response.Response
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlDbVersionsByFilter(ctx context.Context, param map[string]interface{}) (ret []*postgresql.Version, errRet error) {
+	var (
+		logId           = tccommon.GetLogId(ctx)
+		request         = postgresql.NewDescribeDBVersionsRequest()
+		response        = postgresql.NewDescribeDBVersionsResponse()
+		dBVersion       string
+		dBMajorVersion  string
+		dBKernelVersion string
+	)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UsePostgresqlClient().DescribeDBVersions(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.VersionSet) < 1 {
+		return
+	}
+
+	ret = response.Response.VersionSet
+
+	// filter
+	if v, ok := param["DBVersion"]; ok {
+		dBVersion = v.(string)
+	}
+
+	if v, ok := param["DBMajorVersion"]; ok {
+		dBMajorVersion = v.(string)
+	}
+
+	if v, ok := param["DBKernelVersion"]; ok {
+		dBKernelVersion = v.(string)
+	}
+
+	if dBVersion != "" || dBMajorVersion != "" || dBKernelVersion != "" {
+		var filterRet []*postgresql.Version
+		for _, item := range ret {
+			flag := true
+			for k, v := range param {
+				var fValue string
+				if k == "DBVersion" {
+					fValue = *item.DBVersion
+				}
+
+				if k == "DBMajorVersion" {
+					fValue = *item.DBMajorVersion
+				}
+
+				if k == "DBKernelVersion" {
+					fValue = *item.DBKernelVersion
+				}
+
+				if fValue != v {
+					flag = false
+					break
+				}
+			}
+
+			if flag {
+				filterRet = append(filterRet, item)
+			}
+		}
+
+		ret = filterRet
+	}
+
+	return
+}
