@@ -171,10 +171,12 @@ The following arguments are supported:
 * `cos_backup` - (Optional, List) COS automatic backup information.
 * `deploy_mode` - (Optional, Int, ForceNew) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
 * `es_acl` - (Optional, List) Kibana Access Control Configuration.
+* `es_public_acl` - (Optional, List) Public network access control list.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `kibana_public_access` - (Optional, String) Kibana public network access status. Valid values are `OPEN` and `CLOSE`.
 * `license_type` - (Optional, String) License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.
 * `multi_zone_infos` - (Optional, List, ForceNew) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
+* `public_access` - (Optional, String) ES cluster public network access status. Valid values are `OPEN` and `CLOSE`. Cannot be changed at the same time as `es_acl`.
 * `renew_flag` - (Optional, String, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `subnet_id` - (Optional, String, ForceNew) The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted or `-`.
 * `tags` - (Optional, Map) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
@@ -189,6 +191,10 @@ The `es_acl` object supports the following:
 
 * `black_list` - (Optional, Set) Blacklist of kibana access.
 * `white_list` - (Optional, Set) Whitelist of kibana access.
+
+The `es_public_acl` object supports the following:
+
+* `white_ip_list` - (Optional, Set) Access Whitelist.
 
 The `multi_zone_infos` object supports the following:
 
@@ -218,6 +224,7 @@ In addition to all arguments above, the following attributes are exported:
 * `elasticsearch_domain` - Elasticsearch domain name.
 * `elasticsearch_port` - Elasticsearch port.
 * `elasticsearch_vip` - Elasticsearch VIP.
+* `es_public_url` - Es public network address.
 * `kibana_url` - Kibana access URL.
 
 

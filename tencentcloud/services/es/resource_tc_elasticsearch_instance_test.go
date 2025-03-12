@@ -133,6 +133,10 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *test
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_instance.es_kibana", "es_public_url"),
 				),
 			},
 			{
@@ -140,6 +144,9 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *test
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "CLOSE"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
 				),
 			},
 			{
@@ -147,6 +154,9 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *test
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
 				),
 			},
 		},
@@ -298,6 +308,12 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	license_type         = "basic"
 	basic_security_type  = 2
 	kibana_public_access = "CLOSE"
+	public_access = "CLOSE"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
   
 	node_info_list {
 	  node_num  = 2
@@ -317,6 +333,12 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	license_type         = "basic"
 	basic_security_type  = 2
 	kibana_public_access = "OPEN"
+	public_access = "OPEN"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
   
 	node_info_list {
 	  node_num  = 2
