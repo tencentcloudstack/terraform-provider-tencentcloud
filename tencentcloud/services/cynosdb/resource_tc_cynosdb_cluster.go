@@ -337,7 +337,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	for _, insGrp := range insGrps.Response.InstanceGrpInfoList {
 		if *insGrp.Type == CYNOSDB_INSGRP_HA {
 			rwGroupId = *insGrp.InstanceGrpId
-		} else if *insGrp.Type == CYNOSDB_INSGRP_RO {
+		} else if *insGrp.Type == CYNOSDB_INSGRP_RO || *insGrp.Type == CYNOSDB_INSGRP_SINGLERO {
 			roGroupIds = append(roGroupIds, *insGrp.InstanceGrpId)
 		}
 	}
@@ -499,7 +499,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 				"ip":   *insGrp.Vip,
 				"port": *insGrp.Vport,
 			})
-		} else if *insGrp.Type == CYNOSDB_INSGRP_RO {
+		} else if *insGrp.Type == CYNOSDB_INSGRP_RO || *insGrp.Type == CYNOSDB_INSGRP_SINGLERO {
 			roGroupId = *insGrp.InstanceGrpId
 			_ = d.Set("ro_group_id", roGroupId)
 			for _, roIns := range insGrp.InstanceSet {
