@@ -893,6 +893,7 @@ tencentcloud_postgresql_db_instance_versions
 tencentcloud_postgresql_zones
 tencentcloud_postgresql_account_privileges
 tencentcloud_postgresql_dedicated_clusters
+tencentcloud_postgresql_db_versions
 
 Resource
 tencentcloud_postgresql_instance

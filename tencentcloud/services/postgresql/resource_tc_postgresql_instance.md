@@ -2,7 +2,11 @@ Use this resource to create postgresql instance.
 
 -> **Note:** To update the charge type, please update the `charge_type` and specify the `period` for the charging period. It only supports updating from `POSTPAID_BY_HOUR` to `PREPAID`, and the `period` field only valid in that upgrading case.
 
--> **Note:** If no values are set for the two parameters: `db_major_version` and `engine_version`, then `engine_version` is set to `10.4` by default. Suggest using parameter `db_major_version` to create an instance
+-> **Note:** If no values are set for the parameters: `db_kernel_version`, `db_major_version` and `engine_version`, then `engine_version` is set to `10.4` by default. Suggest using parameter `db_major_version` to create an instance
+
+-> **Note:** If you need to upgrade the database version, Please use data source `tencentcloud_postgresql_db_versions` to obtain the valid version value for `db_kernel_version`, `db_major_version` and `engine_version`. And when modifying, `db_kernel_version`, `db_major_version` and `engine_version` must be set.
+
+-> **Note:** If upgrade `db_kernel_version`, will synchronize the upgrade of the read-only instance version; If upgrade `db_major_version`, cannot have read-only instances.
 
 Example Usage
 
@@ -46,7 +50,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   storage           = 10
 
   tags = {
-    test = "tf"
+    CreateBy = "Terraform"
   }
 }
 ```
@@ -92,7 +96,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   delete_protection = true
 
   tags = {
-    test = "tf"
+    CreateBy = "Terraform"
   }
 }
 ```
@@ -149,7 +153,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   }
 
   tags = {
-    test = "tf"
+    CreateBy = "Terraform"
   }
 }
 ```
@@ -204,7 +208,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   }
 
   tags = {
-    CreateBy = "terraform"
+    CreateBy = "Terraform"
   }
 }
 ```
@@ -242,7 +246,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   }
 
   tags = {
-    tf = "test"
+    CreateBy = "Terraform"
   }
 }
 ```
@@ -261,6 +265,8 @@ resource "tencentcloud_postgresql_instance" "example" {
   vpc_id               = "vpc-86v957zb"
   subnet_id            = "subnet-enm92y0m"
   engine_version       = "13.3"
+  db_kernel_version    = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
+  db_major_version     = "13"
   root_password        = "Root123$"
   charset              = "LATIN1"
   project_id           = 0
@@ -276,10 +282,8 @@ resource "tencentcloud_postgresql_instance" "example" {
     backup_period                = ["monday", "thursday", "sunday"]
   }
 
-  db_kernel_version = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
-
   tags = {
-    tf = "test"
+    CreateBy = "Terraform"
   }
 }
 ```

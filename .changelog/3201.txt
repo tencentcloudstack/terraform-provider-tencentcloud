@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: support upgrade version
+```
+
+```release-note:new-datasource
+tencentcloud_postgresql_db_versions
+```
