@@ -173,6 +173,7 @@ tencentcloud_as_limits
 tencentcloud_as_last_activity
 
 Resource
+tencentcloud_as_load_balancer
 tencentcloud_as_scaling_config
 tencentcloud_as_scaling_group
 tencentcloud_as_scaling_group_status
