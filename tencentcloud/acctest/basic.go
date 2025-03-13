@@ -856,10 +856,10 @@ locals {
 locals {
   filtered_sharding_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0 && lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") == "4.4" && lookup(i, "memory") == 4096 && lookup(i, "default_storage") == 256000]
   sharding_spec = concat(local.filtered_sharding_spec, [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0])
-  sharding_machine_type = local.sharding_spec.0.machine_type
-  sharding_memory = local.sharding_spec.0.memory / 1024
-  sharding_volume = local.sharding_spec.0.default_storage / 1000
-  sharding_engine_version = lookup(var.engine_versions, local.sharding_spec.0.engine_version)
+  sharding_machine_type = local.filtered_sharding_spec.0.machine_type
+  sharding_memory = local.filtered_sharding_spec.0.memory / 1024
+  sharding_volume = local.filtered_sharding_spec.0.default_storage / 1000
+  sharding_engine_version = lookup(var.engine_versions, local.filtered_sharding_spec.0.engine_version)
 }
 `
 
