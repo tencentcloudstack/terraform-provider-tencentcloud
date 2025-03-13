@@ -1,3 +1,17 @@
+## 1.81.173(March 13 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mongodb_readonly_instance` ([#3200](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3200))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: optimize ro group sg ([#3203](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3203))
+* resource/tencentcloud_elasticsearch_instance: Support for public_access fields. ([#3205](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3205))
+* resource/tencentcloud_kubernetes_addon: update doc ([#3204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3204))
+* resource/tencentcloud_mongodb_sharding_instance: support update mongos_memory ([#3199](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3199))
+* resource/tencentcloud_postgresql_instance: support upgrade version ([#3201](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3201))
+
 ## 1.81.172(March 7 , 2025)
 
 FEATURES:
