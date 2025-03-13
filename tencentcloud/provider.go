@@ -1530,6 +1530,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_grafana_sso_config":                                               tcmg.ResourceTencentCloudMonitorGrafanaSsoConfig(),
 			"tencentcloud_monitor_grafana_version_upgrade":                                          tcmg.ResourceTencentCloudMonitorGrafanaVersionUpgrade(),
 			"tencentcloud_mongodb_standby_instance":                                                 mongodb.ResourceTencentCloudMongodbStandbyInstance(),
+			"tencentcloud_mongodb_readonly_instance":                                                mongodb.ResourceTencentCloudMongodbReadOnlyInstance(),
 			"tencentcloud_elasticsearch_instance":                                                   es.ResourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_elasticsearch_security_group":                                             es.ResourceTencentCloudElasticsearchSecurityGroup(),
 			"tencentcloud_elasticsearch_logstash":                                                   es.ResourceTencentCloudElasticsearchLogstash(),
