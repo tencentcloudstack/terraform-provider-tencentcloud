@@ -93,6 +93,7 @@ The following arguments are supported:
 * `health_check_time_out` - (Optional, Int) Time out of health check. The value range is [2-60](SEC).
 * `health_check_type` - (Optional, String) Type of health check. Valid value is `CUSTOM`, `PING`, `TCP`, `HTTP`, `HTTPS`, `GRPC`, `GRPCS`.
 * `health_check_unhealth_num` - (Optional, Int) Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
+* `health_source_ip_type` - (Optional, Int) Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.
 * `http2_switch` - (Optional, Bool) Indicate to apply HTTP2.0 protocol or not.
 * `multi_cert_info` - (Optional, List) Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.
 * `oauth` - (Optional, List) OAuth configuration information.
