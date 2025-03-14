@@ -391,3 +391,10 @@ func ValidateTkeGpuDriverVersion(v interface{}, k string) (ws []string, errors [
 	}
 	return
 }
+
+func ValidateStringNotNil(v interface{}, k string) (ws []string, errors []error) {
+	if v == nil || v == "" {
+		errors = append(errors, fmt.Errorf("%s cannot be null or \\", k))
+	}
+	return
+}

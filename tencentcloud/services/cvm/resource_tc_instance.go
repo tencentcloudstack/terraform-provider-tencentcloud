@@ -220,8 +220,11 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			},
 
 			"orderly_security_groups": {
-				Type:          schema.TypeList,
-				Elem:          &schema.Schema{Type: schema.TypeString},
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: tccommon.ValidateStringNotNil,
+				},
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"security_groups"},
