@@ -707,11 +707,11 @@ func NewAllocateIp6AddressesBandwidthResponse() (response *AllocateIp6AddressesB
 }
 
 // AllocateIp6AddressesBandwidth
-// 本接口（AllocateIp6AddressesBandwidth）用于为传统弹性公网 IPv6 实例开通 IPv6 公网带宽。
+// 本接口（AllocateIp6AddressesBandwidth）用于为传统弹性公网 IPv6 地址开通 IPv6 公网带宽。
 //
 // 
 //
-// - 传统弹性公网 IPv6 实例默认仅具备 IPv6 内网通信能力，需为 IPv6 地址分配公网带宽后，才具备 IPv6 公网通信能力。
+// - 传统弹性公网 IPv6 地址默认仅具备内网通信能力，需通过控制台或 API 接口为其分配公网带宽后，才能具备 IPv6 公网通信能力、并于传统弹性公网 IPv6 列表页可见。
 //
 // - 支持为一个或多个传统弹性公网 IPv6 实例开通公网带宽。
 //
@@ -738,11 +738,11 @@ func (c *Client) AllocateIp6AddressesBandwidth(request *AllocateIp6AddressesBand
 }
 
 // AllocateIp6AddressesBandwidth
-// 本接口（AllocateIp6AddressesBandwidth）用于为传统弹性公网 IPv6 实例开通 IPv6 公网带宽。
+// 本接口（AllocateIp6AddressesBandwidth）用于为传统弹性公网 IPv6 地址开通 IPv6 公网带宽。
 //
 // 
 //
-// - 传统弹性公网 IPv6 实例默认仅具备 IPv6 内网通信能力，需为 IPv6 地址分配公网带宽后，才具备 IPv6 公网通信能力。
+// - 传统弹性公网 IPv6 地址默认仅具备内网通信能力，需通过控制台或 API 接口为其分配公网带宽后，才能具备 IPv6 公网通信能力、并于传统弹性公网 IPv6 列表页可见。
 //
 // - 支持为一个或多个传统弹性公网 IPv6 实例开通公网带宽。
 //
@@ -1781,6 +1781,7 @@ func NewAttachCcnInstancesResponse() (response *AttachCcnInstancesResponse) {
 //  UNSUPPORTEDOPERATION_CCNCROSSACCOUNT = "UnsupportedOperation.CcnCrossAccount"
 //  UNSUPPORTEDOPERATION_CCNORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.CcnOrdinaryAccountRefuseAttach"
 //  UNSUPPORTEDOPERATION_CCNROUTETABLENOTEXIST = "UnsupportedOperation.CcnRouteTableNotExist"
+//  UNSUPPORTEDOPERATION_CCNTRAFFICMETERINGUNABLECROSSBORDER = "UnsupportedOperation.CcnTrafficMeteringUnableCrossBorder"
 //  UNSUPPORTEDOPERATION_INSTANCEANDRTBNOTMATCH = "UnsupportedOperation.InstanceAndRtbNotMatch"
 //  UNSUPPORTEDOPERATION_INSTANCECDCIDNOTMATCHCCNCDCID = "UnsupportedOperation.InstanceCdcIdNotMatchCcnCdcId"
 //  UNSUPPORTEDOPERATION_INSTANCEORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.InstanceOrdinaryAccountRefuseAttach"
@@ -1816,6 +1817,7 @@ func (c *Client) AttachCcnInstances(request *AttachCcnInstancesRequest) (respons
 //  UNSUPPORTEDOPERATION_CCNCROSSACCOUNT = "UnsupportedOperation.CcnCrossAccount"
 //  UNSUPPORTEDOPERATION_CCNORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.CcnOrdinaryAccountRefuseAttach"
 //  UNSUPPORTEDOPERATION_CCNROUTETABLENOTEXIST = "UnsupportedOperation.CcnRouteTableNotExist"
+//  UNSUPPORTEDOPERATION_CCNTRAFFICMETERINGUNABLECROSSBORDER = "UnsupportedOperation.CcnTrafficMeteringUnableCrossBorder"
 //  UNSUPPORTEDOPERATION_INSTANCEANDRTBNOTMATCH = "UnsupportedOperation.InstanceAndRtbNotMatch"
 //  UNSUPPORTEDOPERATION_INSTANCECDCIDNOTMATCHCCNCDCID = "UnsupportedOperation.InstanceCdcIdNotMatchCcnCdcId"
 //  UNSUPPORTEDOPERATION_INSTANCEORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.InstanceOrdinaryAccountRefuseAttach"
@@ -2269,6 +2271,59 @@ func (c *Client) CheckDefaultSubnetWithContext(ctx context.Context, request *Che
     return
 }
 
+func NewCheckGatewayFlowMonitorRequest() (request *CheckGatewayFlowMonitorRequest) {
+    request = &CheckGatewayFlowMonitorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CheckGatewayFlowMonitor")
+    
+    
+    return
+}
+
+func NewCheckGatewayFlowMonitorResponse() (response *CheckGatewayFlowMonitorResponse) {
+    response = &CheckGatewayFlowMonitorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CheckGatewayFlowMonitor
+// 本接口（CheckGatewayFlowMonitor）用于查询网关是否启用流量监控。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_INVALIDSTATE = "UnsupportedOperation.InvalidState"
+func (c *Client) CheckGatewayFlowMonitor(request *CheckGatewayFlowMonitorRequest) (response *CheckGatewayFlowMonitorResponse, err error) {
+    return c.CheckGatewayFlowMonitorWithContext(context.Background(), request)
+}
+
+// CheckGatewayFlowMonitor
+// 本接口（CheckGatewayFlowMonitor）用于查询网关是否启用流量监控。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_INVALIDSTATE = "UnsupportedOperation.InvalidState"
+func (c *Client) CheckGatewayFlowMonitorWithContext(ctx context.Context, request *CheckGatewayFlowMonitorRequest) (response *CheckGatewayFlowMonitorResponse, err error) {
+    if request == nil {
+        request = NewCheckGatewayFlowMonitorRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CheckGatewayFlowMonitor require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCheckGatewayFlowMonitorResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCheckNetDetectStateRequest() (request *CheckNetDetectStateRequest) {
     request = &CheckNetDetectStateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2346,6 +2401,73 @@ func (c *Client) CheckNetDetectStateWithContext(ctx context.Context, request *Ch
     request.SetContext(ctx)
     
     response = NewCheckNetDetectStateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCheckTrafficMirrorRequest() (request *CheckTrafficMirrorRequest) {
+    request = &CheckTrafficMirrorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CheckTrafficMirror")
+    
+    
+    return
+}
+
+func NewCheckTrafficMirrorResponse() (response *CheckTrafficMirrorResponse) {
+    response = &CheckTrafficMirrorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CheckTrafficMirror
+// 检查流量镜像的采集端接收端（公网IP类型）
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETER_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameter.UnsupportedLbTrafficMirrorAz"
+//  INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameterValue.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//  INVALIDPARAMETERVALUE_INVALIDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.InvalidLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameterValue.UnsupportedLbTrafficMirrorAz"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_VPCMISMATCH = "UnsupportedOperation.VpcMismatch"
+func (c *Client) CheckTrafficMirror(request *CheckTrafficMirrorRequest) (response *CheckTrafficMirrorResponse, err error) {
+    return c.CheckTrafficMirrorWithContext(context.Background(), request)
+}
+
+// CheckTrafficMirror
+// 检查流量镜像的采集端接收端（公网IP类型）
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETER_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameter.UnsupportedLbTrafficMirrorAz"
+//  INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameterValue.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//  INVALIDPARAMETERVALUE_INVALIDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.InvalidLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameterValue.UnsupportedLbTrafficMirrorAz"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_VPCMISMATCH = "UnsupportedOperation.VpcMismatch"
+func (c *Client) CheckTrafficMirrorWithContext(ctx context.Context, request *CheckTrafficMirrorRequest) (response *CheckTrafficMirrorResponse, err error) {
+    if request == nil {
+        request = NewCheckTrafficMirrorRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CheckTrafficMirror require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCheckTrafficMirrorResponse()
     err = c.Send(request, response)
     return
 }
@@ -2782,6 +2904,7 @@ func NewCreateAssistantCidrResponse() (response *CreateAssistantCidrResponse) {
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAPASSISTCIDR = "InvalidParameterValue.SubnetOverlapAssistCidr"
 //  INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateAssistantCidr(request *CreateAssistantCidrRequest) (response *CreateAssistantCidrResponse, err error) {
@@ -2800,6 +2923,7 @@ func (c *Client) CreateAssistantCidr(request *CreateAssistantCidrRequest) (respo
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAPASSISTCIDR = "InvalidParameterValue.SubnetOverlapAssistCidr"
 //  INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateAssistantCidrWithContext(ctx context.Context, request *CreateAssistantCidrRequest) (response *CreateAssistantCidrResponse, err error) {
@@ -5392,8 +5516,11 @@ func NewCreateRoutesResponse() (response *CreateRoutesResponse) {
 //  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_ROUTENEXTHOPINVALID = "InvalidParameterValue.RouteNextHopInvalid"
 //  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
@@ -5419,8 +5546,11 @@ func (c *Client) CreateRoutes(request *CreateRoutesRequest) (response *CreateRou
 //  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_ROUTENEXTHOPINVALID = "InvalidParameterValue.RouteNextHopInvalid"
 //  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
@@ -5764,7 +5894,7 @@ func NewCreateSecurityGroupWithPoliciesResponse() (response *CreateSecurityGroup
 //
 // * CidrBlock, Ipv6CidrBlock, SecurityGroupId, AddressTemplate四者是排他关系，不允许同时输入，Protocol + Port和ServiceTemplate二者是排他关系，不允许同时输入。
 //
-// * 一次请求中只能创建单个方向的规则, 如果需要指定索引（PolicyIndex）参数, 多条规则的索引必须一致。
+// * 请求中可以同时指定入站和出站两个方向的规则, 如果需要指定索引（PolicyIndex）参数, 多条规则的索引必须一致。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
@@ -5816,7 +5946,7 @@ func (c *Client) CreateSecurityGroupWithPolicies(request *CreateSecurityGroupWit
 //
 // * CidrBlock, Ipv6CidrBlock, SecurityGroupId, AddressTemplate四者是排他关系，不允许同时输入，Protocol + Port和ServiceTemplate二者是排他关系，不允许同时输入。
 //
-// * 一次请求中只能创建单个方向的规则, 如果需要指定索引（PolicyIndex）参数, 多条规则的索引必须一致。
+// * 请求中可以同时指定入站和出站两个方向的规则, 如果需要指定索引（PolicyIndex）参数, 多条规则的索引必须一致。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
@@ -6074,6 +6204,7 @@ func NewCreateSubnetResponse() (response *CreateSubnetResponse) {
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAP = "InvalidParameterValue.SubnetOverlap"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATEKEY = "InvalidParameterValue.TagDuplicateKey"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATERESOURCETYPE = "InvalidParameterValue.TagDuplicateResourceType"
@@ -6135,6 +6266,7 @@ func (c *Client) CreateSubnet(request *CreateSubnetRequest) (response *CreateSub
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAP = "InvalidParameterValue.SubnetOverlap"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATEKEY = "InvalidParameterValue.TagDuplicateKey"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATERESOURCETYPE = "InvalidParameterValue.TagDuplicateResourceType"
@@ -6222,6 +6354,7 @@ func NewCreateSubnetsResponse() (response *CreateSubnetsResponse) {
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATEKEY = "InvalidParameterValue.TagDuplicateKey"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATERESOURCETYPE = "InvalidParameterValue.TagDuplicateResourceType"
@@ -6248,6 +6381,7 @@ func NewCreateSubnetsResponse() (response *CreateSubnetsResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
+//  UNSUPPORTEDOPERATION_CDCVPGNOTEXISTS = "UnsupportedOperation.CdcVpgNotExists"
 //  UNSUPPORTEDOPERATION_DCGATEWAYSNOTFOUNDINVPC = "UnsupportedOperation.DcGatewaysNotFoundInVpc"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
 //  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
@@ -6278,6 +6412,7 @@ func (c *Client) CreateSubnets(request *CreateSubnetsRequest) (response *CreateS
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATEKEY = "InvalidParameterValue.TagDuplicateKey"
 //  INVALIDPARAMETERVALUE_TAGDUPLICATERESOURCETYPE = "InvalidParameterValue.TagDuplicateResourceType"
@@ -6304,6 +6439,7 @@ func (c *Client) CreateSubnets(request *CreateSubnetsRequest) (response *CreateS
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
+//  UNSUPPORTEDOPERATION_CDCVPGNOTEXISTS = "UnsupportedOperation.CdcVpgNotExists"
 //  UNSUPPORTEDOPERATION_DCGATEWAYSNOTFOUNDINVPC = "UnsupportedOperation.DcGatewaysNotFoundInVpc"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
 //  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
@@ -6322,6 +6458,137 @@ func (c *Client) CreateSubnetsWithContext(ctx context.Context, request *CreateSu
     request.SetContext(ctx)
     
     response = NewCreateSubnetsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateTrafficMirrorRequest() (request *CreateTrafficMirrorRequest) {
+    request = &CreateTrafficMirrorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CreateTrafficMirror")
+    
+    
+    return
+}
+
+func NewCreateTrafficMirrorResponse() (response *CreateTrafficMirrorResponse) {
+    response = &CreateTrafficMirrorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateTrafficMirror
+// 本接口（CreateTrafficMirror）用于创建流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETER_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameter.UnsupportedLbTrafficMirrorAz"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameterValue.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.DuplicatedLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_INVALIDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.InvalidLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  INVALIDPARAMETERVALUE_OBJECTUSEINTRAFFICMIRROR = "InvalidParameterValue.ObjectUseInTrafficMirror"
+//  INVALIDPARAMETERVALUE_OBJECTVPCNOTCURRENTVPC = "InvalidParameterValue.ObjectVpcNotCurrentVpc"
+//  INVALIDPARAMETERVALUE_TAGDUPLICATEKEY = "InvalidParameterValue.TagDuplicateKey"
+//  INVALIDPARAMETERVALUE_TAGDUPLICATERESOURCETYPE = "InvalidParameterValue.TagDuplicateResourceType"
+//  INVALIDPARAMETERVALUE_TAGINVALIDKEY = "InvalidParameterValue.TagInvalidKey"
+//  INVALIDPARAMETERVALUE_TAGINVALIDKEYLEN = "InvalidParameterValue.TagInvalidKeyLen"
+//  INVALIDPARAMETERVALUE_TAGINVALIDVAL = "InvalidParameterValue.TagInvalidVal"
+//  INVALIDPARAMETERVALUE_TAGKEYNOTEXISTS = "InvalidParameterValue.TagKeyNotExists"
+//  INVALIDPARAMETERVALUE_TAGNOTALLOCATEDQUOTA = "InvalidParameterValue.TagNotAllocatedQuota"
+//  INVALIDPARAMETERVALUE_TAGNOTEXISTED = "InvalidParameterValue.TagNotExisted"
+//  INVALIDPARAMETERVALUE_TAGNOTSUPPORTTAG = "InvalidParameterValue.TagNotSupportTag"
+//  INVALIDPARAMETERVALUE_TAGRESOURCEFORMATERROR = "InvalidParameterValue.TagResourceFormatError"
+//  INVALIDPARAMETERVALUE_TAGTIMESTAMPEXCEEDED = "InvalidParameterValue.TagTimestampExceeded"
+//  INVALIDPARAMETERVALUE_TAGVALNOTEXISTS = "InvalidParameterValue.TagValNotExists"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameterValue.UnsupportedLbTrafficMirrorAz"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TAGKEYEXCEEDED = "LimitExceeded.TagKeyExceeded"
+//  LIMITEXCEEDED_TAGKEYPERRESOURCEEXCEEDED = "LimitExceeded.TagKeyPerResourceExceeded"
+//  LIMITEXCEEDED_TAGNOTENOUGHQUOTA = "LimitExceeded.TagNotEnoughQuota"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
+//  LIMITEXCEEDED_TAGQUOTAEXCEEDED = "LimitExceeded.TagQuotaExceeded"
+//  LIMITEXCEEDED_TAGTAGSEXCEEDED = "LimitExceeded.TagTagsExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//  UNSUPPORTEDOPERATION_PUBLICCLBNOTSUPPORT = "UnsupportedOperation.PublicClbNotSupport"
+//  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
+//  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
+//  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
+//  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTCLB = "UnsupportedOperation.TrafficMirrorNotSupportClb"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) CreateTrafficMirror(request *CreateTrafficMirrorRequest) (response *CreateTrafficMirrorResponse, err error) {
+    return c.CreateTrafficMirrorWithContext(context.Background(), request)
+}
+
+// CreateTrafficMirror
+// 本接口（CreateTrafficMirror）用于创建流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETER_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameter.UnsupportedLbTrafficMirrorAz"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameterValue.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.DuplicatedLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_INVALIDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.InvalidLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  INVALIDPARAMETERVALUE_OBJECTUSEINTRAFFICMIRROR = "InvalidParameterValue.ObjectUseInTrafficMirror"
+//  INVALIDPARAMETERVALUE_OBJECTVPCNOTCURRENTVPC = "InvalidParameterValue.ObjectVpcNotCurrentVpc"
+//  INVALIDPARAMETERVALUE_TAGDUPLICATEKEY = "InvalidParameterValue.TagDuplicateKey"
+//  INVALIDPARAMETERVALUE_TAGDUPLICATERESOURCETYPE = "InvalidParameterValue.TagDuplicateResourceType"
+//  INVALIDPARAMETERVALUE_TAGINVALIDKEY = "InvalidParameterValue.TagInvalidKey"
+//  INVALIDPARAMETERVALUE_TAGINVALIDKEYLEN = "InvalidParameterValue.TagInvalidKeyLen"
+//  INVALIDPARAMETERVALUE_TAGINVALIDVAL = "InvalidParameterValue.TagInvalidVal"
+//  INVALIDPARAMETERVALUE_TAGKEYNOTEXISTS = "InvalidParameterValue.TagKeyNotExists"
+//  INVALIDPARAMETERVALUE_TAGNOTALLOCATEDQUOTA = "InvalidParameterValue.TagNotAllocatedQuota"
+//  INVALIDPARAMETERVALUE_TAGNOTEXISTED = "InvalidParameterValue.TagNotExisted"
+//  INVALIDPARAMETERVALUE_TAGNOTSUPPORTTAG = "InvalidParameterValue.TagNotSupportTag"
+//  INVALIDPARAMETERVALUE_TAGRESOURCEFORMATERROR = "InvalidParameterValue.TagResourceFormatError"
+//  INVALIDPARAMETERVALUE_TAGTIMESTAMPEXCEEDED = "InvalidParameterValue.TagTimestampExceeded"
+//  INVALIDPARAMETERVALUE_TAGVALNOTEXISTS = "InvalidParameterValue.TagValNotExists"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameterValue.UnsupportedLbTrafficMirrorAz"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TAGKEYEXCEEDED = "LimitExceeded.TagKeyExceeded"
+//  LIMITEXCEEDED_TAGKEYPERRESOURCEEXCEEDED = "LimitExceeded.TagKeyPerResourceExceeded"
+//  LIMITEXCEEDED_TAGNOTENOUGHQUOTA = "LimitExceeded.TagNotEnoughQuota"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
+//  LIMITEXCEEDED_TAGQUOTAEXCEEDED = "LimitExceeded.TagQuotaExceeded"
+//  LIMITEXCEEDED_TAGTAGSEXCEEDED = "LimitExceeded.TagTagsExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//  UNSUPPORTEDOPERATION_PUBLICCLBNOTSUPPORT = "UnsupportedOperation.PublicClbNotSupport"
+//  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
+//  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
+//  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
+//  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTCLB = "UnsupportedOperation.TrafficMirrorNotSupportClb"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) CreateTrafficMirrorWithContext(ctx context.Context, request *CreateTrafficMirrorRequest) (response *CreateTrafficMirrorResponse, err error) {
+    if request == nil {
+        request = NewCreateTrafficMirrorRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateTrafficMirror require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateTrafficMirrorResponse()
     err = c.Send(request, response)
     return
 }
@@ -6864,6 +7131,7 @@ func NewCreateVpnConnectionResponse() (response *CreateVpnConnectionResponse) {
 //  INVALIDPARAMETERVALUE_VPNCONNBGPTUNNELCIDRNOTSUPPORTED = "InvalidParameterValue.VpnConnBgpTunnelCidrNotSupported"
 //  INVALIDPARAMETERVALUE_VPNCONNCIDRCONFLICT = "InvalidParameterValue.VpnConnCidrConflict"
 //  INVALIDPARAMETERVALUE_VPNCONNHEALTHCHECKIPCONFLICT = "InvalidParameterValue.VpnConnHealthCheckIpConflict"
+//  INVALIDPARAMETERVALUE_VPNCONNSPDCIDRCONFLICT = "InvalidParameterValue.VpnConnSpdCidrConflict"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_TAGKEYEXCEEDED = "LimitExceeded.TagKeyExceeded"
 //  LIMITEXCEEDED_TAGKEYPERRESOURCEEXCEEDED = "LimitExceeded.TagKeyPerResourceExceeded"
@@ -6917,6 +7185,7 @@ func (c *Client) CreateVpnConnection(request *CreateVpnConnectionRequest) (respo
 //  INVALIDPARAMETERVALUE_VPNCONNBGPTUNNELCIDRNOTSUPPORTED = "InvalidParameterValue.VpnConnBgpTunnelCidrNotSupported"
 //  INVALIDPARAMETERVALUE_VPNCONNCIDRCONFLICT = "InvalidParameterValue.VpnConnCidrConflict"
 //  INVALIDPARAMETERVALUE_VPNCONNHEALTHCHECKIPCONFLICT = "InvalidParameterValue.VpnConnHealthCheckIpConflict"
+//  INVALIDPARAMETERVALUE_VPNCONNSPDCIDRCONFLICT = "InvalidParameterValue.VpnConnSpdCidrConflict"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_TAGKEYEXCEEDED = "LimitExceeded.TagKeyExceeded"
 //  LIMITEXCEEDED_TAGKEYPERRESOURCEEXCEEDED = "LimitExceeded.TagKeyPerResourceExceeded"
@@ -7915,6 +8184,7 @@ func NewDeleteDirectConnectGatewayResponse() (response *DeleteDirectConnectGatew
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
 //  UNSUPPORTEDOPERATION_DCGATEWAYNATRULEEXISTS = "UnsupportedOperation.DCGatewayNatRuleExists"
+//  UNSUPPORTEDOPERATION_DCGHASFLOWLOG = "UnsupportedOperation.DcgHasFlowLog"
 //  UNSUPPORTEDOPERATION_ROUTETABLEHASSUBNETRULE = "UnsupportedOperation.RouteTableHasSubnetRule"
 func (c *Client) DeleteDirectConnectGateway(request *DeleteDirectConnectGatewayRequest) (response *DeleteDirectConnectGatewayResponse, err error) {
     return c.DeleteDirectConnectGatewayWithContext(context.Background(), request)
@@ -7937,6 +8207,7 @@ func (c *Client) DeleteDirectConnectGateway(request *DeleteDirectConnectGatewayR
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
 //  UNSUPPORTEDOPERATION_DCGATEWAYNATRULEEXISTS = "UnsupportedOperation.DCGatewayNatRuleExists"
+//  UNSUPPORTEDOPERATION_DCGHASFLOWLOG = "UnsupportedOperation.DcgHasFlowLog"
 //  UNSUPPORTEDOPERATION_ROUTETABLEHASSUBNETRULE = "UnsupportedOperation.RouteTableHasSubnetRule"
 func (c *Client) DeleteDirectConnectGatewayWithContext(ctx context.Context, request *DeleteDirectConnectGatewayRequest) (response *DeleteDirectConnectGatewayResponse, err error) {
     if request == nil {
@@ -9739,6 +10010,57 @@ func (c *Client) DeleteTemplateMemberWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDeleteTrafficMirrorRequest() (request *DeleteTrafficMirrorRequest) {
+    request = &DeleteTrafficMirrorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DeleteTrafficMirror")
+    
+    
+    return
+}
+
+func NewDeleteTrafficMirrorResponse() (response *DeleteTrafficMirrorResponse) {
+    response = &DeleteTrafficMirrorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteTrafficMirror
+// 本接口（DeleteTrafficMirror）用于删除流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteTrafficMirror(request *DeleteTrafficMirrorRequest) (response *DeleteTrafficMirrorResponse, err error) {
+    return c.DeleteTrafficMirrorWithContext(context.Background(), request)
+}
+
+// DeleteTrafficMirror
+// 本接口（DeleteTrafficMirror）用于删除流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteTrafficMirrorWithContext(ctx context.Context, request *DeleteTrafficMirrorRequest) (response *DeleteTrafficMirrorResponse, err error) {
+    if request == nil {
+        request = NewDeleteTrafficMirrorRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteTrafficMirror require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteTrafficMirrorResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteTrafficPackagesRequest() (request *DeleteTrafficPackagesRequest) {
     request = &DeleteTrafficPackagesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10429,6 +10751,63 @@ func (c *Client) DescribeAccountAttributesWithContext(ctx context.Context, reque
     return
 }
 
+func NewDescribeAddressBandwidthRangeRequest() (request *DescribeAddressBandwidthRangeRequest) {
+    request = &DescribeAddressBandwidthRangeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeAddressBandwidthRange")
+    
+    
+    return
+}
+
+func NewDescribeAddressBandwidthRangeResponse() (response *DescribeAddressBandwidthRangeResponse) {
+    response = &DescribeAddressBandwidthRangeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAddressBandwidthRange
+// 查询指定EIP的带宽上下限范围。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  UNSUPPORTEDOPERATION_ACCOUNTNOTSUPPORTED = "UnsupportedOperation.AccountNotSupported"
+func (c *Client) DescribeAddressBandwidthRange(request *DescribeAddressBandwidthRangeRequest) (response *DescribeAddressBandwidthRangeResponse, err error) {
+    return c.DescribeAddressBandwidthRangeWithContext(context.Background(), request)
+}
+
+// DescribeAddressBandwidthRange
+// 查询指定EIP的带宽上下限范围。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
+//  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  UNSUPPORTEDOPERATION_ACCOUNTNOTSUPPORTED = "UnsupportedOperation.AccountNotSupported"
+func (c *Client) DescribeAddressBandwidthRangeWithContext(ctx context.Context, request *DescribeAddressBandwidthRangeRequest) (response *DescribeAddressBandwidthRangeResponse, err error) {
+    if request == nil {
+        request = NewDescribeAddressBandwidthRangeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAddressBandwidthRange require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAddressBandwidthRangeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAddressQuotaRequest() (request *DescribeAddressQuotaRequest) {
     request = &DescribeAddressQuotaRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10712,6 +11091,61 @@ func (c *Client) DescribeAssistantCidrWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDescribeAssistantCidrResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBandwidthPackageBandwidthRangeRequest() (request *DescribeBandwidthPackageBandwidthRangeRequest) {
+    request = &DescribeBandwidthPackageBandwidthRangeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeBandwidthPackageBandwidthRange")
+    
+    
+    return
+}
+
+func NewDescribeBandwidthPackageBandwidthRangeResponse() (response *DescribeBandwidthPackageBandwidthRangeResponse) {
+    response = &DescribeBandwidthPackageBandwidthRangeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBandwidthPackageBandwidthRange
+// 查询指定带宽包的带宽上下限范围
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+func (c *Client) DescribeBandwidthPackageBandwidthRange(request *DescribeBandwidthPackageBandwidthRangeRequest) (response *DescribeBandwidthPackageBandwidthRangeResponse, err error) {
+    return c.DescribeBandwidthPackageBandwidthRangeWithContext(context.Background(), request)
+}
+
+// DescribeBandwidthPackageBandwidthRange
+// 查询指定带宽包的带宽上下限范围
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+func (c *Client) DescribeBandwidthPackageBandwidthRangeWithContext(ctx context.Context, request *DescribeBandwidthPackageBandwidthRangeRequest) (response *DescribeBandwidthPackageBandwidthRangeResponse, err error) {
+    if request == nil {
+        request = NewDescribeBandwidthPackageBandwidthRangeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBandwidthPackageBandwidthRange require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBandwidthPackageBandwidthRangeResponse()
     err = c.Send(request, response)
     return
 }
@@ -14213,6 +14647,63 @@ func (c *Client) DescribeRouteConflictsWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeRouteListRequest() (request *DescribeRouteListRequest) {
+    request = &DescribeRouteListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeRouteList")
+    
+    
+    return
+}
+
+func NewDescribeRouteListResponse() (response *DescribeRouteListResponse) {
+    response = &DescribeRouteListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRouteList
+// 本接口（DescribeRouteList）用于查询路由条目列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRouteList(request *DescribeRouteListRequest) (response *DescribeRouteListResponse, err error) {
+    return c.DescribeRouteListWithContext(context.Background(), request)
+}
+
+// DescribeRouteList
+// 本接口（DescribeRouteList）用于查询路由条目列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRouteListWithContext(ctx context.Context, request *DescribeRouteListRequest) (response *DescribeRouteListResponse, err error) {
+    if request == nil {
+        request = NewDescribeRouteListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRouteList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRouteListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRouteTableAssociatedInstancesRequest() (request *DescribeRouteTableAssociatedInstancesRequest) {
     request = &DescribeRouteTableAssociatedInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -15426,6 +15917,63 @@ func (c *Client) DescribeTenantCcnsWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeTenantCcnsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTrafficMirrorsRequest() (request *DescribeTrafficMirrorsRequest) {
+    request = &DescribeTrafficMirrorsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeTrafficMirrors")
+    
+    
+    return
+}
+
+func NewDescribeTrafficMirrorsResponse() (response *DescribeTrafficMirrorsResponse) {
+    response = &DescribeTrafficMirrorsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTrafficMirrors
+// 本接口（DescribeTrafficMirrors）用于查询流量镜像实例信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeTrafficMirrors(request *DescribeTrafficMirrorsRequest) (response *DescribeTrafficMirrorsResponse, err error) {
+    return c.DescribeTrafficMirrorsWithContext(context.Background(), request)
+}
+
+// DescribeTrafficMirrors
+// 本接口（DescribeTrafficMirrors）用于查询流量镜像实例信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeTrafficMirrorsWithContext(ctx context.Context, request *DescribeTrafficMirrorsRequest) (response *DescribeTrafficMirrorsResponse, err error) {
+    if request == nil {
+        request = NewDescribeTrafficMirrorsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTrafficMirrors require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTrafficMirrorsResponse()
     err = c.Send(request, response)
     return
 }
@@ -18001,6 +18549,7 @@ func NewEnableCcnRoutesResponse() (response *EnableCcnRoutesResponse) {
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_CCNROUTECIDROVERLAP = "UnsupportedOperation.CcnRouteCidrOverlap"
 //  UNSUPPORTEDOPERATION_ECMP = "UnsupportedOperation.Ecmp"
 func (c *Client) EnableCcnRoutes(request *EnableCcnRoutesRequest) (response *EnableCcnRoutesResponse, err error) {
     return c.EnableCcnRoutesWithContext(context.Background(), request)
@@ -18014,6 +18563,7 @@ func (c *Client) EnableCcnRoutes(request *EnableCcnRoutesRequest) (response *Ena
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_CCNROUTECIDROVERLAP = "UnsupportedOperation.CcnRouteCidrOverlap"
 //  UNSUPPORTEDOPERATION_ECMP = "UnsupportedOperation.Ecmp"
 func (c *Client) EnableCcnRoutesWithContext(ctx context.Context, request *EnableCcnRoutesRequest) (response *EnableCcnRoutesResponse, err error) {
     if request == nil {
@@ -18668,6 +19218,67 @@ func (c *Client) InquirePriceCreateDirectConnectGatewayWithContext(ctx context.C
     return
 }
 
+func NewInquiryPriceAllocateAddressesRequest() (request *InquiryPriceAllocateAddressesRequest) {
+    request = &InquiryPriceAllocateAddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "InquiryPriceAllocateAddresses")
+    
+    
+    return
+}
+
+func NewInquiryPriceAllocateAddressesResponse() (response *InquiryPriceAllocateAddressesResponse) {
+    response = &InquiryPriceAllocateAddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceAllocateAddresses
+// 本接口（InquiryPriceAllocateAddresses）用于新购弹性公网IP询价。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDREGION = "FailedOperation.InvalidRegion"
+//  INVALIDACCOUNT_NOTSUPPORTED = "InvalidAccount.NotSupported"
+//  INVALIDPARAMETERVALUE_BANDWIDTHOUTOFRANGE = "InvalidParameterValue.BandwidthOutOfRange"
+//  INVALIDPARAMETERVALUE_COMBINATION = "InvalidParameterValue.Combination"
+//  INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
+//  UNSUPPORTEDOPERATION_ACTIONNOTFOUND = "UnsupportedOperation.ActionNotFound"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
+func (c *Client) InquiryPriceAllocateAddresses(request *InquiryPriceAllocateAddressesRequest) (response *InquiryPriceAllocateAddressesResponse, err error) {
+    return c.InquiryPriceAllocateAddressesWithContext(context.Background(), request)
+}
+
+// InquiryPriceAllocateAddresses
+// 本接口（InquiryPriceAllocateAddresses）用于新购弹性公网IP询价。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDREGION = "FailedOperation.InvalidRegion"
+//  INVALIDACCOUNT_NOTSUPPORTED = "InvalidAccount.NotSupported"
+//  INVALIDPARAMETERVALUE_BANDWIDTHOUTOFRANGE = "InvalidParameterValue.BandwidthOutOfRange"
+//  INVALIDPARAMETERVALUE_COMBINATION = "InvalidParameterValue.Combination"
+//  INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
+//  UNSUPPORTEDOPERATION_ACTIONNOTFOUND = "UnsupportedOperation.ActionNotFound"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
+func (c *Client) InquiryPriceAllocateAddressesWithContext(ctx context.Context, request *InquiryPriceAllocateAddressesRequest) (response *InquiryPriceAllocateAddressesResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceAllocateAddressesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceAllocateAddresses require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceAllocateAddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewInquiryPriceCreateVpnGatewayRequest() (request *InquiryPriceCreateVpnGatewayRequest) {
     request = &InquiryPriceCreateVpnGatewayRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -18715,6 +19326,116 @@ func (c *Client) InquiryPriceCreateVpnGatewayWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewInquiryPriceCreateVpnGatewayResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquiryPriceModifyAddressesBandwidthRequest() (request *InquiryPriceModifyAddressesBandwidthRequest) {
+    request = &InquiryPriceModifyAddressesBandwidthRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "InquiryPriceModifyAddressesBandwidth")
+    
+    
+    return
+}
+
+func NewInquiryPriceModifyAddressesBandwidthResponse() (response *InquiryPriceModifyAddressesBandwidthResponse) {
+    response = &InquiryPriceModifyAddressesBandwidthResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceModifyAddressesBandwidth
+// EIP修改带宽询价
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  INVALIDPARAMETERVALUE_BANDWIDTHOUTOFRANGE = "InvalidParameterValue.BandwidthOutOfRange"
+//  INVALIDPARAMETERVALUE_BANDWIDTHTOOSMALL = "InvalidParameterValue.BandwidthTooSmall"
+//  INVALIDPARAMETERVALUE_RESOURCEEXPIRED = "InvalidParameterValue.ResourceExpired"
+//  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
+func (c *Client) InquiryPriceModifyAddressesBandwidth(request *InquiryPriceModifyAddressesBandwidthRequest) (response *InquiryPriceModifyAddressesBandwidthResponse, err error) {
+    return c.InquiryPriceModifyAddressesBandwidthWithContext(context.Background(), request)
+}
+
+// InquiryPriceModifyAddressesBandwidth
+// EIP修改带宽询价
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  INVALIDPARAMETERVALUE_BANDWIDTHOUTOFRANGE = "InvalidParameterValue.BandwidthOutOfRange"
+//  INVALIDPARAMETERVALUE_BANDWIDTHTOOSMALL = "InvalidParameterValue.BandwidthTooSmall"
+//  INVALIDPARAMETERVALUE_RESOURCEEXPIRED = "InvalidParameterValue.ResourceExpired"
+//  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
+func (c *Client) InquiryPriceModifyAddressesBandwidthWithContext(ctx context.Context, request *InquiryPriceModifyAddressesBandwidthRequest) (response *InquiryPriceModifyAddressesBandwidthResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceModifyAddressesBandwidthRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceModifyAddressesBandwidth require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceModifyAddressesBandwidthResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquiryPriceRenewAddressesRequest() (request *InquiryPriceRenewAddressesRequest) {
+    request = &InquiryPriceRenewAddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "InquiryPriceRenewAddresses")
+    
+    
+    return
+}
+
+func NewInquiryPriceRenewAddressesResponse() (response *InquiryPriceRenewAddressesResponse) {
+    response = &InquiryPriceRenewAddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceRenewAddresses
+// 本接口（InquiryPriceRenewAddresses）用于续费预付费弹性公网IP询价。
+//
+// 可能返回的错误码:
+//  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  UNSUPPORTEDOPERATION_INVALIDADDRESSINTERNETCHARGETYPE = "UnsupportedOperation.InvalidAddressInternetChargeType"
+func (c *Client) InquiryPriceRenewAddresses(request *InquiryPriceRenewAddressesRequest) (response *InquiryPriceRenewAddressesResponse, err error) {
+    return c.InquiryPriceRenewAddressesWithContext(context.Background(), request)
+}
+
+// InquiryPriceRenewAddresses
+// 本接口（InquiryPriceRenewAddresses）用于续费预付费弹性公网IP询价。
+//
+// 可能返回的错误码:
+//  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  UNSUPPORTEDOPERATION_INVALIDADDRESSINTERNETCHARGETYPE = "UnsupportedOperation.InvalidAddressInternetChargeType"
+func (c *Client) InquiryPriceRenewAddressesWithContext(ctx context.Context, request *InquiryPriceRenewAddressesRequest) (response *InquiryPriceRenewAddressesResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceRenewAddressesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceRenewAddresses require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceRenewAddressesResponse()
     err = c.Send(request, response)
     return
 }
@@ -19589,6 +20310,7 @@ func NewModifyAssistantCidrResponse() (response *ModifyAssistantCidrResponse) {
 //  INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAPASSISTCIDR = "InvalidParameterValue.SubnetOverlapAssistCidr"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -19608,6 +20330,7 @@ func (c *Client) ModifyAssistantCidr(request *ModifyAssistantCidrRequest) (respo
 //  INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
 //  INVALIDPARAMETERVALUE_SUBNETOVERLAPASSISTCIDR = "InvalidParameterValue.SubnetOverlapAssistCidr"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -22626,6 +23349,65 @@ func (c *Client) ModifyTemplateMemberWithContext(ctx context.Context, request *M
     return
 }
 
+func NewModifyTrafficMirrorAttributeRequest() (request *ModifyTrafficMirrorAttributeRequest) {
+    request = &ModifyTrafficMirrorAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyTrafficMirrorAttribute")
+    
+    
+    return
+}
+
+func NewModifyTrafficMirrorAttributeResponse() (response *ModifyTrafficMirrorAttributeResponse) {
+    response = &ModifyTrafficMirrorAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyTrafficMirrorAttribute
+// 本接口（ModifyTrafficMirrorAttribute）用于修改流量镜像实例属性。
+//
+// 注意：只支持修改名字和描述信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyTrafficMirrorAttribute(request *ModifyTrafficMirrorAttributeRequest) (response *ModifyTrafficMirrorAttributeResponse, err error) {
+    return c.ModifyTrafficMirrorAttributeWithContext(context.Background(), request)
+}
+
+// ModifyTrafficMirrorAttribute
+// 本接口（ModifyTrafficMirrorAttribute）用于修改流量镜像实例属性。
+//
+// 注意：只支持修改名字和描述信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyTrafficMirrorAttributeWithContext(ctx context.Context, request *ModifyTrafficMirrorAttributeRequest) (response *ModifyTrafficMirrorAttributeResponse, err error) {
+    if request == nil {
+        request = NewModifyTrafficMirrorAttributeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyTrafficMirrorAttribute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyTrafficMirrorAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyVpcAttributeRequest() (request *ModifyVpcAttributeRequest) {
     request = &ModifyVpcAttributeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -24185,7 +24967,7 @@ func NewReplaceCcnRouteTableInputPolicysResponse() (response *ReplaceCcnRouteTab
 //
 // 
 //
-// - 实例类型: `instance-type`，可选值：私有网络 `VPC`、专线网关 `DIRECTCONNECT`、专线网关 `VPNGW`
+// - 实例类型: `instance-type`，可选值：私有网络 `VPC`、专线网关 `DIRECTCONNECT`、VPN网关 `VPNGW`
 //
 // - 实例ID: `instance-id`，例如：`dcg-8zljkrft`、`vpc-jdevjrup`，暂不支持 `Edge` 实例
 //
@@ -24229,7 +25011,7 @@ func (c *Client) ReplaceCcnRouteTableInputPolicys(request *ReplaceCcnRouteTableI
 //
 // 
 //
-// - 实例类型: `instance-type`，可选值：私有网络 `VPC`、专线网关 `DIRECTCONNECT`、专线网关 `VPNGW`
+// - 实例类型: `instance-type`，可选值：私有网络 `VPC`、专线网关 `DIRECTCONNECT`、VPN网关 `VPNGW`
 //
 // - 实例ID: `instance-id`，例如：`dcg-8zljkrft`、`vpc-jdevjrup`，暂不支持 `Edge` 实例
 //
@@ -24539,7 +25321,9 @@ func NewReplaceRoutesResponse() (response *ReplaceRoutesResponse) {
 //  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
@@ -24562,7 +25346,9 @@ func (c *Client) ReplaceRoutes(request *ReplaceRoutesRequest) (response *Replace
 //  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
@@ -24973,8 +25759,10 @@ func NewResetRoutesResponse() (response *ResetRoutesResponse) {
 //  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
@@ -24993,8 +25781,10 @@ func (c *Client) ResetRoutes(request *ResetRoutesRequest) (response *ResetRoutes
 //  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
@@ -25013,6 +25803,207 @@ func (c *Client) ResetRoutesWithContext(ctx context.Context, request *ResetRoute
     request.SetContext(ctx)
     
     response = NewResetRoutesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetTrafficMirrorFilterRequest() (request *ResetTrafficMirrorFilterRequest) {
+    request = &ResetTrafficMirrorFilterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ResetTrafficMirrorFilter")
+    
+    
+    return
+}
+
+func NewResetTrafficMirrorFilterResponse() (response *ResetTrafficMirrorFilterResponse) {
+    response = &ResetTrafficMirrorFilterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetTrafficMirrorFilter
+// 本接口（ResetTrafficMirrorFilter）用于更新流量镜像实例过滤规则。
+//
+// 注意：每一个流量镜像实例，不能同时支持按nat网关和五元组两种规则过滤
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTRAFFICMIRRORACTION = "InvalidParameterValue.UnsupportedTrafficMirrorAction"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ResetTrafficMirrorFilter(request *ResetTrafficMirrorFilterRequest) (response *ResetTrafficMirrorFilterResponse, err error) {
+    return c.ResetTrafficMirrorFilterWithContext(context.Background(), request)
+}
+
+// ResetTrafficMirrorFilter
+// 本接口（ResetTrafficMirrorFilter）用于更新流量镜像实例过滤规则。
+//
+// 注意：每一个流量镜像实例，不能同时支持按nat网关和五元组两种规则过滤
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTRAFFICMIRRORACTION = "InvalidParameterValue.UnsupportedTrafficMirrorAction"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ResetTrafficMirrorFilterWithContext(ctx context.Context, request *ResetTrafficMirrorFilterRequest) (response *ResetTrafficMirrorFilterResponse, err error) {
+    if request == nil {
+        request = NewResetTrafficMirrorFilterRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetTrafficMirrorFilter require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetTrafficMirrorFilterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetTrafficMirrorSrcsRequest() (request *ResetTrafficMirrorSrcsRequest) {
+    request = &ResetTrafficMirrorSrcsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ResetTrafficMirrorSrcs")
+    
+    
+    return
+}
+
+func NewResetTrafficMirrorSrcsResponse() (response *ResetTrafficMirrorSrcsResponse) {
+    response = &ResetTrafficMirrorSrcsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetTrafficMirrorSrcs
+// 本接口（ResetTrafficMirrorSrcs）用于重置流量镜像实例采集对象。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETER_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameter.UnsupportedLbTrafficMirrorAz"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  INVALIDPARAMETERVALUE_OBJECTVPCNOTCURRENTVPC = "InvalidParameterValue.ObjectVpcNotCurrentVpc"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameterValue.UnsupportedLbTrafficMirrorAz"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) ResetTrafficMirrorSrcs(request *ResetTrafficMirrorSrcsRequest) (response *ResetTrafficMirrorSrcsResponse, err error) {
+    return c.ResetTrafficMirrorSrcsWithContext(context.Background(), request)
+}
+
+// ResetTrafficMirrorSrcs
+// 本接口（ResetTrafficMirrorSrcs）用于重置流量镜像实例采集对象。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
+//  INVALIDPARAMETER_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameter.UnsupportedLbTrafficMirrorAz"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  INVALIDPARAMETERVALUE_OBJECTVPCNOTCURRENTVPC = "InvalidParameterValue.ObjectVpcNotCurrentVpc"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameterValue.UnsupportedLbTrafficMirrorAz"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) ResetTrafficMirrorSrcsWithContext(ctx context.Context, request *ResetTrafficMirrorSrcsRequest) (response *ResetTrafficMirrorSrcsResponse, err error) {
+    if request == nil {
+        request = NewResetTrafficMirrorSrcsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetTrafficMirrorSrcs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetTrafficMirrorSrcsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetTrafficMirrorTargetRequest() (request *ResetTrafficMirrorTargetRequest) {
+    request = &ResetTrafficMirrorTargetRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ResetTrafficMirrorTarget")
+    
+    
+    return
+}
+
+func NewResetTrafficMirrorTargetResponse() (response *ResetTrafficMirrorTargetResponse) {
+    response = &ResetTrafficMirrorTargetResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetTrafficMirrorTarget
+// 本接口（ResetTrafficMirrorTarget）用于更新流量镜像实例的接收目的信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//  INVALIDPARAMETERVALUE_INVALIDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.InvalidLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//  UNSUPPORTEDOPERATION_PUBLICCLBNOTSUPPORT = "UnsupportedOperation.PublicClbNotSupport"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTCLB = "UnsupportedOperation.TrafficMirrorNotSupportClb"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) ResetTrafficMirrorTarget(request *ResetTrafficMirrorTargetRequest) (response *ResetTrafficMirrorTargetResponse, err error) {
+    return c.ResetTrafficMirrorTargetWithContext(context.Background(), request)
+}
+
+// ResetTrafficMirrorTarget
+// 本接口（ResetTrafficMirrorTarget）用于更新流量镜像实例的接收目的信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//  INVALIDPARAMETERVALUE_INVALIDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.InvalidLbTrafficMirrorReciverEndpoint"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//  UNSUPPORTEDOPERATION_PUBLICCLBNOTSUPPORT = "UnsupportedOperation.PublicClbNotSupport"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTCLB = "UnsupportedOperation.TrafficMirrorNotSupportClb"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) ResetTrafficMirrorTargetWithContext(ctx context.Context, request *ResetTrafficMirrorTargetRequest) (response *ResetTrafficMirrorTargetResponse, err error) {
+    if request == nil {
+        request = NewResetTrafficMirrorTargetRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetTrafficMirrorTarget require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetTrafficMirrorTargetResponse()
     err = c.Send(request, response)
     return
 }
@@ -25347,6 +26338,108 @@ func (c *Client) SetVpnGatewaysRenewFlagWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewSetVpnGatewaysRenewFlagResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartTrafficMirrorRequest() (request *StartTrafficMirrorRequest) {
+    request = &StartTrafficMirrorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "StartTrafficMirror")
+    
+    
+    return
+}
+
+func NewStartTrafficMirrorResponse() (response *StartTrafficMirrorResponse) {
+    response = &StartTrafficMirrorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartTrafficMirror
+// 本接口（StartTrafficMirror）用于开启流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) StartTrafficMirror(request *StartTrafficMirrorRequest) (response *StartTrafficMirrorResponse, err error) {
+    return c.StartTrafficMirrorWithContext(context.Background(), request)
+}
+
+// StartTrafficMirror
+// 本接口（StartTrafficMirror）用于开启流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) StartTrafficMirrorWithContext(ctx context.Context, request *StartTrafficMirrorRequest) (response *StartTrafficMirrorResponse, err error) {
+    if request == nil {
+        request = NewStartTrafficMirrorRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartTrafficMirror require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartTrafficMirrorResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopTrafficMirrorRequest() (request *StopTrafficMirrorRequest) {
+    request = &StopTrafficMirrorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "StopTrafficMirror")
+    
+    
+    return
+}
+
+func NewStopTrafficMirrorResponse() (response *StopTrafficMirrorResponse) {
+    response = &StopTrafficMirrorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopTrafficMirror
+// 本接口（StopTrafficMirror）用于关闭流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) StopTrafficMirror(request *StopTrafficMirrorRequest) (response *StopTrafficMirrorResponse, err error) {
+    return c.StopTrafficMirrorWithContext(context.Background(), request)
+}
+
+// StopTrafficMirror
+// 本接口（StopTrafficMirror）用于关闭流量镜像实例。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) StopTrafficMirrorWithContext(ctx context.Context, request *StopTrafficMirrorRequest) (response *StopTrafficMirrorResponse, err error) {
+    if request == nil {
+        request = NewStopTrafficMirrorRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopTrafficMirror require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopTrafficMirrorResponse()
     err = c.Send(request, response)
     return
 }
@@ -25824,6 +26917,130 @@ func (c *Client) UnlockCcnsWithContext(ctx context.Context, request *UnlockCcnsR
     request.SetContext(ctx)
     
     response = NewUnlockCcnsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateTrafficMirrorAllFilterRequest() (request *UpdateTrafficMirrorAllFilterRequest) {
+    request = &UpdateTrafficMirrorAllFilterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "UpdateTrafficMirrorAllFilter")
+    
+    
+    return
+}
+
+func NewUpdateTrafficMirrorAllFilterResponse() (response *UpdateTrafficMirrorAllFilterResponse) {
+    response = &UpdateTrafficMirrorAllFilterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateTrafficMirrorAllFilter
+// 本接口（UpdateTrafficMirrorAllFilter）用于更新流量镜像实例的过滤规则或者采集对象。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  INVALIDPARAMETERVALUE_OBJECTUSEINTRAFFICMIRROR = "InvalidParameterValue.ObjectUseInTrafficMirror"
+//  INVALIDPARAMETERVALUE_OBJECTVPCNOTCURRENTVPC = "InvalidParameterValue.ObjectVpcNotCurrentVpc"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTRAFFICMIRRORACTION = "InvalidParameterValue.UnsupportedTrafficMirrorAction"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) UpdateTrafficMirrorAllFilter(request *UpdateTrafficMirrorAllFilterRequest) (response *UpdateTrafficMirrorAllFilterResponse, err error) {
+    return c.UpdateTrafficMirrorAllFilterWithContext(context.Background(), request)
+}
+
+// UpdateTrafficMirrorAllFilter
+// 本接口（UpdateTrafficMirrorAllFilter）用于更新流量镜像实例的过滤规则或者采集对象。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
+//  INVALIDPARAMETERVALUE_OBJECTUSEINTRAFFICMIRROR = "InvalidParameterValue.ObjectUseInTrafficMirror"
+//  INVALIDPARAMETERVALUE_OBJECTVPCNOTCURRENTVPC = "InvalidParameterValue.ObjectVpcNotCurrentVpc"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTRAFFICMIRRORACTION = "InvalidParameterValue.UnsupportedTrafficMirrorAction"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
+func (c *Client) UpdateTrafficMirrorAllFilterWithContext(ctx context.Context, request *UpdateTrafficMirrorAllFilterRequest) (response *UpdateTrafficMirrorAllFilterResponse, err error) {
+    if request == nil {
+        request = NewUpdateTrafficMirrorAllFilterRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateTrafficMirrorAllFilter require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateTrafficMirrorAllFilterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateTrafficMirrorDirectionRequest() (request *UpdateTrafficMirrorDirectionRequest) {
+    request = &UpdateTrafficMirrorDirectionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "UpdateTrafficMirrorDirection")
+    
+    
+    return
+}
+
+func NewUpdateTrafficMirrorDirectionResponse() (response *UpdateTrafficMirrorDirectionResponse) {
+    response = &UpdateTrafficMirrorDirectionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateTrafficMirrorDirection
+// 本接口（UpdateTrafficMirrorDirection）用于更新流量镜像实例的采集方向。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTRAFFICMIRRORACTION = "InvalidParameterValue.UnsupportedTrafficMirrorAction"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdateTrafficMirrorDirection(request *UpdateTrafficMirrorDirectionRequest) (response *UpdateTrafficMirrorDirectionResponse, err error) {
+    return c.UpdateTrafficMirrorDirectionWithContext(context.Background(), request)
+}
+
+// UpdateTrafficMirrorDirection
+// 本接口（UpdateTrafficMirrorDirection）用于更新流量镜像实例的采集方向。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTRAFFICMIRRORACTION = "InvalidParameterValue.UnsupportedTrafficMirrorAction"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdateTrafficMirrorDirectionWithContext(ctx context.Context, request *UpdateTrafficMirrorDirectionRequest) (response *UpdateTrafficMirrorDirectionResponse, err error) {
+    if request == nil {
+        request = NewUpdateTrafficMirrorDirectionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateTrafficMirrorDirection require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateTrafficMirrorDirectionResponse()
     err = c.Send(request, response)
     return
 }
