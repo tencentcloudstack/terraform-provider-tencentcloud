@@ -60,6 +60,10 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `dns_pod_domain` - Internet address domain name.
+* `ro_group` - Read only group.
+  * `dns_pod_domain` - Internet address domain name.
+  * `tgw_wan_vport` - External port number.
+* `tgw_wan_vport` - External port number.
 
 

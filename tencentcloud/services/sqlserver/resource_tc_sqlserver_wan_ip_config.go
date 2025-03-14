@@ -40,6 +40,40 @@ func ResourceTencentCloudSqlserverWanIpConfig() *schema.Resource {
 				Required:    true,
 				Description: "Whether to open wan ip, true: enable; false: disable.",
 			},
+
+			// computed
+			"dns_pod_domain": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Internet address domain name.",
+			},
+
+			"tgw_wan_vport": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "External port number.",
+			},
+
+			"ro_group": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Read only group.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dns_pod_domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Internet address domain name.",
+						},
+
+						"tgw_wan_vport": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "External port number.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -73,6 +107,72 @@ func resourceTencentCloudSqlserverWanIpConfigCreate(d *schema.ResourceData, meta
 func resourceTencentCloudSqlserverWanIpConfigRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_sqlserver_wan_ip_config.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
+	var (
+		logId            = tccommon.GetLogId(tccommon.ContextNil)
+		ctx              = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		sqlserverService = SqlserverService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId       string
+		roGroupId        string
+	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 1 {
+		instanceId = idSplit[0]
+	} else if len(idSplit) == 2 {
+		instanceId = idSplit[0]
+		roGroupId = idSplit[1]
+	} else {
+		return fmt.Errorf("tencentcloud_sqlserver_wan_ip_config id is broken, id is %s", d.Id())
+	}
+
+	instance, has, err := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if !has {
+		d.SetId("")
+		return nil
+	}
+
+	if instance.DnsPodDomain != nil {
+		_ = d.Set("dns_pod_domain", instance.DnsPodDomain)
+	}
+
+	if instance.TgwWanVPort != nil {
+		_ = d.Set("tgw_wan_vport", instance.TgwWanVPort)
+	}
+
+	if roGroupId != "" {
+		roGroupList, err := sqlserverService.DescribeReadonlyGroupList(ctx, instanceId)
+		if err != nil {
+			return err
+		}
+
+		if roGroupList == nil {
+			d.SetId("")
+			log.Printf("[WARN]%s resource `SqlservereReadonlyGroup` [%s] not found, please check if it has been deleted.", logId, d.Id())
+			return nil
+		}
+
+		tmpList := make([]map[string]interface{}, 0, len(roGroupList))
+		for _, v := range roGroupList {
+			dMap := map[string]interface{}{}
+			if v.ReadOnlyGroupId != nil && *v.ReadOnlyGroupId == roGroupId {
+				if v.DnsPodDomain != nil {
+					dMap["dns_pod_domain"] = v.DnsPodDomain
+				}
+
+				if v.TgwWanVPort != nil {
+					dMap["tgw_wan_vport"] = v.TgwWanVPort
+				}
+
+				tmpList = append(tmpList, dMap)
+			}
+		}
+
+		_ = d.Set("ro_group", tmpList)
+	}
 
 	return nil
 }
