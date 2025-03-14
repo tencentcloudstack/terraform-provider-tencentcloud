@@ -1050,6 +1050,7 @@ tencentcloud_sqlserver_start_xevent
 tencentcloud_sqlserver_instance_tde
 tencentcloud_sqlserver_database_tde
 tencentcloud_sqlserver_general_cloud_ro_instance
+tencentcloud_sqlserver_wan_ip_config
 
 SSL Certificates(ssl)
 Data Source

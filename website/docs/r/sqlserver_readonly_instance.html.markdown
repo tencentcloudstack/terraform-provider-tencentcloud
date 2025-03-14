@@ -99,11 +99,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the SQL Server instance.
+* `dns_pod_domain` - Internet address domain name.
 * `engine_version` - Version of the SQL Server database engine.
 * `ha_type` - Instance type.
 * `project_id` - Project ID.
 * `ro_flag` - Readonly flag. `RO` (read-only instance), `MASTER` (primary instance with read-only instances). If it is left empty, it refers to an instance which is not read-only and has no RO group.
 * `status` - Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.
+* `tgw_wan_vport` - External port number.
 * `vip` - IP for private access.
 * `vport` - Port for private access.
 
