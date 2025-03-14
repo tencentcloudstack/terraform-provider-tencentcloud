@@ -4,31 +4,43 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_cluster_endpoint"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_cluster_endpoint"
 description: |-
-  Provide a resource to create a KubernetesClusterEndpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
+  Provide a resource to create a kubernetes cluster endpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
 ---
 
 # tencentcloud_kubernetes_cluster_endpoint
 
-Provide a resource to create a KubernetesClusterEndpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
+Provide a resource to create a kubernetes cluster endpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
 
 ~> **NOTE:** Recommend using `depends_on` to make sure endpoint create after node pools or workers does.
 
 ## Example Usage
 
-```hcl
-resource "tencentcloud_kubernetes_node_pool" "pool1" {}
+### Open intranet access for kubernetes cluster
 
-resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
-  cluster_id       = "cls-xxxxxxxx"
-  cluster_internet = true
-  cluster_intranet = true
-  # managed_cluster_internet_security_policies = [
-  "192.168.0.0/24"
-]
-cluster_intranet_subnet_id = "subnet-xxxxxxxx"
-depends_on = [
-  tencentcloud_kubernetes_node_pool.pool1
-]
+```hcl
+resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
+  cluster_id                 = "cls-fdy7hm1q"
+  cluster_intranet           = true
+  cluster_intranet_subnet_id = "subnet-7nl0sswi"
+  cluster_intranet_domain    = "intranet_demo.com"
+}
+```
+
+### Open internet access for kubernetes cluster
+
+```hcl
+resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
+  cluster_id                      = "cls-fdy7hm1q"
+  cluster_internet                = true
+  cluster_internet_security_group = "sg-e6a8xxib"
+  cluster_internet_domain         = "internet_demo.com"
+  extensive_parameters = jsonencode({
+    "AddressIPVersion" : "IPV4",
+    "InternetAccessible" : {
+      "InternetChargeType" : "TRAFFIC_POSTPAID_BY_HOUR",
+      "InternetMaxBandwidthOut" : 10
+    }
+  })
 }
 ```
 
@@ -59,11 +71,4 @@ In addition to all arguments above, the following attributes are exported:
 * `pgw_endpoint` - The Intranet address used for access.
 * `user_name` - User name of account.
 
-
-## Import
-
-KubernetesClusterEndpoint instance can be imported by passing cluster id, e.g.
-```
-$ terraform import tencentcloud_kubernetes_cluster_endpoint.test cluster-id
-```
 

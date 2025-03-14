@@ -21,9 +21,6 @@ func ResourceTencentCloudTkeClusterEndpoint() *schema.Resource {
 		Create: resourceTencentCloudTkeClusterEndpointCreate,
 		Update: resourceTencentCloudTkeClusterEndpointUpdate,
 		Delete: resourceTencentCloudTkeClusterEndpointDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -378,6 +375,11 @@ func resourceTencentCloudTkeClusterEndpointDelete(d *schema.ResourceData, meta i
 		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, "", false, "")
 		if err != nil {
 			errs = *multierror.Append(err)
+		} else {
+			taskErr := waitForClusterEndpointFinish(ctx, &service, id, false, false)
+			if taskErr != nil {
+				errs = *multierror.Append(taskErr)
+			}
 		}
 	}
 
