@@ -240,7 +240,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 		params["disk-charge-type"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 
-	if v, ok := d.GetOk("portable"); ok {
+	if v, ok := d.GetOkExists("portable"); ok {
 		if v.(bool) {
 			params["portable"] = "TRUE"
 		} else {
