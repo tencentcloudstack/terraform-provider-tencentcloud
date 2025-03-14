@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_instance: Array `ordered_security_groups` element "" is not allowed.
+```
