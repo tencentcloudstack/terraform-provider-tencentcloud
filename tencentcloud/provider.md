@@ -1286,6 +1286,7 @@ tencentcloud_route_table_entry
 tencentcloud_dnat
 tencentcloud_nat_gateway
 tencentcloud_nat_gateway_snat
+tencentcloud_nat_gateway_flow_monitor
 tencentcloud_nat_refresh_nat_dc_route
 tencentcloud_ha_vip
 tencentcloud_ha_vip_eip_attachment

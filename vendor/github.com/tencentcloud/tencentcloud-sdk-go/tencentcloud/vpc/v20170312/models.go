@@ -152,7 +152,6 @@ type AccessPolicy struct {
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// Remark
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 }
 
@@ -494,8 +493,10 @@ type AddressInfo struct {
 	Address *string `json:"Address,omitnil,omitempty" name:"Address"`
 
 	// 备注。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 更新时间。
+	UpdatedTime *string `json:"UpdatedTime,omitnil,omitempty" name:"UpdatedTime"`
 }
 
 type AddressTemplate struct {
@@ -511,11 +512,13 @@ type AddressTemplate struct {
 	// 创建时间。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
+	// 最后更新时间。
+	UpdatedTime *string `json:"UpdatedTime,omitnil,omitempty" name:"UpdatedTime"`
+
 	// 带备注的IP地址信息。
 	AddressExtraSet []*AddressInfo `json:"AddressExtraSet,omitnil,omitempty" name:"AddressExtraSet"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -532,11 +535,13 @@ type AddressTemplateGroup struct {
 	// 创建时间。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
+	// 最后更新时间。
+	UpdatedTime *string `json:"UpdatedTime,omitnil,omitempty" name:"UpdatedTime"`
+
 	// IP地址模板实例。
 	AddressTemplateSet []*AddressTemplateItem `json:"AddressTemplateSet,omitnil,omitempty" name:"AddressTemplateSet"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -544,14 +549,20 @@ type AddressTemplateItem struct {
 	// IP地址模板ID
 	AddressTemplateId *string `json:"AddressTemplateId,omitnil,omitempty" name:"AddressTemplateId"`
 
-	// IP模板名称
+	// IP模板名称，废弃字段。
 	AddressTemplateName *string `json:"AddressTemplateName,omitnil,omitempty" name:"AddressTemplateName"`
 
-	// 废弃字段
+	// 废弃字段。
 	From *string `json:"From,omitnil,omitempty" name:"From"`
 
 	// 废弃字段
 	To *string `json:"To,omitnil,omitempty" name:"To"`
+
+	// 备注。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 最后更新时间。
+	UpdatedTime *string `json:"UpdatedTime,omitnil,omitempty" name:"UpdatedTime"`
 }
 
 type AddressTemplateSpecification struct {
@@ -1036,16 +1047,16 @@ func (r *AllocateIPv6AddressesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AllocateIp6AddressesBandwidthRequestParams struct {
-	// 需要开通公网访问能力的IPV6地址
+	// 需要开通公网访问能力的IPv6地址
 	Ip6Addresses []*string `json:"Ip6Addresses,omitnil,omitempty" name:"Ip6Addresses"`
 
 	// 带宽，单位Mbps。默认是1Mbps
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
-	// 网络计费模式。IPV6当前支持"TRAFFIC_POSTPAID_BY_HOUR"，"BANDWIDTH_PACKAGE"。默认网络计费模式是"TRAFFIC_POSTPAID_BY_HOUR"。
+	// 网络计费模式。IPv6当前支持"TRAFFIC_POSTPAID_BY_HOUR"，"BANDWIDTH_PACKAGE"。默认网络计费模式是"TRAFFIC_POSTPAID_BY_HOUR"。
 	InternetChargeType *string `json:"InternetChargeType,omitnil,omitempty" name:"InternetChargeType"`
 
-	// 带宽包id，上移账号，申请带宽包计费模式的ipv6地址需要传入.
+	// 带宽包id，上移账号，申请带宽包计费模式的IPv6地址需要传入.
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
 	// 需要关联的标签列表。	
@@ -1055,16 +1066,16 @@ type AllocateIp6AddressesBandwidthRequestParams struct {
 type AllocateIp6AddressesBandwidthRequest struct {
 	*tchttp.BaseRequest
 	
-	// 需要开通公网访问能力的IPV6地址
+	// 需要开通公网访问能力的IPv6地址
 	Ip6Addresses []*string `json:"Ip6Addresses,omitnil,omitempty" name:"Ip6Addresses"`
 
 	// 带宽，单位Mbps。默认是1Mbps
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
-	// 网络计费模式。IPV6当前支持"TRAFFIC_POSTPAID_BY_HOUR"，"BANDWIDTH_PACKAGE"。默认网络计费模式是"TRAFFIC_POSTPAID_BY_HOUR"。
+	// 网络计费模式。IPv6当前支持"TRAFFIC_POSTPAID_BY_HOUR"，"BANDWIDTH_PACKAGE"。默认网络计费模式是"TRAFFIC_POSTPAID_BY_HOUR"。
 	InternetChargeType *string `json:"InternetChargeType,omitnil,omitempty" name:"InternetChargeType"`
 
-	// 带宽包id，上移账号，申请带宽包计费模式的ipv6地址需要传入.
+	// 带宽包id，上移账号，申请带宽包计费模式的IPv6地址需要传入.
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
 	// 需要关联的标签列表。	
@@ -1096,7 +1107,7 @@ func (r *AllocateIp6AddressesBandwidthRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AllocateIp6AddressesBandwidthResponseParams struct {
-	// 弹性公网 IPV6 的唯一 ID 列表。
+	// 传统弹性公网 IPv6 的唯一 ID 列表。
 	AddressSet []*string `json:"AddressSet,omitnil,omitempty" name:"AddressSet"`
 
 	// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
@@ -1445,7 +1456,7 @@ type AssociateAddressRequestParams struct {
 	// 指定绑定时是否设置直通。弹性公网 IP 直通请参见 [EIP 直通](https://cloud.tencent.com/document/product/1199/41709)。取值：True、False，默认值为 False。当绑定 CVM 实例、EKS 弹性集群时，可设定此参数为 True。此参数目前处于内测中，如需使用，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&level3_id=1071&queue=96&scene_code=34639&step=2)。
 	EipDirectConnection *bool `json:"EipDirectConnection,omitnil,omitempty" name:"EipDirectConnection"`
 
-	// 要绑定的实例所在的地域
+	// 要绑定的实例所在地域。默认无需填写，仅限GAAP特殊场景需指定实例所在地域。
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 }
 
@@ -1467,7 +1478,7 @@ type AssociateAddressRequest struct {
 	// 指定绑定时是否设置直通。弹性公网 IP 直通请参见 [EIP 直通](https://cloud.tencent.com/document/product/1199/41709)。取值：True、False，默认值为 False。当绑定 CVM 实例、EKS 弹性集群时，可设定此参数为 True。此参数目前处于内测中，如需使用，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&level3_id=1071&queue=96&scene_code=34639&step=2)。
 	EipDirectConnection *bool `json:"EipDirectConnection,omitnil,omitempty" name:"EipDirectConnection"`
 
-	// 要绑定的实例所在的地域
+	// 要绑定的实例所在地域。默认无需填写，仅限GAAP特殊场景需指定实例所在地域。
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 }
 
@@ -2383,6 +2394,17 @@ type BandwidthPackageBillBandwidth struct {
 	BandwidthUsage *float64 `json:"BandwidthUsage,omitnil,omitempty" name:"BandwidthUsage"`
 }
 
+type BandwidthRange struct {
+	// 资源ID。
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 带宽下限，单位：Mbps。
+	BandwidthLowerLimit *uint64 `json:"BandwidthLowerLimit,omitnil,omitempty" name:"BandwidthLowerLimit"`
+
+	// 带宽上限，单位：Mbps。
+	BandwidthUpperLimit *uint64 `json:"BandwidthUpperLimit,omitnil,omitempty" name:"BandwidthUpperLimit"`
+}
+
 type BatchModifySnapshotPolicy struct {
 	// 快照策略Id。
 	SnapshotPolicyId *string `json:"SnapshotPolicyId,omitnil,omitempty" name:"SnapshotPolicyId"`
@@ -2410,23 +2432,18 @@ type BgpConfig struct {
 
 type BgpConfigAndAsn struct {
 	// BGP通道CIDR
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TunnelCidr *string `json:"TunnelCidr,omitnil,omitempty" name:"TunnelCidr"`
 
 	// 本端BGP IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalBgpIp *string `json:"LocalBgpIp,omitnil,omitempty" name:"LocalBgpIp"`
 
 	// 对端BGP IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteBgpIp *string `json:"RemoteBgpIp,omitnil,omitempty" name:"RemoteBgpIp"`
 
 	// 本端BGP ASN号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalBgpAsn *string `json:"LocalBgpAsn,omitnil,omitempty" name:"LocalBgpAsn"`
 
 	// 对端BGP ASN号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteBgpAsn *string `json:"RemoteBgpAsn,omitnil,omitempty" name:"RemoteBgpAsn"`
 }
 
@@ -2562,82 +2579,69 @@ type CcnBandwidth struct {
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
 	// 实例的创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 实例的过期时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpiredTime *string `json:"ExpiredTime,omitnil,omitempty" name:"ExpiredTime"`
 
 	// 带宽实例的唯一ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RegionFlowControlId *string `json:"RegionFlowControlId,omitnil,omitempty" name:"RegionFlowControlId"`
 
 	// 带宽是否自动续费的标记。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
 	// 描述带宽的地域和限速上限信息。在地域间限速的情况下才会返回参数，出口限速模式不返回。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CcnRegionBandwidthLimit *CcnRegionBandwidthLimitInfo `json:"CcnRegionBandwidthLimit,omitnil,omitempty" name:"CcnRegionBandwidthLimit"`
 
 	// 云市场实例ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MarketId *string `json:"MarketId,omitnil,omitempty" name:"MarketId"`
 
 	// 实例所属用户主账号ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserAccountID *string `json:"UserAccountID,omitnil,omitempty" name:"UserAccountID"`
 
 	// 是否跨境，`true`表示跨境，反之不跨境。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsCrossBorder *bool `json:"IsCrossBorder,omitnil,omitempty" name:"IsCrossBorder"`
 
 	// `true`表示封禁，地域间流量不通，`false`解禁，地域间流量正常
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSecurityLock *bool `json:"IsSecurityLock,omitnil,omitempty" name:"IsSecurityLock"`
 
 	// `POSTPAID`表示后付费，`PREPAID`表示预付费。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
 	// 实例更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
 type CcnBandwidthInfo struct {
 	// 带宽所属的云联网ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
 	// 实例的创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 实例的过期时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpiredTime *string `json:"ExpiredTime,omitnil,omitempty" name:"ExpiredTime"`
 
 	// 带宽实例的唯一ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RegionFlowControlId *string `json:"RegionFlowControlId,omitnil,omitempty" name:"RegionFlowControlId"`
 
 	// 带宽是否自动续费的标记。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
 	// 描述带宽的地域和限速上限信息。在地域间限速的情况下才会返回参数，出口限速模式不返回。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CcnRegionBandwidthLimit *CcnRegionBandwidthLimit `json:"CcnRegionBandwidthLimit,omitnil,omitempty" name:"CcnRegionBandwidthLimit"`
 
 	// 云市场实例ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MarketId *string `json:"MarketId,omitnil,omitempty" name:"MarketId"`
 
 	// 资源绑定的标签列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
+
+	// `true表示`Qos默认带宽；`false`表示非Qos默认带宽；
+	DefaultQosBandwidthFlag *bool `json:"DefaultQosBandwidthFlag,omitnil,omitempty" name:"DefaultQosBandwidthFlag"`
+
+	// 服务等级信息。
+	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 }
 
 type CcnBatchRouteTable struct {
@@ -2680,16 +2684,15 @@ type CcnInstance struct {
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 实例关联的路由表ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 
 	// 实例付费方式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 }
 
 type CcnInstanceInfo struct {
-
+	// 云联网唯一ID。
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 }
 
 type CcnInstanceWithoutRegion struct {
@@ -2718,7 +2721,6 @@ type CcnRegionBandwidthLimit struct {
 	IsBm *bool `json:"IsBm,omitnil,omitempty" name:"IsBm"`
 
 	// 目的地域，例如：ap-shanghai
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DstRegion *string `json:"DstRegion,omitnil,omitempty" name:"DstRegion"`
 
 	// 目的地域是否为黑石地域，默认`false`。
@@ -2727,15 +2729,12 @@ type CcnRegionBandwidthLimit struct {
 
 type CcnRegionBandwidthLimitInfo struct {
 	// 源地域，例如：ap-shanghai
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceRegion *string `json:"SourceRegion,omitnil,omitempty" name:"SourceRegion"`
 
 	// 目的地域， 例如：ap-shanghai
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DestinationRegion *string `json:"DestinationRegion,omitnil,omitempty" name:"DestinationRegion"`
 
 	// 出带宽上限，单位：Mbps。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BandwidthLimit *uint64 `json:"BandwidthLimit,omitnil,omitempty" name:"BandwidthLimit"`
 }
 
@@ -2780,11 +2779,9 @@ type CcnRoute struct {
 	InstanceExtraName *string `json:"InstanceExtraName,omitnil,omitempty" name:"InstanceExtraName"`
 
 	// 实例类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AliasType *string `json:"AliasType,omitnil,omitempty" name:"AliasType"`
 
 	// 实例id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AliasInstanceId *string `json:"AliasInstanceId,omitnil,omitempty" name:"AliasInstanceId"`
 }
 
@@ -2833,19 +2830,15 @@ type CcnRouteTableBroadcastPolicy struct {
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// as-path操作
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OperateAsPath *string `json:"OperateAsPath,omitnil,omitempty" name:"OperateAsPath"`
 
 	// as-path操作模式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AsPathOperateMode *string `json:"AsPathOperateMode,omitnil,omitempty" name:"AsPathOperateMode"`
 
 	// community操作
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OperateCommunitySet []*string `json:"OperateCommunitySet,omitnil,omitempty" name:"OperateCommunitySet"`
 
 	// community操作模式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CommunityOperateMode *string `json:"CommunityOperateMode,omitnil,omitempty" name:"CommunityOperateMode"`
 }
 
@@ -2879,15 +2872,12 @@ type CcnRouteTableInputPolicy struct {
 
 type CcnRouteTableInputPolicys struct {
 	// 策略列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Policys []*CcnRouteTableInputPolicy `json:"Policys,omitnil,omitempty" name:"Policys"`
 
 	// 版本号。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyVersion *uint64 `json:"PolicyVersion,omitnil,omitempty" name:"PolicyVersion"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 }
 
@@ -3044,6 +3034,72 @@ func (r *CheckDefaultSubnetResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CheckGatewayFlowMonitorRequestParams struct {
+	// 网关实例ID，目前我们支持的网关实例类型有，
+	// 专线网关实例ID，形如，`dcg-ltjahce6`；
+	// Nat网关实例ID，形如，`nat-ltjahce6`；
+	// VPN网关实例ID，形如，`vpn-ltjahce6`。
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+}
+
+type CheckGatewayFlowMonitorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例ID，目前我们支持的网关实例类型有，
+	// 专线网关实例ID，形如，`dcg-ltjahce6`；
+	// Nat网关实例ID，形如，`nat-ltjahce6`；
+	// VPN网关实例ID，形如，`vpn-ltjahce6`。
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+}
+
+func (r *CheckGatewayFlowMonitorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckGatewayFlowMonitorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckGatewayFlowMonitorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CheckGatewayFlowMonitorResponseParams struct {
+	// 网关是否启用了流控。true为启用，false未启用。
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 网关的带宽。
+	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CheckGatewayFlowMonitorResponse struct {
+	*tchttp.BaseResponse
+	Response *CheckGatewayFlowMonitorResponseParams `json:"Response"`
+}
+
+func (r *CheckGatewayFlowMonitorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckGatewayFlowMonitorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CheckNetDetectStateRequestParams struct {
 	// 探测目的IPv4地址数组，最多两个。
 	DetectDestinationIp []*string `json:"DetectDestinationIp,omitnil,omitempty" name:"DetectDestinationIp"`
@@ -3170,6 +3226,88 @@ func (r *CheckNetDetectStateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CheckTrafficMirrorRequestParams struct {
+	// 流量镜像所属的vpc
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 流量镜像的实例id
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像的采集端IP列表
+	CollectorSources []*string `json:"CollectorSources,omitnil,omitempty" name:"CollectorSources"`
+
+	// 流量镜像的接收端的子网
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 流量镜像采集端的
+	CollectorTarget []*TrafficMirrorTarget `json:"CollectorTarget,omitnil,omitempty" name:"CollectorTarget"`
+}
+
+type CheckTrafficMirrorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像所属的vpc
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 流量镜像的实例id
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像的采集端IP列表
+	CollectorSources []*string `json:"CollectorSources,omitnil,omitempty" name:"CollectorSources"`
+
+	// 流量镜像的接收端的子网
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 流量镜像采集端的
+	CollectorTarget []*TrafficMirrorTarget `json:"CollectorTarget,omitnil,omitempty" name:"CollectorTarget"`
+}
+
+func (r *CheckTrafficMirrorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckTrafficMirrorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "TrafficMirrorId")
+	delete(f, "CollectorSources")
+	delete(f, "SubnetId")
+	delete(f, "CollectorTarget")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckTrafficMirrorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CheckTrafficMirrorResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CheckTrafficMirrorResponse struct {
+	*tchttp.BaseResponse
+	Response *CheckTrafficMirrorResponseParams `json:"Response"`
+}
+
+func (r *CheckTrafficMirrorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckTrafficMirrorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CidrForCcn struct {
 	// local cidr值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3182,11 +3320,9 @@ type CidrForCcn struct {
 
 type ClassicLinkInstance struct {
 	// VPC实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 云服务器实例唯一ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -3263,7 +3399,7 @@ type CloneSecurityGroupRequestParams struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	// 若指定Tags入参且指定IsCloneTags为true，会合并源安全组的标签和新增的标签。
-	Tags *Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CloneSecurityGroupRequest struct {
@@ -3286,7 +3422,7 @@ type CloneSecurityGroupRequest struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	// 若指定Tags入参且指定IsCloneTags为true，会合并源安全组的标签和新增的标签。
-	Tags *Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CloneSecurityGroupRequest) ToJsonString() string {
@@ -3544,6 +3680,9 @@ type CreateAndAttachNetworkInterfaceRequestParams struct {
 	// 绑定类型：0 标准型 1 扩展型。
 	AttachType *uint64 `json:"AttachType,omitnil,omitempty" name:"AttachType"`
 
+	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false。
+	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
+
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
@@ -3584,6 +3723,9 @@ type CreateAndAttachNetworkInterfaceRequest struct {
 	// 绑定类型：0 标准型 1 扩展型。
 	AttachType *uint64 `json:"AttachType,omitnil,omitempty" name:"AttachType"`
 
+	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false。
+	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
+
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
@@ -3611,6 +3753,7 @@ func (r *CreateAndAttachNetworkInterfaceRequest) FromJsonString(s string) error 
 	delete(f, "NetworkInterfaceDescription")
 	delete(f, "Tags")
 	delete(f, "AttachType")
+	delete(f, "IsRdma")
 	delete(f, "ClientToken")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAndAttachNetworkInterfaceRequest has unknown keys!", "")
@@ -4463,11 +4606,17 @@ type CreateDirectConnectGatewayRequestParams struct {
 	// 云联网路由发布模式，可选值：`standard`（标准模式）、`exquisite`（精细模式）。只有云联网类型专线网关才支持`ModeType`。
 	ModeType *string `json:"ModeType,omitnil,omitempty" name:"ModeType"`
 
+	// 专线网关自定义ASN，范围：45090，64512-65534 和4200000000-4294967294
+	GatewayAsn *uint64 `json:"GatewayAsn,omitnil,omitempty" name:"GatewayAsn"`
+
 	// 专线网关可用区
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 专线网关高可用区容灾组ID
 	HaZoneGroupId *string `json:"HaZoneGroupId,omitnil,omitempty" name:"HaZoneGroupId"`
+
+	// 标签
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateDirectConnectGatewayRequest struct {
@@ -4493,11 +4642,17 @@ type CreateDirectConnectGatewayRequest struct {
 	// 云联网路由发布模式，可选值：`standard`（标准模式）、`exquisite`（精细模式）。只有云联网类型专线网关才支持`ModeType`。
 	ModeType *string `json:"ModeType,omitnil,omitempty" name:"ModeType"`
 
+	// 专线网关自定义ASN，范围：45090，64512-65534 和4200000000-4294967294
+	GatewayAsn *uint64 `json:"GatewayAsn,omitnil,omitempty" name:"GatewayAsn"`
+
 	// 专线网关可用区
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 专线网关高可用区容灾组ID
 	HaZoneGroupId *string `json:"HaZoneGroupId,omitnil,omitempty" name:"HaZoneGroupId"`
+
+	// 标签
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateDirectConnectGatewayRequest) ToJsonString() string {
@@ -4517,8 +4672,10 @@ func (r *CreateDirectConnectGatewayRequest) FromJsonString(s string) error {
 	delete(f, "NetworkInstanceId")
 	delete(f, "GatewayType")
 	delete(f, "ModeType")
+	delete(f, "GatewayAsn")
 	delete(f, "Zone")
 	delete(f, "HaZoneGroupId")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDirectConnectGatewayRequest has unknown keys!", "")
 	}
@@ -5709,6 +5866,9 @@ type CreateNetworkInterfaceRequestParams struct {
 	// 网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。
 	TrunkingFlag *string `json:"TrunkingFlag,omitnil,omitempty" name:"TrunkingFlag"`
 
+	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false
+	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
+
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
@@ -5747,6 +5907,9 @@ type CreateNetworkInterfaceRequest struct {
 	// 网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。
 	TrunkingFlag *string `json:"TrunkingFlag,omitnil,omitempty" name:"TrunkingFlag"`
 
+	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false
+	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
+
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
@@ -5773,6 +5936,7 @@ func (r *CreateNetworkInterfaceRequest) FromJsonString(s string) error {
 	delete(f, "PrivateIpAddresses")
 	delete(f, "Tags")
 	delete(f, "TrunkingFlag")
+	delete(f, "IsRdma")
 	delete(f, "ClientToken")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNetworkInterfaceRequest has unknown keys!", "")
@@ -6973,6 +7137,140 @@ func (r *CreateSubnetsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateTrafficMirrorRequestParams struct {
+	// VPC实例ID。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 流量镜像名字。
+	TrafficMirrorName *string `json:"TrafficMirrorName,omitnil,omitempty" name:"TrafficMirrorName"`
+
+	// 流量镜像描述。
+	TrafficMirrorDescribe *string `json:"TrafficMirrorDescribe,omitnil,omitempty" name:"TrafficMirrorDescribe"`
+
+	// 流量镜像状态, 支持RUNNING/STOPED（vpc），RUNNING（公网IP），当采集vpc流量镜像时，此参数为必填。
+	State *string `json:"State,omitnil,omitempty" name:"State"`
+
+	// 流量镜像采集方向，支持EGRESS/INGRESS/ALL（vpc），ALL（公网IP）。
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// 流量镜像的采集对象。
+	CollectorSrcs []*string `json:"CollectorSrcs,omitnil,omitempty" name:"CollectorSrcs"`
+
+	// 流量镜像过滤的natgw实例。
+	NatId *string `json:"NatId,omitnil,omitempty" name:"NatId"`
+
+	// 需要过滤的五元组规则。
+	CollectorNormalFilters []*TrafficMirrorFilter `json:"CollectorNormalFilters,omitnil,omitempty" name:"CollectorNormalFilters"`
+
+	// 流量镜像的目的地址。
+	CollectorTarget *TrafficMirrorTarget `json:"CollectorTarget,omitnil,omitempty" name:"CollectorTarget"`
+
+	// 流量镜像采集流量的发送端所属子网ID。
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 创建的流量镜像的类型，支持VPC/PUBLICIP，默认为VPC类型。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type CreateTrafficMirrorRequest struct {
+	*tchttp.BaseRequest
+	
+	// VPC实例ID。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 流量镜像名字。
+	TrafficMirrorName *string `json:"TrafficMirrorName,omitnil,omitempty" name:"TrafficMirrorName"`
+
+	// 流量镜像描述。
+	TrafficMirrorDescribe *string `json:"TrafficMirrorDescribe,omitnil,omitempty" name:"TrafficMirrorDescribe"`
+
+	// 流量镜像状态, 支持RUNNING/STOPED（vpc），RUNNING（公网IP），当采集vpc流量镜像时，此参数为必填。
+	State *string `json:"State,omitnil,omitempty" name:"State"`
+
+	// 流量镜像采集方向，支持EGRESS/INGRESS/ALL（vpc），ALL（公网IP）。
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// 流量镜像的采集对象。
+	CollectorSrcs []*string `json:"CollectorSrcs,omitnil,omitempty" name:"CollectorSrcs"`
+
+	// 流量镜像过滤的natgw实例。
+	NatId *string `json:"NatId,omitnil,omitempty" name:"NatId"`
+
+	// 需要过滤的五元组规则。
+	CollectorNormalFilters []*TrafficMirrorFilter `json:"CollectorNormalFilters,omitnil,omitempty" name:"CollectorNormalFilters"`
+
+	// 流量镜像的目的地址。
+	CollectorTarget *TrafficMirrorTarget `json:"CollectorTarget,omitnil,omitempty" name:"CollectorTarget"`
+
+	// 流量镜像采集流量的发送端所属子网ID。
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 创建的流量镜像的类型，支持VPC/PUBLICIP，默认为VPC类型。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *CreateTrafficMirrorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateTrafficMirrorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "TrafficMirrorName")
+	delete(f, "TrafficMirrorDescribe")
+	delete(f, "State")
+	delete(f, "Direction")
+	delete(f, "CollectorSrcs")
+	delete(f, "NatId")
+	delete(f, "CollectorNormalFilters")
+	delete(f, "CollectorTarget")
+	delete(f, "SubnetId")
+	delete(f, "Type")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTrafficMirrorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateTrafficMirrorResponseParams struct {
+	// 流量镜像实例
+	TrafficMirror *TrafficMirror `json:"TrafficMirror,omitnil,omitempty" name:"TrafficMirror"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateTrafficMirrorResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateTrafficMirrorResponseParams `json:"Response"`
+}
+
+func (r *CreateTrafficMirrorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateTrafficMirrorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateTrafficPackagesRequestParams struct {
 	// 流量包规格。可选值:
 	// <li>10: 10GB流量，有效期一个月</li>
@@ -7428,7 +7726,6 @@ func (r *CreateVpcPeeringConnectionRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateVpcPeeringConnectionResponseParams struct {
 	// 对等连接ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PeeringConnectionId *string `json:"PeeringConnectionId,omitnil,omitempty" name:"PeeringConnectionId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8035,10 +8332,10 @@ type CreateVpnGatewaySslServerRequestParams struct {
 	// SSL VPN服务端监听协议端口，默认1194。
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 认证算法。可选 'SHA1', 'MD5', 'NONE'，默认NONE。
+	// 认证算法。可选 'SHA1'，默认SHA1。
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
-	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 'NONE'，默认NONE。
+	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
 	// 是否支持压缩。当前不支持压缩，默认False。
@@ -8078,10 +8375,10 @@ type CreateVpnGatewaySslServerRequest struct {
 	// SSL VPN服务端监听协议端口，默认1194。
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 认证算法。可选 'SHA1', 'MD5', 'NONE'，默认NONE。
+	// 认证算法。可选 'SHA1'，默认SHA1。
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
-	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 'NONE'，默认NONE。
+	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
 	// 是否支持压缩。当前不支持压缩，默认False。
@@ -8227,11 +8524,9 @@ type CrossBorderCompliance struct {
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 法定代表人身份证号。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LegalPersonId *string `json:"LegalPersonId,omitnil,omitempty" name:"LegalPersonId"`
 
 	// 法定代表人身份证。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LegalPersonIdCard *string `json:"LegalPersonIdCard,omitnil,omitempty" name:"LegalPersonIdCard"`
 }
 
@@ -10657,6 +10952,60 @@ func (r *DeleteTemplateMemberResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteTrafficMirrorRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+}
+
+type DeleteTrafficMirrorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+}
+
+func (r *DeleteTrafficMirrorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteTrafficMirrorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteTrafficMirrorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteTrafficMirrorResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteTrafficMirrorResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteTrafficMirrorResponseParams `json:"Response"`
+}
+
+func (r *DeleteTrafficMirrorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteTrafficMirrorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteTrafficPackagesRequestParams struct {
 	// 待删除的流量包唯一ID数组
 	TrafficPackageIds []*string `json:"TrafficPackageIds,omitnil,omitempty" name:"TrafficPackageIds"`
@@ -11339,6 +11688,63 @@ func (r *DescribeAccountAttributesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeAddressBandwidthRangeRequestParams struct {
+	// EIP资源ID列表，单次查询上限20。
+	AddressIds []*string `json:"AddressIds,omitnil,omitempty" name:"AddressIds"`
+}
+
+type DescribeAddressBandwidthRangeRequest struct {
+	*tchttp.BaseRequest
+	
+	// EIP资源ID列表，单次查询上限20。
+	AddressIds []*string `json:"AddressIds,omitnil,omitempty" name:"AddressIds"`
+}
+
+func (r *DescribeAddressBandwidthRangeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAddressBandwidthRangeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AddressIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAddressBandwidthRangeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAddressBandwidthRangeResponseParams struct {
+	// EIP带宽上下限详细信息。
+	BandwidthRangeSet []*BandwidthRange `json:"BandwidthRangeSet,omitnil,omitempty" name:"BandwidthRangeSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAddressBandwidthRangeResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAddressBandwidthRangeResponseParams `json:"Response"`
+}
+
+func (r *DescribeAddressBandwidthRangeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAddressBandwidthRangeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeAddressQuotaRequestParams struct {
 
 }
@@ -11407,6 +11813,18 @@ type DescribeAddressTemplateGroupsRequestParams struct {
 
 	// 是否查询IP地址模板成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`AddressTemplateGroupId ` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// IP地址成员排序字段。支持：`AddressTemplateId` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// IP地址成员排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 type DescribeAddressTemplateGroupsRequest struct {
@@ -11425,6 +11843,18 @@ type DescribeAddressTemplateGroupsRequest struct {
 
 	// 是否查询IP地址模板成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`AddressTemplateGroupId ` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// IP地址成员排序字段。支持：`AddressTemplateId` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// IP地址成员排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 func (r *DescribeAddressTemplateGroupsRequest) ToJsonString() string {
@@ -11443,6 +11873,10 @@ func (r *DescribeAddressTemplateGroupsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "NeedMemberInfo")
+	delete(f, "OrderField")
+	delete(f, "OrderDirection")
+	delete(f, "MemberOrderField")
+	delete(f, "MemberOrderDirection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAddressTemplateGroupsRequest has unknown keys!", "")
 	}
@@ -11493,6 +11927,18 @@ type DescribeAddressTemplatesRequestParams struct {
 
 	// 是否获取IP地址模板成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`AddressTemplateId` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// IP成员排序字段。支持：`Address` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// IP成员排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 type DescribeAddressTemplatesRequest struct {
@@ -11512,6 +11958,18 @@ type DescribeAddressTemplatesRequest struct {
 
 	// 是否获取IP地址模板成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`AddressTemplateId` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// IP成员排序字段。支持：`Address` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// IP成员排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 func (r *DescribeAddressTemplatesRequest) ToJsonString() string {
@@ -11530,6 +11988,10 @@ func (r *DescribeAddressTemplatesRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "NeedMemberInfo")
+	delete(f, "OrderField")
+	delete(f, "OrderDirection")
+	delete(f, "MemberOrderField")
+	delete(f, "MemberOrderDirection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAddressTemplatesRequest has unknown keys!", "")
 	}
@@ -11753,6 +12215,63 @@ func (r *DescribeAssistantCidrResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAssistantCidrResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBandwidthPackageBandwidthRangeRequestParams struct {
+	// 带宽包资源ID列表，单次查询上限20。
+	BandwidthPackageIds []*string `json:"BandwidthPackageIds,omitnil,omitempty" name:"BandwidthPackageIds"`
+}
+
+type DescribeBandwidthPackageBandwidthRangeRequest struct {
+	*tchttp.BaseRequest
+	
+	// 带宽包资源ID列表，单次查询上限20。
+	BandwidthPackageIds []*string `json:"BandwidthPackageIds,omitnil,omitempty" name:"BandwidthPackageIds"`
+}
+
+func (r *DescribeBandwidthPackageBandwidthRangeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBandwidthPackageBandwidthRangeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "BandwidthPackageIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBandwidthPackageBandwidthRangeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBandwidthPackageBandwidthRangeResponseParams struct {
+	// 带宽包带宽上下限详细信息。
+	BandwidthRangeSet []*BandwidthRange `json:"BandwidthRangeSet,omitnil,omitempty" name:"BandwidthRangeSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeBandwidthPackageBandwidthRangeResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBandwidthPackageBandwidthRangeResponseParams `json:"Response"`
+}
+
+func (r *DescribeBandwidthPackageBandwidthRangeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBandwidthPackageBandwidthRangeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -13220,7 +13739,6 @@ func (r *DescribeCrossBorderFlowMonitorRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeCrossBorderFlowMonitorResponseParams struct {
 	// 云联网跨境带宽监控数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CrossBorderFlowMonitorData []*CrossBorderFlowMonitorData `json:"CrossBorderFlowMonitorData,omitnil,omitempty" name:"CrossBorderFlowMonitorData"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -14499,11 +15017,11 @@ func (r *DescribeIPv6AddressesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeIp6AddressesRequestParams struct {
-	// 标识 IPV6 的唯一 ID 列表。IPV6 唯一 ID 形如：`eip-11112222`。参数不支持同时指定`Ip6AddressIds`和`Filters`。
+	// 标识 IPv6 的唯一 ID 列表。IPv6 唯一 ID 形如：`eip-11112222`。参数不支持同时指定`Ip6AddressIds`和`Filters`。
 	Ip6AddressIds []*string `json:"Ip6AddressIds,omitnil,omitempty" name:"Ip6AddressIds"`
 
 	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。参数不支持同时指定`AddressIds`和`Filters`。详细的过滤条件如下：
-	// <li> address-ip - String - 是否必填：否 - （过滤条件）按照 IPV6 的 IP 地址过滤。</li>
+	// <li> address-ip - String - 是否必填：否 - （过滤条件）按照 IPv6 的 IP 地址过滤。</li>
 	// <li> network-interface-id - String - 是否必填：否 - （过滤条件）按照弹性网卡的唯一ID过滤。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -14517,11 +15035,11 @@ type DescribeIp6AddressesRequestParams struct {
 type DescribeIp6AddressesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 标识 IPV6 的唯一 ID 列表。IPV6 唯一 ID 形如：`eip-11112222`。参数不支持同时指定`Ip6AddressIds`和`Filters`。
+	// 标识 IPv6 的唯一 ID 列表。IPv6 唯一 ID 形如：`eip-11112222`。参数不支持同时指定`Ip6AddressIds`和`Filters`。
 	Ip6AddressIds []*string `json:"Ip6AddressIds,omitnil,omitempty" name:"Ip6AddressIds"`
 
 	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。参数不支持同时指定`AddressIds`和`Filters`。详细的过滤条件如下：
-	// <li> address-ip - String - 是否必填：否 - （过滤条件）按照 IPV6 的 IP 地址过滤。</li>
+	// <li> address-ip - String - 是否必填：否 - （过滤条件）按照 IPv6 的 IP 地址过滤。</li>
 	// <li> network-interface-id - String - 是否必填：否 - （过滤条件）按照弹性网卡的唯一ID过滤。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -14556,10 +15074,10 @@ func (r *DescribeIp6AddressesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeIp6AddressesResponseParams struct {
-	// 符合条件的 IPV6 数量。
+	// 符合条件的 IPv6 数量。
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// IPV6 详细信息列表。
+	// IPv6 详细信息列表。
 	AddressSet []*Address `json:"AddressSet,omitnil,omitempty" name:"AddressSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -16637,6 +17155,88 @@ func (r *DescribeRouteConflictsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeRouteListRequestParams struct {
+	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。</li>
+	// <li>gateway-id - String - （过滤条件）网关ID。</li>
+	// <li>description - String - （过滤条件）路由描述。</li>
+	// <li>route-table-id - String - （过滤条件）路由表实例ID。</li>
+	// <li>dest-cidr - String - （过滤条件）目的端地址，支持模糊左匹配。</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 请求对象个数。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeRouteListRequest struct {
+	*tchttp.BaseRequest
+	
+	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。</li>
+	// <li>gateway-id - String - （过滤条件）网关ID。</li>
+	// <li>description - String - （过滤条件）路由描述。</li>
+	// <li>route-table-id - String - （过滤条件）路由表实例ID。</li>
+	// <li>dest-cidr - String - （过滤条件）目的端地址，支持模糊左匹配。</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 请求对象个数。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeRouteListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRouteListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRouteListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeRouteListResponseParams struct {
+	// 路由对象。
+	RouteSet []*Route `json:"RouteSet,omitnil,omitempty" name:"RouteSet"`
+
+	// 符合条件的实例数量。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeRouteListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeRouteListResponseParams `json:"Response"`
+}
+
+func (r *DescribeRouteListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRouteListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeRouteTableAssociatedInstancesRequestParams struct {
 	// 过滤条件：
 	// <li>ccn-id - String -（过滤条件）CCN实例ID。</li>
@@ -17410,6 +18010,18 @@ type DescribeServiceTemplateGroupsRequestParams struct {
 
 	// 是否获取协议端口模板成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`ServiceTemplateGroupId ` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// 协议端口成员排序字段。支持：`ServiceTemplateId ` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// 协议端口成员排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 type DescribeServiceTemplateGroupsRequest struct {
@@ -17428,6 +18040,18 @@ type DescribeServiceTemplateGroupsRequest struct {
 
 	// 是否获取协议端口模板成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`ServiceTemplateGroupId ` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// 协议端口成员排序字段。支持：`ServiceTemplateId ` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// 协议端口成员排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 func (r *DescribeServiceTemplateGroupsRequest) ToJsonString() string {
@@ -17446,6 +18070,10 @@ func (r *DescribeServiceTemplateGroupsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "NeedMemberInfo")
+	delete(f, "OrderField")
+	delete(f, "OrderDirection")
+	delete(f, "MemberOrderField")
+	delete(f, "MemberOrderDirection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeServiceTemplateGroupsRequest has unknown keys!", "")
 	}
@@ -17496,6 +18124,18 @@ type DescribeServiceTemplatesRequestParams struct {
 
 	// 是否获取协议端口成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`ServiceTemplateId ` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// 协议端口排序字段。支持：`Service ` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// 协议端口排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 type DescribeServiceTemplatesRequest struct {
@@ -17515,6 +18155,18 @@ type DescribeServiceTemplatesRequest struct {
 
 	// 是否获取协议端口成员标识。
 	NeedMemberInfo *bool `json:"NeedMemberInfo,omitnil,omitempty" name:"NeedMemberInfo"`
+
+	// 排序字段。支持：`ServiceTemplateId ` `CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// 协议端口排序字段。支持：`Service ` `UpdateTime`。注意：该字段没有默认值。
+	MemberOrderField *string `json:"MemberOrderField,omitnil,omitempty" name:"MemberOrderField"`
+
+	// 协议端口排序方法。升序：`ASC`，倒序：`DESC`。注意：该字段没有默认值。
+	MemberOrderDirection *string `json:"MemberOrderDirection,omitnil,omitempty" name:"MemberOrderDirection"`
 }
 
 func (r *DescribeServiceTemplatesRequest) ToJsonString() string {
@@ -17533,6 +18185,10 @@ func (r *DescribeServiceTemplatesRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "NeedMemberInfo")
+	delete(f, "OrderField")
+	delete(f, "OrderDirection")
+	delete(f, "MemberOrderField")
+	delete(f, "MemberOrderDirection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeServiceTemplatesRequest has unknown keys!", "")
 	}
@@ -18370,7 +19026,6 @@ func (r *DescribeTenantCcnsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeTenantCcnsResponseParams struct {
 	// 云联网（CCN）对象。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CcnSet []*CcnInstanceInfo `json:"CcnSet,omitnil,omitempty" name:"CcnSet"`
 
 	// 符合条件的对象总数。
@@ -18393,6 +19048,92 @@ func (r *DescribeTenantCcnsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTenantCcnsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTrafficMirrorsRequestParams struct {
+	// 流量镜像实例ID集合
+	TrafficMirrorIds []*string `json:"TrafficMirrorIds,omitnil,omitempty" name:"TrafficMirrorIds"`
+
+	// 流量镜像查询过滤调节。
+	// vpc-id ：VPC实例ID，例如：vpc-f49l6u0z。
+	// traffic-mirror-id：流量镜像实例ID。
+	// traffic-mirror-name：流量镜像名称。
+	// tag-key ：按照标签键进行过滤。
+	Filters *Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeTrafficMirrorsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID集合
+	TrafficMirrorIds []*string `json:"TrafficMirrorIds,omitnil,omitempty" name:"TrafficMirrorIds"`
+
+	// 流量镜像查询过滤调节。
+	// vpc-id ：VPC实例ID，例如：vpc-f49l6u0z。
+	// traffic-mirror-id：流量镜像实例ID。
+	// traffic-mirror-name：流量镜像名称。
+	// tag-key ：按照标签键进行过滤。
+	Filters *Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeTrafficMirrorsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTrafficMirrorsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorIds")
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTrafficMirrorsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTrafficMirrorsResponseParams struct {
+	// 流量镜像实例信息
+	TrafficMirrorSet []*TrafficMirror `json:"TrafficMirrorSet,omitnil,omitempty" name:"TrafficMirrorSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTrafficMirrorsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTrafficMirrorsResponseParams `json:"Response"`
+}
+
+func (r *DescribeTrafficMirrorsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTrafficMirrorsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -19742,7 +20483,6 @@ type DescribeVpnGatewayRoutesResponseParams struct {
 	Routes []*VpnGatewayRoute `json:"Routes,omitnil,omitempty" name:"Routes"`
 
 	// 路由条数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -19767,12 +20507,7 @@ func (r *DescribeVpnGatewayRoutesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeVpnGatewaySslClientsRequestParams struct {
-	// 过滤条件，参数不支持同时指定SslVpnClientIds和Filters。
-	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
-	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
-	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpns-1j2w6xpx。</li>
-	// <li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpnc-3rlxp4nd。</li>
-	// <li>ssl-vpn-client-name - String - （过滤条件）SSL-VPN-CLIENT实例名称。</li>
+	// 过滤条件，参数不支持同时指定SslVpnClientIds和Filters。<li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li><li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li><li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpns-1j2w6xpx。</li><li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpnc-3rlxp4nd。</li><li>ssl-vpn-client-name - String - （过滤条件）SSL-VPN-CLIENT实例名称。</li><li>ssl-vpn-client-inner-ip - String - （过滤条件）SSL-VPN-CLIENT私网IP。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认值0。
@@ -19792,12 +20527,7 @@ type DescribeVpnGatewaySslClientsRequestParams struct {
 type DescribeVpnGatewaySslClientsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 过滤条件，参数不支持同时指定SslVpnClientIds和Filters。
-	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
-	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
-	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpns-1j2w6xpx。</li>
-	// <li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpnc-3rlxp4nd。</li>
-	// <li>ssl-vpn-client-name - String - （过滤条件）SSL-VPN-CLIENT实例名称。</li>
+	// 过滤条件，参数不支持同时指定SslVpnClientIds和Filters。<li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li><li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li><li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpns-1j2w6xpx。</li><li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpnc-3rlxp4nd。</li><li>ssl-vpn-client-name - String - （过滤条件）SSL-VPN-CLIENT实例名称。</li><li>ssl-vpn-client-inner-ip - String - （过滤条件）SSL-VPN-CLIENT私网IP。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认值0。
@@ -20398,7 +21128,6 @@ type DhcpIp struct {
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -20449,51 +21178,44 @@ type DirectConnectGateway struct {
 	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitnil,omitempty" name:"EnableBGPCommunity"`
 
 	// 绑定的NAT网关ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NatGatewayId *string `json:"NatGatewayId,omitnil,omitempty" name:"NatGatewayId"`
 
 	// 专线网关是否支持VXLAN架构
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VXLANSupport []*bool `json:"VXLANSupport,omitnil,omitempty" name:"VXLANSupport"`
 
 	// 云联网路由发布模式：`standard`（标准模式）、`exquisite`（精细模式）。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModeType *string `json:"ModeType,omitnil,omitempty" name:"ModeType"`
 
 	// 是否为localZone专线网关。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalZone *bool `json:"LocalZone,omitnil,omitempty" name:"LocalZone"`
 
 	// 专线网关所在可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 网关流控明细启用状态：
 	// 0：关闭
 	// 1：开启
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableFlowDetails *uint64 `json:"EnableFlowDetails,omitnil,omitempty" name:"EnableFlowDetails"`
 
 	// 开启、关闭网关流控明细时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FlowDetailsUpdateTime *string `json:"FlowDetailsUpdateTime,omitnil,omitempty" name:"FlowDetailsUpdateTime"`
 
 	// 是否支持开启网关流控明细
 	// 0：不支持
 	// 1：支持
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NewAfc *uint64 `json:"NewAfc,omitnil,omitempty" name:"NewAfc"`
 
 	// 专线网关接入网络类型：
 	// <li>`VXLAN` - VXLAN类型。</li>
 	// <li>`MPLS` - MPLS类型。</li>
 	// <li>`Hybrid` - Hybrid类型。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AccessNetworkType *string `json:"AccessNetworkType,omitnil,omitempty" name:"AccessNetworkType"`
 
 	// 跨可用区容灾专线网关的可用区列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HaZoneList []*string `json:"HaZoneList,omitnil,omitempty" name:"HaZoneList"`
+
+	// 专线网关自定义ASN
+	GatewayAsn *uint64 `json:"GatewayAsn,omitnil,omitempty" name:"GatewayAsn"`
 }
 
 type DirectConnectGatewayCcnRoute struct {
@@ -22315,11 +23037,9 @@ func (r *GetCcnRegionBandwidthLimitsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type GetCcnRegionBandwidthLimitsResponseParams struct {
 	// 云联网（CCN）各地域出带宽详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CcnBandwidthSet []*CcnBandwidthInfo `json:"CcnBandwidthSet,omitnil,omitempty" name:"CcnBandwidthSet"`
 
 	// 符合条件的对象数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -22461,13 +23181,13 @@ func (r *HaVipAssociateAddressIpResponse) FromJsonString(s string) error {
 }
 
 type HaVipAssociation struct {
-	// HaVip实例唯一ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HaVipId *string `json:"HaVipId,omitnil,omitempty" name:"HaVipId"`
-
 	// HaVip绑定的子机或网卡唯一ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// HaVip实例唯一ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HaVipId *string `json:"HaVipId,omitnil,omitempty" name:"HaVipId"`
 
 	// HaVip绑定的类型。取值:CVM, ENI。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -22530,19 +23250,15 @@ func (r *HaVipDisassociateAddressIpResponse) FromJsonString(s string) error {
 
 type HealthCheckConfig struct {
 	// 探测模式，默认值NQA，不可修改。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProbeType *string `json:"ProbeType,omitnil,omitempty" name:"ProbeType"`
 
 	// 探测间隔，腾讯云两次健康检查间隔时间，范围【1000-5000】，单位ms。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProbeInterval *int64 `json:"ProbeInterval,omitnil,omitempty" name:"ProbeInterval"`
 
 	// 探测次数，连续N次健康检查失败后执行路由切换，范围【3-8】，单位次。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProbeThreshold *int64 `json:"ProbeThreshold,omitnil,omitempty" name:"ProbeThreshold"`
 
 	// 探测超时时间，范围【10-5000】，单位ms。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProbeTimeout *int64 `json:"ProbeTimeout,omitnil,omitempty" name:"ProbeTimeout"`
 }
 
@@ -22715,11 +23431,9 @@ func (r *InquirePriceCreateDirectConnectGatewayRequest) FromJsonString(s string)
 // Predefined struct for user
 type InquirePriceCreateDirectConnectGatewayResponseParams struct {
 	// 专线网关标准接入费用
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCost *int64 `json:"TotalCost,omitnil,omitempty" name:"TotalCost"`
 
 	// 专线网关真实接入费用
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RealTotalCost *int64 `json:"RealTotalCost,omitnil,omitempty" name:"RealTotalCost"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -22739,6 +23453,118 @@ func (r *InquirePriceCreateDirectConnectGatewayResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquirePriceCreateDirectConnectGatewayResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InquiryPriceAllocateAddressesRequestParams struct {
+	// EIP计费方式。
+	// <ul style="margin:0"><li>账号为标准账户类型的用户，可选值：<ul>
+	// <li>BANDWIDTH_POSTPAID_BY_HOUR：带宽按小时后付费</li>
+	// <li>BANDWIDTH_PREPAID_BY_MONTH：包月按带宽预付费</li>
+	// <li>TRAFFIC_POSTPAID_BY_HOUR：流量按小时后付费</li></ul>默认值：TRAFFIC_POSTPAID_BY_HOUR。</li>
+	// </ul>
+	InternetChargeType *string `json:"InternetChargeType,omitnil,omitempty" name:"InternetChargeType"`
+
+	// EIP出带宽上限，单位：Mbps。
+	// <ul style="margin:0"><li>账号为标准账户类型的用户，可选值范围取决于EIP计费方式：<ul>
+	// <li>BANDWIDTH_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li>
+	// <li>BANDWIDTH_PREPAID_BY_MONTH：1 Mbps 至 200 Mbps</li>
+	// <li>TRAFFIC_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li></ul>默认值：1 Mbps。</li>
+	// <li>账号为传统账户类型的用户，EIP出带宽上限取决于与其绑定的实例的公网出带宽上限，无需传递此参数。</li></ul>
+	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 包月按带宽预付费EIP的计费参数。EIP为包月按带宽预付费时，该参数必传，其余场景不需传递
+	AddressChargePrepaid *AddressChargePrepaid `json:"AddressChargePrepaid,omitnil,omitempty" name:"AddressChargePrepaid"`
+
+	// EIP类型。默认值：EIP。
+	// 
+	// <ul style="margin:0"><li>精品IP，可选值：<ul><li>HighQualityEIP：精品IP</li></ul>注意：仅部分地域支持精品IP。</li></ul><ul style="margin:0">
+	//         <li>高防IP，可选值：<ul>
+	//                 <li>AntiDDoSEIP：高防IP</li>
+	//             </ul>
+	//         </li>
+	//     </ul>
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
+}
+
+type InquiryPriceAllocateAddressesRequest struct {
+	*tchttp.BaseRequest
+	
+	// EIP计费方式。
+	// <ul style="margin:0"><li>账号为标准账户类型的用户，可选值：<ul>
+	// <li>BANDWIDTH_POSTPAID_BY_HOUR：带宽按小时后付费</li>
+	// <li>BANDWIDTH_PREPAID_BY_MONTH：包月按带宽预付费</li>
+	// <li>TRAFFIC_POSTPAID_BY_HOUR：流量按小时后付费</li></ul>默认值：TRAFFIC_POSTPAID_BY_HOUR。</li>
+	// </ul>
+	InternetChargeType *string `json:"InternetChargeType,omitnil,omitempty" name:"InternetChargeType"`
+
+	// EIP出带宽上限，单位：Mbps。
+	// <ul style="margin:0"><li>账号为标准账户类型的用户，可选值范围取决于EIP计费方式：<ul>
+	// <li>BANDWIDTH_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li>
+	// <li>BANDWIDTH_PREPAID_BY_MONTH：1 Mbps 至 200 Mbps</li>
+	// <li>TRAFFIC_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li></ul>默认值：1 Mbps。</li>
+	// <li>账号为传统账户类型的用户，EIP出带宽上限取决于与其绑定的实例的公网出带宽上限，无需传递此参数。</li></ul>
+	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 包月按带宽预付费EIP的计费参数。EIP为包月按带宽预付费时，该参数必传，其余场景不需传递
+	AddressChargePrepaid *AddressChargePrepaid `json:"AddressChargePrepaid,omitnil,omitempty" name:"AddressChargePrepaid"`
+
+	// EIP类型。默认值：EIP。
+	// 
+	// <ul style="margin:0"><li>精品IP，可选值：<ul><li>HighQualityEIP：精品IP</li></ul>注意：仅部分地域支持精品IP。</li></ul><ul style="margin:0">
+	//         <li>高防IP，可选值：<ul>
+	//                 <li>AntiDDoSEIP：高防IP</li>
+	//             </ul>
+	//         </li>
+	//     </ul>
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
+}
+
+func (r *InquiryPriceAllocateAddressesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InquiryPriceAllocateAddressesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InternetChargeType")
+	delete(f, "InternetMaxBandwidthOut")
+	delete(f, "AddressChargePrepaid")
+	delete(f, "AddressType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceAllocateAddressesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InquiryPriceAllocateAddressesResponseParams struct {
+	// 弹性公网IP价格
+	Price *InternetPrice `json:"Price,omitnil,omitempty" name:"Price"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type InquiryPriceAllocateAddressesResponse struct {
+	*tchttp.BaseResponse
+	Response *InquiryPriceAllocateAddressesResponseParams `json:"Response"`
+}
+
+func (r *InquiryPriceAllocateAddressesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InquiryPriceAllocateAddressesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -22824,6 +23650,134 @@ func (r *InquiryPriceCreateVpnGatewayResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquiryPriceCreateVpnGatewayResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InquiryPriceModifyAddressesBandwidthRequestParams struct {
+	// EIP唯一ID
+	AddressIds []*string `json:"AddressIds,omitnil,omitempty" name:"AddressIds"`
+
+	// 新带宽值
+	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+}
+
+type InquiryPriceModifyAddressesBandwidthRequest struct {
+	*tchttp.BaseRequest
+	
+	// EIP唯一ID
+	AddressIds []*string `json:"AddressIds,omitnil,omitempty" name:"AddressIds"`
+
+	// 新带宽值
+	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+}
+
+func (r *InquiryPriceModifyAddressesBandwidthRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InquiryPriceModifyAddressesBandwidthRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AddressIds")
+	delete(f, "InternetMaxBandwidthOut")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceModifyAddressesBandwidthRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InquiryPriceModifyAddressesBandwidthResponseParams struct {
+	// 弹性公网IP调整带宽询价结果
+	Price *InternetPrice `json:"Price,omitnil,omitempty" name:"Price"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type InquiryPriceModifyAddressesBandwidthResponse struct {
+	*tchttp.BaseResponse
+	Response *InquiryPriceModifyAddressesBandwidthResponseParams `json:"Response"`
+}
+
+func (r *InquiryPriceModifyAddressesBandwidthResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InquiryPriceModifyAddressesBandwidthResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InquiryPriceRenewAddressesRequestParams struct {
+	// 续费资源实例ID。
+	AddressIds []*string `json:"AddressIds,omitnil,omitempty" name:"AddressIds"`
+
+	// 包月按带宽预付费EIP的计费参数。EIP为包月按带宽预付费时，该参数必传，其余场景不需传递。
+	AddressChargePrepaid *AddressChargePrepaid `json:"AddressChargePrepaid,omitnil,omitempty" name:"AddressChargePrepaid"`
+}
+
+type InquiryPriceRenewAddressesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 续费资源实例ID。
+	AddressIds []*string `json:"AddressIds,omitnil,omitempty" name:"AddressIds"`
+
+	// 包月按带宽预付费EIP的计费参数。EIP为包月按带宽预付费时，该参数必传，其余场景不需传递。
+	AddressChargePrepaid *AddressChargePrepaid `json:"AddressChargePrepaid,omitnil,omitempty" name:"AddressChargePrepaid"`
+}
+
+func (r *InquiryPriceRenewAddressesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InquiryPriceRenewAddressesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AddressIds")
+	delete(f, "AddressChargePrepaid")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceRenewAddressesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InquiryPriceRenewAddressesResponseParams struct {
+	// 弹性公网IP续费价格。
+	Price *InternetPrice `json:"Price,omitnil,omitempty" name:"Price"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type InquiryPriceRenewAddressesResponse struct {
+	*tchttp.BaseResponse
+	Response *InquiryPriceRenewAddressesResponseParams `json:"Response"`
+}
+
+func (r *InquiryPriceRenewAddressesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InquiryPriceRenewAddressesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -23007,6 +23961,27 @@ type InstanceStatistic struct {
 
 	// 实例的个数
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+}
+
+type InternetPrice struct {
+	// 公网IP询价详细参数。
+	AddressPrice *InternetPriceDetail `json:"AddressPrice,omitnil,omitempty" name:"AddressPrice"`
+}
+
+type InternetPriceDetail struct {
+	// 付费单价，单位：元，仅后付费价格查询返回。
+	UnitPrice *float64 `json:"UnitPrice,omitnil,omitempty" name:"UnitPrice"`
+
+	// 折扣后的价格，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiscountPrice *float64 `json:"DiscountPrice,omitnil,omitempty" name:"DiscountPrice"`
+
+	// 计价单元，可取值范围：<ul> <li>HOUR：表示计价单元是按每小时来计算。当前涉及该计价单元的场景有：流量按小时后付费（TRAFFIC_POSTPAID_BY_HOUR）、带宽按小时后付费（BANDWIDTH_POSTPAID_BY_HOUR）。</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ChargeUnit *string `json:"ChargeUnit,omitnil,omitempty" name:"ChargeUnit"`
+
+	// 原价，单位：元，仅预付费价格查询返回。
+	OriginalPrice *float64 `json:"OriginalPrice,omitnil,omitempty" name:"OriginalPrice"`
 }
 
 type Ip6Rule struct {
@@ -23195,7 +24170,7 @@ type Ipv6SubnetCidrBlock struct {
 	// 子网实例`ID`。形如：`subnet-pxir56ns`。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// `IPv6`子网段。形如：`3402:4e00:20:1001::/64`
+	// `IPv6`子网段。形如：`3402:4e00:20:1001::/64`。作为AssignIpv6SubnetCidrBlock接口入参时，该参数必填。
 	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
 }
 
@@ -25231,10 +26206,10 @@ type ModifyIp6AddressesBandwidthRequestParams struct {
 	// 修改的目标带宽，单位Mbps
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
-	// IPV6地址。Ip6Addresses和Ip6AddressId必须且只能传一个
+	// IPv6地址。Ip6Addresses和Ip6AddressId必须且只能传一个
 	Ip6Addresses []*string `json:"Ip6Addresses,omitnil,omitempty" name:"Ip6Addresses"`
 
-	// IPV6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressId必须且只能传一个
+	// IPv6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressId必须且只能传一个
 	Ip6AddressIds []*string `json:"Ip6AddressIds,omitnil,omitempty" name:"Ip6AddressIds"`
 }
 
@@ -25244,10 +26219,10 @@ type ModifyIp6AddressesBandwidthRequest struct {
 	// 修改的目标带宽，单位Mbps
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
-	// IPV6地址。Ip6Addresses和Ip6AddressId必须且只能传一个
+	// IPv6地址。Ip6Addresses和Ip6AddressId必须且只能传一个
 	Ip6Addresses []*string `json:"Ip6Addresses,omitnil,omitempty" name:"Ip6Addresses"`
 
-	// IPV6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressId必须且只能传一个
+	// IPv6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressId必须且只能传一个
 	Ip6AddressIds []*string `json:"Ip6AddressIds,omitnil,omitempty" name:"Ip6AddressIds"`
 }
 
@@ -27269,6 +28244,74 @@ func (r *ModifyTemplateMemberResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyTrafficMirrorAttributeRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像实例名称
+	TrafficMirrorName *string `json:"TrafficMirrorName,omitnil,omitempty" name:"TrafficMirrorName"`
+
+	// 流量镜像实例描述信息
+	TrafficMirrorDescription *string `json:"TrafficMirrorDescription,omitnil,omitempty" name:"TrafficMirrorDescription"`
+}
+
+type ModifyTrafficMirrorAttributeRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像实例名称
+	TrafficMirrorName *string `json:"TrafficMirrorName,omitnil,omitempty" name:"TrafficMirrorName"`
+
+	// 流量镜像实例描述信息
+	TrafficMirrorDescription *string `json:"TrafficMirrorDescription,omitnil,omitempty" name:"TrafficMirrorDescription"`
+}
+
+func (r *ModifyTrafficMirrorAttributeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyTrafficMirrorAttributeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	delete(f, "TrafficMirrorName")
+	delete(f, "TrafficMirrorDescription")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyTrafficMirrorAttributeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyTrafficMirrorAttributeResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyTrafficMirrorAttributeResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyTrafficMirrorAttributeResponseParams `json:"Response"`
+}
+
+func (r *ModifyTrafficMirrorAttributeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyTrafficMirrorAttributeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyVpcAttributeRequestParams struct {
 	// VPC实例ID。形如：vpc-f49l6u0z。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
@@ -27987,7 +29030,6 @@ func (r *ModifyVpnGatewayRoutesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyVpnGatewayRoutesResponseParams struct {
 	// VPN路由信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Routes []*VpnGatewayRoute `json:"Routes,omitnil,omitempty" name:"Routes"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -28087,10 +29129,10 @@ type ModifyVpnGatewaySslServerRequestParams struct {
 	// SSL VPN服务端监听协议端口。
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 加密算法。可选 'AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'NONE'。默认NONE
+	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
-	// 认证算法。可选 'SHA1', 'MD5', 'NONE'。默认NONE
+	// 认证算法。可选 'SHA1'，默认SHA1。
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
 	// 是否支持压缩。当前不支持压缩。默认False。
@@ -28124,10 +29166,10 @@ type ModifyVpnGatewaySslServerRequest struct {
 	// SSL VPN服务端监听协议端口。
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 加密算法。可选 'AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'NONE'。默认NONE
+	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
-	// 认证算法。可选 'SHA1', 'MD5', 'NONE'。默认NONE
+	// 认证算法。可选 'SHA1'，默认SHA1。
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
 	// 是否支持压缩。当前不支持压缩。默认False。
@@ -28396,11 +29438,9 @@ type NetDetect struct {
 	NetDetectDescription *string `json:"NetDetectDescription,omitnil,omitempty" name:"NetDetectDescription"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -28578,6 +29618,15 @@ type NetworkInterface struct {
 	// <li>`DELETING`：删除中</li>
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
+	// 弹性网卡状态：
+	// <li>`PENDING`：创建中</li>
+	// <li>`AVAILABLE`：可用的</li>
+	// <li>`ATTACHING`：绑定中</li>
+	// <li>`DETACHING`：解绑中</li>
+	// <li>`DELETING`：删除中</li>
+	// <li>`INUSE`：已绑定</li>
+	NetworkInterfaceState *string `json:"NetworkInterfaceState,omitnil,omitempty" name:"NetworkInterfaceState"`
+
 	// 内网IP信息。
 	PrivateIpAddressSet []*PrivateIpAddressSpecification `json:"PrivateIpAddressSet,omitnil,omitempty" name:"PrivateIpAddressSet"`
 
@@ -28750,12 +29799,13 @@ type PeerConnection struct {
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// 服务分级：PT、AU、AG。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
 	// 互通类型，VPC_PEER：VPC间互通；VPC_BM_PEER：VPC与黑石网络互通。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 对端VPC唯一ID。
+	DestinationVpcId *string `json:"DestinationVpcId,omitnil,omitempty" name:"DestinationVpcId"`
 }
 
 type PolicyStatistics struct {
@@ -29255,20 +30305,20 @@ func (r *ReleaseIPv6AddressesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ReleaseIp6AddressesBandwidthRequestParams struct {
-	// IPV6地址。Ip6Addresses和Ip6AddressIds必须且只能传一个
+	// IPv6地址。Ip6Addresses和Ip6AddressIds必须且只能传一个
 	Ip6Addresses []*string `json:"Ip6Addresses,omitnil,omitempty" name:"Ip6Addresses"`
 
-	// IPV6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressIds必须且只能传一个。
+	// IPv6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressIds必须且只能传一个。
 	Ip6AddressIds []*string `json:"Ip6AddressIds,omitnil,omitempty" name:"Ip6AddressIds"`
 }
 
 type ReleaseIp6AddressesBandwidthRequest struct {
 	*tchttp.BaseRequest
 	
-	// IPV6地址。Ip6Addresses和Ip6AddressIds必须且只能传一个
+	// IPv6地址。Ip6Addresses和Ip6AddressIds必须且只能传一个
 	Ip6Addresses []*string `json:"Ip6Addresses,omitnil,omitempty" name:"Ip6Addresses"`
 
-	// IPV6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressIds必须且只能传一个。
+	// IPv6地址对应的唯一ID，形如eip-xxxxxxxx。Ip6Addresses和Ip6AddressIds必须且只能传一个。
 	Ip6AddressIds []*string `json:"Ip6AddressIds,omitnil,omitempty" name:"Ip6AddressIds"`
 }
 
@@ -30465,6 +31515,203 @@ func (r *ResetRoutesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ResetTrafficMirrorFilterRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像需要过滤的natgw实例ID
+	NatId *string `json:"NatId,omitnil,omitempty" name:"NatId"`
+
+	// 流量镜像需要过滤的五元组规则
+	CollectorNormalFilters []*TrafficMirrorFilter `json:"CollectorNormalFilters,omitnil,omitempty" name:"CollectorNormalFilters"`
+}
+
+type ResetTrafficMirrorFilterRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像需要过滤的natgw实例ID
+	NatId *string `json:"NatId,omitnil,omitempty" name:"NatId"`
+
+	// 流量镜像需要过滤的五元组规则
+	CollectorNormalFilters []*TrafficMirrorFilter `json:"CollectorNormalFilters,omitnil,omitempty" name:"CollectorNormalFilters"`
+}
+
+func (r *ResetTrafficMirrorFilterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetTrafficMirrorFilterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	delete(f, "NatId")
+	delete(f, "CollectorNormalFilters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetTrafficMirrorFilterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ResetTrafficMirrorFilterResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ResetTrafficMirrorFilterResponse struct {
+	*tchttp.BaseResponse
+	Response *ResetTrafficMirrorFilterResponseParams `json:"Response"`
+}
+
+func (r *ResetTrafficMirrorFilterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetTrafficMirrorFilterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ResetTrafficMirrorSrcsRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像采集对象
+	CollectorSrcs []*string `json:"CollectorSrcs,omitnil,omitempty" name:"CollectorSrcs"`
+}
+
+type ResetTrafficMirrorSrcsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像采集对象
+	CollectorSrcs []*string `json:"CollectorSrcs,omitnil,omitempty" name:"CollectorSrcs"`
+}
+
+func (r *ResetTrafficMirrorSrcsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetTrafficMirrorSrcsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	delete(f, "CollectorSrcs")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetTrafficMirrorSrcsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ResetTrafficMirrorSrcsResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ResetTrafficMirrorSrcsResponse struct {
+	*tchttp.BaseResponse
+	Response *ResetTrafficMirrorSrcsResponseParams `json:"Response"`
+}
+
+func (r *ResetTrafficMirrorSrcsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetTrafficMirrorSrcsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ResetTrafficMirrorTargetRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像的接收目的信息
+	CollectorTarget *TrafficMirrorTarget `json:"CollectorTarget,omitnil,omitempty" name:"CollectorTarget"`
+
+	// 公网IP类型的流量镜像采集流量的发送端所属子网
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+}
+
+type ResetTrafficMirrorTargetRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像的接收目的信息
+	CollectorTarget *TrafficMirrorTarget `json:"CollectorTarget,omitnil,omitempty" name:"CollectorTarget"`
+
+	// 公网IP类型的流量镜像采集流量的发送端所属子网
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+}
+
+func (r *ResetTrafficMirrorTargetRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetTrafficMirrorTargetRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	delete(f, "CollectorTarget")
+	delete(f, "SubnetId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetTrafficMirrorTargetRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ResetTrafficMirrorTargetResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ResetTrafficMirrorTargetResponse struct {
+	*tchttp.BaseResponse
+	Response *ResetTrafficMirrorTargetResponseParams `json:"Response"`
+}
+
+func (r *ResetTrafficMirrorTargetResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetTrafficMirrorTargetResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ResetVpnConnectionRequestParams struct {
 	// VPN网关实例ID。
 	VpnGatewayId *string `json:"VpnGatewayId,omitnil,omitempty" name:"VpnGatewayId"`
@@ -30976,7 +32223,6 @@ type RouteSelectionPolicy struct {
 	SourceCidrBlock *string `json:"SourceCidrBlock,omitnil,omitempty" name:"SourceCidrBlock"`
 
 	// 路由表描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 实例ID。
@@ -31172,11 +32418,9 @@ type SecurityGroupPolicySet struct {
 
 type SecurityPolicyDatabase struct {
 	// 本端网段
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalCidrBlock *string `json:"LocalCidrBlock,omitnil,omitempty" name:"LocalCidrBlock"`
 
 	// 对端网段
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteCidrBlock []*string `json:"RemoteCidrBlock,omitnil,omitempty" name:"RemoteCidrBlock"`
 }
 
@@ -31193,11 +32437,13 @@ type ServiceTemplate struct {
 	// 创建时间。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
+	// 最后更新时间。
+	UpdatedTime *string `json:"UpdatedTime,omitnil,omitempty" name:"UpdatedTime"`
+
 	// 带备注的协议端口信息。
 	ServiceExtraSet []*ServicesInfo `json:"ServiceExtraSet,omitnil,omitempty" name:"ServiceExtraSet"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -31214,11 +32460,13 @@ type ServiceTemplateGroup struct {
 	// 创建时间。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
+	// 最后更新时间。
+	UpdatedTime *string `json:"UpdatedTime,omitnil,omitempty" name:"UpdatedTime"`
+
 	// 协议端口模板实例信息。
 	ServiceTemplateSet []*ServiceTemplate `json:"ServiceTemplateSet,omitnil,omitempty" name:"ServiceTemplateSet"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -31235,8 +32483,10 @@ type ServicesInfo struct {
 	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
 
 	// 备注。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 更新时间。
+	UpdatedTime *string `json:"UpdatedTime,omitnil,omitempty" name:"UpdatedTime"`
 }
 
 // Predefined struct for user
@@ -31541,7 +32791,6 @@ type SslVpnClient struct {
 
 type SslVpnSever struct {
 	// VPC实例ID.
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// SSL-VPN-SERVER 实例ID。
@@ -31607,8 +32856,115 @@ type SslVpnSever struct {
 	AccessPolicy []*AccessPolicy `json:"AccessPolicy,omitnil,omitempty" name:"AccessPolicy"`
 
 	// CAM服务提供商Name
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SpName *string `json:"SpName,omitnil,omitempty" name:"SpName"`
+}
+
+// Predefined struct for user
+type StartTrafficMirrorRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+}
+
+type StartTrafficMirrorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+}
+
+func (r *StartTrafficMirrorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartTrafficMirrorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "StartTrafficMirrorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StartTrafficMirrorResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type StartTrafficMirrorResponse struct {
+	*tchttp.BaseResponse
+	Response *StartTrafficMirrorResponseParams `json:"Response"`
+}
+
+func (r *StartTrafficMirrorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartTrafficMirrorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StopTrafficMirrorRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+}
+
+type StopTrafficMirrorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+}
+
+func (r *StopTrafficMirrorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StopTrafficMirrorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "StopTrafficMirrorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StopTrafficMirrorResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type StopTrafficMirrorResponse struct {
+	*tchttp.BaseResponse
+	Response *StopTrafficMirrorResponseParams `json:"Response"`
+}
+
+func (r *StopTrafficMirrorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StopTrafficMirrorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type Subnet struct {
@@ -31727,6 +33083,94 @@ type TrafficFlow struct {
 	FormatUnit *string `json:"FormatUnit,omitnil,omitempty" name:"FormatUnit"`
 }
 
+type TrafficMirror struct {
+	// VPC实例ID。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 流量镜像实例。
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像名字。
+	TrafficMirrorName *string `json:"TrafficMirrorName,omitnil,omitempty" name:"TrafficMirrorName"`
+
+	// 流量镜像描述。
+	TrafficMirrorDescribe *string `json:"TrafficMirrorDescribe,omitnil,omitempty" name:"TrafficMirrorDescribe"`
+
+	// 流量镜像状态。
+	State *string `json:"State,omitnil,omitempty" name:"State"`
+
+	// 流量镜像采集方向。
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// 流量镜像采集对象。
+	CollectorSrcs []*string `json:"CollectorSrcs,omitnil,omitempty" name:"CollectorSrcs"`
+
+	// 流量镜像过滤的nat网关实例ID。
+	NatId *string `json:"NatId,omitnil,omitempty" name:"NatId"`
+
+	// 流量镜像过滤的五元组规则。
+	CollectorNormalFilters []*TrafficMirrorFilter `json:"CollectorNormalFilters,omitnil,omitempty" name:"CollectorNormalFilters"`
+
+	// 流量镜接收目标。
+	CollectorTarget *TrafficMirrorTarget `json:"CollectorTarget,omitnil,omitempty" name:"CollectorTarget"`
+
+	// 流量镜像创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 流量镜像的类型。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 流量镜像所属的子网ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 流量镜接收目标资源信息，当接收目标为ENI和CLB时返回。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TargetInfo []*TrafficMirrorTargetResourceInfo `json:"TargetInfo,omitnil,omitempty" name:"TargetInfo"`
+}
+
+type TrafficMirrorFilter struct {
+	// 过滤规则的源网段
+	SrcNet *string `json:"SrcNet,omitnil,omitempty" name:"SrcNet"`
+
+	// 过滤规则的目的网段
+	DstNet *string `json:"DstNet,omitnil,omitempty" name:"DstNet"`
+
+	// 过滤规则的协议
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 过滤规则的源端口，默认值1-65535
+	SrcPort *string `json:"SrcPort,omitnil,omitempty" name:"SrcPort"`
+
+	// 过滤规则的目的端口，默认值1-65535
+	DstPort *string `json:"DstPort,omitnil,omitempty" name:"DstPort"`
+}
+
+type TrafficMirrorTarget struct {
+	// 流量镜像的接收IP
+	TargetIps []*string `json:"TargetIps,omitnil,omitempty" name:"TargetIps"`
+
+	// 流量镜像接收IP组，均衡规则，支持ENI/FIVE_TUPLE_FLOW（vpc），FIVE_TUPLE_FLOW（公网IP）
+	AlgHash *string `json:"AlgHash,omitnil,omitempty" name:"AlgHash"`
+
+	// 流量镜像的接收endpoint（公网IP）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TargetEndPoints []*string `json:"TargetEndPoints,omitnil,omitempty" name:"TargetEndPoints"`
+
+	// 流量镜像的接收类型，分别为：IP/ENI/CLB
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
+}
+
+type TrafficMirrorTargetResourceInfo struct {
+	// 接收目标的资源Id
+	TargetId *string `json:"TargetId,omitnil,omitempty" name:"TargetId"`
+
+	// 接收目标的资源名称
+	TargetName *string `json:"TargetName,omitnil,omitempty" name:"TargetName"`
+}
+
 type TrafficPackage struct {
 	// 流量包唯一ID
 	TrafficPackageId *string `json:"TrafficPackageId,omitnil,omitempty" name:"TrafficPackageId"`
@@ -31763,27 +33207,21 @@ type TrafficPackage struct {
 
 type TrafficQosPolicySet struct {
 	// CCN实例ID。形如：ccn-f49l6u0z。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
 	// qos id。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	QosId *uint64 `json:"QosId,omitnil,omitempty" name:"QosId"`
 
 	// 描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	QosPolicyDescription *string `json:"QosPolicyDescription,omitnil,omitempty" name:"QosPolicyDescription"`
 
 	// 名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	QosPolicyName *string `json:"QosPolicyName,omitnil,omitempty" name:"QosPolicyName"`
 
 	// 带宽。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 流量调度策略ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	QosPolicyId *string `json:"QosPolicyId,omitnil,omitempty" name:"QosPolicyId"`
 }
 
@@ -32294,6 +33732,149 @@ func (r *UnlockCcnsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type UpdateTrafficMirrorAllFilterRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像采集方向
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// 流量镜像采集对象
+	CollectorSrcs []*string `json:"CollectorSrcs,omitnil,omitempty" name:"CollectorSrcs"`
+
+	// 流量镜像需要过滤的natgw实例
+	NatId *string `json:"NatId,omitnil,omitempty" name:"NatId"`
+
+	// 流量镜像需要过滤的五元组规则
+	CollectorNormalFilters []*TrafficMirrorFilter `json:"CollectorNormalFilters,omitnil,omitempty" name:"CollectorNormalFilters"`
+}
+
+type UpdateTrafficMirrorAllFilterRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像采集方向
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// 流量镜像采集对象
+	CollectorSrcs []*string `json:"CollectorSrcs,omitnil,omitempty" name:"CollectorSrcs"`
+
+	// 流量镜像需要过滤的natgw实例
+	NatId *string `json:"NatId,omitnil,omitempty" name:"NatId"`
+
+	// 流量镜像需要过滤的五元组规则
+	CollectorNormalFilters []*TrafficMirrorFilter `json:"CollectorNormalFilters,omitnil,omitempty" name:"CollectorNormalFilters"`
+}
+
+func (r *UpdateTrafficMirrorAllFilterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateTrafficMirrorAllFilterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	delete(f, "Direction")
+	delete(f, "CollectorSrcs")
+	delete(f, "NatId")
+	delete(f, "CollectorNormalFilters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateTrafficMirrorAllFilterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateTrafficMirrorAllFilterResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateTrafficMirrorAllFilterResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateTrafficMirrorAllFilterResponseParams `json:"Response"`
+}
+
+func (r *UpdateTrafficMirrorAllFilterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateTrafficMirrorAllFilterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateTrafficMirrorDirectionRequestParams struct {
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像采集方向
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+}
+
+type UpdateTrafficMirrorDirectionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流量镜像实例ID
+	TrafficMirrorId *string `json:"TrafficMirrorId,omitnil,omitempty" name:"TrafficMirrorId"`
+
+	// 流量镜像采集方向
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+}
+
+func (r *UpdateTrafficMirrorDirectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateTrafficMirrorDirectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficMirrorId")
+	delete(f, "Direction")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateTrafficMirrorDirectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateTrafficMirrorDirectionResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateTrafficMirrorDirectionResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateTrafficMirrorDirectionResponseParams `json:"Response"`
+}
+
+func (r *UpdateTrafficMirrorDirectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateTrafficMirrorDirectionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type UsedDetail struct {
 	// 流量包唯一ID
 	TrafficPackageId *string `json:"TrafficPackageId,omitnil,omitempty" name:"TrafficPackageId"`
@@ -32491,30 +34072,24 @@ type VpnConnection struct {
 	HealthCheckStatus *string `json:"HealthCheckStatus,omitnil,omitempty" name:"HealthCheckStatus"`
 
 	// DPD探测开关。默认为0，表示关闭DPD探测。可选值：0（关闭），1（开启）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DpdEnable *int64 `json:"DpdEnable,omitnil,omitempty" name:"DpdEnable"`
 
 	// DPD超时时间。即探测确认对端不存在需要的时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DpdTimeout *string `json:"DpdTimeout,omitnil,omitempty" name:"DpdTimeout"`
 
 	// DPD超时后的动作。默认为clear。dpdEnable为1（开启）时有效。可取值为clear（断开）和restart（重试）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DpdAction *string `json:"DpdAction,omitnil,omitempty" name:"DpdAction"`
 
 	// 标签键值对数组
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// 协商类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NegotiationType *string `json:"NegotiationType,omitnil,omitempty" name:"NegotiationType"`
 
 	// Bgp配置信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BgpConfig *BgpConfigAndAsn `json:"BgpConfig,omitnil,omitempty" name:"BgpConfig"`
 
 	// Nqa配置信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HealthCheckConfig *HealthCheckConfig `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
 }
 

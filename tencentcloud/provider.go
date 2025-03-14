@@ -1217,6 +1217,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_route_table_association":                                                  vpc.ResourceTencentCloudRouteTableAssociation(),
 			"tencentcloud_dnat":                                                                     vpc.ResourceTencentCloudDnat(),
 			"tencentcloud_nat_gateway":                                                              vpc.ResourceTencentCloudNatGateway(),
+			"tencentcloud_nat_gateway_flow_monitor":                                                 vpc.ResourceTencentCloudNatGatewayFlowMonitor(),
 			"tencentcloud_nat_gateway_snat":                                                         vpc.ResourceTencentCloudNatGatewaySnat(),
 			"tencentcloud_nat_refresh_nat_dc_route":                                                 vpc.ResourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_vpc_private_nat_gateway":                                                  vpc.ResourceTencentCloudVpcPrivateNatGateway(),

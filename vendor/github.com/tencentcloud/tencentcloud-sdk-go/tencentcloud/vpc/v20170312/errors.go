@@ -101,6 +101,9 @@ const (
 	// 参数不支持同时指定。
 	INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
 
+	// 当前IP已在其他公网IP类型的流量镜像中使用。
+	INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
+
 	// 指定过滤条件不存在。
 	INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 
@@ -127,6 +130,9 @@ const (
 
 	// 指定键值不是一个字符串型。
 	INVALIDPARAMETER_NOTSTR = "InvalidParameter.NotStr"
+
+	// 当前公网IP所在的地区不支持流量采集。
+	INVALIDPARAMETER_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameter.UnsupportedLbTrafficMirrorAz"
 
 	// 专线网关跨可用区容灾组不存在。
 	INVALIDPARAMETER_VPGHAGROUPNOTFOUND = "InvalidParameter.VpgHaGroupNotFound"
@@ -212,6 +218,12 @@ const (
 	// 本端地域和端地域重复。
 	INVALIDPARAMETERVALUE_DUPLICATEREGION = "InvalidParameterValue.DuplicateRegion"
 
+	// 当前IP已在其他公网IP类型的流量镜像中使用。
+	INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameterValue.DuplicatedLbTrafficMirrorCollectors"
+
+	// 当前接收端已在其他的公网IP类型的流量镜像中使用。
+	INVALIDPARAMETERVALUE_DUPLICATEDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.DuplicatedLbTrafficMirrorReciverEndpoint"
+
 	// 值超过上限。
 	INVALIDPARAMETERVALUE_EIPBRANDWIDTHOUTINVALID = "InvalidParameterValue.EIPBrandWidthOutInvalid"
 
@@ -278,6 +290,9 @@ const (
 	// 无效的IPv6地址。
 	INVALIDPARAMETERVALUE_INVALIDIPV6 = "InvalidParameterValue.InvalidIpv6"
 
+	// 接收端不是一个存在的虚机IP也不是可路由的idc机房IP。
+	INVALIDPARAMETERVALUE_INVALIDLBTRAFFICMIRRORRECIVERENDPOINT = "InvalidParameterValue.InvalidLbTrafficMirrorReciverEndpoint"
+
 	// 旧的带宽值无效。
 	INVALIDPARAMETERVALUE_INVALIDOLDBANDWIDTH = "InvalidParameterValue.InvalidOldBandwidth"
 
@@ -310,6 +325,9 @@ const (
 
 	// 该请求需要走BPAAS流程服务审批，当前发起审批中。
 	INVALIDPARAMETERVALUE_MEMBERAPPROVALAPPLICATIONSTARTED = "InvalidParameterValue.MemberApprovalApplicationStarted"
+
+	// 流量镜像target的内网带宽不足。
+	INVALIDPARAMETERVALUE_MIRRORLACKTARGETRESOURCE = "InvalidParameterValue.MirrorLackTargetResource"
 
 	// 缺少绑定的实例。
 	INVALIDPARAMETERVALUE_MISSINGASSOCIATEENTITY = "InvalidParameterValue.MissingAssociateEntity"
@@ -359,6 +377,12 @@ const (
 	// 不是UTF8编码。
 	INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
 
+	// 流量镜像采集对象已经被使用。
+	INVALIDPARAMETERVALUE_OBJECTUSEINTRAFFICMIRROR = "InvalidParameterValue.ObjectUseInTrafficMirror"
+
+	// 流量镜像采集的VPC不是当前VPCID。
+	INVALIDPARAMETERVALUE_OBJECTVPCNOTCURRENTVPC = "InvalidParameterValue.ObjectVpcNotCurrentVpc"
+
 	// 该操作仅对主网卡支持。
 	INVALIDPARAMETERVALUE_ONLYSUPPORTEDFORMASTERNETWORKCARD = "InvalidParameterValue.OnlySupportedForMasterNetworkCard"
 
@@ -398,6 +422,9 @@ const (
 	// 该资源不支持此操作。
 	INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
 
+	// 自定义路由的下一跳参数不正确。
+	INVALIDPARAMETERVALUE_ROUTENEXTHOPINVALID = "InvalidParameterValue.RouteNextHopInvalid"
+
 	// 指定的优先级之间冲突或与已存在的优先级冲突。
 	INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
 
@@ -415,6 +442,9 @@ const (
 
 	// 子网与辅助Cidr网段重叠。
 	INVALIDPARAMETERVALUE_SUBNETOVERLAPASSISTCIDR = "InvalidParameterValue.SubnetOverlapAssistCidr"
+
+	// 子网与自定义路由目的Cidr网段完全重叠。
+	INVALIDPARAMETERVALUE_SUBNETOVERLAPROUTE = "InvalidParameterValue.SubnetOverlapRoute"
 
 	// 子网CIDR不合法。
 	INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
@@ -476,8 +506,17 @@ const (
 	// 该可用区不可用。
 	INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
 
+	// 当前公网IP所在的地区不支持流量采集。
+	INVALIDPARAMETERVALUE_UNSUPPORTEDLBTRAFFICMIRRORAZ = "InvalidParameterValue.UnsupportedLbTrafficMirrorAz"
+
+	// 当前流量镜像不支持此操作。
+	INVALIDPARAMETERVALUE_UNSUPPORTEDTRAFFICMIRRORACTION = "InvalidParameterValue.UnsupportedTrafficMirrorAction"
+
 	// 目的网段和当前VPC的CIDR冲突。
 	INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+
+	// 辅助Cidr与自定义子网路由目的Cidr网段完全重叠。
+	INVALIDPARAMETERVALUE_VPCCIDROVERLAPROUTE = "InvalidParameterValue.VpcCidrOverlapRoute"
 
 	// 当前功能不支持此专线网关。
 	INVALIDPARAMETERVALUE_VPGTYPENOTMATCH = "InvalidParameterValue.VpgTypeNotMatch"
@@ -496,6 +535,9 @@ const (
 
 	// VPN通道探测ip冲突。
 	INVALIDPARAMETERVALUE_VPNCONNHEALTHCHECKIPCONFLICT = "InvalidParameterValue.VpnConnHealthCheckIpConflict"
+
+	// SPD规则源目IP有重叠。
+	INVALIDPARAMETERVALUE_VPNCONNSPDCIDRCONFLICT = "InvalidParameterValue.VpnConnSpdCidrConflict"
 
 	// 参数Zone的值与CDC所在Zone冲突。
 	INVALIDPARAMETERVALUE_ZONECONFLICT = "InvalidParameterValue.ZoneConflict"
@@ -800,11 +842,20 @@ const (
 	// 跨账号场景下不支持自驾云账号实例 关联普通账号云联网。
 	UNSUPPORTEDOPERATION_CCNORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.CcnOrdinaryAccountRefuseAttach"
 
+	// 当前路由与已有路由的CIDR重叠，仅能开启其中一条路由。
+	UNSUPPORTEDOPERATION_CCNROUTECIDROVERLAP = "UnsupportedOperation.CcnRouteCidrOverlap"
+
 	// 指定的路由表不存在。
 	UNSUPPORTEDOPERATION_CCNROUTETABLENOTEXIST = "UnsupportedOperation.CcnRouteTableNotExist"
 
+	// 流量计量类型云联网暂不支持跨境
+	UNSUPPORTEDOPERATION_CCNTRAFFICMETERINGUNABLECROSSBORDER = "UnsupportedOperation.CcnTrafficMeteringUnableCrossBorder"
+
 	// CDC子网不支持创建非本地网关类型的路由。
 	UNSUPPORTEDOPERATION_CDCSUBNETNOTSUPPORTUNLOCALGATEWAY = "UnsupportedOperation.CdcSubnetNotSupportUnLocalGateway"
+
+	// VPG型的CDC网关不存在。
+	UNSUPPORTEDOPERATION_CDCVPGNOTEXISTS = "UnsupportedOperation.CdcVpgNotExists"
 
 	// 实例已经和VPC绑定。
 	UNSUPPORTEDOPERATION_CLASSICINSTANCEIDALREADYEXISTS = "UnsupportedOperation.ClassicInstanceIdAlreadyExists"
@@ -835,6 +886,9 @@ const (
 
 	// 指定的VPC未发现专线网关。
 	UNSUPPORTEDOPERATION_DCGATEWAYSNOTFOUNDINVPC = "UnsupportedOperation.DcGatewaysNotFoundInVpc"
+
+	// 当前专线网关有流日志，不支持删除。
+	UNSUPPORTEDOPERATION_DCGHASFLOWLOG = "UnsupportedOperation.DcgHasFlowLog"
 
 	// 禁止删除默认路由表。
 	UNSUPPORTEDOPERATION_DELDEFAULTROUTE = "UnsupportedOperation.DelDefaultRoute"
@@ -946,6 +1000,9 @@ const (
 
 	// 当前状态不支持发布至云联网，请重试。
 	UNSUPPORTEDOPERATION_INVALIDSTATUSNOTIFYCCN = "UnsupportedOperation.InvalidStatusNotifyCcn"
+
+	// 不支持IPV6。
+	UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
 
 	// 关联当前云联网的实例的账号存在不是金融云账号。
 	UNSUPPORTEDOPERATION_ISNOTFINANCEACCOUNT = "UnsupportedOperation.IsNotFinanceAccount"
@@ -1067,6 +1124,9 @@ const (
 	// 私网NAT网关存在关联规则。
 	UNSUPPORTEDOPERATION_PRIVATENATGATEWAYASSOCIATIONEXISTS = "UnsupportedOperation.PrivateNatGatewayAssociationExists"
 
+	// 不支持公网CLB。
+	UNSUPPORTEDOPERATION_PUBLICCLBNOTSUPPORT = "UnsupportedOperation.PublicClbNotSupport"
+
 	// Nat网关至少存在一个弹性IP，弹性IP不能解绑。
 	UNSUPPORTEDOPERATION_PUBLICIPADDRESSDISASSOCIATE = "UnsupportedOperation.PublicIpAddressDisassociate"
 
@@ -1171,6 +1231,12 @@ const (
 
 	// 不支持使用系统预留的标签键。
 	UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
+
+	// 流量镜像不支持目标Clb。
+	UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTCLB = "UnsupportedOperation.TrafficMirrorNotSupportClb"
+
+	// 流量镜像源、目的不可同端。
+	UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
 
 	// 账号ID不存在。
 	UNSUPPORTEDOPERATION_UINNOTFOUND = "UnsupportedOperation.UinNotFound"
