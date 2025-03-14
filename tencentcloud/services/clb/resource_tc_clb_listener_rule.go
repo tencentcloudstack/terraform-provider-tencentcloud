@@ -133,6 +133,13 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CLB_HTTP_METHOD),
 				Description:  "Methods of health check. NOTES: Only supports listeners of `HTTP` and `HTTPS` protocol. The default is `HEAD`, the available value are `HEAD` and `GET`.",
 			},
+			"health_source_ip_type": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
+				Description:  "Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.",
+			},
 			"certificate_ssl_mode": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -613,6 +620,9 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		}
 		_ = d.Set("health_check_type", instance.HealthCheck.CheckType)
 		_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
+		if instance.HealthCheck.SourceIpType != nil {
+			_ = d.Set("health_source_ip_type", instance.HealthCheck.SourceIpType)
+		}
 	}
 
 	if instance.Certificate != nil {
