@@ -1,3 +1,20 @@
+## 1.81.174(March 13 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_nat_gateway_flow_monitor` ([#3215](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3215))
+* **New Resource:** `tencentcloud_sqlserver_wan_ip_config` ([#3198](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3198))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_listener_rule: support `health_source_ip_type` param ([#3208](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3208))
+* resource/tencentcloud_cos_bucket: update doc ([#3214](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3214))
+* resource/tencentcloud_kubernetes_cluster_endpoint: optimize code logic and documentation ([#3207](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3207))
+* resource/tencentcloud_sqlserver_basic_instance: add new params ([#3198](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3198))
+* resource/tencentcloud_sqlserver_general_cloud_instance: add new params ([#3198](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3198))
+* resource/tencentcloud_sqlserver_instance: add new params ([#3198](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3198))
+* resource/tencentcloud_ssl_certificates: fix crash while no return `CertificatePublicKey` ([#3216](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3216))
+
 ## 1.81.173(March 13 , 2025)
 
 FEATURES:
