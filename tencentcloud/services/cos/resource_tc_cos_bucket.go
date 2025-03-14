@@ -188,12 +188,12 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `cos/kms`, `cos/kms` is for cdc cos scenario.",
+				Description: "The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `SM4`.",
 			},
 			"kms_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS or cos/kms. Set kms id to the specified value. If not specified, the default kms id is used.",
+				Description: "The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS. Set kms id to the specified value. If not specified, the default kms id is used.",
 			},
 			"versioning_enable": {
 				Type:        schema.TypeBool,

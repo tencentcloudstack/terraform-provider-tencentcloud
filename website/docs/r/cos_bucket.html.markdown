@@ -80,7 +80,7 @@ resource "tencentcloud_kms_key" "example" {
 resource "tencentcloud_cos_bucket" "bucket_basic" {
   bucket               = "tf-bucket-cdc-${local.app_id}"
   acl                  = "private"
-  encryption_algorithm = "KMS" #cos/kms for cdc cos
+  encryption_algorithm = "KMS"
   kms_id               = tencentcloud_kms_key.example.id
   versioning_enable    = true
   acceleration_enable  = false
@@ -428,11 +428,11 @@ The following arguments are supported:
 * `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
 * `enable_intelligent_tiering` - (Optional, Bool) Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.
-* `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `cos/kms`, `cos/kms` is for cdc cos scenario.
+* `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `SM4`.
 * `force_clean` - (Optional, Bool) Force cleanup all objects before delete bucket.
 * `intelligent_tiering_days` - (Optional, Int) Specifies the limit of days for standard-tier data to low-frequency data in an intelligent tiered storage configuration, with optional days of 30, 60, 90. Default value is 30.
 * `intelligent_tiering_request_frequent` - (Optional, Int) Specify the access limit for converting standard layer data into low-frequency layer data in the configuration. The default value is once, which can be used in combination with the number of days to achieve the conversion effect. For example, if the parameter is set to 1 and the number of access days is 30, it means that objects with less than one visit in 30 consecutive days will be reduced from the standard layer to the low frequency layer.
-* `kms_id` - (Optional, String) The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS or cos/kms. Set kms id to the specified value. If not specified, the default kms id is used.
+* `kms_id` - (Optional, String) The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS. Set kms id to the specified value. If not specified, the default kms id is used.
 * `lifecycle_rules` - (Optional, List) A configuration of object lifecycle management (documented below).
 * `log_enable` - (Optional, Bool) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).
 * `log_prefix` - (Optional, String) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
