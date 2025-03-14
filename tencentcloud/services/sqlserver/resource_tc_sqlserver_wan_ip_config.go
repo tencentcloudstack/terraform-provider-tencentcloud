@@ -157,8 +157,8 @@ func resourceTencentCloudSqlserverWanIpConfigRead(d *schema.ResourceData, meta i
 
 		tmpList := make([]map[string]interface{}, 0, len(roGroupList))
 		for _, v := range roGroupList {
-			dMap := map[string]interface{}{}
 			if v.ReadOnlyGroupId != nil && *v.ReadOnlyGroupId == roGroupId {
+				dMap := map[string]interface{}{}
 				if v.DnsPodDomain != nil {
 					dMap["dns_pod_domain"] = v.DnsPodDomain
 				}
