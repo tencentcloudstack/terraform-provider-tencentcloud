@@ -1213,6 +1213,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_subnet":                                                                   vpc.ResourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                                              vpc.ResourceTencentCloudRouteEntry(),
 			"tencentcloud_route_table_entry":                                                        vpc.ResourceTencentCloudVpcRouteEntry(),
+			"tencentcloud_route_table_entry_config":                                                 vpc.ResourceTencentCloudRouteTableEntryConfig(),
 			"tencentcloud_route_table":                                                              vpc.ResourceTencentCloudVpcRouteTable(),
 			"tencentcloud_route_table_association":                                                  vpc.ResourceTencentCloudRouteTableAssociation(),
 			"tencentcloud_dnat":                                                                     vpc.ResourceTencentCloudDnat(),
