@@ -58,6 +58,7 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 			"disabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether the entry is disabled, default is `false`.",
 			},
 			"description": {

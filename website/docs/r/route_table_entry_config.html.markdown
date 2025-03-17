@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a vpc route table entry config
 
+~> **NOTE:** When setting the route item switch, do not use it together with resource `tencentcloud_route_table_entry`.
+
 ## Example Usage
 
 ### Enable route item
