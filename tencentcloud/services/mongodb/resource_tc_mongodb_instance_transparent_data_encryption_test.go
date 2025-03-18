@@ -25,8 +25,9 @@ func TestAccTencentCloudMongodbInstanceTransparentDataEncryptionResource_basic(t
 				),
 			},
 			{
-				ResourceName: "tencentcloud_mongodb_instance_transparent_data_encryption.encryption",
-				ImportState:  true,
+				ResourceName:      "tencentcloud_mongodb_instance_transparent_data_encryption.encryption",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
