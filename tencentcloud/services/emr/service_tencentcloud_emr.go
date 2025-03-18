@@ -248,7 +248,11 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 
 	if v, ok := d.GetOk("pre_executed_file_settings"); ok {
 		preExecutedFileSettings := v.([]interface{})
-		for _, preExecutedFileSetting := range preExecutedFileSettings {
+		for idx, preExecutedFileSetting := range preExecutedFileSettings {
+			if preExecutedFileSetting == nil {
+				err = fmt.Errorf("pre_executed_file_settings element with index %d is nil", idx+1)
+				return
+			}
 			preExecutedFileSettingMap := preExecutedFileSetting.(map[string]interface{})
 			tmpPreExecutedFileSetting := &emr.PreExecuteFileSettings{}
 			if v, ok := preExecutedFileSettingMap["args"]; ok {
