@@ -15,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
+	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
 	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
@@ -131,6 +132,7 @@ type TencentCloudClient struct {
 	vpcConn            *vpc.Client
 	cbsConn            *cbs.Client
 	cvmv20170312Conn   *cvmv20170312.Client
+	cvmIntlConn        *cvmintl.Client
 	clbConn            *clb.Client
 	dayuConn           *dayu.Client
 	dcConn             *dc.Client
@@ -585,6 +587,19 @@ func (me *TencentCloudClient) UseCvmClient(iacExtInfo ...IacExtInfo) *cvmv201703
 	me.cvmv20170312Conn.WithHttpTransport(&logRoundTripper)
 
 	return me.cvmv20170312Conn
+}
+
+// UseCvmIntlClient returns cvm intl client for service
+func (me *TencentCloudClient) UseCvmIntlClient(iacExtInfo ...IacExtInfo) *cvmintl.Client {
+	if me.cvmIntlConn != nil {
+		return me.cvmIntlConn
+	}
+
+	cpf := me.NewClientIntlProfile(300)
+	me.cvmIntlConn, _ = cvmintl.NewClient(me.Credential, me.Region, cpf)
+	me.cvmIntlConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cvmIntlConn
 }
 
 // UseCvmV20170312Client returns cvm client for service

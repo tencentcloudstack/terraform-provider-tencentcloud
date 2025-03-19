@@ -386,14 +386,14 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"user_data": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ForceNew:      true,
+				Computed:      true,
 				ConflictsWith: []string{"user_data_raw"},
 				Description:   "The user data to be injected into this instance. Must be base64 encoded and up to 16 KB.",
 			},
 			"user_data_raw": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ForceNew:      true,
+				Computed:      true,
 				ConflictsWith: []string{"user_data"},
 				Description:   "The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded.",
 			},
@@ -1431,6 +1431,34 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("running_flag", true)
 	}
 
+	var instanceAttribute *cvm.InstanceAttribute
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		request := cvm.NewDescribeInstancesAttributesRequest()
+		request.InstanceIds = helper.Strings([]string{instanceId})
+		request.Attributes = helper.Strings([]string{"UserData"})
+		response, errRet := client.UseCvmClient().DescribeInstancesAttributes(request)
+		if errRet != nil {
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+
+		if len(response.Response.InstanceSet) > 0 {
+			instanceAttribute = response.Response.InstanceSet[0]
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	if instanceAttribute != nil && instanceAttribute.Attributes != nil && instanceAttribute.Attributes.UserData != nil {
+		_ = d.Set("user_data", instanceAttribute.Attributes.UserData)
+		userDataRaw, e := base64.StdEncoding.DecodeString(*(instanceAttribute.Attributes.UserData))
+		if e != nil {
+			return e
+		}
+		_ = d.Set("user_data_raw", string(userDataRaw))
+	}
+
 	return nil
 }
 
@@ -1938,6 +1966,30 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	if d.HasChange("user_data") {
+		err := cvmService.ModifyUserData(ctx, instanceId, d.Get("user_data").(string))
+		if err != nil {
+			return err
+		}
+
+		err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+		if err != nil {
+			return err
+		}
+	}
+	if d.HasChange("user_data_raw") {
+		userDataRaw := d.Get("user_data_raw").(string)
+		userData := base64.StdEncoding.EncodeToString([]byte(userDataRaw))
+		err := cvmService.ModifyUserData(ctx, instanceId, userData)
+		if err != nil {
+			return err
+		}
+
+		err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+		if err != nil {
+			return err
+		}
+	}
 	d.Partial(false)
 
 	return resourceTencentCloudInstanceRead(d, meta)

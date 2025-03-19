@@ -1086,7 +1086,7 @@ github.com/t-yuki/gocover-cobertura
 # github.com/tdakkota/asciicheck v0.2.0
 ## explicit; go 1.18
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1114+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1161+incompatible
 ## explicit
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/errors
@@ -1094,6 +1094,7 @@ github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/http
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/json
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/regions
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.799
@@ -1165,7 +1166,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1078
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1122
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1126
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1179,7 +1180,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1053
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1126
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
