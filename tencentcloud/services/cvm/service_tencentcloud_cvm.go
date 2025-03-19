@@ -12,6 +12,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -222,6 +223,25 @@ func (me *CvmService) ModifyInstanceName(ctx context.Context, instanceId, instan
 	request := cvm.NewModifyInstancesAttributeRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.InstanceName = &instanceName
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ModifyInstancesAttribute(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) ModifyUserData(ctx context.Context, instanceId, userData string) error {
+	logId := tccommon.GetLogId(ctx)
+	request := cvm.NewModifyInstancesAttributeRequest()
+	request.InstanceIds = []*string{&instanceId}
+	request.UserData = &userData
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().ModifyInstancesAttribute(request)
@@ -930,12 +950,12 @@ func (me *CvmService) CreateReservedInstance(ctx context.Context, configId strin
 	return
 }
 
-func (me *CvmService) DescribeReservedInstanceByFilter(ctx context.Context, filters map[string]string) (instances []*cvm.ReservedInstances, errRet error) {
+func (me *CvmService) DescribeReservedInstanceByFilter(ctx context.Context, filters map[string]string) (instances []*cvmintl.ReservedInstances, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	request := cvm.NewDescribeReservedInstancesRequest()
-	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	request := cvmintl.NewDescribeReservedInstancesRequest()
+	request.Filters = make([]*cvmintl.Filter, 0, len(filters))
 	for k, v := range filters {
-		filter := cvm.Filter{
+		filter := cvmintl.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
@@ -944,12 +964,12 @@ func (me *CvmService) DescribeReservedInstanceByFilter(ctx context.Context, filt
 
 	var offset int64 = 0
 	var pageSize int64 = 100
-	instances = make([]*cvm.ReservedInstances, 0)
+	instances = make([]*cvmintl.ReservedInstances, 0)
 	for {
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseCvmClient().DescribeReservedInstances(request)
+		response, err := me.client.UseCvmIntlClient().DescribeReservedInstances(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())

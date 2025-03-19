@@ -25,7 +25,7 @@ require (
 	github.com/mozillazg/go-httpheader v0.4.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.2
-	github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1114+incompatible
+	github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1161+incompatible
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.799
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763
@@ -46,8 +46,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1107
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1078
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1122
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1053
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1126
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1126
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.1111
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335

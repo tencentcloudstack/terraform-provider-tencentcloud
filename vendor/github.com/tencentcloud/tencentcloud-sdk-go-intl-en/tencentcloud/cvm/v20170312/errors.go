@@ -15,1172 +15,1109 @@
 package v20170312
 
 const (
-	// 此产品的特有错误码
+	// error codes for specific actions
 
-	// 该请求账户未通过资格审计。
+	// Your account failed the qualification verification.
 	ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
 
-	// 角色名鉴权失败
+	// Role name authentication failed.
 	AUTHFAILURE_CAMROLENAMEAUTHENTICATEFAILED = "AuthFailure.CamRoleNameAuthenticateFailed"
 
-	// 弹性网卡不允许跨子网操作。
+	// ENIs do not support changing subnets.
 	ENINOTALLOWEDCHANGESUBNET = "EniNotAllowedChangeSubnet"
 
-	// 账号已经存在
+	// The account already exists.
 	FAILEDOPERATION_ACCOUNTALREADYEXISTS = "FailedOperation.AccountAlreadyExists"
 
-	// 账号为当前用户
+	// You cannot share images with yourself.
 	FAILEDOPERATION_ACCOUNTISYOURSELF = "FailedOperation.AccountIsYourSelf"
 
-	// 该实例 `ins-xxxxxxx` 已经在 `dgroup-xxxxxx` 置放群组里。
-	FAILEDOPERATION_ALREADYINDISASTERRECOVERGROUP = "FailedOperation.AlreadyInDisasterRecoverGroup"
-
-	// 自带许可镜像暂时不支持共享。
+	// BYOL images cannot be shared.
 	FAILEDOPERATION_BYOLIMAGESHAREFAILED = "FailedOperation.BYOLImageShareFailed"
 
-	// 未找到指定的容灾组
+	// The specified spread placement group does not exist.
 	FAILEDOPERATION_DISASTERRECOVERGROUPNOTFOUND = "FailedOperation.DisasterRecoverGroupNotFound"
 
-	// 获取实例的自动化助手状态失败
+	// Failed to obtain the status of TencentCloud Automation Tools for the instance.
 	FAILEDOPERATION_GETINSTANCETATAGENTSTATUSFAILED = "FailedOperation.GetInstanceTATAgentStatusFailed"
 
-	// 标签键存在不合法字符
+	// The tag key contains invalid characters.
 	FAILEDOPERATION_ILLEGALTAGKEY = "FailedOperation.IllegalTagKey"
 
-	// 标签值存在不合法字符。
+	// The tag value contains invalid characters.
 	FAILEDOPERATION_ILLEGALTAGVALUE = "FailedOperation.IllegalTagValue"
 
-	// 询价失败
+	// Price query failed.
 	FAILEDOPERATION_INQUIRYPRICEFAILED = "FailedOperation.InquiryPriceFailed"
 
-	// 查询退换价格失败，找不到付款订单，请检查设备 `ins-xxxxxxx` 是否已过期。
+	// Failed to query the refund: the payment order is not found. Check whether the instance `ins-xxxxxxx` has expired.
 	FAILEDOPERATION_INQUIRYREFUNDPRICEFAILED = "FailedOperation.InquiryRefundPriceFailed"
 
-	// 镜像状态繁忙，请稍后重试。
+	// The image is busy. Please try again later.
 	FAILEDOPERATION_INVALIDIMAGESTATE = "FailedOperation.InvalidImageState"
 
-	// 不支持操作的applicationRole实例
+	// 
 	FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 
-	// 请求不支持`EMR`的实例`ins-xxxxxxxx`。
+	// The EMR instance `ins-xxxxxxxx` does not support this operation.
 	FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
 
-	// 该实例已存在指定的定时任务
-	FAILEDOPERATION_MUTACTIONTIMEREXIST = "FailedOperation.MutActionTimerExist"
-
-	// 子网可用IP已耗尽。
+	// No available IPs in the subnet.
 	FAILEDOPERATION_NOAVAILABLEIPADDRESSCOUNTINSUBNET = "FailedOperation.NoAvailableIpAddressCountInSubnet"
 
-	// 当前实例没有弹性IP
+	// This instance does not bind an EIP.
 	FAILEDOPERATION_NOTFOUNDEIP = "FailedOperation.NotFoundEIP"
 
-	// 账号为协作者，请填写主账号
+	// You’re using a collaborator account. Please enter a root account.
 	FAILEDOPERATION_NOTMASTERACCOUNT = "FailedOperation.NotMasterAccount"
 
-	// 指定的置放群组非空。
+	// The specified placement group is not empty.
 	FAILEDOPERATION_PLACEMENTSETNOTEMPTY = "FailedOperation.PlacementSetNotEmpty"
 
-	// 促销期内购买的实例不允许调整配置或计费模式。
+	// The configuration or billing mode of the CVM instances purchased during the promotion period cannot be modified.
 	FAILEDOPERATION_PROMOTIONALPERIORESTRICTION = "FailedOperation.PromotionalPerioRestriction"
 
-	// 暂无法在此国家/地区提供该服务。
+	// The service is not available in this country/region.
 	FAILEDOPERATION_PROMOTIONALREGIONRESTRICTION = "FailedOperation.PromotionalRegionRestriction"
 
-	// 镜像共享失败。
+	// Image sharing failed.
 	FAILEDOPERATION_QIMAGESHAREFAILED = "FailedOperation.QImageShareFailed"
 
-	// 镜像共享失败。
+	// Image sharing failed.
 	FAILEDOPERATION_RIMAGESHAREFAILED = "FailedOperation.RImageShareFailed"
 
-	// 安全组操作失败。
+	// Security group operation failed.
 	FAILEDOPERATION_SECURITYGROUPACTIONFAILED = "FailedOperation.SecurityGroupActionFailed"
 
-	// 快照容量大于磁盘大小，请选用更大的磁盘空间。
+	// The snapshot size is larger than the disk capacity. You need a larger disk space.
 	FAILEDOPERATION_SNAPSHOTSIZELARGERTHANDATASIZE = "FailedOperation.SnapshotSizeLargerThanDataSize"
 
-	// 不支持快照size小于云盘size。
+	// The snapshot size should be larger than the cloud disk capacity.
 	FAILEDOPERATION_SNAPSHOTSIZELESSTHANDATASIZE = "FailedOperation.SnapshotSizeLessThanDataSize"
 
-	// 请求中指定的标签键为系统预留标签，禁止创建
+	// The tag key specified in the request is reserved for the system.
 	FAILEDOPERATION_TAGKEYRESERVED = "FailedOperation.TagKeyReserved"
 
-	// 镜像是公共镜像并且启用了自动化助手服务，但它不符合 Linux&x86_64。
+	// This image is not a Linux&x86_64 image.
 	FAILEDOPERATION_TATAGENTNOTSUPPORT = "FailedOperation.TatAgentNotSupport"
 
-	// 实例无法退还。
+	// The instance is unreturnable.
 	FAILEDOPERATION_UNRETURNABLE = "FailedOperation.Unreturnable"
 
-	// 给定实例所在可用区不相同，请给定相同可用区的实例。
-	FAILEDOPERATION_ZONEINCONSISTENT = "FailedOperation.ZoneInconsistent"
-
-	// 镜像配额超过了限制。
+	// The image quota has been exceeded.
 	IMAGEQUOTALIMITEXCEEDED = "ImageQuotaLimitExceeded"
 
-	// 表示当前创建的实例个数超过了该账户允许购买的剩余配额数。
+	// You are trying to create more instances than your remaining quota allows.
 	INSTANCESQUOTALIMITEXCEEDED = "InstancesQuotaLimitExceeded"
 
-	// 内部错误。
+	// Internal error.
 	INTERNALERROR = "InternalError"
 
-	// 内部错误
+	// Internal error.
 	INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
 
-	// 操作内部错误。
+	// Internal error.
 	INTERNALSERVERERROR = "InternalServerError"
 
-	// 账户余额不足。
+	// Insufficient account balance.
 	INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 
-	// 账户有未支付订单。
+	// The account has unpaid orders.
 	INVALIDACCOUNT_UNPAIDORDER = "InvalidAccount.UnpaidOrder"
 
-	// 无效的账户Id。
+	// Invalid account ID.
 	INVALIDACCOUNTID_NOTFOUND = "InvalidAccountId.NotFound"
 
-	// 您无法共享镜像给自己。
+	// You cannot share images with yourself.
 	INVALIDACCOUNTIS_YOURSELF = "InvalidAccountIs.YourSelf"
 
-	// 指定的ClientToken字符串长度超出限制，必须小于等于64字节。
+	// The specified ClientToken exceeds the maximum length of 64 bytes.
 	INVALIDCLIENTTOKEN_TOOLONG = "InvalidClientToken.TooLong"
 
-	// 无效的过滤器。
+	// Invalid filter.
 	INVALIDFILTER = "InvalidFilter"
 
-	// [`Filter`](/document/api/213/15753#Filter)。
+	// [`Filter`](https://intl.cloud.tencent.com/document/api/213/15753?from_cn_redirect=1#Filter)
 	INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 
-	// 不支持该宿主机实例执行指定的操作。
+	// The specified operation on this CDH instance is not support .
 	INVALIDHOST_NOTSUPPORTED = "InvalidHost.NotSupported"
 
-	// 无效[CDH](https://cloud.tencent.com/document/product/416) `ID`。指定的[CDH](https://cloud.tencent.com/document/product/416) `ID`格式错误。例如`ID`长度错误`host-1122`。
+	// Invalid [CDH](https://intl.cloud.tencent.com/document/product/416?from_cn_redirect=1) `ID`. The specified [CDH](https://intl.cloud.tencent.com/document/product/416?from_cn_redirect=1) `ID` has an invalid format. For example, `host-1122` has an invalid `ID` length.
 	INVALIDHOSTID_MALFORMED = "InvalidHostId.Malformed"
 
-	// 指定的HostId不存在，或不属于该请求账号所有。
+	// The specified HostId does not exist, or does not belong to your account.
 	INVALIDHOSTID_NOTFOUND = "InvalidHostId.NotFound"
 
-	// 镜像处于共享中。
+	// The image is being shared.
 	INVALIDIMAGEID_INSHARED = "InvalidImageId.InShared"
 
-	// 镜像状态不合法。
+	// Invalid image status.
 	INVALIDIMAGEID_INCORRECTSTATE = "InvalidImageId.IncorrectState"
 
-	// 错误的镜像Id格式。
+	// Invalid image ID format.
 	INVALIDIMAGEID_MALFORMED = "InvalidImageId.Malformed"
 
-	// 未找到该镜像。
+	// The image cannot be found.
 	INVALIDIMAGEID_NOTFOUND = "InvalidImageId.NotFound"
 
-	// 镜像大小超过限制。
+	// The image size exceeds the limit.
 	INVALIDIMAGEID_TOOLARGE = "InvalidImageId.TooLarge"
 
-	// 镜像名称与原有镜像重复。
+	// The specified image name already exists.
 	INVALIDIMAGENAME_DUPLICATE = "InvalidImageName.Duplicate"
 
-	// 不支持的操作系统类型。
+	// The operating system type is not supported.
 	INVALIDIMAGEOSTYPE_UNSUPPORTED = "InvalidImageOsType.Unsupported"
 
-	// 不支持的操作系统版本。
+	// The operating system version is not supported.
 	INVALIDIMAGEOSVERSION_UNSUPPORTED = "InvalidImageOsVersion.Unsupported"
 
-	// 不被支持的实例。
+	// This instance is not supported.
 	INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 
-	// 无效实例`ID`。指定的实例`ID`格式错误。例如实例`ID`长度错误`ins-1122`。
+	// Invalid instance `ID`. The specified instance `ID` has an invalid format. For example, `ins-1122` has an invalid `ID` length.
 	INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 
-	// 没有找到相应实例。
+	// No instance found.
 	INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 
-	// 指定的InstanceName字符串长度超出限制，必须小于等于60字节。
+	// The specified InstanceName exceeds the maximum length of 60 bytes.
 	INVALIDINSTANCENAME_TOOLONG = "InvalidInstanceName.TooLong"
 
-	// 该实例不满足包月[退还规则](https://cloud.tencent.com/document/product/213/9711)。
+	// This instance does not meet the [Return Policy](https://intl.cloud.tencent.com/document/product/213/9711?from_cn_redirect=1) for prepaid instances.
 	INVALIDINSTANCENOTSUPPORTEDPREPAIDINSTANCE = "InvalidInstanceNotSupportedPrepaidInstance"
 
-	// 指定实例的当前状态不能进行该操作。
+	// This operation cannot be performed due to the current instance status.
 	INVALIDINSTANCESTATE = "InvalidInstanceState"
 
-	// 指定InstanceType参数格式不合法。
+	// The specified `InstanceType` parameter has an invalid format.
 	INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
 
-	// 密钥对数量超过限制。
+	// The number of key pairs exceeds the limit.
 	INVALIDKEYPAIR_LIMITEXCEEDED = "InvalidKeyPair.LimitExceeded"
 
-	// 无效密钥对ID。指定的密钥对ID格式错误，例如 `ID` 长度错误`skey-1122`。
+	// Invalid key pair ID. The specified key pair ID has an invalid format. For example, `skey-1122` has an invalid `ID` length.
 	INVALIDKEYPAIRID_MALFORMED = "InvalidKeyPairId.Malformed"
 
-	// 无效密钥对ID。指定的密钥对ID不存在。
+	// Invalid key pair ID. The specified key pair ID does not exist.
 	INVALIDKEYPAIRID_NOTFOUND = "InvalidKeyPairId.NotFound"
 
-	// 密钥对名称重复。
+	// Key pair name already exists.
 	INVALIDKEYPAIRNAME_DUPLICATE = "InvalidKeyPairName.Duplicate"
 
-	// 密钥名称为空。
+	// The key name cannot be empty.
 	INVALIDKEYPAIRNAMEEMPTY = "InvalidKeyPairNameEmpty"
 
-	// 密钥名称包含非法字符。密钥名称只支持英文、数字和下划线。
+	// The key name contains invalid characters. Key names can only contain letters, numbers and underscores.
 	INVALIDKEYPAIRNAMEINCLUDEILLEGALCHAR = "InvalidKeyPairNameIncludeIllegalChar"
 
-	// 密钥名称超过25个字符。
+	// The key name cannot exceed 25 characters.
 	INVALIDKEYPAIRNAMETOOLONG = "InvalidKeyPairNameTooLong"
 
-	// 参数错误。
+	// A parameter error occurred.
 	INVALIDPARAMETER = "InvalidParameter"
 
-	// 最多指定一个参数。
+	// Up to one parameter can be specified.
 	INVALIDPARAMETER_ATMOSTONE = "InvalidParameter.AtMostOne"
 
-	// 不支持自动制作快照。
+	// Automatic snapshot creation is not supported.
 	INVALIDPARAMETER_AUTOSNAPSHOTNOTSUPPORTED = "InvalidParameter.AutoSnapshotNotSupported"
 
-	// 不支持参数CdcId。
+	// 
 	INVALIDPARAMETER_CDCNOTSUPPORTED = "InvalidParameter.CdcNotSupported"
 
-	// DataDiskIds不应该传入RootDisk的Id。
+	// RootDisk ID should not be passed to DataDiskIds.
 	INVALIDPARAMETER_DATADISKIDCONTAINSROOTDISK = "InvalidParameter.DataDiskIdContainsRootDisk"
 
-	// 指定的数据盘不属于指定的实例。
+	// The specified data disk does not belong to the specified instance.
 	INVALIDPARAMETER_DATADISKNOTBELONGSPECIFIEDINSTANCE = "InvalidParameter.DataDiskNotBelongSpecifiedInstance"
 
-	// 只能包含一个系统盘快照。
+	// Only one system disk snapshot can be included.
 	INVALIDPARAMETER_DUPLICATESYSTEMSNAPSHOTS = "InvalidParameter.DuplicateSystemSnapshots"
 
-	// 边缘可用区指定三网外网IP参数需要先指定主ip外网IP参数。
+	// When specifying the CTCC/CUCC/CMCC public IP address parameter for edge zones, you need to first specify the public IP address parameter for the primary IP address.
 	INVALIDPARAMETER_EDGEZONEMISSINTERNETACCESSIBLE = "InvalidParameter.EdgeZoneMissInternetAccessible"
 
-	// 指定的CDH母机不支持自定义类型的子机规格
+	// The specified CDH host does not support custom instance specifications.
 	INVALIDPARAMETER_HOSTIDCUSTOMIZEDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdCustomizedInstanceTypeNotSupport"
 
-	// 指定的CDH母机不支持该子机机型规格
+	// The specified CDH host does not support the instance model specifications.
 	INVALIDPARAMETER_HOSTIDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdInstanceTypeNotSupport"
 
-	// 指定的CDH母机不支持标准类型的子机规格
+	// The specified CDH host does not support standard instance specifications.
 	INVALIDPARAMETER_HOSTIDSTANDARDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdStandardInstanceTypeNotSupport"
 
-	// 该主机当前状态不支持该操作。
+	// This operation is not supported under the current status of the CVM.
 	INVALIDPARAMETER_HOSTIDSTATUSNOTSUPPORT = "InvalidParameter.HostIdStatusNotSupport"
 
-	// 指定的hostName不符合规范。
+	// The specified HostName is invalid.
 	INVALIDPARAMETER_HOSTNAMEILLEGAL = "InvalidParameter.HostNameIllegal"
 
-	// 参数ImageIds和SnapshotIds必须有且仅有一个。
+	// Either `ImageIds` or `SnapshotIds` must be specified.
 	INVALIDPARAMETER_IMAGEIDSSNAPSHOTIDSMUSTONE = "InvalidParameter.ImageIdsSnapshotIdsMustOne"
 
-	// 当前接口不支持实例镜像。
+	// This API does not support instance images.
 	INVALIDPARAMETER_INSTANCEIMAGENOTSUPPORT = "InvalidParameter.InstanceImageNotSupport"
 
-	// 不存在支持指定子机规格的CDH母机
+	// No CDH host supports the specified instance specifications.
 	INVALIDPARAMETER_INSTANCETYPESUPPORTEDHOSTNOTFOUND = "InvalidParameter.InstanceTypeSupportedHostNotFound"
 
-	// 不支持设置公网带宽相关信息。
+	// Unable to set the public network bandwidth. 
 	INVALIDPARAMETER_INTERNETACCESSIBLENOTSUPPORTED = "InvalidParameter.InternetAccessibleNotSupported"
 
-	// 云盘资源售罄。
-	INVALIDPARAMETER_INVALIDCLOUDDISKSOLDOUT = "InvalidParameter.InvalidCloudDiskSoldOut"
-
-	// 参数依赖不正确。
+	// Invalid parameter dependency.
 	INVALIDPARAMETER_INVALIDDEPENDENCE = "InvalidParameter.InvalidDependence"
 
-	// 当前操作不支持该类型实例。
-	INVALIDPARAMETER_INVALIDINSTANCENOTSUPPORTED = "InvalidParameter.InvalidInstanceNotSupported"
-
-	// 指定的私有网络ip格式不正确。
+	// Invalid VPC IP address format.
 	INVALIDPARAMETER_INVALIDIPFORMAT = "InvalidParameter.InvalidIpFormat"
 
-	// 指定的 KMS 密钥 ID 非法。
+	// The specified KMS key ID is invalid.
 	INVALIDPARAMETER_INVALIDKMSKEYID = "InvalidParameter.InvalidKmsKeyId"
 
-	// 不能同时指定ImageIds和Filters。
+	// `ImageIds` and `Filters` cannot be specified at the same time.
 	INVALIDPARAMETER_INVALIDPARAMETERCOEXISTIMAGEIDSFILTERS = "InvalidParameter.InvalidParameterCoexistImageIdsFilters"
 
-	// 错误的url地址。
+	// Invalid URL.
 	INVALIDPARAMETER_INVALIDPARAMETERURLERROR = "InvalidParameter.InvalidParameterUrlError"
 
-	// 输入的 TargetOSType 非法
+	// The entered TargetOSType is invalid.
 	INVALIDPARAMETER_INVALIDTARGETOSTYPE = "InvalidParameter.InvalidTargetOSType"
 
-	// CoreCount和ThreadPerCore必须同时提供。
+	// `CoreCount` and `ThreadPerCore` must be specified at the same time.
 	INVALIDPARAMETER_LACKCORECOUNTORTHREADPERCORE = "InvalidParameter.LackCoreCountOrThreadPerCore"
 
-	// 本地数据盘不支持创建实例镜像。
+	// Local data disks cannot be used to create instance images.
 	INVALIDPARAMETER_LOCALDATADISKNOTSUPPORT = "InvalidParameter.LocalDataDiskNotSupport"
 
-	// 仅是边缘可用区支持这个参数。
+	// Only edge zones support this parameter.
 	INVALIDPARAMETER_ONLYSUPPORTFOREDGEZONE = "InvalidParameter.OnlySupportForEdgeZone"
 
-	// 不支持同时指定密钥登录和保持镜像登录方式。
+	// Specifying an SSH key will override the original one of the image.
 	INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 
-	// 不支持设置登录密码。
+	// Setting login password is not supported.
 	INVALIDPARAMETER_PASSWORDNOTSUPPORTED = "InvalidParameter.PasswordNotSupported"
 
-	// 指定的快照不存在。
+	// The specified snapshot does not exist.
 	INVALIDPARAMETER_SNAPSHOTNOTFOUND = "InvalidParameter.SnapshotNotFound"
 
-	// 这个参数需要开启白名单才可以使用。
+	// This parameter can only be used when the allowlist feature is enabled.
 	INVALIDPARAMETER_SPECIALPARAMETERFORSPECIALACCOUNT = "InvalidParameter.SpecialParameterForSpecialAccount"
 
-	// 多选一必选参数缺失。
+	// At least one of the multiple parameters must be passed in.
 	INVALIDPARAMETER_SPECIFYONEPARAMETER = "InvalidParameter.SpecifyOneParameter"
 
-	// 不支持Swap盘。
+	// Swap disks are not supported.
 	INVALIDPARAMETER_SWAPDISKNOTSUPPORT = "InvalidParameter.SwapDiskNotSupport"
 
-	// 参数不包含系统盘快照。
+	// The parameter does not contain system disk snapshot.
 	INVALIDPARAMETER_SYSTEMSNAPSHOTNOTFOUND = "InvalidParameter.SystemSnapshotNotFound"
 
-	// 参数长度超过限制。
+	// The length of parameter exceeds the limit.
 	INVALIDPARAMETER_VALUETOOLARGE = "InvalidParameter.ValueTooLarge"
 
-	// 表示参数组合不正确。
+	// The parameter combination is invalid.
 	INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
 
-	// 指定的两个参数冲突，不能同时存在。 EIP只能绑定在实例上或指定网卡的指定内网 IP 上。
+	// The two specified parameters conflict. An EIP can only be bound to the instance or the specified private IP of the specified ENI.
 	INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
 
-	// 参数取值错误。
+	// Incorrect parameter value.
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
-	// 入参数目不相等。
+	// The number of request parameters are not equal.
 	INVALIDPARAMETERVALUE_AMOUNTNOTEQUAL = "InvalidParameterValue.AmountNotEqual"
 
-	// 共享带宽包ID不合要求，请提供规范的共享带宽包ID，类似bwp-xxxxxxxx，字母x代表小写字符或者数字。
+	// The shared bandwidth package ID is invalid. Please provide a standard shared bandwidth package ID in the format similar to bwp-xxxxxxxx. In this format, the letter x stands for a lowercase character or a number.
 	INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 
-	// 请确认指定的带宽包是否存在。
+	// The specified bandwidth package does not exist.
 	INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDNOTFOUND = "InvalidParameterValue.BandwidthPackageIdNotFound"
 
-	// 带宽包所属的运营商和运营商参数不匹配。
+	// The ISP of the bandwidth package does not match the ISP parameter.
 	INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEISPNOTMATCH = "InvalidParameterValue.BandwidthPackageIspNotMatch"
 
-	// 带宽包所属的可用区和指定的可用区不匹配。
+	// The availability zone of the bandwidth package does not match the specified availability zone.
 	INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEZONENOTMATCH = "InvalidParameterValue.BandwidthPackageZoneNotMatch"
 
-	// 实例为基础网络实例，目标实例规格仅支持私有网络，不支持调整。
+	// Only VPC is supported. The network type of the instance is classic network, which cannot be changed.
 	INVALIDPARAMETERVALUE_BASICNETWORKINSTANCEFAMILY = "InvalidParameterValue.BasicNetworkInstanceFamily"
 
-	// 请确认存储桶是否存在。
+	// The bucket does not exist.
 	INVALIDPARAMETERVALUE_BUCKETNOTFOUND = "InvalidParameterValue.BucketNotFound"
 
-	// CamRoleName不合要求，只允许包含英文字母、数字或者 +=,.@_- 字符。
+	// Invalid `CamRoleName`. This parameter must contain only letters, numbers and symbols (`+`, `=`, `,`, `.`, `@`, `_`, `-`).
 	INVALIDPARAMETERVALUE_CAMROLENAMEMALFORMED = "InvalidParameterValue.CamRoleNameMalformed"
 
-	// CDH磁盘扩容只支持LOCAL_BASIC和LOCAL_SSD。
+	// 
 	INVALIDPARAMETERVALUE_CDHONLYLOCALDATADISKRESIZE = "InvalidParameterValue.CdhOnlyLocalDataDiskResize"
 
-	// 找不到对应的CHC物理服务器。
+	// Corresponding CHC hosts not found.
 	INVALIDPARAMETERVALUE_CHCHOSTSNOTFOUND = "InvalidParameterValue.ChcHostsNotFound"
 
-	// 该CHC未配置任何网络。
+	// No network is configured for this CHC.
 	INVALIDPARAMETERVALUE_CHCNETWORKEMPTY = "InvalidParameterValue.ChcNetworkEmpty"
 
-	// SSD云硬盘为数据盘时，购买大小不得小于100GB
+	// The minimum capacity of a SSD data disk is 100 GB.
 	INVALIDPARAMETERVALUE_CLOUDSSDDATADISKSIZETOOSMALL = "InvalidParameterValue.CloudSsdDataDiskSizeTooSmall"
 
-	// 核心计数不合法。
+	// Invalid number of cores.
 	INVALIDPARAMETERVALUE_CORECOUNTVALUE = "InvalidParameterValue.CoreCountValue"
 
-	// CDC不支持指定的计费模式。
+	// 
 	INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
 
-	// 已经存在部署VPC。
+	// A deployment VPC already exists.
 	INVALIDPARAMETERVALUE_DEPLOYVPCALREADYEXISTS = "InvalidParameterValue.DeployVpcAlreadyExists"
 
-	// 置放群组ID格式错误。
+	// Incorrect placement group ID format.
 	INVALIDPARAMETERVALUE_DISASTERRECOVERGROUPIDMALFORMED = "InvalidParameterValue.DisasterRecoverGroupIdMalformed"
 
-	// 参数值重复。
+	// Duplicate parameter value.
 	INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 
-	// 重复标签。
+	// Duplicate tags.
 	INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
 
-	// 实例的申请的外网IP个数超过了这种规格实例的外网ip配额。
+	// The number of requested public IP addresses exceeds the quota of this instance type.
 	INVALIDPARAMETERVALUE_EXTERNALIPQUOTALIMITED = "InvalidParameterValue.ExternalIpQuotaLimited"
 
-	// 非GPU实例不允许转为GPU实例。
+	// Non-GPU instances cannot be changed to the GPU instance.
 	INVALIDPARAMETERVALUE_GPUINSTANCEFAMILY = "InvalidParameterValue.GPUInstanceFamily"
 
-	// 您的高性能计算集群已经绑定其他可用区，不能购买当前可用区机器。
+	// 
 	INVALIDPARAMETERVALUE_HPCCLUSTERIDZONEIDNOTMATCH = "InvalidParameterValue.HpcClusterIdZoneIdNotMatch"
 
-	// IP格式非法。
+	// Invalid IP format
 	INVALIDPARAMETERVALUE_IPADDRESSMALFORMED = "InvalidParameterValue.IPAddressMalformed"
 
-	// ipv6地址无效
+	// Invalid IPv6 address
 	INVALIDPARAMETERVALUE_IPV6ADDRESSMALFORMED = "InvalidParameterValue.IPv6AddressMalformed"
 
-	// ISO文件必须强制导入
+	// ISO files must be imported by force.
 	INVALIDPARAMETERVALUE_ISOMUSTIMPORTBYFORCE = "InvalidParameterValue.ISOMustImportByForce"
 
-	// HostName参数值不合法
+	// The value of HostName is invalid.
 	INVALIDPARAMETERVALUE_ILLEGALHOSTNAME = "InvalidParameterValue.IllegalHostName"
 
-	// 传参格式不对。
+	// Incorrect request parameter format.
 	INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 
-	// 实例ID不合要求，请提供规范的实例ID，类似ins-xxxxxxxx，字母x代表小写字符或数字。
+	// Invalid instance ID. Please enter a valid ID, such as ins-xxxxxxxx (“x” represents a lower-case letter or a number).
 	INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 
-	// 不支持操作不同计费方式的实例。
-	INVALIDPARAMETERVALUE_INSTANCENOTSUPPORTEDMIXPRICINGMODEL = "InvalidParameterValue.InstanceNotSupportedMixPricingModel"
-
-	// 指定机型不存在
+	// The specified instance type does not exist.
 	INVALIDPARAMETERVALUE_INSTANCETYPENOTFOUND = "InvalidParameterValue.InstanceTypeNotFound"
 
-	// 实例类型不可加入高性能计算集群。
+	// This type of instances cannot be added to the HPC cluster.
 	INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTHPCCLUSTER = "InvalidParameterValue.InstanceTypeNotSupportHpcCluster"
 
-	// 高性能计算实例需指定对应的高性能计算集群。
+	// The HPC cluster needs to be specified for the high-performance computing instance.
 	INVALIDPARAMETERVALUE_INSTANCETYPEREQUIREDHPCCLUSTER = "InvalidParameterValue.InstanceTypeRequiredHpcCluster"
 
-	// 竞价数量不足。
+	// The spot instances are out of stock.
 	INVALIDPARAMETERVALUE_INSUFFICIENTOFFERING = "InvalidParameterValue.InsufficientOffering"
 
-	// 竞价失败。
+	// The bid is lower than the market price.
 	INVALIDPARAMETERVALUE_INSUFFICIENTPRICE = "InvalidParameterValue.InsufficientPrice"
 
-	// 无效的appid。
+	// Invalid AppID
 	INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 
-	// 不支持指定的启动模式。
+	// Unsupported boot mode.
 	INVALIDPARAMETERVALUE_INVALIDBOOTMODE = "InvalidParameterValue.InvalidBootMode"
 
-	// 请检查存储桶的写入权限是否已放通。
+	// You don’t have the write permission to the bucket.
 	INVALIDPARAMETERVALUE_INVALIDBUCKETPERMISSIONFOREXPORT = "InvalidParameterValue.InvalidBucketPermissionForExport"
 
-	// 参数 FileNamePrefixList 的长度与 ImageIds 或 SnapshotIds 不匹配。
+	// The length of `FileNamePrefixList` does not match `ImageIds` or `SnapshotIds`.
 	INVALIDPARAMETERVALUE_INVALIDFILENAMEPREFIXLIST = "InvalidParameterValue.InvalidFileNamePrefixList"
 
-	// 不支持转为非GPU或其他类型GPU实例。
+	// Converting to a non-GPU or other type of GPU instance is not supported.
 	INVALIDPARAMETERVALUE_INVALIDGPUFAMILYCHANGE = "InvalidParameterValue.InvalidGPUFamilyChange"
 
-	// 错误格式的镜像族名称
+	// Invalid format of image family name
 	INVALIDPARAMETERVALUE_INVALIDIMAGEFAMILY = "InvalidParameterValue.InvalidImageFamily"
 
-	// 镜像ID不支持指定的实例机型。
+	// The specified image does not support the specified instance type.
 	INVALIDPARAMETERVALUE_INVALIDIMAGEFORGIVENINSTANCETYPE = "InvalidParameterValue.InvalidImageForGivenInstanceType"
 
-	// 当前镜像为RAW格式，无法创建CVM，建议您选择其他镜像。
+	// A RAW image cannot be used to create a CVM. Choose another image.
 	INVALIDPARAMETERVALUE_INVALIDIMAGEFORMAT = "InvalidParameterValue.InvalidImageFormat"
 
-	// 镜像不允许执行该操作
+	// The image does not support this operation.
 	INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 
-	// 镜像无法用于重装当前实例。
+	// The image cannot be used to reinstall the current instance.
 	INVALIDPARAMETERVALUE_INVALIDIMAGEIDFORRETSETINSTANCE = "InvalidParameterValue.InvalidImageIdForRetsetInstance"
 
-	// 指定的镜像ID为共享镜像。
+	// 
 	INVALIDPARAMETERVALUE_INVALIDIMAGEIDISSHARED = "InvalidParameterValue.InvalidImageIdIsShared"
 
-	// 当前地域不支持指定镜像所包含的操作系统。
+	// The operating system of the specified image is not available in the current region.
 	INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 
-	// 镜像被其他操作占用，请检查，并稍后重试。
+	// The image has another ongoing task. Please check and try again later.
 	INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 
-	// 该实例配置来自免费升配活动，暂不支持3个月内进行降配。
+	// The instance configuration is upgraded for free and cannot be downgraded within 3 months.
 	INVALIDPARAMETERVALUE_INVALIDINSTANCESOURCE = "InvalidParameterValue.InvalidInstanceSource"
 
-	// 指定机型不支持包销付费模式。
-	INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
-
-	// IP地址不符合规范
+	// Invalid IP address.
 	INVALIDPARAMETERVALUE_INVALIDIPFORMAT = "InvalidParameterValue.InvalidIpFormat"
 
-	// 实例启动模板描述格式错误。
+	// Incorrect format of instance launch template description.
 	INVALIDPARAMETERVALUE_INVALIDLAUNCHTEMPLATEDESCRIPTION = "InvalidParameterValue.InvalidLaunchTemplateDescription"
 
-	// 实例启动模板名称格式错误。
+	// Incorrect format of instance launch template name.
 	INVALIDPARAMETERVALUE_INVALIDLAUNCHTEMPLATENAME = "InvalidParameterValue.InvalidLaunchTemplateName"
 
-	// 实例启动模板描述格式错误。
+	// Incorrect format of instance launch template version description.
 	INVALIDPARAMETERVALUE_INVALIDLAUNCHTEMPLATEVERSIONDESCRIPTION = "InvalidParameterValue.InvalidLaunchTemplateVersionDescription"
 
-	// 许可证类型不可用。
+	// Invalid license type.
 	INVALIDPARAMETERVALUE_INVALIDLICENSETYPE = "InvalidParameterValue.InvalidLicenseType"
 
-	// 参数值错误。
+	// Invalid parameter value.
 	INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUELIMIT = "InvalidParameterValue.InvalidParameterValueLimit"
 
-	// 无效密码。指定的密码不符合密码复杂度限制。例如密码长度不符合限制等。
+	// Invalid password. The specified password does not meet the complexity requirements (e.g., too long or too short)
 	INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 
-	// Region ID不可用。
+	// The Region ID is unavailable.
 	INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 
-	// 时间格式不合法。
+	// Incorrect time format.
 	INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 
-	// UserData格式错误, 需要base64编码格式
+	// Incorrect UserData format. Use the Base64-encoded format.
 	INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
 
-	// 无效的模糊查询字符串。
+	// Invalid fuzzy query string
 	INVALIDPARAMETERVALUE_INVALIDVAGUENAME = "InvalidParameterValue.InvalidVagueName"
 
-	// 边缘可用区不支持这个运营商。
+	// Edge zones do not support this ISP.
 	INVALIDPARAMETERVALUE_ISPNOTSUPPORTFOREDGEZONE = "InvalidParameterValue.IspNotSupportForEdgeZone"
 
-	// 重复指定了运营商参数值。
+	// Duplicate ISP parameter value specified.
 	INVALIDPARAMETERVALUE_ISPVALUEREPEATED = "InvalidParameterValue.IspValueRepeated"
 
-	// 请确认密钥是否存在。
+	// The key does not exist.
 	INVALIDPARAMETERVALUE_KEYPAIRNOTFOUND = "InvalidParameterValue.KeyPairNotFound"
 
-	// 指定的密钥不支持当前操作。
+	// The specified key does not support the operation.
 	INVALIDPARAMETERVALUE_KEYPAIRNOTSUPPORTED = "InvalidParameterValue.KeyPairNotSupported"
 
-	// 不支持删除默认启动模板版本。
+	// The default launch template version cannot be operated.
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEDEFAULTVERSION = "InvalidParameterValue.LaunchTemplateDefaultVersion"
 
-	// 实例启动模板ID格式错误，请提供规范的实例启动模板ID，类似lt-xxxxxxxx，字母x代表小写字符或者数字。
+	// Incorrect format of instance launch template ID. Please provide a valid instance launch template ID, similar to lt-xxxxxxxx, where x represents a lowercase character or digit.
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDMALFORMED = "InvalidParameterValue.LaunchTemplateIdMalformed"
 
-	// 实例启动模板ID不存在。
+	// The instance launch template ID does not exist.
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDNOTEXISTED = "InvalidParameterValue.LaunchTemplateIdNotExisted"
 
-	// 实例启动模板和版本ID组合不存在。
+	// The combination of the template and the version ID does not exist.
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDVERNOTEXISTED = "InvalidParameterValue.LaunchTemplateIdVerNotExisted"
 
-	// 指定的实例启动模板id不存在。
+	// The specified instance launch template ID doesn't exist.
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEIDVERSETALREADY = "InvalidParameterValue.LaunchTemplateIdVerSetAlready"
 
-	// 实例启动模板未找到。
+	// The instance launch template is not found.
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATENOTFOUND = "InvalidParameterValue.LaunchTemplateNotFound"
 
-	// 无效的实例启动模板版本号。
+	// Invalid instance launch template version number.
 	INVALIDPARAMETERVALUE_LAUNCHTEMPLATEVERSION = "InvalidParameterValue.LaunchTemplateVersion"
 
-	// 参数值数量超过限制。
+	// The number of parameter values exceeds the limit.
 	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 
-	// 本地盘的限制范围。
-	INVALIDPARAMETERVALUE_LOCALDISKSIZERANGE = "InvalidParameterValue.LocalDiskSizeRange"
-
-	// 参数值必须为开启DHCP的VPC
+	// The parameter value must be a DHCP-enabled VPC.
 	INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
 
-	// 子网不属于该cdc集群。
+	// The subnet is not in the CDC cluster.
 	INVALIDPARAMETERVALUE_NOTCDCSUBNET = "InvalidParameterValue.NotCdcSubnet"
 
-	// 输入参数值不能为空。
+	// The parameter value is required.
 	INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
 
-	// 不支持的操作。
+	// Unsupported operation.
 	INVALIDPARAMETERVALUE_NOTSUPPORTED = "InvalidParameterValue.NotSupported"
 
-	// 该机型不支持预热
+	// Preheating is not supported on this model.
 	INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDINSTANCETYPE = "InvalidParameterValue.PreheatNotSupportedInstanceType"
 
-	// 该可用区目前不支持预热功能
+	// Preheating is not supported in this availability zone.
 	INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDZONE = "InvalidParameterValue.PreheatNotSupportedZone"
 
-	// 预热地域不可用，请检查预热地域是否正确。
+	// 
 	INVALIDPARAMETERVALUE_PREHEATUNAVAILABLEZONES = "InvalidParameterValue.PreheatUnavailableZones"
 
-	//  无效参数值。参数值取值范围不合法。
+	//  Invalid parameter value: invalid parameter value range.
 	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 
-	// 请求需要区域镜像。
+	// 
 	INVALIDPARAMETERVALUE_REQUIREDLOCATIONIMAGE = "InvalidParameterValue.RequiredLocationImage"
 
-	// 快照ID不合要求，请提供规范的快照ID，类似snap-xxxxxxxx，字母x代表小写字符或者数字
+	// Invalid snapshot ID. Provide a snapshot ID in the format of snap-xxxxxxxx, where the letter x refers to lowercase letter or number.
 	INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
 
-	// 子网ID不合要求，请提供规范的子网ID，类似subnet-xxxxxxxx，字母x代表小写字符或者数字
+	// Invalid subnet ID. Please provide a subnet ID in the format of subnet-xxxxxxxx, where “x” can be a lowercase letter or number.
 	INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
 
-	// 创建失败，您指定的子网不存在，请您重新指定
+	// Creation failed: the subnet does not exist. Please specify another subnet.
 	INVALIDPARAMETERVALUE_SUBNETNOTEXIST = "InvalidParameterValue.SubnetNotExist"
 
-	// 指定的标签不存在。
+	// The specified tag does not exist
 	INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
 
-	// 标签配额超限。
+	// Tag quota limit exceeded.
 	INVALIDPARAMETERVALUE_TAGQUOTALIMITEXCEEDED = "InvalidParameterValue.TagQuotaLimitExceeded"
 
-	// 每核心线程数不合法。
+	// Invalid thread count per core.
 	INVALIDPARAMETERVALUE_THREADPERCOREVALUE = "InvalidParameterValue.ThreadPerCoreValue"
 
-	// 参数值超过最大限制。
+	// The parameter value exceeds the maximum limit.
 	INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 
-	// 无效参数值。参数值太长。
+	// Invalid parameter value: parameter value is too long.
 	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 
-	// uuid不合要求。
+	// Invalid UUID.
 	INVALIDPARAMETERVALUE_UUIDMALFORMED = "InvalidParameterValue.UuidMalformed"
 
-	// VPC ID`xxx`不合要求，请提供规范的Vpc ID， 类似vpc-xxxxxxxx，字母x代表小写字符或者数字。
+	// The VPC ID `xxx` is invalid. Please provide a VPC ID in the format of vpc-xxxxxxxx, where “x” can be a lowercase letter or number.
 	INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
 
-	// 指定的VpcId不存在。
+	// The specified VpcId doesn't exist.
 	INVALIDPARAMETERVALUE_VPCIDNOTEXIST = "InvalidParameterValue.VpcIdNotExist"
 
-	// VPC网络与实例不在同一可用区
+	// The VPC and instance must be in the same availability zone.
 	INVALIDPARAMETERVALUE_VPCIDZONEIDNOTMATCH = "InvalidParameterValue.VpcIdZoneIdNotMatch"
 
-	// 该VPC不支持ipv6。
+	// This VPC does not support the IPv6 addresses.
 	INVALIDPARAMETERVALUE_VPCNOTSUPPORTIPV6ADDRESS = "InvalidParameterValue.VpcNotSupportIpv6Address"
 
-	// 请求不支持该可用区
+	// The availability zone does not support this operation.
 	INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
 
-	// 参数值数量超过限制。
+	// The number of parameter values exceeds the limit.
 	INVALIDPARAMETERVALUELIMIT = "InvalidParameterValueLimit"
 
-	// 无效参数值。指定的 `Offset` 无效。
+	// Invalid parameter value: invalid `Offset`.
 	INVALIDPARAMETERVALUEOFFSET = "InvalidParameterValueOffset"
 
-	// 无效密码。指定的密码不符合密码复杂度限制。例如密码长度不符合限制等。
+	// Invalid password. The specified password does not meet the password requirements. For example, the password length does not meet the requirements.
 	INVALIDPASSWORD = "InvalidPassword"
 
-	// 无效时长。目前只支持时长：[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36]，单位：月。
+	// Invalid period. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36]; unit: month.
 	INVALIDPERIOD = "InvalidPeriod"
 
-	// 账户不支持该操作。
+	// This operation is not supported for the account.
 	INVALIDPERMISSION = "InvalidPermission"
 
-	// 无效的项目ID，指定的项目ID不存在。
+	// Invalid project ID: the specified project ID does not exist.
 	INVALIDPROJECTID_NOTFOUND = "InvalidProjectId.NotFound"
 
-	// 无效密钥公钥。指定公钥已经存在。
+	// Invalid public key: the specified key already exists.
 	INVALIDPUBLICKEY_DUPLICATE = "InvalidPublicKey.Duplicate"
 
-	// 无效密钥公钥。指定公钥格式错误，不符合`OpenSSH RSA`格式要求。
+	// Invalid public key: the specified public key does not meet the `OpenSSH RSA` format requirements.
 	INVALIDPUBLICKEY_MALFORMED = "InvalidPublicKey.Malformed"
 
-	// 未找到该区域。
+	// The region cannot be found.
 	INVALIDREGION_NOTFOUND = "InvalidRegion.NotFound"
 
-	// 该区域目前不支持同步镜像。
+	// Currently this region does not support image synchronization.
 	INVALIDREGION_UNAVAILABLE = "InvalidRegion.Unavailable"
 
-	// 指定的`安全组ID`不存在。
+	// The specified `security group ID` does not exist.
 	INVALIDSECURITYGROUPID_NOTFOUND = "InvalidSecurityGroupId.NotFound"
 
-	// 指定的`安全组ID`格式错误，例如`实例ID`长度错误`sg-ide32`。
+	// The specified `security group ID` is in the wrong format. For example, `sg-ide32` has an invalid `instance ID` length.
 	INVALIDSGID_MALFORMED = "InvalidSgId.Malformed"
 
-	// 指定的`zone`不存在。
+	// The specified `zone` does not exist.
 	INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 
-	// 一个实例绑定安全组数量不能超过5个
+	// An instance can be bound with up to 5 security groups.
 	LIMITEXCEEDED_ASSOCIATEUSGLIMITEXCEEDED = "LimitExceeded.AssociateUSGLimitExceeded"
 
-	// 已达到可购买实例的配额上限。
+	// The quota limit for purchasing instances has been reached.
 	LIMITEXCEEDED_CVMINSTANCEQUOTA = "LimitExceeded.CvmInstanceQuota"
 
-	// 安全组关联云主机弹性网卡配额超限。
+	// The CVM ENIs associated with the security group has exceeded the limit.
 	LIMITEXCEEDED_CVMSVIFSPERSECGROUPLIMITEXCEEDED = "LimitExceeded.CvmsVifsPerSecGroupLimitExceeded"
 
-	// 指定置放群组配额不足。
+	// The quota of the specified placement group is insufficient.
 	LIMITEXCEEDED_DISASTERRECOVERGROUP = "LimitExceeded.DisasterRecoverGroup"
 
-	// 特定实例包含的某个ENI的EIP数量已超过目标实例类型的EIP允许的最大值，请删除部分EIP后重试。
+	// The number of EIPs of an ENI contained in a specific instance has exceeded the maximum allowed EIPs of the target instance type. Please delete some EIPs and try again.
 	LIMITEXCEEDED_EIPNUMLIMIT = "LimitExceeded.EipNumLimit"
 
-	// 网卡数量超过实例上限。
+	// 
 	LIMITEXCEEDED_ENILIMITINSTANCETYPE = "LimitExceeded.EniLimitInstanceType"
 
-	// 特定实例当前ENI数量已超过目标实例类型的ENI允许的最大值，需删除部分ENI后重试。
+	// The number of ENIs on a specified instance exceeds the maximum ENIs allowed for the target instance type. Delete some ENIs and try again.
 	LIMITEXCEEDED_ENINUMLIMIT = "LimitExceeded.EniNumLimit"
 
-	// 正在运行中的镜像导出任务已达上限，请等待已有任务完成后，再次发起重试。
+	// The number of image export tasks in progress reached the upper limit. Please try again after the running tasks are completed.
 	LIMITEXCEEDED_EXPORTIMAGETASKLIMITEXCEEDED = "LimitExceeded.ExportImageTaskLimitExceeded"
 
-	// 已达创建高性能计算集群数的上限。
-	LIMITEXCEEDED_HPCCLUSTERQUOTA = "LimitExceeded.HpcClusterQuota"
-
-	// IP数量超过网卡上限。
+	// Number of IPs on this ENI reached the upper limit.
 	LIMITEXCEEDED_IPV6ADDRESSNUM = "LimitExceeded.IPv6AddressNum"
 
-	// 实例指定的弹性网卡数目超过了实例弹性网卡数目配额。
+	// Reached the upper limit of the ENIs for the instance.
 	LIMITEXCEEDED_INSTANCEENINUMLIMIT = "LimitExceeded.InstanceEniNumLimit"
 
-	// 当前配额不足够生产指定数量的实例
+	// You are short of the instance quota.
 	LIMITEXCEEDED_INSTANCEQUOTA = "LimitExceeded.InstanceQuota"
 
-	// 目标实例规格不支持当前规格的外网带宽上限，不支持调整。具体可参考[公网网络带宽上限](https://cloud.tencent.com/document/product/213/12523)。
+	// Unable to adjust: the target instance type does not support the configured public network bandwidth cap. See [Public Network Bandwidth Cap](https://intl.cloud.tencent.com/document/product/213/12523).
 	LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
 
-	// 实例启动模板数量超限。
+	// The number of instance launch templates exceeds the limit.
 	LIMITEXCEEDED_LAUNCHTEMPLATEQUOTA = "LimitExceeded.LaunchTemplateQuota"
 
-	// 实例启动模板版本数量超限。
+	// The number of instance launch template versions exceeds the limit.
 	LIMITEXCEEDED_LAUNCHTEMPLATEVERSIONQUOTA = "LimitExceeded.LaunchTemplateVersionQuota"
 
-	// 您在该可用区的预热额度已达上限，建议取消不再使用的快照预热
+	// Reached the upper limit for preheating in this availability zone. Remove some snapshots first.
 	LIMITEXCEEDED_PREHEATIMAGESNAPSHOTOUTOFQUOTA = "LimitExceeded.PreheatImageSnapshotOutOfQuota"
 
-	// 预付费实例已购买数量已达到最大配额，请提升配额后重试。
+	// Your quota for monthly-subscribed instances is used up. Increase your quota and try again.
 	LIMITEXCEEDED_PREPAYQUOTA = "LimitExceeded.PrepayQuota"
 
-	// 包销付费实例已购买数量已达到最大配额。
+	// 
 	LIMITEXCEEDED_PREPAYUNDERWRITEQUOTA = "LimitExceeded.PrepayUnderwriteQuota"
 
-	// 安全组限额不足
+	// The number of security groups exceeds the quota limit.
 	LIMITEXCEEDED_SINGLEUSGQUOTA = "LimitExceeded.SingleUSGQuota"
 
-	// 竞价实例类型配额不足
+	// The spot instance offerings are out of stock.
 	LIMITEXCEEDED_SPOTQUOTA = "LimitExceeded.SpotQuota"
 
-	// 标签绑定的资源数量已达到配额限制。
+	// Exceeded the upper limit of resources bound to the tag.
 	LIMITEXCEEDED_TAGRESOURCEQUOTA = "LimitExceeded.TagResourceQuota"
 
-	// 退还失败，退还配额已达上限。
+	// Failed to return instances because of the quota limit.
 	LIMITEXCEEDED_USERRETURNQUOTA = "LimitExceeded.UserReturnQuota"
 
-	// 竞价实例配额不足
+	// You are short of the spot instance quota.
 	LIMITEXCEEDED_USERSPOTQUOTA = "LimitExceeded.UserSpotQuota"
 
-	// 子网IP不足
+	// Insufficient subnet IPs.
 	LIMITEXCEEDED_VPCSUBNETNUM = "LimitExceeded.VpcSubnetNum"
 
-	// 缺少参数错误。
+	// Missing parameter.
 	MISSINGPARAMETER = "MissingParameter"
 
-	// 缺少必要参数，请至少提供一个参数。
+	// Parameter missing. Provide at least one parameter.
 	MISSINGPARAMETER_ATLEASTONE = "MissingParameter.AtLeastOne"
 
-	// DPDK实例机型要求VPC网络
+	// The DPDK instance requires a VPC.
 	MISSINGPARAMETER_DPDKINSTANCETYPEREQUIREDVPC = "MissingParameter.DPDKInstanceTypeRequiredVPC"
 
-	// 该实例类型必须开启云监控服务
+	// The instance type must have Cloud Monitor enabled.
 	MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
 
-	// 同样的任务正在运行。
+	// An identical job is running.
 	MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
 
-	// 不支持该账户的操作。
+	// 
 	OPERATIONDENIED_ACCOUNTNOTSUPPORTED = "OperationDenied.AccountNotSupported"
 
-	// 不允许未配置部署网络的CHC安装云上镜像。
+	// A CHC instance without network configured is not allowed for the installation of a cloud image
 	OPERATIONDENIED_CHCINSTALLCLOUDIMAGEWITHOUTDEPLOYNETWORK = "OperationDenied.ChcInstallCloudImageWithoutDeployNetwork"
 
-	// 禁止管控账号操作。
+	// Operation denied: This is a restricted account.
 	OPERATIONDENIED_INNERUSERPROHIBITACTION = "OperationDenied.InnerUserProhibitAction"
 
-	// 实例正在执行其他操作，请稍后再试。
+	// The instance has an operation in progress. Please try again later.
 	OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 
-	// 非带宽上移用户不允许申请边缘可用区外网IP。
+	// Bill-by-CVM users are not allowed to apply for edge zone public IP addresses.
 	OPERATIONDENIED_NOTBANDWIDTHSHIFTUPUSERAPPLYEDGEZONEEIP = "OperationDenied.NotBandwidthShiftUpUserApplyEdgeZoneEip"
 
-	// 镜像共享超过配额。
+	// The number of shared images exceeds the quota.
 	OVERQUOTA = "OverQuota"
 
-	// 该地域不支持导入镜像。
+	// This region does not support importing images.
 	REGIONABILITYLIMIT_UNSUPPORTEDTOIMPORTIMAGE = "RegionAbilityLimit.UnsupportedToImportImage"
 
-	// 资源被占用。
+	// The resource is in use.
 	RESOURCEINUSE = "ResourceInUse"
 
-	// 磁盘回滚正在执行中，请稍后再试。
+	// 
 	RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 
-	// 高性能计算集群使用中。
-	RESOURCEINUSE_HPCCLUSTER = "ResourceInUse.HpcCluster"
-
-	// 该可用区已售罄
+	// The availability zone has been sold out.
 	RESOURCEINSUFFICIENT_AVAILABILITYZONESOLDOUT = "ResourceInsufficient.AvailabilityZoneSoldOut"
 
-	// 网段资源不足。
+	// 
 	RESOURCEINSUFFICIENT_CIDRBLOCK = "ResourceInsufficient.CidrBlock"
 
-	// 指定的云盘规格已售罄
+	// The specified cloud disk has been sold out.
 	RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 
-	// 云盘参数不符合规范
+	// The parameters of cloud disk do not meet the specification.
 	RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 
-	// 实例个数超过容灾组的配额
+	// The number of instances exceeded the quota limit of spread placement groups.
 	RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
 
-	// 安全组资源配额不足。
+	// 
 	RESOURCEINSUFFICIENT_INSUFFICIENTGROUPQUOTA = "ResourceInsufficient.InsufficientGroupQuota"
 
-	// 指定的实例类型库存不足。
+	// The specified instance type is insufficient.
 	RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 
-	// 指定的实例类型在选择的可用区已售罄。
+	// The instances of the specified types were sold out in the selected AZs.
 	RESOURCEINSUFFICIENT_ZONESOLDOUTFORSPECIFIEDINSTANCE = "ResourceInsufficient.ZoneSoldOutForSpecifiedInstance"
 
-	// 高性能计算集群不存在。
+	// The HPC cluster does not exist.
 	RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
 
-	// 指定的置放群组不存在。
+	// The specified placement group does not exist.
 	RESOURCENOTFOUND_INVALIDPLACEMENTSET = "ResourceNotFound.InvalidPlacementSet"
 
-	// 可用区不支持此机型。
+	// This instance type is not supported in the AZ.
 	RESOURCENOTFOUND_INVALIDZONEINSTANCETYPE = "ResourceNotFound.InvalidZoneInstanceType"
 
-	// 指定密钥对不存在。
+	// 
 	RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 
-	// 无可用的缺省类型的CBS资源。
+	// No default CBS resources are available.
 	RESOURCENOTFOUND_NODEFAULTCBS = "ResourceNotFound.NoDefaultCbs"
 
-	// 无可用的缺省类型的CBS资源。
+	// No default CBS resources are available.
 	RESOURCENOTFOUND_NODEFAULTCBSWITHREASON = "ResourceNotFound.NoDefaultCbsWithReason"
 
-	// 资源不可用。
-	RESOURCEUNAVAILABLE = "ResourceUnavailable"
-
-	// 该可用区不售卖此机型
+	// This instance type is unavailable in the availability zone.
 	RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 
-	// 快照正在创建过程中。
+	// The snapshot is being created.
 	RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 
-	// 该可用区已售罄
+	// Resources in this availability zone has been sold out.
 	RESOURCESSOLDOUT_AVAILABLEZONE = "ResourcesSoldOut.AvailableZone"
 
-	// 公网IP已售罄。
+	// The public IP has been sold out.
 	RESOURCESSOLDOUT_EIPINSUFFICIENT = "ResourcesSoldOut.EipInsufficient"
 
-	// 指定的实例类型已售罄。
+	// The specified instance type is sold out.
 	RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 
-	// 安全组服务接口调用通用错误。
+	// A general error occurred during the security group service API call.
 	SECGROUPACTIONFAILURE = "SecGroupActionFailure"
 
-	// 未授权操作。
+	// 
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
-	// 指定的镜像不属于用户。
+	// The specified image does not belong to the user.
 	UNAUTHORIZEDOPERATION_IMAGENOTBELONGTOACCOUNT = "UnauthorizedOperation.ImageNotBelongToAccount"
 
-	// 请确认Token是否有效。
+	// Check if the token is valid.
 	UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
 
-	// 您无法进行当前操作，请确认多因子认证（MFA）是否失效。
+	// Unauthorized operation. Make sure Multi-Factor Authentication (MFA) is valid.
 	UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 
-	// 没有权限进行此操作，请确认是否存在多因子认证（MFA）。
+	// Unauthorized operation. Make sure Multi-Factor Authentication (MFA) exists.
 	UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 
-	// 无权操作指定的资源，请正确配置CAM策略。
+	// You’re not authorized for the operation. Please check the CAM policy.
 	UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 
-	// 未知参数错误。
+	// Unknown parameter error.
 	UNKNOWNPARAMETER = "UnknownParameter"
 
-	// 操作不支持。
+	// Unsupported operation.
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
-	// 该操作暂不支持Arm机器。
+	// This operation is currently not supported for ARM machines.
 	UNSUPPORTEDOPERATION_ARMARCHITECTURE = "UnsupportedOperation.ArmArchitecture"
 
-	// 指定的实例付费模式或者网络付费模式不支持共享带宽包
+	// The specified instance or network cannot use the bandwidth package.
 	UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 
-	// cbs远端ssd盘不支持该操作
-	UNSUPPORTEDOPERATION_CBSREMOTESSDNOTSUPPORT = "UnsupportedOperation.CbsRemoteSsdNotSupport"
-
-	// 实例创建快照的时间距今不到24小时。
+	// Only one snapshot can be created in 24 hours. 
 	UNSUPPORTEDOPERATION_DISKSNAPCREATETIMETOOOLD = "UnsupportedOperation.DiskSnapCreateTimeTooOld"
 
-	// 边缘可用区实例不支持此项操作。
+	// 
 	UNSUPPORTEDOPERATION_EDGEZONEINSTANCE = "UnsupportedOperation.EdgeZoneInstance"
 
-	// 所选择的边缘可用区不支持云盘操作。
+	// The selected edge zone does not support cloud disk operations.
 	UNSUPPORTEDOPERATION_EDGEZONENOTSUPPORTCLOUDDISK = "UnsupportedOperation.EdgeZoneNotSupportCloudDisk"
 
-	// 云服务器绑定了弹性网卡，请解绑弹性网卡后再切换私有网络。
+	// An ENI is bound to the CVM. Please unbind the ENI from the CVM before switching to VPC.
 	UNSUPPORTEDOPERATION_ELASTICNETWORKINTERFACE = "UnsupportedOperation.ElasticNetworkInterface"
 
-	// 不支持加密镜像。
+	// Encrypted images are not supported.
 	UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
 
-	// 异构机型不支持跨机型调整。
+	// You cannot change the model of a heterogeneous instance.
 	UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
 
-	// 不支持未开启休眠功能的实例。
+	// Instances with hibernation disabled are not supported.
 	UNSUPPORTEDOPERATION_HIBERNATIONFORNORMALINSTANCE = "UnsupportedOperation.HibernationForNormalInstance"
 
-	// 当前的镜像不支持休眠。
+	// 
 	UNSUPPORTEDOPERATION_HIBERNATIONOSVERSION = "UnsupportedOperation.HibernationOsVersion"
 
-	// IPv6实例不支持VPC迁移
+	// IPv6 instances cannot be migrated from Classiclink to VPC.
 	UNSUPPORTEDOPERATION_IPV6NOTSUPPORTVPCMIGRATE = "UnsupportedOperation.IPv6NotSupportVpcMigrate"
 
-	// 镜像大小超出限制，不支持导出。
+	// Failed to export the image: The image is too large.
 	UNSUPPORTEDOPERATION_IMAGETOOLARGEEXPORTUNSUPPORTED = "UnsupportedOperation.ImageTooLargeExportUnsupported"
 
-	// 请求不支持该实例计费模式
+	// This instance billing mode does not support the operation.
 	UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
 
-	// 不支持混合付费模式。
+	// A mixed payment mode is not supported.
 	UNSUPPORTEDOPERATION_INSTANCEMIXEDPRICINGMODEL = "UnsupportedOperation.InstanceMixedPricingModel"
 
-	// 不支持混合升配和降配实例。
-	UNSUPPORTEDOPERATION_INSTANCEMIXEDRESETINSTANCETYPE = "UnsupportedOperation.InstanceMixedResetInstanceType"
-
-	// 中心可用区和边缘可用区实例不能混用批量操作。
-	UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
-
-	// 指定实例不支持操作系统转换。
+	// The specified instance does not support operating system switching.
 	UNSUPPORTEDOPERATION_INSTANCEOSCONVERTOSNOTSUPPORT = "UnsupportedOperation.InstanceOsConvertOsNotSupport"
 
-	// 请求不支持操作系统为`Xserver windows2012cndatacenterx86_64`的实例`ins-xxxxxx` 。
+	// The instance `ins-xxxxxx` with the `Xserver windows2012cndatacenterx86_64` operating system does not support this operation.
 	UNSUPPORTEDOPERATION_INSTANCEOSWINDOWS = "UnsupportedOperation.InstanceOsWindows"
 
-	// 当前实例为重装系统失败状态，不支持此操作；推荐您再次重装系统，也可以销毁/退还实例或提交工单
+	// 
 	UNSUPPORTEDOPERATION_INSTANCEREINSTALLFAILED = "UnsupportedOperation.InstanceReinstallFailed"
 
-	// 该子机处于封禁状态，请联系相关人员处理。
+	// This CVM is blocked. Please submit a ticket.
 	UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
 
-	// 请求不支持永久故障的实例。
+	// The instances are permanently corrupted, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATECORRUPTED = "UnsupportedOperation.InstanceStateCorrupted"
 
-	// 请求不支持进入救援模式的实例
+	// Instances are entering the rescue mode, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATEENTERRESCUEMODE = "UnsupportedOperation.InstanceStateEnterRescueMode"
 
-	// 不支持状态为 `ENTER_SERVICE_LIVE_MIGRATE`.的实例 `ins-xxxxxx` 。
+	// The instance `ins-xxxxxx` in the `ENTER_SERVICE_LIVE_MIGRATE` status is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATEENTERSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateEnterServiceLiveMigrate"
 
-	// 请求不支持正在退出救援模式的实例
+	// Instances are exiting from the rescue mode, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATEEXITRESCUEMODE = "UnsupportedOperation.InstanceStateExitRescueMode"
 
-	// 不支持状态为 `EXIT_SERVICE_LIVE_MIGRATE`.的实例 `ins-xxxxxx` 。
+	// The instance `ins-xxxxxx` in the `EXIT_SERVICE_LIVE_MIGRATE` status is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATEEXITSERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateExitServiceLiveMigrate"
 
-	// 操作不支持已冻结的实例。
+	// The operation is not supported for the frozen instances.
 	UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
 
-	// 请求不支持正在隔离状态的实例。
+	// Unable to isolate: the instance is isolated
 	UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
 
-	// 不支持操作创建失败的实例。
+	// The instance is failed to create, so the operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATELAUNCHFAILED = "UnsupportedOperation.InstanceStateLaunchFailed"
 
-	// 指定操作不支持非运行中状态的实例。
+	// The specified operation is not supported for instances that are not in the running state.
 	UNSUPPORTEDOPERATION_INSTANCESTATENOTRUNNING = "UnsupportedOperation.InstanceStateNotRunning"
 
-	// 请求不支持创建未完成的实例
+	// The instances are being created, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
 
-	// 请求不支持正在重启的实例
+	// The instances are being restarted, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
 
-	// 请求不支持救援模式的实例
+	// Instances in the rescue mode are not available for this operation.
 	UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
 
-	// 请求不支持开机状态的实例
+	// Running instances do not support this operation.
 	UNSUPPORTEDOPERATION_INSTANCESTATERUNNING = "UnsupportedOperation.InstanceStateRunning"
 
-	// 不支持正在服务迁移的实例，请稍后再试
+	// The instances are being migrated, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATESERVICELIVEMIGRATE = "UnsupportedOperation.InstanceStateServiceLiveMigrate"
 
-	// 请求不支持隔离状态的实例
+	// Isolated instances do not support this operation.
 	UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
 
-	// 实例开机中，不允许该操作。
+	// The instance is starting up, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
 
-	// 请求不支持已关机的实例
+	// The instance has been shut down, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATESTOPPED = "UnsupportedOperation.InstanceStateStopped"
 
-	// 请求不支持正在关机的实例
+	// The instance is being shut down, and this operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 
-	// 不支持已销毁的实例
+	// Terminated instances are not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATETERMINATED = "UnsupportedOperation.InstanceStateTerminated"
 
-	// 请求不支持正在销毁的实例
+	// The instance is being terminated, and the operation is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
 
-	// 实例类型不支持设置`GridDriverService` 状态
-	UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
-
-	// 实例类型不支持设置 HighDensityMode 状态
-	UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTHIGHDENSITYMODESETTING = "UnsupportedOperation.InstanceTypeNotSupportHighDensityModeSetting"
-
-	// 实例类型不支持设置`EnableJumboFrame` 状态
+	// The instance type does not support setting the `EnableJumboFrame` status.
 	UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
 
-	// 不支持不重启情况下修改Jumbo Frame状态
+	// Modifying Jumbo Frame status without a restart is not supported.
 	UNSUPPORTEDOPERATION_INSTANCESENABLEJUMBOWITHOUTREBOOT = "UnsupportedOperation.InstancesEnableJumboWithoutReboot"
 
-	// 不支持已启用销毁保护的实例，请先到设置实例销毁保护，关闭实例销毁保护，然后重试。
+	// The instance is under termination protection and cannot be terminated. Disable the termination protection and try again.
 	UNSUPPORTEDOPERATION_INSTANCESPROTECTED = "UnsupportedOperation.InstancesProtected"
 
-	// 用户创建高性能集群配额已达上限。
-	UNSUPPORTEDOPERATION_INSUFFICIENTCLUSTERQUOTA = "UnsupportedOperation.InsufficientClusterQuota"
-
-	// 不支持调整数据盘。
+	// Adjusting the data disk is not supported.
 	UNSUPPORTEDOPERATION_INVALIDDATADISK = "UnsupportedOperation.InvalidDataDisk"
 
-	// 不支持指定的磁盘
+	// The specified disk is not supported.
 	UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 
-	// 不支持带有云硬盘备份点。
-	UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
-
-	// 不支持极速回滚。
+	// 
 	UNSUPPORTEDOPERATION_INVALIDDISKFASTROLLBACK = "UnsupportedOperation.InvalidDiskFastRollback"
 
-	// 镜像许可类型与实例不符，请选择其他镜像。
+	// The image license type does not match the instance. Select another image.
 	UNSUPPORTEDOPERATION_INVALIDIMAGELICENSETYPEFORRESET = "UnsupportedOperation.InvalidImageLicenseTypeForReset"
 
-	// 不支持已经设置了释放时间的实例，请在实例详情页撤销实例定时销毁后再试。
+	// This operation is not supported for the instance with a termination schedule. Please cancel the scheduled termination time in the instance details page and try again.
 	UNSUPPORTEDOPERATION_INVALIDINSTANCENOTSUPPORTEDPROTECTEDINSTANCE = "UnsupportedOperation.InvalidInstanceNotSupportedProtectedInstance"
 
-	// 不支持有swap盘的实例。
+	// Instances with swap disks are not supported.
 	UNSUPPORTEDOPERATION_INVALIDINSTANCEWITHSWAPDISK = "UnsupportedOperation.InvalidInstanceWithSwapDisk"
 
-	// 用户无权限操作当前实例。
+	// The user does not have permissions to operate the current instance.
 	UNSUPPORTEDOPERATION_INVALIDINSTANCESOWNER = "UnsupportedOperation.InvalidInstancesOwner"
 
-	// 当前操作只支持国际版用户。
+	// The current operation is supported only for Tencent Cloud users.
 	UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
 
-	// 指定的地域不支持加密盘。
+	// Encrypted disks are not available in the selected regions.
 	UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
 
-	// 该可用区不可售卖。
-	UNSUPPORTEDOPERATION_INVALIDZONE = "UnsupportedOperation.InvalidZone"
-
-	// 密钥不支持Windows操作系统
+	// Key-pair login is not available to Windows instances.
 	UNSUPPORTEDOPERATION_KEYPAIRUNSUPPORTEDWINDOWS = "UnsupportedOperation.KeyPairUnsupportedWindows"
 
-	// 机型数据盘全为本地盘不支持跨机型调整。
+	// A model whose data disks are all local disks does not support cross-model configuration adjustment.
 	UNSUPPORTEDOPERATION_LOCALDATADISKCHANGEINSTANCEFAMILY = "UnsupportedOperation.LocalDataDiskChangeInstanceFamily"
 
-	// 不支持正在本地盘转云盘的磁盘，请稍后发起请求。
+	// The specified disk is converting to a cloud disk. Try again later.
 	UNSUPPORTEDOPERATION_LOCALDISKMIGRATINGTOCLOUDDISK = "UnsupportedOperation.LocalDiskMigratingToCloudDisk"
 
-	// 此请求不支持该区域镜像,请更换其他镜像。
+	// This request does not support images in this region. Please change to another image.
 	UNSUPPORTEDOPERATION_LOCATIONIMAGENOTSUPPORTED = "UnsupportedOperation.LocationImageNotSupported"
 
-	// 市场镜像实例不支持操作系统转换
+	// Marketplace image instances do not support operating system switching.
 	UNSUPPORTEDOPERATION_MARKETIMAGECONVERTOSUNSUPPORTED = "UnsupportedOperation.MarketImageConvertOSUnsupported"
 
-	// 从市场镜像创建的自定义镜像不支持导出。
+	// The custom images created with the market images cannot be exported.
 	UNSUPPORTEDOPERATION_MARKETIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.MarketImageExportUnsupported"
 
-	// 不支持修改系统盘的加密属性，例如使用非加密镜像重装加密系统盘。
+	// Encryption attributes of the system disk cannot be modified. 
 	UNSUPPORTEDOPERATION_MODIFYENCRYPTIONNOTSUPPORTED = "UnsupportedOperation.ModifyEncryptionNotSupported"
 
-	// 绑定负载均衡的实例，不支持修改vpc属性。
+	// An instance bound with CLB does not support modifying its VPC attributes.
 	UNSUPPORTEDOPERATION_MODIFYVPCWITHCLB = "UnsupportedOperation.ModifyVPCWithCLB"
 
-	// 实例基础网络已互通VPC网络，请自行解除关联，再进行切换VPC。
+	// This instance is configured with ClassLink. Please cancel the association and continue. 
 	UNSUPPORTEDOPERATION_MODIFYVPCWITHCLASSLINK = "UnsupportedOperation.ModifyVPCWithClassLink"
 
-	// 该实例类型不支持竞价计费
+	// This instance type does not support spot instances.
 	UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
 
-	// 不支持物理网络的实例。
+	// A physical network is not supported by this instance.
 	UNSUPPORTEDOPERATION_NOVPCNETWORK = "UnsupportedOperation.NoVpcNetwork"
 
-	// 当前实例不是FPGA机型。
-	UNSUPPORTEDOPERATION_NOTFPGAINSTANCE = "UnsupportedOperation.NotFpgaInstance"
-
-	// 针对当前实例设置定时任务失败。
+	// Failed to configure the scheduled action for the current instance. 
 	UNSUPPORTEDOPERATION_NOTSUPPORTIMPORTINSTANCESACTIONTIMER = "UnsupportedOperation.NotSupportImportInstancesActionTimer"
 
-	// 操作不支持当前实例
+	// The instance does not support this operation.
 	UNSUPPORTEDOPERATION_NOTSUPPORTINSTANCEIMAGE = "UnsupportedOperation.NotSupportInstanceImage"
 
-	// 实例存在未支付订单。
+	// There are unpaid orders for the instance.
 	UNSUPPORTEDOPERATION_NOTSUPPORTUNPAIDORDER = "UnsupportedOperation.NotSupportUnpaidOrder"
 
-	// 该操作仅支持预付费账户
+	// Only a prepaid account supports this operation.
 	UNSUPPORTEDOPERATION_ONLYFORPREPAIDACCOUNT = "UnsupportedOperation.OnlyForPrepaidAccount"
 
-	// 无效的原机型。
+	// The original instance type is invalid.
 	UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 
-	// 您的账户不支持镜像预热
+	// Image preheating is not supported under your account.
 	UNSUPPORTEDOPERATION_PREHEATIMAGE = "UnsupportedOperation.PreheatImage"
 
-	// 公共镜像或市场镜像不支持导出。
+	// Public images and market images cannot be exported.
 	UNSUPPORTEDOPERATION_PUBLICIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.PublicImageExportUnsupported"
 
-	// 当前镜像不支持对该实例的重装操作。
+	// This image does not support instance reinstallation.
 	UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
 
-	// RedHat镜像不支持导出。
+	// The RedHat image cannot be exported.
 	UNSUPPORTEDOPERATION_REDHATIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.RedHatImageExportUnsupported"
 
-	// 实例使用商业操作系统，不支持退还。
+	// An instance with an enterprise operating system installed cannot be returned.
 	UNSUPPORTEDOPERATION_REDHATINSTANCETERMINATEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceTerminateUnsupported"
 
-	// 请求不支持操作系统为RedHat的实例。
+	// The operating system of the instance is RedHat, so this operation is not supported.
 	UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
 
-	// 不支持该地域
+	// The region is unsupported.
 	UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
 
-	// 当前用户暂不支持购买预留实例计费。
+	// Purchasing reserved instances is not supported for the current user.
 	UNSUPPORTEDOPERATION_RESERVEDINSTANCEINVISIBLEFORUSER = "UnsupportedOperation.ReservedInstanceInvisibleForUser"
 
-	// 用户预留实例计费配额已达上限。
+	// You’ve used up your quota for Reserved Instances.
 	UNSUPPORTEDOPERATION_RESERVEDINSTANCEOUTOFQUATA = "UnsupportedOperation.ReservedInstanceOutofQuata"
 
-	// 共享镜像不支持导出。
+	// Shared images cannot be exported.
 	UNSUPPORTEDOPERATION_SHAREDIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.SharedImageExportUnsupported"
 
-	// 请求不支持特殊机型的实例
+	// This special instance type does not support the operation.
 	UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 
-	// 该地域不支持竞价实例。
+	// Spot instance is not supported in this region.
 	UNSUPPORTEDOPERATION_SPOTUNSUPPORTEDREGION = "UnsupportedOperation.SpotUnsupportedRegion"
 
-	// 不支持关机不收费特性
+	// The instance does not support the **no charges when shut down** feature.
 	UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
 
-	// 不支持关机不收费机器做同类型变配操作。
+	// Configuration adjustment of the same type is not supported for instances with no charges when shut down.
 	UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGINGSAMEFAMILY = "UnsupportedOperation.StoppedModeStopChargingSameFamily"
 
-	// 指定的镜像不支持转为加密自定义镜像。
+	// The specified image does not support synchronization to an encrypted custom image.
 	UNSUPPORTEDOPERATION_SYNCENCRYPTIMAGENOTSUPPORT = "UnsupportedOperation.SyncEncryptImageNotSupport"
 
-	// 请求不支持该类型系统盘。
+	// 
 	UNSUPPORTEDOPERATION_SYSTEMDISKTYPE = "UnsupportedOperation.SystemDiskType"
 
-	// 自动化助手不在线情况下，不支持该操作。
+	// The operation is not supported when TencentCloud Automation Tools are offline.
 	UNSUPPORTEDOPERATION_TATAGENTNOTONLINE = "UnsupportedOperation.TatAgentNotOnline"
 
-	// 包月转包销，不支持包销折扣高于现有包年包月折扣。
-	UNSUPPORTEDOPERATION_UNDERWRITEDISCOUNTGREATERTHANPREPAIDDISCOUNT = "UnsupportedOperation.UnderwriteDiscountGreaterThanPrepaidDiscount"
-
-	// 该机型为包销机型，RenewFlag的值只允许设置为NOTIFY_AND_AUTO_RENEW。
+	// For an underwriting instance, `RenewFlag` can only be set to `NOTIFY_AND_AUTO_RENEW`.
 	UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
 
-	// 当前实例不允许变配到非ARM机型。
+	// 
 	UNSUPPORTEDOPERATION_UNSUPPORTEDARMCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedARMChangeInstanceFamily"
 
-	// 指定机型不支持跨机型调整配置。
+	// The specified model does not support cross-model configuration adjustment.
 	UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceFamily"
 
-	// 非ARM机型不支持调整到ARM机型。
+	// Non-ARM model instances cannot be changed to the ARM model.
 	UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCEFAMILYTOARM = "UnsupportedOperation.UnsupportedChangeInstanceFamilyToARM"
 
-	// 不支持实例变配到此类型机型。
+	// Changing to this model type for this instance is not allowed.
 	UNSUPPORTEDOPERATION_UNSUPPORTEDCHANGEINSTANCETOTHISINSTANCEFAMILY = "UnsupportedOperation.UnsupportedChangeInstanceToThisInstanceFamily"
 
-	// 请求不支持国际版账号
+	// This operation is not available for Tencent Cloud International users.
 	UNSUPPORTEDOPERATION_UNSUPPORTEDINTERNATIONALUSER = "UnsupportedOperation.UnsupportedInternationalUser"
 
-	// 指定的Pool非法。
+	// The specified pool is illegal.
 	UNSUPPORTEDOPERATION_UNSUPPORTEDPOOL = "UnsupportedOperation.UnsupportedPool"
 
-	// 指定用户不支持执行操作系统转换。
+	// The specified user does not support performing operating system switching.
 	UNSUPPORTEDOPERATION_USERCONVERTOSNOTSUPPORT = "UnsupportedOperation.UserConvertOsNotSupport"
 
-	// 用户限额操作的配额不足。
+	// The quota of user limit operations is insufficient.
 	UNSUPPORTEDOPERATION_USERLIMITOPERATIONEXCEEDQUOTA = "UnsupportedOperation.UserLimitOperationExceedQuota"
 
-	// Windows镜像不支持导出。
+	// Windows images cannot be exported.
 	UNSUPPORTEDOPERATION_WINDOWSIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.WindowsImageExportUnsupported"
 
-	// 私有网络ip不在子网内。
+	// The VPC IP address is not in the subnet.
 	VPCADDRNOTINSUBNET = "VpcAddrNotInSubNet"
 
-	// 私有网络ip已经被使用。
+	// The VPC IP address is already occupied.
 	VPCIPISUSED = "VpcIpIsUsed"
 )
