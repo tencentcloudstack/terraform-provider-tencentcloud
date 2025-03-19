@@ -67,6 +67,8 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_deploy_type` - Cluster deploy type of `MANAGED_CLUSTER` or `INDEPENDENT_CLUSTER`.
 * `cluster_external_endpoint` - External network address to access.
 * `domain` - Domain name for access.
+* `kube_config_intranet` - Kubernetes config of private network.
+* `kube_config` - The Intranet address used for access.
 * `password` - Password of account.
 * `pgw_endpoint` - The Intranet address used for access.
 * `user_name` - User name of account.

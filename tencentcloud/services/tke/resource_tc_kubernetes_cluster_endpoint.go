@@ -115,6 +115,16 @@ func ResourceTencentCloudTkeClusterEndpoint() *schema.Resource {
 				Computed:    true,
 				Description: "The Intranet address used for access.",
 			},
+			"kube_config": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The Intranet address used for access.",
+			},
+			"kube_config_intranet": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Kubernetes config of private network.",
+			},
 		},
 	}
 }
@@ -168,6 +178,45 @@ func resourceTencentCloudTkeClusterEndpointRead(d *schema.ResourceData, meta int
 	//if len(security.SecurityPolicy) > 0 {
 	//	_ = d.Set("managed_cluster_internet_security_policies", security.SecurityPolicy)
 	//}
+
+	var config string
+	clusterInternet := d.Get("cluster_internet").(bool)
+	clusterIntranet := d.Get("cluster_intranet").(bool)
+	if clusterInternet {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := service.DescribeClusterConfig(ctx, id, true)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			config = result
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		_ = d.Set("kube_config", config)
+	}
+
+	if clusterIntranet {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := service.DescribeClusterConfig(ctx, id, false)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			config = result
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		_ = d.Set("kube_config_intranet", config)
+	}
 
 	return nil
 }
