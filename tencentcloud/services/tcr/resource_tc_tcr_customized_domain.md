@@ -6,27 +6,27 @@ Create a tcr customized domain
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr"
+  name          = "tf-example"
   instance_type = "premium"
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 
 resource "tencentcloud_tcr_customized_domain" "example" {
   registry_id    = tencentcloud_tcr_instance.example.id
-  domain_name    = "www.test.com"
+  domain_name    = "www.demo.com"
   certificate_id = "your_cert_id"
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```
 
 Import
 
-tcr customized_domain can be imported using the id, e.g.
+tcr customized domain can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tcr_customized_domain.customized_domain customized_domain_id
+terraform import tencentcloud_tcr_customized_domain.example tcr-fjvvsfdh#www.demo.com
 ```
