@@ -1434,6 +1434,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	var instanceAttribute *cvm.InstanceAttribute
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		request := cvm.NewDescribeInstancesAttributesRequest()
+		request.InstanceIds = helper.Strings([]string{instanceId})
+		request.Attributes = helper.Strings([]string{"UserData"})
 		response, errRet := client.UseCvmClient().DescribeInstancesAttributes(request)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
