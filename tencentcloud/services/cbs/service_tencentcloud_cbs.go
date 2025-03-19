@@ -13,6 +13,7 @@ import (
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -901,6 +902,11 @@ func (me *CbsService) ApplyDiskBackup(ctx context.Context, diskBackupId, diskId 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := me.client.UseCbsClient().ApplyDiskBackup(request)
 		if e != nil {
+			if sdkError, ok := e.(*errors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceUnavailable.NotSupported" {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
