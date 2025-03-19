@@ -385,7 +385,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		cpu = v.(int)
 	}
 
-	if v, ok := d.GetOk("period"); ok {
+	if v, ok := d.GetOkExists("period"); ok {
 		log.Printf("period set")
 		period = v.(int)
 	} else {
@@ -404,7 +404,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		dbKernelVersion = v.(string)
 	}
 
-	if v, ok := d.GetOk("need_support_tde"); ok {
+	if v, ok := d.GetOkExists("need_support_tde"); ok {
 		needSupportTde = v.(int)
 	}
 
@@ -416,12 +416,12 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		kmsRegion = v.(string)
 	}
 
-	if v, ok := d.Get("auto_renew_flag").(int); ok {
-		autoRenewFlag = v
+	if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+		autoRenewFlag = v.(int)
 	}
 
-	if v, ok := d.Get("auto_voucher").(int); ok {
-		autoVoucher = v
+	if v, ok := d.GetOkExists("auto_voucher"); ok {
+		autoVoucher = v.(int)
 	}
 
 	if v, ok := d.GetOk("voucher_ids"); ok {
@@ -1004,10 +1004,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	d.Partial(true)
 
 	if err := helper.ImmutableArgsChek(d,
-		// "charge_type",
-		// "period",
-		// "auto_renew_flag",
-		// "auto_voucher",
+		"auto_voucher",
 		"voucher_ids",
 		"root_user",
 	); err != nil {
@@ -1023,18 +1020,11 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		waitSwitch = v.(int)
 	}
 
-	if d.HasChange("period") && !d.HasChange("charge_type") {
-		return fmt.Errorf("The `period` field can be changed only when updating the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.")
-	}
-
 	if d.HasChange("charge_type") {
 		var (
+			request       = postgresql.NewModifyDBInstanceChargeTypeRequest()
 			chargeTypeOld string
 			chargeTypeNew string
-			period        = 1
-			autoRenew     = 0
-			autoVoucher   = 0
-			request       = postgresql.NewModifyDBInstanceChargeTypeRequest()
 		)
 
 		old, new := d.GetChange("charge_type")
@@ -1050,32 +1040,9 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return fmt.Errorf("It only support to update the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.")
 		}
 
-		if v, ok := d.GetOk("period"); ok {
-			log.Printf("period set")
-			period = v.(int)
-		} else {
-			log.Printf("period not set")
-		}
-
-		if v, ok := d.GetOk("auto_renew_flag"); ok {
-			log.Printf("auto_renew_flag set")
-			autoRenew = v.(int)
-		} else {
-			log.Printf("auto_renew_flag not set")
-		}
-
-		if v, ok := d.GetOk("auto_voucher"); ok {
-			log.Printf("auto_voucher set")
-			autoVoucher = v.(int)
-		} else {
-			log.Printf("auto_voucher not set")
-		}
-
 		request.DBInstanceId = &instanceId
 		request.InstanceChargeType = &chargeTypeNew
-		request.Period = helper.IntInt64(period)
-		request.AutoRenewFlag = helper.IntInt64(autoRenew)
-		request.AutoVoucher = helper.IntInt64(autoVoucher)
+		request.Period = helper.IntInt64(1)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyDBInstanceChargeType(request)
 			if e != nil {
@@ -1089,6 +1056,76 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 		if err != nil {
 			log.Printf("[CRITAL]%s operate postgresql ModifyDbInstanceChargeType failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait unit charge type changing operation of instance done
+		service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"running"}, 2*tccommon.ReadRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
+	if d.HasChange("auto_renew_flag") {
+		request := postgresql.NewSetAutoRenewFlagRequest()
+		request.DBInstanceIdSet = helper.Strings([]string{instanceId})
+		if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+			request.AutoRenewFlag = helper.IntInt64(v.(int))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().SetAutoRenewFlag(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s operate postgresql SetAutoRenewFlag failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait unit charge type changing operation of instance done
+		service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"running"}, 2*tccommon.ReadRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
+	if d.HasChange("period") {
+		request := postgresql.NewRenewInstanceRequest()
+		request.DBInstanceId = &instanceId
+		if v, ok := d.GetOkExists("period"); ok {
+			request.Period = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("auto_voucher"); ok {
+			request.AutoVoucher = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOk("voucher_ids"); ok {
+			request.VoucherIds = helper.InterfacesStringsPoint(v.([]interface{}))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().RenewInstance(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s operate postgresql RenewInstance failed, reason:%+v", logId, err)
 			return err
 		}
 
