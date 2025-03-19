@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create an entry of a routing table.
 
+~> **NOTE:** When setting the route item switch, do not use it together with resource `tencentcloud_route_table_entry_config`.
+
 ## Example Usage
 
 ```hcl
