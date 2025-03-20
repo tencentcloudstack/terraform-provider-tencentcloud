@@ -65,6 +65,7 @@ The following arguments are supported:
 * `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
 * `subnet_id` - (Optional, String) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server.
+* `time_zone` - (Optional, String) System time zone, default: `China Standard Time`.
 * `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
 * `vpc_id` - (Optional, String) ID of VPC.
 * `wait_switch` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.2. The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.
