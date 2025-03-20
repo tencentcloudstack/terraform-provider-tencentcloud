@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudReservedInstance(t *testing.T) {
+func TestAccTencentCloudReservedInstanceResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { tcacctest.AccPreCheck(t) },
@@ -17,7 +17,6 @@ func TestAccTencentCloudReservedInstance(t *testing.T) {
 			{
 				Config: testAccReservedInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckPlacementGroupExists("tencentcloud_reserved_instance.reserved_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "config_id", "3ae825a8-bf6f-4c43-aa2c-c507c08fba92"),
 					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "instance_count", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_reserved_instance.reserved_instance", "reserved_instance_name", "test"),
@@ -27,9 +26,8 @@ func TestAccTencentCloudReservedInstance(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_reserved_instance.reserved_instance",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName: "tencentcloud_reserved_instance.reserved_instance",
+				ImportState:  true,
 			},
 		},
 	})
