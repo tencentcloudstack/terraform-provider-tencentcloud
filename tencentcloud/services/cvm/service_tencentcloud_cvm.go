@@ -759,11 +759,23 @@ func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanc
 	return nil
 }
 
-func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, placementType string) (placementId string, errRet error) {
+func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, placementType string, affinity int, tags []*cvm.Tag) (placementId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewCreateDisasterRecoverGroupRequest()
 	request.Name = &placementName
 	request.Type = &placementType
+
+	if affinity != 0 {
+		request.Affinity = helper.IntInt64(affinity)
+	}
+
+	if len(tags) > 0 {
+		tagSpecification := cvm.TagSpecification{
+			ResourceType: helper.String("ps"),
+			Tags:         tags,
+		}
+		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().CreateDisasterRecoverGroup(request)
@@ -1904,4 +1916,12 @@ func (me *CvmService) DeleteCvmInstanceActionTimerById(ctx context.Context, acti
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+func flattenInstanceTagsMapping(list []*cvm.Tag) map[string]interface{} {
+	result := make(map[string]interface{}, len(list))
+	for _, v := range list {
+		result[*v.Key] = *v.Value
+	}
+	return result
 }
