@@ -2029,3 +2029,32 @@ func (me *RedisService) DescribeRedisLogDeliveryById(ctx context.Context, instan
 	ret = response.Response.SlowLog
 	return
 }
+
+func (me *RedisService) DescribeRedisWanAddressById(ctx context.Context, instanceId string) (ret *redis.InstanceSet, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := redis.NewDescribeInstancesRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	ret = response.Response.InstanceSet[0]
+	return
+}
