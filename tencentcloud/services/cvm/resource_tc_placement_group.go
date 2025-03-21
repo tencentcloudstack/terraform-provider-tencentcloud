@@ -40,6 +40,7 @@ func ResourceTencentCloudPlacementGroup() *schema.Resource {
 			"affinity": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Computed:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
 				Description:  "Affinity of the placement group.Valid values: 1~10, default is 1.",
@@ -143,6 +144,7 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 
 	_ = d.Set("name", placement.Name)
 	_ = d.Set("type", placement.Type)
+	_ = d.Set("affinity", placement.Affinity)
 	_ = d.Set("cvm_quota_total", placement.CvmQuotaTotal)
 	_ = d.Set("current_num", placement.CurrentNum)
 	_ = d.Set("create_time", placement.CreateTime)
