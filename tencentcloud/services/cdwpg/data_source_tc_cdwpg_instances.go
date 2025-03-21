@@ -181,7 +181,7 @@ func dataSourceTencentCloudCdwpgInstancesRead(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	var instanceId string
+	ids := make([]string, 0, len(instances))
 	instancesList := make([]map[string]interface{}, 0, len(instances))
 	for _, instance := range instances {
 		instancesListMap := map[string]interface{}{}
@@ -191,7 +191,7 @@ func dataSourceTencentCloudCdwpgInstancesRead(d *schema.ResourceData, meta inter
 		}
 
 		if instance.InstanceId != nil {
-			instanceId = *instance.InstanceId
+			ids = append(ids, *instance.InstanceId)
 			instancesListMap["instance_id"] = instance.InstanceId
 		}
 
@@ -258,9 +258,9 @@ func dataSourceTencentCloudCdwpgInstancesRead(d *schema.ResourceData, meta inter
 		instancesList = append(instancesList, instancesListMap)
 	}
 
-	_ = d.Set("instances_list.", instancesList)
+	_ = d.Set("instances_list", instancesList)
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
