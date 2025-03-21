@@ -179,6 +179,7 @@ func ResourceTencentCloudClsCosShipper() *schema.Resource {
 			"start_time": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Start time for data shipping, which cannot be earlier than the lifecycle start time of the log topic. If you do not specify this parameter, it will be set to the time when you create the data shipping task.",
 			},
 			"end_time": {
