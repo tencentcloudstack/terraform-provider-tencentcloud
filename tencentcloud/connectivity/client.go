@@ -2054,7 +2054,6 @@ func (me *TencentCloudClient) UseCdwpgV20201230Client() *cdwpg.Client {
 		return me.cdwpgv20201230Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.cdwpgv20201230Conn, _ = cdwpg.NewClient(me.Credential, me.Region, cpf)
 	me.cdwpgv20201230Conn.WithHttpTransport(&LogRoundTripper{})
 
