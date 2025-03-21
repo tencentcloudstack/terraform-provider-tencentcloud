@@ -234,6 +234,7 @@ type TencentCloudClient struct {
 	monitor20180724Conn         *monitor.Client
 	cdcv20201214Conn            *cdc.Client
 	mqttv20240516Conn           *mqtt.Client
+	cdwpgv20201230Conn          *cdwpg.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2045,4 +2046,16 @@ func (me *TencentCloudClient) UseMqttV20240516Client() *mqtt.Client {
 	me.mqttv20240516Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.mqttv20240516Conn
+}
+
+// UseCdwpgV20201230Client return CDWPG client for service
+func (me *TencentCloudClient) UseCdwpgV20201230Client() *cdwpg.Client {
+	if me.cdwpgv20201230Conn != nil {
+		return me.cdwpgv20201230Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.cdwpgv20201230Conn, _ = cdwpg.NewClient(me.Credential, me.Region, cpf)
+	me.cdwpgv20201230Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdwpgv20201230Conn
 }
