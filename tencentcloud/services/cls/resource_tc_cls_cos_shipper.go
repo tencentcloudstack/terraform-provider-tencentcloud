@@ -338,7 +338,7 @@ func resourceTencentCloudClsCosShipperCreate(d *schema.ResourceData, meta interf
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create cls cos shipper failed, Reponse is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create cls cos shipper failed, Response is nil."))
 		}
 
 		response = result
