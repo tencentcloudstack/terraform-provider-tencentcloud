@@ -98,7 +98,7 @@ func ResourceTencentCloudServerlessHbaseInstance() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of tags to bind to the instance.",
 				Elem: &schema.Resource{
@@ -195,7 +195,7 @@ func resourceTencentCloudServerlessHbaseInstanceCreate(d *schema.ResourceData, m
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			tagsMap := item.(map[string]interface{})
 			tag := emr.Tag{}
 			if v, ok := tagsMap["tag_key"]; ok {
@@ -415,11 +415,11 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 		oldMap := make(map[string]interface{})
 		newMap := make(map[string]interface{})
 
-		for _, o := range oldValue.([]interface{}) {
+		for _, o := range oldValue.(*schema.Set).List() {
 			oMap := o.(map[string]interface{})
 			oldMap[oMap["tag_key"].(string)] = oMap["tag_value"].(string)
 		}
-		for _, n := range newValue.([]interface{}) {
+		for _, n := range newValue.(*schema.Set).List() {
 			nMap := n.(map[string]interface{})
 			newMap[nMap["tag_key"].(string)] = nMap["tag_value"].(string)
 		}
