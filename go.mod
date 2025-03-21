@@ -109,7 +109,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.1126
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.0.993
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970

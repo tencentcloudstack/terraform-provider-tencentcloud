@@ -1171,7 +1171,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdc_dedicated_cluster_orders":                 cdc.DataSourceTencentCloudCdcDedicatedClusterOrders(),
 			"tencentcloud_cdc_dedicated_clusters":                       cdc.DataSourceTencentCloudCdcDedicatedClusters(),
 			"tencentcloud_cdwdoris_instances":                           cdwdoris.DataSourceTencentCloudCdwdorisInstances(),
-			"tencentcloud_lite_hbase_instances":                         emr.DataSourceTencentCloudLiteHbaseInstances()},
+			"tencentcloud_lite_hbase_instances":                         emr.DataSourceTencentCloudLiteHbaseInstances(),
+			"tencentcloud_cdwpg_instances":                              cdwpg.DataSourceTencentCloudCdwpgInstances(),
+			"tencentcloud_cdwpg_log":                                    cdwpg.DataSourceTencentCloudCdwpgLog(),
+			"tencentcloud_cdwpg_nodes":                                  cdwpg.DataSourceTencentCloudCdwpgNodes(),
+		},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                                                  project.ResourceTencentCloudProject(),

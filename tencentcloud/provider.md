@@ -2244,6 +2244,11 @@ tencentcloud_bi_embed_token_apply
 tencentcloud_bi_embed_interval_apply
 
 CDWPG
+Data Source
+tencentcloud_cdwpg_instances
+tencentcloud_cdwpg_log
+tencentcloud_cdwpg_nodes
+
 Resource
 tencentcloud_cdwpg_instance
 
