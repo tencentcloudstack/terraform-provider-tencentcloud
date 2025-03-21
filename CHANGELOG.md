@@ -1,3 +1,31 @@
+## 1.81.175(March 21 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cdwpg_instances` ([#3232](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3232))
+* **New Data Source:** `tencentcloud_cdwpg_log` ([#3232](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3232))
+* **New Data Source:** `tencentcloud_cdwpg_nodes` ([#3232](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3232))
+* **New Data Source:** `tencentcloud_sqlserver_collation_time_zone` ([#3228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3228))
+* **New Resource:** `tencentcloud_route_table_entry_config` ([#3217](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3217))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_cos_shipper: support new params ([#3231](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3231))
+* resource/tencentcloud_dts_migrate_service: Optimize deletion logic ([#3230](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3230))
+* resource/tencentcloud_dts_sync_job: Optimize deletion logic ([#3230](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3230))
+* resource/tencentcloud_dts_sync_job: Optimize update logic ([#3230](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3230))
+* resource/tencentcloud_emr_cluster: handle error when the element in pre_executed_file_settings is nil ([#3219](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3219))
+* resource/tencentcloud_instance: support `user_data` and `user_data_raw` update ([#3227](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3227))
+* resource/tencentcloud_kubernetes_cluster_endpoint: add `kube_config`, `kube_config_intranet` fields output ([#3225](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3225))
+* resource/tencentcloud_mongodb_instance_transparent_data_encryption: fix import ([#3222](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3222))
+* resource/tencentcloud_placement_group: support `affinity` and `tags` ([#3229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3229))
+* resource/tencentcloud_postgresql_instance: support update `charge_type`, `period`, `auto_renew_flag` ([#3223](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3223))
+* resource/tencentcloud_reserved_instance: update cvm sdk ([#3227](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3227))
+* resource/tencentcloud_serverless_hbase_instance: Change `tags` from `TypeList` to `TypeSet` ([#3233](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3233))
+* resource/tencentcloud_sqlserver_instance: Support time_zone field. ([#3228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3228))
+* resource/tencentcloud_sqlserver_readonly_instance: Support time_zone field. ([#3228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3228))
+* resource/tencentcloud_tcr_customized_domain: update doc ([#3224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3224))
+
 ## 1.81.174(March 14 , 2025)
 
 FEATURES:
