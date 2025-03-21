@@ -742,6 +742,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_backup_upload_size":                 sqlserver.DataSourceTencentCloudSqlserverBackupUploadSize(),
 			"tencentcloud_sqlserver_cross_region_zone":                  sqlserver.DataSourceTencentCloudSqlserverCrossRegionZone(),
 			"tencentcloud_sqlserver_db_charsets":                        sqlserver.DataSourceTencentCloudSqlserverDBCharsets(),
+			"tencentcloud_sqlserver_collation_time_zone":                sqlserver.DataSourceTencentCloudSqlserverCollationTimeZone(),
 			"tencentcloud_ckafka_users":                                 ckafka.DataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                                  ckafka.DataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                                ckafka.DataSourceTencentCloudCkafkaTopics(),

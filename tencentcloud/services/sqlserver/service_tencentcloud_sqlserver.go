@@ -13,6 +13,7 @@ import (
 	"github.com/pkg/errors"
 	SDKErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
+	sqlserverv20180328 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -3456,5 +3457,43 @@ func (me *SqlserverService) DescribeSqlserverDescHaLogByFilter(ctx context.Conte
 	}
 
 	descHaLog = response.Response.SwitchLog
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverCollationTimeZoneByFilter(ctx context.Context, param map[string]interface{}) (ret *sqlserverv20180328.DescribeCollationTimeZoneResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = sqlserver.NewDescribeCollationTimeZoneRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MachineType" {
+			request.MachineType = v.(*string)
+		}
+		if k == "DBVersion" {
+			request.DBVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeCollationTimeZone(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }

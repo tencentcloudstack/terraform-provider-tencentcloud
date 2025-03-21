@@ -87,6 +87,12 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 			},
 			Description: "Security group bound to the instance.",
 		},
+		"time_zone": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Optional:    true,
+			Description: "System time zone, default: `China Standard Time`.",
+		},
 		//Computed values
 		"ro_flag": {
 			Type:        schema.TypeString,
@@ -317,6 +323,10 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 		request.SecurityGroupList = append(request.SecurityGroupList, &v)
 	}
 
+	if v, ok := d.GetOk("time_zone"); ok {
+		request.TimeZone = helper.String(v.(string))
+	}
+
 	request.GoodsNum = helper.IntInt64(1)
 	request.Zone = &zone
 
@@ -511,6 +521,13 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	d.Partial(true)
 
+	immutableArgs := []string{"time_zone"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	//basic info update
 	if err := sqlServerAllInstanceRoleUpdate(ctx, d, meta); err != nil {
 		return err
@@ -655,6 +672,10 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 	_ = d.Set("vip", instance.Vip)
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("security_groups", securityGroup)
+
+	if instance.TimeZone != nil {
+		_ = d.Set("time_zone", instance.TimeZone)
+	}
 	return
 }
 
