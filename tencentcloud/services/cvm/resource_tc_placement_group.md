@@ -4,8 +4,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_placement_group" "foo" {
-  name = "test"
-  type = "HOST"
+  name     = "test"
+  type     = "HOST"
+  affinity = 2
+  tags     = {
+    createBy = "terraform"
+  }
 }
 ```
 
