@@ -134,7 +134,7 @@ func DataSourceTencentCloudCdwpgInstances() *schema.Resource {
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results..",
+				Description: "Used to save results.",
 			},
 		},
 	}

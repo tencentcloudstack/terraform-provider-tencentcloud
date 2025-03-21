@@ -204,7 +204,7 @@ func DataSourceTencentCloudCdwpgLog() *schema.Resource {
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results..",
+				Description: "Used to save results.",
 			},
 		},
 	}
@@ -351,7 +351,7 @@ func dataSourceTencentCloudCdwpgLogRead(d *schema.ResourceData, meta interface{}
 
 			slowLogDetailsMap["normal_querys"] = normalQuerysList
 		}
-		_ = d.Set("slow_log_details.", []interface{}{slowLogDetailsMap})
+		_ = d.Set("slow_log_details", []interface{}{slowLogDetailsMap})
 	}
 
 	paramMap1 := make(map[string]interface{})
@@ -405,7 +405,7 @@ func dataSourceTencentCloudCdwpgLogRead(d *schema.ResourceData, meta interface{}
 			errorLogDetailsList = append(errorLogDetailsList, errorLogDetailsMap)
 		}
 
-		_ = d.Set("error_log_details.", errorLogDetailsList)
+		_ = d.Set("error_log_details", errorLogDetailsList)
 	}
 
 	d.SetId(instanceId)

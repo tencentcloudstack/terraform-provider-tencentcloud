@@ -22,7 +22,7 @@ data "tencentcloud_cdwpg_instances" "cdwpg_instances" {
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional, String) Used to save results..
+* `result_output_file` - (Optional, String) Used to save results.
 * `search_instance_id` - (Optional, String) Search instance id.
 * `search_instance_name` - (Optional, String) Search instance name.
 * `search_tags` - (Optional, Set: [`String`]) Search tags.

@@ -49,7 +49,7 @@ func DataSourceTencentCloudCdwpgNodes() *schema.Resource {
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results..",
+				Description: "Used to save results.",
 			},
 		},
 	}
@@ -104,7 +104,7 @@ func dataSourceTencentCloudCdwpgNodesRead(d *schema.ResourceData, meta interface
 			instanceNodesList = append(instanceNodesList, instanceNodesMap)
 		}
 
-		_ = d.Set("instance_nodes.", instanceNodesList)
+		_ = d.Set("instance_nodes", instanceNodesList)
 	}
 
 	d.SetId(instanceId)

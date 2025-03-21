@@ -32,7 +32,7 @@ The following arguments are supported:
 * `duration` - (Optional, Float64) Filter duration.
 * `order_by_type` - (Optional, String) Ascending/Descending.
 * `order_by` - (Optional, String) Sort by.
-* `result_output_file` - (Optional, String) Used to save results..
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -24,7 +24,7 @@ data "tencentcloud_cdwpg_nodes" "cdwpg_nodes" {
 The following arguments are supported:
 
 * `instance_id` - (Required, String) Instance id.
-* `result_output_file` - (Optional, String) Used to save results..
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 
