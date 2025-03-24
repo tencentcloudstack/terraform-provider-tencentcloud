@@ -346,3 +346,57 @@ func (me *CdwpgService) DescribeCdwpgDbconfigByFilter(ctx context.Context, param
 
 	return
 }
+
+func (me *CdwpgService) DescribeCdwpgAccountById(ctx context.Context, instanceId string) (ret *cdwpg.AccountInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cdwpg.NewDescribeAccountsRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwpgV20201230Client().DescribeAccounts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Accounts) < 1 {
+		return
+	}
+
+	ret = response.Response.Accounts[0]
+	return
+}
+
+func (me *CdwpgService) DescribeCdwpgUserhbaById(ctx context.Context, instanceId string) (ret *cdwpg.DescribeUserHbaConfigResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cdwpg.NewDescribeUserHbaConfigRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwpgV20201230Client().DescribeUserHbaConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
