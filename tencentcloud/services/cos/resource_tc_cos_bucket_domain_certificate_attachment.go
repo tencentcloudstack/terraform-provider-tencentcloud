@@ -61,6 +61,11 @@ func ResourceTencentCloudCosBucketDomainCertificateAttachment() *schema.Resource
 										Description: "Custom certificate.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
+												"cert_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "ID of certificate.",
+												},
 												"cert": {
 													Type:        schema.TypeString,
 													Required:    true,
@@ -112,6 +117,9 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentCreate(d *schema.Re
 			}
 			if CustomCertMap, ok := helper.InterfaceToMap(certMap, "custom_cert"); ok {
 				customCert := cos.BucketDomainCustomCert{}
+				if v, ok := CustomCertMap["cert_id"]; ok {
+					customCert.CertId = v.(string)
+				}
 				if v, ok := CustomCertMap["cert"]; ok {
 					customCert.Cert = v.(string)
 				}

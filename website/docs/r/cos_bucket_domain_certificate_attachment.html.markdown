@@ -16,15 +16,28 @@ Provides a resource to attach/detach the corresponding certificate for the domai
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cos_bucket_domain_certificate_attachment" "foo" {
-  bucket = ""
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket      = "private-bucket-${local.app_id}"
+  acl         = "private"
+  force_clean = true
+}
+
+resource "tencentcloud_cos_bucket_domain_certificate_attachment" "example" {
+  bucket = tencentcloud_cos_bucket.example.id
   domain_certificate {
-    domain = "domain_name"
+    domain = "www.example.com"
     certificate {
       cert_type = "CustomCert"
       custom_cert {
-        cert        = "===CERTIFICATE==="
-        private_key = "===PRIVATE_KEY==="
+        cert_id     = "Mbx45wts"
+        cert        = "-----BEGIN CERTIFICATE-----"
+        private_key = "-----BEGIN RSA PRIVATE_KEY-----"
       }
     }
   }
@@ -47,6 +60,7 @@ The `custom_cert` object of `certificate` supports the following:
 
 * `cert` - (Required, String) Public key of certificate.
 * `private_key` - (Required, String) Private key of certificate.
+* `cert_id` - (Optional, String) ID of certificate.
 
 The `domain_certificate` object supports the following:
 
