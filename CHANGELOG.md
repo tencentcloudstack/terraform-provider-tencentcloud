@@ -1,3 +1,9 @@
+## 1.81.176(March 24 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket_domain_certificate_attachment: support `cert_id` params ([#3235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3235))
+
 ## 1.81.175(March 21 , 2025)
 
 FEATURES:
