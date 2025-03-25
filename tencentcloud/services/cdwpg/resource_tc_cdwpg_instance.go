@@ -389,7 +389,7 @@ func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interf
 
 	request.InstanceId = &instanceId
 
-	immutableArgs := []string{"zone", "user_vpc_id", "user_subnet_id", "charge_properties", "admin_password", "resources"}
+	immutableArgs := []string{"zone", "user_vpc_id", "user_subnet_id", "charge_properties", "admin_password"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -397,31 +397,32 @@ func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	service := CdwpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
 	if d.HasChange("instance_name") {
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
-	}
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwpgClient().ModifyInstance(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwpgClient().ModifyInstance(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cdwpg instance failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update cdwpg instance failed, reason:%+v", logId, err)
-		return err
-	}
 
-	service := CdwpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
 
-	if _, e := conf.WaitForState(); e != nil {
-		return e
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -436,6 +437,58 @@ func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if d.HasChange("resources") {
+		if v, ok := d.GetOk("resources"); ok {
+			resources := v.([]interface{})
+			for idx := range resources {
+				for _, resourcesItem := range []string{"spec_name", "disk_spec", "type"} {
+					key := fmt.Sprintf("resources.%d.%s", idx, resourcesItem)
+					if d.HasChange(key) {
+						return fmt.Errorf("argument `%s` cannot be changed", resourcesItem)
+					}
+				}
+			}
+			for idx, item := range resources {
+				resourceMap := item.(map[string]interface{})
+				countKey := fmt.Sprintf("resources.%d.count", idx)
+				if d.HasChange(countKey) {
+					request := cdwpg.NewScaleOutInstanceRequest()
+					request.InstanceId = helper.String(instanceId)
+					request.NodeType = helper.String(resourceMap["type"].(string))
+					oCount, nCount := d.GetChange(countKey)
+					if nCount.(int) < oCount.(int) {
+						return fmt.Errorf("only scale-out is supported")
+					}
+					request.ScaleOutCount = helper.IntInt64(nCount.(int) - oCount.(int))
+
+					err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwpgClient().ScaleOutInstance(request)
+						if e != nil {
+							return tccommon.RetryError(e)
+						} else {
+							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+						}
+						if result.Response.ErrorMsg != nil && *result.Response.ErrorMsg != "" {
+							return resource.NonRetryableError(fmt.Errorf(*result.Response.ErrorMsg))
+						}
+						return nil
+					})
+					if err != nil {
+						log.Printf("[CRITAL]%s scale out cdwpg instance failed, reason:%+v", logId, err)
+						return err
+					}
+
+					time.Sleep(5 * time.Second)
+					conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
+
+					if _, e := conf.WaitForState(); e != nil {
+						return e
+					}
+
+				}
+			}
+		}
+	}
 	return resourceTencentCloudCdwpgInstanceRead(d, meta)
 }
 
