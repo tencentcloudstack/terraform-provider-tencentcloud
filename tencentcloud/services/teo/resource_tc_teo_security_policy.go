@@ -155,6 +155,7 @@ func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 						"managed_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Managed rule configuration.",
 							Elem: &schema.Resource{
