@@ -14,6 +14,7 @@ type BucketStatement struct {
 	Effect    string                            `json:"effect,omitempty"`
 	Resource  []string                          `json:"resource,omitempty"`
 	Condition map[string]map[string]interface{} `json:"condition,omitempty"`
+	Sid       string                            `json:"sid,omitempty"`
 }
 
 type BucketPutPolicyOptions struct {
@@ -26,19 +27,24 @@ type BucketGetPolicyResult BucketPutPolicyOptions
 
 func (s *BucketService) PutPolicy(ctx context.Context, opt *BucketPutPolicyOptions) (*Response, error) {
 	var f *strings.Reader
+	var body string
 	if opt != nil {
 		bs, err := json.Marshal(opt)
 		if err != nil {
 			return nil, err
 		}
-		body := string(bs)
+		body = string(bs)
 		f = strings.NewReader(body)
 	}
+	header := &commonHeader{
+		ContentLength: int64(len(body)),
+	}
 	sendOpt := &sendOptions{
-		baseURL: s.client.BaseURL.BucketURL,
-		uri:     "/?policy",
-		method:  http.MethodPut,
-		body:    f,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/?policy",
+		method:    http.MethodPut,
+		body:      f,
+		optHeader: header,
 	}
 	resp, err := s.client.send(ctx, sendOpt)
 	return resp, err

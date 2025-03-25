@@ -1681,7 +1681,9 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 			item.OriginParameter.Protocol = v.(string)
 		}
 		if v, ok := dMap["host"]; ok {
-			item.OriginInfo.HostInfo = v.(string)
+			tmpHost := cos.BucketOriginHostInfo{}
+			tmpHost.HostName = v.(string)
+			item.OriginInfo.HostInfo = &tmpHost
 		}
 		if v, ok := dMap["follow_query_string"]; ok {
 			item.OriginParameter.FollowQueryString = v.(bool)
