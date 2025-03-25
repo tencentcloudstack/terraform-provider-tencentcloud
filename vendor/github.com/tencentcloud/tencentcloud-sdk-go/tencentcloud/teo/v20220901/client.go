@@ -2104,7 +2104,9 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 }
 
 // CreateRule
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [CreateL7AccRules](https://cloud.tencent.com/document/product/1552/115822)。
+// 本接口为旧版本创建规则引擎接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本创建七层加速规则接口详情请参考 [CreateL7AccRules](https://cloud.tencent.com/document/product/1552/115822)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2204,7 +2206,9 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 }
 
 // CreateRule
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [CreateL7AccRules](https://cloud.tencent.com/document/product/1552/115822)。
+// 本接口为旧版本创建规则引擎接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本创建七层加速规则接口详情请参考 [CreateL7AccRules](https://cloud.tencent.com/document/product/1552/115822)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3433,7 +3437,9 @@ func NewDeleteRulesResponse() (response *DeleteRulesResponse) {
 }
 
 // DeleteRules
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [DeleteL7AccRules](https://cloud.tencent.com/document/product/1552/115821)。
+// 本接口为旧版本删除规则引擎接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本删除七层加速规则接口详情请参考 [DeleteL7AccRules](https://cloud.tencent.com/document/product/1552/115821)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3459,7 +3465,9 @@ func (c *Client) DeleteRules(request *DeleteRulesRequest) (response *DeleteRules
 }
 
 // DeleteRules
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [DeleteL7AccRules](https://cloud.tencent.com/document/product/1552/115821)。
+// 本接口为旧版本删除规则引擎接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本删除七层加速规则接口详情请参考 [DeleteL7AccRules](https://cloud.tencent.com/document/product/1552/115821)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5695,7 +5703,9 @@ func NewDescribeRulesResponse() (response *DescribeRulesResponse) {
 }
 
 // DescribeRules
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [DescribeL7AccRules](https://cloud.tencent.com/document/product/1552/115820)。
+// 本接口为旧版本查询规则引擎规则接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本查询七层加速规则接口详情请参考  [DescribeL7AccRules](https://cloud.tencent.com/document/product/1552/115820)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
@@ -5706,7 +5716,9 @@ func (c *Client) DescribeRules(request *DescribeRulesRequest) (response *Describ
 }
 
 // DescribeRules
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [DescribeL7AccRules](https://cloud.tencent.com/document/product/1552/115820)。
+// 本接口为旧版本查询规则引擎规则接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本查询七层加速规则接口详情请参考  [DescribeL7AccRules](https://cloud.tencent.com/document/product/1552/115820)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
@@ -5895,6 +5907,63 @@ func (c *Client) DescribeSecurityIPGroupInfoWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDescribeSecurityIPGroupInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSecurityPolicyRequest() (request *DescribeSecurityPolicyRequest) {
+    request = &DescribeSecurityPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicy")
+    
+    
+    return
+}
+
+func NewDescribeSecurityPolicyResponse() (response *DescribeSecurityPolicyResponse) {
+    response = &DescribeSecurityPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSecurityPolicy
+// 查询安全防护配置详情。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeSecurityPolicy(request *DescribeSecurityPolicyRequest) (response *DescribeSecurityPolicyResponse, err error) {
+    return c.DescribeSecurityPolicyWithContext(context.Background(), request)
+}
+
+// DescribeSecurityPolicy
+// 查询安全防护配置详情。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeSecurityPolicyWithContext(ctx context.Context, request *DescribeSecurityPolicyRequest) (response *DescribeSecurityPolicyResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecurityPolicyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecurityPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecurityPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -8471,6 +8540,57 @@ func (c *Client) ModifyL7AccRuleWithContext(ctx context.Context, request *Modify
     return
 }
 
+func NewModifyL7AccRulePriorityRequest() (request *ModifyL7AccRulePriorityRequest) {
+    request = &ModifyL7AccRulePriorityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyL7AccRulePriority")
+    
+    
+    return
+}
+
+func NewModifyL7AccRulePriorityResponse() (response *ModifyL7AccRulePriorityResponse) {
+    response = &ModifyL7AccRulePriorityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyL7AccRulePriority
+// 本接口用于修改[规则引擎](https://cloud.tencent.com/document/product/1552/70901)中规则列表的优先级，本接口需要传入站点 ID 下完整的规则 ID 列表，规则 ID 列表可以通过[查询七层加速规则](https://cloud.tencent.com/document/product/1552/115820)接口获取，最终优先级顺序将调整成规则 ID 列表的顺序，从前往后执行。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDRULEENGINE = "InvalidParameter.InvalidRuleEngine"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+func (c *Client) ModifyL7AccRulePriority(request *ModifyL7AccRulePriorityRequest) (response *ModifyL7AccRulePriorityResponse, err error) {
+    return c.ModifyL7AccRulePriorityWithContext(context.Background(), request)
+}
+
+// ModifyL7AccRulePriority
+// 本接口用于修改[规则引擎](https://cloud.tencent.com/document/product/1552/70901)中规则列表的优先级，本接口需要传入站点 ID 下完整的规则 ID 列表，规则 ID 列表可以通过[查询七层加速规则](https://cloud.tencent.com/document/product/1552/115820)接口获取，最终优先级顺序将调整成规则 ID 列表的顺序，从前往后执行。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDRULEENGINE = "InvalidParameter.InvalidRuleEngine"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+func (c *Client) ModifyL7AccRulePriorityWithContext(ctx context.Context, request *ModifyL7AccRulePriorityRequest) (response *ModifyL7AccRulePriorityResponse, err error) {
+    if request == nil {
+        request = NewModifyL7AccRulePriorityRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyL7AccRulePriority require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyL7AccRulePriorityResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyL7AccSettingRequest() (request *ModifyL7AccSettingRequest) {
     request = &ModifyL7AccSettingRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8918,7 +9038,9 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 }
 
 // ModifyRule
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [ModifyL7AccRule](https://cloud.tencent.com/document/product/1552/115818)。
+// 本接口为旧版本修改规则引擎接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本修改七层加速规则接口详情请参考 [ModifyL7AccRule](https://cloud.tencent.com/document/product/1552/115818)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
@@ -9017,7 +9139,9 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 }
 
 // ModifyRule
-// 本接口为旧版，EdgeOne 已对规则引擎相关接口全面升级，详情请参考 [ModifyL7AccRule](https://cloud.tencent.com/document/product/1552/115818)。
+// 本接口为旧版本修改规则引擎接口，EdgeOne 于 2025 年 1 月 21 日已对规则引擎相关接口全面升级，新版本修改七层加速规则接口详情请参考 [ModifyL7AccRule](https://cloud.tencent.com/document/product/1552/115818)。
+//
+// <p style="color: red;">注意：自 2025 年 1 月 21 日起，旧版接口停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。为避免在使用旧版接口时出现数据字段冲突，建议您尽早迁移到新版规则引擎接口。</p>
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
