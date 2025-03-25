@@ -21,7 +21,7 @@ func TestAccTencentCloudCdwpgInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "instance_name", "test_pg"),
 					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "user_vpc_id", "vpc-axrsmmrv"),
-					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "user_subnet_id", "subnet-o6qcrhzo"),
+					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "user_subnet_id", "subnet-kxaxknmg"),
 					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "charge_properties.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "resources.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "tags.tagKey", "tagValue"),
@@ -57,7 +57,7 @@ resource "tencentcloud_cdwpg_instance" "instance" {
 	instance_name  = "test_pg"
 	zone           = "ap-guangzhou-6"
 	user_vpc_id    = "vpc-axrsmmrv"
-	user_subnet_id = "subnet-o6qcrhzo"
+	user_subnet_id = "subnet-kxaxknmg"
 	charge_properties {
 	  renew_flag  = 0
 	  time_span   = 1
@@ -99,7 +99,7 @@ resource "tencentcloud_cdwpg_instance" "instance" {
 	instance_name  = "test_pg_update"
 	zone           = "ap-guangzhou-6"
 	user_vpc_id    = "vpc-axrsmmrv"
-	user_subnet_id = "subnet-o6qcrhzo"
+	user_subnet_id = "subnet-kxaxknmg"
 	charge_properties {
 	  renew_flag  = 0
 	  time_span   = 1
@@ -141,7 +141,7 @@ resource "tencentcloud_cdwpg_instance" "instance" {
 	instance_name  = "test_pg_update"
 	zone           = "ap-guangzhou-6"
 	user_vpc_id    = "vpc-axrsmmrv"
-	user_subnet_id = "subnet-o6qcrhzo"
+	user_subnet_id = "subnet-kxaxknmg"
 	charge_properties {
 	  renew_flag  = 0
 	  time_span   = 1
