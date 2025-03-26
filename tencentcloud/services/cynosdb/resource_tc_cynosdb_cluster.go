@@ -201,6 +201,10 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if v, ok := d.GetOk("cynos_version"); ok && v != "" {
+		return fmt.Errorf("Setting cynos_version is not supported when creating a cluster")
+	}
+
 	request.PayMode = &chargeType
 	var response *cynosdb.CreateClustersResponse
 	var err error
@@ -588,6 +592,16 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("param_items", resultParamItems)
 	}
 
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		_ = d.Set("force_delete", v)
+	} else {
+		_ = d.Set("force_delete", false)
+	}
+
+	if cluster.CynosVersion != nil {
+		_ = d.Set("cynos_version", cluster.CynosVersion)
+	}
+
 	return nil
 }
 
@@ -939,6 +953,36 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		subnetId := d.Get("subnet_id").(string)
 		oldIpReserveHours := int64(d.Get("old_ip_reserve_hours").(int))
 		err := cynosdbService.SwitchClusterVpc(ctx, clusterId, vpcId, subnetId, oldIpReserveHours)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("cynos_version") {
+		cynosVersion := d.Get("cynos_version").(string)
+		flowId, err := cynosdbService.UpgradeClusterVersion(ctx, clusterId, cynosVersion)
+		if err != nil {
+			return err
+		}
+
+		service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ok, err := service.DescribeFlow(ctx, flowId)
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("update cynosdb cynos_version is processing"))
+			}
+		})
+
 		if err != nil {
 			return err
 		}
