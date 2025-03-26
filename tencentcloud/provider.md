@@ -2252,6 +2252,7 @@ tencentcloud_cdwpg_nodes
 
 Resource
 tencentcloud_cdwpg_instance
+tencentcloud_cdwpg_dbconfig
 
 CSIP
 Resource

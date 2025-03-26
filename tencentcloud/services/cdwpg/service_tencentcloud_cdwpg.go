@@ -295,3 +295,54 @@ func (me *CdwpgService) DescribeCdwpgNodesByFilter(ctx context.Context, param ma
 	ret = response.Response
 	return
 }
+
+func (me *CdwpgService) DescribeCdwpgDbconfigByFilter(ctx context.Context, param map[string]interface{}) (ret []*cdwpg.ParamItem, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cdwpg.NewDescribeDBParamsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "NodeTypes" {
+			request.NodeTypes = v.([]*string)
+		}
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCdwpgV20201230Client().DescribeDBParams(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

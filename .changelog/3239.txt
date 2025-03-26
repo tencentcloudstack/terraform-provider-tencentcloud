@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_cdwpg_dbconfig
+```
+
+```release-note:enhancement
+resource/tencentcloud_cdwpg_instance: `count` update is supported
+```

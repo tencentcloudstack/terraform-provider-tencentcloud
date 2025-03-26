@@ -2223,6 +2223,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_bi_embed_token_apply":                                                     bi.ResourceTencentCloudBiEmbedTokenApply(),
 			"tencentcloud_bi_embed_interval_apply":                                                  bi.ResourceTencentCloudBiEmbedIntervalApply(),
 			"tencentcloud_cdwpg_instance":                                                           cdwpg.ResourceTencentCloudCdwpgInstance(),
+			"tencentcloud_cdwpg_dbconfig":                                                           cdwpg.ResourceTencentCloudCdwpgDbconfig(),
 			"tencentcloud_clickhouse_keyval_config":                                                 cdwch.ResourceTencentCloudClickhouseKeyvalConfig(),
 			"tencentcloud_clickhouse_xml_config":                                                    cdwch.ResourceTencentCloudClickhouseXmlConfig(),
 			"tencentcloud_clb_target_group_attachments":                                             clb.ResourceTencentCloudClbTargetGroupAttachments(),
