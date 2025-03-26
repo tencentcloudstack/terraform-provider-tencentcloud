@@ -1176,6 +1176,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwpg_instances":                              cdwpg.DataSourceTencentCloudCdwpgInstances(),
 			"tencentcloud_cdwpg_log":                                    cdwpg.DataSourceTencentCloudCdwpgLog(),
 			"tencentcloud_cdwpg_nodes":                                  cdwpg.DataSourceTencentCloudCdwpgNodes(),
+			"tencentcloud_mqtt_apply_registration_code":                 mqtt.DataSourceTencentCloudMqttApplyRegistrationCode(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2264,6 +2265,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_instance":                  mqtt.ResourceTencentCloudMqttInstance(),
 			"tencentcloud_mqtt_instance_public_endpoint":  mqtt.ResourceTencentCloudMqttInstancePublicEndpoint(),
 			"tencentcloud_mqtt_topic":                     mqtt.ResourceTencentCloudMqttTopic(),
+			"tencentcloud_mqtt_ca_certificate":            mqtt.ResourceTencentCloudMqttCaCertificate(),
+			"tencentcloud_mqtt_user":                      mqtt.ResourceTencentCloudMqttUser(),
+			"tencentcloud_mqtt_device_certificate":        mqtt.ResourceTencentCloudMqttDeviceCertificate(),
 		},
 
 		ConfigureFunc: providerConfigure,

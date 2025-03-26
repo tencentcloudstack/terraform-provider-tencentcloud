@@ -2292,7 +2292,12 @@ Resource
 tencentcloud_tcss_image_registry
 
 TDMQ for MQTT(MQTT)
+Data Source
+tencentcloud_mqtt_apply_registration_code
 Resource
 tencentcloud_mqtt_instance
 tencentcloud_mqtt_instance_public_endpoint
 tencentcloud_mqtt_topic
+tencentcloud_mqtt_ca_certificate
+tencentcloud_mqtt_user
+tencentcloud_mqtt_device_certificate
