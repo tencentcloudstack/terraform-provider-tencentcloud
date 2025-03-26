@@ -59,10 +59,7 @@ func resourceTencentCloudCdwpgDbconfigCreate(d *schema.ResourceData, meta interf
 	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_dbconfig.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var (
-		instanceId string
-	)
-	instanceId = d.Get("instance_id").(string)
+	instanceId := d.Get("instance_id").(string)
 	d.SetId(instanceId)
 
 	return resourceTencentCloudCdwpgDbconfigUpdate(d, meta)
