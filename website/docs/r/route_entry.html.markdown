@@ -49,7 +49,7 @@ The following arguments are supported:
 
 * `cidr_block` - (Required, String, ForceNew) The RouteEntry's target network segment.
 * `next_hub` - (Required, String, ForceNew) The route entry's next hub. CVM instance ID or VPC router interface ID.
-* `next_type` - (Required, String, ForceNew) The next hop type. Valid values: `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway`,`havip`,`local_gateway` and `instance`. `instance` points to CVM Instance.
+* `next_type` - (Required, String, ForceNew) The next hop type. Valid values: `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway`,`havip`,`local_gateway`, `intranat`, `user_ccn` and `instance`. `instance` points to CVM Instance.
 * `route_table_id` - (Required, String, ForceNew) The ID of the route table.
 * `vpc_id` - (Required, String, ForceNew) The VPC ID.
 

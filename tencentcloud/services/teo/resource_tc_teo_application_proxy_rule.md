@@ -1,5 +1,7 @@
 Provides a resource to create a teo application_proxy_rule
 
+~> **NOTE:** The current resource has been deprecated, please use `tencentcloud_teo_l4_proxy_rule`.
+
 Example Usage
 
 ```hcl

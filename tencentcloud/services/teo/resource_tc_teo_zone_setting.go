@@ -22,6 +22,7 @@ func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		DeprecationMessage: "This resource has been deprecated in favour of the Terraform equivalent resource `tencentcloud_teo_l7_acc_setting`.",
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,

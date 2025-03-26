@@ -43,6 +43,7 @@ resource "tencentcloud_security_group" "security_group" {
 }
 
 resource "tencentcloud_mysql_instance" "example" {
+  device_type       = "BASIC_V2"
   internet_service  = 1
   engine_version    = "5.7"
   charge_type       = "POSTPAID"
@@ -143,7 +144,13 @@ The following arguments are supported:
 * `availability_zone` - (Optional, String) Indicates which availability zone will be used.
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cpu` - (Optional, Int) CPU cores.
-* `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
+* `device_type` - (Optional, String) Specify device type, available values:
+	- `UNIVERSAL` (default): universal instance,
+	- `EXCLUSIVE`: exclusive instance,
+	- `BASIC_V2`: ONTKE single-node instance,
+	- `CLOUD_NATIVE_CLUSTER`: cluster version standard type,
+	- `CLOUD_NATIVE_CLUSTER_EXCLUSIVE`: cluster version enhanced type.
+If it is not specified, it defaults to a universal instance.
 * `engine_type` - (Optional, String) Instance engine type. The default value is `InnoDB`. Supported values include `InnoDB` and `RocksDB`.
 * `engine_version` - (Optional, String) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.
 * `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.

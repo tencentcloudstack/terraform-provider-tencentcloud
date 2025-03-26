@@ -29,7 +29,7 @@ func (me *WafService) DescribeWafCustomRuleById(ctx context.Context, domain, rul
 	request.Limit = common.Uint64Ptr(20)
 	request.Filters = []*waf.FiltersItemNew{
 		{
-			Name:       common.StringPtr("RuleID"),
+			Name:       common.StringPtr("RuleId"),
 			Values:     common.StringPtrs([]string{ruleId}),
 			ExactMatch: common.BoolPtr(true),
 		},
@@ -94,7 +94,7 @@ func (me *WafService) DescribeWafCustomWhiteRuleById(ctx context.Context, domain
 	request.Limit = common.Uint64Ptr(20)
 	request.Filters = []*waf.FiltersItemNew{
 		{
-			Name:       common.StringPtr("RuleID"),
+			Name:       common.StringPtr("RuleId"),
 			Values:     common.StringPtrs([]string{ruleId}),
 			ExactMatch: common.BoolPtr(true),
 		},
@@ -886,7 +886,7 @@ func (me *WafService) DescribeWafAntiFakeById(ctx context.Context, id, domain st
 	request.Limit = common.Uint64Ptr(10)
 	request.Filters = []*waf.FiltersItemNew{
 		{
-			Name:       common.StringPtr("RuleID"),
+			Name:       common.StringPtr("RuleId"),
 			Values:     common.StringPtrs([]string{id}),
 			ExactMatch: common.BoolPtr(true),
 		},
@@ -948,6 +948,15 @@ func (me *WafService) DescribeWafAntiInfoLeakById(ctx context.Context, ruleId, d
 
 	request := waf.NewDescribeAntiInfoLeakageRulesRequest()
 	request.Domain = &domain
+	request.Limit = common.Uint64Ptr(10)
+	request.Offset = common.Uint64Ptr(0)
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("RuleId"),
+			Values:     common.StringPtrs([]string{ruleId}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -969,14 +978,7 @@ func (me *WafService) DescribeWafAntiInfoLeakById(ctx context.Context, ruleId, d
 		return
 	}
 
-	ruleIdInt, _ := strconv.ParseUint(ruleId, 10, 64)
-	for _, item := range response.Response.RuleList {
-		if *item.RuleId == ruleIdInt {
-			antiInfoLeak = item
-			break
-		}
-	}
-
+	antiInfoLeak = response.Response.RuleList[0]
 	return
 }
 
@@ -1189,7 +1191,7 @@ func (me *WafService) DescribeWafCcById(ctx context.Context, domain, ruleId stri
 	request.Domain = &domain
 	request.Filters = []*waf.FiltersItemNew{
 		{
-			Name:       common.StringPtr("RuleID"),
+			Name:       common.StringPtr("RuleId"),
 			Values:     common.StringPtrs([]string{ruleId}),
 			ExactMatch: common.BoolPtr(true),
 		},

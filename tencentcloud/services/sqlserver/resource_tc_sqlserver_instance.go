@@ -87,6 +87,12 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 			},
 			Description: "Security group bound to the instance.",
 		},
+		"time_zone": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Optional:    true,
+			Description: "System time zone, default: `China Standard Time`.",
+		},
 		//Computed values
 		"ro_flag": {
 			Type:        schema.TypeString,
@@ -123,6 +129,16 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 			Optional:    true,
 			Deprecated:  "It has been deprecated from version 1.81.2.",
 			Description: "The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.",
+		},
+		"dns_pod_domain": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Internet address domain name.",
+		},
+		"tgw_wan_vport": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "External port number.",
 		},
 	}
 
@@ -305,6 +321,10 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
 	for _, v := range securityGroups {
 		request.SecurityGroupList = append(request.SecurityGroupList, &v)
+	}
+
+	if v, ok := d.GetOk("time_zone"); ok {
+		request.TimeZone = helper.String(v.(string))
 	}
 
 	request.GoodsNum = helper.IntInt64(1)
@@ -501,6 +521,13 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	d.Partial(true)
 
+	immutableArgs := []string{"time_zone"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	//basic info update
 	if err := sqlServerAllInstanceRoleUpdate(ctx, d, meta); err != nil {
 		return err
@@ -616,6 +643,14 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 		_ = d.Set("charge_type", svcpostgresql.COMMON_PAYTYPE_POSTPAID)
 	}
 
+	if instance.DnsPodDomain != nil {
+		_ = d.Set("dns_pod_domain", instance.DnsPodDomain)
+	}
+
+	if instance.TgwWanVPort != nil {
+		_ = d.Set("tgw_wan_vport", instance.TgwWanVPort)
+	}
+
 	var securityGroup []string
 	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		securityGroup, inErr = sqlserverService.DescribeInstanceSecurityGroups(ctx, instanceId)
@@ -637,6 +672,10 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 	_ = d.Set("vip", instance.Vip)
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("security_groups", securityGroup)
+
+	if instance.TimeZone != nil {
+		_ = d.Set("time_zone", instance.TimeZone)
+	}
 	return
 }
 

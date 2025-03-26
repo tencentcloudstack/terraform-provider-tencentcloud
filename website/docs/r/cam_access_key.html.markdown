@@ -4,35 +4,43 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cam_access_key"
 sidebar_current: "docs-tencentcloud-resource-cam_access_key"
 description: |-
-  Provides a resource to create a cam access_key
+  Provides a resource to create a CAM access key
 ---
 
 # tencentcloud_cam_access_key
 
-Provides a resource to create a cam access_key
+Provides a resource to create a CAM access key
 
 ## Example Usage
 
+### Create access key
+
 ```hcl
-resource "tencentcloud_cam_access_key" "access_key" {
-  target_uin = 100033690181
+data "tencentcloud_user_info" "info" {}
+
+resource "tencentcloud_cam_access_key" "example" {
+  target_uin = data.tencentcloud_user_info.info.uin
 }
 ```
 
-### Update
+### Update access key
 
 ```hcl
-resource "tencentcloud_cam_access_key" "access_key" {
-  target_uin = 100033690181
+data "tencentcloud_user_info" "info" {}
+
+resource "tencentcloud_cam_access_key" "example" {
+  target_uin = data.tencentcloud_user_info.info.uin
   status     = "Inactive"
 }
 ```
 
-### Encrypted
+### Encrypted access key
 
 ```hcl
-resource "tencentcloud_cam_access_key" "access_key" {
-  target_uin = 100033690181
+data "tencentcloud_user_info" "info" {}
+
+resource "tencentcloud_cam_access_key" "example" {
+  target_uin = data.tencentcloud_user_info.info.uin
   pgp_key    = "keybase:some_person_that_exists"
 }
 ```
@@ -58,9 +66,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cam access_key can be imported using the id, e.g.
+cam access key can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cam_access_key.access_key access_key_id
+terraform import tencentcloud_cam_access_key.example 100037718101#AKID7F******************
 ```
 

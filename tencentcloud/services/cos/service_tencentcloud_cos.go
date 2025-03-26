@@ -780,6 +780,44 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string, cdcId
 	if response.RedirectAllRequestsTo != nil {
 		website["redirect_all_requests_to"] = *response.RedirectAllRequestsTo.Protocol
 	}
+	if response.RoutingRules != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		routingRules := make(map[string]interface{}, 0)
+		rulesList := make([]map[string]interface{}, 0, len(response.RoutingRules))
+		for _, item := range response.RoutingRules {
+			tmpMap := make(map[string]interface{}, 0)
+			if item.Condition != nil {
+				if item.Condition.HttpErrorCodeReturnedEquals != nil {
+					tmpMap["condition_error_code"] = item.Condition.HttpErrorCodeReturnedEquals
+				}
+
+				if item.Condition.KeyPrefixEquals != nil {
+					tmpMap["condition_prefix"] = item.Condition.KeyPrefixEquals
+				}
+			}
+
+			if item.Redirect != nil {
+				if item.Redirect.Protocol != nil {
+					tmpMap["redirect_protocol"] = item.Redirect.Protocol
+				}
+
+				if item.Redirect.ReplaceKeyWith != nil {
+					tmpMap["redirect_replace_key"] = item.Redirect.ReplaceKeyWith
+				}
+
+				if item.Redirect.ReplaceKeyPrefixWith != nil {
+					tmpMap["redirect_replace_key_prefix"] = item.Redirect.ReplaceKeyPrefixWith
+				}
+			}
+
+			rulesList = append(rulesList, tmpMap)
+		}
+
+		routingRules["rules"] = rulesList
+		tmpList = append(tmpList, routingRules)
+		website["routing_rules"] = tmpList
+	}
+
 	if len(website) > 0 {
 		websites = append(websites, website)
 	}

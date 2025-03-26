@@ -1,20 +1,19 @@
-Provides a resource to create a dts sync_job
+Provides a resource to create a DTS sync job
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_dts_sync_job" "sync_job" {
-  pay_mode = "PostPay"
+resource "tencentcloud_dts_sync_job" "example" {
+  pay_mode          = "PostPay"
   src_database_type = "mysql"
-  src_region = "ap-guangzhou"
+  src_region        = "ap-guangzhou"
   dst_database_type = "cynosdbmysql"
-  dst_region = "ap-guangzhou"
+  dst_region        = "ap-guangzhou"
+  auto_renew        = 0
+  instance_class    = "micro"
   tags {
-	tag_key = "aaa"
-	tag_value = "bbb"
+    tag_key   = "createBy"
+    tag_value = "Terraform"
   }
-  auto_renew = 0
-  instance_class = "micro"
 }
-
 ```

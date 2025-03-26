@@ -268,6 +268,11 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateIntegerInRange(1024, 12*1024*1024),
 				Description:  "The size of a single message in bytes at the instance level. Value range: `1024 - 12*1024*1024 bytes (i.e., 1KB-12MB).",
 			},
+			"elastic_bandwidth_switch": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Elastic bandwidth switch 0 not turned on 1 turned on (0 default). This takes effect only when the instance is created.",
+			},
 			"vip": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -363,6 +368,10 @@ func ckafkaRequestSetParams(request interface{}, d *schema.ResourceData) {
 			zoneIds = append(zoneIds, helper.IntInt64(v.(int)))
 		}
 		values.FieldByName("ZoneIds").Set(reflect.ValueOf(zoneIds))
+	}
+
+	if v, ok := d.GetOk("elastic_bandwidth_switch"); ok {
+		values.FieldByName("ElasticBandwidthSwitch").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
 	}
 }
 
@@ -721,7 +730,7 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		"zone_id", "period", "vpc_id",
 		"subnet_id", "renew_flag", "kafka_version",
 		"multi_zone_flag", "zone_ids", "disk_type",
-		"specifications_type", "instance_type",
+		"specifications_type", "instance_type", "elastic_bandwidth_switch",
 	}
 
 	for _, v := range immutableArgs {

@@ -66,6 +66,15 @@ resource_metas:
       - name: remark
     block:
       attributes:
+        id:
+          display_name: ID
+          description: '域名记录唯一ID'
+          widget: text
+          is_backfilled: true
+          is_not_edited: true
+          constraint_mode: READONLY
+          filter:
+            enable: true
         domain:
           display_name: 域名
           widget: text

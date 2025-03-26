@@ -14,6 +14,7 @@ import (
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -1223,27 +1224,29 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 
 func (me *CamService) DescribeCamServiceLinkedRole(ctx context.Context, roleId string) (serviceLinkedRole *cam.RoleInfo, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = cam.NewGetRoleRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = cam.NewGetRoleRequest()
+		response = cam.NewGetRoleResponse()
 	)
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
-		}
-	}()
 	request.RoleId = &roleId
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().GetRole(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseCamClient().GetRole(request)
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		log.Printf("[CRITAL]%s read CAM group failed, reason:%s\n", logId, err.Error())
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response != nil && response.Response != nil {
 		serviceLinkedRole = response.Response.RoleInfo
@@ -1256,24 +1259,24 @@ func (me *CamService) DeleteCamServiceLinkedRoleById(ctx context.Context, roleId
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewDeleteServiceLinkedRoleRequest()
+	response := cam.NewDeleteServiceLinkedRoleResponse()
 
 	request.RoleName = &roleId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete object", request.ToJsonString(), errRet.Error())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().DeleteServiceLinkedRole(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCamClient().DeleteServiceLinkedRole(request)
-	if err != nil {
-		errRet = err
-		return "", err
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return "", errRet
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response != nil && response.Response != nil {
 		deletionTaskId = *response.Response.DeletionTaskId
@@ -1312,21 +1315,23 @@ func (me *CamService) DescribeCamUserSamlConfigById(ctx context.Context) (userSa
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewDescribeUserSAMLConfigRequest()
+	response := cam.NewDescribeUserSAMLConfigResponse()
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().DescribeUserSAMLConfig(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().DescribeUserSAMLConfig(request)
-	if err != nil {
-		errRet = err
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	userSamlConfig = response
 	return
@@ -1337,22 +1342,18 @@ func (me *CamService) DeleteCamUserSamlConfigById(ctx context.Context) (errRet e
 
 	request := cam.NewUpdateUserSAMLConfigRequest()
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
 	request.Operate = helper.String("disable")
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().UpdateUserSAMLConfig(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseCamClient().UpdateUserSAMLConfig(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
 	return
 }
@@ -1361,21 +1362,24 @@ func (me *CamService) DescribeCamMfaFlagById(ctx context.Context, id uint64) (lo
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewDescribeSafeAuthFlagCollRequest()
+	response := cam.NewDescribeSafeAuthFlagCollResponse()
 	request.SubUin = &id
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().DescribeSafeAuthFlagColl(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().DescribeSafeAuthFlagColl(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil || response.Response.ActionFlag == nil && response.Response.LoginFlag == nil {
 		return
@@ -1390,22 +1394,24 @@ func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, targetUin ui
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewListAccessKeysRequest()
+	response := cam.NewListAccessKeysResponse()
 	request.TargetUin = &targetUin
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().ListAccessKeys(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().ListAccessKeys(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil || len(response.Response.AccessKeys) < 1 {
 		return
@@ -1425,20 +1431,16 @@ func (me *CamService) DeleteCamAccessKeyById(ctx context.Context, uin, accessKey
 	request := cam.NewDeleteAccessKeyRequest()
 	request.AccessKeyId = &accessKeyId
 	request.TargetUin = helper.StrToUint64Point(uin)
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().DeleteAccessKey(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCamClient().DeleteAccessKey(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
 	return
 }
@@ -1447,22 +1449,24 @@ func (me *CamService) DescribeCamUserPermissionBoundaryById(ctx context.Context,
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewGetUserPermissionBoundaryRequest()
+	response := cam.NewGetUserPermissionBoundaryResponse()
 	request.TargetUin = helper.StrToInt64Point(targetUin)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().GetUserPermissionBoundary(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().GetUserPermissionBoundary(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil {
 		return
@@ -1477,21 +1481,16 @@ func (me *CamService) DeleteCamUserPermissionBoundaryById(ctx context.Context, t
 
 	request := cam.NewDeleteUserPermissionsBoundaryRequest()
 	request.TargetUin = helper.StrToInt64Point(targetUin)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().DeleteUserPermissionsBoundary(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCamClient().DeleteUserPermissionsBoundary(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
 	return
 }
@@ -1500,23 +1499,26 @@ func (me *CamService) DescribeCamPolicyVersionById(ctx context.Context, policyId
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewGetPolicyVersionRequest()
+	response := cam.NewGetPolicyVersionResponse()
 	request.PolicyId = &policyId
 	request.VersionId = &versionId
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().GetPolicyVersion(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().GetPolicyVersion(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil || response.Response.PolicyVersion == nil {
 		return
@@ -1533,20 +1535,16 @@ func (me *CamService) DeleteCamPolicyVersionById(ctx context.Context, policyId u
 	request.PolicyId = &policyId
 	request.VersionId = []*uint64{helper.Uint64(versionId)}
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().DeletePolicyVersion(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCamClient().DeletePolicyVersion(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
 	return
 }
@@ -1666,25 +1664,29 @@ func (me *CamService) DescribeCamTagRoleById(ctx context.Context, roleName, role
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewGetRoleRequest()
+	response := cam.NewGetRoleResponse()
 	if roleName == "" {
 		request.RoleId = &roleId
 	} else {
 		request.RoleName = &roleName
 	}
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().GetRole(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().GetRole(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil || response.Response.RoleInfo == nil {
 		return
@@ -1703,44 +1705,43 @@ func (me *CamService) DeleteCamTagRoleById(ctx context.Context, roleName, roleId
 		request.RoleName = &roleName
 	}
 	request.TagKeys = keys
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().UntagRole(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().UntagRole(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	return
+	return errRet
 }
 
 func (me *CamService) DescribeCamRolePermissionBoundaryAttachmentById(ctx context.Context, roleId string, policyId string) (RolePermissionBoundaryAttachment *cam.GetRolePermissionBoundaryResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewGetRolePermissionBoundaryRequest()
+	response := cam.NewGetRolePermissionBoundaryResponse()
 	request.RoleId = &roleId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().GetRolePermissionBoundary(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseCamClient().GetRolePermissionBoundary(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	if response == nil || response.Response == nil || response.Response.PolicyId == nil {
 		return
 	}
@@ -1760,20 +1761,17 @@ func (me *CamService) DeleteCamRolePermissionBoundaryAttachmentById(ctx context.
 	} else {
 		request.RoleId = &roleId
 	}
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().DeleteRolePermissionsBoundary(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCamClient().DeleteRolePermissionsBoundary(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
 	return
 }
@@ -1859,22 +1857,25 @@ func (me *CamService) DescribeCamSetPolicyVersionById(ctx context.Context, polic
 	logId := tccommon.GetLogId(ctx)
 
 	request := cam.NewListPolicyVersionsRequest()
+	response := cam.NewListPolicyVersionsResponse()
 	request.PolicyId = helper.StrToUint64Point(policyId)
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCamClient().ListPolicyVersions(request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
-	response, err := me.client.UseCamClient().ListPolicyVersions(request)
-	if err != nil {
-		errRet = err
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil || len(response.Response.Versions) < 1 {
 		return

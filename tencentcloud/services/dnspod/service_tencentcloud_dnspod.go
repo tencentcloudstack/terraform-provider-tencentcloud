@@ -527,7 +527,7 @@ func (me *DnspodService) DescribeDnspodRecordListByFilter(ctx context.Context, p
 
 	var (
 		offset uint64 = 0
-		limit  uint64 = 20
+		limit  uint64 = 1000
 	)
 	for {
 		request.Offset = &offset

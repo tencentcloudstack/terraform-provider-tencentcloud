@@ -13,6 +13,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -429,8 +430,40 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
 		return fmt.Errorf("setting of the field[availability_zone_list, hidden_zone] does not support update")
 	}
-	if d.HasChange("mongos_cpu") || d.HasChange("mongos_memory") || d.HasChange("mongos_node_num") {
-		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_num] does not support update")
+	if d.HasChange("mongos_node_num") {
+		return fmt.Errorf("setting of the field[mongos_node_num] does not support update")
+	}
+
+	if d.HasChange("mongos_cpu") && d.HasChange("mongos_memory") {
+		if v, ok := d.GetOk("mongos_memory"); ok {
+			dealId, err := mongodbService.ModifyMongosMemory(ctx, instanceId, v.(int))
+			if err != nil {
+				return err
+			}
+			if dealId == "" {
+				return fmt.Errorf("deal id is empty")
+			}
+
+			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
+				if err != nil {
+					if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+						if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
+							return resource.RetryableError(err)
+						}
+					}
+					return resource.NonRetryableError(err)
+				}
+
+				if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS {
+					return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
+				}
+				return nil
+			})
+			if errUpdate != nil {
+				return errUpdate
+			}
+		}
 	}
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)

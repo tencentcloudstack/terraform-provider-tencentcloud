@@ -734,22 +734,25 @@ func (me *AsService) DescribeAsLoadBalancerById(ctx context.Context, autoScaling
 	logId := tccommon.GetLogId(ctx)
 
 	request := as.NewDescribeAutoScalingGroupsRequest()
+	response := as.NewDescribeAutoScalingGroupsResponse()
 	request.AutoScalingGroupIds = []*string{&autoScalingGroupId}
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseAsClient().DescribeAutoScalingGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-	}()
 
-	ratelimit.Check(request.GetAction())
+		response = result
+		return nil
+	})
 
-	response, err := me.client.UseAsClient().DescribeAutoScalingGroups(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.AutoScalingGroupSet) < 1 {
 		return
@@ -762,7 +765,7 @@ func (me *AsService) DescribeAsLoadBalancerById(ctx context.Context, autoScaling
 func (me *AsService) DeleteAsLoadBalancerById(ctx context.Context, autoScalingGroupId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := as.NewDetachLoadBalancersRequest()
+	request := as.NewModifyLoadBalancersRequest()
 	request.AutoScalingGroupId = &autoScalingGroupId
 
 	defer func() {
@@ -773,7 +776,7 @@ func (me *AsService) DeleteAsLoadBalancerById(ctx context.Context, autoScalingGr
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseAsClient().DetachLoadBalancers(request)
+	response, err := me.client.UseAsClient().ModifyLoadBalancers(request)
 	if err != nil {
 		errRet = err
 		return

@@ -80,7 +80,7 @@ resource "tencentcloud_kms_key" "example" {
 resource "tencentcloud_cos_bucket" "bucket_basic" {
   bucket               = "tf-bucket-cdc-${local.app_id}"
   acl                  = "private"
-  encryption_algorithm = "KMS" #cos/kms for cdc cos
+  encryption_algorithm = "KMS"
   kms_id               = tencentcloud_kms_key.example.id
   versioning_enable    = true
   acceleration_enable  = false
@@ -248,6 +248,19 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
     index_document           = "index.html"
     error_document           = "error.html"
     redirect_all_requests_to = "https"
+    routing_rules {
+      rules {
+        condition_error_code        = "404"
+        redirect_protocol           = "https"
+        redirect_replace_key_prefix = "/test"
+      }
+
+      rules {
+        condition_prefix     = "/test"
+        redirect_protocol    = "https"
+        redirect_replace_key = "key"
+      }
+    }
   }
 }
 
@@ -415,11 +428,11 @@ The following arguments are supported:
 * `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
 * `enable_intelligent_tiering` - (Optional, Bool) Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.
-* `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `cos/kms`, `cos/kms` is for cdc cos scenario.
+* `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `SM4`.
 * `force_clean` - (Optional, Bool) Force cleanup all objects before delete bucket.
 * `intelligent_tiering_days` - (Optional, Int) Specifies the limit of days for standard-tier data to low-frequency data in an intelligent tiered storage configuration, with optional days of 30, 60, 90. Default value is 30.
 * `intelligent_tiering_request_frequent` - (Optional, Int) Specify the access limit for converting standard layer data into low-frequency layer data in the configuration. The default value is once, which can be used in combination with the number of days to achieve the conversion effect. For example, if the parameter is set to 1 and the number of access days is 30, it means that objects with less than one visit in 30 consecutive days will be reduced from the standard layer to the low frequency layer.
-* `kms_id` - (Optional, String) The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS or cos/kms. Set kms id to the specified value. If not specified, the default kms id is used.
+* `kms_id` - (Optional, String) The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS. Set kms id to the specified value. If not specified, the default kms id is used.
 * `lifecycle_rules` - (Optional, List) A configuration of object lifecycle management (documented below).
 * `log_enable` - (Optional, Bool) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).
 * `log_prefix` - (Optional, String) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
@@ -496,6 +509,18 @@ The `replica_rules` object supports the following:
 * `id` - (Optional, String) Name of a specific rule.
 * `prefix` - (Optional, String) Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.
 
+The `routing_rules` object of `website` supports the following:
+
+* `rules` - (Required, List) Routing rule list.
+
+The `rules` object of `routing_rules` supports the following:
+
+* `condition_error_code` - (Optional, String) Specifies the error code as the match condition for the routing rule. Valid values: only 4xx return codes, such as 403 or 404.
+* `condition_prefix` - (Optional, String) Specifies the object key prefix as the match condition for the routing rule.
+* `redirect_protocol` - (Optional, String) Specifies the target protocol for the routing rule. Only HTTPS is supported.
+* `redirect_replace_key_prefix` - (Optional, String) Specifies the object key prefix to replace the original prefix in the request. You can set this parameter only if the condition is KeyPrefixEquals.
+* `redirect_replace_key` - (Optional, String) Specifies the target object key to replace the original object key in the request.
+
 The `transition` object of `lifecycle_rules` supports the following:
 
 * `storage_class` - (Required, String) Specifies the storage class to which you want the object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
@@ -507,6 +532,7 @@ The `website` object supports the following:
 * `error_document` - (Optional, String) An absolute path to the document to return in case of a 4XX error.
 * `index_document` - (Optional, String) COS returns this index document when requests are made to the root domain or any of the subfolders.
 * `redirect_all_requests_to` - (Optional, String) Redirects all request configurations. Valid values: http, https. Default is `http`.
+* `routing_rules` - (Optional, List) Routing rule configuration. A RoutingRules container can contain up to 100 RoutingRule elements.
 
 ## Attributes Reference
 

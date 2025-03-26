@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_dts_migrate_service: Optimize deletion logic
+```
+
+```release-note:enhancement
+resource/tencentcloud_dts_sync_job: Optimize deletion logic
+```
+
+```release-note:enhancement
+resource/tencentcloud_dts_sync_job: Optimize update logic
+```

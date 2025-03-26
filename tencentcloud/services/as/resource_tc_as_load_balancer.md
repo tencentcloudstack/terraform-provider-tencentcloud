@@ -1,40 +1,40 @@
-Provides a resource to create a as load_balancer
+Provides a resource to create a as load balancer
 
-~> **NOTE:** `load_balancer_ids` A list of traditional load balancer IDs, with a maximum of 20 traditional load balancers bound to each scaling group. Only one LoadBalancerIds and ForwardLoadBalancers can be specified simultaneously.
-~> **NOTE:** `forward_load_balancers` List of application type load balancers, with a maximum of 100 bound application type load balancers for each scaling group. Only one LoadBalancerIds and ForwardLoadBalancers can be specified simultaneously.
+~> **NOTE:** This resource must exclusive in one auto scaling group, do not declare additional rule resources of this auto scaling group elsewhere.
+
+~> **NOTE:** If the `auto_scaling_group_id` field of this resource comes from the `tencentcloud_as_scaling_group` resource, then the `forward_balancer_ids` field of the `tencentcloud_as_scaling_group` resource cannot be set simultaneously with this resource, which may result in conflicts
+
+~> **NOTE:** `forward_load_balancers` List of application type load balancers, with a maximum of 100 bound application type load balancers for each scaling group.
 
 Example Usage
 
-If use `load_balancer_ids`
-
 ```hcl
-data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "as"
+variable "availability_zone" {
+  default = "ap-guangzhou-6"
 }
 
-data "tencentcloud_images" "image" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "TencentOS Server 3.2 (Final)"
-}
-
+// create vpc
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
   cidr_block = "10.0.0.0/16"
+  name       = "vpc"
 }
 
+// create subnet
 resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
-  name              = "subnet-example"
-  cidr_block        = "10.0.0.0/16"
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
 }
+
 
 resource "tencentcloud_as_scaling_config" "example" {
   configuration_name = "tf-example"
-  image_id           = data.tencentcloud_images.image.images.0.image_id
-  instance_types     = ["SA1.SMALL1", "SA2.SMALL1", "SA2.SMALL2", "SA2.SMALL4"]
+  image_id           = "img-eb30mz89"
+  instance_types     = ["S6.MEDIUM4"]
   instance_name_settings {
-    instance_name = "test-ins-name"
+    instance_name = "demo-ins-name"
   }
 }
 
@@ -49,19 +49,17 @@ resource "tencentcloud_as_scaling_group" "example" {
 
 resource "tencentcloud_clb_instance" "example" {
   network_type = "INTERNAL"
-  clb_name     = "clb-example"
-  project_id   = 0
+  clb_name     = "tf-example"
   vpc_id       = tencentcloud_vpc.vpc.id
   subnet_id    = tencentcloud_subnet.subnet.id
-
   tags = {
-    test = "tf"
+    createBy = "Terraform"
   }
 }
 
 resource "tencentcloud_clb_listener" "example" {
   clb_id        = tencentcloud_clb_instance.example.id
-  listener_name = "listener-example"
+  listener_name = "tf-example"
   port          = 80
   protocol      = "HTTP"
 }
@@ -73,15 +71,6 @@ resource "tencentcloud_clb_listener_rule" "example" {
   url         = "/bar"
 }
 
-resource "tencentcloud_as_load_balancer" "example" {
-  auto_scaling_group_id = tencentcloud_as_scaling_group.example.id
-  load_balancer_ids     = [tencentcloud_clb_instance.example.id]
-}
-```
-
-If use `forward_load_balancers`
-
-```hcl
 resource "tencentcloud_as_load_balancer" "example" {
   auto_scaling_group_id = tencentcloud_as_scaling_group.example.id
 
@@ -100,8 +89,8 @@ resource "tencentcloud_as_load_balancer" "example" {
 
 Import
 
-as load_balancer can be imported using the id, e.g.
+as load balancer can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_as_load_balancer.load_balancer auto_scaling_group_id
+terraform import tencentcloud_as_load_balancer.example asg-bpp4uol2
 ```

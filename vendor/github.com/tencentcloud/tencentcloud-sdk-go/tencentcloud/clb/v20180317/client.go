@@ -45,6 +45,128 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewAddCustomizedConfigRequest() (request *AddCustomizedConfigRequest) {
+    request = &AddCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "AddCustomizedConfig")
+    
+    
+    return
+}
+
+func NewAddCustomizedConfigResponse() (response *AddCustomizedConfigResponse) {
+    response = &AddCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCustomizedConfig
+// 新增个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AddCustomizedConfig(request *AddCustomizedConfigRequest) (response *AddCustomizedConfigResponse, err error) {
+    return c.AddCustomizedConfigWithContext(context.Background(), request)
+}
+
+// AddCustomizedConfig
+// 新增个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AddCustomizedConfigWithContext(ctx context.Context, request *AddCustomizedConfigRequest) (response *AddCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewAddCustomizedConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAssociateCustomizedConfigRequest() (request *AssociateCustomizedConfigRequest) {
+    request = &AssociateCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "AssociateCustomizedConfig")
+    
+    
+    return
+}
+
+func NewAssociateCustomizedConfigResponse() (response *AssociateCustomizedConfigResponse) {
+    response = &AssociateCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AssociateCustomizedConfig
+// 关联配置到server或location，根据配置类型关联到server或location。准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AssociateCustomizedConfig(request *AssociateCustomizedConfigRequest) (response *AssociateCustomizedConfigResponse, err error) {
+    return c.AssociateCustomizedConfigWithContext(context.Background(), request)
+}
+
+// AssociateCustomizedConfig
+// 关联配置到server或location，根据配置类型关联到server或location。准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AssociateCustomizedConfigWithContext(ctx context.Context, request *AssociateCustomizedConfigRequest) (response *AssociateCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewAssociateCustomizedConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAssociateCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAssociateTargetGroupsRequest() (request *AssociateTargetGroupsRequest) {
     request = &AssociateTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -298,6 +420,7 @@ func NewBatchModifyTargetTagResponse() (response *BatchModifyTargetTagResponse) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -313,6 +436,7 @@ func (c *Client) BatchModifyTargetTag(request *BatchModifyTargetTagRequest) (res
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -537,8 +661,6 @@ func NewCloneLoadBalancerResponse() (response *CloneLoadBalancerResponse) {
 //
 // 独占集群克隆必须传对应的参数，否则按共享型创建
 //
-// 功能内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/1akuvsmyn0g)。
-//
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
@@ -607,8 +729,6 @@ func (c *Client) CloneLoadBalancer(request *CloneLoadBalancerRequest) (response 
 // BGP带宽包必须传带宽包id
 //
 // 独占集群克隆必须传对应的参数，否则按共享型创建
-//
-// 功能内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/1akuvsmyn0g)。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -810,7 +930,7 @@ func NewCreateLoadBalancerResponse() (response *CreateLoadBalancerResponse) {
 // CreateLoadBalancer
 // 本接口(CreateLoadBalancer)用来创建负载均衡实例（本接口只支持购买按量计费的负载均衡，包年包月的负载均衡请通过控制台购买）。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
 //
-// 注意：(1)指定可用区申请负载均衡、跨zone容灾(仅香港支持)【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】；(2)目前只有北京、上海、广州支持IPv6；(3)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
+// 注意：(1)可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域是否支持创建IPv6实例；(2)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
 //
 // 本接口为异步接口，接口成功返回后，可使用 DescribeLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
 //
@@ -835,7 +955,7 @@ func (c *Client) CreateLoadBalancer(request *CreateLoadBalancerRequest) (respons
 // CreateLoadBalancer
 // 本接口(CreateLoadBalancer)用来创建负载均衡实例（本接口只支持购买按量计费的负载均衡，包年包月的负载均衡请通过控制台购买）。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
 //
-// 注意：(1)指定可用区申请负载均衡、跨zone容灾(仅香港支持)【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】；(2)目前只有北京、上海、广州支持IPv6；(3)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
+// 注意：(1)可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域是否支持创建IPv6实例；(2)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
 //
 // 本接口为异步接口，接口成功返回后，可使用 DescribeLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
 //
@@ -1137,6 +1257,75 @@ func (c *Client) CreateTopicWithContext(ctx context.Context, request *CreateTopi
     request.SetContext(ctx)
     
     response = NewCreateTopicResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCustomizedConfigRequest() (request *DeleteCustomizedConfigRequest) {
+    request = &DeleteCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DeleteCustomizedConfig")
+    
+    
+    return
+}
+
+func NewDeleteCustomizedConfigResponse() (response *DeleteCustomizedConfigResponse) {
+    response = &DeleteCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCustomizedConfig
+// 删除个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteCustomizedConfig(request *DeleteCustomizedConfigRequest) (response *DeleteCustomizedConfigResponse, err error) {
+    return c.DeleteCustomizedConfigWithContext(context.Background(), request)
+}
+
+// DeleteCustomizedConfig
+// 删除个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteCustomizedConfigWithContext(ctx context.Context, request *DeleteCustomizedConfigRequest) (response *DeleteCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewDeleteCustomizedConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCustomizedConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -3757,6 +3946,69 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDisassociateCustomizedConfigRequest() (request *DisassociateCustomizedConfigRequest) {
+    request = &DisassociateCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DisassociateCustomizedConfig")
+    
+    
+    return
+}
+
+func NewDisassociateCustomizedConfigResponse() (response *DisassociateCustomizedConfigResponse) {
+    response = &DisassociateCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisassociateCustomizedConfig
+// 去关联个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DisassociateCustomizedConfig(request *DisassociateCustomizedConfigRequest) (response *DisassociateCustomizedConfigResponse, err error) {
+    return c.DisassociateCustomizedConfigWithContext(context.Background(), request)
+}
+
+// DisassociateCustomizedConfig
+// 去关联个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DisassociateCustomizedConfigWithContext(ctx context.Context, request *DisassociateCustomizedConfigRequest) (response *DisassociateCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewDisassociateCustomizedConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisassociateCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDisassociateTargetGroupsRequest() (request *DisassociateTargetGroupsRequest) {
     request = &DisassociateTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4259,6 +4511,65 @@ func (c *Client) ModifyBlockIPListWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyBlockIPListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCustomizedConfigRequest() (request *ModifyCustomizedConfigRequest) {
+    request = &ModifyCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "ModifyCustomizedConfig")
+    
+    
+    return
+}
+
+func NewModifyCustomizedConfigResponse() (response *ModifyCustomizedConfigResponse) {
+    response = &ModifyCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCustomizedConfig
+// 修改个性化配置。如果配置已经绑定clb、server或location，同时更新。准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyCustomizedConfig(request *ModifyCustomizedConfigRequest) (response *ModifyCustomizedConfigResponse, err error) {
+    return c.ModifyCustomizedConfigWithContext(context.Background(), request)
+}
+
+// ModifyCustomizedConfig
+// 修改个性化配置。如果配置已经绑定clb、server或location，同时更新。准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyCustomizedConfigWithContext(ctx context.Context, request *ModifyCustomizedConfigRequest) (response *ModifyCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyCustomizedConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCustomizedConfigResponse()
     err = c.Send(request, response)
     return
 }

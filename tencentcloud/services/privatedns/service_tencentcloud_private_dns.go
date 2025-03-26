@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	privatednsIntlv20201028 "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 
@@ -228,10 +229,10 @@ func (me *PrivateDnsService) DescribePrivatednsPrivateZoneListByFilter(ctx conte
 	return
 }
 
-func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Context, ruleId string) (ret *privatedns.ForwardRule, errRet error) {
+func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Context, ruleId string) (ret *privatednsIntlv20201028.ForwardRule, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := privatedns.NewDescribeForwardRuleRequest()
+	request := privatednsIntlv20201028.NewDescribeForwardRuleRequest()
 	request.RuleId = helper.String(ruleId)
 
 	defer func() {
@@ -242,7 +243,7 @@ func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Conte
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UsePrivatednsV20201028Client().DescribeForwardRule(request)
+	response, err := me.client.UsePrivatednsIntlV20201028Client().DescribeForwardRule(request)
 	if err != nil {
 		errRet = err
 		return
@@ -257,11 +258,11 @@ func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Conte
 	return
 }
 
-func (me *PrivatednsService) DescribePrivateDnsEndPointById(ctx context.Context, endPointId string) (ret *privatedns.DescribeEndPointListResponseParams, errRet error) {
+func (me *PrivatednsService) DescribePrivateDnsEndPointById(ctx context.Context, endPointId string) (ret *privatednsIntlv20201028.DescribeEndPointListResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := privatedns.NewDescribeEndPointListRequest()
-	filter := &privatedns.Filter{
+	request := privatednsIntlv20201028.NewDescribeEndPointListRequest()
+	filter := &privatednsIntlv20201028.Filter{
 		Name:   helper.String("EndPointId"),
 		Values: []*string{helper.String(endPointId)},
 	}
@@ -275,11 +276,50 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointById(ctx context.Context,
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UsePrivatednsV20201028Client().DescribeEndPointList(request)
+	response, err := me.client.UsePrivatednsIntlV20201028Client().DescribeEndPointList(request)
 	if err != nil {
 		errRet = err
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *PrivatednsService) DescribePrivateDnsExtendEndPointById(ctx context.Context, endPointId string) (ret *privatednsIntlv20201028.DescribeExtendEndpointListResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatednsIntlv20201028.NewDescribeExtendEndpointListRequest()
+	response := privatednsIntlv20201028.NewDescribeExtendEndpointListResponse()
+	filter := &privatednsIntlv20201028.Filter{
+		Name:   helper.String("EndpointId"),
+		Values: []*string{helper.String(endPointId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeExtendEndpointList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ret = response.Response

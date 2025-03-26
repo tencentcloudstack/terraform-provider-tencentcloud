@@ -2,6 +2,7 @@ package cbs
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 	"sync"
@@ -12,6 +13,7 @@ import (
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -310,12 +312,34 @@ func (me *CbsService) ResizeDisk(ctx context.Context, diskId string, diskSize in
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ResizeDisk(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		storage, e := me.DescribeDiskById(ctx, diskId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
+			return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
+		}
+
+		if *storage.DiskSize != uint64(diskSize) {
+			return resource.RetryableError(fmt.Errorf("waiting for cbs size changed to %d, now %d", diskSize, *storage.DiskSize))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s resize cbs failed, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
 	return nil
 }
 
@@ -387,20 +411,11 @@ func (me *CbsService) DetachDisk(ctx context.Context, diskId, instanceId string)
 	return nil
 }
 
-func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName string, tags map[string]string) (snapshotId string, errRet error) {
+func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName string) (snapshotId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cbs.NewCreateSnapshotRequest()
 	request.DiskId = &diskId
 	request.SnapshotName = &snapshotName
-	if len(tags) > 0 {
-		for tagKey, tagValue := range tags {
-			tag := cbs.Tag{
-				Key:   helper.String(tagKey),
-				Value: helper.String(tagValue),
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
-	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().CreateSnapshot(request)
 	if err != nil {
@@ -411,6 +426,11 @@ func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName s
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.SnapshotId == nil {
+		errRet = fmt.Errorf("CreateSnapshot response is nil.")
+		return
+	}
 
 	snapshotId = *response.Response.SnapshotId
 	return
@@ -796,6 +816,11 @@ func (me *CbsService) CreateDiskBackup(ctx context.Context, diskId, diskBackupNa
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseCbsClient().CreateDiskBackup(request)
 		if e != nil {
+			if sdkError, ok := e.(*errors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceUnavailable.NotSupported" {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -882,6 +907,11 @@ func (me *CbsService) ApplyDiskBackup(ctx context.Context, diskBackupId, diskId 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := me.client.UseCbsClient().ApplyDiskBackup(request)
 		if e != nil {
+			if sdkError, ok := e.(*errors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceUnavailable.NotSupported" {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -891,6 +921,42 @@ func (me *CbsService) ApplyDiskBackup(ctx context.Context, diskBackupId, diskId 
 	if err != nil {
 		log.Printf("[CRITAL]%s ApplyDiskBackup failed, reason:%+v", logId, err)
 		return err
+	}
+	return
+}
+
+func (me *CbsService) DescribeDiskConfigQuota(ctx context.Context, cvmInfo map[string]interface{}) (diskConfigSet []*cbs.DiskConfig, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cbs.NewDescribeDiskConfigQuotaRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InquiryType = helper.String("INQUIRY_CVM_CONFIG")
+	request.Zones = helper.Strings([]string{cvmInfo["availability_zone"].(string)})
+	request.CPU = helper.Int64Uint64(cvmInfo["cpu_core_count"].(int64))
+	request.Memory = helper.Int64Uint64(cvmInfo["memory_size"].(int64))
+	request.InstanceFamilies = helper.Strings([]string{cvmInfo["family"].(string)})
+	request.DiskTypes = helper.Strings(cvmInfo["disk_types"].([]string))
+	request.DiskChargeType = helper.String(cvmInfo["disk_charge_type"].(string))
+	request.DiskUsage = helper.String(cvmInfo["disk_usage"].(string))
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCbsClient().DescribeDiskConfigQuota(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		diskConfigSet = result.Response.DiskConfigSet
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		log.Printf("[CRITAL]%s create cbs DiskBackup failed, reason:%+v", logId, err)
+		return
 	}
 	return
 }

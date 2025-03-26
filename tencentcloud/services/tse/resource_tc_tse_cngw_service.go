@@ -104,6 +104,7 @@ func ResourceTencentCloudTseCngwService() *schema.Resource {
 						"targets": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "provided when service type is IPList.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -143,6 +144,7 @@ func ResourceTencentCloudTseCngwService() *schema.Resource {
 						"source_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "source service type.",
 						},
 						"scf_type": {
@@ -204,6 +206,7 @@ func ResourceTencentCloudTseCngwService() *schema.Resource {
 						"real_source_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "exact source service type.",
 						},
 					},

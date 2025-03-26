@@ -96,6 +96,7 @@ func ResourceTencentCloudAsScalingGroup() *schema.Resource {
 			"forward_balancer_ids": {
 				Type:          schema.TypeSet,
 				Optional:      true,
+				Computed:      true,
 				ConflictsWith: []string{"load_balancer_ids"},
 				Description:   "List of application load balancers, which can't be specified with `load_balancer_ids` together.",
 				Elem: &schema.Resource{

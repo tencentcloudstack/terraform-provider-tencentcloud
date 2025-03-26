@@ -147,6 +147,12 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Dedicated cluster ID.",
 			},
+			"wait_switch": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY, POSTGRESQL_KERNEL_UPGRADE_MAINTAIN_WINDOW}),
+				Description:  "Switch time after instance configurations are modified. `0`: Switch immediately; `2`: Switch during maintenance time window. Default: `0`. Note: This only takes effect when updating the `memory`, `storage`, `cpu` fields.",
+			},
 			// Computed values
 			"create_time": {
 				Type:        schema.TypeString,
@@ -453,6 +459,11 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		return err
 	}
 
+	waitSwitch := POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY
+	if v, ok := d.GetOk("wait_switch"); ok {
+		waitSwitch = v.(int)
+	}
+
 	if d.HasChange("read_only_group_id") {
 		var (
 			masterInstanceId string
@@ -526,7 +537,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 			cpu = v.(int)
 		}
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu)
+			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu, waitSwitch)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -535,13 +546,15 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if outErr != nil {
 			return outErr
 		}
-		time.Sleep(time.Second * 5)
-		// check update storage and memory done
-		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-		if checkErr != nil {
-			return checkErr
-		}
 
+		if waitSwitch == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
+			time.Sleep(time.Second * 5)
+			// check update storage and memory done
+			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+			if checkErr != nil {
+				return checkErr
+			}
+		}
 	}
 
 	// update project id

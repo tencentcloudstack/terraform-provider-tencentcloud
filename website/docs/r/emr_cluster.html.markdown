@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_emr_cluster"
 sidebar_current: "docs-tencentcloud-resource-emr_cluster"
 description: |-
-  Provide a resource to create a emr cluster.
+  Provide a resource to create an emr cluster.
 ---
 
 # tencentcloud_emr_cluster
 
-Provide a resource to create a emr cluster.
+Provide a resource to create an emr cluster.
 
 ## Example Usage
 
@@ -94,7 +94,7 @@ resource "tencentcloud_emr_cluster" "emr_cluster" {
   time_span = 3600
   time_unit = "s"
   pay_mode  = 0
-  placement_info = {
+  placement_info {
     zone       = var.availability_zone
     project_id = 0
   }
@@ -138,6 +138,11 @@ The following arguments are supported:
 * `placement` - (Optional, Map, **Deprecated**) It will be deprecated in later versions. Use `placement_info` instead. The location of the instance.
 * `pre_executed_file_settings` - (Optional, List, ForceNew) Pre executed file settings. It can only be set at the time of creation, and cannot be modified.
 * `resource_spec` - (Optional, List) Resource specification of EMR instance.
+* `scene_name` - (Optional, String) Scene-based value:
+	- Hadoop-Kudu
+	- Hadoop-Zookeeper
+	- Hadoop-Presto
+	- Hadoop-Hbase.
 * `sg_id` - (Optional, String, ForceNew) The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.
 * `tags` - (Optional, Map) Tag description list.
 * `terminate_node_info` - (Optional, List) Terminate nodes. Note: it only works when the number of nodes decreases.

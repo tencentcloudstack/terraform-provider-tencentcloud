@@ -144,6 +144,7 @@ The following arguments are supported:
 * `disk_size` - (Optional, Int) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `disk_type` - (Optional, String) Type of disk.
 * `dynamic_retention_config` - (Optional, List) Dynamic message retention policy configuration.
+* `elastic_bandwidth_switch` - (Optional, Int) Elastic bandwidth switch 0 not turned on 1 turned on (0 default). This takes effect only when the instance is created.
 * `instance_type` - (Optional, Int) Description of instance type. `profession`: 1, `standard`:  1(general), 2(standard), 3(advanced), 4(capacity), 5(specialized-1), 6(specialized-2), 7(specialized-3), 8(specialized-4), 9(exclusive).
 * `kafka_version` - (Optional, String) Kafka version (0.10.2/1.1.1/2.4.1).
 * `max_message_byte` - (Optional, Int) The size of a single message in bytes at the instance level. Value range: `1024 - 12*1024*1024 bytes (i.e., 1KB-12MB).

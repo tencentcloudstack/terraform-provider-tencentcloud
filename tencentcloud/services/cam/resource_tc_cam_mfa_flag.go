@@ -27,12 +27,14 @@ func ResourceTencentCloudCamMfaFlag() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"op_uin": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Operate uin.",
 			},
 
 			"login_flag": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "Login flag setting.",
@@ -59,6 +61,7 @@ func ResourceTencentCloudCamMfaFlag() *schema.Resource {
 
 			"action_flag": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "Action flag setting.",
@@ -121,6 +124,8 @@ func resourceTencentCloudCamMfaFlagRead(d *schema.ResourceData, meta interface{}
 		log.Printf("[WARN]%s resource `CamMfaFlag` not found, please check if it has been deleted.\n", logId)
 		return nil
 	}
+
+	_ = d.Set("op_uin", uin)
 
 	if loginFlag != nil {
 		loginFlagMap := map[string]interface{}{}

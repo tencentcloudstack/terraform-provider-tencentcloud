@@ -152,10 +152,16 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Description: "Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.",
 		},
 		"device_type": {
-			Type:        schema.TypeString,
-			Optional:    true,
-			Computed:    true,
-			Description: "Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.",
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+			Description: "Specify device type, available values:\n" +
+				"	- `UNIVERSAL` (default): universal instance,\n" +
+				"	- `EXCLUSIVE`: exclusive instance,\n" +
+				"	- `BASIC_V2`: ONTKE single-node instance,\n" +
+				"	- `CLOUD_NATIVE_CLUSTER`: cluster version standard type,\n" +
+				"	- `CLOUD_NATIVE_CLUSTER_EXCLUSIVE`: cluster version enhanced type.\n" +
+				"If it is not specified, it defaults to a universal instance.",
 		},
 		"tags": {
 			Type:        schema.TypeMap,

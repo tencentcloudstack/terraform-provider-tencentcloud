@@ -137,7 +137,6 @@ func ResourceTencentCloudVpnGateway() *schema.Resource {
 			"bgp_asn": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Computed:    true,
 				Description: "BGP ASN. Value range: 1 - 4294967295. Using BGP requires configuring ASN.",
 			},
 			"create_time": {
@@ -269,10 +268,8 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("vpc", "vpngw", region, gatewayId)
-
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -297,6 +294,7 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 		log.Printf("[CRITAL]%s read VPN gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
 	if !has {
 		d.SetId("")
 		return nil
@@ -321,7 +319,7 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("zone", gateway.Zone)
 	_ = d.Set("cdc_id", gateway.CdcId)
 	_ = d.Set("max_connection", gateway.MaxConnection)
-	if gateway.BgpAsn != nil {
+	if gateway.BgpAsn != nil && *gateway.BgpAsn != 0 {
 		_ = d.Set("bgp_asn", gateway.BgpAsn)
 	}
 

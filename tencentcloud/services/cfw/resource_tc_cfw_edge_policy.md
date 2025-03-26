@@ -1,4 +1,4 @@
-Provides a resource to create a cfw edge_policy
+Provides a resource to create a CFW edge policy
 
 Example Usage
 
@@ -38,8 +38,8 @@ resource "tencentcloud_cfw_edge_policy" "example" {
 
 Import
 
-cfw edge_policy can be imported using the id, e.g.
+CFW edge policy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfw_edge_policy.example edge_policy_id
+terraform import tencentcloud_cfw_edge_policy.example 1859582
 ```

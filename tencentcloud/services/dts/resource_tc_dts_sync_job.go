@@ -307,10 +307,19 @@ func resourceTencentCloudDtsSyncJobDelete(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Isolated", "Stopped"}, 2*tccommon.ReadRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Isolated", "Stopped", "NotBilledByInternational", "NotBilled"}, 2*tccommon.ReadRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
+	}
+
+	syncConfig, e := service.DescribeDtsSyncConfigById(ctx, syncJobId)
+	if e != nil {
+		return e
+	}
+
+	if syncConfig != nil && syncConfig.TradeStatus != nil && (*syncConfig.TradeStatus == "NotBilledByInternational" || *syncConfig.TradeStatus == "NotBilled") {
+		return nil
 	}
 
 	if err := service.DestroyDtsSyncJobById(ctx, syncJobId); err != nil {

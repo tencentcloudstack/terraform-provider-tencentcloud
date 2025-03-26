@@ -37,6 +37,7 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
 ```
 
 TCP/UDP Listener with tcp health check
+
 ```hcl
 resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
@@ -56,6 +57,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 ```
 
 TCP/UDP Listener with http health check
+
 ```hcl
 resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
@@ -79,6 +81,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 ```
 
 TCP/UDP Listener with customer health check
+
 ```hcl
 resource "tencentcloud_clb_listener" "listener_tcp"{
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
@@ -100,7 +103,7 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
 }
 ```
 
-HTTPS Listener
+HTTPS Listener with sigle certificate
 
 ```hcl
 resource "tencentcloud_clb_listener" "HTTPS_listener" {
@@ -112,6 +115,26 @@ resource "tencentcloud_clb_listener" "HTTPS_listener" {
   certificate_id       = "VjANRdz8"
   certificate_ca_id    = "VfqO4zkB"
   sni_switch           = true
+}
+```
+
+HTTPS Listener with multi certificates
+
+```hcl
+resource "tencentcloud_clb_listener" "HTTPS_listener" {
+  clb_id               = "lb-l6cp6jt4"
+  listener_name        = "test_listener"
+  port                 = "80"
+  protocol             = "HTTPS"
+  sni_switch           = true
+
+  multi_cert_info {
+    ssl_mode = "UNIDIRECTIONAL"
+    cert_id_list = [
+      "LCYouprI",
+      "JVO1alRN"
+    ]
+  }
 }
 ```
 

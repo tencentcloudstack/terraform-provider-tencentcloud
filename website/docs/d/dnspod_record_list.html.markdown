@@ -61,6 +61,7 @@ The following arguments are supported:
 * `sort_field` - (Optional, String) Sorting field, supporting NAME, LINE, TYPE, VALUE, WEIGHT, MX, TTL, UPDATED_ON fields. NAME: The host header of the resolution record LINE: The resolution record line TYPE: The resolution record type VALUE: The resolution record value WEIGHT: The weight MX: MX priority TTL: The resolution record cache time UPDATED_ON: The resolution record update time.
 * `sort_type` - (Optional, String) Sorting method, ascending: ASC, descending: DESC. The default value is ASC.
 * `sub_domain` - (Optional, String) Retrieve resolution records based on the host header of the resolution record. Fuzzy matching is used by default. You can set the IsExactSubdomain parameter to true for precise searching.
+* `sub_domains` - (Optional, Set: [`String`]) Sub domains.
 * `ttl_begin` - (Optional, Int) The starting point of the resolution record TTL query interval.
 * `ttl_end` - (Optional, Int) The endpoint of the resolution record TTL query interval.
 * `updated_at_begin` - (Optional, String) The starting point of the resolution record update time query interval.

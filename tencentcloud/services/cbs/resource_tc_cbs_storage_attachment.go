@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func ResourceTencentCloudCbsStorageAttachment() *schema.Resource {
@@ -54,6 +55,11 @@ func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := cbsService.AttachDisk(ctx, storageId, instanceId)
 		if e != nil {
+			if sdkError, ok := e.(*errors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceUnavailable.NotSupported" {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return tccommon.RetryError(e)
 		}
 		return nil

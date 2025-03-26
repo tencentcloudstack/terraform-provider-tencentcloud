@@ -277,7 +277,7 @@ The `force_redirect` object of `https_config` supports the following:
 
 The `header_rules` object of `request_header` supports the following:
 
-* `header_mode` - (Required, String) Http header setting method. The following types are supported: `add`: add a head, if a head already exists, there will be a duplicate head, `del`: delete the head.
+* `header_mode` - (Required, String) Http header setting method. The following types are supported: `set`: sets a value for an existing header parameter, a new header parameter, or multiple header parameters. Multiple header parameters will be merged into one; `del`: deletes a header parameter; `add`: adds a header parameter. By default, you can repeat the same action to add the same header parameter, which may affect browser response. Please consider the set operation first.
 * `header_name` - (Required, String) Http header name.
 * `header_value` - (Required, String) Http header value, optional when Mode is `del`, Required when Mode is `add`/`set`.
 * `rule_paths` - (Required, List) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html.

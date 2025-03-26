@@ -65,6 +65,7 @@ The following arguments are supported:
 * `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
 * `subnet_id` - (Optional, String) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server.
+* `time_zone` - (Optional, String) System time zone, default: `China Standard Time`.
 * `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
 * `vpc_id` - (Optional, String) ID of VPC.
 * `wait_switch` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.2. The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.
@@ -75,8 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the SQL Server instance.
+* `dns_pod_domain` - Internet address domain name.
 * `ro_flag` - Readonly flag. `RO` (read-only instance), `MASTER` (primary instance with read-only instances). If it is left empty, it refers to an instance which is not read-only and has no RO group.
 * `status` - Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.
+* `tgw_wan_vport` - External port number.
 * `vip` - IP for private access.
 * `vport` - Port for private access.
 

@@ -22,30 +22,24 @@ jobs:
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: list of changed files
-        id: getDiffFile
-        run: |
-          echo "::set-output name=files::$(git diff --name-only origin/master | grep '\.go$' | xargs)"
-        shell: bash
-
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
           go-version-file: .go-version
-          #go-version: '1.21'
+          go-version: '1.21'
           cache: false 
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
         with:
-          version: v1.48.0
-          #version: v1.54
+          skip-cache: true
+          version: v1.54
           working-directory: ./tencentcloud
-          args: --new-from-rev=origin/master -v ${{ steps.getDiffFile.outputs.files }} 
+          args: --new-from-rev=origin/master -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v

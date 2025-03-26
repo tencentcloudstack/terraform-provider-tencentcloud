@@ -79,11 +79,13 @@ func ResourceTencentCloudClbServerAttachment() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Default:     "",
 							Description: "CVM Instance Id of the backend server, conflict with `eni_ip` but must specify one of them.",
 						},
 						"eni_ip": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Default:     "",
 							Description: "Eni IP address of the backend server, conflict with `instance_id` but must specify one of them.",
 						},
 						"port": {

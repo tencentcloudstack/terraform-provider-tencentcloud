@@ -32,7 +32,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `status` - cc auto status, 1 means open, 0 means close.
+* `status` - cc auto status, 1(open), 0(close).
 
 
 ## Import

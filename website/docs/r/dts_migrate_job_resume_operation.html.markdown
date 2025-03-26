@@ -4,18 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dts_migrate_job_resume_operation"
 sidebar_current: "docs-tencentcloud-resource-dts_migrate_job_resume_operation"
 description: |-
-  Provides a resource to create a dts migrate_job_resume_operation
+  Provides a resource to create a DTS migrate job resume operation
 ---
 
 # tencentcloud_dts_migrate_job_resume_operation
 
-Provides a resource to create a dts migrate_job_resume_operation
+Provides a resource to create a DTS migrate job resume operation
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_dts_migrate_job_resume_operation" "resume" {
-  job_id        = "job_id"
+resource "tencentcloud_dts_migrate_job_resume_operation" "example" {
+  job_id        = "dts-puwyj5uy"
   resume_option = "normal"
 }
 ```

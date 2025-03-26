@@ -17,10 +17,11 @@ import (
 
 func ResourceTencentCloudMonitorTmpMultipleWrites() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudMonitorTmpMultipleWritesCreate,
-		Read:   resourceTencentCloudMonitorTmpMultipleWritesRead,
-		Update: resourceTencentCloudMonitorTmpMultipleWritesUpdate,
-		Delete: resourceTencentCloudMonitorTmpMultipleWritesDelete,
+		DeprecationMessage: "This resource will been deprecated in Terraform TencentCloud provider version v1.81.166. Please use `tencentcloud_monitor_tmp_multiple_writes_list` instead.",
+		Create:             resourceTencentCloudMonitorTmpMultipleWritesCreate,
+		Read:               resourceTencentCloudMonitorTmpMultipleWritesRead,
+		Update:             resourceTencentCloudMonitorTmpMultipleWritesUpdate,
+		Delete:             resourceTencentCloudMonitorTmpMultipleWritesDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -169,6 +170,44 @@ func resourceTencentCloudMonitorTmpMultipleWritesCreate(d *schema.ResourceData, 
 			}
 			request.RemoteWrites = append(request.RemoteWrites, &remoteWrite)
 		}
+	}
+
+	initStatus := monitorv20180724.NewDescribePrometheusInstanceInitStatusRequest()
+	initStatus.InstanceId = &instanceId
+	err := resource.Retry(8*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		results, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribePrometheusInstanceInitStatus(initStatus)
+		if errRet != nil {
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+		status := results.Response.Status
+		if status == nil {
+			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
+		}
+		if *status == "running" {
+			return nil
+		}
+		if *status == "uninitialized" {
+			iniRequest := monitorv20180724.NewRunPrometheusInstanceRequest()
+			iniRequest.InstanceId = request.InstanceId
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().RunPrometheusInstance(iniRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				return resource.RetryableError(fmt.Errorf("prometheusInstanceInit error %v, operate failed", err))
+			}
+			return resource.RetryableError(fmt.Errorf("prometheusInstance initializing, retry..."))
+		}
+		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %v, retry...", *status))
+	})
+	if err != nil {
+		return err
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

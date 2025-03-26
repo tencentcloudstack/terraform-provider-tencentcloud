@@ -1090,6 +1090,37 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 	}
 	return
 }
+
+func checkMultiCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta interface{}) (multiCertificateSetFlag bool, multiCertPara *clb.MultiCertInfo, errRet error) {
+	multiCertificateSetFlag = false
+	var multiCertInfo clb.MultiCertInfo
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "multi_cert_info"); ok {
+		if tmp, ok := dMap["ssl_mode"].(string); ok {
+			multiCertInfo.SSLMode = helper.String(tmp)
+		}
+
+		if tmp, ok := dMap["cert_id_list"]; ok {
+			tmpList := tmp.(*schema.Set).List()
+			if len(tmpList) < 1 {
+				errRet = fmt.Errorf("`cert_id_list` cannot be empty.")
+				return
+			}
+
+			for _, item := range tmpList {
+				var certInfo clb.CertInfo
+				certInfo.CertId = helper.String(item.(string))
+				multiCertInfo.CertList = append(multiCertInfo.CertList, &certInfo)
+			}
+		}
+
+		multiCertificateSetFlag = true
+		multiCertPara = &multiCertInfo
+	}
+
+	return
+}
+
 func processRetryErrMsg(err error) *resource.RetryError {
 	if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 		for _, msg := range []string{
@@ -1246,15 +1277,28 @@ func (me *ClbService) RegisterTargetInstances(ctx context.Context, targetGroupId
 			Weight: &weight,
 		},
 	}
+
+	var requestId string
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		_, err := me.client.UseClbClient().RegisterTargetGroupInstances(request)
+		result, err := me.client.UseClbClient().RegisterTargetGroupInstances(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Register target group instance failed, Response is nil."))
+		}
+
+		requestId = *result.Response.RequestId
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
+	if retryErr != nil {
+		return retryErr
 	}
 
 	return nil
@@ -1270,15 +1314,27 @@ func (me *ClbService) DeregisterTargetInstances(ctx context.Context, targetGroup
 		},
 	}
 
+	var requestId string
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		_, err := me.client.UseClbClient().DeregisterTargetGroupInstances(request)
+		result, err := me.client.UseClbClient().DeregisterTargetGroupInstances(request)
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Deregister target group instance failed, Response is nil."))
+		}
+
+		requestId = *result.Response.RequestId
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
+	if retryErr != nil {
+		return retryErr
 	}
 
 	return nil
@@ -1511,18 +1567,37 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 	request.TargetGroupId = &targetGroupId
 	request.TargetGroupInstances = []*clb.TargetGroupInstance{&instance}
 
+	var requestId string
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
+		result, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
 		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if e.GetCode() == "FailedOperation.ResourceInOperating" {
+					return resource.RetryableError(fmt.Errorf("ModifyTargetGroupInstancesWeight is waitting retry..."))
+				}
+			}
+
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Modify target group instance weight failed, Response is nil."))
+		}
+
+		requestId = *result.Response.RequestId
 		return nil
 	})
 
 	if err != nil {
 		return err
 	}
+
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
+	if retryErr != nil {
+		return retryErr
+	}
+
 	return nil
 }
 
@@ -1666,11 +1741,11 @@ func (me *ClbService) UpdateClsLogSet(ctx context.Context, request *cls.ModifyLo
 	return
 }
 
-func (me *ClbService) DescribeLbCustomizedConfigById(ctx context.Context, configId string) (customizedConfig *clb.ConfigListItem, errRet error) {
+func (me *ClbService) DescribeLbCustomizedConfigById(ctx context.Context, configId, configType string) (customizedConfig *clb.ConfigListItem, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := clb.NewDescribeCustomizedConfigListRequest()
 	request.UconfigIds = []*string{&configId}
-	request.ConfigType = helper.String("CLB")
+	request.ConfigType = helper.String(configType)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeCustomizedConfigList(request)
 	if err != nil {
@@ -2451,4 +2526,41 @@ func waitTaskReady(ctx context.Context, client *clb.Client, reqeustId string) er
 		return err
 	}
 	return nil
+}
+
+func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx context.Context, configId string) (bindList []*clb.BindDetailItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := clb.NewDescribeCustomizedConfigAssociateListRequest()
+	request.UconfigId = helper.String(configId)
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClbClient().DescribeCustomizedConfigAssociateList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BindList) < 1 {
+			break
+		}
+
+		bindList = append(bindList, response.Response.BindList...)
+		if len(response.Response.BindList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
 }

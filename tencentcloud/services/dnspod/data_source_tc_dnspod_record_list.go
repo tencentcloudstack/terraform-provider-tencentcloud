@@ -2,6 +2,7 @@ package dnspod
 
 import (
 	"context"
+	"fmt"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -29,9 +30,17 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 			},
 
 			"sub_domain": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Retrieve resolution records based on the host header of the resolution record. Fuzzy matching is used by default. You can set the IsExactSubdomain parameter to true for precise searching.",
+				Optional:      true,
+				Type:          schema.TypeString,
+				ConflictsWith: []string{"sub_domains"},
+				Description:   "Retrieve resolution records based on the host header of the resolution record. Fuzzy matching is used by default. You can set the IsExactSubdomain parameter to true for precise searching.",
+			},
+			"sub_domains": {
+				Optional:      true,
+				Type:          schema.TypeSet,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				ConflictsWith: []string{"sub_domain"},
+				Description:   "Sub domains.",
 			},
 
 			"record_type": {
@@ -381,8 +390,16 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 		paramMap["DomainId"] = helper.IntUint64(v.(int))
 	}
 
+	subDomains := make([]string, 0)
 	if v, ok := d.GetOk("sub_domain"); ok {
-		paramMap["SubDomain"] = helper.String(v.(string))
+		subDomains = append(subDomains, v.(string))
+	}
+
+	if v, ok := d.GetOk("sub_domains"); ok {
+		subDomainList := v.(*schema.Set).List()
+		for _, subDomain := range subDomainList {
+			subDomains = append(subDomains, subDomain.(string))
+		}
 	}
 
 	if v, ok := d.GetOk("record_type"); ok {
@@ -472,16 +489,46 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 
 	var recordList []*dnspod.RecordListItem
 
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeDnspodRecordListByFilter(ctx, paramMap)
-		if e != nil {
-			return tccommon.RetryError(e)
+	if len(subDomains) == 0 {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := service.DescribeDnspodRecordListByFilter(ctx, paramMap)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			recordList = append(recordList, result...)
+			return nil
+		})
+		if err != nil {
+			return err
 		}
-		recordList = result
-		return nil
-	})
-	if err != nil {
-		return err
+	} else {
+		recordIds := map[uint64]struct{}{}
+
+		for _, subDomain := range subDomains {
+			paramMap["SubDomain"] = helper.String(subDomain)
+			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				result, e := service.DescribeDnspodRecordListByFilter(ctx, paramMap)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+				for _, resultItem := range result {
+					if resultItem.RecordId == nil {
+						return resource.NonRetryableError(fmt.Errorf("record id is nil"))
+					}
+					if _, ok := recordIds[*resultItem.RecordId]; ok {
+						continue
+					} else {
+						recordIds[*resultItem.RecordId] = struct{}{}
+						recordList = append(recordList, resultItem)
+					}
+				}
+
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	ids := make([]string, 0, len(recordList))

@@ -54,7 +54,7 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
-				MaxItems:    5,
+				MaxItems:    10,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Specified types of CVM instances.",
 			},
@@ -262,6 +262,17 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 					},
 				},
 			},
+
+			"disaster_recover_group_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "Placement group ID. Only one is allowed.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+
 			"dedicated_cluster_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -490,6 +501,15 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.InstanceNameSettings = settings[0]
 	}
 
+	if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
+		disasterRecoverGroupIds := v.([]interface{})
+		request.DisasterRecoverGroupIds = make([]*string, 0, len(disasterRecoverGroupIds))
+		for i := range disasterRecoverGroupIds {
+			subnetId := disasterRecoverGroupIds[i].(string)
+			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &subnetId)
+		}
+	}
+
 	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
@@ -606,6 +626,12 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 
 		if config.InstanceChargePrepaid != nil {
 			_ = d.Set("instance_charge_type_prepaid_renew_flag", config.InstanceChargePrepaid.RenewFlag)
+		}
+
+		if len(config.DisasterRecoverGroupIds) > 0 {
+			_ = d.Set("disaster_recover_group_ids", helper.StringsInterfaces(config.DisasterRecoverGroupIds))
+		} else {
+			_ = d.Set("disaster_recover_group_ids", []string{})
 		}
 
 		if config.DedicatedClusterId != nil {
@@ -851,6 +877,7 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("password") || d.HasChange("key_ids") || d.HasChange("keep_image_login") {
+		request.LoginSettings = &as.LoginSettings{}
 		if v, ok := d.GetOk("password"); ok {
 			request.LoginSettings.Password = helper.String(v.(string))
 		}
@@ -865,6 +892,17 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOk("keep_image_login"); ok {
 			keepImageLogin := v.(bool)
 			request.LoginSettings.KeepImageLogin = &keepImageLogin
+		}
+	}
+
+	if d.HasChange("disaster_recover_group_ids") {
+		if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
+			disasterRecoverGroupIds := v.([]interface{})
+			request.DisasterRecoverGroupIds = make([]*string, 0, len(disasterRecoverGroupIds))
+			for i := range disasterRecoverGroupIds {
+				subnetId := disasterRecoverGroupIds[i].(string)
+				request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &subnetId)
+			}
 		}
 	}
 

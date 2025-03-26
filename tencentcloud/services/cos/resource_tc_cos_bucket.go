@@ -188,12 +188,12 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `cos/kms`, `cos/kms` is for cdc cos scenario.",
+				Description: "The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `SM4`.",
 			},
 			"kms_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS or cos/kms. Set kms id to the specified value. If not specified, the default kms id is used.",
+				Description: "The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS. Set kms id to the specified value. If not specified, the default kms id is used.",
 			},
 			"versioning_enable": {
 				Type:        schema.TypeBool,
@@ -483,6 +483,50 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Computed:     true,
 							ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"http", "https"}),
 							Description:  "Redirects all request configurations. Valid values: http, https. Default is `http`.",
+						},
+						"routing_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Routing rule configuration. A RoutingRules container can contain up to 100 RoutingRule elements.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rules": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Routing rule list.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"condition_error_code": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the error code as the match condition for the routing rule. Valid values: only 4xx return codes, such as 403 or 404.",
+												},
+												"condition_prefix": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the object key prefix as the match condition for the routing rule.",
+												},
+												"redirect_protocol": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the target protocol for the routing rule. Only HTTPS is supported.",
+												},
+												"redirect_replace_key": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the target object key to replace the original object key in the request.",
+												},
+												"redirect_replace_key_prefix": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the object key prefix to replace the original prefix in the request. You can set this parameter only if the condition is KeyPrefixEquals.",
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 						"endpoint": {
 							Type:        schema.TypeString,
@@ -1403,13 +1447,14 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 		request := s3.DeleteBucketWebsiteInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).DeleteBucketWebsite(&request)
 
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).DeleteBucketWebsite(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket website", request.String(), err.Error())
 			return fmt.Errorf("cos delete bucket website error: %s, bucket: %s", err.Error(), bucket)
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, "delete bucket website", request.String(), response.String())
 	} else {
@@ -1423,42 +1468,72 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 		} else {
 			w = make(map[string]interface{})
 		}
-		var indexDocument, errorDocument string
-		var redirectAllRequestsTo = "http"
-		if v, ok := w["index_document"]; ok {
-			indexDocument = v.(string)
-		}
-		if v, ok := w["error_document"]; ok {
-			errorDocument = v.(string)
-		}
-		if v, ok := w["redirect_all_requests_to"]; ok && v != "" {
-			redirectAllRequestsTo = v.(string)
-		}
-		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
-		request := s3.PutBucketWebsiteInput{
-			Bucket: aws.String(bucket),
-			WebsiteConfiguration: &s3.WebsiteConfiguration{
-				IndexDocument: &s3.IndexDocument{
-					Suffix: aws.String(indexDocument),
-				},
-				ErrorDocument: &s3.ErrorDocument{
-					Key: aws.String(errorDocument),
-				},
-				RedirectAllRequestsTo: &s3.RedirectAllRequestsTo{
-					HostName: aws.String(endPointUrl),
-					Protocol: aws.String(redirectAllRequestsTo),
-				},
-			},
-		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).PutBucketWebsite(&request)
 
+		websiteConfiguration := cos.BucketPutWebsiteOptions{}
+		if v, ok := w["index_document"].(string); ok && v != "" {
+			websiteConfiguration.Index = v
+		}
+
+		if v, ok := w["error_document"].(string); ok && v != "" {
+			websiteConfiguration.Error = &cos.ErrorDocument{
+				Key: v,
+			}
+		}
+
+		if v, ok := w["redirect_all_requests_to"].(string); ok && v != "" {
+			websiteConfiguration.RedirectProtocol = &cos.RedirectRequestsProtocol{
+				Protocol: v,
+			}
+		}
+
+		if v, ok := w["routing_rules"]; ok {
+			websiteRoutingRules := cos.WebsiteRoutingRules{}
+			for _, item := range v.([]interface{}) {
+				rules := item.(map[string]interface{})
+				if v, ok := rules["rules"]; ok {
+					wbRules := []cos.WebsiteRoutingRule{}
+					for _, rule := range v.([]interface{}) {
+						dMap := rule.(map[string]interface{})
+						wbRule := cos.WebsiteRoutingRule{}
+						if v, ok := dMap["condition_error_code"].(string); ok && v != "" {
+							wbRule.ConditionErrorCode = v
+						}
+
+						if v, ok := dMap["condition_prefix"].(string); ok && v != "" {
+							wbRule.ConditionPrefix = v
+						}
+
+						if v, ok := dMap["redirect_protocol"].(string); ok && v != "" {
+							wbRule.RedirectProtocol = v
+						}
+
+						if v, ok := dMap["redirect_replace_key"].(string); ok && v != "" {
+							wbRule.RedirectReplaceKey = v
+						}
+
+						if v, ok := dMap["redirect_replace_key_prefix"].(string); ok && v != "" {
+							wbRule.RedirectReplaceKeyPrefix = v
+						}
+
+						wbRules = append(wbRules, wbRule)
+					}
+
+					websiteRoutingRules.Rules = wbRules
+				}
+			}
+
+			websiteConfiguration.RoutingRules = &websiteRoutingRules
+		}
+
+		request := websiteConfiguration
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClientNew(bucket, cdcId).Bucket.PutWebsite(ctx, &request)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "put bucket website", request.String(), err.Error())
 			return fmt.Errorf("cos put bucket website error: %s, bucket: %s", err.Error(), bucket)
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, "put bucket website", request.String(), response.String())
+
+		reqBytes, _ := json.Marshal(request)
+		respBytes, _ := json.Marshal(response.Response.Body)
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "put bucket website", string(reqBytes), string(respBytes))
 	}
 
 	return nil
@@ -1888,9 +1963,14 @@ func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) (result bool) {
 	newOwnerId := newOwner.SelectElement("ID")
 	newOwnerName := newOwner.SelectElement("DisplayName")
 
+	if oldOwnerId == nil || newOwnerId == nil {
+		log.Println("[CRITAL]oldOwnerId or newOwnerId is nil: return false.")
+		return false
+	}
+
 	// diff: Owner element
-	if oldOwnerId.Text() != newOwnerId.Text() || oldOwnerName.Text() != newOwnerName.Text() {
-		log.Printf("[CRITAL]OwnerId[old:%s, new:%s] or OwnerName[old:%s, new:%s] not equal: return false.\n", oldOwnerId.Text(), newOwnerId.Text(), oldOwnerName.Text(), newOwnerName.Text())
+	if oldOwnerId.Text() != newOwnerId.Text() {
+		log.Printf("[CRITAL]OwnerId[old:%s, new:%s] not equal: return false.\n", oldOwnerId.Text(), newOwnerId.Text())
 		return false
 	}
 

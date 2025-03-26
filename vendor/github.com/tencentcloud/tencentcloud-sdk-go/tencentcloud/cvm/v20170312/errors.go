@@ -32,6 +32,9 @@ const (
 	// 账号为当前用户
 	FAILEDOPERATION_ACCOUNTISYOURSELF = "FailedOperation.AccountIsYourSelf"
 
+	// 该实例 `ins-xxxxxxx` 已经在 `dgroup-xxxxxx` 置放群组里。
+	FAILEDOPERATION_ALREADYINDISASTERRECOVERGROUP = "FailedOperation.AlreadyInDisasterRecoverGroup"
+
 	// 自带许可镜像暂时不支持共享。
 	FAILEDOPERATION_BYOLIMAGESHAREFAILED = "FailedOperation.BYOLImageShareFailed"
 
@@ -872,6 +875,9 @@ const (
 	// 指定的实例付费模式或者网络付费模式不支持共享带宽包
 	UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 
+	// cbs远端ssd盘不支持该操作
+	UNSUPPORTEDOPERATION_CBSREMOTESSDNOTSUPPORT = "UnsupportedOperation.CbsRemoteSsdNotSupport"
+
 	// 实例创建快照的时间距今不到24小时。
 	UNSUPPORTEDOPERATION_DISKSNAPCREATETIMETOOOLD = "UnsupportedOperation.DiskSnapCreateTimeTooOld"
 
@@ -907,6 +913,9 @@ const (
 
 	// 不支持混合付费模式。
 	UNSUPPORTEDOPERATION_INSTANCEMIXEDPRICINGMODEL = "UnsupportedOperation.InstanceMixedPricingModel"
+
+	// 不支持混合升配和降配实例。
+	UNSUPPORTEDOPERATION_INSTANCEMIXEDRESETINSTANCETYPE = "UnsupportedOperation.InstanceMixedResetInstanceType"
 
 	// 中心可用区和边缘可用区实例不能混用批量操作。
 	UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
@@ -982,6 +991,12 @@ const (
 
 	// 请求不支持正在销毁的实例
 	UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+
+	// 实例类型不支持设置`GridDriverService` 状态
+	UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
+
+	// 实例类型不支持设置 HighDensityMode 状态
+	UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTHIGHDENSITYMODESETTING = "UnsupportedOperation.InstanceTypeNotSupportHighDensityModeSetting"
 
 	// 实例类型不支持设置`EnableJumboFrame` 状态
 	UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"

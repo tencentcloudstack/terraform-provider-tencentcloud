@@ -38,6 +38,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_type", "CLOUD_BASIC"),
 					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_instance.kafka_instance", "vip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_instance.kafka_instance", "vport"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "elastic_bandwidth_switch", "1"),
 				),
 			},
 			{
@@ -54,6 +55,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "kafka_version", "1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_size", "300"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_type", "CLOUD_BASIC"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "elastic_bandwidth_switch", "1"),
 				),
 			},
 			{
@@ -63,7 +65,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy", "elastic_bandwidth_switch"},
 			},
 		},
 	})
@@ -113,7 +115,7 @@ func TestAccTencentCloudCkafkaInstanceResource_postpaid(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance_postpaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "upgrade_strategy", "elastic_bandwidth_switch"},
 			},
 		},
 	})
@@ -257,7 +259,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   band_width         = 20
   disk_type          = "CLOUD_BASIC"
   partition          = 400
-
+  elastic_bandwidth_switch = 1
 
   config {
     auto_create_topic_enable   = true
@@ -299,7 +301,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   band_width         = 20
   disk_type          = "CLOUD_BASIC"
   partition          = 400
-
+  elastic_bandwidth_switch = 1
 
   config {
     auto_create_topic_enable   = true

@@ -203,6 +203,16 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Optional:    true,
 				Description: "Access the external file system.",
 			},
+			"scene_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Scene-based value:\n" +
+					"	- Hadoop-Kudu\n" +
+					"	- Hadoop-Zookeeper\n" +
+					"	- Hadoop-Presto\n" +
+					"	- Hadoop-Hbase.",
+			},
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -307,7 +317,7 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	immutableFields := []string{"auto_renew", "placement", "placement_info", "display_strategy", "login_settings", "extend_fs_field"}
+	immutableFields := []string{"auto_renew", "placement", "placement_info", "display_strategy", "login_settings", "extend_fs_field", "scene_name"}
 	for _, f := range immutableFields {
 		if d.HasChange(f) {
 			return fmt.Errorf("cannot update argument `%s`", f)
@@ -598,6 +608,7 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 
 	_ = d.Set("instance_id", instanceId)
 	clusterNodeMap := make(map[string]*emr.NodeHardwareInfo)
+	clusterNodeNum := make(map[string]int)
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, err := emrService.DescribeClusterNodes(ctx, instanceId, "all", "all", 0, 10)
 
@@ -611,8 +622,16 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 				node := item
 				// 节点类型 0:common节点；1:master节点；2:core节点；3:task节点
 				if node.Flag != nil {
-					clusterNodeMap[strconv.FormatInt(*node.Flag, 10)] = node
+					nodeFlag := strconv.FormatInt(*node.Flag, 10)
+					clusterNodeMap[nodeFlag] = node
+					if v, ok := clusterNodeNum[nodeFlag]; ok {
+						clusterNodeNum[nodeFlag] = v + 1
+					} else {
+						clusterNodeNum[nodeFlag] = 1
+					}
+
 				}
+
 			}
 		}
 
@@ -623,6 +642,7 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	if instance != nil {
+		_ = d.Set("scene_name", instance.SceneName)
 		_ = d.Set("product_id", instance.ProductId)
 		_ = d.Set("vpc_settings", map[string]interface{}{
 			"vpc_id":    *instance.UniqVpcId,
@@ -646,144 +666,89 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 			}
 			resourceSpec := make(map[string]interface{})
 
-			var masterCount int64
-			if instance.Config.MasterNodeSize != nil {
-				masterCount = *instance.Config.MasterNodeSize
-				resourceSpec["master_count"] = masterCount
+			if v, ok := clusterNodeNum["1"]; ok {
+				resourceSpec["master_count"] = v
 			}
-			if masterCount != 0 && instance.Config.MasterResource != nil {
-				masterResource := instance.Config.MasterResource
+
+			if v, ok := clusterNodeMap["1"]; ok && v != nil {
 				masterResourceSpec := make(map[string]interface{})
-				if masterResource.MemSize != nil {
-					masterResourceSpec["mem_size"] = *masterResource.MemSize
-				}
-				if masterResource.Cpu != nil {
-					masterResourceSpec["cpu"] = *masterResource.Cpu
-				}
-				if masterResource.DiskSize != nil {
-					masterResourceSpec["disk_size"] = *masterResource.DiskSize
-				}
-				if masterResource.DiskType != nil {
-					masterResourceSpec["disk_type"] = *masterResource.DiskType
-				}
-				if masterResource.Spec != nil {
-					masterResourceSpec["spec"] = *masterResource.Spec
-				}
-				if masterResource.StorageType != nil {
-					masterResourceSpec["storage_type"] = *masterResource.StorageType
-				}
-				if masterResource.RootSize != nil {
-					masterResourceSpec["root_size"] = *masterResource.RootSize
-				}
-				if v, ok := clusterNodeMap["1"]; ok {
+				masterResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+				masterResourceSpec["cpu"] = v.CpuNum
+				if instance.Config.MasterResource != nil {
+					masterResource := instance.Config.MasterResource
+					masterResourceSpec["disk_size"] = masterResource.DiskSize
 					masterResourceSpec["multi_disks"] = fetchMultiDisks(v, masterResource)
+
 				}
+				if v.StorageType != nil {
+					masterResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
+				masterResourceSpec["spec"] = v.Spec
+				masterResourceSpec["storage_type"] = v.RootStorageType
+				masterResourceSpec["root_size"] = v.RootSize
 				resourceSpec["master_resource_spec"] = []interface{}{masterResourceSpec}
 			}
 
-			var coreCount int64
-			if instance.Config.CoreNodeSize != nil {
-				coreCount = *instance.Config.CoreNodeSize
-				resourceSpec["core_count"] = coreCount
+			if v, ok := clusterNodeNum["2"]; ok {
+				resourceSpec["core_count"] = v
 			}
-			if coreCount != 0 && instance.Config.CoreResource != nil {
-				coreResource := instance.Config.CoreResource
+			if v, ok := clusterNodeMap["2"]; ok && v != nil {
 				coreResourceSpec := make(map[string]interface{})
-				if coreResource.MemSize != nil {
-					coreResourceSpec["mem_size"] = *coreResource.MemSize
-				}
-				if coreResource.Cpu != nil {
-					coreResourceSpec["cpu"] = *coreResource.Cpu
-				}
-				if coreResource.DiskSize != nil {
-					coreResourceSpec["disk_size"] = *coreResource.DiskSize
-				}
-				if coreResource.DiskType != nil {
-					coreResourceSpec["disk_type"] = *coreResource.DiskType
-				}
-				if coreResource.Spec != nil {
-					coreResourceSpec["spec"] = *coreResource.Spec
-				}
-				if coreResource.StorageType != nil {
-					coreResourceSpec["storage_type"] = *coreResource.StorageType
-				}
-				if coreResource.RootSize != nil {
-					coreResourceSpec["root_size"] = *coreResource.RootSize
-				}
-				if v, ok := clusterNodeMap["2"]; ok {
+				coreResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+				coreResourceSpec["cpu"] = v.CpuNum
+				if instance.Config.CoreResource != nil {
+					coreResource := instance.Config.CoreResource
+					coreResourceSpec["disk_size"] = coreResource.DiskSize
 					coreResourceSpec["multi_disks"] = fetchMultiDisks(v, coreResource)
 				}
-
+				if v.StorageType != nil {
+					coreResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
+				coreResourceSpec["spec"] = v.Spec
+				coreResourceSpec["storage_type"] = v.RootStorageType
+				coreResourceSpec["root_size"] = v.RootSize
 				resourceSpec["core_resource_spec"] = []interface{}{coreResourceSpec}
 			}
 
-			var taskCount int64
-			if instance.Config.TaskNodeSize != nil {
-				taskCount = *instance.Config.TaskNodeSize
-				resourceSpec["task_count"] = taskCount
+			if v, ok := clusterNodeNum["3"]; ok {
+				resourceSpec["task_count"] = v
 			}
-			if taskCount != 0 && instance.Config.TaskResource != nil {
-				taskResource := instance.Config.TaskResource
+			if v, ok := clusterNodeMap["3"]; ok && v != nil {
 				taskResourceSpec := make(map[string]interface{})
-				if taskResource.MemSize != nil {
-					taskResourceSpec["mem_size"] = *taskResource.MemSize
-				}
-				if taskResource.Cpu != nil {
-					taskResourceSpec["cpu"] = *taskResource.Cpu
-				}
-				if taskResource.DiskSize != nil {
-					taskResourceSpec["disk_size"] = *taskResource.DiskSize
-				}
-				if taskResource.DiskType != nil {
-					taskResourceSpec["disk_type"] = *taskResource.DiskType
-				}
-				if taskResource.Spec != nil {
-					taskResourceSpec["spec"] = *taskResource.Spec
-				}
-				if taskResource.StorageType != nil {
-					taskResourceSpec["storage_type"] = *taskResource.StorageType
-				}
-				if taskResource.RootSize != nil {
-					taskResourceSpec["root_size"] = *taskResource.RootSize
-				}
-				if v, ok := clusterNodeMap["3"]; ok {
+				taskResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+				taskResourceSpec["cpu"] = v.CpuNum
+				if instance.Config.TaskResource != nil {
+					taskResource := instance.Config.TaskResource
+					taskResourceSpec["disk_size"] = taskResource.DiskSize
 					taskResourceSpec["multi_disks"] = fetchMultiDisks(v, taskResource)
 				}
+				if v.StorageType != nil {
+					taskResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
+				taskResourceSpec["spec"] = v.Spec
+				taskResourceSpec["storage_type"] = v.RootStorageType
+				taskResourceSpec["root_size"] = v.RootSize
 				resourceSpec["task_resource_spec"] = []interface{}{taskResourceSpec}
 			}
 
-			var commonCount int64
-			if instance.Config.ComNodeSize != nil {
-				commonCount = *instance.Config.ComNodeSize
-				resourceSpec["common_count"] = commonCount
+			if v, ok := clusterNodeNum["0"]; ok {
+				resourceSpec["common_count"] = v
 			}
-			if commonCount != 0 && instance.Config.ComResource != nil {
-				comResource := instance.Config.ComResource
+			if v, ok := clusterNodeMap["0"]; ok && v != nil {
 				comResourceSpec := make(map[string]interface{})
-				if comResource.MemSize != nil {
-					comResourceSpec["mem_size"] = *comResource.MemSize
-				}
-				if comResource.Cpu != nil {
-					comResourceSpec["cpu"] = *comResource.Cpu
-				}
-				if comResource.DiskSize != nil {
-					comResourceSpec["disk_size"] = *comResource.DiskSize
-				}
-				if comResource.DiskType != nil {
-					comResourceSpec["disk_type"] = *comResource.DiskType
-				}
-				if comResource.Spec != nil {
-					comResourceSpec["spec"] = *comResource.Spec
-				}
-				if comResource.StorageType != nil {
-					comResourceSpec["storage_type"] = *comResource.StorageType
-				}
-				if comResource.RootSize != nil {
-					comResourceSpec["root_size"] = *comResource.RootSize
-				}
-				if v, ok := clusterNodeMap["0"]; ok {
+				comResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+				comResourceSpec["cpu"] = v.CpuNum
+				if instance.Config.ComResource != nil {
+					comResource := instance.Config.ComResource
+					comResourceSpec["disk_size"] = comResource.DiskSize
 					comResourceSpec["multi_disks"] = fetchMultiDisks(v, comResource)
 				}
+				if v.StorageType != nil {
+					comResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+				}
+				comResourceSpec["spec"] = v.Spec
+				comResourceSpec["storage_type"] = v.RootStorageType
+				comResourceSpec["root_size"] = v.RootSize
 				resourceSpec["common_resource_spec"] = []interface{}{comResourceSpec}
 			}
 

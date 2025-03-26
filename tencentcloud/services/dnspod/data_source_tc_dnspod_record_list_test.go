@@ -11,12 +11,48 @@ import (
 func TestAccTencentCloudDnspodRecordListDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodRecordListDataSource,
 				Check:  resource.ComposeTestCheckFunc(tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_dnspod_record_list.record_list")),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudDnspodRecordListDataSource_subDomains(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDnspodRecordListDataSource_subDomains,
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_dnspod_record_list.subdomains"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dnspod_record_list.subdomains", "record_list.#", "2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dnspod_record_list.subdomains", "instance_list.#", "2"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudDnspodRecordListDataSource_withoutSubDomain(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDnspodRecordListDataSource_withoutSubDomain,
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_dnspod_record_list.subdomains"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dnspod_record_list.subdomains", "record_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dnspod_record_list.subdomains", "instance_list.#"),
+				),
 			},
 		},
 	})
@@ -49,4 +85,19 @@ data "tencentcloud_dnspod_record_list" "record_list" {
   # project_id = -1
 }
 
+`
+
+const testAccDnspodRecordListDataSource_subDomains = `
+data "tencentcloud_dnspod_record_list" "subdomains" {
+  domain              = "mikatong.xyz"
+  is_exact_sub_domain = true
+  sub_domains          = ["tes1029","tes103"]
+}
+`
+
+const testAccDnspodRecordListDataSource_withoutSubDomain = `
+data "tencentcloud_dnspod_record_list" "subdomains" {
+  domain              = "mikatong.xyz"
+  is_exact_sub_domain = true
+}
 `

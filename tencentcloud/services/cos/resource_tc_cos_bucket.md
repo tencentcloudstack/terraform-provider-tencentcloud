@@ -69,7 +69,7 @@ resource "tencentcloud_kms_key" "example" {
 resource "tencentcloud_cos_bucket" "bucket_basic" {
   bucket               = "tf-bucket-cdc-${local.app_id}"
   acl                  = "private"
-  encryption_algorithm = "KMS" #cos/kms for cdc cos
+  encryption_algorithm = "KMS"
   kms_id               = tencentcloud_kms_key.example.id
   versioning_enable    = true
   acceleration_enable  = false
@@ -237,6 +237,19 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
     index_document           = "index.html"
     error_document           = "error.html"
     redirect_all_requests_to = "https"
+    routing_rules {
+      rules {
+        condition_error_code        = "404"
+        redirect_protocol           = "https"
+        redirect_replace_key_prefix = "/test"
+      }
+
+      rules {
+        condition_prefix            = "/test"
+        redirect_protocol           = "https"
+        redirect_replace_key        = "key"
+      }
+    }
   }
 }
 
