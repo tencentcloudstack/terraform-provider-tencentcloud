@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_eip_association: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_eip_public_address_adjust: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_instance: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_instance_set: Added a new field `private_ip_addresses` to support specifying multiple IPs to create instances
+```
