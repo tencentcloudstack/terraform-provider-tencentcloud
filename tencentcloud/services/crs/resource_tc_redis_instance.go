@@ -271,6 +271,17 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 					},
 				},
 			},
+			"wan_address_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Wan address switch, default `close`, values: `open`, `close`.",
+			},
+			"wan_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Allocate Wan Address.",
+			},
 		},
 	}
 }
@@ -522,6 +533,13 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 	//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
+	if v, ok := d.GetOk("wan_address_switch"); ok {
+		err := resourceRedisWanAddressModify(ctx, &redisService, meta, d.Id(), v.(string))
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudRedisInstanceRead(d, meta)
 }
 
@@ -684,6 +702,14 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("tags", tags)
 
 	_ = d.Set("charge_type", REDIS_CHARGE_TYPE_NAME[*info.BillingMode])
+
+	if info.WanAddress != nil && *info.WanAddress != "" {
+		_ = d.Set("wan_address", info.WanAddress)
+		_ = d.Set("wan_address_switch", "open")
+	} else {
+		_ = d.Set("wan_address_switch", "close")
+	}
+
 	return nil
 }
 
@@ -1018,6 +1044,13 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		_ = d.Set("operation_network", operation)
 	}
 
+	if d.HasChange("wan_address_switch") {
+		err := resourceRedisWanAddressModify(ctx, &redisService, meta, d.Id(), d.Get("wan_address_switch").(string))
+		if err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
@@ -1291,4 +1324,68 @@ func TencentCloudRedisGetRemoveNodesByIds(ids []int, nodes []*redis.RedisNodeInf
 		ids = append(ids[:index], ids[index+1:]...)
 	}
 	return
+}
+
+func resourceRedisWanAddressModify(ctx context.Context, service *RedisService, meta interface{}, instanceId, addressSwitch string) error {
+	instance, err := service.DescribeRedisInstanceById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if addressSwitch == "close" {
+		if instance.WanAddress != nil && *instance.WanAddress != "" {
+			request := redis.NewReleaseWanAddressRequest()
+			request.InstanceId = helper.String(instanceId)
+
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().ReleaseWanAddressWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if reqErr != nil {
+				log.Printf("[CRITAL] delete redis wan address failed, reason:%+v", reqErr)
+				return reqErr
+			}
+
+			_, _, _, err := service.CheckRedisOnlineOk(ctx, instanceId, 20*tccommon.ReadRetryTimeout)
+			if err != nil {
+				log.Printf("[CRITAL] redis networkConfig fail, reason:%s\n", err.Error())
+				return err
+			}
+		}
+	} else if addressSwitch == "open" {
+		if instance.WanAddress == nil || *instance.WanAddress == "" {
+			request := redis.NewAllocateWanAddressRequest()
+			request.InstanceId = helper.String(instanceId)
+
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().AllocateWanAddressWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if reqErr != nil {
+				log.Printf("[CRITAL] create redis wan address failed, reason:%+v", reqErr)
+				return reqErr
+			}
+
+			service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			_, _, _, err := service.CheckRedisOnlineOk(ctx, instanceId, 20*tccommon.ReadRetryTimeout)
+			if err != nil {
+				log.Printf("[CRITAL] redis networkConfig fail, reason:%s\n", err.Error())
+				return err
+			}
+		}
+	} else {
+		return fmt.Errorf("invalid address_switch %s", addressSwitch)
+	}
+
+	return nil
 }
