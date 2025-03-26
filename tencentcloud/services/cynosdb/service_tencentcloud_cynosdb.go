@@ -2927,3 +2927,31 @@ func (me *CynosdbService) DescribeCynosdbBackupConfigById(ctx context.Context, c
 	ret = response.Response
 	return
 }
+
+func (me *CynosdbService) UpgradeClusterVersion(ctx context.Context, clusterId, cynosVersion string) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewUpgradeClusterVersionRequest()
+	response := cynosdb.NewUpgradeClusterVersionResponse()
+
+	request.ClusterId = &clusterId
+	request.CynosVersion = &cynosVersion
+	request.UpgradeType = helper.String(CYNOSDB_UPGRADE_IMMEDIATE)
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseCynosdbClient().UpgradeClusterVersion(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return tccommon.RetryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+	if response != nil && response.Response != nil {
+		flowId = *response.Response.FlowId
+	}
+
+	return
+}

@@ -483,6 +483,12 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Serverless cluster status. NOTE: This is a readonly attribute, to modify, please set `serverless_status_flag`.",
 		},
+		"cynos_version": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Kernel version, you can enter it when modifying.",
+		},
 	}
 
 	for k, v := range TencentCynosdbInstanceBaseInfo() {
