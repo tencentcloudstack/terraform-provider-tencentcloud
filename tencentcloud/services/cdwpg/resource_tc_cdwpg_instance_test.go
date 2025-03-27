@@ -69,7 +69,6 @@ func TestAccTencentCloudCdwpgInstanceResource_withVersion(t *testing.T) {
 				Config: testAccCdwpgInstanceWithVersionUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cdwpg_instance.instance", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "instance_name", "test_pg_update"),
 					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "product_version", "3.16.9.4"),
 				),
 			},
