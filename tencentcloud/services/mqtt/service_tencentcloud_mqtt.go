@@ -311,3 +311,115 @@ func (me *MqttService) DescribeMqttDeviceCertificateById(ctx context.Context, in
 	ret = response.Response
 	return
 }
+
+func (me *MqttService) DescribeMqttJwtAuthenticatorById(ctx context.Context, instanceId string) (ret *mqttv20240516.MQTTAuthenticatorItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDescribeAuthenticatorRequest()
+	response := mqttv20240516.NewDescribeAuthenticatorResponse()
+	request.InstanceId = &instanceId
+	request.Type = helper.String("JWT")
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMqttV20240516Client().DescribeAuthenticator(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		errRet = reqErr
+		return
+	}
+
+	if len(response.Response.Authenticators) == 0 {
+		return
+	}
+
+	ret = response.Response.Authenticators[0]
+	return
+}
+
+func (me *MqttService) DescribeMqttJwksAuthenticatorById(ctx context.Context, instanceId string) (ret *mqttv20240516.MQTTAuthenticatorItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDescribeAuthenticatorRequest()
+	response := mqttv20240516.NewDescribeAuthenticatorResponse()
+	request.InstanceId = &instanceId
+	request.Type = helper.String("JWKS")
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMqttV20240516Client().DescribeAuthenticator(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		errRet = reqErr
+		return
+	}
+
+	if len(response.Response.Authenticators) == 0 {
+		return
+	}
+
+	ret = response.Response.Authenticators[0]
+	return
+}
+
+func (me *MqttService) DescribeMqttHttpAuthenticatorById(ctx context.Context, instanceId string) (ret *mqttv20240516.MQTTAuthenticatorItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDescribeAuthenticatorRequest()
+	response := mqttv20240516.NewDescribeAuthenticatorResponse()
+	request.InstanceId = &instanceId
+	request.Type = helper.String("HTTP")
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMqttV20240516Client().DescribeAuthenticator(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		errRet = reqErr
+		return
+	}
+
+	if len(response.Response.Authenticators) == 0 {
+		return
+	}
+
+	ret = response.Response.Authenticators[0]
+
+	return
+}

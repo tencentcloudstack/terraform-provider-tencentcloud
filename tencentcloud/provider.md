@@ -2301,3 +2301,5 @@ tencentcloud_mqtt_topic
 tencentcloud_mqtt_ca_certificate
 tencentcloud_mqtt_user
 tencentcloud_mqtt_device_certificate
+tencentcloud_mqtt_jwt_authenticator
+tencentcloud_mqtt_jwks_authenticator
