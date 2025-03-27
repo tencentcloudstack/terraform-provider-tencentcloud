@@ -3,6 +3,7 @@ package teo
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -213,10 +214,14 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 			return reqErr
 		}
 
-		service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		conf := tccommon.BuildStateChangeConf([]string{"doing"}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TeoL7AccRuleStateRefreshFunc(zoneId, *response.Response.TaskId, []string{"failure"}))
-		if _, e := conf.WaitForState(); e != nil {
-			return e
+		if response != nil && response.Response != nil && response.Response.TaskId != nil {
+			service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			conf := tccommon.BuildStateChangeConf([]string{"doing"}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TeoL7AccRuleStateRefreshFunc(zoneId, *response.Response.TaskId, []string{"failure"}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		} else {
+			return fmt.Errorf("[CRITAL]%s update teo l7 acc rule failed, response body is nil", logId)
 		}
 	}
 
