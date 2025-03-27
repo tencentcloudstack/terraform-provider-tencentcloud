@@ -1715,6 +1715,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_bucket_generate_inventory_immediately_operation":                      cos.ResourceTencentCloudCosBucketGenerateInventoryImmediatelyOperation(),
 			"tencentcloud_cos_object_download_operation":                                            cos.ResourceTencentCloudCosObjectDownloadOperation(),
 			"tencentcloud_address_template":                                                         vpc.ResourceTencentCloudAddressTemplate(),
+			"tencentcloud_address_extra_template":                                                   vpc.ResourceTencentCloudAddressExtraTemplate(),
 			"tencentcloud_address_template_group":                                                   vpc.ResourceTencentCloudAddressTemplateGroup(),
 			"tencentcloud_protocol_template":                                                        vpc.ResourceTencentCloudProtocolTemplate(),
 			"tencentcloud_protocol_template_group":                                                  vpc.ResourceTencentCloudProtocolTemplateGroup(),

@@ -3,8 +3,10 @@ package vpc
 import (
 	"context"
 	"fmt"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -26,7 +28,6 @@ func ResourceTencentCloudAddressExtraTemplate() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
 				Description: "IP address template name.",
 			},
@@ -42,7 +43,7 @@ func ResourceTencentCloudAddressExtraTemplate() *schema.Resource {
 						},
 						"description": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "Remarks.",
 						},
 						"updated_time": {
@@ -79,7 +80,7 @@ func resourceTencentCloudAddressExtraTemplateCreate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("addresses_extra"); ok {
 		addressInfos := make([]*vpc.AddressInfo, 0, 10)
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			addressInfo := vpc.AddressInfo{}
 			if v, ok := dMap["address"]; ok {
@@ -91,6 +92,20 @@ func resourceTencentCloudAddressExtraTemplateCreate(d *schema.ResourceData, meta
 			addressInfos = append(addressInfos, &addressInfo)
 		}
 		request.AddressesExtra = addressInfos
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		tags := v.(map[string]interface{})
+		request.Tags = make([]*vpc.Tag, 0, len(tags))
+		for k, t := range tags {
+			key := k
+			value := t.(string)
+			tag := vpc.Tag{
+				Key:   &key,
+				Value: &value,
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -145,8 +160,35 @@ func resourceTencentCloudAddressExtraTemplateRead(d *schema.ResourceData, meta i
 	}
 
 	_ = d.Set("name", template.AddressTemplateName)
-	_ = d.Set("addresses", template.AddressSet)
 
+	if len(template.AddressExtraSet) > 0 {
+		addressExtraSets := make([]map[string]interface{}, 0, len(template.AddressExtraSet))
+		for _, v := range template.AddressExtraSet {
+			addressExtraSet := map[string]interface{}{}
+			if v.Address != nil {
+				addressExtraSet["address"] = *v.Address
+			}
+			if v.Description != nil {
+				addressExtraSet["description"] = *v.Description
+			}
+			if v.UpdatedTime != nil {
+				addressExtraSet["updated_time"] = *v.UpdatedTime
+			}
+
+			addressExtraSets = append(addressExtraSets, addressExtraSet)
+		}
+		_ = d.Set("addresses_extra", addressExtraSets)
+	}
+
+	if len(template.TagSet) > 0 {
+		tags := make(map[string]string)
+		for _, tag := range template.TagSet {
+			if tag.Key != nil && tag.Value != nil {
+				tags[*tag.Key] = *tag.Value
+			}
+		}
+		_ = d.Set("tags", tags)
+	}
 	return nil
 }
 
@@ -157,25 +199,64 @@ func resourceTencentCloudAddressExtraTemplateUpdate(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	templateId := d.Id()
 
-	if d.HasChange("name") || d.HasChange("addresses") {
-		var outErr, inErr error
-		name := d.Get("name").(string)
-		addresses := d.Get("addresses").(*schema.Set).List()
-		vpcService := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = vpcService.ModifyAddressTemplate(ctx, templateId, name, addresses)
-			if inErr != nil {
-				return tccommon.RetryError(inErr, "UnsupportedOperation.MutexOperationTaskRunning")
+	if d.HasChange("name") || d.HasChange("addresses_extra") {
+		var (
+			request = vpc.NewModifyAddressTemplateAttributeRequest()
+		)
+		request.AddressTemplateId = helper.String(templateId)
+
+		if v, ok := d.GetOk("name"); ok {
+			request.AddressTemplateName = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("addresses_extra"); ok {
+			addressInfos := make([]*vpc.AddressInfo, 0, 10)
+			for _, item := range v.(*schema.Set).List() {
+				dMap := item.(map[string]interface{})
+				addressInfo := vpc.AddressInfo{}
+				if v, ok := dMap["address"]; ok {
+					addressInfo.Address = helper.String(v.(string))
+				}
+				if v, ok := dMap["description"]; ok {
+					addressInfo.Description = helper.String(v.(string))
+				}
+				addressInfos = append(addressInfos, &addressInfo)
+			}
+			request.AddressesExtra = addressInfos
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyAddressTemplateAttribute(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 			return nil
 		})
-		if outErr != nil {
-			return outErr
-		}
 
+		if err != nil {
+			log.Printf("[CRITAL]%s modify vpc address template failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
-	return resourceTencentCloudAddressTemplateRead(d, meta)
+	if d.HasChange("tags") {
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(client)
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		region := client.Region
+
+		resourceName := tccommon.BuildTagResourceName("vpc", "address", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudAddressExtraTemplateRead(d, meta)
 }
 
 func resourceTencentCloudAddressExtraTemplateDelete(d *schema.ResourceData, meta interface{}) error {
