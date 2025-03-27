@@ -1,3 +1,19 @@
+## 1.81.177(March 27 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_address_extra_template` ([#3246](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3246))
+* **New Resource:** `tencentcloud_cdwpg_dbconfig` ([#3239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3239))
+* **New Resource:** `tencentcloud_teo_security_ip_group` ([#3243](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3243))
+* **New Resource:** `tencentcloud_teo_security_policy_config` ([#3237](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3237))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdwpg_instance: `count` update is supported ([#3239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3239))
+* resource/tencentcloud_clickhouse_instance: update demo ([#3242](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3242))
+* resource/tencentcloud_cynosdb_cluster: support `cynos_version` fileds. ([#3240](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3240))
+* resource/tencentcloud_redis_instance: support `wan_address` fileds. ([#3241](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3241))
+
 ## 1.81.176(March 24 , 2025)
 
 ENHANCEMENTS:
