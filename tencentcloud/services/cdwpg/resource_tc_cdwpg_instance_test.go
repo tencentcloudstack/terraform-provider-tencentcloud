@@ -214,7 +214,7 @@ resource "tencentcloud_cdwpg_instance" "instance" {
 	instance_name  = "test_pg"
 	zone           = "ap-guangzhou-6"
 	user_vpc_id    = "vpc-axrsmmrv"
-	user_subnet_id = "subnet-o6qcrhzo"
+	user_subnet_id = "subnet-kxaxknmg"
 	charge_properties {
 	  renew_flag  = 0
 	  time_span   = 1
@@ -257,7 +257,7 @@ resource "tencentcloud_cdwpg_instance" "instance" {
 	instance_name  = "test_pg"
 	zone           = "ap-guangzhou-6"
 	user_vpc_id    = "vpc-axrsmmrv"
-	user_subnet_id = "subnet-o6qcrhzo"
+	user_subnet_id = "subnet-kxaxknmg"
 	charge_properties {
 	  renew_flag  = 0
 	  time_span   = 1
