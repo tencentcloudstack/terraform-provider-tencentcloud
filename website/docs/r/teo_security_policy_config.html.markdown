@@ -1,13 +1,13 @@
 ---
 subcategory: "TencentCloud EdgeOne(TEO)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_teo_security_policy"
-sidebar_current: "docs-tencentcloud-resource-teo_security_policy"
+page_title: "TencentCloud: tencentcloud_teo_security_policy_config"
+sidebar_current: "docs-tencentcloud-resource-teo_security_policy_config"
 description: |-
   Provides a resource to create a teo security policy
 ---
 
-# tencentcloud_teo_security_policy
+# tencentcloud_teo_security_policy_config
 
 Provides a resource to create a teo security policy
 
@@ -18,7 +18,7 @@ Provides a resource to create a teo security policy
 ### If entity is ZoneDefaultPolicy
 
 ```hcl
-resource "tencentcloud_teo_security_policy" "example" {
+resource "tencentcloud_teo_security_policy_config" "example" {
   zone_id = "zone-37u62pwxfo8s"
   entity  = "ZoneDefaultPolicy"
   security_policy {
@@ -200,7 +200,7 @@ resource "tencentcloud_teo_security_policy" "example" {
 ### If entity is Host
 
 ```hcl
-resource "tencentcloud_teo_security_policy" "example" {
+resource "tencentcloud_teo_security_policy_config" "example" {
   zone_id = "zone-37u62pwxfo8s"
   entity  = "Host"
   host    = "www.example.com"
@@ -383,7 +383,7 @@ resource "tencentcloud_teo_security_policy" "example" {
 ### If entity is Template
 
 ```hcl
-resource "tencentcloud_teo_security_policy" "example" {
+resource "tencentcloud_teo_security_policy_config" "example" {
   zone_id     = "zone-37u62pwxfo8s"
   entity      = "Template"
   template_id = "temp-05dtxkyw"
@@ -673,10 +673,10 @@ teo security policy can be imported using the id, e.g.
 
 ```
 # If entity is ZoneDefaultPolicy 
-terraform import tencentcloud_teo_security_policy.example zone-37u62pwxfo8s#ZoneDefaultPolicy
+terraform import tencentcloud_teo_security_policy_config.example zone-37u62pwxfo8s#ZoneDefaultPolicy
 # If entity is Host
-terraform import tencentcloud_teo_security_policy.example zone-37u62pwxfo8s#Host#www.example.com
+terraform import tencentcloud_teo_security_policy_config.example zone-37u62pwxfo8s#Host#www.example.com
 # If entity is Template
-terraform import tencentcloud_teo_security_policy.example zone-37u62pwxfo8s#Template#temp-05dtxkyw
+terraform import tencentcloud_teo_security_policy_config.example zone-37u62pwxfo8s#Template#temp-05dtxkyw
 ```
 

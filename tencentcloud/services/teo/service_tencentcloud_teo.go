@@ -1645,7 +1645,7 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 	return
 }
 
-func (me *TeoService) DescribeTeoSecurityPolicyById(ctx context.Context, zoneId, entity, host, templateId string) (ret *teo.SecurityPolicy, errRet error) {
+func (me *TeoService) DescribeTeoSecurityPolicyConfigById(ctx context.Context, zoneId, entity, host, templateId string) (ret *teo.SecurityPolicy, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeSecurityPolicyRequest()

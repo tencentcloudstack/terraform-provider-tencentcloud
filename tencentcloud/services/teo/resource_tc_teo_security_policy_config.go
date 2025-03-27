@@ -14,12 +14,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
+func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTeoSecurityPolicyCreate,
-		Read:   resourceTencentCloudTeoSecurityPolicyRead,
-		Update: resourceTencentCloudTeoSecurityPolicyUpdate,
-		Delete: resourceTencentCloudTeoSecurityPolicyDelete,
+		Create: resourceTencentCloudTeoSecurityPolicyConfigCreate,
+		Read:   resourceTencentCloudTeoSecurityPolicyConfigRead,
+		Update: resourceTencentCloudTeoSecurityPolicyConfigUpdate,
+		Delete: resourceTencentCloudTeoSecurityPolicyConfigDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -134,6 +134,7 @@ func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 												"id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "The ID of a custom rule. <br> the rule ID supports different rule configuration operations: <br> - add a new rule: ID is empty or the ID parameter is not specified; <br> - modify an existing rule: specify the rule ID that needs to be updated/modified; <br> - delete an existing rule: existing Rules not included in the Rules list of the CustomRules parameter will be deleted.",
 												},
 												"rule_type": {
@@ -144,7 +145,7 @@ func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 												"priority": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													Description: "Customizes the priority of rules. value range: 0-100. it defaults to 0. only supports PreciseMatchRule.",
+													Description: "Customizes the priority of rules. value range: 0-100. it defaults to 0. only supports `rule_type` is `PreciseMatchRule`.",
 												},
 											},
 										},
@@ -189,15 +190,16 @@ func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 												},
 												"ruleset_version": {
 													Type:        schema.TypeString,
-													Optional:    true,
+													Computed:    true,
 													Description: "The currently used version, in the format compliant with ISO 8601 standard, such as 2023-12-21T12:00:32Z. it is empty by default and is only an output parameter.",
 												},
 											},
 										},
 									},
 									"managed_rule_groups": {
-										Type:        schema.TypeList,
+										Type:        schema.TypeSet,
 										Optional:    true,
+										Computed:    true,
 										Description: "Configuration of the managed rule group. if this structure is passed as an empty array or the GroupId is not included in the list, it will be processed based on the default method.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -357,45 +359,44 @@ func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 												},
 												"meta_data": {
 													Type:        schema.TypeList,
-													Optional:    true,
-													MaxItems:    1,
+													Computed:    true,
 													Description: "Managed rule group information, for output only.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"group_detail": {
 																Type:        schema.TypeString,
-																Optional:    true,
+																Computed:    true,
 																Description: "Managed rule group description, for output only.",
 															},
 															"group_name": {
 																Type:        schema.TypeString,
-																Optional:    true,
+																Computed:    true,
 																Description: "Managed rule group name, for output only.",
 															},
 															"rule_details": {
 																Type:        schema.TypeList,
-																Optional:    true,
+																Computed:    true,
 																Description: "All sub-rule information under the current managed rule group, for output only.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"rule_id": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
+																			Computed:    true,
 																			Description: "Managed rule Id.",
 																		},
 																		"risk_level": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
+																			Computed:    true,
 																			Description: "Protection level of managed rules. valid values: <li>low: low risk. this rule has a relatively low risk and is applicable to access scenarios in a very strict control environment. this level of rule may generate considerable false alarms.</li> <li>medium: medium risk. this means the risk of this rule is normal and it is suitable for protection scenarios with stricter requirements.</li> <li>high: high risk. this indicates that the risk of this rule is relatively high and it will not generate false alarms in most scenarios.</li> <li>extreme: ultra-high risk. this represents that the risk of this rule is extremely high and it will not generate false alarms basically.</li>.",
 																		},
 																		"description": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
+																			Computed:    true,
 																			Description: "Rule description.",
 																		},
 																		"tags": {
 																			Type:        schema.TypeSet,
-																			Optional:    true,
+																			Computed:    true,
 																			Description: "Rule tag. some types of rules do not have tags.",
 																			Elem: &schema.Schema{
 																				Type: schema.TypeString,
@@ -403,7 +404,7 @@ func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 																		},
 																		"rule_version": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
+																			Computed:    true,
 																			Description: "Rule ownership version.",
 																		},
 																	},
@@ -447,8 +448,8 @@ func ResourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy.create")()
+func resourceTencentCloudTeoSecurityPolicyConfigCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -484,11 +485,11 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 		return fmt.Errorf("If `entity` is `ZoneDefaultPolicy`, Please do not set `host` and `template_id`; If `entity` is `Host`, Only support set `host`; If `entity` is `Template`, Only support set `template_id`.")
 	}
 
-	return resourceTencentCloudTeoSecurityPolicyUpdate(d, meta)
+	return resourceTencentCloudTeoSecurityPolicyConfigUpdate(d, meta)
 }
 
-func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy.read")()
+func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy_config.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -518,7 +519,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("`entity` is illegal, %s.", entity)
 	}
 
-	respData, err := service.DescribeTeoSecurityPolicyById(ctx, zoneId, entity, host, templateId)
+	respData, err := service.DescribeTeoSecurityPolicyConfigById(ctx, zoneId, entity, host, templateId)
 	if err != nil {
 		return err
 	}
@@ -609,6 +610,8 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 				rulesList = append(rulesList, rulesMap)
 			}
 
+			customRulesMap["rules"] = rulesList
+		} else {
 			customRulesMap["rules"] = rulesList
 		}
 
@@ -805,8 +808,8 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 	return nil
 }
 
-func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy.update")()
+func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy_config.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -940,15 +943,11 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 					managedRuleAutoUpdate.AutoUpdateToLatestVersion = helper.String(v)
 				}
 
-				if v, ok := autoUpdateMap["ruleset_version"].(string); ok && v != "" {
-					managedRuleAutoUpdate.RulesetVersion = helper.String(v)
-				}
-
 				managedRules.AutoUpdate = &managedRuleAutoUpdate
 			}
 
 			if v, ok := managedRulesMap["managed_rule_groups"]; ok {
-				for _, item := range v.([]interface{}) {
+				for _, item := range v.(*schema.Set).List() {
 					managedRuleGroupsMap := item.(map[string]interface{})
 					managedRuleGroup := teov20220901.ManagedRuleGroup{}
 					if v, ok := managedRuleGroupsMap["group_id"].(string); ok && v != "" {
@@ -1051,51 +1050,6 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 						}
 					}
 
-					if metaDataMap, ok := helper.ConvertInterfacesHeadToMap(managedRuleGroupsMap["meta_data"]); ok {
-						managedRuleGroupMeta := teov20220901.ManagedRuleGroupMeta{}
-						if v, ok := metaDataMap["group_detail"].(string); ok && v != "" {
-							managedRuleGroupMeta.GroupDetail = helper.String(v)
-						}
-
-						if v, ok := metaDataMap["group_name"].(string); ok && v != "" {
-							managedRuleGroupMeta.GroupName = helper.String(v)
-						}
-
-						if v, ok := metaDataMap["rule_details"]; ok {
-							for _, item := range v.([]interface{}) {
-								ruleDetailsMap := item.(map[string]interface{})
-								managedRuleDetail := teov20220901.ManagedRuleDetail{}
-								if v, ok := ruleDetailsMap["rule_id"].(string); ok && v != "" {
-									managedRuleDetail.RuleId = helper.String(v)
-								}
-
-								if v, ok := ruleDetailsMap["risk_level"].(string); ok && v != "" {
-									managedRuleDetail.RiskLevel = helper.String(v)
-								}
-
-								if v, ok := ruleDetailsMap["description"].(string); ok && v != "" {
-									managedRuleDetail.Description = helper.String(v)
-								}
-
-								if v, ok := ruleDetailsMap["tags"]; ok {
-									tagsSet := v.(*schema.Set).List()
-									for i := range tagsSet {
-										tags := tagsSet[i].(string)
-										managedRuleDetail.Tags = append(managedRuleDetail.Tags, helper.String(tags))
-									}
-								}
-
-								if v, ok := ruleDetailsMap["rule_version"].(string); ok && v != "" {
-									managedRuleDetail.RuleVersion = helper.String(v)
-								}
-
-								managedRuleGroupMeta.RuleDetails = append(managedRuleGroupMeta.RuleDetails, &managedRuleDetail)
-							}
-						}
-
-						managedRuleGroup.MetaData = &managedRuleGroupMeta
-					}
-
 					managedRules.ManagedRuleGroups = append(managedRules.ManagedRuleGroups, &managedRuleGroup)
 				}
 			}
@@ -1114,7 +1068,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.BaseResponse == nil {
+		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("Create teo security policy failed, Response is nil."))
 		}
 
@@ -1126,11 +1080,11 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 		return reqErr
 	}
 
-	return resourceTencentCloudTeoSecurityPolicyRead(d, meta)
+	return resourceTencentCloudTeoSecurityPolicyConfigRead(d, meta)
 }
 
-func resourceTencentCloudTeoSecurityPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy.delete")()
+func resourceTencentCloudTeoSecurityPolicyConfigDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_policy_config.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
