@@ -1275,6 +1275,7 @@ tencentcloud_security_group
 tencentcloud_security_group_rule_set
 tencentcloud_security_group_lite_rule
 tencentcloud_address_template
+tencentcloud_address_extra_template
 tencentcloud_address_template_group
 tencentcloud_protocol_template
 tencentcloud_protocol_template_group
@@ -1492,6 +1493,7 @@ tencentcloud_teo_function_runtime_environment
 tencentcloud_teo_l7_acc_rule
 tencentcloud_teo_l7_acc_setting
 tencentcloud_teo_security_ip_group
+tencentcloud_teo_security_policy_config
 
 TencentCloud ServiceMesh(TCM)
 Data Source

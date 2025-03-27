@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to manage address template.
 
+~> **NOTE:** It can be replaced by `tencentcloud_address_extra_template`.
+
 ## Example Usage
 
 ```hcl
