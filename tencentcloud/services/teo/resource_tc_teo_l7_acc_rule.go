@@ -45,7 +45,6 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Computed:    true,
 							Description: "Rule status. The possible values are: `enable`: enabled; `disable`: disabled.",
 							Deprecated:  "This field is deprecated and will be removed in the future. No longer valid. If the rule is empty, delete the rule.",
 						},
@@ -131,10 +130,6 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 
 			if rules.RuleId != nil {
 				rulesMap["rule_id"] = rules.RuleId
-			}
-
-			if rules.Status != nil {
-				rulesMap["status"] = rules.Status
 			}
 
 			if rules.RuleName != nil {
@@ -233,47 +228,6 @@ func resourceTencentCloudTeoL7AccRuleDelete(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_l7_acc_rule.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	// logId := tccommon.GetLogId(tccommon.ContextNil)
-	// ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	// zoneId := d.Id()
-
-	// var (
-	// 	request  = teov20220901.NewDeleteL7AccRulesRequest()
-	// 	response = teov20220901.NewDeleteL7AccRulesResponse()
-	// )
-	// request.ZoneId = helper.String(zoneId)
-
-	// if v, ok := d.GetOk("rules"); ok {
-	// 	for _, item := range v.([]interface{}) {
-	// 		rulesMap := item.(map[string]interface{})
-	// 		if v, ok := rulesMap["rule_id"].(string); ok && v != "" {
-	// 			request.RuleIds = append(request.RuleIds, helper.String(v))
-	// 		}
-	// 	}
-	// }
-
-	// if len(request.RuleIds) == 0 {
-	// 	return errors.New("[CRITAL]%s delete teo l7 acc rule failed, rule_ids is empty")
-	// }
-
-	// reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-	// 	result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteL7AccRulesWithContext(ctx, request)
-	// 	if e != nil {
-	// 		return tccommon.RetryError(e)
-	// 	} else {
-	// 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-	// 	}
-	// 	response = result
-	// 	return nil
-	// })
-	// if reqErr != nil {
-	// 	log.Printf("[CRITAL]%s delete teo l7 acc rule failed, reason:%+v", logId, reqErr)
-	// 	return reqErr
-	// }
-
-	// _ = response
-	// _ = zoneId
 	d.Set("rules", []interface{}{})
 	return resourceTencentCloudTeoL7AccRuleUpdate(d, meta)
 }
