@@ -1644,3 +1644,43 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoSecurityPolicyConfigById(ctx context.Context, zoneId, entity, host, templateId string) (ret *teo.SecurityPolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeSecurityPolicyRequest()
+	response := teo.NewDescribeSecurityPolicyResponse()
+	request.ZoneId = &zoneId
+	request.Entity = &entity
+	if host != "" {
+		request.Host = &host
+	}
+
+	if templateId != "" {
+		request.TemplateId = &templateId
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeSecurityPolicy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.SecurityPolicy
+	return
+}

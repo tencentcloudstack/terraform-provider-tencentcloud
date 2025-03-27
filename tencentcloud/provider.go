@@ -1794,6 +1794,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_function_rule":                                                        teo.ResourceTencentCloudTeoFunctionRule(),
 			"tencentcloud_teo_function_rule_priority":                                               teo.ResourceTencentCloudTeoFunctionRulePriority(),
 			"tencentcloud_teo_function_runtime_environment":                                         teo.ResourceTencentCloudTeoFunctionRuntimeEnvironment(),
+			"tencentcloud_teo_security_policy_config":                                               teo.ResourceTencentCloudTeoSecurityPolicyConfig(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                   tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                                tcm.ResourceTencentCloudTcmPrometheusAttachment(),

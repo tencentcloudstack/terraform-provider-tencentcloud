@@ -894,6 +894,11 @@ func (r *BindZoneToPlanResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type BlockIPActionParameters struct {
+	// 封禁 IP 的惩罚时长。支持的单位有：<li>s：秒，取值范围1～120；</li><li>m：分，取值范围1～120；</li><li>h：小时，取值范围1～48。</li>
+	Duration *string `json:"Duration,omitnil,omitempty" name:"Duration"`
+}
+
 type BotConfig struct {
 	// bot开关，取值有：
 	// <li>on：开启；</li>
@@ -3869,7 +3874,7 @@ type CreateZoneRequestParams struct {
 	// 待绑定的目标套餐 ID。当您账号下已存在套餐时，可以填写此参数，直接将站点绑定至该套餐。若您当前没有可绑定的套餐时，请前往控制台购买套餐完成站点创建。
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
-	// 同名站点标识。限制输入数字、英文、- 和 _ 组合，长度 20 个字符以内。详情参考 [同名站点标识](https://cloud.tencent.com/document/product/1552/70202)，无此使用场景时，该字段保留为空即可。
+	// 同名站点标识。限制输入数字、英文、"." 、"-" 和 "_"，长度 200 个字符以内。详情参考 [同名站点标识](https://cloud.tencent.com/document/product/1552/70202)，无此使用场景时，该字段保留为空即可。
 	AliasZoneName *string `json:"AliasZoneName,omitnil,omitempty" name:"AliasZoneName"`
 
 	// 标签。该参数用于对站点进行分权限管控、分账。需要先前往 [标签控制台](https://console.cloud.tencent.com/tag/taglist) 创建对应的标签才可以在此处传入对应的标签键和标签值。
@@ -3910,7 +3915,7 @@ type CreateZoneRequest struct {
 	// 待绑定的目标套餐 ID。当您账号下已存在套餐时，可以填写此参数，直接将站点绑定至该套餐。若您当前没有可绑定的套餐时，请前往控制台购买套餐完成站点创建。
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
-	// 同名站点标识。限制输入数字、英文、- 和 _ 组合，长度 20 个字符以内。详情参考 [同名站点标识](https://cloud.tencent.com/document/product/1552/70202)，无此使用场景时，该字段保留为空即可。
+	// 同名站点标识。限制输入数字、英文、"." 、"-" 和 "_"，长度 200 个字符以内。详情参考 [同名站点标识](https://cloud.tencent.com/document/product/1552/70202)，无此使用场景时，该字段保留为空即可。
 	AliasZoneName *string `json:"AliasZoneName,omitnil,omitempty" name:"AliasZoneName"`
 
 	// 标签。该参数用于对站点进行分权限管控、分账。需要先前往 [标签控制台](https://console.cloud.tencent.com/tag/taglist) 创建对应的标签才可以在此处传入对应的标签键和标签值。
@@ -4049,6 +4054,34 @@ type CustomField struct {
 	// 是否投递该字段，不填表示不投递此字段。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+}
+
+type CustomRule struct {
+	// 自定义规则的名称。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 自定义规则的具体内容，需符合表达式语法，详细规范参见产品文档。
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// 自定义规则的执行动作。	SecurityAction 的 Name 取值支持：<li>Deny：拦截；</li><li>Monitor：观察；</li><li>ReturnCustomPage：使用指定页面拦截；</li><li>Redirect：重定向至 URL；</li><li>BlockIP：IP 封禁；</li><li>JSChallenge：JavaScript 挑战；</li><li>ManagedChallenge：托管挑战；</li><li>Allow：放行。</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 自定义规则是否开启。取值有：<li>on：开启</li><li>off：关闭</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 自定义规则的 ID。<br>通过规则 ID 可支持不同的规则配置操作：<br> - 增加新规则：ID 为空或不指定 ID 参数；<br> - 修改已有规则：指定需要更新/修改的规则 ID；<br> - 删除已有规则：CustomRules 参数中，Rules 列表中未包含的已有规则将被删除。
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 自定义规则的类型。取值有：<li>BasicAccessRule：基础访问管控；</li><li>PreciseMatchRule：精准匹配规则，默认；</li><li>ManagedAccessRule：专家定制规则，仅出参。</li><br/>默认为PreciseMatchRule。
+	RuleType *string `json:"RuleType,omitnil,omitempty" name:"RuleType"`
+
+	// 自定义规则的优先级，范围是 0 ~ 100，默认为 0，仅支持精准匹配规则（PreciseMatchRule）。
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+}
+
+type CustomRules struct {
+	// 自定义规则的定义列表。<br>使用 ModifySecurityPolicy 修改 Web 防护配置时: <br> -  若未指定 Rules 参数，或 Rules 参数长度为零：清空所有自定义规则配置。<br> - 若 SecurityPolicy 参数中，未指定 CustomRules 参数值：保持已有自定义规则配置，不做修改。
+	Rules []*CustomRule `json:"Rules,omitnil,omitempty" name:"Rules"`
 }
 
 type CustomTime struct {
@@ -5859,7 +5892,14 @@ type DescribeBillingDataRequestParams struct {
 	// <li>quic_request: QUIC 请求，单位为次；</li>
 	// <li>bot_request_clean: Bot 请求，单位为次；</li>
 	// <li>cls_count: 实时日志推送条数，单位为条；</li>
-	// <li>ddos_bandwidth: 弹性 DDoS 防护带宽，单位为 bps。</li>
+	// <li>ddos_bandwidth: 弹性 DDoS 防护带宽，单位为 bps；</li>
+	// <li>total_transcode：所有规格音频，视频即时转码，转封装时长，单位为秒；</li>
+	// <li>remux：转封装时长，单位为秒；</li>
+	// <li>transcode_audio：音频转码时长，单位为秒；</li>
+	// <li>transcode_H264_SD：H.264 编码方式的标清视频（短边 <= 480 px）时长，单位为秒；</li>
+	// <li>transcode_H264_HD：H.264 编码方式的高清视频（短边 <= 720 px）时长，单位为秒；</li>
+	// <li>transcode_H264_FHD：H.264 编码方式的全高清视频（短边 <= 1080 px）时长，单位为秒；</li>
+	// <li>transcode_H264_2K：H.264 编码方式的 2K 视频（短边 <= 1440 px）时长，单位为秒。</li>
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
 	// 查询时间粒度，取值有：
@@ -5903,7 +5943,14 @@ type DescribeBillingDataRequest struct {
 	// <li>quic_request: QUIC 请求，单位为次；</li>
 	// <li>bot_request_clean: Bot 请求，单位为次；</li>
 	// <li>cls_count: 实时日志推送条数，单位为条；</li>
-	// <li>ddos_bandwidth: 弹性 DDoS 防护带宽，单位为 bps。</li>
+	// <li>ddos_bandwidth: 弹性 DDoS 防护带宽，单位为 bps；</li>
+	// <li>total_transcode：所有规格音频，视频即时转码，转封装时长，单位为秒；</li>
+	// <li>remux：转封装时长，单位为秒；</li>
+	// <li>transcode_audio：音频转码时长，单位为秒；</li>
+	// <li>transcode_H264_SD：H.264 编码方式的标清视频（短边 <= 480 px）时长，单位为秒；</li>
+	// <li>transcode_H264_HD：H.264 编码方式的高清视频（短边 <= 720 px）时长，单位为秒；</li>
+	// <li>transcode_H264_FHD：H.264 编码方式的全高清视频（短边 <= 1080 px）时长，单位为秒；</li>
+	// <li>transcode_H264_2K：H.264 编码方式的 2K 视频（短边 <= 1440 px）时长，单位为秒。</li>
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
 	// 查询时间粒度，取值有：
@@ -8882,6 +8929,85 @@ func (r *DescribeSecurityIPGroupResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSecurityPolicyRequestParams struct {
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 安全策略类型，可使用以下参数值进行查询： <li>ZoneDefaultPolicy：用于指定查询站点级策略；</li><li>Template：用于指定查询策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定查询域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>	
+	Entity *string `json:"Entity,omitnil,omitempty" name:"Entity"`
+
+	// 指定策略模板 ID。当 Entity 参数值为 Template 时，使用本参数指定策略模板的 ID 查询模板配置。
+	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
+
+	// 指定域名。当 Entity 参数值为 Host 时，使用本参数指定的域名级策略查询域名配置，例如：使用 www.example.com ，配置该域名的域名级策略。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+}
+
+type DescribeSecurityPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 安全策略类型，可使用以下参数值进行查询： <li>ZoneDefaultPolicy：用于指定查询站点级策略；</li><li>Template：用于指定查询策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定查询域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>	
+	Entity *string `json:"Entity,omitnil,omitempty" name:"Entity"`
+
+	// 指定策略模板 ID。当 Entity 参数值为 Template 时，使用本参数指定策略模板的 ID 查询模板配置。
+	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
+
+	// 指定域名。当 Entity 参数值为 Host 时，使用本参数指定的域名级策略查询域名配置，例如：使用 www.example.com ，配置该域名的域名级策略。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+}
+
+func (r *DescribeSecurityPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSecurityPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "Entity")
+	delete(f, "TemplateId")
+	delete(f, "Host")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSecurityPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSecurityPolicyResponseParams struct {
+	// 安全策略配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityPolicy *SecurityPolicy `json:"SecurityPolicy,omitnil,omitempty" name:"SecurityPolicy"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSecurityPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSecurityPolicyResponseParams `json:"Response"`
+}
+
+func (r *DescribeSecurityPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSecurityPolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSecurityTemplateBindingsRequestParams struct {
 	// 要查询的站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -8960,10 +9086,12 @@ type DescribeTimingL4DataRequestParams struct {
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询指标，取值有：
-	// <li>l4Flow_connections: 访问连接数；</li>
+	// <li>l4Flow_connections: 访问并发连接数；</li>
 	// <li>l4Flow_flux: 访问总流量；</li>
 	// <li>l4Flow_inFlux: 访问入流量；</li>
-	// <li>l4Flow_outFlux: 访问出流量。</li>
+	// <li>l4Flow_outFlux: 访问出流量；</li>
+	// <li>l4Flow_inBandwidth: 访问入向带宽峰值；</li>
+	// <li>l4Flow_outBandwidth: 访问出向带宽峰值。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
 	// 站点 ID 集合，此参数必填。
@@ -8984,10 +9112,7 @@ type DescribeTimingL4DataRequestParams struct {
 	// <li>proxyId：按照四层代理实例 ID 进行过滤。</li>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 数据归属地区，取值有：
-	// <li>overseas：全球（除中国大陆地区）数据；</li>
-	// <li>mainland：中国大陆地区数据；</li>
-	// <li>global：全球数据。</li>不填默认取值为global。
+	// 数据归属地区。该参数已废弃。请在 Filters.country 中按客户端地域过滤数据。
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
@@ -9001,10 +9126,12 @@ type DescribeTimingL4DataRequest struct {
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询指标，取值有：
-	// <li>l4Flow_connections: 访问连接数；</li>
+	// <li>l4Flow_connections: 访问并发连接数；</li>
 	// <li>l4Flow_flux: 访问总流量；</li>
 	// <li>l4Flow_inFlux: 访问入流量；</li>
-	// <li>l4Flow_outFlux: 访问出流量。</li>
+	// <li>l4Flow_outFlux: 访问出流量；</li>
+	// <li>l4Flow_inBandwidth: 访问入向带宽峰值；</li>
+	// <li>l4Flow_outBandwidth: 访问出向带宽峰值。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
 	// 站点 ID 集合，此参数必填。
@@ -9025,10 +9152,7 @@ type DescribeTimingL4DataRequest struct {
 	// <li>proxyId：按照四层代理实例 ID 进行过滤。</li>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 数据归属地区，取值有：
-	// <li>overseas：全球（除中国大陆地区）数据；</li>
-	// <li>mainland：中国大陆地区数据；</li>
-	// <li>global：全球数据。</li>不填默认取值为global。
+	// 数据归属地区。该参数已废弃。请在 Filters.country 中按客户端地域过滤数据。
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
@@ -9134,14 +9258,11 @@ type DescribeTimingL7AnalysisDataRequestParams struct {
 	// <li>tlsVersion：按照 TLS 版本进行过滤。若填写 tlsVersion 参数，则最多可查询近 30 天的数据。对应 Value 的可选项如下：<br>   TLS1.0；<br>   TLS1.1；<br>   TLS1.2；<br>   TLS1.3。</li>
 	// <li>ipVersion：按照 IP 版本进行过滤。对应 Value 的可选项如下：<br>   4：IPv4；<br>   6：IPv6。</li>
 	// <li>cacheType：按照缓存状态进行过滤。对应 Value 的可选项如下：<br>   hit：请求命中 EdgeOne 节点缓存，资源由节点缓存提供。资源部分命中缓存也会记录为 hit。<br>   miss：请求未命中 EdgeOne 节点缓存，资源由源站提供。<br>   dynamic：请求的资源无法缓存/未配置被节点缓存，资源由源站提供。<br>   other：无法被识别的缓存状态。边缘函数响应的请求会记录为 other。</li>
-	// <li>clientIp：按照客户端 IP 进行过滤。</li>
+	// <li>clientIp：按照客户端 IP 进行过滤。若填写 clientIp 参数，则最多可查询近 30 天的数据。</li>
+	// <li>userAgent：按照 User-Agent 请求头部进行过滤。若填写 userAgent 参数，则最多可查询近 30 天的数据。</li>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 数据归属地区，取值有：
-	// <li>overseas：全球（除中国大陆地区）数据；</li>
-	// <li>mainland：中国大陆地区数据；</li>
-	// <li>global：全球数据。</li>
-	// 不填默认取值为 global。
+	// 数据归属地区。该参数已废弃。请在 Filters.country 中按客户端地域过滤数据。
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
@@ -9193,14 +9314,11 @@ type DescribeTimingL7AnalysisDataRequest struct {
 	// <li>tlsVersion：按照 TLS 版本进行过滤。若填写 tlsVersion 参数，则最多可查询近 30 天的数据。对应 Value 的可选项如下：<br>   TLS1.0；<br>   TLS1.1；<br>   TLS1.2；<br>   TLS1.3。</li>
 	// <li>ipVersion：按照 IP 版本进行过滤。对应 Value 的可选项如下：<br>   4：IPv4；<br>   6：IPv6。</li>
 	// <li>cacheType：按照缓存状态进行过滤。对应 Value 的可选项如下：<br>   hit：请求命中 EdgeOne 节点缓存，资源由节点缓存提供。资源部分命中缓存也会记录为 hit。<br>   miss：请求未命中 EdgeOne 节点缓存，资源由源站提供。<br>   dynamic：请求的资源无法缓存/未配置被节点缓存，资源由源站提供。<br>   other：无法被识别的缓存状态。边缘函数响应的请求会记录为 other。</li>
-	// <li>clientIp：按照客户端 IP 进行过滤。</li>
+	// <li>clientIp：按照客户端 IP 进行过滤。若填写 clientIp 参数，则最多可查询近 30 天的数据。</li>
+	// <li>userAgent：按照 User-Agent 请求头部进行过滤。若填写 userAgent 参数，则最多可查询近 30 天的数据。</li>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 数据归属地区，取值有：
-	// <li>overseas：全球（除中国大陆地区）数据；</li>
-	// <li>mainland：中国大陆地区数据；</li>
-	// <li>global：全球数据。</li>
-	// 不填默认取值为 global。
+	// 数据归属地区。该参数已废弃。请在 Filters.country 中按客户端地域过滤数据。
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
@@ -9415,6 +9533,7 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 	// <li> l7Flow_outFlux_ua_device：按设备类型维度统计 L7 EdgeOne 响应流量指标; </li>
 	// <li> l7Flow_outFlux_ua_browser：按浏览器类型维度统计 L7 EdgeOne 响应流量指标；</li>
 	// <li> l7Flow_outFlux_ua_os：按操作系统类型维度统计 L7 EdgeOne 响应流量指标；</li>
+	// <li> l7Flow_outFlux_ua：按 User-Agent 维度统计 L7 EdgeOne 响应流量指标；</li>
 	// <li> l7Flow_request_country：按国家/地区维度统计 L7 访问请求数指标；</li>
 	// <li> l7Flow_request_province：按中国大陆境内省份维度统计 L7 访问请求数指标；</li>
 	// <li> l7Flow_request_statusCode：按状态码维度统计 L7 访问请求数指标；</li>
@@ -9425,7 +9544,9 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 	// <li> l7Flow_request_referer：按 Referer 维度统计 L7 访问请求数指标；</li>
 	// <li> l7Flow_request_ua_device：按设备类型维度统计 L7 访问请求数指标; </li>
 	// <li> l7Flow_request_ua_browser：按浏览器类型维度统计 L7 访问请求数指标；</li>
-	// <li> l7Flow_request_ua_os：按操作系统类型维度统计 L7 访问请求数指标。</li>
+	// <li> l7Flow_request_ua_os：按操作系统类型维度统计 L7 访问请求数指标；</li>
+	// <li> l7Flow_request_ua：按 User-Agent 维度统计 L7 访问请求数指标。</li>
+	// 
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
 	// 站点 ID 集合，此参数必填。
@@ -9451,7 +9572,8 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 	// <li>tlsVersion：按照 TLS 版本进行过滤。若填写 tlsVersion 参数，则最多可查询近 30 天的数据。对应 Value 的可选项如下：<br>   TLS1.0；<br>   TLS1.1；<br>   TLS1.2；<br>   TLS1.3。</li>
 	// <li>ipVersion：按照 IP 版本进行过滤。对应 Value 的可选项如下：<br>   4：IPv4；<br>   6：IPv6。</li>
 	// <li>cacheType：按照缓存状态进行过滤。对应 Value 的可选项如下：<br>   hit：请求命中 EdgeOne 节点缓存，资源由节点缓存提供。资源部分命中缓存也会记录为 hit。<br>   miss：请求未命中 EdgeOne 节点缓存，资源由源站提供。<br>   dynamic：请求的资源无法缓存/未配置被节点缓存，资源由源站提供。<br>   other：无法被识别的缓存状态。边缘函数响应的请求会记录为 other。</li>
-	// <li>clientIp：按照客户端 IP 进行过滤。</li>
+	// <li>clientIp：按照客户端 IP 进行过滤。若填写 clientIp 参数，则最多可查询近 30 天的数据。</li>
+	// <li>userAgent：按照 User-Agent 请求头部进行过滤。若填写 userAgent 参数，则最多可查询近 30 天的数据。</li>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 查询时间粒度，取值有：
@@ -9461,10 +9583,7 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 	// <li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
 	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
 
-	// 数据归属地区，取值有：
-	// <li>overseas：全球（除中国大陆地区）数据；</li>
-	// <li>mainland：中国大陆地区数据；</li>
-	// <li>global：全球数据。</li>不填默认取值为global。
+	// 数据归属地区。该参数已废弃。请在 Filters.country 中按客户端地域过滤数据。
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
@@ -9489,6 +9608,7 @@ type DescribeTopL7AnalysisDataRequest struct {
 	// <li> l7Flow_outFlux_ua_device：按设备类型维度统计 L7 EdgeOne 响应流量指标; </li>
 	// <li> l7Flow_outFlux_ua_browser：按浏览器类型维度统计 L7 EdgeOne 响应流量指标；</li>
 	// <li> l7Flow_outFlux_ua_os：按操作系统类型维度统计 L7 EdgeOne 响应流量指标；</li>
+	// <li> l7Flow_outFlux_ua：按 User-Agent 维度统计 L7 EdgeOne 响应流量指标；</li>
 	// <li> l7Flow_request_country：按国家/地区维度统计 L7 访问请求数指标；</li>
 	// <li> l7Flow_request_province：按中国大陆境内省份维度统计 L7 访问请求数指标；</li>
 	// <li> l7Flow_request_statusCode：按状态码维度统计 L7 访问请求数指标；</li>
@@ -9499,7 +9619,9 @@ type DescribeTopL7AnalysisDataRequest struct {
 	// <li> l7Flow_request_referer：按 Referer 维度统计 L7 访问请求数指标；</li>
 	// <li> l7Flow_request_ua_device：按设备类型维度统计 L7 访问请求数指标; </li>
 	// <li> l7Flow_request_ua_browser：按浏览器类型维度统计 L7 访问请求数指标；</li>
-	// <li> l7Flow_request_ua_os：按操作系统类型维度统计 L7 访问请求数指标。</li>
+	// <li> l7Flow_request_ua_os：按操作系统类型维度统计 L7 访问请求数指标；</li>
+	// <li> l7Flow_request_ua：按 User-Agent 维度统计 L7 访问请求数指标。</li>
+	// 
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
 	// 站点 ID 集合，此参数必填。
@@ -9525,7 +9647,8 @@ type DescribeTopL7AnalysisDataRequest struct {
 	// <li>tlsVersion：按照 TLS 版本进行过滤。若填写 tlsVersion 参数，则最多可查询近 30 天的数据。对应 Value 的可选项如下：<br>   TLS1.0；<br>   TLS1.1；<br>   TLS1.2；<br>   TLS1.3。</li>
 	// <li>ipVersion：按照 IP 版本进行过滤。对应 Value 的可选项如下：<br>   4：IPv4；<br>   6：IPv6。</li>
 	// <li>cacheType：按照缓存状态进行过滤。对应 Value 的可选项如下：<br>   hit：请求命中 EdgeOne 节点缓存，资源由节点缓存提供。资源部分命中缓存也会记录为 hit。<br>   miss：请求未命中 EdgeOne 节点缓存，资源由源站提供。<br>   dynamic：请求的资源无法缓存/未配置被节点缓存，资源由源站提供。<br>   other：无法被识别的缓存状态。边缘函数响应的请求会记录为 other。</li>
-	// <li>clientIp：按照客户端 IP 进行过滤。</li>
+	// <li>clientIp：按照客户端 IP 进行过滤。若填写 clientIp 参数，则最多可查询近 30 天的数据。</li>
+	// <li>userAgent：按照 User-Agent 请求头部进行过滤。若填写 userAgent 参数，则最多可查询近 30 天的数据。</li>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 查询时间粒度，取值有：
@@ -9535,10 +9658,7 @@ type DescribeTopL7AnalysisDataRequest struct {
 	// <li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
 	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
 
-	// 数据归属地区，取值有：
-	// <li>overseas：全球（除中国大陆地区）数据；</li>
-	// <li>mainland：中国大陆地区数据；</li>
-	// <li>global：全球数据。</li>不填默认取值为global。
+	// 数据归属地区。该参数已废弃。请在 Filters.country 中按客户端地域过滤数据。
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
@@ -9886,7 +10006,7 @@ type DescribeZonesRequestParams struct {
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回当前 appid 下有权限的所有站点信息。详细的过滤条件如下：
-	// <li>zone-name：按照站点名称进行过滤；</li><li>zone-id：按照站点 ID进行过滤。站点 ID 形如：zone-2noz78a8ev6k；</li><li>status：按照站点状态进行过滤；</li><li>tag-key：按照标签键进行过滤；</li><li>tag-value： 按照标签值进行过滤。</li>模糊查询时仅支持过滤字段名为 zone-name。
+	// <li>zone-name：按照站点名称进行过滤；</li><li>zone-id：按照站点 ID进行过滤。站点 ID 形如：zone-2noz78a8ev6k；</li><li>status：按照站点状态进行过滤；</li><li>tag-key：按照标签键进行过滤；</li><li>tag-value： 按照标签值进行过滤。</li><li>alias-zone-name： 按照同名站点标识进行过滤。</li>模糊查询时支持过滤字段名为 zone-name 或 alias-zone-name。
 	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 可根据该字段对返回结果进行排序，取值有：
@@ -9914,7 +10034,7 @@ type DescribeZonesRequest struct {
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回当前 appid 下有权限的所有站点信息。详细的过滤条件如下：
-	// <li>zone-name：按照站点名称进行过滤；</li><li>zone-id：按照站点 ID进行过滤。站点 ID 形如：zone-2noz78a8ev6k；</li><li>status：按照站点状态进行过滤；</li><li>tag-key：按照标签键进行过滤；</li><li>tag-value： 按照标签值进行过滤。</li>模糊查询时仅支持过滤字段名为 zone-name。
+	// <li>zone-name：按照站点名称进行过滤；</li><li>zone-id：按照站点 ID进行过滤。站点 ID 形如：zone-2noz78a8ev6k；</li><li>status：按照站点状态进行过滤；</li><li>tag-key：按照标签键进行过滤；</li><li>tag-value： 按照标签值进行过滤。</li><li>alias-zone-name： 按照同名站点标识进行过滤。</li>模糊查询时支持过滤字段名为 zone-name 或 alias-zone-name。
 	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 可根据该字段对返回结果进行排序，取值有：
@@ -10125,6 +10245,43 @@ type DetailHost struct {
 	// 回源时是否携带客户端IP所属地域信息的配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientIpCountry *ClientIpCountry `json:"ClientIpCountry,omitnil,omitempty" name:"ClientIpCountry"`
+}
+
+type DetectLengthLimitCondition struct {
+	// 匹配条件的参数名称，取值有：
+	// <li>body_depth：请求正文包部分的检测深度。</li>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 匹配条件的参数值，取值与 Name 成对使用。
+	// 当 Name 值为 body_depth 时， Values 只支持传入单个值，取值有：
+	// <li>10KB；</li>
+	// <li>64KB；</li>
+	// <li>128KB。</li>
+	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
+}
+
+type DetectLengthLimitConfig struct {
+	// 检测长度限制的规则列表。
+	DetectLengthLimitRules []*DetectLengthLimitRule `json:"DetectLengthLimitRules,omitnil,omitempty" name:"DetectLengthLimitRules"`
+}
+
+type DetectLengthLimitRule struct {
+	// 规则Id。仅出参使用。
+	RuleId *uint64 `json:"RuleId,omitnil,omitempty" name:"RuleId"`
+
+	// 规则名称。仅出参使用。
+	RuleName *string `json:"RuleName,omitnil,omitempty" name:"RuleName"`
+
+	// 规则描述，仅出参使用。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 规则配置条件。仅出参使用。
+	Conditions []*DetectLengthLimitCondition `json:"Conditions,omitnil,omitempty" name:"Conditions"`
+
+	// 处置方式，取值有：
+	// <li>skip：当请求正文数据超过 Conditions 出参中 body_depth 设置的检测深度时，跳过所有请求正文内容的检测；</li>
+	// <li>scan：仅检测 Conditions 出参中 body_depth 设置的检测深度，对超出部分的请求正文内容直接截断处理，超出部分的请求正文不会经过安全检测。</li>仅出参使用。
+	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 }
 
 type DiffIPWhitelist struct {
@@ -11762,6 +11919,84 @@ type LogFormat struct {
 	// <li>，：半角逗号；</li>
 	// <li>;：半角分号。</li>
 	FieldDelimiter *string `json:"FieldDelimiter,omitnil,omitempty" name:"FieldDelimiter"`
+}
+
+type ManagedRuleAction struct {
+	// 托管规则组下的具体项，用于改写此单条规则项配置的内容，具体参考产品文档。	
+	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
+
+	// RuleId 中指定托管规则项的处置动作。 SecurityAction 的 Name 取值支持：<li>Deny：拦截，响应拦截页面；</li><li>Monitor：观察，不处理请求记录安全事件到日志中；</li><li>Disabled：未启用，不扫描请求跳过该规则。</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+}
+
+type ManagedRuleAutoUpdate struct {
+	// 是否开启自动更新至最新版本。取值有：<li>on：开启</li><li>off：关闭</li>
+	AutoUpdateToLatestVersion *string `json:"AutoUpdateToLatestVersion,omitnil,omitempty" name:"AutoUpdateToLatestVersion"`
+
+	// 当前使用的版本，格式符合ISO 8601标准，如2023-12-21T12:00:32Z，默认为空，仅出参。
+	RulesetVersion *string `json:"RulesetVersion,omitnil,omitempty" name:"RulesetVersion"`
+}
+
+type ManagedRuleDetail struct {
+	// 托管规则Id。
+	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
+
+	// 托管规则的防护级别。取值有：<li>low：低风险，此规则风险较低，适用于非常严格控制环境下的访问场景，该等级规则可能造成较多的误报；</li><li>medium：中风险，表示此条规则风险正常，适用较为严格的防护场景；</li><li>high：高风险，表示此条规则风险较高，大多数场景不会产生误报；</li><li>extreme：超高风险，表示此条规则风险极高，基本不会产生误报；</li>
+	RiskLevel *string `json:"RiskLevel,omitnil,omitempty" name:"RiskLevel"`
+
+	// 规则描述。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 规则标签。部分类型的规则不存在标签。
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 规则所属版本。
+	RuleVersion *string `json:"RuleVersion,omitnil,omitempty" name:"RuleVersion"`
+}
+
+type ManagedRuleGroup struct {
+	// 托管规则的组名称，未指定配置的规则分组将按照默认配置处理，GroupId 的具体取值参考产品文档。
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// 托管规则组的防护级别。取值有：<li>loose：宽松，只包含超高风险规则，此时需配置Action，且RuleActions配置无效；</li><li>normal：正常，包含超高风险和高风险规则，此时需配置Action，且RuleActions配置无效；</li><li>strict：严格，包含超高风险、高风险和中风险规则，此时需配置Action，且RuleActions配置无效；</li><li>extreme：超严格，包含超高风险、高风险、中风险和低风险规则，此时需配置Action，且RuleActions配置无效；</li><li>custom：自定义，精细化策略，按单条规则配置处置方式，此时Action字段无效，使用RuleActions配置单条规则的精细化策略。</li>	
+	SensitivityLevel *string `json:"SensitivityLevel,omitnil,omitempty" name:"SensitivityLevel"`
+
+	// 托管规则组的处置动作。SecurityAction 的 Name 取值支持：<li>Deny：拦截，响应拦截页面；</li><li>Monitor：观察，不处理请求记录安全事件到日志中；</li><li>Disabled：未启用，不扫描请求跳过该规则。</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 托管规则组下规则项的具体配置，仅在 SensitivityLevel 为 custom 时配置生效。
+	RuleActions []*ManagedRuleAction `json:"RuleActions,omitnil,omitempty" name:"RuleActions"`
+
+	// 托管规则组信息，仅出参。	
+	MetaData *ManagedRuleGroupMeta `json:"MetaData,omitnil,omitempty" name:"MetaData"`
+}
+
+type ManagedRuleGroupMeta struct {
+	// 托管规则组描述，仅出参。
+	GroupDetail *string `json:"GroupDetail,omitnil,omitempty" name:"GroupDetail"`
+
+	// 托管规则组名称，仅出参。
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// 当前托管规则组下的所有子规则信息，仅出参。
+	RuleDetails []*ManagedRuleDetail `json:"RuleDetails,omitnil,omitempty" name:"RuleDetails"`
+}
+
+type ManagedRules struct {
+	// 托管规则是否开启。取值有：<li>on：开启，所有托管规则按配置生效；</li><li>off：关闭，所有托管规则不生效。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 评估模式是否开启，仅在 Enabled 参数为 on 时有效。取值有：<li>on：开启，表示所有托管规则以观察模式生效；</li><li>off：关闭，表示所有托管规则以实际配置生效。</li>
+	DetectionOnly *string `json:"DetectionOnly,omitnil,omitempty" name:"DetectionOnly"`
+
+	// 托管规则语义分析选项是否开启，仅在 Enabled 参数为 on 时有效。取值有：<li>on：开启，对请求进行语义分析后进行处理；</li><li>off：关闭，对请求不进行语义分析，直接进行处理。</li> <br/>默认为 off。
+	SemanticAnalysis *string `json:"SemanticAnalysis,omitnil,omitempty" name:"SemanticAnalysis"`
+
+	// 托管规则自动更新选项。
+	AutoUpdate *ManagedRuleAutoUpdate `json:"AutoUpdate,omitnil,omitempty" name:"AutoUpdate"`
+
+	// 托管规则组的配置。如果此结构传空数组或 GroupId 未包含在列表内将按照默认方式处理。
+	ManagedRuleGroups []*ManagedRuleGroup `json:"ManagedRuleGroups,omitnil,omitempty" name:"ManagedRuleGroups"`
 }
 
 type MaxAge struct {
@@ -13467,6 +13702,67 @@ func (r *ModifyL4ProxyStatusResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyL7AccRulePriorityRequestParams struct {
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 站点 ID 下完整的规则 ID 列表，规则 ID 列表可以通过 [查询七层加速规则](https://cloud.tencent.com/document/product/1552/115820) 获取，最终优先级顺序将调整成规则 ID 列表的顺序，从前往后依次执行。
+	RuleIds []*string `json:"RuleIds,omitnil,omitempty" name:"RuleIds"`
+}
+
+type ModifyL7AccRulePriorityRequest struct {
+	*tchttp.BaseRequest
+	
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 站点 ID 下完整的规则 ID 列表，规则 ID 列表可以通过 [查询七层加速规则](https://cloud.tencent.com/document/product/1552/115820) 获取，最终优先级顺序将调整成规则 ID 列表的顺序，从前往后依次执行。
+	RuleIds []*string `json:"RuleIds,omitnil,omitempty" name:"RuleIds"`
+}
+
+func (r *ModifyL7AccRulePriorityRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyL7AccRulePriorityRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "RuleIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyL7AccRulePriorityRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyL7AccRulePriorityResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyL7AccRulePriorityResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyL7AccRulePriorityResponseParams `json:"Response"`
+}
+
+func (r *ModifyL7AccRulePriorityResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyL7AccRulePriorityResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyL7AccRuleRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -14210,44 +14506,44 @@ func (r *ModifySecurityIPGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifySecurityPolicyRequestParams struct {
-	// 站点Id。
+	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 安全配置。
+	// 安全策略配置。<li>当 SecurityPolicy 参数中的 CustomRule 被设置时，SecurityConfig 参数中的 AclConfg、 IpTableConfg 将被忽略；</li><li>当 SecurityPolicy 参数中的 ManagedRule 被设置时，SecurityConfig 参数中的 WafConfig 将被忽略。</li><li>对于自定义规则以及托管规则策略配置建议使用 SecurityPolicy 参数进行设置。</li>
 	SecurityConfig *SecurityConfig `json:"SecurityConfig,omitnil,omitempty" name:"SecurityConfig"`
 
-	// 子域名/应用名。
-	// 
-	// 注意：当同时指定本参数和 TemplateId 参数时，本参数不生效。请勿同时指定本参数和 TemplateId 参数。
+	// 安全策略配置。对 Web 防护自定义策略和托管规则配置建议使用，支持表达式语法对安全策略进行配置。
+	SecurityPolicy *SecurityPolicy `json:"SecurityPolicy,omitnil,omitempty" name:"SecurityPolicy"`
+
+	// 安全策略类型，可使用以下参数值： <li>ZoneDefaultPolicy：用于指定站点级策略；</li><li>Template：用于指定策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>
 	Entity *string `json:"Entity,omitnil,omitempty" name:"Entity"`
 
-	// 指定模板策略 ID，或指定站点全局策略。
-	// - 如需配置策略模板，请指定策略模板 ID。
-	// - 如需配置站点全局策略，请使用 @ZoneLevel@Domain 参数值
-	// 
-	// 注意：当使用本参数时，Entity 参数不生效。请勿同时使用本参数和 Entity 参数。
+	// 指定域名。当 Entity 参数值为 Host 时，使用本参数指定的域名级策略，例如：使用 www.example.com ，配置该域名的域名级策略。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 指定策略模板 ID。当 Entity 参数值为 Template 时，使用本参数指定策略模板的 ID。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 }
 
 type ModifySecurityPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点Id。
+	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 安全配置。
+	// 安全策略配置。<li>当 SecurityPolicy 参数中的 CustomRule 被设置时，SecurityConfig 参数中的 AclConfg、 IpTableConfg 将被忽略；</li><li>当 SecurityPolicy 参数中的 ManagedRule 被设置时，SecurityConfig 参数中的 WafConfig 将被忽略。</li><li>对于自定义规则以及托管规则策略配置建议使用 SecurityPolicy 参数进行设置。</li>
 	SecurityConfig *SecurityConfig `json:"SecurityConfig,omitnil,omitempty" name:"SecurityConfig"`
 
-	// 子域名/应用名。
-	// 
-	// 注意：当同时指定本参数和 TemplateId 参数时，本参数不生效。请勿同时指定本参数和 TemplateId 参数。
+	// 安全策略配置。对 Web 防护自定义策略和托管规则配置建议使用，支持表达式语法对安全策略进行配置。
+	SecurityPolicy *SecurityPolicy `json:"SecurityPolicy,omitnil,omitempty" name:"SecurityPolicy"`
+
+	// 安全策略类型，可使用以下参数值： <li>ZoneDefaultPolicy：用于指定站点级策略；</li><li>Template：用于指定策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>
 	Entity *string `json:"Entity,omitnil,omitempty" name:"Entity"`
 
-	// 指定模板策略 ID，或指定站点全局策略。
-	// - 如需配置策略模板，请指定策略模板 ID。
-	// - 如需配置站点全局策略，请使用 @ZoneLevel@Domain 参数值
-	// 
-	// 注意：当使用本参数时，Entity 参数不生效。请勿同时使用本参数和 Entity 参数。
+	// 指定域名。当 Entity 参数值为 Host 时，使用本参数指定的域名级策略，例如：使用 www.example.com ，配置该域名的域名级策略。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 指定策略模板 ID。当 Entity 参数值为 Template 时，使用本参数指定策略模板的 ID。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 }
 
@@ -14265,7 +14561,9 @@ func (r *ModifySecurityPolicyRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ZoneId")
 	delete(f, "SecurityConfig")
+	delete(f, "SecurityPolicy")
 	delete(f, "Entity")
+	delete(f, "Host")
 	delete(f, "TemplateId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifySecurityPolicyRequest has unknown keys!", "")
@@ -14309,7 +14607,7 @@ type ModifyZoneRequestParams struct {
 	// 自定义站点信息，以替代系统默认分配的名称服务器。不填写保持原有配置。当站点是无域名接入方式时不允许传此参数。
 	VanityNameServers *VanityNameServers `json:"VanityNameServers,omitnil,omitempty" name:"VanityNameServers"`
 
-	// 站点别名。数字、英文、-和_组合，限制20个字符。
+	// 同名站点标识。限制输入数字、英文、"." 、"-" 和 "_"，长度 200 个字符以内。
 	AliasZoneName *string `json:"AliasZoneName,omitnil,omitempty" name:"AliasZoneName"`
 
 	// 站点接入地域，取值有：
@@ -14337,7 +14635,7 @@ type ModifyZoneRequest struct {
 	// 自定义站点信息，以替代系统默认分配的名称服务器。不填写保持原有配置。当站点是无域名接入方式时不允许传此参数。
 	VanityNameServers *VanityNameServers `json:"VanityNameServers,omitnil,omitempty" name:"VanityNameServers"`
 
-	// 站点别名。数字、英文、-和_组合，限制20个字符。
+	// 同名站点标识。限制输入数字、英文、"." 、"-" 和 "_"，长度 200 个字符以内。
 	AliasZoneName *string `json:"AliasZoneName,omitnil,omitempty" name:"AliasZoneName"`
 
 	// 站点接入地域，取值有：
@@ -15470,6 +15768,11 @@ type RealtimeLogDeliveryTask struct {
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
+type RedirectActionParameters struct {
+	// 重定向的URL。
+	URL *string `json:"URL,omitnil,omitempty" name:"URL"`
+}
+
 type RenewFlag struct {
 	// 预付费套餐的自动续费标志，取值有：
 	// <li> on：开启自动续费；</li>
@@ -15612,11 +15915,23 @@ type ResponseSpeedLimitParameters struct {
 	// <li>LimitAfterSpecificSecondsDownloaded：全速下载特定时间后开始限速。</li>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// 限速值，单位为：KB/s，填写数值，指定限速大小。
+	// 限速值，指定限速大小，填写含单位的数值或变量。当前支持单位有：KB/s。
 	MaxSpeed *string `json:"MaxSpeed,omitnil,omitempty" name:"MaxSpeed"`
 
-	// 限速开始值，可以为下载大小或指定时长，单位为：KB或s，当 Mode 取值为 LimitAfterSpecificBytesDownloaded 或 LimitAfterSpecificSecondsDownloaded 时，该参数必填。填写数值，指定下载大小或指定时长。
+	// 限速开始值，可以为下载大小或指定时长，填写含单位的数值或变量，指定下载大小或指定时长。
+	// 
+	// - 当Mode 取值为 LimitAfterSpecificBytesDownloaded 时，单位取值有： KB；
+	// 
+	// - 当Mode 取值为 LimitAfterSpecificSecondsDownloaded 时，单位取值有： s。
 	StartAt *string `json:"StartAt,omitnil,omitempty" name:"StartAt"`
+}
+
+type ReturnCustomPageActionParameters struct {
+	// 响应状态码。
+	ResponseCode *string `json:"ResponseCode,omitnil,omitempty" name:"ResponseCode"`
+
+	// 响应的自定义页面ID。
+	ErrorPageId *string `json:"ErrorPageId,omitnil,omitempty" name:"ErrorPageId"`
 }
 
 type RewriteAction struct {
@@ -16129,6 +16444,21 @@ type SecEntryValue struct {
 	Sum *float64 `json:"Sum,omitnil,omitempty" name:"Sum"`
 }
 
+type SecurityAction struct {
+	// 安全执行的具体动作。取值有：
+	// <li>Deny：拦截；</li><li>Monitor：观察；</li><li>ReturnCustomPage：使用指定页面拦截；</li><li>Redirect：重定向至 URL；</li><li>BlockIP：IP 封禁；</li><li>JSChallenge：JavaScript 挑战；</li><li>ManagedChallenge：托管挑战；</li><li>Disabled：未启用；</li><li>Allow：放行。</li>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 当 Name 为 BlockIP 时的附加参数。
+	BlockIPActionParameters *BlockIPActionParameters `json:"BlockIPActionParameters,omitnil,omitempty" name:"BlockIPActionParameters"`
+
+	// 当 Name 为 ReturnCustomPage 时的附加参数。
+	ReturnCustomPageActionParameters *ReturnCustomPageActionParameters `json:"ReturnCustomPageActionParameters,omitnil,omitempty" name:"ReturnCustomPageActionParameters"`
+
+	// 当 Name 为 Redirect 时的附加参数。
+	RedirectActionParameters *RedirectActionParameters `json:"RedirectActionParameters,omitnil,omitempty" name:"RedirectActionParameters"`
+}
+
 type SecurityConfig struct {
 	// 托管规则。如果入参为空或不填，默认使用历史配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -16169,6 +16499,18 @@ type SecurityConfig struct {
 	// 慢速攻击配置。如果入参为空或不填，默认使用历史配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlowPostConfig *SlowPostConfig `json:"SlowPostConfig,omitnil,omitempty" name:"SlowPostConfig"`
+
+	// 检测长度限制配置。仅出参使用。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DetectLengthLimitConfig *DetectLengthLimitConfig `json:"DetectLengthLimitConfig,omitnil,omitempty" name:"DetectLengthLimitConfig"`
+}
+
+type SecurityPolicy struct {
+	// 自定义规则配置。
+	CustomRules *CustomRules `json:"CustomRules,omitnil,omitempty" name:"CustomRules"`
+
+	// 托管规则配置。
+	ManagedRules *ManagedRules `json:"ManagedRules,omitnil,omitempty" name:"ManagedRules"`
 }
 
 type SecurityTemplateBinding struct {
