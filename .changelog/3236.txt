@@ -1,13 +1,9 @@
 ```release-note:new-resource
-tencentcloud_cdwpg_account
+tencentcloud_cdwpg_reset_account_password
 ```
 
 ```release-note:new-resource
 tencentcloud_cdwpg_restart_instance
-```
-
-```release-note:new-resource
-tencentcloud_cdwpg_upgrade_instance
 ```
 
 ```release-note:new-resource
