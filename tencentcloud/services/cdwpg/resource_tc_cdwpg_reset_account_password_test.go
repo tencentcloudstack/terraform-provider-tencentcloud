@@ -8,7 +8,7 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudCdwpgAccountResource_basic(t *testing.T) {
+func TestAccTencentCloudCdwpgResetAccountPasswordResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -17,9 +17,9 @@ func TestAccTencentCloudCdwpgAccountResource_basic(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{{
 			Config: testAccCdwpgAccount,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cdwpg_account.cdwpg_account", "id")),
+			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cdwpg_reset_account_password.cdwpg_account", "id")),
 		}, {
-			ResourceName:            "tencentcloud_cdwpg_account.cdwpg_account",
+			ResourceName:            "tencentcloud_cdwpg_reset_account_password.cdwpg_account",
 			ImportState:             true,
 			ImportStateVerify:       true,
 			ImportStateVerifyIgnore: []string{"new_password"},
@@ -28,8 +28,8 @@ func TestAccTencentCloudCdwpgAccountResource_basic(t *testing.T) {
 }
 
 const testAccCdwpgAccount = `
-resource "tencentcloud_cdwpg_account" "cdwpg_account" {
-	instance_id = "cdwpg-zpiemnyd"
+resource "tencentcloud_cdwpg_reset_account_password" "cdwpg_account" {
+	instance_id = "cdwpg-r3xgk6w3"
 	user_name = "dbadmin"
 	new_password = "testpassword"
 }

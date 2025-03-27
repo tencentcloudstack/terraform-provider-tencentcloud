@@ -14,12 +14,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudCdwpgAccount() *schema.Resource {
+func ResourceTencentCloudCdwpgResetAccountPassword() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCdwpgAccountCreate,
-		Read:   resourceTencentCloudCdwpgAccountRead,
-		Update: resourceTencentCloudCdwpgAccountUpdate,
-		Delete: resourceTencentCloudCdwpgAccountDelete,
+		Create: resourceTencentCloudCdwpgResetAccountPasswordCreate,
+		Read:   resourceTencentCloudCdwpgResetAccountPasswordRead,
+		Update: resourceTencentCloudCdwpgResetAccountPasswordUpdate,
+		Delete: resourceTencentCloudCdwpgResetAccountPasswordDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -48,8 +48,8 @@ func ResourceTencentCloudCdwpgAccount() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCdwpgAccountCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_account.create")()
+func resourceTencentCloudCdwpgResetAccountPasswordCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_reset_account_password.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	instanceId := d.Get("instance_id").(string)
@@ -57,11 +57,11 @@ func resourceTencentCloudCdwpgAccountCreate(d *schema.ResourceData, meta interfa
 
 	d.SetId(strings.Join([]string{instanceId, userName}, tccommon.FILED_SP))
 
-	return resourceTencentCloudCdwpgAccountUpdate(d, meta)
+	return resourceTencentCloudCdwpgResetAccountPasswordUpdate(d, meta)
 }
 
-func resourceTencentCloudCdwpgAccountRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_account.read")()
+func resourceTencentCloudCdwpgResetAccountPasswordRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_reset_account_password.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -99,8 +99,8 @@ func resourceTencentCloudCdwpgAccountRead(d *schema.ResourceData, meta interface
 	return nil
 }
 
-func resourceTencentCloudCdwpgAccountUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_account.update")()
+func resourceTencentCloudCdwpgResetAccountPasswordUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_reset_account_password.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -149,11 +149,11 @@ func resourceTencentCloudCdwpgAccountUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	return resourceTencentCloudCdwpgAccountRead(d, meta)
+	return resourceTencentCloudCdwpgResetAccountPasswordRead(d, meta)
 }
 
-func resourceTencentCloudCdwpgAccountDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_account.delete")()
+func resourceTencentCloudCdwpgResetAccountPasswordDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_reset_account_password.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
