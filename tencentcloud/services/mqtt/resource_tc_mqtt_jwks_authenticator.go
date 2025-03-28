@@ -20,6 +20,9 @@ func ResourceTencentCloudMqttJwksAuthenticator() *schema.Resource {
 		Read:   resourceTencentCloudMqttJwksAuthenticatorRead,
 		Update: resourceTencentCloudMqttJwksAuthenticatorUpdate,
 		Delete: resourceTencentCloudMqttJwksAuthenticatorDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -157,8 +160,8 @@ func resourceTencentCloudMqttJwksAuthenticatorRead(d *schema.ResourceData, meta 
 			_ = d.Set("endpoint", v)
 		}
 
-		if v, ok := configMap["refresh_interval"].(int); ok {
-			_ = d.Set("refresh_interval", v)
+		if v, ok := configMap["refreshInterval"].(float64); ok {
+			_ = d.Set("refresh_interval", int(v))
 		}
 
 		if v, ok := configMap["text"].(string); ok && v != "" {
@@ -210,6 +213,7 @@ func resourceTencentCloudMqttJwksAuthenticatorUpdate(d *schema.ResourceData, met
 		request.Remark = helper.String(v.(string))
 	}
 
+	request.Status = helper.String("open")
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMqttV20240516Client().ModifyJWKSAuthenticatorWithContext(ctx, request)
 		if e != nil {

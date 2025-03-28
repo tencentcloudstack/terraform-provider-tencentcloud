@@ -96,10 +96,6 @@ func resourceTencentCloudMqttJwtAuthenticatorCreate(d *schema.ResourceData, meta
 		request.PublicKey = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("status"); ok {
-		request.Status = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("remark"); ok {
 		request.Remark = helper.String(v.(string))
 	}

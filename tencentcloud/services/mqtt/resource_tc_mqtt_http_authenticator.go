@@ -2,6 +2,7 @@ package mqtt
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -19,6 +20,9 @@ func ResourceTencentCloudMqttHttpAuthenticator() *schema.Resource {
 		Read:   resourceTencentCloudMqttHttpAuthenticatorRead,
 		Update: resourceTencentCloudMqttHttpAuthenticatorUpdate,
 		Delete: resourceTencentCloudMqttHttpAuthenticatorDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -41,7 +45,14 @@ func ResourceTencentCloudMqttHttpAuthenticator() *schema.Resource {
 			"method": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Network request method Get or Post, default Post.",
+				Description: "Network request method GET or POST, default POST.",
+			},
+
+			"status": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Is the authenticator enabled: open enable; Close close.",
 			},
 
 			"remark": {
@@ -131,6 +142,10 @@ func resourceTencentCloudMqttHttpAuthenticatorCreate(d *schema.ResourceData, met
 
 	if v, ok := d.GetOk("method"); ok {
 		request.Method = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("status"); ok {
+		request.Status = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
@@ -224,6 +239,82 @@ func resourceTencentCloudMqttHttpAuthenticatorRead(d *schema.ResourceData, meta 
 		return nil
 	}
 
+	_ = d.Set("instance_id", instanceId)
+
+	if respData.Config != nil {
+		var configMap map[string]interface{}
+		e := json.Unmarshal([]byte(*respData.Config), &configMap)
+		if e != nil {
+			return fmt.Errorf("Failed to parse config content: %s", e.Error())
+		}
+
+		if v, ok := configMap["endpoint"].(string); ok && v != "" {
+			_ = d.Set("endpoint", v)
+		}
+
+		if v, ok := configMap["concurrency"].(float64); ok {
+			_ = d.Set("concurrency", int(v))
+		}
+
+		if v, ok := configMap["method"].(string); ok && v != "" {
+			_ = d.Set("method", v)
+		}
+
+		if v, ok := configMap["connectTimeout"].(float64); ok {
+			_ = d.Set("connect_timeout", int(v))
+		}
+
+		if v, ok := configMap["readTimeout"].(float64); ok {
+			_ = d.Set("read_timeout", int(v))
+		}
+
+		if v, ok := configMap["headers"].([]interface{}); ok {
+			tmpList := make([]map[string]interface{}, 0)
+			for _, item := range v {
+				bodyMap := item.(map[string]interface{})
+				dMap := map[string]interface{}{}
+				if v, ok := bodyMap["key"].(string); ok && v != "" {
+					dMap["key"] = v
+				}
+
+				if v, ok := bodyMap["value"].(string); ok && v != "" {
+					dMap["value"] = v
+				}
+
+				tmpList = append(tmpList, dMap)
+			}
+
+			_ = d.Set("header", tmpList)
+		}
+
+		if v, ok := configMap["body"].([]interface{}); ok {
+			tmpList := make([]map[string]interface{}, 0)
+			for _, item := range v {
+				bodyMap := item.(map[string]interface{})
+				dMap := map[string]interface{}{}
+				if v, ok := bodyMap["key"].(string); ok && v != "" {
+					dMap["key"] = v
+				}
+
+				if v, ok := bodyMap["value"].(string); ok && v != "" {
+					dMap["value"] = v
+				}
+
+				tmpList = append(tmpList, dMap)
+			}
+
+			_ = d.Set("body", tmpList)
+		}
+	}
+
+	if respData.Status != nil {
+		_ = d.Set("status", respData.Status)
+	}
+
+	if respData.Remark != nil {
+		_ = d.Set("remark", respData.Remark)
+	}
+
 	return nil
 }
 
@@ -262,6 +353,10 @@ func resourceTencentCloudMqttHttpAuthenticatorUpdate(d *schema.ResourceData, met
 
 	if v, ok := d.GetOk("method"); ok {
 		request.Method = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("status"); ok {
+		request.Status = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("header"); ok {

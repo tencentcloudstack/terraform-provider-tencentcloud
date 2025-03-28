@@ -2266,10 +2266,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_instance_public_endpoint":  mqtt.ResourceTencentCloudMqttInstancePublicEndpoint(),
 			"tencentcloud_mqtt_topic":                     mqtt.ResourceTencentCloudMqttTopic(),
 			"tencentcloud_mqtt_ca_certificate":            mqtt.ResourceTencentCloudMqttCaCertificate(),
-			"tencentcloud_mqtt_user":                      mqtt.ResourceTencentCloudMqttUser(),
 			"tencentcloud_mqtt_device_certificate":        mqtt.ResourceTencentCloudMqttDeviceCertificate(),
+			"tencentcloud_mqtt_user":                      mqtt.ResourceTencentCloudMqttUser(),
 			"tencentcloud_mqtt_jwt_authenticator":         mqtt.ResourceTencentCloudMqttJwtAuthenticator(),
 			"tencentcloud_mqtt_jwks_authenticator":        mqtt.ResourceTencentCloudMqttJwksAuthenticator(),
+			"tencentcloud_mqtt_http_authenticator":        mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
 		},
 
 		ConfigureFunc: providerConfigure,
