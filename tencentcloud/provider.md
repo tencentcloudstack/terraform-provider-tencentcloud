@@ -2256,6 +2256,9 @@ tencentcloud_cdwpg_nodes
 Resource
 tencentcloud_cdwpg_instance
 tencentcloud_cdwpg_dbconfig
+tencentcloud_cdwpg_reset_account_password
+tencentcloud_cdwpg_restart_instance
+tencentcloud_cdwpg_userhba
 
 CSIP
 Resource

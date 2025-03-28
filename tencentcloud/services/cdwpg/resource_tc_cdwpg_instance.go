@@ -143,6 +143,12 @@ func ResourceTencentCloudCdwpgInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+			"product_version": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Version.",
+			},
 		},
 	}
 }
@@ -223,6 +229,9 @@ func resourceTencentCloudCdwpgInstanceCreate(d *schema.ResourceData, meta interf
 			}
 			request.Resources = append(request.Resources, &resourceSpecNew)
 		}
+	}
+	if v, ok := d.GetOk("product_version"); ok {
+		request.ProductVersion = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -366,6 +375,10 @@ func resourceTencentCloudCdwpgInstanceRead(d *schema.ResourceData, meta interfac
 
 	}
 
+	if instance.Version != nil {
+		_ = d.Set("product_version", instance.Version)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "cdwpg", "cdwpgInstance", tcClient.Region, d.Id())
@@ -489,6 +502,34 @@ func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interf
 			}
 		}
 	}
+	if d.HasChange("product_version") {
+		if v, ok := d.GetOk("product_version"); ok {
+			request := cdwpg.NewUpgradeInstanceRequest()
+			request.InstanceId = helper.String(instanceId)
+			request.PackageVersion = helper.String(v.(string))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwpgV20201230Client().UpgradeInstance(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s create cdwpg upgrade instance failed, reason:%+v", logId, err)
+				return err
+			}
+
+			service := CdwpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
+
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		}
+	}
+
 	return resourceTencentCloudCdwpgInstanceRead(d, meta)
 }
 
