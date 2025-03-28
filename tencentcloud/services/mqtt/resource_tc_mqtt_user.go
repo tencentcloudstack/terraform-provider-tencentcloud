@@ -42,7 +42,6 @@ func ResourceTencentCloudMqttUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Sensitive:   true,
 				Description: "Password, when this field is empty, the backend will generate it by default.",
 			},
@@ -190,6 +189,10 @@ func resourceTencentCloudMqttUserUpdate(d *schema.ResourceData, meta interface{}
 
 	instanceId := idSplit[0]
 	userName := idSplit[1]
+
+	if d.HasChange("password") {
+		return fmt.Errorf("`password` can not be changed.")
+	}
 
 	if d.HasChange("remark") {
 		request := mqttv20240516.NewModifyUserRequest()

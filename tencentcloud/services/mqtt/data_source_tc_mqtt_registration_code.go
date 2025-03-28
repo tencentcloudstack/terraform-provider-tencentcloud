@@ -12,9 +12,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func DataSourceTencentCloudMqttApplyRegistrationCode() *schema.Resource {
+func DataSourceTencentCloudMqttRegistrationCode() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudMqttApplyRegistrationCodeRead,
+		Read: dataSourceTencentCloudMqttRegistrationCodeRead,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -37,8 +37,8 @@ func DataSourceTencentCloudMqttApplyRegistrationCode() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudMqttApplyRegistrationCodeRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("data_source.tencentcloud_mqtt_apply_registration_code.read")()
+func dataSourceTencentCloudMqttRegistrationCodeRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_mqtt_registration_code.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -56,7 +56,7 @@ func dataSourceTencentCloudMqttApplyRegistrationCodeRead(d *schema.ResourceData,
 
 	var respData *mqttv20240516.ApplyRegistrationCodeResponseParams
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeMqttApplyRegistrationCodeByFilter(ctx, paramMap)
+		result, e := service.DescribeMqttRegistrationCodeByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

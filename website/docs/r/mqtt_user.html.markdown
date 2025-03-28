@@ -28,7 +28,7 @@ The following arguments are supported:
 
 * `instance_id` - (Required, String, ForceNew) Instance ID.
 * `username` - (Required, String, ForceNew) Username, cannot be empty, only supports uppercase and lowercase letter separators ("_", "-"), cannot exceed 32 characters.
-* `password` - (Optional, String, ForceNew) Password, when this field is empty, the backend will generate it by default.
+* `password` - (Optional, String) Password, when this field is empty, the backend will generate it by default.
 * `remark` - (Optional, String) Note that the length should not exceed 128 characters.
 
 ## Attributes Reference

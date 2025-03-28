@@ -102,7 +102,7 @@ func (me *MqttService) DescribeMqttTopicById(ctx context.Context, instanceId str
 	return
 }
 
-func (me *MqttService) DescribeMqttApplyRegistrationCodeByFilter(ctx context.Context, param map[string]interface{}) (ret *mqttv20240516.ApplyRegistrationCodeResponseParams, errRet error) {
+func (me *MqttService) DescribeMqttRegistrationCodeByFilter(ctx context.Context, param map[string]interface{}) (ret *mqttv20240516.ApplyRegistrationCodeResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = mqttv20240516.NewApplyRegistrationCodeRequest()
@@ -121,12 +121,12 @@ func (me *MqttService) DescribeMqttApplyRegistrationCodeByFilter(ctx context.Con
 	}
 
 	ratelimit.Check(request.GetAction())
-
 	response, err := me.client.UseMqttV20240516Client().ApplyRegistrationCode(request)
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil {

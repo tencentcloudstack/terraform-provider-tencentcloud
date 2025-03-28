@@ -1176,7 +1176,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwpg_instances":                              cdwpg.DataSourceTencentCloudCdwpgInstances(),
 			"tencentcloud_cdwpg_log":                                    cdwpg.DataSourceTencentCloudCdwpgLog(),
 			"tencentcloud_cdwpg_nodes":                                  cdwpg.DataSourceTencentCloudCdwpgNodes(),
-			"tencentcloud_mqtt_apply_registration_code":                 mqtt.DataSourceTencentCloudMqttApplyRegistrationCode(),
+			"tencentcloud_mqtt_registration_code":                       mqtt.DataSourceTencentCloudMqttRegistrationCode(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
