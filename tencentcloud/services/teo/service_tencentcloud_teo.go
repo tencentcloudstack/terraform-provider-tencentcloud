@@ -1718,7 +1718,15 @@ func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[st
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTeoV20220901Client().DescribeZones(request)
+		response := teo.NewDescribeZonesResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoClient().DescribeZones(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
 		if err != nil {
 			errRet = err
 			return
