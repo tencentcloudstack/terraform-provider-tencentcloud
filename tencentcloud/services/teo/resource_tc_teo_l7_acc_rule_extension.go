@@ -2469,8 +2469,8 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 
 func resourceTencentCloudTeoL7AccRuleContent(rules []*teo.RuleEngineItem) (string, error) {
 	type Content struct {
-		FormatVersion string                `json:"FormatVersion,omitnil,omitempty"`
-		Rules         []*teo.RuleEngineItem `json:"Rules,omitnil,omitempty"`
+		FormatVersion string                `json:"FormatVersion,omitempty"`
+		Rules         []*teo.RuleEngineItem `json:"Rules,omitempty"`
 	}
 	content := Content{
 		FormatVersion: "1.0",
