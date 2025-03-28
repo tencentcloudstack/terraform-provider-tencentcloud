@@ -145,6 +145,7 @@ func ResourceTencentCloudCdwpgInstance() *schema.Resource {
 			},
 			"product_version": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Version.",
 			},
