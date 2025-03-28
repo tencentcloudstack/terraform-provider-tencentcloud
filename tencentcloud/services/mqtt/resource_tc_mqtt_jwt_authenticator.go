@@ -170,7 +170,7 @@ func resourceTencentCloudMqttJwtAuthenticatorRead(d *schema.ResourceData, meta i
 		}
 
 		if v, ok := configMap["public_key"].(string); ok && v != "" {
-			_ = d.Set("public_key", v)
+			_ = d.Set("publicKey", v)
 		}
 	}
 
