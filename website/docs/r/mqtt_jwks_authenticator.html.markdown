@@ -38,7 +38,7 @@ resource "tencentcloud_mqtt_jwks_authenticator" "example" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, String) Instance ID.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
 * `endpoint` - (Optional, String) JWKS endpoint.
 * `from` - (Optional, String) Pass the key of JWT when connecting the device; Username - passed using the username field; Password - Pass using password field.
 * `refresh_interval` - (Optional, Int) JWKS refresh interval. unit: s.

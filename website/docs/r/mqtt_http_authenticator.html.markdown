@@ -40,7 +40,7 @@ resource "tencentcloud_mqtt_http_authenticator" "example" {
 The following arguments are supported:
 
 * `endpoint` - (Required, String) JWKS endpoint.
-* `instance_id` - (Required, String) Instance ID.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
 * `body` - (Optional, List) Forwarding request body.
 * `concurrency` - (Optional, Int) Maximum concurrent connections, default 8, range: 1-20.
 * `connect_timeout` - (Optional, Int) Connection timeout, unit: seconds, range: 1-30.

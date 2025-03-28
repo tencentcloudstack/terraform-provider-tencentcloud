@@ -27,6 +27,7 @@ func ResourceTencentCloudMqttHttpAuthenticator() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance ID.",
 			},
 
