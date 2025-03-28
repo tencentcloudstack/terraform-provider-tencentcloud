@@ -616,7 +616,7 @@ func (me *MonitorService) DescribeMonitorTmpAlertRuleById(ctx context.Context, i
 	}()
 
 	request.InstanceId = &instanceId
-	request.RuleId = &tmpAlertRuleId
+	// request.RuleId = &tmpAlertRuleId
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMonitorClient().DescribeAlertRules(request)

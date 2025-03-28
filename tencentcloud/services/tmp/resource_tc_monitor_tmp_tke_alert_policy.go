@@ -491,13 +491,15 @@ func resourceTencentCloudTkeTmpAlertPolicyRead(d *schema.ResourceData, meta inte
 	}
 
 	notify := tmpAlertPolicy.Notification
-	alertManager := map[string]interface{}{
-		"url":          notify.AlertManager.Url,
-		"cluster_type": notify.AlertManager.ClusterType,
-		"cluster_id":   notify.AlertManager.ClusterId,
-	}
 	var alertManagers []map[string]interface{}
-	alertManagers = append(alertManagers, alertManager)
+	if notify.AlertManager != nil {
+		alertManager := map[string]interface{}{
+			"url":          notify.AlertManager.Url,
+			"cluster_type": notify.AlertManager.ClusterType,
+			"cluster_id":   notify.AlertManager.ClusterId,
+		}
+		alertManagers = append(alertManagers, alertManager)
+	}
 
 	var notifyWay []string
 	if len(notify.NotifyWay) > 0 {
