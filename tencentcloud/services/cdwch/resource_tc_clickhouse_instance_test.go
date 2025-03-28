@@ -184,7 +184,7 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "cdwch-subnet"
   cidr_block        = "10.0.1.0/24"
-  availability_zone = var.availability_zone
+  availability_zone = "ap-guangzhou-6"
   is_multicast      = false
 }
 resource "tencentcloud_subnet" "subnet1" {
