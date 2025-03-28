@@ -118,7 +118,8 @@ func resourceTencentCloudMonitorTmpScrapeJobRead(d *schema.ResourceData, meta in
 
 	if tmpScrapeJob == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpScrapeJob` %s does not exist", tmpScrapeJobId)
+		log.Printf("[WARN]%s resource `tmpScrapeJob` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	_ = d.Set("instance_id", strings.Split(tmpScrapeJobId, tccommon.FILED_SP)[1])

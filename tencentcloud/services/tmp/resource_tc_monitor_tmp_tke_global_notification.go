@@ -2,7 +2,7 @@ package tmp
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
@@ -176,7 +176,8 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d *schema.ResourceD
 
 	if globalNotification == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `global_notification` %s does not exist", instanceId)
+		log.Printf("[WARN]%s resource `global_notification` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if *globalNotification.Enabled {

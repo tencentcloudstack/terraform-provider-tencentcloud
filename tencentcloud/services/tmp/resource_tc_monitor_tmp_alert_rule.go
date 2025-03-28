@@ -227,7 +227,8 @@ func resourceTencentCloudMonitorTmpAlertRuleRead(d *schema.ResourceData, meta in
 
 	if tmpAlertRule == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpAlertRule` %s does not exist", ids[1])
+		log.Printf("[WARN]%s resource `tmpAlertRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	_ = d.Set("instance_id", ids[0])

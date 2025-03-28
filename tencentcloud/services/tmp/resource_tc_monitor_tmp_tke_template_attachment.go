@@ -186,7 +186,8 @@ func resourceTencentCloudMonitorTmpTkeTemplateAttachmentRead(d *schema.ResourceD
 
 	if targets == nil || len(targets) < 1 {
 		d.SetId("")
-		return fmt.Errorf("resource `targets` %s does not exist", templateId)
+		log.Printf("[WARN]%s resource `targets` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	tempTargets := make([]map[string]interface{}, 0)

@@ -189,7 +189,8 @@ func resourceTencentCloudMonitorTmpExporterIntegrationRead(d *schema.ResourceDat
 
 	if tmpExporterIntegration == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpExporterIntegration` %s does not exist", tmpExporterIntegrationId)
+		log.Printf("[WARN]%s resource `tmpExporterIntegration` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if tmpExporterIntegration.Kind != nil {

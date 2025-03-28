@@ -116,7 +116,8 @@ func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta int
 
 	if tmpCvmAgent == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpCvmAgent` %s does not exist", ids[1])
+		log.Printf("[WARN]%s resource `tmpCvmAgent` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if tmpCvmAgent.InstanceId != nil {

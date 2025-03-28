@@ -458,7 +458,8 @@ func resourceTencentCloudTkeTmpAlertPolicyRead(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG] tmpAlertPolicy[%v]\n", tmpAlertPolicy)
 	if tmpAlertPolicy == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `AlertPolicy` %s does not exist", tmpAlertPolicyId)
+		log.Printf("[WARN]%s resource `AlertPolicy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	rules := make([]map[string]interface{}, 0, len(tmpAlertPolicy.Rules))
