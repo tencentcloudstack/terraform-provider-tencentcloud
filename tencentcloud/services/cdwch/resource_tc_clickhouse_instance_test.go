@@ -203,7 +203,7 @@ resource "tencentcloud_subnet" "subnet2" {
 }
 
 resource "tencentcloud_clickhouse_instance" "cdwch_instance_secondary_zone" {
-  zone            = var.availability_zone
+  zone            = "ap-guangzhou-6"
   ha_flag         = true
   vpc_id          = tencentcloud_vpc.vpc.id
   subnet_id       = tencentcloud_subnet.subnet.id
