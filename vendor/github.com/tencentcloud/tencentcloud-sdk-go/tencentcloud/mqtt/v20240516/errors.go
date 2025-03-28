@@ -20,11 +20,26 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// FailedOperation.CertificateVerificationFailed
+	FAILEDOPERATION_CERTIFICATEVERIFICATIONFAILED = "FailedOperation.CertificateVerificationFailed"
+
+	// 策略优先级重复
+	FAILEDOPERATION_DUPLICATEAUTHORIZATIONIDORPRIORITY = "FailedOperation.DuplicateAuthorizationIdOrPriority"
+
 	// FailedOperation.InstanceNotReady
 	FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
 
+	// FailedOperation.InstanceRegistrationCodeEmpty
+	FAILEDOPERATION_INSTANCEREGISTRATIONCODEEMPTY = "FailedOperation.InstanceRegistrationCodeEmpty"
+
 	// FailedOperation.PublicKeyVerifyFailed
 	FAILEDOPERATION_PUBLICKEYVERIFYFAILED = "FailedOperation.PublicKeyVerifyFailed"
+
+	// FailedOperation.RegistrationCodeVerifyFailed
+	FAILEDOPERATION_REGISTRATIONCODEVERIFYFAILED = "FailedOperation.RegistrationCodeVerifyFailed"
+
+	// RelatedDeviceCertificateExists
+	FAILEDOPERATION_RELATEDDEVICECERTIFICATEEXISTS = "FailedOperation.RelatedDeviceCertificateExists"
 
 	// LimitExceeded.TopicNum
 	LIMITEXCEEDED_TOPICNUM = "LimitExceeded.TopicNum"
@@ -38,6 +53,9 @@ const (
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
 
+	// 授权策略未找到
+	RESOURCENOTFOUND_AUTHORIZATIONPOLICY = "ResourceNotFound.AuthorizationPolicy"
+
 	// ResourceNotFound.Instance
 	RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
 
@@ -46,6 +64,9 @@ const (
 
 	// ResourceNotFound.Topic
 	RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+
+	// 用户名未找到
+	RESOURCENOTFOUND_USERNAME = "ResourceNotFound.Username"
 
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
