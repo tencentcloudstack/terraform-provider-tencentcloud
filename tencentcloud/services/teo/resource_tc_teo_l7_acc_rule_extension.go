@@ -1,6 +1,8 @@
 package teo
 
 import (
+	"encoding/json"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -2463,4 +2465,20 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 		}
 	}
 	return branchesList
+}
+
+func resourceTencentCloudTeoL7AccRuleContent(rules []*teo.RuleEngineItem) (string, error) {
+	type Content struct {
+		FormatVersion string                `json:"FormatVersion,omitempty"`
+		Rules         []*teo.RuleEngineItem `json:"Rules,omitempty"`
+	}
+	content := Content{
+		FormatVersion: "1.0",
+		Rules:         rules,
+	}
+	contentBytes, err := json.Marshal(content)
+	if err != nil {
+		return "", err
+	}
+	return string(contentBytes), nil
 }

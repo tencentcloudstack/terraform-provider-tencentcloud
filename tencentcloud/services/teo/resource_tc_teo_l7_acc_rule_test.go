@@ -18,11 +18,10 @@ func TestAccTencentCloudTeoL7AccRuleResource_basic(t *testing.T) {
 				Config: testAccTeoL7AccRule,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-36bjhygh1bxe"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.#", "6"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.description.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.rule_name", "网站加速"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.status", "enable"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.branches.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.branches.0.condition", "${http.request.host} in ['aaa.makn.cn']"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.branches.0.actions.#", "2"),
@@ -69,11 +68,10 @@ func TestAccTencentCloudTeoL7AccRuleResource_basic(t *testing.T) {
 				Config: testAccTeoL7AccRuleUp,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-36bjhygh1bxe"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.#", "6"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.#", "5"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.description.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.rule_name", "网站加速"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.status", "disable"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.branches.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.branches.0.condition", "${http.request.host} in ['aaa.makn.cn']"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.branches.0.actions.#", "2"),
@@ -118,11 +116,10 @@ func TestAccTencentCloudTeoL7AccRuleResource_basic(t *testing.T) {
 const testAccTeoL7AccRule = `
 
 resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
-  zone_id = "zone-36bjhygh1bxe"
+  zone_id = "zone-39quuimqg8r6"
   rules {
     description = ["1"]
     rule_name   = "网站加速"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -180,7 +177,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["2"]
     rule_name   = "音视频直播"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -231,7 +227,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["3"]
     rule_name   = "大文件下载"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -282,7 +277,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["4"]
     rule_name   = "音视频点播"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -333,7 +327,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["5"]
     rule_name   = "API 加速"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -355,7 +348,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["6"]
     rule_name   = "WordPress 建站"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -429,11 +421,10 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
 const testAccTeoL7AccRuleUp = `
 
 resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
-  zone_id = "zone-36bjhygh1bxe"
+  zone_id = "zone-39quuimqg8r6"
   rules {
     description = ["1"]
     rule_name   = "网站加速"
-    status      = "disable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -491,7 +482,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["2"]
     rule_name   = "音视频直播"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -542,7 +532,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["3"]
     rule_name   = "大文件下载"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -591,82 +580,8 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
     }
   }
   rules {
-    description = ["4"]
-    rule_name   = "音视频点播"
-    status      = "enable"
-    branches {
-      condition = "$${http.request.host} in ['aaa.makn.cn']"
-      actions {
-        name = "Cache"
-        cache_parameters {
-          custom_time {
-            cache_time           = 2592000
-            ignore_cache_control = "off"
-            switch               = "on"
-          }
-        }
-      }
-      actions {
-        name = "CacheKey"
-        cache_key_parameters {
-          full_url_cache = "off"
-          ignore_case    = "off"
-          scheme         = null
-          query_string {
-            action = null
-            switch = "off"
-            values = []
-          }
-        }
-      }
-      actions {
-        name = "RangeOriginPull"
-        range_origin_pull_parameters {
-          switch = "on"
-        }
-      }
-      sub_rules {
-        description = ["4-1"]
-        branches {
-          condition = "$${http.request.file_extension} in ['php', 'jsp', 'asp', 'aspx']"
-          actions {
-            name = "Cache"
-            cache_parameters {
-              no_cache {
-                switch = "on"
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  rules {
-    description = ["5"]
-    rule_name   = "API 加速"
-    status      = "enable"
-    branches {
-      condition = "$${http.request.host} in ['aaa.makn.cn']"
-      actions {
-        name = "Cache"
-        cache_parameters {
-          no_cache {
-            switch = "on"
-          }
-        }
-      }
-      actions {
-        name = "SmartRouting"
-        smart_routing_parameters {
-          switch = "off"
-        }
-      }
-    }
-  }
-  rules {
     description = ["6"]
     rule_name   = "WordPress 建站"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -727,6 +642,56 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
                 default_cache_strategy = "on"
                 default_cache_time     = 0
                 switch                 = "on"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+    rules {
+    description = ["4"]
+    rule_name   = "音视频点播"
+    branches {
+      condition = "$${http.request.host} in ['aaa.makn.cn']"
+      actions {
+        name = "Cache"
+        cache_parameters {
+          custom_time {
+            cache_time           = 2592000
+            ignore_cache_control = "off"
+            switch               = "on"
+          }
+        }
+      }
+      actions {
+        name = "CacheKey"
+        cache_key_parameters {
+          full_url_cache = "off"
+          ignore_case    = "off"
+          scheme         = null
+          query_string {
+            action = null
+            switch = "off"
+            values = []
+          }
+        }
+      }
+      actions {
+        name = "RangeOriginPull"
+        range_origin_pull_parameters {
+          switch = "on"
+        }
+      }
+      sub_rules {
+        description = ["4-1"]
+        branches {
+          condition = "$${http.request.file_extension} in ['php', 'jsp', 'asp', 'aspx']"
+          actions {
+            name = "Cache"
+            cache_parameters {
+              no_cache {
+                switch = "on"
               }
             }
           }

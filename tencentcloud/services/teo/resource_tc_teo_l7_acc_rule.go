@@ -3,8 +3,9 @@ package teo
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -46,6 +47,7 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Rule status. The possible values are: `enable`: enabled; `disable`: disabled.",
+							Deprecated:  "This field is deprecated and will be removed in the future. No longer valid. If the rule is empty, delete the rule.",
 						},
 						"rule_name": {
 							Type:        schema.TypeString,
@@ -85,70 +87,17 @@ func resourceTencentCloudTeoL7AccRuleCreate(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_l7_acc_rule.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
 	var (
 		zoneId string
-	)
-	var (
-		request  = teov20220901.NewCreateL7AccRulesRequest()
-		response = teov20220901.NewCreateL7AccRulesResponse()
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-		request.ZoneId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("rules"); ok {
-		for _, item := range v.([]interface{}) {
-			rulesMap := item.(map[string]interface{})
-			ruleEngineItem := teov20220901.RuleEngineItem{}
-			if v, ok := rulesMap["status"].(string); ok && v != "" {
-				ruleEngineItem.Status = helper.String(v)
-			}
-			if v, ok := rulesMap["rule_name"].(string); ok && v != "" {
-				ruleEngineItem.RuleName = helper.String(v)
-			}
-			if v, ok := rulesMap["description"]; ok {
-				descriptionSet := v.([]interface{})
-				for i := range descriptionSet {
-					description := descriptionSet[i].(string)
-					ruleEngineItem.Description = append(ruleEngineItem.Description, helper.String(description))
-				}
-			}
-			// if v, ok := rulesMap["rule_priority"].(int); ok {
-			// 	ruleEngineItem.RulePriority = helper.IntInt64(v)
-			// }
-			if _, ok := rulesMap["branches"]; ok {
-				ruleEngineItem.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap)
-			}
-
-			request.Rules = append(request.Rules, &ruleEngineItem)
-		}
-	}
-
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateL7AccRulesWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-	if reqErr != nil {
-		log.Printf("[CRITAL]%s create teo l7 acc rule failed, reason:%+v", logId, reqErr)
-		return reqErr
 	}
 
 	d.SetId(zoneId)
 
-	_ = response
-	return resourceTencentCloudTeoL7AccRuleRead(d, meta)
+	return resourceTencentCloudTeoL7AccRuleUpdate(d, meta)
 }
 
 func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface{}) error {
@@ -182,10 +131,6 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 
 			if rules.RuleId != nil {
 				rulesMap["rule_id"] = rules.RuleId
-			}
-
-			if rules.Status != nil {
-				rulesMap["status"] = rules.Status
 			}
 
 			if rules.RuleName != nil {
@@ -223,64 +168,60 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 
 	zoneId := d.Id()
 
-	needChange := false
-	mutableArgs := []string{"rules"}
-	for _, v := range mutableArgs {
-		if d.HasChange(v) {
-			needChange = true
-			break
-		}
-	}
+	if v, ok := d.GetOk("rules"); ok {
+		request := teov20220901.NewImportZoneConfigRequest()
+		request.ZoneId = helper.String(zoneId)
 
-	if needChange {
-		if v, ok := d.GetOk("rules"); ok {
-			for _, item := range v.([]interface{}) {
-				request := teov20220901.NewModifyL7AccRuleRequest()
-
-				if v, ok := d.GetOk("zone_id"); ok {
-					request.ZoneId = helper.String(v.(string))
-				}
-				rulesMap := item.(map[string]interface{})
-				ruleEngineItem := teov20220901.RuleEngineItem{}
-				if v, ok := rulesMap["status"].(string); ok && v != "" {
-					ruleEngineItem.Status = helper.String(v)
-				}
-				if v, ok := rulesMap["rule_id"].(string); ok && v != "" {
-					ruleEngineItem.RuleId = helper.String(v)
-				}
-				if v, ok := rulesMap["rule_name"].(string); ok && v != "" {
-					ruleEngineItem.RuleName = helper.String(v)
-				}
-				if v, ok := rulesMap["description"]; ok {
-					descriptionSet := v.([]interface{})
-					for i := range descriptionSet {
-						description := descriptionSet[i].(string)
-						ruleEngineItem.Description = append(ruleEngineItem.Description, helper.String(description))
-					}
-				}
-				// if v, ok := rulesMap["rule_priority"].(int); ok {
-				// 	ruleEngineItem.RulePriority = helper.IntInt64(v)
-				// }
-
-				if _, ok := rulesMap["branches"]; ok {
-					ruleEngineItem.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap)
-				}
-				request.Rule = &ruleEngineItem
-
-				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyL7AccRuleWithContext(ctx, request)
-					if e != nil {
-						return tccommon.RetryError(e)
-					} else {
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-					}
-					return nil
-				})
-				if reqErr != nil {
-					log.Printf("[CRITAL]%s update teo l7 acc rule failed, reason:%+v", logId, reqErr)
-					return reqErr
+		rules := []*teov20220901.RuleEngineItem{}
+		for _, item := range v.([]interface{}) {
+			rulesMap := item.(map[string]interface{})
+			ruleEngineItem := teov20220901.RuleEngineItem{}
+			if v, ok := rulesMap["rule_name"].(string); ok && v != "" {
+				ruleEngineItem.RuleName = helper.String(v)
+			}
+			if v, ok := rulesMap["description"]; ok {
+				descriptionSet := v.([]interface{})
+				for i := range descriptionSet {
+					description := descriptionSet[i].(string)
+					ruleEngineItem.Description = append(ruleEngineItem.Description, helper.String(description))
 				}
 			}
+			if _, ok := rulesMap["branches"]; ok {
+				ruleEngineItem.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap)
+			}
+			rules = append(rules, &ruleEngineItem)
+		}
+
+		context, err := resourceTencentCloudTeoL7AccRuleContent(rules)
+		if err != nil {
+			return err
+		}
+		request.Content = helper.String(context)
+
+		response := teov20220901.NewImportZoneConfigResponse()
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ImportZoneConfigWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			response = result
+			return nil
+		})
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update teo l7 acc rule failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		if response != nil && response.Response != nil && response.Response.TaskId != nil {
+			service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			conf := tccommon.BuildStateChangeConf([]string{"doing"}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TeoL7AccRuleStateRefreshFunc(zoneId, *response.Response.TaskId, []string{"failure"}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		} else {
+			return fmt.Errorf("[CRITAL]%s update teo l7 acc rule failed, response body is nil", logId)
 		}
 	}
 
@@ -292,54 +233,6 @@ func resourceTencentCloudTeoL7AccRuleDelete(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_l7_acc_rule.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	zoneId := d.Id()
-
-	var (
-		request  = teov20220901.NewDeleteL7AccRulesRequest()
-		response = teov20220901.NewDeleteL7AccRulesResponse()
-	)
-	request.ZoneId = helper.String(zoneId)
-
-	if v, ok := d.GetOk("rule_ids"); ok {
-		ruleIdsSet := v.([]interface{})
-		for i := range ruleIdsSet {
-			ruleIds := ruleIdsSet[i].(string)
-			request.RuleIds = append(request.RuleIds, helper.String(ruleIds))
-		}
-	}
-
-	if v, ok := d.GetOk("rules"); ok {
-		for _, item := range v.([]interface{}) {
-			rulesMap := item.(map[string]interface{})
-			if v, ok := rulesMap["rule_id"].(string); ok && v != "" {
-				request.RuleIds = append(request.RuleIds, helper.String(v))
-			}
-		}
-	}
-
-	if len(request.RuleIds) == 0 {
-		return errors.New("[CRITAL]%s delete teo l7 acc rule failed, rule_ids is empty")
-	}
-
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteL7AccRulesWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-	if reqErr != nil {
-		log.Printf("[CRITAL]%s delete teo l7 acc rule failed, reason:%+v", logId, reqErr)
-		return reqErr
-	}
-
-	_ = response
-	_ = zoneId
-	return nil
+	d.Set("rules", []interface{}{})
+	return resourceTencentCloudTeoL7AccRuleUpdate(d, meta)
 }

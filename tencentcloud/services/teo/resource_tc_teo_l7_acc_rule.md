@@ -1,5 +1,7 @@
 Provides a resource to create a teo l7_acc_rule
 
+~> **NOTE:** This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
+
 Example Usage
 
 ```hcl
@@ -8,7 +10,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["1"]
     rule_name   = "网站加速"
-    status      = "disable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -66,7 +67,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["2"]
     rule_name   = "音视频直播"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -117,7 +117,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["3"]
     rule_name   = "大文件下载"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -168,7 +167,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["4"]
     rule_name   = "音视频点播"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -219,7 +217,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["5"]
     rule_name   = "API 加速"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -241,7 +238,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["6"]
     rule_name   = "WordPress 建站"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {

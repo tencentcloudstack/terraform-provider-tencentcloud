@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a teo l7_acc_rule
 
+~> **NOTE:** This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
+
 ## Example Usage
 
 ```hcl
@@ -19,7 +21,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["1"]
     rule_name   = "网站加速"
-    status      = "disable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -77,7 +78,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["2"]
     rule_name   = "音视频直播"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -128,7 +128,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["3"]
     rule_name   = "大文件下载"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -179,7 +178,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["4"]
     rule_name   = "音视频点播"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -230,7 +228,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["5"]
     rule_name   = "API 加速"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -252,7 +249,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   rules {
     description = ["6"]
     rule_name   = "WordPress 建站"
-    status      = "enable"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -646,7 +642,7 @@ The `rules` object supports the following:
 * `branches` - (Optional, List) Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
 * `description` - (Optional, List) Rule annotation. multiple annotations can be added.
 * `rule_name` - (Optional, String) Rule name. The name length limit is 255 characters.
-* `status` - (Optional, String) Rule status. The possible values are: `enable`: enabled; `disable`: disabled.
+* `status` - (Optional, String, **Deprecated**) This field is deprecated and will be removed in the future. No longer valid. If the rule is empty, delete the rule. Rule status. The possible values are: `enable`: enabled; `disable`: disabled.
 
 The `set_content_identifier_parameters` object of `actions` supports the following:
 

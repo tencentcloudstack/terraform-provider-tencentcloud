@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -1745,4 +1746,31 @@ func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[st
 	}
 
 	return
+}
+
+func (me *TeoService) TeoL7AccRuleStateRefreshFunc(zoneId, taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		request := teov20220901.NewDescribeZoneConfigImportResultRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.TaskId = helper.String(taskId)
+		ratelimit.Check(request.GetAction())
+		object, err := me.client.UseTeoV20220901Client().DescribeZoneConfigImportResult(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if object == nil || object.Response == nil || object.Response.Status == nil {
+			return nil, "", nil
+		}
+		status := helper.PString(object.Response.Status)
+		if len(failStates) > 0 {
+			for _, state := range failStates {
+				if strings.Contains(status, state) {
+					return object, status, fmt.Errorf("teo[%s] sync check task[%s] failed, status is on [%s], return...", zoneId, taskId, status)
+				}
+			}
+		}
+
+		return object, status, nil
+	}
 }
