@@ -125,7 +125,7 @@ func testAccCheckAlertRuleExists(r string) resource.TestCheckFunc {
 
 const testAlertRule_basic = testInstance_basic + `
 resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
-  instance_id	= tencentcloud_monitor_tmp_instance.basic.id
+  instance_id	= tencentcloud_monitor_tmp_instance.example.id
   rule_name		= "test-rule_name"
   receivers 	= ["notice-tj75hgqj"]
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 0"
@@ -143,7 +143,7 @@ resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
 
 const testAlertRule_update = testInstance_basic + `
 resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
-  instance_id	= tencentcloud_monitor_tmp_instance.basic.id
+  instance_id	= tencentcloud_monitor_tmp_instance.example.id
   rule_name		= "test-rule_name_update"
   receivers 	= ["notice-tj75hgqj"]
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 1"

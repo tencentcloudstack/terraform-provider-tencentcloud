@@ -2,7 +2,6 @@ package tmp
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 
@@ -141,7 +140,8 @@ func resourceTencentCloudTkeTmpConfigRead(d *schema.ResourceData, meta interface
 
 	if params == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `prometheus_config` %s does not exist", configId)
+		log.Printf("[WARN]%s resource `prometheus_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if e := d.Set("config", params.Config); e != nil {

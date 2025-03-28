@@ -842,6 +842,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_eip":                                     dayuv2.DataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                     teo.DataSourceTencentCloudTeoZoneAvailablePlans(),
 			"tencentcloud_teo_rule_engine_settings":                     teo.DataSourceTencentCloudTeoRuleEngineSettings(),
+			"tencentcloud_teo_zones":                                    teo.DataSourceTencentCloudTeoZones(),
 			"tencentcloud_sts_caller_identity":                          sts.DataSourceTencentCloudStsCallerIdentity(),
 			"tencentcloud_dcdb_instances":                               dcdb.DataSourceTencentCloudDcdbInstances(),
 			"tencentcloud_dcdb_accounts":                                dcdb.DataSourceTencentCloudDcdbAccounts(),
