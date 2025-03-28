@@ -214,14 +214,14 @@ variable "international_subnet_id" {
 // Tke Exclusive Network Environment
 const (
 	TkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
-	DefaultTkeClusterId   = "cls-r8gqwjw6"
+	DefaultTkeClusterId   = "cls-2weetaxi"
 	DefaultTkeClusterName = "keep-tke-cluster"
 	DefaultTkeClusterType = "tke"
-	DefaultPrometheusId   = "prom-1lspn8sw"
+	DefaultPrometheusId   = "prom-9ywsz034"
 	DefaultTemplateId     = "temp-gqunlvo1"
-	ClusterPrometheusId   = "prom-g261hacc"
-	TkeClusterIdAgent     = "cls-9ae9qo9k"
-	TkeClusterTypeAgent   = "eks"
+	ClusterPrometheusId   = "prom-9ywsz034"
+	TkeClusterIdAgent     = "cls-2weetaxi"
+	TkeClusterTypeAgent   = "tke"
 	DefaultAgentId        = "agent-q3zy8gt8"
 )
 
