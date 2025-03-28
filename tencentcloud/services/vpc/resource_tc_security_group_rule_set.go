@@ -57,12 +57,12 @@ func ResourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 		"service_template_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Specify Protocol template ID like `ppm-xxxxxxxx`, conflict with `cidr_block` and `port`.",
+			Description: "Specify Protocol template ID like `ppm-xxxxxxxx`, conflict with `protocol` and `port`.",
 		},
 		"service_template_group": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Specify Group ID of Protocol template ID like `ppmg-xxxxxxxx`, conflict with `cidr_block` and `port`.",
+			Description: "Specify Group ID of Protocol template ID like `ppmg-xxxxxxxx`, conflict with `protocol` and `port`.",
 		},
 		"protocol": {
 			Type:        schema.TypeString,
