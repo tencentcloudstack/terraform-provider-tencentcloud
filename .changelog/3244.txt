@@ -1,5 +1,5 @@
 ```release-note:new-data-source
-tencentcloud_mqtt_apply_registration_code
+tencentcloud_mqtt_registration_code
 ```
 
 ```release-note:new-resource
