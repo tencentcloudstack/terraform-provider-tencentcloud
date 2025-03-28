@@ -612,7 +612,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 		return
 	}
 
-	stop, err := me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"isolated", "noBilled"})
+	stop, err := me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"isolated", "notBilled"})
 	if err != nil {
 		return err
 	}
@@ -660,7 +660,7 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 				status := *ret.Status
 				for _, target := range targetStatus {
 					if strings.Contains(target, status) {
-						if status == "noBilled" {
+						if status == "notBilled" {
 							stop = true
 							return nil
 						}
@@ -676,7 +676,7 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 				status := *ret.TradeInfo.TradeStatus
 				for _, target := range targetStatus {
 					if strings.Contains(target, status) {
-						if status == "noBilled" {
+						if status == "notBilled" {
 							stop = true
 							return nil
 						}
