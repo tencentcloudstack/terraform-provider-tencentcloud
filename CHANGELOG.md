@@ -1,3 +1,36 @@
+## 1.81.178(March 28 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_mqtt_registration_code` ([#3244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3244))
+* **New Data Source:** `tencentcloud_teo_zones` ([#3248](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3248))
+* **New Resource:** `tencentcloud_cdwpg_reset_account_password` ([#3236](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3236))
+* **New Resource:** `tencentcloud_cdwpg_restart_instance` ([#3236](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3236))
+* **New Resource:** `tencentcloud_cdwpg_userhba` ([#3236](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3236))
+* **New Resource:** `tencentcloud_mqtt_http_authenticator` ([#3244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3244))
+* **New Resource:** `tencentcloud_mqtt_jwks_authenticator` ([#3244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3244))
+* **New Resource:** `tencentcloud_mqtt_jwt_authenticator` ([#3244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3244))
+* **New Resource:** `tencentcloud_mqtt_user` ([#3244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3244))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdwpg_instance: support product_version ([#3236](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3236))
+* resource/tencentcloud_cvm_launch_template: fix some problems ([#3254](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3254))
+* resource/tencentcloud_cvm_launch_template_version: fix some problems ([#3250](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3250))
+* resource/tencentcloud_dts_migrate_service: fix cannot be delete ([#3252](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3252))
+* resource/tencentcloud_monitor_tmpCvmAgent: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_monitor_tmpScrapeJob: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_monitor_tmp_alert_rule: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_monitor_tmp_exporter_integration: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_monitor_tmp_tke_cluster_agent: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_monitor_tmp_tke_global_notification: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_monitor_tmp_tke_template: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_monitor_tmp_tke_template_attachment: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_teo_l7_acc_rule: Fix the problem of modifying rules and supporting the order of rules. ([#3247](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3247))
+* resource/tencentcloud_tke_tmp_alert_policy: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_tke_tmp_config: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+* resource/tencentcloud_tmp_monitor_recording_rule: Modify the query to be empty without error. ([#3249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3249))
+
 ## 1.81.177(March 27 , 2025)
 
 FEATURES:
