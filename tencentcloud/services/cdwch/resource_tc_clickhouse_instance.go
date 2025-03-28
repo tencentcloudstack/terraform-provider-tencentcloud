@@ -2,6 +2,7 @@ package cdwch
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -158,6 +159,28 @@ func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Tag description list.",
 			},
+			"secondary_zone_info": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "Secondary zone info.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"secondary_zone": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Secondary zone.",
+						},
+						"secondary_subnet": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Secondary subnet.",
+						},
+					},
+				},
+			},
 			"expire_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -226,6 +249,23 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("common_spec", []map[string]interface{}{commonSpec})
 	}
 
+	if instanceInfo.SecondaryZoneInfo != nil {
+
+		data := make([]secondaryZoneInfo, 0)
+		err := json.Unmarshal([]byte(*instanceInfo.SecondaryZoneInfo), &data)
+		if err != nil {
+			return err
+		}
+		secondaryZoneInfoList := make([]interface{}, 0)
+		for _, item := range data {
+			secondaryZoneInfoList = append(secondaryZoneInfoList, map[string]interface{}{
+				"secondary_zone":   item.SecondaryZone,
+				"secondary_subnet": item.SecondarySubnet,
+			})
+		}
+
+		_ = d.Set("secondary_zone_info", secondaryZoneInfoList)
+	}
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "cdwch", "cdwchInstance", tcClient.Region, d.Id())
@@ -328,6 +368,18 @@ func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta i
 		request.CommonSpec = &nodeSpec
 	}
 
+	if v, ok := d.GetOk("secondary_zone_info"); ok {
+		secondaryZoneInfo := make([]*cdwch.SecondaryZoneInfo, 0)
+		for _, item := range v.([]interface{}) {
+			itemMap := item.(map[string]interface{})
+			secondaryZoneInfo = append(secondaryZoneInfo, &cdwch.SecondaryZoneInfo{
+				SecondaryZone:   helper.String(itemMap["secondary_zone"].(string)),
+				SecondarySubnet: helper.String(itemMap["secondary_subnet"].(string)),
+			})
+		}
+		request.SecondaryZoneInfo = secondaryZoneInfo
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().CreateInstanceNew(request)
 		if e != nil {
@@ -392,7 +444,7 @@ func resourceTencentCloudClickhouseInstanceUpdate(d *schema.ResourceData, meta i
 		}
 	}
 
-	immutableArgs := []string{"zone", "ha_flag", "vpc_id", "subnet_id", "product_version", "instance_name", "charge_type", "renew_flag", "time_span", "data_spec", "cls_log_set_id", "cos_bucket_name", "mount_disk_type", "ha_zk", "common_spec"}
+	immutableArgs := []string{"zone", "ha_flag", "vpc_id", "subnet_id", "product_version", "instance_name", "charge_type", "renew_flag", "time_span", "data_spec", "cls_log_set_id", "cos_bucket_name", "mount_disk_type", "ha_zk", "common_spec", "secondary_zone_info"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -450,4 +502,9 @@ func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta i
 		return err
 	}
 	return nil
+}
+
+type secondaryZoneInfo struct {
+	SecondaryZone   string `json:"SecondaryZone"`
+	SecondarySubnet string `json:"SecondarySubnet"`
 }
