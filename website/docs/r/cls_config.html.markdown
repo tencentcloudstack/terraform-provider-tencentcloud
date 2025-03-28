@@ -53,8 +53,8 @@ The following arguments are supported:
 * `exclude_paths` - (Optional, List) Collection path blocklist.
 * `log_type` - (Optional, String) Type of the log to be collected. Valid values: json_log: log in JSON format; delimiter_log: log in delimited format; minimalist_log: minimalist log; multiline_log: log in multi-line format; fullregex_log: log in full regex format. Default value: minimalist_log.
 * `output` - (Optional, String) Log topic ID (TopicId) of collection configuration.
-* `path` - (Optional, String) Log collection path containing the filename.
-* `user_define_rule` - (Optional, String) Custom collection rule, which is a serialized JSON string.
+* `path` - (Optional, String) Log collection path containing the filename. Required for document collection.
+* `user_define_rule` - (Optional, String) Custom collection rule, which is a serialized JSON string. Required when LogType is user_define_log.
 
 The `exclude_paths` object supports the following:
 
@@ -63,23 +63,23 @@ The `exclude_paths` object supports the following:
 
 The `extract_rule` object supports the following:
 
-* `address` - (Optional, String) syslog system log collection specifies the address and port that the collector listens to.
+* `address` - (Optional, String) syslog system log collection specifies the address and port that the collector listens to. This parameter is only valid when LogType is service_syslog. It does not need to be filled in for other types.
 * `backtracking` - (Optional, Int) Size of the data to be rewound in incremental collection mode. Default value: -1 (full collection).
 * `begin_regex` - (Optional, String) First-Line matching rule, which is valid only if log_type is multiline_log or fullregex_log.
 * `delimiter` - (Optional, String) Delimiter for delimited log, which is valid only if log_type is delimiter_log.
 * `filter_key_regex` - (Optional, List) Log keys to be filtered and the corresponding regex.
-* `is_gbk` - (Optional, Int) GBK encoding. Default 0.
+* `is_gbk` - (Optional, Int) GBK encoding. Default 0. Note: - Currently, when the value is 0, it means UTF-8 encoding.
 * `json_standard` - (Optional, Int) standard json. Default 0.
 * `keys` - (Optional, Set) Key name of each extracted field. An empty key indicates to discard the field. This parameter is valid only if log_type is delimiter_log. json_log logs use the key of JSON itself.
 * `log_regex` - (Optional, String) Full log matching rule, which is valid only if log_type is fullregex_log.
-* `meta_tags` - (Optional, List) metadata tags.
-* `metadata_type` - (Optional, Int) metadata type.
-* `parse_protocol` - (Optional, String) parse protocol.
+* `meta_tags` - (Optional, List) metadata tags. Note: - Required when MetadataType is 2. - COS import does not support this field.
+* `metadata_type` - (Optional, Int) metadata type. 0: Do not use metadata information; 1: Use machine group metadata; 2: Use user-defined metadata; 3: Use collection configuration path. Note: COS import does not support this field.
+* `parse_protocol` - (Optional, String) parse protocol. This parameter is only valid when LogType is service_syslog. It does not need to be filled in for other types.
 * `path_regex` - (Optional, String) metadata path regex.
-* `protocol` - (Optional, String) syslog protocol, tcp or udp.
+* `protocol` - (Optional, String) syslog protocol, tcp or udp. The value can be tcp or udp. It is effective only when LogType is service_syslog. Other types do not need to be filled in.
 * `time_format` - (Optional, String) Time field format. For more information, please see the output parameters of the time format description of the strftime function in C language.
 * `time_key` - (Optional, String) Time field key name. time_key and time_format must appear in pair.
-* `un_match_log_key` - (Optional, String) Unmatched log key.
+* `un_match_log_key` - (Optional, String) Unmatched log key. Required when UnMatchUpLoadSwitch is true.
 * `un_match_up_load_switch` - (Optional, Bool) Whether to upload the logs that failed to be parsed. Valid values: true: yes; false: no.
 
 The `filter_key_regex` object of `extract_rule` supports the following:
