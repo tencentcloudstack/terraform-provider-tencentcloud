@@ -200,6 +200,14 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Default:     0,
 			Description: "Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.",
 		},
+		"in_maintenance": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Description: "Switch time for instance configuration changes.\n" +
+				"	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.\n" +
+				"	- 1: Perform reconfiguration tasks within the maintenance time window.\n" +
+				"Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.",
+		},
 		// Computed
 		"status": {
 			Type:        schema.TypeInt,

@@ -468,7 +468,11 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
-		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, nil)
+		params := make(map[string]interface{})
+		if v, ok := d.GetOkExists("in_maintenance"); ok {
+			params["in_maintenance"] = v.(int)
+		}
+		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
 			return err
 		}

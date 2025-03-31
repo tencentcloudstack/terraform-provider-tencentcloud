@@ -553,6 +553,9 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			removeNodeList := v.([]interface{})
 			params["remove_node_list"] = removeNodeList
 		}
+		if v, ok := d.GetOkExists("in_maintenance"); ok {
+			params["in_maintenance"] = v.(int)
+		}
 		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
 			return err
