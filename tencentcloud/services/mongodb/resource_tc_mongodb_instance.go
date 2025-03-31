@@ -553,7 +553,9 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			removeNodeList := v.([]interface{})
 			params["remove_node_list"] = removeNodeList
 		}
+		var inMaintenance int
 		if v, ok := d.GetOkExists("in_maintenance"); ok {
+			inMaintenance = v.(int)
 			params["in_maintenance"] = v.(int)
 		}
 		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
@@ -565,26 +567,27 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return fmt.Errorf("deal id is empty")
 		}
 
-		errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
-			if err != nil {
-				if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
-					if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
-						return resource.RetryableError(err)
+		if inMaintenance == 0 {
+			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
+				if err != nil {
+					if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
+						if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
+							return resource.RetryableError(err)
+						}
 					}
+					return resource.NonRetryableError(err)
 				}
-				return resource.NonRetryableError(err)
-			}
 
-			if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS {
-				return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
+				if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS {
+					return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
+				}
+				return nil
+			})
+			if errUpdate != nil {
+				return errUpdate
 			}
-			return nil
-		})
-		if errUpdate != nil {
-			return errUpdate
 		}
-
 	}
 
 	if d.HasChange("instance_name") {
