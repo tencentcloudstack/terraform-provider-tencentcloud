@@ -18,6 +18,8 @@ It's more flexible than managing worker config directly with `tencentcloud_kuber
 
 ~> **NOTE:** Executing `terraform destroy` to destroy the resource will default to deleting the node resource, If it is necessary to preserve node instance resources, Please set `instance_delete_mode` to `retain`.
 
+~> **NOTE:** If you want to set up addon for the tke cluster, it is recommended to use resource `tencentcloud_kubernetes_addon`.
+
 ## Example Usage
 
 ### Create a basic cluster with two worker nodes

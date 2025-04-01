@@ -134,6 +134,67 @@ func (me *TkeService) DescribeExtensionAddonList(ctx context.Context, clusterId 
 	return appList, err
 }
 
+func (me *TkeService) DescribeAddonList(ctx context.Context, clusterId string) (ret []*tke.Addon, errRet error) {
+	request := tke.NewDescribeAddonRequest()
+	response := tke.NewDescribeAddonResponse()
+	request.ClusterId = &clusterId
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTkeClient().DescribeAddon(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Addons) == 0 {
+		return
+	}
+
+	ret = response.Response.Addons
+	return
+}
+
+func (me *TkeService) DescribeAddonValuesList(ctx context.Context, clusterId, addonName string) (ret *tke.DescribeAddonValuesResponseParams, errRet error) {
+	request := tke.NewDescribeAddonValuesRequest()
+	response := tke.NewDescribeAddonValuesResponse()
+	request.ClusterId = &clusterId
+	request.AddonName = &addonName
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTkeClient().DescribeAddonValues(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
 func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonName string, addonResponseData *AddonResponseData) (string, bool, error) {
 	var (
 		err      error
