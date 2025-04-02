@@ -1,3 +1,10 @@
+## 1.81.179(April 2 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clickhouse_instance: support secondary_zone_info ([#3253](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3253))
+* resource/tencentcloud_kubernetes_cluster: Optimize resource import ([#3258](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3258))
+
 ## 1.81.178(March 28 , 2025)
 
 FEATURES:
