@@ -773,43 +773,6 @@ func resourceTencentCloudKubernetesClusterReadPostHandleResponse0(ctx context.Co
 			_ = d.Set("cluster_audit", audits)
 		}
 
-		applist, err := service.DescribeExtensionAddonList(ctx, d.Id())
-		if err != nil {
-			return err
-		}
-		addons := make([]map[string]interface{}, 0)
-		for _, item := range applist.Items {
-			if item.Status.Phase == "Succeeded" && item.Labels["application.tkestack.io/type"] == "internal-addon" {
-				addonParam := AddonRequestBody{
-					Kind: helper.String("App"),
-					Spec: &AddonSpec{
-						Chart: &AddonSpecChart{
-							ChartName:    item.Spec.Chart.ChartName,
-							ChartVersion: item.Spec.Chart.ChartVersion,
-						},
-						Values: &AddonSpecValues{
-							Values:        item.Spec.Values.Values,
-							RawValues:     item.Spec.Values.RawValues,
-							RawValuesType: item.Spec.Values.RawValuesType,
-						},
-					},
-				}
-				result, err := json.Marshal(addonParam)
-				if err != nil {
-					return err
-				}
-
-				addon := map[string]interface{}{
-					"name":  item.Name,
-					"param": string(result),
-				}
-				addons = append(addons, addon)
-			}
-		}
-		if len(addons) > 0 {
-			_ = d.Set("extension_addon", addons)
-		}
-
 		resp, err := service.DescribeClusterExtraArgs(ctx, d.Id())
 		if err != nil {
 			return err
