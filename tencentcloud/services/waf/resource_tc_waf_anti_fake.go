@@ -47,7 +47,7 @@ func ResourceTencentCloudWafAntiFake() *schema.Resource {
 				Type:         schema.TypeInt,
 				Default:      ANTI_FAKE_URL_STATUS_1,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(ANTI_FAKE_URL_STATUS),
-				Description:  "Status. 0: Turn off rules and log switches, 1: Turn on the rule switch and Turn off the log switch; 2: Turn off the rule switch and turn on the log switch;3: Turn on the log switch.",
+				Description:  "Status. 0: Turn off rules and log switches, 1: Turn on the rule switch and Turn off the log switch; 2: Turn off the rule switch and turn on the log switch; 3: Turn on the rule switch and turn on the log switch.",
 			},
 			"rule_id": {
 				Computed:    true,
