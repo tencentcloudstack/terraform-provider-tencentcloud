@@ -1133,7 +1133,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.1010
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.0.843
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.0.1129
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
@@ -1166,7 +1166,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1078
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1130
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1133
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors

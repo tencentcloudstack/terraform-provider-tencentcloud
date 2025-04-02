@@ -139,6 +139,7 @@ The following arguments are supported:
 * `ha_zk` - (Optional, Bool) Whether ZK is highly available.
 * `mount_disk_type` - (Optional, Int) Whether it is mounted on a bare disk.
 * `renew_flag` - (Optional, Int) PREPAID needs to be passed. Whether to renew automatically. 1 means auto renewal is enabled.
+* `secondary_zone_info` - (Optional, List) Secondary zone info.
 * `tags` - (Optional, Map) Tag description list.
 * `time_span` - (Optional, Int) Prepaid needs to be delivered, billing time length, how many months.
 
@@ -153,6 +154,11 @@ The `data_spec` object supports the following:
 * `count` - (Required, Int) Data spec count.
 * `disk_size` - (Required, Int) Disk size.
 * `spec_name` - (Required, String) Spec name.
+
+The `secondary_zone_info` object supports the following:
+
+* `secondary_subnet` - (Optional, String) Secondary subnet.
+* `secondary_zone` - (Optional, String) Secondary zone.
 
 ## Attributes Reference
 
