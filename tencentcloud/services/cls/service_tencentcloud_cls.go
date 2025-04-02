@@ -2,6 +2,7 @@ package cls
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -1381,10 +1382,24 @@ func (me *ClsService) DeleteClsScheduledSqlById(ctx context.Context, taskId stri
 	return
 }
 
-func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context) (ret *cls.DescribeCloudProductLogTasksResponseParams, errRet error) {
+func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context, instanceId, assumerName, logType string) (ret *cls.DescribeCloudProductLogTasksResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeCloudProductLogTasksRequest()
+	request.Filters = []*cls.Filter{
+		{
+			Key:    helper.String("instanceId"),
+			Values: helper.Strings([]string{instanceId}),
+		},
+		{
+			Key:    helper.String("assumerName"),
+			Values: helper.Strings([]string{assumerName}),
+		},
+		{
+			Key:    helper.String("logType"),
+			Values: helper.Strings([]string{logType}),
+		},
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -1393,10 +1408,6 @@ func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context) (r
 	}()
 
 	ratelimit.Check(request.GetAction())
-
-	if err := resourceTencentCloudClsCloudProductLogTaskReadPreRequest0(ctx, request); err != nil {
-		return nil, err
-	}
 
 	response, err := me.client.UseClsV20201016Client().DescribeCloudProductLogTasks(request)
 	if err != nil {
@@ -1407,6 +1418,24 @@ func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context) (r
 
 	ret = response.Response
 	return
+}
+
+func (me *ClsService) ClsCloudProductLogTaskStateRefreshFunc(ctx context.Context, instanceId, assumerName, logType string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ret, err := me.DescribeClsCloudProductLogTaskById(ctx, instanceId, assumerName, logType)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if ret == nil || len(ret.Tasks) < 1 {
+			return cls.CloudProductLogTaskInfo{}, "3", nil
+		}
+		task := ret.Tasks[0]
+		if task.Status == nil {
+			return nil, "", fmt.Errorf("task status is nil")
+		}
+		return task, helper.Int64ToStr(*task.Status), nil
+	}
 }
 
 func (me *ClsService) DescribeClsNoticeContentById(ctx context.Context, noticeContentId string) (ret *cls.NoticeContentTemplate, errRet error) {

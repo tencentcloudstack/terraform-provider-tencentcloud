@@ -585,26 +585,26 @@ func (c *Client) CreateAlarmShieldWithContext(ctx context.Context, request *Crea
     return
 }
 
-func NewCreateCloudProductLogTaskRequest() (request *CreateCloudProductLogTaskRequest) {
-    request = &CreateCloudProductLogTaskRequest{
+func NewCreateCloudProductLogCollectionRequest() (request *CreateCloudProductLogCollectionRequest) {
+    request = &CreateCloudProductLogCollectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cls", APIVersion, "CreateCloudProductLogTask")
+    request.Init().WithApiInfo("cls", APIVersion, "CreateCloudProductLogCollection")
     
     
     return
 }
 
-func NewCreateCloudProductLogTaskResponse() (response *CreateCloudProductLogTaskResponse) {
-    response = &CreateCloudProductLogTaskResponse{
+func NewCreateCloudProductLogCollectionResponse() (response *CreateCloudProductLogCollectionResponse) {
+    response = &CreateCloudProductLogCollectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// CreateCloudProductLogTask
+// CreateCloudProductLogCollection
 // 内部云产品接入使用相关接口
 //
 // 可能返回的错误码:
@@ -620,11 +620,11 @@ func NewCreateCloudProductLogTaskResponse() (response *CreateCloudProductLogTask
 //  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateCloudProductLogTask(request *CreateCloudProductLogTaskRequest) (response *CreateCloudProductLogTaskResponse, err error) {
-    return c.CreateCloudProductLogTaskWithContext(context.Background(), request)
+func (c *Client) CreateCloudProductLogCollection(request *CreateCloudProductLogCollectionRequest) (response *CreateCloudProductLogCollectionResponse, err error) {
+    return c.CreateCloudProductLogCollectionWithContext(context.Background(), request)
 }
 
-// CreateCloudProductLogTask
+// CreateCloudProductLogCollection
 // 内部云产品接入使用相关接口
 //
 // 可能返回的错误码:
@@ -640,18 +640,18 @@ func (c *Client) CreateCloudProductLogTask(request *CreateCloudProductLogTaskReq
 //  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateCloudProductLogTaskWithContext(ctx context.Context, request *CreateCloudProductLogTaskRequest) (response *CreateCloudProductLogTaskResponse, err error) {
+func (c *Client) CreateCloudProductLogCollectionWithContext(ctx context.Context, request *CreateCloudProductLogCollectionRequest) (response *CreateCloudProductLogCollectionResponse, err error) {
     if request == nil {
-        request = NewCreateCloudProductLogTaskRequest()
+        request = NewCreateCloudProductLogCollectionRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("CreateCloudProductLogTask require credential")
+        return nil, errors.New("CreateCloudProductLogCollection require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewCreateCloudProductLogTaskResponse()
+    response = NewCreateCloudProductLogCollectionResponse()
     err = c.Send(request, response)
     return
 }
@@ -2109,26 +2109,26 @@ func (c *Client) DeleteAlarmShieldWithContext(ctx context.Context, request *Dele
     return
 }
 
-func NewDeleteCloudProductLogTaskRequest() (request *DeleteCloudProductLogTaskRequest) {
-    request = &DeleteCloudProductLogTaskRequest{
+func NewDeleteCloudProductLogCollectionRequest() (request *DeleteCloudProductLogCollectionRequest) {
+    request = &DeleteCloudProductLogCollectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cls", APIVersion, "DeleteCloudProductLogTask")
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteCloudProductLogCollection")
     
     
     return
 }
 
-func NewDeleteCloudProductLogTaskResponse() (response *DeleteCloudProductLogTaskResponse) {
-    response = &DeleteCloudProductLogTaskResponse{
+func NewDeleteCloudProductLogCollectionResponse() (response *DeleteCloudProductLogCollectionResponse) {
+    response = &DeleteCloudProductLogCollectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// DeleteCloudProductLogTask
+// DeleteCloudProductLogCollection
 // 内部云产品接入使用相关接口
 //
 // 可能返回的错误码:
@@ -2142,11 +2142,11 @@ func NewDeleteCloudProductLogTaskResponse() (response *DeleteCloudProductLogTask
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DeleteCloudProductLogTask(request *DeleteCloudProductLogTaskRequest) (response *DeleteCloudProductLogTaskResponse, err error) {
-    return c.DeleteCloudProductLogTaskWithContext(context.Background(), request)
+func (c *Client) DeleteCloudProductLogCollection(request *DeleteCloudProductLogCollectionRequest) (response *DeleteCloudProductLogCollectionResponse, err error) {
+    return c.DeleteCloudProductLogCollectionWithContext(context.Background(), request)
 }
 
-// DeleteCloudProductLogTask
+// DeleteCloudProductLogCollection
 // 内部云产品接入使用相关接口
 //
 // 可能返回的错误码:
@@ -2160,18 +2160,18 @@ func (c *Client) DeleteCloudProductLogTask(request *DeleteCloudProductLogTaskReq
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DeleteCloudProductLogTaskWithContext(ctx context.Context, request *DeleteCloudProductLogTaskRequest) (response *DeleteCloudProductLogTaskResponse, err error) {
+func (c *Client) DeleteCloudProductLogCollectionWithContext(ctx context.Context, request *DeleteCloudProductLogCollectionRequest) (response *DeleteCloudProductLogCollectionResponse, err error) {
     if request == nil {
-        request = NewDeleteCloudProductLogTaskRequest()
+        request = NewDeleteCloudProductLogCollectionRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DeleteCloudProductLogTask require credential")
+        return nil, errors.New("DeleteCloudProductLogCollection require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDeleteCloudProductLogTaskResponse()
+    response = NewDeleteCloudProductLogCollectionResponse()
     err = c.Send(request, response)
     return
 }
@@ -5906,26 +5906,26 @@ func (c *Client) ModifyAlarmShieldWithContext(ctx context.Context, request *Modi
     return
 }
 
-func NewModifyCloudProductLogTaskRequest() (request *ModifyCloudProductLogTaskRequest) {
-    request = &ModifyCloudProductLogTaskRequest{
+func NewModifyCloudProductLogCollectionRequest() (request *ModifyCloudProductLogCollectionRequest) {
+    request = &ModifyCloudProductLogCollectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cls", APIVersion, "ModifyCloudProductLogTask")
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyCloudProductLogCollection")
     
     
     return
 }
 
-func NewModifyCloudProductLogTaskResponse() (response *ModifyCloudProductLogTaskResponse) {
-    response = &ModifyCloudProductLogTaskResponse{
+func NewModifyCloudProductLogCollectionResponse() (response *ModifyCloudProductLogCollectionResponse) {
+    response = &ModifyCloudProductLogCollectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// ModifyCloudProductLogTask
+// ModifyCloudProductLogCollection
 // 内部云产品接入使用相关接口
 //
 // 可能返回的错误码:
@@ -5939,11 +5939,11 @@ func NewModifyCloudProductLogTaskResponse() (response *ModifyCloudProductLogTask
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) ModifyCloudProductLogTask(request *ModifyCloudProductLogTaskRequest) (response *ModifyCloudProductLogTaskResponse, err error) {
-    return c.ModifyCloudProductLogTaskWithContext(context.Background(), request)
+func (c *Client) ModifyCloudProductLogCollection(request *ModifyCloudProductLogCollectionRequest) (response *ModifyCloudProductLogCollectionResponse, err error) {
+    return c.ModifyCloudProductLogCollectionWithContext(context.Background(), request)
 }
 
-// ModifyCloudProductLogTask
+// ModifyCloudProductLogCollection
 // 内部云产品接入使用相关接口
 //
 // 可能返回的错误码:
@@ -5957,18 +5957,18 @@ func (c *Client) ModifyCloudProductLogTask(request *ModifyCloudProductLogTaskReq
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) ModifyCloudProductLogTaskWithContext(ctx context.Context, request *ModifyCloudProductLogTaskRequest) (response *ModifyCloudProductLogTaskResponse, err error) {
+func (c *Client) ModifyCloudProductLogCollectionWithContext(ctx context.Context, request *ModifyCloudProductLogCollectionRequest) (response *ModifyCloudProductLogCollectionResponse, err error) {
     if request == nil {
-        request = NewModifyCloudProductLogTaskRequest()
+        request = NewModifyCloudProductLogCollectionRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("ModifyCloudProductLogTask require credential")
+        return nil, errors.New("ModifyCloudProductLogCollection require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewModifyCloudProductLogTaskResponse()
+    response = NewModifyCloudProductLogCollectionResponse()
     err = c.Send(request, response)
     return
 }
