@@ -88,9 +88,9 @@ resource "tencentcloud_clb_target_group_instance_attachment" "example" {
 The following arguments are supported:
 
 * `bind_ip` - (Required, String, ForceNew) The Intranet IP of the target group instance.
-* `port` - (Required, Int, ForceNew) Port of the target group instance.
 * `target_group_id` - (Required, String, ForceNew) Target group ID.
-* `weight` - (Required, Int) The weight of the target group instance.
+* `port` - (Optional, Int, ForceNew) The port of the target group instance, fully listening to the target group does not support passing this field.
+* `weight` - (Optional, Int) The weight of the target group instance.
 
 ## Attributes Reference
 

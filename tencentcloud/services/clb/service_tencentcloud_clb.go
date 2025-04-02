@@ -1510,7 +1510,7 @@ func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clb
 	return
 }
 
-func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []string) (has bool, err error) {
+func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []string) (targetInfo *clb.TargetGroupInfo, has bool, err error) {
 	var (
 		logId       = tccommon.GetLogId(ctx)
 		targetInfos []*clb.TargetGroupInfo
@@ -1540,15 +1540,17 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 			if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
 				*rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *rule.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 				if originListenerId == ids[1] && originClbId == ids[2] {
-					return true, nil
+					targetInfo = info
+					return targetInfo, true, nil
 				}
 			} else if originListenerId == ids[1] && originClbId == ids[2] && originLocationId == ids[3] {
-				return true, nil
+				targetInfo = info
+				return targetInfo, true, nil
 			}
 		}
 	}
 
-	return false, nil
+	return nil, false, nil
 }
 
 func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targetGroupId, listenerId, clbId, locationId string) (errRet error) {

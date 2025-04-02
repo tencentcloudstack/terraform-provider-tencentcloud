@@ -1157,7 +1157,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.1073
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1107
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1132
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033

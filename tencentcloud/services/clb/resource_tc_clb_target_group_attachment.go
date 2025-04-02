@@ -49,6 +49,13 @@ func ResourceTencentCloudClbTargetGroupAttachment() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of the CLB listener rule.",
 			},
+			"weight": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: tccommon.ValidateIntegerInRange(0, 100),
+				Description:  "Target group weight, range [0, 100]. It only takes effect when binding to the v2 target group. If it does not exist, it defaults to 10.",
+			},
 		},
 	}
 }
@@ -87,6 +94,10 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("rule_id"); ok {
 		targetGroupAssociation.LocationId = helper.String(v.(string))
 		locationId = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("weight"); ok {
+		targetGroupAssociation.Weight = helper.IntInt64(v.(int))
 	}
 
 	//check listenerId
@@ -195,7 +206,7 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 		return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 	}
 
-	has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)
+	targetInfo, has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)
 	if err != nil {
 		return err
 	}
@@ -210,6 +221,10 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 	_ = d.Set("clb_id", ids[2])
 	if ids[3] != "" {
 		_ = d.Set("rule_id", ids[3])
+	}
+
+	if targetInfo.Weight != nil {
+		_ = d.Set("weight", targetInfo.Weight)
 	}
 
 	return nil

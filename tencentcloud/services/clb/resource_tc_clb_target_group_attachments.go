@@ -71,6 +71,13 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 							Optional:    true,
 							Description: "Forwarding rule ID.",
 						},
+						"weight": {
+							Type:         schema.TypeInt,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: tccommon.ValidateIntegerInRange(0, 100),
+							Description:  "Target group weight, range [0, 100]. It only takes effect when binding to the v2 target group. If it does not exist, it defaults to 10.",
+						},
 					},
 				},
 			},
@@ -269,8 +276,14 @@ func parseParamToRequest(d *schema.ResourceData, param string, id string) (assoc
 			targetGroupAssociation := clb.TargetGroupAssociation{}
 			dMap[param] = id
 			for name := range dMap {
-				if dMap[name] != nil && dMap[name].(string) != "" {
-					setString(name, dMap[name].(string), &targetGroupAssociation)
+				if dMap[name] != nil {
+					if v, ok := dMap[name].(string); ok && v != "" {
+						setString(name, v, &targetGroupAssociation)
+					}
+
+					if v, ok := dMap[name].(int); ok {
+						setInt(name, v, &targetGroupAssociation)
+					}
 				}
 			}
 			associations = append(associations, &targetGroupAssociation)
@@ -288,6 +301,15 @@ func setString(fieldName string, value string, request *clb.TargetGroupAssociati
 		request.ListenerId = helper.String(value)
 	case "location_id":
 		request.LocationId = helper.String(value)
+	default:
+		log.Printf("Invalid field name: %s\n", fieldName)
+	}
+}
+
+func setInt(fieldName string, value int, request *clb.TargetGroupAssociation) {
+	switch fieldName {
+	case "weight":
+		request.Weight = helper.IntInt64(value)
 	default:
 		log.Printf("Invalid field name: %s\n", fieldName)
 	}

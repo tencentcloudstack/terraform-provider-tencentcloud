@@ -83,6 +83,7 @@ The following arguments are supported:
 * `target_group_id` - (Required, String, ForceNew) ID of the CLB target group.
 * `listener_id` - (Optional, String, ForceNew) ID of the CLB listener.
 * `rule_id` - (Optional, String, ForceNew) ID of the CLB listener rule.
+* `weight` - (Optional, Int, ForceNew) Target group weight, range [0, 100]. It only takes effect when binding to the v2 target group. If it does not exist, it defaults to 10.
 
 ## Attributes Reference
 
