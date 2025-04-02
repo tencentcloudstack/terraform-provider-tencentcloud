@@ -125,7 +125,7 @@ func testAccCheckClbTargetGroupAttachmentExists(n string) resource.TestCheckFunc
 			return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 		}
 
-		has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)
+		_, has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)
 		if err != nil {
 			return err
 		}
