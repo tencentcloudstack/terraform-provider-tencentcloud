@@ -55,6 +55,7 @@ The `associations` object supports the following:
 * `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, when the binding target is target group, load_balancer_id in associations is required.
 * `location_id` - (Optional, String, ForceNew) Forwarding rule ID.
 * `target_group_id` - (Optional, String, ForceNew) Target group ID, when the binding target is clb, the target_group_id in associations is required.
+* `weight` - (Optional, Int, ForceNew) Target group weight, range [0, 100]. It only takes effect when binding to the v2 target group. If it does not exist, it defaults to 10.
 
 ## Attributes Reference
 

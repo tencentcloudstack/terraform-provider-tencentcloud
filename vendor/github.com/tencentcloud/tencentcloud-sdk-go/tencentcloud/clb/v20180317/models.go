@@ -331,7 +331,7 @@ type Backend struct {
 	// 后端服务的唯一 ID，如 ins-abcd1234
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 后端服务的监听端口
+	// 后端服务的监听端口，如果是全端口段监听器绑定的全监听目标组场景，此端口返回0，表示无效端口，绑定的后端服务的端口随监听器端口。
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 后端服务的转发权重，取值范围：[0, 100]，默认为 10。
@@ -746,6 +746,9 @@ type CertificateInput struct {
 	// 认证类型，UNIDIRECTIONAL：单向认证，MUTUAL：双向认证
 	SSLMode *string `json:"SSLMode,omitnil,omitempty" name:"SSLMode"`
 
+	// 双向认证时，是否开启客户端认证，ON:开启，OPTIONAL:自适应，默认ON。
+	SSLVerifyClient *string `json:"SSLVerifyClient,omitnil,omitempty" name:"SSLVerifyClient"`
+
 	// 服务端证书的 ID，如果不填写此项则必须上传证书，包括 CertContent，CertKey，CertName。
 	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 
@@ -771,6 +774,9 @@ type CertificateInput struct {
 type CertificateOutput struct {
 	// 认证类型，UNIDIRECTIONAL：单向认证，MUTUAL：双向认证
 	SSLMode *string `json:"SSLMode,omitnil,omitempty" name:"SSLMode"`
+
+	// 是否开启客户端证书验证，只在双向认证时生效。
+	SSLVerifyClient *string `json:"SSLVerifyClient,omitnil,omitempty" name:"SSLVerifyClient"`
 
 	// 服务端证书的ID。
 	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
@@ -1350,12 +1356,8 @@ type CreateListenerRequestParams struct {
 	HealthCheck *HealthCheck `json:"HealthCheck,omitnil,omitempty" name:"HealthCheck"`
 
 	// 证书相关信息。参数限制如下：
-	// <li>
-	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
-	// </li>
-	// <li>
-	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数MultiCertInfo至少需要传一个， 但不能同时传入。
-	// </li>
+	// <li>此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。</li>
+	// <li>创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数MultiCertInfo至少需要传一个， 但不能同时传入。</li>
 	Certificate *CertificateInput `json:"Certificate,omitnil,omitempty" name:"Certificate"`
 
 	// 会话保持时间，单位：秒。可选值：30~3600，默认 0，表示不开启。此参数仅适用于TCP/UDP监听器。
@@ -1384,12 +1386,8 @@ type CreateListenerRequestParams struct {
 	DeregisterTargetRst *bool `json:"DeregisterTargetRst,omitnil,omitempty" name:"DeregisterTargetRst"`
 
 	// 证书信息，支持同时传入不同算法类型的多本服务端证书，参数限制如下：
-	// <li>
-	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
-	// </li>
-	// <li>
-	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数Certificate至少需要传一个， 但不能同时传入。
-	// </li>
+	// <li>此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。</li>
+	// <li>创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数Certificate至少需要传一个， 但不能同时传入。</li>
 	MultiCertInfo *MultiCertInfo `json:"MultiCertInfo,omitnil,omitempty" name:"MultiCertInfo"`
 
 	// 监听器最大连接数，当前仅性能容量型实例且仅TCP/UDP/TCP_SSL/QUIC监听器支持，不传或者传-1表示监听器维度不限速。基础网络实例不支持该参数。
@@ -1412,6 +1410,9 @@ type CreateListenerRequestParams struct {
 
 	// TCP_SSL监听器支持关闭SSL后仍然支持混绑，此参数为关闭开关
 	SslCloseSwitch *bool `json:"SslCloseSwitch,omitnil,omitempty" name:"SslCloseSwitch"`
+
+	// 数据压缩模式
+	DataCompressMode *string `json:"DataCompressMode,omitnil,omitempty" name:"DataCompressMode"`
 }
 
 type CreateListenerRequest struct {
@@ -1433,12 +1434,8 @@ type CreateListenerRequest struct {
 	HealthCheck *HealthCheck `json:"HealthCheck,omitnil,omitempty" name:"HealthCheck"`
 
 	// 证书相关信息。参数限制如下：
-	// <li>
-	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
-	// </li>
-	// <li>
-	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数MultiCertInfo至少需要传一个， 但不能同时传入。
-	// </li>
+	// <li>此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。</li>
+	// <li>创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数MultiCertInfo至少需要传一个， 但不能同时传入。</li>
 	Certificate *CertificateInput `json:"Certificate,omitnil,omitempty" name:"Certificate"`
 
 	// 会话保持时间，单位：秒。可选值：30~3600，默认 0，表示不开启。此参数仅适用于TCP/UDP监听器。
@@ -1467,12 +1464,8 @@ type CreateListenerRequest struct {
 	DeregisterTargetRst *bool `json:"DeregisterTargetRst,omitnil,omitempty" name:"DeregisterTargetRst"`
 
 	// 证书信息，支持同时传入不同算法类型的多本服务端证书，参数限制如下：
-	// <li>
-	// 此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。
-	// </li>
-	// <li>
-	// 创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数Certificate至少需要传一个， 但不能同时传入。
-	// </li>
+	// <li>此参数仅适用于TCP_SSL监听器和未开启SNI特性的HTTPS监听器。</li>
+	// <li>创建TCP_SSL监听器和未开启SNI特性的HTTPS监听器时，此参数和参数Certificate至少需要传一个， 但不能同时传入。</li>
 	MultiCertInfo *MultiCertInfo `json:"MultiCertInfo,omitnil,omitempty" name:"MultiCertInfo"`
 
 	// 监听器最大连接数，当前仅性能容量型实例且仅TCP/UDP/TCP_SSL/QUIC监听器支持，不传或者传-1表示监听器维度不限速。基础网络实例不支持该参数。
@@ -1495,6 +1488,9 @@ type CreateListenerRequest struct {
 
 	// TCP_SSL监听器支持关闭SSL后仍然支持混绑，此参数为关闭开关
 	SslCloseSwitch *bool `json:"SslCloseSwitch,omitnil,omitempty" name:"SslCloseSwitch"`
+
+	// 数据压缩模式
+	DataCompressMode *string `json:"DataCompressMode,omitnil,omitempty" name:"DataCompressMode"`
 }
 
 func (r *CreateListenerRequest) ToJsonString() string {
@@ -1531,6 +1527,7 @@ func (r *CreateListenerRequest) FromJsonString(s string) error {
 	delete(f, "FullEndPorts")
 	delete(f, "H2cSwitch")
 	delete(f, "SslCloseSwitch")
+	delete(f, "DataCompressMode")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateListenerRequest has unknown keys!", "")
 	}
@@ -1987,14 +1984,17 @@ type CreateTargetGroupRequestParams struct {
 	// 目标组的vpcid属性，不填则使用默认vpc
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 目标组的默认端口， 后续添加服务器时可使用该默认端口。Port和TargetGroupInstances.N中的port二者必填其一。
+	// 目标组的默认端口， 后续添加服务器时可使用该默认端口。全监听目标组不支持此参数，非全监听目标组Port和TargetGroupInstances.N中的port二者必填其一。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 目标组绑定的后端服务器
+	// 目标组绑定的后端服务器，单次最多支持50个。
 	TargetGroupInstances []*TargetGroupInstance `json:"TargetGroupInstances,omitnil,omitempty" name:"TargetGroupInstances"`
 
 	// 目标组类型，当前支持v1(旧版目标组), v2(新版目标组), 默认为v1(旧版目标组)。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 目标组后端转发协议。v2新版目标组该项必填。目前支持tcp、udp。
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 标签。
 	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
@@ -2005,6 +2005,9 @@ type CreateTargetGroupRequestParams struct {
 	//     <li>设置该值后，添加后端服务到目标组时， 若后端服务不单独设置权重， 则使用这里的默认权重。 </li>
 	// </ul>
 	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 全监听目标组标识，为true表示是全监听目标组，false表示不是全监听目标组。
+	FullListenSwitch *bool `json:"FullListenSwitch,omitnil,omitempty" name:"FullListenSwitch"`
 }
 
 type CreateTargetGroupRequest struct {
@@ -2016,14 +2019,17 @@ type CreateTargetGroupRequest struct {
 	// 目标组的vpcid属性，不填则使用默认vpc
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 目标组的默认端口， 后续添加服务器时可使用该默认端口。Port和TargetGroupInstances.N中的port二者必填其一。
+	// 目标组的默认端口， 后续添加服务器时可使用该默认端口。全监听目标组不支持此参数，非全监听目标组Port和TargetGroupInstances.N中的port二者必填其一。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 目标组绑定的后端服务器
+	// 目标组绑定的后端服务器，单次最多支持50个。
 	TargetGroupInstances []*TargetGroupInstance `json:"TargetGroupInstances,omitnil,omitempty" name:"TargetGroupInstances"`
 
 	// 目标组类型，当前支持v1(旧版目标组), v2(新版目标组), 默认为v1(旧版目标组)。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 目标组后端转发协议。v2新版目标组该项必填。目前支持tcp、udp。
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 标签。
 	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
@@ -2034,6 +2040,9 @@ type CreateTargetGroupRequest struct {
 	//     <li>设置该值后，添加后端服务到目标组时， 若后端服务不单独设置权重， 则使用这里的默认权重。 </li>
 	// </ul>
 	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 全监听目标组标识，为true表示是全监听目标组，false表示不是全监听目标组。
+	FullListenSwitch *bool `json:"FullListenSwitch,omitnil,omitempty" name:"FullListenSwitch"`
 }
 
 func (r *CreateTargetGroupRequest) ToJsonString() string {
@@ -2053,8 +2062,10 @@ func (r *CreateTargetGroupRequest) FromJsonString(s string) error {
 	delete(f, "Port")
 	delete(f, "TargetGroupInstances")
 	delete(f, "Type")
+	delete(f, "Protocol")
 	delete(f, "Tags")
 	delete(f, "Weight")
+	delete(f, "FullListenSwitch")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTargetGroupRequest has unknown keys!", "")
 	}
@@ -2097,7 +2108,9 @@ type CreateTopicRequestParams struct {
 	// 日志类型，ACCESS：访问日志，HEALTH：健康检查日志，默认ACCESS。
 	TopicType *string `json:"TopicType,omitnil,omitempty" name:"TopicType"`
 
-	// 日志集的保存周期，单位：天，默认30天，范围[1, 3600]。
+	// 存储时间，单位天
+	// - 日志接入标准存储时，支持1至3600天，值为3640时代表永久保存。
+	// - 日志接入低频存储时，支持7至3600天，值为3640时代表永久保存。
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 日志主题的存储类型，可选值 HOT（标准存储），COLD（低频存储）；默认为HOT。
@@ -2116,7 +2129,9 @@ type CreateTopicRequest struct {
 	// 日志类型，ACCESS：访问日志，HEALTH：健康检查日志，默认ACCESS。
 	TopicType *string `json:"TopicType,omitnil,omitempty" name:"TopicType"`
 
-	// 日志集的保存周期，单位：天，默认30天，范围[1, 3600]。
+	// 存储时间，单位天
+	// - 日志接入标准存储时，支持1至3600天，值为3640时代表永久保存。
+	// - 日志接入低频存储时，支持7至3600天，值为3640时代表永久保存。
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 日志主题的存储类型，可选值 HOT（标准存储），COLD（低频存储）；默认为HOT。
@@ -2379,6 +2394,9 @@ func (r *DeleteLoadBalancerListenersResponse) FromJsonString(s string) error {
 type DeleteLoadBalancerRequestParams struct {
 	// 要删除的负载均衡实例 ID数组，数组大小最大支持20。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
+
+	// 是否强制删除clb。为true表示强制删除，为false表示不是强制删除，需要做拦截校验。
+	ForceDelete *bool `json:"ForceDelete,omitnil,omitempty" name:"ForceDelete"`
 }
 
 type DeleteLoadBalancerRequest struct {
@@ -2386,6 +2404,9 @@ type DeleteLoadBalancerRequest struct {
 	
 	// 要删除的负载均衡实例 ID数组，数组大小最大支持20。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
+
+	// 是否强制删除clb。为true表示强制删除，为false表示不是强制删除，需要做拦截校验。
+	ForceDelete *bool `json:"ForceDelete,omitnil,omitempty" name:"ForceDelete"`
 }
 
 func (r *DeleteLoadBalancerRequest) ToJsonString() string {
@@ -2401,6 +2422,7 @@ func (r *DeleteLoadBalancerRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "LoadBalancerIds")
+	delete(f, "ForceDelete")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteLoadBalancerRequest has unknown keys!", "")
 	}
@@ -5840,7 +5862,7 @@ func (r *InquiryPriceRenewLoadBalancerResponse) FromJsonString(s string) error {
 }
 
 type InternetAccessible struct {
-	// TRAFFIC_POSTPAID_BY_HOUR 按流量按小时后计费 ; BANDWIDTH_POSTPAID_BY_HOUR 按带宽按小时后计费; BANDWIDTH_PACKAGE 按带宽包计费;BANDWIDTH_PREPAID按带宽预付费。
+	// TRAFFIC_POSTPAID_BY_HOUR 按流量按小时后计费 ; BANDWIDTH_POSTPAID_BY_HOUR 按带宽按小时后计费，国际站用户不支持该计费模式; BANDWIDTH_PACKAGE 按带宽包计费;BANDWIDTH_PREPAID按带宽预付费。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InternetChargeType *string `json:"InternetChargeType,omitnil,omitempty" name:"InternetChargeType"`
 
@@ -6183,7 +6205,12 @@ type LoadBalancer struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NumericalVpcId *uint64 `json:"NumericalVpcId,omitnil,omitempty" name:"NumericalVpcId"`
 
-	// 负载均衡IP地址所属的运营商。取值范围（BGP、CMCC、CTCC、CUCC）
+	// 负载均衡IP地址所属的运营商。
+	// 
+	// - BGP :  BGP（多线）
+	// - CMCC：中国移动单线
+	// - CTCC：中国电信单线
+	// - CUCC：中国联通单线
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VipIsp *string `json:"VipIsp,omitnil,omitempty" name:"VipIsp"`
 
@@ -6331,7 +6358,7 @@ type LoadBalancerDetail struct {
 	LoadBalancerName *string `json:"LoadBalancerName,omitnil,omitempty" name:"LoadBalancerName"`
 
 	// 负载均衡实例的网络类型：
-	// OPEN：公网属性，INTERNAL：内网属性；对于内网属性的负载均衡，可通过绑定EIP出公网，具体可参考EIP文档。
+	// Public：公网属性，Private：内网属性；对于内网属性的负载均衡，可通过绑定EIP出公网，具体可参考EIP文档。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LoadBalancerType *string `json:"LoadBalancerType,omitnil,omitempty" name:"LoadBalancerType"`
 
@@ -7407,7 +7434,7 @@ func (r *ModifyLoadBalancerAttributesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyLoadBalancerMixIpTargetRequestParams struct {
-	// 负载均衡实例ID数组。
+	// 负载均衡实例ID数组，默认支持20个负载均衡实例ID。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
 	// 开启/关闭IPv6FullChain负载均衡7层监听器支持混绑IPv4/IPv6目标特性。
@@ -7417,7 +7444,7 @@ type ModifyLoadBalancerMixIpTargetRequestParams struct {
 type ModifyLoadBalancerMixIpTargetRequest struct {
 	*tchttp.BaseRequest
 	
-	// 负载均衡实例ID数组。
+	// 负载均衡实例ID数组，默认支持20个负载均衡实例ID。
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitnil,omitempty" name:"LoadBalancerIds"`
 
 	// 开启/关闭IPv6FullChain负载均衡7层监听器支持混绑IPv4/IPv6目标特性。
@@ -7722,7 +7749,7 @@ type ModifyTargetGroupAttributeRequestParams struct {
 	// 目标组的新名称。
 	TargetGroupName *string `json:"TargetGroupName,omitnil,omitempty" name:"TargetGroupName"`
 
-	// 目标组的新默认端口。
+	// 目标组的新默认端口。全监听目标组不支持此参数。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 后端服务默认权重。
@@ -7742,7 +7769,7 @@ type ModifyTargetGroupAttributeRequest struct {
 	// 目标组的新名称。
 	TargetGroupName *string `json:"TargetGroupName,omitnil,omitempty" name:"TargetGroupName"`
 
-	// 目标组的新默认端口。
+	// 目标组的新默认端口。全监听目标组不支持此参数。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 后端服务默认权重。
@@ -8117,6 +8144,9 @@ type MultiCertInfo struct {
 
 	// 监听器或规则证书列表，单双向认证，多本服务端证书算法类型不能重复;若SSLMode为双向认证，证书列表必须包含一本ca证书。
 	CertList []*CertInfo `json:"CertList,omitnil,omitempty" name:"CertList"`
+
+	// 双向认证时，是否开启客户端认证，ON:开启，OPTIONAL:自适应，默认ON
+	SSLVerifyClient *string `json:"SSLVerifyClient,omitnil,omitempty" name:"SSLVerifyClient"`
 }
 
 type OAuth struct {
@@ -8568,13 +8598,11 @@ type RewriteLocationMap struct {
 }
 
 type RewriteTarget struct {
-	// 重定向目标的监听器ID
-	// 注意：此字段可能返回 null，表示无重定向。
+	// 重定向目标的监听器ID，该字段仅配置了重定向时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TargetListenerId *string `json:"TargetListenerId,omitnil,omitempty" name:"TargetListenerId"`
 
-	// 重定向目标的转发规则ID
-	// 注意：此字段可能返回 null，表示无重定向。
+	// 重定向目标的转发规则ID，该字段仅配置了重定向时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TargetLocationId *string `json:"TargetLocationId,omitnil,omitempty" name:"TargetLocationId"`
 
@@ -8917,12 +8945,12 @@ type SetLoadBalancerClsLogRequestParams struct {
 
 	// 日志服务(CLS)的日志集 ID。
 	// <li>增加和更新日志主题时可调用 [DescribeLogsets](https://cloud.tencent.com/document/product/614/58624) 接口获取日志集 ID。</li>
-	// <li>删除日志主题时，此参数填写为null即可。</li>
+	// <li>删除日志主题时，此参数填写为**空字符串**即可。</li>
 	LogSetId *string `json:"LogSetId,omitnil,omitempty" name:"LogSetId"`
 
 	// 日志服务(CLS)的日志主题 ID。
 	// <li>增加和更新日志主题时可调用 [DescribeTopics](https://cloud.tencent.com/document/product/614/56454) 接口获取日志主题 ID。</li>
-	// <li>删除日志主题时，此参数填写为null即可。</li>
+	// <li>删除日志主题时，此参数填写为**空字符串**即可。</li>
 	LogTopicId *string `json:"LogTopicId,omitnil,omitempty" name:"LogTopicId"`
 
 	// 日志类型：
@@ -8940,12 +8968,12 @@ type SetLoadBalancerClsLogRequest struct {
 
 	// 日志服务(CLS)的日志集 ID。
 	// <li>增加和更新日志主题时可调用 [DescribeLogsets](https://cloud.tencent.com/document/product/614/58624) 接口获取日志集 ID。</li>
-	// <li>删除日志主题时，此参数填写为null即可。</li>
+	// <li>删除日志主题时，此参数填写为**空字符串**即可。</li>
 	LogSetId *string `json:"LogSetId,omitnil,omitempty" name:"LogSetId"`
 
 	// 日志服务(CLS)的日志主题 ID。
 	// <li>增加和更新日志主题时可调用 [DescribeTopics](https://cloud.tencent.com/document/product/614/56454) 接口获取日志主题 ID。</li>
-	// <li>删除日志主题时，此参数填写为null即可。</li>
+	// <li>删除日志主题时，此参数填写为**空字符串**即可。</li>
 	LogTopicId *string `json:"LogTopicId,omitnil,omitempty" name:"LogTopicId"`
 
 	// 日志类型：
@@ -9297,7 +9325,7 @@ type TargetGroupBackend struct {
 	// 后端服务的唯一 ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 后端服务的监听端口
+	// 后端服务的监听端口，全端口段监听器此字段返回0，代表无效端口，即不支持设置。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 后端服务的转发权重，取值范围：[0, 100]，默认为 10。
@@ -9338,7 +9366,7 @@ type TargetGroupInfo struct {
 	// 目标组的名字
 	TargetGroupName *string `json:"TargetGroupName,omitnil,omitempty" name:"TargetGroupName"`
 
-	// 目标组的默认端口
+	// 目标组的默认端口，全监听目标组此字段返回0，表示无效端口。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
@@ -9370,19 +9398,24 @@ type TargetGroupInfo struct {
 	// 默认权重。只有v2类型目标组返回该字段。当返回为NULL时， 表示未设置默认权重。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 是否全监听目标组
+	FullListenSwitch *bool `json:"FullListenSwitch,omitnil,omitempty" name:"FullListenSwitch"`
 }
 
 type TargetGroupInstance struct {
 	// 目标组实例的内网IP
 	BindIP *string `json:"BindIP,omitnil,omitempty" name:"BindIP"`
 
-	// 目标组实例的端口
+	// 目标组实例的端口，全监听目标组不支持传此字段。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 目标组实例的权重
+	// 
+	// v2目标组需要配置权重，调用CreateTargetGroup接口创建目标组时该参数与创建接口中的Weight参数必填其一。
 	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 
-	// 目标组实例的新端口
+	// 目标组实例的新端口，全监听目标组不支持传此字段。
 	NewPort *uint64 `json:"NewPort,omitnil,omitempty" name:"NewPort"`
 }
 
