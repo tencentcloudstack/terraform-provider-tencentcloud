@@ -4,19 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cbs_snapshot_share_permission"
 sidebar_current: "docs-tencentcloud-resource-cbs_snapshot_share_permission"
 description: |-
-  Provides a resource to create a cbs snapshot_share_permission
+  Provides a resource to create a CBS snapshot share permission
 ---
 
 # tencentcloud_cbs_snapshot_share_permission
 
-Provides a resource to create a cbs snapshot_share_permission
+Provides a resource to create a CBS snapshot share permission
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cbs_snapshot_share_permission" "snapshot_share_permission" {
-  account_ids = ["1xxxxxx", "2xxxxxx"]
-  snapshot_id = "snap-xxxxxx"
+resource "tencentcloud_cbs_snapshot_share_permission" "example" {
+  account_ids = ["10002320****", "10002277****"]
+  snapshot_id = "snap-cs5kj0j8"
 }
 ```
 
@@ -37,9 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cbs snapshot_share_permission can be imported using the id, e.g.
+CBS snapshot share permission can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cbs_snapshot_share_permission.snapshot_share_permission snap-xxxxxx
+terraform import tencentcloud_cbs_snapshot_share_permission.example snap-cs5kj0j8
 ```
 
