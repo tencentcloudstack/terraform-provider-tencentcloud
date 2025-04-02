@@ -35,7 +35,7 @@ func ResourceTencentCloudClbInstanceSlaConfig() *schema.Resource {
 					"`SLA`: Super Large 4. When you have activated Super Large models, `SLA` refers to Super Large 4; " +
 					"`clb.c2.medium`: Standard; " +
 					"`clb.c3.small`: Advanced 1; " +
-					"`clb.c3.medium`: Advanced 1; " +
+					"`clb.c3.medium`: Advanced 2; " +
 					"`clb.c4.small`: Super Large 1; " +
 					"`clb.c4.medium`: Super Large 2; " +
 					"`clb.c4.large`: Super Large 3; " +
