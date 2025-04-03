@@ -61,6 +61,7 @@ import (
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -235,6 +236,7 @@ type TencentCloudClient struct {
 	cdcv20201214Conn            *cdc.Client
 	mqttv20240516Conn           *mqtt.Client
 	cdwpgv20201230Conn          *cdwpg.Client
+	gwlbv20240906Conn           *gwlb.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2058,4 +2060,16 @@ func (me *TencentCloudClient) UseCdwpgV20201230Client() *cdwpg.Client {
 	me.cdwpgv20201230Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cdwpgv20201230Conn
+}
+
+// UseGwlbV20240906Client return GWLB client for service
+func (me *TencentCloudClient) UseGwlbV20240906Client() *gwlb.Client {
+	if me.gwlbv20240906Conn != nil {
+		return me.gwlbv20240906Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.gwlbv20240906Conn, _ = gwlb.NewClient(me.Credential, me.Region, cpf)
+	me.gwlbv20240906Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.gwlbv20240906Conn
 }

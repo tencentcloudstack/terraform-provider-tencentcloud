@@ -71,6 +71,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mariadb"
@@ -1310,6 +1311,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_instance_sla_config":                                                  clb.ResourceTencentCloudClbInstanceSlaConfig(),
 			"tencentcloud_clb_replace_cert_for_lbs":                                                 clb.ResourceTencentCloudClbReplaceCertForLbs(),
 			"tencentcloud_clb_security_group_attachment":                                            clb.ResourceTencentCloudClbSecurityGroupAttachment(),
+			"tencentcloud_gwlb_instance":                                                            gwlb.ResourceTencentCloudGwlbInstance(),
+			"tencentcloud_gwlb_target_group":                                                        gwlb.ResourceTencentCloudGwlbTargetGroup(),
+			"tencentcloud_gwlb_instance_associate_target_group":                                     gwlb.ResourceTencentCloudGwlbInstanceAssociateTargetGroup(),
+			"tencentcloud_gwlb_target_group_register_instances":                                     gwlb.ResourceTencentCloudGwlbTargetGroupRegisterInstances(),
 			"tencentcloud_container_cluster":                                                        tke.ResourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":                                               tke.ResourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                                                       tke.ResourceTencentCloudKubernetesCluster(),

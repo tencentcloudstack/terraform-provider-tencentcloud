@@ -366,6 +366,13 @@ Resource
 tencentcloud_container_cluster
 tencentcloud_container_cluster_instance
 
+Gateway Load Balancer(GWLB)
+Resource
+tencentcloud_gwlb_instance
+tencentcloud_gwlb_target_group
+tencentcloud_gwlb_instance_associate_target_group
+tencentcloud_gwlb_target_group_register_instances
+
 Cloud Load Balancer(CLB)
 Data Source
 tencentcloud_clb_attachments
