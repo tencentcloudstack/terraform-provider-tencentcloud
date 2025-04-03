@@ -1,3 +1,25 @@
+## 1.81.180(April 3 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_gwlb_instance` ([#3270](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3270))
+* **New Resource:** `tencentcloud_gwlb_instance_associate_target_group` ([#3270](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3270))
+* **New Resource:** `tencentcloud_gwlb_target_group` ([#3270](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3270))
+* **New Resource:** `tencentcloud_gwlb_target_group_register_instances` ([#3270](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3270))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cam_user: update doc ([#3265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3265))
+* resource/tencentcloud_cbs_snapshot_share_permission: update code and doc ([#3263](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3263))
+* resource/tencentcloud_clb_instance_sla_config: update doc ([#3261](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3261))
+* resource/tencentcloud_cls_cloud_product_log_task: update api ([#3259](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3259))
+* resource/tencentcloud_cls_config: fix create error while `extract_rule` is nil ([#3266](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3266))
+* resource/tencentcloud_cos_bucket: Support multi zone deletion ([#3267](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3267))
+* resource/tencentcloud_cos_buckets: Fix the issue of query errors ([#3268](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3268))
+* resource/tencentcloud_cos_buckets: update doc ([#3264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3264))
+* resource/tencentcloud_dts_migrate_job: update doc ([#3269](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3269))
+* resource/tencentcloud_waf_anti_fake: update doc ([#3262](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3262))
+
 ## 1.81.179(April 2 , 2025)
 
 ENHANCEMENTS:
