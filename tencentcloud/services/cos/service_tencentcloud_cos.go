@@ -353,13 +353,13 @@ func (me *CosService) TencentcloudHeadBucket(ctx context.Context, bucket string,
 	return
 }
 
-func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bool, versioned bool, cdcId string) (errRet error) {
+func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bool, versioned bool, cdcId string, multiAz bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	if forced {
 		log.Printf("[DEBUG]%s api[%s] triggered, bucket [%s], versioned [%v]\n",
 			logId, "ForceCleanObject", bucket, versioned)
-		err := me.ForceCleanObject(ctx, bucket, versioned, cdcId)
+		err := me.ForceCleanObject(ctx, bucket, versioned, cdcId, multiAz)
 		if err != nil {
 			return err
 		}
@@ -381,7 +381,7 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bo
 	return nil
 }
 
-func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versioned bool, cdcId string) error {
+func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versioned bool, cdcId string, multiAz bool) error {
 	logId := tccommon.GetLogId(ctx)
 
 	// Get the object list of bucket with all versions
@@ -407,7 +407,7 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 	}
 
 	delObjs := make([]cos.Object, 0, delCnt)
-	if versioned {
+	if versioned || multiAz {
 		//add the versions
 		for _, v := range objList.Version {
 			delObjs = append(delObjs, cos.Object{

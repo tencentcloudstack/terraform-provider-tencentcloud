@@ -74,7 +74,7 @@ func testSweepCosBuckets(region string) error {
 		}
 		log.Printf("[INFO] deleting cos bucket: %s", bucket)
 
-		if err = cosService.DeleteBucket(ctx, bucket, true, true, ""); err != nil {
+		if err = cosService.DeleteBucket(ctx, bucket, true, true, "", true); err != nil {
 			log.Printf("[ERROR] delete bucket %s error: %s", bucket, err.Error())
 		}
 	}
