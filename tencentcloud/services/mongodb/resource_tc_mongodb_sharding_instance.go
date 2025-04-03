@@ -468,32 +468,40 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
-		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, nil)
+		params := make(map[string]interface{})
+
+		var inMaintenance int
+		if v, ok := d.GetOkExists("in_maintenance"); ok {
+			inMaintenance = v.(int)
+			params["in_maintenance"] = v.(int)
+		}
+		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
 			return err
 		}
 
 		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
-		errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
-			if e != nil {
-				return resource.NonRetryableError(e)
-			}
-			if !has {
-				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
-			}
+		if inMaintenance == 0 {
+			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+				if !has {
+					return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
+				}
 
-			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
-			volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
-			if memory != int(memoryDes) || volume != int(volumeDes) {
-				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+				memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
+				volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
+				if memory != int(memoryDes) || volume != int(volumeDes) {
+					return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+				}
+				return nil
+			})
+			if errUpdate != nil {
+				return errUpdate
 			}
-			return nil
-		})
-		if errUpdate != nil {
-			return errUpdate
 		}
-
 	}
 
 	if d.HasChange("instance_name") {

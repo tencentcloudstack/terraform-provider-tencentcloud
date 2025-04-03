@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: support in_maintenance
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_readonly_instance: support in_maintenance
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_standby_instance: support in_maintenance
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: support in_maintenance
+```

@@ -71,6 +71,10 @@ The following arguments are supported:
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `in_maintenance` - (Optional, Int) Switch time for instance configuration changes.
+	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.
+	- 1: Perform reconfiguration tasks within the maintenance time window.
+Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.
 * `mongos_cpu` - (Optional, Int) Number of mongos cpu.
 * `mongos_memory` - (Optional, Int) Mongos memory size in GB.
 * `mongos_node_num` - (Optional, Int) Number of mongos.
