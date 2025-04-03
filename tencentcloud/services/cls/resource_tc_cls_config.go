@@ -2,7 +2,6 @@ package cls
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -224,27 +223,23 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("log_type"); ok {
 		request.LogType = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("extract_rule"); ok {
-		extractRules := make([]*cls.ExtractRuleInfo, 0, 10)
-		if len(v.([]interface{})) != 1 {
-			return fmt.Errorf("need only one extract rule.")
-		}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "extract_rule"); ok {
 		extractRule := cls.ExtractRuleInfo{}
-		dMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := dMap["time_key"]; ok {
-			extractRule.TimeKey = helper.String(v.(string))
+		if v, ok := dMap["time_key"].(string); ok && v != "" {
+			extractRule.TimeKey = helper.String(v)
 		}
-		if v, ok := dMap["time_format"]; ok {
-			extractRule.TimeFormat = helper.String(v.(string))
+		if v, ok := dMap["time_format"].(string); ok && v != "" {
+			extractRule.TimeFormat = helper.String(v)
 		}
-		if v, ok := dMap["delimiter"]; ok {
-			extractRule.Delimiter = helper.String(v.(string))
+		if v, ok := dMap["delimiter"].(string); ok && v != "" {
+			extractRule.Delimiter = helper.String(v)
 		}
-		if v, ok := dMap["log_regex"]; ok {
-			extractRule.LogRegex = helper.String(v.(string))
+		if v, ok := dMap["log_regex"].(string); ok && v != "" {
+			extractRule.LogRegex = helper.String(v)
 		}
-		if v, ok := dMap["begin_regex"]; ok {
-			extractRule.BeginRegex = helper.String(v.(string))
+		if v, ok := dMap["begin_regex"].(string); ok && v != "" {
+			extractRule.BeginRegex = helper.String(v)
 		}
 		if v, ok := dMap["keys"]; ok {
 			keys := v.(*schema.Set).List()
@@ -270,8 +265,8 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 		if v, ok := dMap["un_match_up_load_switch"]; ok {
 			extractRule.UnMatchUpLoadSwitch = helper.Bool(v.(bool))
 		}
-		if v, ok := dMap["un_match_log_key"]; ok {
-			extractRule.UnMatchLogKey = helper.String(v.(string))
+		if v, ok := dMap["un_match_log_key"].(string); ok && v != "" {
+			extractRule.UnMatchLogKey = helper.String(v)
 		}
 		if v, ok := dMap["backtracking"]; ok {
 			extractRule.Backtracking = helper.IntInt64(v.(int))
@@ -282,20 +277,20 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 		if v, ok := dMap["json_standard"]; ok {
 			extractRule.JsonStandard = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["protocol"]; ok {
-			extractRule.Protocol = helper.String(v.(string))
+		if v, ok := dMap["protocol"].(string); ok && v != "" {
+			extractRule.Protocol = helper.String(v)
 		}
-		if v, ok := dMap["address"]; ok {
-			extractRule.Address = helper.String(v.(string))
+		if v, ok := dMap["address"].(string); ok && v != "" {
+			extractRule.Address = helper.String(v)
 		}
-		if v, ok := dMap["parse_protocol"]; ok {
-			extractRule.ParseProtocol = helper.String(v.(string))
+		if v, ok := dMap["parse_protocol"].(string); ok && v != "" {
+			extractRule.ParseProtocol = helper.String(v)
 		}
 		if v, ok := dMap["metadata_type"]; ok {
 			extractRule.MetadataType = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["path_regex"]; ok {
-			extractRule.PathRegex = helper.String(v.(string))
+		if v, ok := dMap["path_regex"].(string); ok && v != "" {
+			extractRule.PathRegex = helper.String(v)
 		}
 		if v, ok := dMap["meta_tags"]; ok {
 			for _, item := range v.([]interface{}) {
@@ -310,19 +305,18 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 				extractRule.MetaTags = append(extractRule.MetaTags, &metaTagInfo)
 			}
 		}
-		extractRules = append(extractRules, &extractRule)
-		request.ExtractRule = extractRules[0]
+		request.ExtractRule = &extractRule
 	}
 	if v, ok := d.GetOk("exclude_paths"); ok {
 		excludePaths := make([]*cls.ExcludePathInfo, 0, 10)
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			excludePath := cls.ExcludePathInfo{}
-			if v, ok := dMap["type"]; ok {
-				excludePath.Type = helper.String(v.(string))
+			if v, ok := dMap["type"].(string); ok && v != "" {
+				excludePath.Type = helper.String(v)
 			}
-			if v, ok := dMap["value"]; ok {
-				excludePath.Value = helper.String(v.(string))
+			if v, ok := dMap["value"].(string); ok && v != "" {
+				excludePath.Value = helper.String(v)
 			}
 			excludePaths = append(excludePaths, &excludePath)
 		}
@@ -553,27 +547,22 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 		if v, ok := d.GetOk("log_type"); ok {
 			request.LogType = helper.String(v.(string))
 		}
-		if v, ok := d.GetOk("extract_rule"); ok {
-			extractRules := make([]*cls.ExtractRuleInfo, 0, 10)
-			if len(v.([]interface{})) != 1 {
-				return fmt.Errorf("need only one extract rule.")
-			}
+		if dMap, ok := helper.InterfacesHeadMap(d, "extract_rule"); ok {
 			extractRule := cls.ExtractRuleInfo{}
-			dMap := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := dMap["time_key"]; ok {
-				extractRule.TimeKey = helper.String(v.(string))
+			if v, ok := dMap["time_key"].(string); ok && v != "" {
+				extractRule.TimeKey = helper.String(v)
 			}
-			if v, ok := dMap["time_format"]; ok {
-				extractRule.TimeFormat = helper.String(v.(string))
+			if v, ok := dMap["time_format"].(string); ok && v != "" {
+				extractRule.TimeFormat = helper.String(v)
 			}
-			if v, ok := dMap["delimiter"]; ok {
-				extractRule.Delimiter = helper.String(v.(string))
+			if v, ok := dMap["delimiter"].(string); ok && v != "" {
+				extractRule.Delimiter = helper.String(v)
 			}
-			if v, ok := dMap["log_regex"]; ok {
-				extractRule.LogRegex = helper.String(v.(string))
+			if v, ok := dMap["log_regex"].(string); ok && v != "" {
+				extractRule.LogRegex = helper.String(v)
 			}
-			if v, ok := dMap["begin_regex"]; ok {
-				extractRule.BeginRegex = helper.String(v.(string))
+			if v, ok := dMap["begin_regex"].(string); ok && v != "" {
+				extractRule.BeginRegex = helper.String(v)
 			}
 			if v, ok := dMap["keys"]; ok {
 				keys := v.(*schema.Set).List()
@@ -599,8 +588,8 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			if v, ok := dMap["un_match_up_load_switch"]; ok {
 				extractRule.UnMatchUpLoadSwitch = helper.Bool(v.(bool))
 			}
-			if v, ok := dMap["un_match_log_key"]; ok {
-				extractRule.UnMatchLogKey = helper.String(v.(string))
+			if v, ok := dMap["un_match_log_key"].(string); ok && v != "" {
+				extractRule.UnMatchLogKey = helper.String(v)
 			}
 			if v, ok := dMap["backtracking"]; ok {
 				extractRule.Backtracking = helper.IntInt64(v.(int))
@@ -611,20 +600,20 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			if v, ok := dMap["json_standard"]; ok {
 				extractRule.JsonStandard = helper.IntInt64(v.(int))
 			}
-			if v, ok := dMap["protocol"]; ok {
-				extractRule.Protocol = helper.String(v.(string))
+			if v, ok := dMap["protocol"].(string); ok && v != "" {
+				extractRule.Protocol = helper.String(v)
 			}
-			if v, ok := dMap["address"]; ok {
-				extractRule.Address = helper.String(v.(string))
+			if v, ok := dMap["address"].(string); ok && v != "" {
+				extractRule.Address = helper.String(v)
 			}
-			if v, ok := dMap["parse_protocol"]; ok {
-				extractRule.ParseProtocol = helper.String(v.(string))
+			if v, ok := dMap["parse_protocol"].(string); ok && v != "" {
+				extractRule.ParseProtocol = helper.String(v)
 			}
 			if v, ok := dMap["metadata_type"]; ok {
 				extractRule.MetadataType = helper.IntInt64(v.(int))
 			}
-			if v, ok := dMap["path_regex"]; ok {
-				extractRule.PathRegex = helper.String(v.(string))
+			if v, ok := dMap["path_regex"].(string); ok && v != "" {
+				extractRule.PathRegex = helper.String(v)
 			}
 			if v, ok := dMap["meta_tags"]; ok {
 				for _, item := range v.([]interface{}) {
@@ -639,8 +628,7 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 					extractRule.MetaTags = append(extractRule.MetaTags, &metaTagInfo)
 				}
 			}
-			extractRules = append(extractRules, &extractRule)
-			request.ExtractRule = extractRules[0]
+			request.ExtractRule = &extractRule
 		}
 	}
 	if d.HasChange("exclude_paths") {
@@ -649,11 +637,11 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			for _, item := range v.([]interface{}) {
 				dMap := item.(map[string]interface{})
 				excludePath := cls.ExcludePathInfo{}
-				if v, ok := dMap["type"]; ok {
-					excludePath.Type = helper.String(v.(string))
+				if v, ok := dMap["type"].(string); ok && v != "" {
+					excludePath.Type = helper.String(v)
 				}
-				if v, ok := dMap["value"]; ok {
-					excludePath.Value = helper.String(v.(string))
+				if v, ok := dMap["value"].(string); ok && v != "" {
+					excludePath.Value = helper.String(v)
 				}
 				excludePaths = append(excludePaths, &excludePath)
 			}
