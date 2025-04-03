@@ -1313,7 +1313,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_security_group_attachment":                                            clb.ResourceTencentCloudClbSecurityGroupAttachment(),
 			"tencentcloud_gwlb_instance":                                                            gwlb.ResourceTencentCloudGwlbInstance(),
 			"tencentcloud_gwlb_target_group":                                                        gwlb.ResourceTencentCloudGwlbTargetGroup(),
-			"tencentcloud_gwlb_instance_associate_target_groups":                                    gwlb.ResourceTencentCloudGwlbInstanceAssociateTargetGroups(),
+			"tencentcloud_gwlb_instance_associate_target_group":                                     gwlb.ResourceTencentCloudGwlbInstanceAssociateTargetGroup(),
 			"tencentcloud_gwlb_target_group_register_instances":                                     gwlb.ResourceTencentCloudGwlbTargetGroupRegisterInstances(),
 			"tencentcloud_container_cluster":                                                        tke.ResourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":                                               tke.ResourceTencentCloudContainerClusterInstance(),

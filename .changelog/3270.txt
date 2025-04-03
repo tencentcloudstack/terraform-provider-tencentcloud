@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_gwlb_instance
+```
+
+```release-note:new-resource
+tencentcloud_gwlb_target_group
+```
+
+```release-note:new-resource
+tencentcloud_gwlb_instance_associate_target_group
+```
+
+```release-note:new-resource
+tencentcloud_gwlb_target_group_register_instances
+```

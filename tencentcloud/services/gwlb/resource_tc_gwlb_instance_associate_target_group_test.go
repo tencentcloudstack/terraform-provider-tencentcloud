@@ -1,8 +1,31 @@
-Provides a resource to create a gwlb gwlb_instance_associate_target_groups
+package gwlb_test
 
-Example Usage
+import (
+	"testing"
 
-```hcl
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+)
+
+func TestAccTencentCloudGwlbInstanceAssociateTargetGroupResource_basic(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGwlbInstanceAssociateTargetGroup,
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_gwlb_instance_associate_target_group.gwlb_instance_associate_target_groups", "id")),
+			},
+		},
+	})
+}
+
+const testAccGwlbInstanceAssociateTargetGroup = `
+
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -46,8 +69,8 @@ resource "tencentcloud_gwlb_target_group" "gwlb_target_group" {
   }
 }
 
-resource "tencentcloud_gwlb_instance_associate_target_groups" "gwlb_instance_associate_target_groups" {
+resource "tencentcloud_gwlb_instance_associate_target_group" "gwlb_instance_associate_target_groups" {
   load_balancer_id = tencentcloud_gwlb_instance.gwlb_instance.id
   target_group_id = tencentcloud_gwlb_target_group.gwlb_target_group.id
 }
-```
+`

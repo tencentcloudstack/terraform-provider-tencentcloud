@@ -1,13 +1,13 @@
 ---
 subcategory: "Gateway Load Balancer(GWLB)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_gwlb_instance_associate_target_groups"
-sidebar_current: "docs-tencentcloud-resource-gwlb_instance_associate_target_groups"
+page_title: "TencentCloud: tencentcloud_gwlb_instance_associate_target_group"
+sidebar_current: "docs-tencentcloud-resource-gwlb_instance_associate_target_group"
 description: |-
   Provides a resource to create a gwlb gwlb_instance_associate_target_groups
 ---
 
-# tencentcloud_gwlb_instance_associate_target_groups
+# tencentcloud_gwlb_instance_associate_target_group
 
 Provides a resource to create a gwlb gwlb_instance_associate_target_groups
 
@@ -57,7 +57,7 @@ resource "tencentcloud_gwlb_target_group" "gwlb_target_group" {
   }
 }
 
-resource "tencentcloud_gwlb_instance_associate_target_groups" "gwlb_instance_associate_target_groups" {
+resource "tencentcloud_gwlb_instance_associate_target_group" "gwlb_instance_associate_target_group" {
   load_balancer_id = tencentcloud_gwlb_instance.gwlb_instance.id
   target_group_id  = tencentcloud_gwlb_target_group.gwlb_target_group.id
 }

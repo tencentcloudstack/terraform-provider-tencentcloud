@@ -14,11 +14,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudGwlbInstanceAssociateTargetGroups() *schema.Resource {
+func ResourceTencentCloudGwlbInstanceAssociateTargetGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudGwlbInstanceAssociateTargetGroupsCreate,
-		Read:   resourceTencentCloudGwlbInstanceAssociateTargetGroupsRead,
-		Delete: resourceTencentCloudGwlbInstanceAssociateTargetGroupsDelete,
+		Create: resourceTencentCloudGwlbInstanceAssociateTargetGroupCreate,
+		Read:   resourceTencentCloudGwlbInstanceAssociateTargetGroupRead,
+		Delete: resourceTencentCloudGwlbInstanceAssociateTargetGroupDelete,
 		Schema: map[string]*schema.Schema{
 			"load_balancer_id": {
 				Type:        schema.TypeString,
@@ -36,8 +36,8 @@ func ResourceTencentCloudGwlbInstanceAssociateTargetGroups() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudGwlbInstanceAssociateTargetGroupsCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_gwlb_instance_associate_target_groups.create")()
+func resourceTencentCloudGwlbInstanceAssociateTargetGroupCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_gwlb_instance_associate_target_group.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -74,11 +74,11 @@ func resourceTencentCloudGwlbInstanceAssociateTargetGroupsCreate(d *schema.Resou
 
 	d.SetId(strings.Join([]string{loadBalancerId, targetGroupId}, tccommon.FILED_SP))
 
-	return resourceTencentCloudGwlbInstanceAssociateTargetGroupsRead(d, meta)
+	return resourceTencentCloudGwlbInstanceAssociateTargetGroupRead(d, meta)
 }
 
-func resourceTencentCloudGwlbInstanceAssociateTargetGroupsRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_gwlb_instance_associate_target_groups.read")()
+func resourceTencentCloudGwlbInstanceAssociateTargetGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_gwlb_instance_associate_target_group.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -96,8 +96,8 @@ func resourceTencentCloudGwlbInstanceAssociateTargetGroupsRead(d *schema.Resourc
 	return nil
 }
 
-func resourceTencentCloudGwlbInstanceAssociateTargetGroupsDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_gwlb_instance_associate_target_groups.delete")()
+func resourceTencentCloudGwlbInstanceAssociateTargetGroupDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_gwlb_instance_associate_target_group.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
