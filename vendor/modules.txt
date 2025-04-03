@@ -1095,7 +1095,6 @@ github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/json
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/regions
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312
-github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/gwlb/v20240906
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.799

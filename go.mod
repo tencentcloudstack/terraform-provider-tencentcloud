@@ -113,6 +113,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.0.993
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.0.1130
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920
@@ -311,7 +312,6 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127 // indirect
 	github.com/tetafro/godot v1.4.11 // indirect
 	github.com/tidwall/gjson v1.17.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
