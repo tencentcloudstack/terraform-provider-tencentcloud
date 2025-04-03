@@ -28,27 +28,20 @@ func TestAccTencentCloudNeedFixClsCloudProductLogTaskResource_basic(t *testing.T
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "cls_region"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "logset_name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "topic_name"),
-					// resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "extend"),
 				),
 			},
-			// {
-			// 	Config: testAccClsCloudProductLogTaskUpdate,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "id"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "instance_id"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "assumer_name"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "log_type"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "cloud_product_region"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "cls_region"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "logset_name"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "topic_name"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "extend"),
-			// 	),
-			// },
 			{
-				ResourceName:      "tencentcloud_cls_cloud_product_log_task.example",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: testAccClsCloudProductLogTaskUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_cloud_product_log_task.example", "extend"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cls_cloud_product_log_task.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"logset_name", "topic_name"},
 			},
 		},
 	})
@@ -56,7 +49,7 @@ func TestAccTencentCloudNeedFixClsCloudProductLogTaskResource_basic(t *testing.T
 
 const testAccClsCloudProductLogTask = `
 resource "tencentcloud_cls_cloud_product_log_task" "example" {
-  instance_id          = "postgres-1p7xvpc1"
+  instance_id          = "postgres-mcdstv8l"
   assumer_name         = "PostgreSQL"
   log_type             = "PostgreSQL-SLOW"
   cloud_product_region = "gz"
@@ -66,15 +59,15 @@ resource "tencentcloud_cls_cloud_product_log_task" "example" {
 }
 `
 
-// const testAccClsCloudProductLogTaskUpdate = `
-// resource "tencentcloud_cls_cloud_product_log_task" "example" {
-//   instance_id          = "postgres-1p7xvpc1"
-//   assumer_name         = "PostgreSQL"
-//   log_type             = "PostgreSQL-SLOW"
-//   cloud_product_region = "gz"
-//   cls_region           = "ap-guangzhou"
-//   logset_name          = "tf-example"
-//   topic_name           = "tf-example"
-//   extend               = "remark update."
-// }
-// `
+const testAccClsCloudProductLogTaskUpdate = `
+resource "tencentcloud_cls_cloud_product_log_task" "example" {
+  instance_id          = "postgres-mcdstv8l"
+  assumer_name         = "PostgreSQL"
+  log_type             = "PostgreSQL-SLOW"
+  cloud_product_region = "gz"
+  cls_region           = "ap-guangzhou"
+  logset_name          = "tf-example"
+  topic_name           = "tf-example"
+  extend               = "{\"ServiceName\":[\"HDFS\",\"KNOX\",\"YARN\",\"ZOOKEEPER\"],\"Policy\":0}"
+}
+`

@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_cloud_product_log_task: update api
+```
