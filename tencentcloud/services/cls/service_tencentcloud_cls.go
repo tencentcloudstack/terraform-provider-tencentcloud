@@ -1407,16 +1407,23 @@ func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context, in
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsV20201016Client().DescribeCloudProductLogTasks(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		ret = response.Response
+		return nil
+	})
 
-	response, err := me.client.UseClsV20201016Client().DescribeCloudProductLogTasks(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	ret = response.Response
 	return
 }
 

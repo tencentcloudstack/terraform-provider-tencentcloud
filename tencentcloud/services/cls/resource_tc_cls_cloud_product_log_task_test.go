@@ -49,7 +49,7 @@ func TestAccTencentCloudNeedFixClsCloudProductLogTaskResource_basic(t *testing.T
 
 const testAccClsCloudProductLogTask = `
 resource "tencentcloud_cls_cloud_product_log_task" "example" {
-  instance_id          = "postgres-f6nf921t"
+  instance_id          = "postgres-mcdstv8l"
   assumer_name         = "PostgreSQL"
   log_type             = "PostgreSQL-SLOW"
   cloud_product_region = "gz"
@@ -61,7 +61,7 @@ resource "tencentcloud_cls_cloud_product_log_task" "example" {
 
 const testAccClsCloudProductLogTaskUpdate = `
 resource "tencentcloud_cls_cloud_product_log_task" "example" {
-  instance_id          = "postgres-f6nf921t"
+  instance_id          = "postgres-mcdstv8l"
   assumer_name         = "PostgreSQL"
   log_type             = "PostgreSQL-SLOW"
   cloud_product_region = "gz"
