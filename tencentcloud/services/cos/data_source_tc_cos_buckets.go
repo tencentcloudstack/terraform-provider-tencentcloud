@@ -261,8 +261,11 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 									//	Description: "",
 									//},
 									"follow_http_headers": {
-										Type:        schema.TypeList,
-										Optional:    true,
+										Type:     schema.TypeSet,
+										Optional: true,
+										Set: func(i interface{}) int {
+											return helper.HashString(i.(string))
+										},
 										Description: "Specifies the pass through headers when accessing the origin server.",
 										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
