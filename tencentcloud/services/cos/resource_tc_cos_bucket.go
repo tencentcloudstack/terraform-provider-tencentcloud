@@ -1042,11 +1042,12 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 	bucket := d.Id()
 	forced := d.Get("force_clean").(bool)
 	versioned := d.Get("versioning_enable").(bool)
+	multiAz := d.Get("multi_az").(bool)
 	cosService := CosService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	cdcId := d.Get("cdc_id").(string)
-	err := cosService.DeleteBucket(ctx, bucket, forced, versioned, cdcId)
+	err := cosService.DeleteBucket(ctx, bucket, forced, versioned, cdcId, multiAz)
 	if err != nil {
 		return err
 	}
