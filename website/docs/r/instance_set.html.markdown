@@ -96,7 +96,8 @@ The following arguments are supported:
 * `key_name` - (Optional, String) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.
 * `password` - (Optional, String) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifying will cause the instance reset.
 * `placement_group_id` - (Optional, String, ForceNew) The ID of a placement group.
-* `private_ip` - (Optional, String) The private IP to be assigned to this instance, must be in the provided subnet and available.
+* `private_ip_addresses` - (Optional, Set: [`String`]) Private network subnet IP array, which can be used when creating an instance or modifying instance vpc attributes. Currently, only batch creation of multiple instances supports passing in multiple IPs of the same subnet. Cannot be set at the same time as `private_ip`.
+* `private_ip` - (Optional, String) The private IP to be assigned to this instance, must be in the provided subnet and available. Cannot be set at the same time as `private_ip_addresses`.
 * `project_id` - (Optional, Int) The project the instance belongs to, default to 0.
 * `security_groups` - (Optional, Set: [`String`]) A list of security group IDs to associate with.
 * `subnet_id` - (Optional, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.

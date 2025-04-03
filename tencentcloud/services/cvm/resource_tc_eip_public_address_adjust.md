@@ -1,4 +1,4 @@
-Provides a resource to create a eip public_address_adjust
+Provides a resource to create a eip public_address_adjust. Used to change the IP address. It supports changing the common public IP of the CVM instance and the EIP with monthly bandwidth. `address_id` and `instance_id` cannot exist at the same time. When `address_id` is passed, only the EIP with monthly bandwidth is supported.
 
 ~> **NOTE:** This interface is used to change the IP address. It supports changing the common public IP of the CVM instance and the EIP of the monthly bandwidth. `address_id` and `instance_id` cannot exist at the same time. When `address_id` is passed, only the EIP of the monthly bandwidth is supported.
 
