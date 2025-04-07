@@ -77,7 +77,7 @@ func ResourceTencentCloudVpnSslServer() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     svccvm.FALSE,
-				Description: "need compressed. Default value: False.",
+				Description: "Need compressed. Currently is not support compress. Default value: False.",
 			},
 		},
 	}

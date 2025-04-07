@@ -37,7 +37,7 @@ The following arguments are supported:
 * `remote_address` - (Required, String) Remote CIDR for client.
 * `ssl_vpn_server_name` - (Required, String) The name of ssl vpn server to be created.
 * `vpn_gateway_id` - (Required, String, ForceNew) VPN gateway ID.
-* `compress` - (Optional, Bool) need compressed. Default value: False.
+* `compress` - (Optional, Bool) Need compressed. Currently is not support compress. Default value: False.
 * `encrypt_algorithm` - (Optional, String) The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE.Default value: NONE.
 * `integrity_algorithm` - (Optional, String) The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.
 * `ssl_vpn_port` - (Optional, Int) The port of ssl vpn. Currently only supports UDP. Default value: 1194.
