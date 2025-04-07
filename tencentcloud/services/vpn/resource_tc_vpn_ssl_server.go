@@ -114,7 +114,7 @@ func resourceTencentCloudVpnSslServerCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("ssl_vpn_protocol"); ok {
 		request.SslVpnProtocol = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("ssl_vpn_port"); ok {
+	if v, ok := d.GetOkExists("ssl_vpn_port"); ok {
 		request.SslVpnPort = helper.IntInt64(v.(int))
 	}
 	if v, ok := d.GetOk("integrity_algorithm"); ok {
@@ -123,7 +123,7 @@ func resourceTencentCloudVpnSslServerCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("encrypt_algorithm"); ok {
 		request.EncryptAlgorithm = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("compress"); ok {
+	if v, ok := d.GetOkExists("compress"); ok {
 		request.Compress = helper.Bool(v.(bool))
 	}
 
@@ -244,7 +244,7 @@ func resourceTencentCloudVpnSslServerUpdate(d *schema.ResourceData, meta interfa
 		if v, ok := d.GetOk("ssl_vpn_protocol"); ok {
 			request.SslVpnProtocol = helper.String(v.(string))
 		}
-		if v, ok := d.GetOk("ssl_vpn_port"); ok {
+		if v, ok := d.GetOkExists("ssl_vpn_port"); ok {
 			request.SslVpnPort = helper.IntInt64(v.(int))
 		}
 		if v, ok := d.GetOk("integrity_algorithm"); ok {

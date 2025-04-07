@@ -14,7 +14,7 @@ Provide a resource to create a VPN SSL Server.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_vpn_ssl_server" "server" {
+resource "tencentcloud_vpn_ssl_server" "example" {
   local_address = [
     "10.0.0.0/17",
   ]
@@ -56,6 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 VPN SSL Server can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_vpn_ssl_server.server vpn-server-id
+$ terraform import tencentcloud_vpn_ssl_server.example vpns-cik6bjct
 ```
 
