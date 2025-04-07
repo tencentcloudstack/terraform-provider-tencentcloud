@@ -45,7 +45,7 @@ func ResourceTencentCloudTatCommand() *schema.Resource {
 			"command_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Command type. `SHELL` and `POWERSHELL` are supported. The default value is `SHELL`.",
+				Description: "Command type. `SHELL`, `POWERSHELL` and `BAT` are supported. The default value is `SHELL`.",
 			},
 
 			"working_directory": {
