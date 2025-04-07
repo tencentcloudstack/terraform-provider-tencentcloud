@@ -89,7 +89,7 @@ func DataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("data_source.tencentcloud_customer_gateways.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vpn_customer_gateways.read")()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
