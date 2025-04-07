@@ -60,7 +60,7 @@ func ResourceTencentCloudVpnSslServer() *schema.Resource {
 			"ssl_vpn_port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "The port of ssl vpn. Default value: 1194.",
+				Description: "The port of ssl vpn. Currently only supports UDP. Default value: 1194.",
 			},
 			"integrity_algorithm": {
 				Type:        schema.TypeString,

@@ -40,7 +40,7 @@ The following arguments are supported:
 * `compress` - (Optional, Bool) need compressed. Default value: False.
 * `encrypt_algorithm` - (Optional, String) The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE.Default value: NONE.
 * `integrity_algorithm` - (Optional, String) The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.
-* `ssl_vpn_port` - (Optional, Int) The port of ssl vpn. Default value: 1194.
+* `ssl_vpn_port` - (Optional, Int) The port of ssl vpn. Currently only supports UDP. Default value: 1194.
 * `ssl_vpn_protocol` - (Optional, String) The protocol of ssl vpn. Default value: UDP.
 
 ## Attributes Reference
