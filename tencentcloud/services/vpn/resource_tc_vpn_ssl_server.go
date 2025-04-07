@@ -65,19 +65,19 @@ func ResourceTencentCloudVpnSslServer() *schema.Resource {
 			"integrity_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.",
+				Description: "The integrity algorithm. Valid values: SHA1. Default value: SHA1.",
 			},
 			"encrypt_algorithm": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Description: "The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE." +
-					"Default value: NONE.",
+				Description: "The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC." +
+					"Default value: AES-128-CBC.",
 			},
 			"compress": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     svccvm.FALSE,
-				Description: "Need compressed. Currently is not support compress. Default value: False.",
+				Description: "Need compressed. Currently is not supports compress. Default value: False.",
 			},
 		},
 	}
