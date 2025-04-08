@@ -44,13 +44,13 @@ func ResourceTencentCloudMonitorTmpExporterIntegration() *schema.Resource {
 
 			"kube_type": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				Description: "Integration config.",
 			},
 
 			"cluster_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "Cluster ID.",
 			},
 		},
@@ -209,6 +209,13 @@ func resourceTencentCloudMonitorTmpExporterIntegrationUpdate(d *schema.ResourceD
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	immutableArgs := []string{"instance_id", "kind", "kube_type", "cluster_id"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed.", v)
+		}
+	}
 
 	request := monitor.NewUpdateExporterIntegrationRequest()
 

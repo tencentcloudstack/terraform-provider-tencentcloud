@@ -11,8 +11,6 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
   instance_id = "prom-gzg3f1em"
   kind        = "qcloud-exporter"
   content     = "{\"name\":\"test\",\"kind\":\"qcloud-exporter\",\"spec\":{\"scrapeSpec\":{\"interval\":\"1m\",\"timeout\":\"1m\",\"relabelConfigs\":\"#metricRelabelings:\\n#- action: labeldrop\\n#  regex: tmp_test_label\\n\"},\"instanceSpec\":{\"region\":\"Guangzhou\",\"role\":\"CM_QCSLinkedRoleInTMP\",\"useRole\":true,\"authProvider\":{\"method\":1,\"presetRole\":\"CM_QCSLinkedRoleInTMP\"},\"rateLimit\":1000,\"delaySeconds\":0,\"rangeSeconds\":0,\"reload_interval_minutes\":10,\"uin\":\"100023201586\",\"tag_key_operation\":\"ToUnderLineAndLower\"},\"exporterSpec\":{\"cvm\":false,\"cbs\":true,\"imageRegistry\":\"ccr.ccs.tencentyun.com\",\"cpu\":\"0.25\",\"memory\":\"0.5Gi\"}},\"status\":{}}"
-  cluster_id  = "cls-csxm4phu"
-  kube_type   = 3
 }
 ```
 
@@ -44,8 +42,6 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
       }
     }
   })
-  cluster_id = ""
-  kube_type  = 3
 }
 ```
 
@@ -106,7 +102,5 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
       EOT
     }
   })
-  cluster_id = ""
-  kube_type  = 3
 }
 ```
