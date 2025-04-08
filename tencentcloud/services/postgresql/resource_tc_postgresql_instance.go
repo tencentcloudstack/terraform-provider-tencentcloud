@@ -259,6 +259,22 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 							Description: "List of backup period per week, available values: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. NOTE: At least specify two days.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
+						"monthly_backup_retention_period": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Specify days of the retention.",
+						},
+						"monthly_backup_period": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "If it is in monthly dimension, the format is numeric characters, such as [\"1\",\"2\"].",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+						"monthly_plan_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Monthly plan id.",
+						},
 					},
 				},
 			},
@@ -715,6 +731,55 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
+
+		if v, ok := plan["monthly_backup_period"].([]interface{}); ok && len(v) > 0 {
+			request0 := postgresql.NewCreateBaseBackupRequest()
+			request0.DBInstanceId = &instanceId
+
+			var baseBackupId *string
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateBaseBackup(request0)
+				if e != nil {
+					return tccommon.RetryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+				}
+				baseBackupId = resp.Response.BaseBackupId
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+
+			request1 := postgresql.NewModifyBackupPlanRequest()
+			request1.DBInstanceId = &instanceId
+			request1.PlanId = baseBackupId
+			request1.BackupPeriod = helper.InterfacesStringsPoint(v)
+
+			if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
+				request1.MinBackupStartTime = &v
+			}
+
+			if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
+				request1.MaxBackupStartTime = &v
+			}
+
+			if v, ok := plan["monthly_backup_retention_period"].(int); ok && v != 0 {
+				request1.BaseBackupRetentionPeriod = helper.IntUint64(v)
+			}
+
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				err := postgresqlService.ModifyBackupPlan(ctx, request1)
+				if err != nil {
+					return tccommon.RetryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	return resourceTencentCloudPostgresqlInstanceRead(d, meta)
@@ -923,9 +988,19 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 
-	var backupPlan *postgresql.BackupPlan
+	var backupPlan, monthlyBackupPlan *postgresql.BackupPlan
 	if len(bkpResponse) > 0 {
 		backupPlan = bkpResponse[0]
+		for _, plan := range bkpResponse {
+			if plan != nil && plan.BackupPeriodType != nil {
+				if *plan.BackupPeriodType == "month" {
+					monthlyBackupPlan = plan
+				}
+				if *plan.BackupPeriodType == "week" {
+					backupPlan = plan
+				}
+			}
+		}
 	}
 
 	if backupPlan != nil {
@@ -951,6 +1026,22 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 			}
 
 			planMap["backup_period"] = strSlice
+		}
+
+		if monthlyBackupPlan != nil && monthlyBackupPlan.PlanId != nil {
+			planMap["monthly_plan_id"] = monthlyBackupPlan.PlanId
+		}
+		if monthlyBackupPlan != nil && monthlyBackupPlan.BackupPeriod != nil {
+			strSlice := []string{}
+			err := json.Unmarshal([]byte(*monthlyBackupPlan.BackupPeriod), &strSlice)
+			if err != nil {
+				return fmt.Errorf("BackupPeriod:[%s] has invalid format,Unmarshal failed! error: %v", *backupPlan.BackupPeriod, err.Error())
+			}
+
+			planMap["monthly_backup_period"] = strSlice
+		}
+		if monthlyBackupPlan != nil && monthlyBackupPlan.BaseBackupRetentionPeriod != nil {
+			planMap["monthly_backup_retention_period"] = monthlyBackupPlan.BaseBackupRetentionPeriod
 		}
 
 		_ = d.Set("backup_plan", []interface{}{planMap})
@@ -1411,6 +1502,55 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			if err != nil {
 				return err
 			}
+
+			request1 := postgresql.NewModifyBackupPlanRequest()
+			request1.DBInstanceId = &instanceId
+			var isDeleted bool
+			if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
+				request1.MinBackupStartTime = &v
+			}
+
+			if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
+				request1.MaxBackupStartTime = &v
+			}
+
+			if v, ok := plan["monthly_backup_retention_period"].(int); ok && v != 0 {
+				request1.BaseBackupRetentionPeriod = helper.IntUint64(v)
+			}
+
+			if v, ok := plan["monthly_backup_period"].([]interface{}); ok && len(v) > 0 {
+				request1.BackupPeriod = helper.InterfacesStringsPoint(v)
+			} else {
+				isDeleted = true
+			}
+
+			var monthlyPlanId string
+			if v, ok := plan["monthly_plan_id"].(string); ok {
+				request1.PlanId = helper.String(v)
+				monthlyPlanId = v
+			}
+			if isDeleted && monthlyPlanId != "" {
+				request0 := postgresql.NewDeleteBackupPlanRequest()
+				request0.DBInstanceId = &instanceId
+				request0.PlanId = &monthlyPlanId
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DeleteBackupPlan(request0)
+					if e != nil {
+						return tccommon.RetryError(e)
+					}
+					return nil
+				})
+
+				if err != nil {
+					return err
+				}
+			} else {
+				err = postgresqlService.ModifyBackupPlan(ctx, request1)
+				if err != nil {
+					return err
+				}
+			}
+
 		}
 	}
 
