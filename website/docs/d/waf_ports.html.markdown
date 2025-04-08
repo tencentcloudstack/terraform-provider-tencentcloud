@@ -26,6 +26,15 @@ data "tencentcloud_waf_ports" "example" {
 }
 ```
 
+### Or
+
+```hcl
+data "tencentcloud_waf_ports" "example" {
+  edition     = "sparta-waf"
+  instance_id = "waf_2ka80zly0702e8j3"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
