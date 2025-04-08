@@ -701,6 +701,37 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	// set backup plan
 	if plan, ok := helper.InterfacesHeadMap(d, "backup_plan"); ok {
+		if v, ok := plan["monthly_backup_period"].([]interface{}); ok && len(v) > 0 {
+			request0 := postgresql.NewCreateBackupPlanRequest()
+			request0.DBInstanceId = &instanceId
+			request0.BackupPeriodType = helper.String("month")
+			request0.PlanName = helper.String("custom_month")
+			request0.BackupPeriod = helper.InterfacesStringsPoint(v)
+
+			if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
+				request0.MinBackupStartTime = &v
+			}
+
+			if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
+				request0.MaxBackupStartTime = &v
+			}
+
+			if v, ok := plan["monthly_backup_retention_period"].(int); ok && v != 0 {
+				request0.BaseBackupRetentionPeriod = helper.IntUint64(v)
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateBackupPlan(request0)
+				if e != nil {
+					return tccommon.RetryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+				}
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+		}
 		request := postgresql.NewModifyBackupPlanRequest()
 		request.DBInstanceId = &instanceId
 		if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
@@ -730,55 +761,6 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 		if err != nil {
 			return err
-		}
-
-		if v, ok := plan["monthly_backup_period"].([]interface{}); ok && len(v) > 0 {
-			request0 := postgresql.NewCreateBaseBackupRequest()
-			request0.DBInstanceId = &instanceId
-
-			var baseBackupId *string
-			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				resp, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateBaseBackup(request0)
-				if e != nil {
-					return tccommon.RetryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
-				}
-				baseBackupId = resp.Response.BaseBackupId
-				return nil
-			})
-
-			if err != nil {
-				return err
-			}
-
-			request1 := postgresql.NewModifyBackupPlanRequest()
-			request1.DBInstanceId = &instanceId
-			request1.PlanId = baseBackupId
-			request1.BackupPeriod = helper.InterfacesStringsPoint(v)
-
-			if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
-				request1.MinBackupStartTime = &v
-			}
-
-			if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
-				request1.MaxBackupStartTime = &v
-			}
-
-			if v, ok := plan["monthly_backup_retention_period"].(int); ok && v != 0 {
-				request1.BaseBackupRetentionPeriod = helper.IntUint64(v)
-			}
-
-			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				err := postgresqlService.ModifyBackupPlan(ctx, request1)
-				if err != nil {
-					return tccommon.RetryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				return err
-			}
 		}
 	}
 
@@ -1505,7 +1487,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 			request1 := postgresql.NewModifyBackupPlanRequest()
 			request1.DBInstanceId = &instanceId
-			var isDeleted bool
+			var hasMonthlybackupPeriod bool
 			if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
 				request1.MinBackupStartTime = &v
 			}
@@ -1520,16 +1502,15 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 			if v, ok := plan["monthly_backup_period"].([]interface{}); ok && len(v) > 0 {
 				request1.BackupPeriod = helper.InterfacesStringsPoint(v)
-			} else {
-				isDeleted = true
+				hasMonthlybackupPeriod = true
 			}
 
 			var monthlyPlanId string
-			if v, ok := plan["monthly_plan_id"].(string); ok {
+			if v, ok := plan["monthly_plan_id"].(string); ok && v != "" {
 				request1.PlanId = helper.String(v)
 				monthlyPlanId = v
 			}
-			if isDeleted && monthlyPlanId != "" {
+			if !hasMonthlybackupPeriod && monthlyPlanId != "" {
 				request0 := postgresql.NewDeleteBackupPlanRequest()
 				request0.DBInstanceId = &instanceId
 				request0.PlanId = &monthlyPlanId
@@ -1544,22 +1525,39 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 				if err != nil {
 					return err
 				}
-			} else {
-				if monthlyPlanId == "" {
-					request00 := postgresql.NewCreateBaseBackupRequest()
-					request00.DBInstanceId = &instanceId
-					err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-						_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateBaseBackup(request00)
-						if e != nil {
-							return tccommon.RetryError(e)
-						}
-						return nil
-					})
-
-					if err != nil {
-						return err
-					}
+			} else if hasMonthlybackupPeriod && monthlyPlanId == "" {
+				request00 := postgresql.NewCreateBackupPlanRequest()
+				request00.DBInstanceId = &instanceId
+				request00.BackupPeriodType = helper.String("month")
+				request00.PlanName = helper.String("custom_month")
+				if v, ok := plan["monthly_backup_period"].([]interface{}); ok && len(v) > 0 {
+					request00.BackupPeriod = helper.InterfacesStringsPoint(v)
 				}
+
+				if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
+					request00.MinBackupStartTime = &v
+				}
+
+				if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
+					request00.MaxBackupStartTime = &v
+				}
+
+				if v, ok := plan["monthly_backup_retention_period"].(int); ok && v != 0 {
+					request00.BaseBackupRetentionPeriod = helper.IntUint64(v)
+				}
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateBackupPlan(request00)
+					if e != nil {
+						return tccommon.RetryError(e)
+					}
+					return nil
+				})
+
+				if err != nil {
+					return err
+				}
+			} else {
+				request1.PlanId = helper.String(monthlyPlanId)
 				err = postgresqlService.ModifyBackupPlan(ctx, request1)
 				if err != nil {
 					return err
