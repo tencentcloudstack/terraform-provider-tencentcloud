@@ -1545,6 +1545,21 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 					return err
 				}
 			} else {
+				if monthlyPlanId == "" {
+					request00 := postgresql.NewCreateBaseBackupRequest()
+					request00.DBInstanceId = &instanceId
+					err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+						_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateBaseBackup(request00)
+						if e != nil {
+							return tccommon.RetryError(e)
+						}
+						return nil
+					})
+
+					if err != nil {
+						return err
+					}
+				}
 				err = postgresqlService.ModifyBackupPlan(ctx, request1)
 				if err != nil {
 					return err
