@@ -182,16 +182,17 @@ func resourceTencentCloudTatCommandCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOk("tags"); ok {
 		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			tag := tat.Tag{}
-			if v, ok := dMap["key"]; ok {
-				tag.Key = helper.String(v.(string))
-			}
-			if v, ok := dMap["value"]; ok {
-				tag.Value = helper.String(v.(string))
-			}
+			if dMap, ok := item.(map[string]interface{}); ok && dMap != nil {
+				tag := tat.Tag{}
+				if v, ok := dMap["key"]; ok {
+					tag.Key = helper.String(v.(string))
+				}
+				if v, ok := dMap["value"]; ok {
+					tag.Value = helper.String(v.(string))
+				}
 
-			request.Tags = append(request.Tags, &tag)
+				request.Tags = append(request.Tags, &tag)
+			}
 		}
 	}
 
