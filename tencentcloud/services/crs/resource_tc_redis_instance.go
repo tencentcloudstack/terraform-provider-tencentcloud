@@ -116,10 +116,9 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Description: "Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.",
 			},
 			"mem_size": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{256, 512, 1024, 2048, 4096, 8192, 12288, 16384, 20480, 24576, 32768, 40960, 49152, 65536}),
-				Description:  "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding. `512MB` is supported only in master-slave instance.",
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding. `512MB` is supported only in master-slave instance.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
