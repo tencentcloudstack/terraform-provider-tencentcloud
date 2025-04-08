@@ -33,7 +33,7 @@ func ResourceTencentCloudTatCommand() *schema.Resource {
 			"content": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Base64-encoded command. The maximum length is 64 KB.",
+				Description: "Command content. The maximum length is 64 KB.",
 			},
 
 			"description": {
@@ -45,7 +45,7 @@ func ResourceTencentCloudTatCommand() *schema.Resource {
 			"command_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Command type. `SHELL` and `POWERSHELL` are supported. The default value is `SHELL`.",
+				Description: "Command type. `SHELL`, `POWERSHELL` and `BAT` are supported. The default value is `SHELL`.",
 			},
 
 			"working_directory": {

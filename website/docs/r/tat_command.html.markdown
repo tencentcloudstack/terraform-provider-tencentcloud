@@ -41,8 +41,8 @@ EOF
 The following arguments are supported:
 
 * `command_name` - (Required, String) Command name. The name can be up to 60 bytes, and contain [a-z], [A-Z], [0-9] and [_-.].
-* `content` - (Required, String) Base64-encoded command. The maximum length is 64 KB.
-* `command_type` - (Optional, String) Command type. `SHELL` and `POWERSHELL` are supported. The default value is `SHELL`.
+* `content` - (Required, String) Command content. The maximum length is 64 KB.
+* `command_type` - (Optional, String) Command type. `SHELL`, `POWERSHELL` and `BAT` are supported. The default value is `SHELL`.
 * `default_parameters` - (Optional, String) The default value of the custom parameter value when it is enabled. The field type is JSON encoded string. For example, {"varA": "222"}.`key` is the name of the custom parameter and value is the default value. Both `key` and `value` are strings.If no parameter value is provided in the `InvokeCommand` API, the default value is used.Up to 20 custom parameters are supported.The name of the custom parameter cannot exceed 64 characters and can contain [a-z], [A-Z], [0-9] and [-_].
 * `description` - (Optional, String) Command description. The maximum length is 120 characters.
 * `enable_parameter` - (Optional, Bool) Whether to enable the custom parameter feature.This cannot be modified once created.Default value: `false`.
