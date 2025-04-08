@@ -620,19 +620,18 @@ const (
 )
 
 const (
-	METRIC_NAME_ACCESS              = "access"
-	METRIC_NAME_BOTACCESS           = "botAccess"
-	METRIC_NAME_DOWN                = "down"
-	METRIC_NAME_UP                  = "up"
-	METRIC_NAME_ATTACK              = "attack"
-	METRIC_NAME_CC                  = "cc"
-	METRIC_NAME_STATUSSERVERERROR   = "StatusServerError"
-	METRIC_NAME_STATUSCLIENTERROR   = "StatusClientError"
-	METRIC_NAME_STATUSREDIRECT      = "StatusRedirect"
-	METRIC_NAME_STATUSOK            = "StatusOk"
-	METRIC_NAME_UPSTREAMSERVERERROR = "UpstreamServerError"
-	METRIC_NAME_UPSTREAMCLIENTERROR = "UpstreamClientError"
-	METRIC_NAME_UPSTREAMREDIRECT    = "UpstreamRedirect"
+	METRIC_NAME_ACCESS      = "access"
+	METRIC_NAME_BOTACCESS   = "botAccess"
+	METRIC_NAME_DOWN        = "down"
+	METRIC_NAME_UP          = "up"
+	METRIC_NAME_ATTACK      = "attack"
+	METRIC_NAME_CC          = "cc"
+	METRIC_NAME_BW          = "bw"
+	METRIC_NAME_TAMPER      = "tamper"
+	METRIC_NAME_LEAK        = "leak"
+	METRIC_NAME_ACL         = "acl"
+	METRIC_NAME_HTTP_STATUS = "http_status"
+	METRIC_NAME_WX_ACCESS   = "wx_access"
 )
 
 var MetricNameList = []string{
@@ -642,13 +641,12 @@ var MetricNameList = []string{
 	METRIC_NAME_UP,
 	METRIC_NAME_ATTACK,
 	METRIC_NAME_CC,
-	METRIC_NAME_STATUSSERVERERROR,
-	METRIC_NAME_STATUSCLIENTERROR,
-	METRIC_NAME_STATUSREDIRECT,
-	METRIC_NAME_STATUSOK,
-	METRIC_NAME_UPSTREAMSERVERERROR,
-	METRIC_NAME_UPSTREAMCLIENTERROR,
-	METRIC_NAME_UPSTREAMREDIRECT,
+	METRIC_NAME_BW,
+	METRIC_NAME_TAMPER,
+	METRIC_NAME_LEAK,
+	METRIC_NAME_ACL,
+	METRIC_NAME_HTTP_STATUS,
+	METRIC_NAME_WX_ACCESS,
 }
 
 var (
