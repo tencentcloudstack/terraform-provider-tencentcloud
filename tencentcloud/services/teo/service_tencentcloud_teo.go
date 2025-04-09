@@ -1774,3 +1774,40 @@ func (me *TeoService) TeoL7AccRuleStateRefreshFunc(zoneId, taskId string, failSt
 		return object, status, nil
 	}
 }
+
+func (me *TeoService) DescribeTeoDnsRecordById(ctx context.Context, zoneId, recordId string) (ret *teov20220901.DnsRecord, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeDnsRecordsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.Filters = []*teov20220901.AdvancedFilter{
+		{
+			Name:   helper.String("id"),
+			Values: helper.Strings([]string{recordId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseTeoClient().DescribeDnsRecords(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if len(response.Response.DnsRecords) > 0 {
+			ret = response.Response.DnsRecords[0]
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
