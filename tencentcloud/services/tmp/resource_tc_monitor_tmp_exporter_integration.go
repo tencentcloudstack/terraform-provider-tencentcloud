@@ -89,7 +89,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 		request.Content = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("kube_type"); ok {
+	if v, ok := d.GetOkExists("kube_type"); ok {
 		kubeType = v.(int)
 		request.KubeType = helper.IntInt64(kubeType)
 	}
@@ -97,6 +97,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
 		request.ClusterId = helper.String(clusterId)
+	}
+
+	if kubeType == 0 && clusterId == "" {
+		return fmt.Errorf("`kube_type` and `cluster_id` can only be set simultaneously or not set at all")
 	}
 
 	initStatus := monitor.NewDescribePrometheusInstanceInitStatusRequest()
@@ -165,7 +169,11 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 
 	tmpExporterIntegrationId := *response.Response.Names[0]
 
-	d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, strconv.Itoa(kubeType), clusterId, kind}, tccommon.FILED_SP))
+	if kubeType != 0 && clusterId != "" {
+		d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, strconv.Itoa(kubeType), clusterId, kind}, tccommon.FILED_SP))
+	} else {
+		d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, kind}, tccommon.FILED_SP))
+	}
 
 	return resourceTencentCloudMonitorTmpExporterIntegrationRead(d, meta)
 }
@@ -231,7 +239,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationUpdate(d *schema.ResourceD
 		request.Content = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("kube_type"); ok {
+	if v, ok := d.GetOkExists("kube_type"); ok {
 		request.KubeType = helper.IntInt64(v.(int))
 	}
 
