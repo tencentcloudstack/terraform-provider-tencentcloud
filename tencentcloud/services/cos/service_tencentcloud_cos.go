@@ -1339,7 +1339,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 					for _, header := range rule.OriginParameter.HttpHeader.FollowHttpHeaders {
 						headers.Add(header.Key)
 					}
-					item["follow_http_headers"] = headers
+					item["follow_http_headers"] = headers.List()
 				}
 
 			}
