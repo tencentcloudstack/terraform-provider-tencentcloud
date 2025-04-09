@@ -234,6 +234,39 @@ func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudPostgresqlInstanceResource_backupPlan(t *testing.T) {
+	// t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+			tcacctest.AccStepSetRegion(t, "ap-guangzhou")
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { tcacctest.AccPreCheck(t) },
+				Config:    testAccPostgresqlInstanceBackupPlan,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "backup_plan.0.min_backup_start_time"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "backup_plan.0.base_backup_retention_period"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "2"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.monthly_backup_period.#", "1"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.monthly_backup_retention_period", "8"),
+				),
+			},
+			{
+				ResourceName:            testPostgresqlInstanceResourceKey,
+				ImportState:             true,
+				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan"},
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
@@ -460,6 +493,34 @@ resource "tencentcloud_postgresql_instance" "test" {
   }
 }
 `
+
+const testAccPostgresqlInstanceBackupPlan string = testAccPostgresqlInstanceBasic + tcacctest.DefaultVpcSubnets + `
+resource "tencentcloud_postgresql_instance" "test" {
+  name 				= "tf_postsql_instance"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type 		= "POSTPAID_BY_HOUR"
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  db_major_version  = "17"
+  engine_version    = "17.0"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  security_groups   = ["sg-5275dorp"]
+  charset			= "LATIN1"
+  project_id 		= 0
+  memory 			= 4
+  storage 			= 100
+
+  backup_plan {
+	min_backup_start_time = "00:10:11"
+	max_backup_start_time = "01:10:11"
+	base_backup_retention_period = 7
+	backup_period = ["monday", "wednesday"]
+	monthly_backup_period = ["1"]
+    monthly_backup_retention_period = 8
+  }
+}
+`
+
 const testAccPostgresqlInstancePostpaid = tcacctest.DefaultVpcSubnets + `
 data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"

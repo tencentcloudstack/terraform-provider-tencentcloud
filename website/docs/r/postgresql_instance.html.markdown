@@ -342,6 +342,8 @@ The `backup_plan` object supports the following:
 * `base_backup_retention_period` - (Optional, Int) Specify days of the retention.
 * `max_backup_start_time` - (Optional, String) Specify latest backup start time, format `hh:mm:ss`.
 * `min_backup_start_time` - (Optional, String) Specify earliest backup start time, format `hh:mm:ss`.
+* `monthly_backup_period` - (Optional, List) If it is in monthly dimension, the format is numeric characters, such as ["1","2"].
+* `monthly_backup_retention_period` - (Optional, Int) Specify days of the retention.
 
 The `db_node_set` object supports the following:
 
