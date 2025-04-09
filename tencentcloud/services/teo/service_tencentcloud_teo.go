@@ -1552,7 +1552,7 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 	request := teov20220901.NewDescribeL4ProxyRulesRequest()
 	request.ZoneId = helper.String(zoneId)
 	request.ProxyId = helper.String(proxyId)
-	filter := &teov20220901.Filter{
+	filter := &teo.Filter{
 		Name:   helper.String("rule-id"),
 		Values: []*string{helper.String(ruleId)},
 	}
@@ -1574,7 +1574,7 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response := teov20220901.NewDescribeL4ProxyRulesResponse()
+		response := teo.NewDescribeL4ProxyRulesResponse()
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseTeoClient().DescribeL4ProxyRules(request)
 			if e != nil {
@@ -1646,11 +1646,11 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 	return
 }
 
-func (me *TeoService) DescribeTeoSecurityPolicyConfigById(ctx context.Context, zoneId, entity, host, templateId string) (ret *teov20220901.SecurityPolicy, errRet error) {
+func (me *TeoService) DescribeTeoSecurityPolicyConfigById(ctx context.Context, zoneId, entity, host, templateId string) (ret *teo.SecurityPolicy, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := teov20220901.NewDescribeSecurityPolicyRequest()
-	response := teov20220901.NewDescribeSecurityPolicyResponse()
+	request := teo.NewDescribeSecurityPolicyRequest()
+	response := teo.NewDescribeSecurityPolicyResponse()
 	request.ZoneId = &zoneId
 	request.Entity = &entity
 	if host != "" {
@@ -1719,7 +1719,7 @@ func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[st
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response := teov20220901.NewDescribeZonesResponse()
+		response := teo.NewDescribeZonesResponse()
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseTeoClient().DescribeZones(request)
 			if e != nil {
@@ -1766,7 +1766,7 @@ func (me *TeoService) TeoL7AccRuleStateRefreshFunc(zoneId, taskId string, failSt
 		if len(failStates) > 0 {
 			for _, state := range failStates {
 				if strings.Contains(status, state) {
-					return object, status, fmt.Errorf("teov20220901[%s] sync check task[%s] failed, status is on [%s], return...", zoneId, taskId, status)
+					return object, status, fmt.Errorf("teo[%s] sync check task[%s] failed, status is on [%s], return...", zoneId, taskId, status)
 				}
 			}
 		}
