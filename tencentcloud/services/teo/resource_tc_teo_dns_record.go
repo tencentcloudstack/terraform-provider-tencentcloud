@@ -27,6 +27,7 @@ func ResourceTencentCloudTeoDnsRecord() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Zone id.",
 			},
 
