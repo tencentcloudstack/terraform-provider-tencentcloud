@@ -10,6 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1545,13 +1546,13 @@ func (me *TeoService) DescribeTeoL7AccSettingById(ctx context.Context, zoneId st
 	return
 }
 
-func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId string, proxyId string, ruleId string) (ret *teo.L4ProxyRule, errRet error) {
+func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId string, proxyId string, ruleId string) (ret *teov20220901.L4ProxyRule, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := teo.NewDescribeL4ProxyRulesRequest()
+	request := teov20220901.NewDescribeL4ProxyRulesRequest()
 	request.ZoneId = helper.String(zoneId)
 	request.ProxyId = helper.String(proxyId)
-	filter := &teo.Filter{
+	filter := &teov20220901.Filter{
 		Name:   helper.String("rule-id"),
 		Values: []*string{helper.String(ruleId)},
 	}
@@ -1569,11 +1570,11 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 		offset uint64 = 0
 		limit  int64  = 20
 	)
-	var instances []*teo.L4ProxyRule
+	var instances []*teov20220901.L4ProxyRule
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response := teo.NewDescribeL4ProxyRulesResponse()
+		response := teov20220901.NewDescribeL4ProxyRulesResponse()
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseTeoClient().DescribeL4ProxyRules(request)
 			if e != nil {
@@ -1607,11 +1608,11 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 	return
 }
 
-func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId string) (ret *teo.DescribeL7AccRulesResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId string) (ret *teov20220901.DescribeL7AccRulesResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := teo.NewDescribeL7AccRulesRequest()
-	response := teo.NewDescribeL7AccRulesResponse()
+	request := teov20220901.NewDescribeL7AccRulesRequest()
+	response := teov20220901.NewDescribeL7AccRulesResponse()
 	request.ZoneId = helper.String(zoneId)
 
 	defer func() {
@@ -1645,11 +1646,11 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 	return
 }
 
-func (me *TeoService) DescribeTeoSecurityPolicyConfigById(ctx context.Context, zoneId, entity, host, templateId string) (ret *teo.SecurityPolicy, errRet error) {
+func (me *TeoService) DescribeTeoSecurityPolicyConfigById(ctx context.Context, zoneId, entity, host, templateId string) (ret *teov20220901.SecurityPolicy, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := teo.NewDescribeSecurityPolicyRequest()
-	response := teo.NewDescribeSecurityPolicyResponse()
+	request := teov20220901.NewDescribeSecurityPolicyRequest()
+	response := teov20220901.NewDescribeSecurityPolicyResponse()
 	request.ZoneId = &zoneId
 	request.Entity = &entity
 	if host != "" {
@@ -1685,10 +1686,10 @@ func (me *TeoService) DescribeTeoSecurityPolicyConfigById(ctx context.Context, z
 	return
 }
 
-func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[string]interface{}) (ret []*teo.Zone, errRet error) {
+func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.Zone, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
-		request = teo.NewDescribeZonesRequest()
+		request = teov20220901.NewDescribeZonesRequest()
 	)
 
 	defer func() {
@@ -1699,7 +1700,7 @@ func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[st
 
 	for k, v := range param {
 		if k == "Filters" {
-			request.Filters = v.([]*teo.AdvancedFilter)
+			request.Filters = v.([]*teov20220901.AdvancedFilter)
 		}
 		if k == "Order" {
 			request.Order = v.(*string)
@@ -1718,7 +1719,7 @@ func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[st
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response := teo.NewDescribeZonesResponse()
+		response := teov20220901.NewDescribeZonesResponse()
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseTeoClient().DescribeZones(request)
 			if e != nil {
@@ -1749,7 +1750,7 @@ func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[st
 
 func (me *TeoService) TeoL7AccRuleStateRefreshFunc(zoneId, taskId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		request := teo.NewDescribeZoneConfigImportResultRequest()
+		request := teov20220901.NewDescribeZoneConfigImportResultRequest()
 		request.ZoneId = helper.String(zoneId)
 		request.TaskId = helper.String(taskId)
 		ratelimit.Check(request.GetAction())
@@ -1765,7 +1766,7 @@ func (me *TeoService) TeoL7AccRuleStateRefreshFunc(zoneId, taskId string, failSt
 		if len(failStates) > 0 {
 			for _, state := range failStates {
 				if strings.Contains(status, state) {
-					return object, status, fmt.Errorf("teo[%s] sync check task[%s] failed, status is on [%s], return...", zoneId, taskId, status)
+					return object, status, fmt.Errorf("teov20220901[%s] sync check task[%s] failed, status is on [%s], return...", zoneId, taskId, status)
 				}
 			}
 		}
@@ -1774,12 +1775,12 @@ func (me *TeoService) TeoL7AccRuleStateRefreshFunc(zoneId, taskId string, failSt
 	}
 }
 
-func (me *TeoService) DescribeTeoDnsRecordById(ctx context.Context, zoneId, recordId string) (ret *teo.DnsRecord, errRet error) {
+func (me *TeoService) DescribeTeoDnsRecordById(ctx context.Context, zoneId, recordId string) (ret *teov20220901.DnsRecord, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := teo.NewDescribeDnsRecordsRequest()
+	request := teov20220901.NewDescribeDnsRecordsRequest()
 	request.ZoneId = helper.String(zoneId)
-	request.Filters = []*teo.AdvancedFilter{
+	request.Filters = []*teov20220901.AdvancedFilter{
 		{
 			Name:   helper.String("id"),
 			Values: helper.Strings([]string{recordId}),
