@@ -190,6 +190,9 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 			})
 		}
 	}
+	if v, ok := params["in_maintenance"]; ok {
+		request.InMaintenance = helper.IntUint64(v.(int))
+	}
 	var response *mongodb.ModifyDBInstanceSpecResponse
 	tradeError := false
 	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
