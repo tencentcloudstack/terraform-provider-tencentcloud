@@ -43,7 +43,7 @@ The following arguments are supported:
 	- CAA: specifies the ca that can issue certificates for this site;
 	- SRV: identifies a server using a service, commonly used in microsoft's directory management.
 Different record types, such as SRV and CAA records, have different requirements for host record names and record value formats. for detailed descriptions and format examples of each record type, please refer to: [introduction to dns record types](https://intl.cloud.tencent.com/document/product/1552/90453?from_cn_redirect=1#2f681022-91ab-4a9e-ac3d-0a6c454d954e).
-* `zone_id` - (Required, String) Zone id.
+* `zone_id` - (Required, String, ForceNew) Zone id.
 * `location` - (Optional, String) DNS record resolution route. if not specified, the default is DEFAULT, which means the default resolution route and is effective in all regions.
 
 - resolution route configuration is only applicable when type (dns record type) is A, AAAA, or CNAME.
