@@ -43,7 +43,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"image_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The image to use for the instance. Changing `image_id` will cause the instance reset.",
+				Description: "The image to use for the instance. Modifications may lead to the reinstallation of the instance's operating system..",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
@@ -81,7 +81,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"hostname": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.",
+				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -331,19 +331,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"disable_monitor_service": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"disable_automation_service": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			// login
 			"key_name": {
@@ -352,14 +352,14 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:      true,
 				Deprecated:    "Please use `key_ids` instead.",
 				ConflictsWith: []string{"key_ids"},
-				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"key_ids": {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"key_name", "password"},
-				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.",
 				Set:           schema.HashString,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 			},
@@ -367,7 +367,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifying will cause the instance reset.",
+				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"keep_image_login": {
 				Type:     schema.TypeBool,
@@ -381,7 +381,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 					}
 				},
 				ConflictsWith: []string{"key_name", "key_ids", "password"},
-				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.",
+				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifications may lead to the reinstallation of the instance's operating system..",
 			},
 			"user_data": {
 				Type:          schema.TypeString,
