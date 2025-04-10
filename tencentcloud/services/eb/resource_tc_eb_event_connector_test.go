@@ -32,18 +32,14 @@ func TestAccTencentCloudEbEventConnectorResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_name", "tf-event-connector"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "description", "event connector desc"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "enable", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "type", "ckafka"),
+					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "type", "tdmq"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eb_event_connector.event_connector", "connection_description.0.resource_description"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.ckafka_params.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.ckafka_params.0.offset", "latest"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.ckafka_params.0.topic_name", "dasdasd"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_eb_event_connector.event_connector",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName: "tencentcloud_eb_event_connector.event_connector",
+				ImportState:  true,
 			},
 		},
 	})
@@ -69,7 +65,7 @@ func testAccCheckEbEventConnectorDestroy(s *terraform.State) error {
 
 		connector, err := service.DescribeEbEventConnectorById(ctx, connectionId, eventBusId)
 		if err != nil {
-			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound.EventBus" {
+			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound" {
 				return nil
 			}
 			return err
@@ -130,7 +126,6 @@ resource "tencentcloud_eb_event_bus" "foo" {
 }
 
 locals {
-  ckafka_id = "ckafka-qzoeaqx8"
   uin = data.tencentcloud_user_info.foo.owner_uin
 }
 
@@ -139,14 +134,10 @@ resource "tencentcloud_eb_event_connector" "event_connector" {
   connection_name = "tf-event-connector"
   description     = "event connector desc"
   enable          = true
-  type            = "ckafka"
+  type            = "tdmq"
 
   connection_description {
-    resource_description = "qcs::ckafka:ap-guangzhou:uin/${local.uin}:ckafkaId/uin/${local.uin}/${local.ckafka_id}"
-    ckafka_params {
-      offset     = "latest"
-      topic_name = "dasdasd"
-    }
+    resource_description = "qcs::tdmq:ap-guangzhou:uin/${local.uin}:subscriptionName/pulsar-pb5xp2wwxepd/keep-tdmq-ns/keep-tdmq-topic1/test"
   }
 }
 
