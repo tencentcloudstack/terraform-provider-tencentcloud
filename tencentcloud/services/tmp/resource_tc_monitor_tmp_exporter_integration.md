@@ -1,5 +1,7 @@
 Provides a resource to create a monitor tmpExporterIntegration
 
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version `1.81.182`. Please use `tencentcloud_monitor_tmp_exporter_integration_v2` instead.
+
 ~> **NOTE:** If you only want to upgrade the exporter version with same config, you can set `version` under `instanceSpec` with any value to trigger the change.
 
 Example Usage
