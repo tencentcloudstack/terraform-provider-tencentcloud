@@ -34,7 +34,7 @@ resource "tencentcloud_postgresql_time_window" "postgresql_time_window" {
 
 The following arguments are supported:
 
-* `db_instance_id` - (Required, String) Instance id.
+* `db_instance_id` - (Required, String, ForceNew) Instance id.
 * `maintain_duration` - (Optional, Int) Maintenance duration, Unit: hours.
 * `maintain_start_time` - (Optional, String) Maintenance start time. Time zone is UTC+8.
 * `maintain_week_days` - (Optional, Set: [`String`]) Maintenance cycle.
