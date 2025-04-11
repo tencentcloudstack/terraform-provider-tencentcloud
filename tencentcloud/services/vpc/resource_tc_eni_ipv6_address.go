@@ -100,17 +100,18 @@ func resourceTencentCloudEniIpv6AddressCreate(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_eni_ipv6_address.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		vpcService         = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request            = vpc.NewAssignIpv6AddressesRequest()
 		response           = vpc.NewAssignIpv6AddressesResponse()
 		networkInterfaceId string
 	)
 
 	if v, ok := d.GetOk("network_interface_id"); ok {
-		networkInterfaceId = v.(string)
 		request.NetworkInterfaceId = helper.String(v.(string))
+		networkInterfaceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("ipv6_addresses"); ok {
@@ -120,21 +121,27 @@ func resourceTencentCloudEniIpv6AddressCreate(d *schema.ResourceData, meta inter
 			if v, ok := dMap["address"]; ok {
 				ipv6Address.Address = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["primary"]; ok {
 				ipv6Address.Primary = helper.Bool(v.(bool))
 			}
+
 			if v, ok := dMap["address_id"]; ok {
 				ipv6Address.AddressId = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["description"]; ok {
 				ipv6Address.Description = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["is_wan_ip_blocked"]; ok {
 				ipv6Address.IsWanIpBlocked = helper.Bool(v.(bool))
 			}
+
 			if v, ok := dMap["state"]; ok {
 				ipv6Address.State = helper.String(v.(string))
 			}
+
 			request.Ipv6Addresses = append(request.Ipv6Addresses, &ipv6Address)
 		}
 	}
@@ -150,22 +157,35 @@ func resourceTencentCloudEniIpv6AddressCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create vpc ipv6EniAddress failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create vpc ipv6EniAddress failed, reason:%+v", logId, err)
 		return err
 	}
 
-	addressSet := response.Response.Ipv6AddressSet
-	if len(addressSet) < 1 {
+	if response.Response.Ipv6AddressSet == nil || len(response.Response.Ipv6AddressSet) < 1 {
 		return fmt.Errorf("assign ipv6 addresses failed.")
 	}
 
-	time.Sleep(5 * time.Second)
-
 	d.SetId(networkInterfaceId)
+
+	// wait
+	if response.Response.RequestId != nil {
+		err = vpcService.DescribeVpcTaskResult(ctx, response.Response.RequestId)
+		if err != nil {
+			return err
+		}
+	} else {
+		time.Sleep(15 * time.Second)
+	}
 
 	return resourceTencentCloudEniIpv6AddressRead(d, meta)
 }
@@ -174,16 +194,14 @@ func resourceTencentCloudEniIpv6AddressRead(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_eni_ipv6_address.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	networkInterfaceId := d.Id()
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		networkInterfaceId = d.Id()
+	)
 
 	enis, err := service.DescribeEniById(ctx, []string{networkInterfaceId})
-
 	if err != nil {
 		return err
 	}
@@ -195,7 +213,6 @@ func resourceTencentCloudEniIpv6AddressRead(d *schema.ResourceData, meta interfa
 	}
 
 	eni := enis[0]
-
 	ipv6s := make([]map[string]interface{}, 0, len(eni.Ipv6AddressSet))
 	for _, ipv6 := range eni.Ipv6AddressSet {
 		ipv6s = append(ipv6s, map[string]interface{}{
@@ -219,14 +236,14 @@ func resourceTencentCloudEniIpv6AddressDelete(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_eni_ipv6_address.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	networkInterfaceId := d.Id()
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		networkInterfaceId = d.Id()
+	)
 
 	enis, err := service.DescribeEniById(ctx, []string{networkInterfaceId})
-
 	if err != nil {
 		return err
 	}

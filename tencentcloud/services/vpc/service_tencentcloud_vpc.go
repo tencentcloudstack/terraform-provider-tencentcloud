@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -5830,6 +5831,7 @@ func (me *VpcService) DescribeVpcEndPointServiceById(ctx context.Context, endPoi
 	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDescribeVpcEndPointServiceRequest()
+	response := vpc.NewDescribeVpcEndPointServiceResponse()
 	request.EndPointServiceIds = []*string{&endPointServiceId}
 
 	defer func() {
@@ -5841,23 +5843,40 @@ func (me *VpcService) DescribeVpcEndPointServiceById(ctx context.Context, endPoi
 	ratelimit.Check(request.GetAction())
 
 	var (
-		offset uint64 = 0
-		limit  uint64 = 20
+		offset    uint64 = 0
+		limit     uint64 = 20
+		instances        = make([]*vpc.EndPointService, 0)
 	)
-	instances := make([]*vpc.EndPointService, 0)
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseVpcClient().DescribeVpcEndPointService(request)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseVpcClient().DescribeVpcEndPointService(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.RetryableError(fmt.Errorf("Describe vpc endPointService failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.EndPointServiceSet) < 1 {
 			break
 		}
+
 		instances = append(instances, response.Response.EndPointServiceSet...)
 		if len(response.Response.EndPointServiceSet) < int(limit) {
 			break
@@ -5869,6 +5888,7 @@ func (me *VpcService) DescribeVpcEndPointServiceById(ctx context.Context, endPoi
 	if len(instances) < 1 {
 		return
 	}
+
 	endPointService = instances[0]
 	return
 }
@@ -5885,14 +5905,22 @@ func (me *VpcService) DeleteVpcEndPointServiceById(ctx context.Context, endPoint
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DeleteVpcEndPointService(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseVpcClient().DeleteVpcEndPointService(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -7000,6 +7028,7 @@ func (me *VpcService) DeleteEniIpv6AddressById(ctx context.Context, networkInter
 	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewUnassignIpv6AddressesRequest()
+	response := vpc.NewUnassignIpv6AddressesResponse()
 	request.NetworkInterfaceId = &networkInterfaceId
 
 	for _, ipv6Address := range ipv6Addresses {
@@ -7014,14 +7043,37 @@ func (me *VpcService) DeleteEniIpv6AddressById(ctx context.Context, networkInter
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().UnassignIpv6Addresses(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseVpcClient().UnassignIpv6Addresses(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete vpc ipv6EniAddress failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	// wait
+	if response.Response.RequestId != nil {
+		err = me.DescribeVpcTaskResult(ctx, response.Response.RequestId)
+		if err != nil {
+			return err
+		}
+	} else {
+		time.Sleep(15 * time.Second)
+	}
 
 	return
 }
