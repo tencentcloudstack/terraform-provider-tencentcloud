@@ -178,7 +178,7 @@ func dataSourceTencentCloudClsTopicsRead(d *schema.ResourceData, meta interface{
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(nil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service = ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
