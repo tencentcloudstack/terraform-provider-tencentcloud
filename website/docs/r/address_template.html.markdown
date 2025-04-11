@@ -27,7 +27,7 @@ resource "tencentcloud_address_template" "foo" {
 The following arguments are supported:
 
 * `addresses` - (Required, Set: [`String`]) Address list. IP(`10.0.0.1`), CIDR(`10.0.1.0/24`), IP range(`10.0.0.1-10.0.0.100`) format are supported.
-* `name` - (Required, String, ForceNew) Name of the address template.
+* `name` - (Required, String) Name of the address template.
 
 ## Attributes Reference
 
