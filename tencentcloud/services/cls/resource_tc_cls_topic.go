@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -374,6 +375,7 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 		request       = cls.NewModifyTopicRequest()
 		id            = d.Id()
 		isWebTracking bool
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	)
 
 	immutableArgs := []string{"partition_count", "storage_type"}
@@ -384,110 +386,122 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("cls", "topic", tcClient.Region, id)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
+	var hasChange bool
 	request.TopicId = helper.String(id)
 
 	if d.HasChange("topic_name") {
 		request.TopicName = helper.String(d.Get("topic_name").(string))
-	}
-
-	if d.HasChange("tags") {
-		tags := d.Get("tags").(map[string]interface{})
-		request.Tags = make([]*cls.Tag, 0, len(tags))
-		for k, v := range tags {
-			key := k
-			value := v
-			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &key,
-				Value: helper.String(value.(string)),
-			})
-		}
+		hasChange = true
 	}
 
 	if d.HasChange("auto_split") {
 		request.AutoSplit = helper.Bool(d.Get("auto_split").(bool))
+		hasChange = true
 	}
 
 	if d.HasChange("max_split_partitions") {
 		request.MaxSplitPartitions = helper.IntInt64(d.Get("max_split_partitions").(int))
+		hasChange = true
 	}
 
 	if d.HasChange("period") {
 		request.Period = helper.IntInt64(d.Get("period").(int))
+		hasChange = true
 	}
 
 	if d.HasChange("hot_period") {
 		request.HotPeriod = helper.IntUint64(d.Get("hot_period").(int))
+		hasChange = true
 	}
 
 	if d.HasChange("describes") {
 		request.Describes = helper.String(d.Get("describes").(string))
+		hasChange = true
 	}
 
-	if v, ok := d.GetOkExists("is_web_tracking"); ok {
-		request.IsWebTracking = helper.Bool(v.(bool))
-		isWebTracking = v.(bool)
+	if d.HasChange("is_web_tracking") {
+		if v, ok := d.GetOkExists("is_web_tracking"); ok {
+			request.IsWebTracking = helper.Bool(v.(bool))
+			isWebTracking = v.(bool)
+			hasChange = true
+		}
 	}
+	if d.HasChange("extends") {
+		if isWebTracking {
+			if dMap, ok := helper.InterfacesHeadMap(d, "extends"); ok {
+				if anonymousAccessMap, ok := helper.InterfaceToMap(dMap, "anonymous_access"); ok {
+					topicExtendInfo := cls.TopicExtendInfo{}
+					anonymousInfo := cls.AnonymousInfo{}
+					if v, ok := anonymousAccessMap["operations"]; ok {
+						tmpList := make([]*string, 0)
+						for _, operation := range v.([]interface{}) {
+							tmpList = append(tmpList, helper.String(operation.(string)))
+						}
 
-	if isWebTracking {
-		if dMap, ok := helper.InterfacesHeadMap(d, "extends"); ok {
-			if anonymousAccessMap, ok := helper.InterfaceToMap(dMap, "anonymous_access"); ok {
-				topicExtendInfo := cls.TopicExtendInfo{}
-				anonymousInfo := cls.AnonymousInfo{}
-				if v, ok := anonymousAccessMap["operations"]; ok {
-					tmpList := make([]*string, 0)
-					for _, operation := range v.([]interface{}) {
-						tmpList = append(tmpList, helper.String(operation.(string)))
+						anonymousInfo.Operations = tmpList
 					}
 
-					anonymousInfo.Operations = tmpList
-				}
+					if v, ok := anonymousAccessMap["conditions"]; ok {
+						for _, condition := range v.([]interface{}) {
+							conditionMap := condition.(map[string]interface{})
+							conditionInfo := cls.ConditionInfo{}
+							if v, ok := conditionMap["attributes"]; ok {
+								conditionInfo.Attributes = helper.String(v.(string))
+							}
 
-				if v, ok := anonymousAccessMap["conditions"]; ok {
-					for _, condition := range v.([]interface{}) {
-						conditionMap := condition.(map[string]interface{})
-						conditionInfo := cls.ConditionInfo{}
-						if v, ok := conditionMap["attributes"]; ok {
-							conditionInfo.Attributes = helper.String(v.(string))
+							if v, ok := conditionMap["rule"]; ok {
+								conditionInfo.Rule = helper.IntUint64(v.(int))
+							}
+
+							if v, ok := conditionMap["condition_value"]; ok {
+								conditionInfo.ConditionValue = helper.String(v.(string))
+							}
+
+							anonymousInfo.Conditions = append(anonymousInfo.Conditions, &conditionInfo)
 						}
-
-						if v, ok := conditionMap["rule"]; ok {
-							conditionInfo.Rule = helper.IntUint64(v.(int))
-						}
-
-						if v, ok := conditionMap["condition_value"]; ok {
-							conditionInfo.ConditionValue = helper.String(v.(string))
-						}
-
-						anonymousInfo.Conditions = append(anonymousInfo.Conditions, &conditionInfo)
 					}
-				}
 
-				topicExtendInfo.AnonymousAccess = &anonymousInfo
-				request.Extends = &topicExtendInfo
+					topicExtendInfo.AnonymousAccess = &anonymousInfo
+					request.Extends = &topicExtendInfo
+				}
+			} else {
+				return fmt.Errorf("If `is_web_tracking` is true, Must set `extends` params.\n.")
 			}
 		} else {
-			return fmt.Errorf("If `is_web_tracking` is true, Must set `extends` params.\n.")
+			if _, ok := helper.InterfacesHeadMap(d, "extends"); ok {
+				return fmt.Errorf("If `is_web_tracking` is false, Not support set `extends` params.\n.")
+			}
 		}
-	} else {
-		if _, ok := helper.InterfacesHeadMap(d, "extends"); ok {
-			return fmt.Errorf("If `is_web_tracking` is false, Not support set `extends` params.\n.")
-		}
+		hasChange = true
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if hasChange {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
 		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
 
 	return resourceTencentCloudClsTopicRead(d, meta)
