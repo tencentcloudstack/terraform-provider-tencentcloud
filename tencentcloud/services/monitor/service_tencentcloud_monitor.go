@@ -544,14 +544,26 @@ func (me *MonitorService) DescribeMonitorTmpExporterIntegration(ctx context.Cont
 	}()
 
 	ids := strings.Split(tmpExporterIntegrationId, tccommon.FILED_SP)
-	if ids[0] != "" {
-		request.Name = &ids[0]
+	if len(ids) == 5 {
+		if ids[0] != "" {
+			request.Name = &ids[0]
+		}
+
+		request.InstanceId = &ids[1]
+		kubeType, _ := strconv.Atoi(ids[2])
+		request.KubeType = helper.IntInt64(kubeType)
+		request.ClusterId = &ids[3]
+		request.Kind = &ids[4]
+	} else if len(ids) == 3 {
+		if ids[0] != "" {
+			request.Name = &ids[0]
+		}
+
+		request.InstanceId = &ids[1]
+		request.Kind = &ids[2]
+	} else {
+		return nil, fmt.Errorf("id is broken, id is %s", tmpExporterIntegrationId)
 	}
-	request.InstanceId = &ids[1]
-	kubeType, _ := strconv.Atoi(ids[2])
-	request.KubeType = helper.IntInt64(kubeType)
-	request.ClusterId = &ids[3]
-	request.Kind = &ids[4]
 
 	response, err := me.client.UseMonitorClient().DescribeExporterIntegrations(request)
 	if err != nil {
@@ -560,12 +572,14 @@ func (me *MonitorService) DescribeMonitorTmpExporterIntegration(ctx context.Cont
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.IntegrationSet) < 1 {
 		return
 	}
+
 	tmpExporterIntegration = response.Response.IntegrationSet[0]
 	return
 }
@@ -576,12 +590,26 @@ func (me *MonitorService) DeleteMonitorTmpExporterIntegrationById(ctx context.Co
 	request := monitor.NewDeleteExporterIntegrationRequest()
 	ids := strings.Split(tmpExporterIntegrationId, tccommon.FILED_SP)
 
-	request.Name = &ids[0]
-	request.InstanceId = &ids[1]
-	kubeType, _ := strconv.Atoi(ids[2])
-	request.KubeType = helper.IntInt64(kubeType)
-	request.ClusterId = &ids[3]
-	request.Kind = &ids[4]
+	if len(ids) == 5 {
+		if ids[0] != "" {
+			request.Name = &ids[0]
+		}
+
+		request.InstanceId = &ids[1]
+		kubeType, _ := strconv.Atoi(ids[2])
+		request.KubeType = helper.IntInt64(kubeType)
+		request.ClusterId = &ids[3]
+		request.Kind = &ids[4]
+	} else if len(ids) == 3 {
+		if ids[0] != "" {
+			request.Name = &ids[0]
+		}
+
+		request.InstanceId = &ids[1]
+		request.Kind = &ids[2]
+	} else {
+		return fmt.Errorf("id is broken, id is %s", tmpExporterIntegrationId)
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -596,6 +624,7 @@ func (me *MonitorService) DeleteMonitorTmpExporterIntegrationById(ctx context.Co
 		errRet = err
 		return err
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
