@@ -1534,3 +1534,74 @@ func (me *ClsService) DescribeClsWebCallbackById(ctx context.Context, webCallbac
 	ret = response.Response.WebCallbacks[0]
 	return
 }
+
+func (me *ClsService) DescribeClsTopicsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cls.TopicInfo, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = cls.NewDescribeTopicsRequest()
+		response = cls.NewDescribeTopicsResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cls.Filter)
+		}
+
+		if k == "PreciseSearch" {
+			request.PreciseSearch = v.(*uint64)
+		}
+
+		if k == "BizType" {
+			request.BizType = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseClsClient().DescribeTopics(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.Topics) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Topics...)
+		if len(response.Response.Topics) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

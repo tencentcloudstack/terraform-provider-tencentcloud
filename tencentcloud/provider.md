@@ -1430,6 +1430,7 @@ tencentcloud_cls_shipper_tasks
 tencentcloud_cls_machines
 tencentcloud_cls_machine_group_configs
 tencentcloud_cls_logsets
+tencentcloud_cls_topics
 
 TencentCloud Lighthouse(Lighthouse)
 Resource
