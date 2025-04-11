@@ -27,5 +27,5 @@ Import
 Vpc ACL can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_vpc_acl.default acl-id
+$ terraform import tencentcloud_vpc_acl.example acl-mijp2oyu
 ```

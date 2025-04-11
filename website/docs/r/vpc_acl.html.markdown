@@ -56,6 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 Vpc ACL can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_vpc_acl.default acl-id
+$ terraform import tencentcloud_vpc_acl.example acl-mijp2oyu
 ```
 
