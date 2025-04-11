@@ -979,7 +979,7 @@ func resourceTencentCloudClsConfigExtraUpdate(d *schema.ResourceData, meta inter
 			request.HostFile = hostFiles[0]
 		}
 	}
-	if d.HasChange("container_file") || d.HasChange("type") {
+	if d.HasChange("container_file") {
 		if v, ok := d.GetOk("container_file"); ok {
 			containerFiles := make([]*cls.ContainerFileInfo, 0, 10)
 			if len(v.([]interface{})) != 1 {
@@ -1040,7 +1040,7 @@ func resourceTencentCloudClsConfigExtraUpdate(d *schema.ResourceData, meta inter
 			request.ContainerFile = containerFiles[0]
 		}
 	}
-	if d.HasChange("container_stdout") || d.HasChange("type") {
+	if d.HasChange("container_stdout") {
 		if v, ok := d.GetOk("container_stdout"); ok {
 			containerStdouts := make([]*cls.ContainerStdoutInfo, 0, 10)
 			if len(v.([]interface{})) != 1 {
