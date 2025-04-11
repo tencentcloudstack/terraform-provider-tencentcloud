@@ -1585,6 +1585,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_instance_network_access":                                       postgresql.ResourceTencentCloudPostgresqlInstanceNetworkAccess(),
 			"tencentcloud_postgresql_parameters":                                                    postgresql.ResourceTencentCloudPostgresqlParameters(),
 			"tencentcloud_postgresql_instance_ssl_config":                                           postgresql.ResourceTencentCloudPostgresqlInstanceSslConfig(),
+			"tencentcloud_postgresql_time_window":                                                   postgresql.ResourceTencentCloudPostgresqlTimeWindow(),
 			"tencentcloud_sqlserver_instance":                                                       sqlserver.ResourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                                             sqlserver.ResourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                                                        sqlserver.ResourceTencentCloudSqlserverAccount(),

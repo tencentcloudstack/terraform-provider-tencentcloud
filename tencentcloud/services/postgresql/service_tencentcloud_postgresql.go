@@ -2393,3 +2393,33 @@ func (me *PostgresqlService) DescribePostgresqlDbVersionsByFilter(ctx context.Co
 
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlTimeWindowById(ctx context.Context, dBInstanceId string) (ret *postgresv20170312.DescribeMaintainTimeWindowResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresv20170312.NewDescribeMaintainTimeWindowRequest()
+	response := postgresv20170312.NewDescribeMaintainTimeWindowResponse()
+	request.DBInstanceId = helper.String(dBInstanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	errRet = resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresV20170312Client().DescribeMaintainTimeWindow(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+
+	ret = response.Response
+	return
+}
