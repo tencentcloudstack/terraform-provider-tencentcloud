@@ -245,7 +245,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Input not supported.",
+				Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Invalid value passed in when creating.",
 			},
 			"system_disk_name": {
 				Type:        schema.TypeString,
@@ -293,7 +293,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Input not supported.",
+							Description: "Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Invalid value passed in when creating.",
 						},
 						"delete_with_instance": {
 							Type:        schema.TypeBool,
@@ -622,9 +622,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.SystemDisk.DiskSize = &diskSize
 	}
 
-	// if v, ok := d.GetOk("system_disk_id"); ok {
-	// 	request.SystemDisk.DiskId = helper.String(v.(string))
-	// }
+	if v, ok := d.GetOk("system_disk_id"); ok {
+		request.SystemDisk.DiskId = helper.String(v.(string))
+	}
 
 	if v, ok := d.GetOk("system_disk_name"); ok {
 		request.SystemDisk.DiskName = helper.String(v.(string))
@@ -658,9 +658,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				}
 			}
 
-			// if value["data_disk_id"] != "" {
-			// 	dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
-			// }
+			if value["data_disk_id"] != "" {
+				dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
+			}
 
 			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
 				deleteWithInstanceBool := deleteWithInstance.(bool)

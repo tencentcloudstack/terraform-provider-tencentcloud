@@ -252,7 +252,7 @@ The following arguments are supported:
 * `spot_max_price` - (Optional, String, ForceNew) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `stopped_mode` - (Optional, String) Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.Need to be used with the running_flag field set to `false`.
 * `subnet_id` - (Optional, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
-* `system_disk_id` - (Optional, String) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Input not supported.
+* `system_disk_id` - (Optional, String) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Invalid value passed in when creating.
 * `system_disk_name` - (Optional, String) Name of the system disk.
 * `system_disk_resize_online` - (Optional, Bool) Resize online.
 * `system_disk_size` - (Optional, Int) Size of the system disk. unit is GB, Default is 50GB. If modified, the instance may force stop.
@@ -266,7 +266,7 @@ The `data_disks` object supports the following:
 
 * `data_disk_size` - (Required, Int) Size of the data disk, and unit is GB.
 * `data_disk_type` - (Required, String, ForceNew) Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: LOCAL_BASIC: local disk, LOCAL_SSD: local SSD disk, LOCAL_NVME: local NVME disk, specified in the InstanceType, LOCAL_PRO: local HDD disk, specified in the InstanceType, CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD, CLOUD_BSSD: Balanced SSD.
-* `data_disk_id` - (Optional, String) Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Input not supported.
+* `data_disk_id` - (Optional, String) Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Invalid value passed in when creating.
 * `data_disk_name` - (Optional, String) Name of data disk.
 * `data_disk_snapshot_id` - (Optional, String, ForceNew) Snapshot ID of the data disk. The selected data disk snapshot size must be smaller than the data disk size.
 * `delete_with_instance_prepaid` - (Optional, Bool, ForceNew) Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `PREPAID` instance), default is false.
