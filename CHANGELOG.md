@@ -1,3 +1,23 @@
+## 1.81.182(April 11 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cls_topics` ([#3291](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3291))
+* **New Resource:** `tencentcloud_monitor_tmp_exporter_integration_v2` ([#3290](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3290))
+* **New Resource:** `tencentcloud_postgresql_time_window` ([#3065](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3065))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_vpc_acls: update doc ([#3296](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3296))
+* resource/tencentcloud_address_template: update doc ([#3302](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3302))
+* resource/tencentcloud_address_template_group: update doc ([#3302](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3302))
+* resource/tencentcloud_eni_ipv6_address: update code and doc ([#3300](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3300))
+* resource/tencentcloud_monitor_tmp_exporter_integration: This resource has been deprecated in Terraform TencentCloud provider version `1.81.182`. Please use `tencentcloud_monitor_tmp_exporter_integration_v2` instead. ([#3290](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3290))
+* resource/tencentcloud_protocol_template: update doc ([#3302](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3302))
+* resource/tencentcloud_protocol_template_group: update doc ([#3302](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3302))
+* resource/tencentcloud_vpc_acl: update doc ([#3297](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3297))
+* resource/tencentcloud_vpc_end_point_service: updace code and doc ([#3295](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3295))
+
 ## 1.81.181(April 9 , 2025)
 
 FEATURES:
