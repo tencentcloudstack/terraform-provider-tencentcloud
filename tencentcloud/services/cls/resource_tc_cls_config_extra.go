@@ -930,7 +930,7 @@ func resourceTencentCloudClsConfigExtraUpdate(d *schema.ResourceData, meta inter
 			request.TopicId = helper.String(v.(string))
 		}
 	}
-	if d.HasChange("type") {
+	if d.HasChange("type") || d.HasChange("container_file") || d.HasChange("container_stdout") {
 		if v, ok := d.GetOk("type"); ok {
 			request.Type = helper.String(v.(string))
 		}
