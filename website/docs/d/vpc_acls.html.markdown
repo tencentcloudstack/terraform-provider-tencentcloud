@@ -13,16 +13,19 @@ Use this data source to query VPC Network ACL information.
 
 ## Example Usage
 
+### Query all acls
+
 ```hcl
-data "tencentcloud_vpc_instances" "foo" {
-}
+data "tencentcloud_vpc_acls" "example" {}
+```
 
-data "tencentcloud_vpc_acls" "foo" {
-  vpc_id = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
-}
+### Query acls by filters
 
-data "tencentcloud_vpc_acls" "foo" {
-  name = "test_acl"
+```hcl
+data "tencentcloud_vpc_acls" "example" {
+  id     = "acl-b7kiagdc"
+  vpc_id = "vpc-2l5kmsbx"
+  name   = "tf-example"
 }
 ```
 
