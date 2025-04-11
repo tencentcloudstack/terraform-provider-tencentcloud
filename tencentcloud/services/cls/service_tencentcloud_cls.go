@@ -45,7 +45,6 @@ func (me *ClsService) DescribeClsLogset(ctx context.Context, logsetId string) (l
 			Values: []*string{&logsetId},
 		},
 	)
-	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
 	var pageSize int64 = 100
@@ -53,34 +52,43 @@ func (me *ClsService) DescribeClsLogset(ctx context.Context, logsetId string) (l
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = logsetId
 
-	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClsClient(iacExtInfo).DescribeLogsets(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		for {
+			request.Offset = &offset
+			request.Limit = &pageSize
+			ratelimit.Check(request.GetAction())
+			response, e := me.client.UseClsClient(iacExtInfo).DescribeLogsets(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				errRet = e
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Logsets) < 1 {
-			break
+			if response == nil || len(response.Response.Logsets) < 1 {
+				break
+			}
+			instances = append(instances, response.Response.Logsets...)
+			if len(response.Response.Logsets) < int(pageSize) {
+				break
+			}
+			offset += pageSize
 		}
-		instances = append(instances, response.Response.Logsets...)
-		if len(response.Response.Logsets) < int(pageSize) {
-			break
-		}
-		offset += pageSize
-	}
 
-	if len(instances) < 1 {
+		if len(instances) < 1 {
+			return nil
+		}
+		logset = instances[0]
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
 		return
 	}
-	logset = instances[0]
 
 	return
 
@@ -294,14 +302,22 @@ func (me *ClsService) DeleteClsTopic(ctx context.Context, id string) (errRet err
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseClsClient().DeleteTopic(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsClient().DeleteTopic(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -774,14 +790,22 @@ func (me *ClsService) DeleteClsIndex(ctx context.Context, id string) (errRet err
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseClsClient().DeleteIndex(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsClient().DeleteIndex(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
