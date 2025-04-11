@@ -196,6 +196,9 @@ func resourceTencentCloudServerlessHbaseInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOk("tags"); ok {
 		for _, item := range v.(*schema.Set).List() {
+			if item == nil {
+				continue
+			}
 			tagsMap := item.(map[string]interface{})
 			tag := emr.Tag{}
 			if v, ok := tagsMap["tag_key"]; ok {
