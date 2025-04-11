@@ -244,6 +244,8 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 			}
 
 			request.Extends = &topicExtendInfo
+		} else {
+			return fmt.Errorf("If `is_web_tracking` is true, Must set `extends` params.\n.")
 		}
 	} else {
 		if _, ok := helper.InterfacesHeadMap(d, "extends"); ok {
