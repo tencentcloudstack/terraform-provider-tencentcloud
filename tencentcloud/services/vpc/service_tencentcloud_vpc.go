@@ -7105,6 +7105,16 @@ func (me *VpcService) DeleteEniIpv4AddressById(ctx context.Context, networkInter
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	// wait
+	if response.Response.RequestId != nil {
+		err = me.DescribeVpcTaskResult(ctx, response.Response.RequestId)
+		if err != nil {
+			return err
+		}
+	} else {
+		time.Sleep(15 * time.Second)
+	}
+
 	return
 }
 
