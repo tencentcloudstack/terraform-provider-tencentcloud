@@ -96,13 +96,21 @@ func (me *AsService) DeleteLaunchConfiguration(ctx context.Context, configuratio
 	logId := tccommon.GetLogId(ctx)
 	request := as.NewDeleteLaunchConfigurationRequest()
 	request.LaunchConfigurationId = &configurationId
-	ratelimit.Check(request.GetAction())
-	_, err := me.client.UseAsClient().DeleteLaunchConfiguration(request)
+
+	err := resource.Retry(4*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseAsClient().DeleteLaunchConfiguration(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
+
 	return nil
 }
 
