@@ -49,6 +49,7 @@ In addition to all arguments above, the following attributes are exported:
   * `internet_charge_type` - Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
   * `local_zone` - Whether this available zone is local zone, This field maybe null, means cannot get a valid value.
   * `network_type` - Types of CLB.
+  * `numerical_vpc_id` - VPC ID in a numeric form. Note: This field may return null, indicating that no valid values can be obtained.
   * `project_id` - ID of the project.
   * `security_groups` - ID set of the security groups.
   * `status_time` - Latest state transition time of CLB.
