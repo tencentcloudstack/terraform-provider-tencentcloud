@@ -42,6 +42,7 @@ func ResourceTencentCloudKubernetesAddon() *schema.Resource {
 			"addon_version": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Version of addon.",
 			},
 
