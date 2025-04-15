@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1107
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1135
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1135
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1142
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1128
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.1111
@@ -81,7 +81,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.1073
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.1015
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.691
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.524
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.1142
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat v1.0.634
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
