@@ -59,14 +59,43 @@ func NewAssumeRoleRequest() (request *AssumeRoleRequest) {
 func NewAssumeRoleResponse() (response *AssumeRoleResponse) {
     response = &AssumeRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssumeRole
-// 申请扮演角色
+// 申请扮演角色临时访问凭证。
+//
+// 
+//
+// 1、角色策略组成
+//
+// 
+//
+// （1）角色信任策略：指定谁可以扮演该角色；
+//
+// 
+//
+// （2）角色权限策略：指定扮演角色后可以执行哪些操作。
+//
+// 
+//
+// 
+//
+// 2、角色可扮演条件
+//
+// 
+//
+// （1）给用户绑定允许调用AssumeRole的策略 ；
+//
+// 
+//
+// （2）将用户添加为角色信任策略中的主体。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CHECKMFAERROR = "FailedOperation.CheckMFAError"
+//  FAILEDOPERATION_MFATYPENOTSUPPORTED = "FailedOperation.MFATypeNotSupported"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ENCRYPTERROR = "InternalError.EncryptError"
 //  INTERNALERROR_GETAPPIDERROR = "InternalError.GetAppIdError"
@@ -95,9 +124,37 @@ func (c *Client) AssumeRole(request *AssumeRoleRequest) (response *AssumeRoleRes
 }
 
 // AssumeRole
-// 申请扮演角色
+// 申请扮演角色临时访问凭证。
+//
+// 
+//
+// 1、角色策略组成
+//
+// 
+//
+// （1）角色信任策略：指定谁可以扮演该角色；
+//
+// 
+//
+// （2）角色权限策略：指定扮演角色后可以执行哪些操作。
+//
+// 
+//
+// 
+//
+// 2、角色可扮演条件
+//
+// 
+//
+// （1）给用户绑定允许调用AssumeRole的策略 ；
+//
+// 
+//
+// （2）将用户添加为角色信任策略中的主体。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CHECKMFAERROR = "FailedOperation.CheckMFAError"
+//  FAILEDOPERATION_MFATYPENOTSUPPORTED = "FailedOperation.MFATypeNotSupported"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ENCRYPTERROR = "InternalError.EncryptError"
 //  INTERNALERROR_GETAPPIDERROR = "InternalError.GetAppIdError"
@@ -151,12 +208,17 @@ func NewAssumeRoleWithSAMLRequest() (request *AssumeRoleWithSAMLRequest) {
 func NewAssumeRoleWithSAMLResponse() (response *AssumeRoleWithSAMLResponse) {
     response = &AssumeRoleWithSAMLResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssumeRoleWithSAML
-// 本接口（AssumeRoleWithSAML）用于根据 SAML 断言申请角色临时凭证。
+// 本接口（AssumeRoleWithSAML）用于根据 SAML 断言申请角色临时访问凭证。
+//
+// 
+//
+// 注意：当使用签名方法 V3 调用本接口时，请求头无须传入 X-TC-Token, 但 Authorization 需要传入值 SKIP。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -171,6 +233,7 @@ func NewAssumeRoleWithSAMLResponse() (response *AssumeRoleWithSAMLResponse) {
 //  INVALIDPARAMETER_ACCOUNTNOTAVALIABLE = "InvalidParameter.AccountNotAvaliable"
 //  INVALIDPARAMETER_EXTENDSTRATEGYOVERSIZE = "InvalidParameter.ExtendStrategyOverSize"
 //  INVALIDPARAMETER_GRANTOTHERRESOURCE = "InvalidParameter.GrantOtherResource"
+//  INVALIDPARAMETER_OVERLIMIT = "InvalidParameter.OverLimit"
 //  INVALIDPARAMETER_OVERTIMEERROR = "InvalidParameter.OverTimeError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYTOOLONG = "InvalidParameter.PolicyTooLong"
@@ -178,6 +241,7 @@ func NewAssumeRoleWithSAMLResponse() (response *AssumeRoleWithSAMLResponse) {
 //  INVALIDPARAMETER_STRATEGYFORMATERROR = "InvalidParameter.StrategyFormatError"
 //  INVALIDPARAMETER_STRATEGYINVALID = "InvalidParameter.StrategyInvalid"
 //  INVALIDPARAMETER_TEMPCODENOTAVALIABLE = "InvalidParameter.TempCodeNotAvaliable"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithSAML(request *AssumeRoleWithSAMLRequest) (response *AssumeRoleWithSAMLResponse, err error) {
@@ -185,7 +249,11 @@ func (c *Client) AssumeRoleWithSAML(request *AssumeRoleWithSAMLRequest) (respons
 }
 
 // AssumeRoleWithSAML
-// 本接口（AssumeRoleWithSAML）用于根据 SAML 断言申请角色临时凭证。
+// 本接口（AssumeRoleWithSAML）用于根据 SAML 断言申请角色临时访问凭证。
+//
+// 
+//
+// 注意：当使用签名方法 V3 调用本接口时，请求头无须传入 X-TC-Token, 但 Authorization 需要传入值 SKIP。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -200,6 +268,7 @@ func (c *Client) AssumeRoleWithSAML(request *AssumeRoleWithSAMLRequest) (respons
 //  INVALIDPARAMETER_ACCOUNTNOTAVALIABLE = "InvalidParameter.AccountNotAvaliable"
 //  INVALIDPARAMETER_EXTENDSTRATEGYOVERSIZE = "InvalidParameter.ExtendStrategyOverSize"
 //  INVALIDPARAMETER_GRANTOTHERRESOURCE = "InvalidParameter.GrantOtherResource"
+//  INVALIDPARAMETER_OVERLIMIT = "InvalidParameter.OverLimit"
 //  INVALIDPARAMETER_OVERTIMEERROR = "InvalidParameter.OverTimeError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYTOOLONG = "InvalidParameter.PolicyTooLong"
@@ -207,6 +276,7 @@ func (c *Client) AssumeRoleWithSAML(request *AssumeRoleWithSAMLRequest) (respons
 //  INVALIDPARAMETER_STRATEGYFORMATERROR = "InvalidParameter.StrategyFormatError"
 //  INVALIDPARAMETER_STRATEGYINVALID = "InvalidParameter.StrategyInvalid"
 //  INVALIDPARAMETER_TEMPCODENOTAVALIABLE = "InvalidParameter.TempCodeNotAvaliable"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithSAMLWithContext(ctx context.Context, request *AssumeRoleWithSAMLRequest) (response *AssumeRoleWithSAMLResponse, err error) {
@@ -235,33 +305,46 @@ func NewAssumeRoleWithWebIdentityRequest() (request *AssumeRoleWithWebIdentityRe
 func NewAssumeRoleWithWebIdentityResponse() (response *AssumeRoleWithWebIdentityResponse) {
     response = &AssumeRoleWithWebIdentityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssumeRoleWithWebIdentity
-// 申请OIDC角色临时密钥
+// 申请OIDC角色临时访问凭证。
+//
+// 
+//
+// 注意：当使用签名方法 V3 调用本接口时，请求头无须传入 X-TC-Token, 但 Authorization 需要传入值 SKIP。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_OVERLIMIT = "InvalidParameter.OverLimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_WEBIDENTITYTOKENERROR = "InvalidParameter.WebIdentityTokenError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithWebIdentity(request *AssumeRoleWithWebIdentityRequest) (response *AssumeRoleWithWebIdentityResponse, err error) {
     return c.AssumeRoleWithWebIdentityWithContext(context.Background(), request)
 }
 
 // AssumeRoleWithWebIdentity
-// 申请OIDC角色临时密钥
+// 申请OIDC角色临时访问凭证。
+//
+// 
+//
+// 注意：当使用签名方法 V3 调用本接口时，请求头无须传入 X-TC-Token, 但 Authorization 需要传入值 SKIP。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_OVERLIMIT = "InvalidParameter.OverLimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_WEBIDENTITYTOKENERROR = "InvalidParameter.WebIdentityTokenError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) AssumeRoleWithWebIdentityWithContext(ctx context.Context, request *AssumeRoleWithWebIdentityRequest) (response *AssumeRoleWithWebIdentityResponse, err error) {
     if request == nil {
@@ -289,14 +372,17 @@ func NewGetCallerIdentityRequest() (request *GetCallerIdentityRequest) {
 func NewGetCallerIdentityResponse() (response *GetCallerIdentityResponse) {
     response = &GetCallerIdentityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetCallerIdentity
 // 获取当前调用者的身份信息。
 //
-// 接口支持主账号，子账号长期密钥以及AssumeRole，GetFederationToken生成的临时凭据的身份获取。
+// 
+//
+// 接口支持主账号，子账号长期密钥以及AssumeRole，GetFederationToken生成的临时访问凭证身份获取。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_ACCESSKEYILLEGAL = "AuthFailure.AccessKeyIllegal"
@@ -309,7 +395,9 @@ func (c *Client) GetCallerIdentity(request *GetCallerIdentityRequest) (response 
 // GetCallerIdentity
 // 获取当前调用者的身份信息。
 //
-// 接口支持主账号，子账号长期密钥以及AssumeRole，GetFederationToken生成的临时凭据的身份获取。
+// 
+//
+// 接口支持主账号，子账号长期密钥以及AssumeRole，GetFederationToken生成的临时访问凭证身份获取。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_ACCESSKEYILLEGAL = "AuthFailure.AccessKeyIllegal"
@@ -345,12 +433,29 @@ func NewGetFederationTokenRequest() (request *GetFederationTokenRequest) {
 func NewGetFederationTokenResponse() (response *GetFederationTokenResponse) {
     response = &GetFederationTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetFederationToken
-// 获取联合身份临时访问凭证
+// **使用说明**
+//
+// 
+//
+// 返回一组临时访问凭证，典型的应用场景是代理应用程序集中申请临时访问凭证，下发给企业网络内其他分布式终端应用，比如终端应用上传文件到COS场景，本接口仅支持永久密钥调用。
+//
+// 
+//
+// **最佳实践**
+//
+// 
+//
+// 1. 临时访问凭据在有效期内都可以使用，建议在有效期内重复使用，以避免业务请求速率上升后被限频
+//
+// 2. 授予临时访问凭证权限的CAM策略，建议按权限最小化原则
+//
+// 3. 调用接口的永久密钥，建议不要使用主账号
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -370,12 +475,29 @@ func NewGetFederationTokenResponse() (response *GetFederationTokenResponse) {
 //  INVALIDPARAMETER_TEMPCODENOTAVALIABLE = "InvalidParameter.TempCodeNotAvaliable"
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) GetFederationToken(request *GetFederationTokenRequest) (response *GetFederationTokenResponse, err error) {
     return c.GetFederationTokenWithContext(context.Background(), request)
 }
 
 // GetFederationToken
-// 获取联合身份临时访问凭证
+// **使用说明**
+//
+// 
+//
+// 返回一组临时访问凭证，典型的应用场景是代理应用程序集中申请临时访问凭证，下发给企业网络内其他分布式终端应用，比如终端应用上传文件到COS场景，本接口仅支持永久密钥调用。
+//
+// 
+//
+// **最佳实践**
+//
+// 
+//
+// 1. 临时访问凭据在有效期内都可以使用，建议在有效期内重复使用，以避免业务请求速率上升后被限频
+//
+// 2. 授予临时访问凭证权限的CAM策略，建议按权限最小化原则
+//
+// 3. 调用接口的永久密钥，建议不要使用主账号
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -395,6 +517,7 @@ func (c *Client) GetFederationToken(request *GetFederationTokenRequest) (respons
 //  INVALIDPARAMETER_TEMPCODENOTAVALIABLE = "InvalidParameter.TempCodeNotAvaliable"
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) GetFederationTokenWithContext(ctx context.Context, request *GetFederationTokenRequest) (response *GetFederationTokenResponse, err error) {
     if request == nil {
         request = NewGetFederationTokenRequest()
@@ -407,6 +530,79 @@ func (c *Client) GetFederationTokenWithContext(ctx context.Context, request *Get
     request.SetContext(ctx)
     
     response = NewGetFederationTokenResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetSessionTokenRequest() (request *GetSessionTokenRequest) {
+    request = &GetSessionTokenRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sts", APIVersion, "GetSessionToken")
+    
+    
+    return
+}
+
+func NewGetSessionTokenResponse() (response *GetSessionTokenResponse) {
+    response = &GetSessionTokenResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetSessionToken
+// 获取MFA临时证书
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CHECKMFAERROR = "FailedOperation.CheckMFAError"
+//  FAILEDOPERATION_MFATYPENOTSUPPORTED = "FailedOperation.MFATypeNotSupported"
+//  FAILEDOPERATION_TEMPKEYNOTALLOWED = "FailedOperation.TempKeyNotAllowed"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ENCRYPTERROR = "InternalError.EncryptError"
+//  INTERNALERROR_GETSEEDTOKENERROR = "InternalError.GetSeedTokenError"
+//  INTERNALERROR_PBSERIALIZEERROR = "InternalError.PbSerializeError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_ACCOUNTNOTAVALIABLE = "InvalidParameter.AccountNotAvaliable"
+//  INVALIDPARAMETER_OVERTIMEERROR = "InvalidParameter.OverTimeError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) GetSessionToken(request *GetSessionTokenRequest) (response *GetSessionTokenResponse, err error) {
+    return c.GetSessionTokenWithContext(context.Background(), request)
+}
+
+// GetSessionToken
+// 获取MFA临时证书
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CHECKMFAERROR = "FailedOperation.CheckMFAError"
+//  FAILEDOPERATION_MFATYPENOTSUPPORTED = "FailedOperation.MFATypeNotSupported"
+//  FAILEDOPERATION_TEMPKEYNOTALLOWED = "FailedOperation.TempKeyNotAllowed"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ENCRYPTERROR = "InternalError.EncryptError"
+//  INTERNALERROR_GETSEEDTOKENERROR = "InternalError.GetSeedTokenError"
+//  INTERNALERROR_PBSERIALIZEERROR = "InternalError.PbSerializeError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_ACCOUNTNOTAVALIABLE = "InvalidParameter.AccountNotAvaliable"
+//  INVALIDPARAMETER_OVERTIMEERROR = "InvalidParameter.OverTimeError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) GetSessionTokenWithContext(ctx context.Context, request *GetSessionTokenRequest) (response *GetSessionTokenResponse, err error) {
+    if request == nil {
+        request = NewGetSessionTokenRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetSessionToken require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetSessionTokenResponse()
     err = c.Send(request, response)
     return
 }
@@ -425,8 +621,9 @@ func NewQueryApiKeyRequest() (request *QueryApiKeyRequest) {
 func NewQueryApiKeyResponse() (response *QueryApiKeyResponse) {
     response = &QueryApiKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // QueryApiKey

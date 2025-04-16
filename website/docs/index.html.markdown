@@ -102,6 +102,7 @@ The following methods are supported, in this order, and explained below:
 - Shared credentials
 - Enable pod OIDC
 - Cam role name
+- MFA certification
 
 ### Static credentials
 
@@ -182,7 +183,28 @@ provider "tencentcloud" {
 }
 ```
 
+Combining MFA
+
+```hcl
+provider "tencentcloud" {
+  secret_id  = "my-secret-id"
+  secret_key = "my-secret-key"
+  region     = "ap-guangzhou"
+
+  assume_role {
+    role_arn         = "my-role-arn"
+    session_name     = "my-session-name"
+    policy           = "my-role-policy"
+    session_duration = 3600
+    serial_number    = "qcs::cam:uin/{my-uin}::mfa/softToken"
+    token_code       = "523886"
+  }
+}
+```
+
 The `role_arn`, `session_name`, `session_duration` and `external_id` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` and `TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID` environment variables.
+
+The `serial_number`, `token_code` can also provided via `TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER`, `TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE` environment variables.
 
 Usage:
 
@@ -193,6 +215,9 @@ $ export TENCENTCLOUD_REGION="ap-guangzhou"
 $ export TENCENTCLOUD_ASSUME_ROLE_ARN="my-role-arn"
 $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME="my-session-name"
 $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
+
+$ export TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER="my-serial-number"
+$ export TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE="my-token-code"
 $ terraform plan
 ```
 
@@ -308,6 +333,37 @@ provider "tencentcloud" {
     external_id      = "my-external-id"
   }
 }
+```
+
+### MFA certification
+
+If provided with MFA certification, Terraform will attempt to use the provided credentials for MFA authentication.
+
+Usage:
+
+```hcl
+provider "tencentcloud" {
+  secret_id  = "my-secret-id"
+  secret_key = "my-secret-key"
+  region     = "ap-guangzhou"
+
+  mfa_certification {
+    serial_number    = "qcs::cam:uin/{my-uin}::mfa/softToken"
+    token_code       = "523886"
+    duration_seconds = 1800
+  }
+}
+```
+
+The `serial_number`, `token_code`, `duration_seconds` can also provided via `TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER`, `TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE`, `TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS` environment variables.
+
+Usage:
+
+```shell
+$ export TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER="my-serial-number"
+$ export TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE="my-token-code"
+$ export TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS=1800
+$ terraform plan
 ```
 
 ### CDC cos usage

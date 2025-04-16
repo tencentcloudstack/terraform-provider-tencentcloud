@@ -131,21 +131,27 @@ const (
 	PROVIDER_COS_DOMAIN     = "TENCENTCLOUD_COS_DOMAIN"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	PROVIDER_ASSUME_ROLE_ARN                = "TENCENTCLOUD_ASSUME_ROLE_ARN"
-	PROVIDER_ASSUME_ROLE_SESSION_NAME       = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
-	PROVIDER_ASSUME_ROLE_SESSION_DURATION   = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
-	PROVIDER_ASSUME_ROLE_EXTERNAL_ID        = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
-	PROVIDER_ASSUME_ROLE_SAML_ASSERTION     = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
-	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN      = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
-	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
-	PROVIDER_ASSUME_ROLE_PROVIDER_ID        = "TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID"
-	PROVIDER_SHARED_CREDENTIALS_DIR         = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
-	PROVIDER_PROFILE                        = "TENCENTCLOUD_PROFILE"
-	PROVIDER_CAM_ROLE_NAME                  = "TENCENTCLOUD_CAM_ROLE_NAME"
-	POD_OIDC_TKE_REGION                     = "TKE_REGION"
-	POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE    = "TKE_WEB_IDENTITY_TOKEN_FILE"
-	POD_OIDC_TKE_PROVIDER_ID                = "TKE_PROVIDER_ID"
-	POD_OIDC_TKE_ROLE_ARN                   = "TKE_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_ARN                    = "TENCENTCLOUD_ASSUME_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_SESSION_NAME           = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
+	PROVIDER_ASSUME_ROLE_SESSION_DURATION       = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	PROVIDER_ASSUME_ROLE_EXTERNAL_ID            = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
+	PROVIDER_ASSUME_ROLE_SOURCE_IDENTITY        = "TENCENTCLOUD_ASSUME_ROLE_SOURCE_IDENTITY"
+	PROVIDER_ASSUME_ROLE_SERIAL_NUMBER          = "TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER"
+	PROVIDER_ASSUME_ROLE_TOKEN_CODE             = "TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE"
+	PROVIDER_ASSUME_ROLE_SAML_ASSERTION         = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
+	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN          = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
+	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN     = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
+	PROVIDER_ASSUME_ROLE_PROVIDER_ID            = "TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID"
+	PROVIDER_MFA_CERTIFICATION_SERIAL_NUMBER    = "TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER"
+	PROVIDER_MFA_CERTIFICATION_TOKEN_CODE       = "TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE"
+	PROVIDER_MFA_CERTIFICATION_DURATION_SECONDS = "TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS"
+	PROVIDER_SHARED_CREDENTIALS_DIR             = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
+	PROVIDER_PROFILE                            = "TENCENTCLOUD_PROFILE"
+	PROVIDER_CAM_ROLE_NAME                      = "TENCENTCLOUD_CAM_ROLE_NAME"
+	POD_OIDC_TKE_REGION                         = "TKE_REGION"
+	POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE        = "TKE_WEB_IDENTITY_TOKEN_FILE"
+	POD_OIDC_TKE_PROVIDER_ID                    = "TKE_PROVIDER_ID"
+	POD_OIDC_TKE_ROLE_ARN                       = "TKE_ROLE_ARN"
 )
 
 const (
@@ -259,6 +265,24 @@ func Provider() *schema.Provider {
 							Optional:    true,
 							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_EXTERNAL_ID, nil),
 							Description: "External role ID, which can be obtained by clicking the role name in the CAM console. It can contain 2-128 letters, digits, and symbols (=,.@:/-). Regex: [\\w+=,.@:/-]*. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID`.",
+						},
+						"source_identity": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SOURCE_IDENTITY, nil),
+							Description: "Caller identity uin. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SOURCE_IDENTITY`.",
+						},
+						"serial_number": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SERIAL_NUMBER, nil),
+							Description: "MFA serial number, the identification number of the MFA device associated with the calling CAM user. Format qcs: cam:uin/${ownerUin}::mfa/${mfaType}. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER`.",
+						},
+						"token_code": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_TOKEN_CODE, nil),
+							Description: "MFA authentication code. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE`.",
 						},
 					},
 				},
@@ -379,6 +403,40 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_CAM_ROLE_NAME, nil),
 				Description: "The name of the CVM instance CAM role. It can be sourced from the `TENCENTCLOUD_CAM_ROLE_NAME` environment variable.",
+			},
+			"mfa_certification": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "The `mfa_certification` block. If provided, terraform will attempt to use the provided credentials for MFA authentication.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"serial_number": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_MFA_CERTIFICATION_SERIAL_NUMBER, nil),
+							Description: "MFA serial number, the identification number of the MFA device associated with the calling CAM user. Format qcs: cam:uin/${ownerUin}::mfa/${mfaType}. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER`.",
+						},
+						"token_code": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_MFA_CERTIFICATION_TOKEN_CODE, nil),
+							Description: "MFA authentication code. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE`.",
+						},
+						"duration_seconds": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							DefaultFunc: func() (interface{}, error) {
+								if v := os.Getenv(PROVIDER_MFA_CERTIFICATION_DURATION_SECONDS); v != "" {
+									return strconv.Atoi(v)
+								}
+								return 1800, nil
+							},
+							ValidateFunc: tccommon.ValidateIntegerInRange(0, 129600),
+							Description:  "Specify the validity period of the temporary certificate. The main account can be set to a maximum validity period of 7200 seconds, and the sub account can be set to a maximum validity period of 129600 seconds, and default is 1800 seconds. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS`.",
+						},
+					},
+				},
 			},
 			"allowed_account_ids": {
 				Type:          schema.TypeSet,
@@ -2406,6 +2464,9 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		assumeRoleSessionDuration int
 		assumeRolePolicy          string
 		assumeRoleExternalId      string
+		assumeRoleSourceIdentity  string
+		assumeRoleSerialNumber    string
+		assumeRoleTokenCode       string
 	)
 
 	// get assume role from credential
@@ -2419,7 +2480,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
 		assumeRoleSessionDuration = 7200
-		err = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
+		err = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId, assumeRoleSourceIdentity, assumeRoleSerialNumber, assumeRoleTokenCode)
 		if err != nil {
 			return nil, fmt.Errorf("Get auth from assume role by credential failed. Reason: %s", err.Error())
 		}
@@ -2430,7 +2491,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	envSessionName := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_NAME)
 	if envRoleArn != "" && envSessionName != "" {
 		if envSessionDuration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); envSessionDuration != "" {
-			var err error
 			assumeRoleSessionDuration, err = strconv.Atoi(envSessionDuration)
 			if err != nil {
 				return nil, err
@@ -2442,6 +2502,9 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		}
 
 		assumeRoleExternalId = os.Getenv(PROVIDER_ASSUME_ROLE_EXTERNAL_ID)
+		assumeRoleSourceIdentity = os.Getenv(PROVIDER_ASSUME_ROLE_SOURCE_IDENTITY)
+		assumeRoleSerialNumber = os.Getenv(PROVIDER_ASSUME_ROLE_SERIAL_NUMBER)
+		assumeRoleTokenCode = os.Getenv(PROVIDER_ASSUME_ROLE_TOKEN_CODE)
 
 		// get assume role with saml from env
 		envSamlAssertion := os.Getenv(PROVIDER_ASSUME_ROLE_SAML_ASSERTION)
@@ -2452,7 +2515,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 		if envSamlAssertion == "" && envPrincipalArn == "" && envWebIdentityToken == "" {
 			// use assume role
-			err = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "", assumeRoleExternalId)
+			err = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "", assumeRoleExternalId, assumeRoleSourceIdentity, assumeRoleSerialNumber, assumeRoleTokenCode)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role by env failed. Reason: %s", err.Error())
 			}
@@ -2489,8 +2552,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionDuration = assumeRole["session_duration"].(int)
 			assumeRolePolicy = assumeRole["policy"].(string)
 			assumeRoleExternalId = assumeRole["external_id"].(string)
+			assumeRoleSourceIdentity = assumeRole["source_identity"].(string)
+			assumeRoleSerialNumber = assumeRole["serial_number"].(string)
+			assumeRoleTokenCode = assumeRole["token_code"].(string)
 
-			err = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId)
+			err = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy, assumeRoleExternalId, assumeRoleSourceIdentity, assumeRoleSerialNumber, assumeRoleTokenCode)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role failed. Reason: %s", err.Error())
 			}
@@ -2543,6 +2609,47 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			err = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken, assumeRoleProviderId)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role with OIDC failed. Reason: %s", err.Error())
+			}
+
+			needSecret = false
+		}
+	}
+
+	// get mfa from env
+	mfaCertificationSerialNumber := os.Getenv(PROVIDER_MFA_CERTIFICATION_SERIAL_NUMBER)
+	mfaCertificationTokenCode := os.Getenv(PROVIDER_MFA_CERTIFICATION_TOKEN_CODE)
+	if mfaCertificationSerialNumber != "" && mfaCertificationTokenCode != "" {
+		var mfaCertificationDurationSeconds int
+		if envDurationSeconds := os.Getenv(PROVIDER_MFA_CERTIFICATION_DURATION_SECONDS); envDurationSeconds != "" {
+			mfaCertificationDurationSeconds, err = strconv.Atoi(envDurationSeconds)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if mfaCertificationDurationSeconds == 0 {
+			mfaCertificationDurationSeconds = 1800
+		}
+
+		err = genClientWithMfaSTS(&tcClient, mfaCertificationSerialNumber, mfaCertificationTokenCode, mfaCertificationDurationSeconds)
+		if err != nil {
+			return nil, fmt.Errorf("Get auth from mfa failed. Reason: %s", err.Error())
+		}
+
+		needSecret = false
+	}
+
+	// get mfa from tf
+	if v, ok := d.GetOk("mfa_certification"); ok {
+		mfaCertificationList := v.(*schema.Set).List()
+		if len(mfaCertificationList) == 1 {
+			mfaCertification := mfaCertificationList[0].(map[string]interface{})
+			mfaCertificationSerialNumber := mfaCertification["serial_number"].(string)
+			mfaCertificationTokenCode := mfaCertification["token_code"].(string)
+			mfaCertificationDurationSeconds := mfaCertification["duration_seconds"].(int)
+			err = genClientWithMfaSTS(&tcClient, mfaCertificationSerialNumber, mfaCertificationTokenCode, mfaCertificationDurationSeconds)
+			if err != nil {
+				return nil, fmt.Errorf("Get auth from mfa failed. Reason: %s", err.Error())
 			}
 
 			needSecret = false
@@ -2613,7 +2720,7 @@ func genClientWithCAM(tcClient *TencentCloudClient, roleName string) error {
 	return nil
 }
 
-func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string, assumeRoleExternalId string) error {
+func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string, assumeRoleExternalId string, assumeRoleSourceIdentity string, assumeRoleSerialNumber string, assumeRoleTokenCode string) error {
 	// applying STS credentials
 	request := sdksts.NewAssumeRoleRequest()
 	response := sdksts.NewAssumeRoleResponse()
@@ -2626,6 +2733,18 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 
 	if assumeRoleExternalId != "" {
 		request.ExternalId = helper.String(assumeRoleExternalId)
+	}
+
+	if assumeRoleSourceIdentity != "" {
+		request.SourceIdentity = helper.String(assumeRoleSourceIdentity)
+	}
+
+	if assumeRoleSerialNumber != "" {
+		request.SerialNumber = helper.String(assumeRoleSerialNumber)
+	}
+
+	if assumeRoleTokenCode != "" {
+		request.TokenCode = helper.String(assumeRoleTokenCode)
 	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -2740,6 +2859,47 @@ func genClientWithOidcSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRol
 
 	if response.Response.Credentials.TmpSecretId == nil || response.Response.Credentials.TmpSecretKey == nil || response.Response.Credentials.Token == nil {
 		return fmt.Errorf("Get Assume Role failed, Credentials is nil.")
+	}
+
+	// using STS credentials
+	tcClient.apiV3Conn.Credential = sdkcommon.NewTokenCredential(
+		*response.Response.Credentials.TmpSecretId,
+		*response.Response.Credentials.TmpSecretKey,
+		*response.Response.Credentials.Token,
+	)
+
+	return nil
+}
+
+func genClientWithMfaSTS(tcClient *TencentCloudClient, mfaCertificationSerialNumber string, mfaCertificationTokenCode string, mfaCertificationDurationSeconds int) error {
+	// applying STS credentials
+	request := sdksts.NewGetSessionTokenRequest()
+	response := sdksts.NewGetSessionTokenResponse()
+	request.SerialNumber = helper.String(mfaCertificationSerialNumber)
+	request.TokenCode = helper.String(mfaCertificationTokenCode)
+	request.DurationSeconds = helper.IntInt64(mfaCertificationDurationSeconds)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := tcClient.apiV3Conn.UseStsClient().GetSessionToken(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Credentials == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get Session Token failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if response.Response.Credentials.TmpSecretId == nil || response.Response.Credentials.TmpSecretKey == nil || response.Response.Credentials.Token == nil {
+		return fmt.Errorf("Get Session Token failed, Credentials is nil.")
 	}
 
 	// using STS credentials
