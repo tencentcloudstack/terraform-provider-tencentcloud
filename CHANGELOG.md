@@ -1,3 +1,17 @@
+## 1.81.183(April 16 , 2025)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_clb_instances: Supported fields `numerical_vpc_id`. ([#3307](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3307))
+* provider: support MFA certification ([#3308](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3308))
+* resource/tencentcloud_cls_config_extra: Fix the problem of failure to modify type. ([#3255](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3255))
+* resource/tencentcloud_eni_ipv4_address: Add deletion operation waiting ([#3303](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3303))
+* resource/tencentcloud_instance: support hpc_cluster_id ([#3312](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3312))
+* resource/tencentcloud_kubernetes_addon: Update field properties ([#3309](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3309))
+* resource/tencentcloud_kubernetes_node_pool: field `pre_start_user_script` support update ([#3313](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3313))
+* resource/tencentcloud_teo_l7_acc_rule: Change the field `private_access` type to `string`. ([#3310](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3310))
+* resource/tencentcloud_vpc_end_point: Optimize query function ([#3304](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3304))
+
 ## 1.81.182(April 11 , 2025)
 
 FEATURES:
