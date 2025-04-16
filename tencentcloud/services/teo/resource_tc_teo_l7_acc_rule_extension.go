@@ -847,7 +847,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Description: "Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.",
 								},
 								"private_access": {
-									Type:        schema.TypeInt,
+									Type:        schema.TypeString,
 									Optional:    true,
 									Description: "Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.",
 								},
