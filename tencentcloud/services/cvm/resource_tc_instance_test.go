@@ -2931,3 +2931,67 @@ resource "tencentcloud_instance" "cvm_with_orderly_sg" {
 	orderly_security_groups    = ["sg-cm7fbbf3", "sg-kensue7b", "sg-05f7wnhn"]
 }
 `
+
+func TestAccTencentCloudInstanceResourceHPC(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceHPC,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.hpc"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.hpc", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet("tencentcloud_instance.hpc", "hpc_cluster_id"),
+				),
+			},
+		},
+	})
+}
+
+const testAccTencentCloudInstanceHPC = `
+locals {
+  availability_zone = "ap-shanghai-5"
+  instance_type     = "HCCS5.24XLARGE384"
+}
+
+resource "tencentcloud_cvm_hpc_cluster" "hpc_cluster" {
+  zone   = local.availability_zone
+  name   = "terraform-test"
+  remark = "create for test"
+}
+
+data "tencentcloud_images" "default" {
+  instance_type = local.instance_type
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = local.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_instance" "hpc" {
+  instance_name     = "tf-example"
+  availability_zone = local.availability_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = local.instance_type
+  system_disk_type  = "LOCAL_BASIC"
+  system_disk_size  = 440
+  hostname          = "user"
+  project_id        = 0
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  hpc_cluster_id    = tencentcloud_cvm_hpc_cluster.hpc_cluster.id
+}
+`
