@@ -1663,6 +1663,29 @@ func (me *TkeService) ModifyClusterNodePoolInstanceTypes(ctx context.Context, cl
 	return
 }
 
+func (me *TkeService) ModifyClusterNodePoolPreStartUserScript(ctx context.Context, clusterId, nodePoolId, preStartUserScript string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tke.NewModifyClusterNodePoolRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.NodePoolId = &nodePoolId
+	request.PreStartUserScript = &preStartUserScript
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().ModifyClusterNodePool(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *TkeService) DeleteClusterNodePool(ctx context.Context, id, nodePoolId string, deleteKeepInstance bool) (errRet error) {
 
 	logId := tccommon.GetLogId(ctx)

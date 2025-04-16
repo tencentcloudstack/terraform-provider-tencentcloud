@@ -226,7 +226,6 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 						"pre_start_user_script": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
 						},
 						"is_schedule": {
