@@ -514,19 +514,29 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLaunchConfiguration(request)
+	var launchConfigurationId string
+	err := resource.Retry(4*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLaunchConfiguration(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if response.Response.LaunchConfigurationId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Launch configuration id is nil"))
+		}
+		launchConfigurationId = *response.Response.LaunchConfigurationId
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
-	if response.Response.LaunchConfigurationId == nil {
-		return fmt.Errorf("Launch configuration id is nil")
-	}
-	d.SetId(*response.Response.LaunchConfigurationId)
+
+	d.SetId(launchConfigurationId)
 
 	return resourceTencentCloudAsScalingConfigRead(d, meta)
 }
@@ -912,14 +922,21 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyLaunchConfigurationAttributes(request)
+	err := resource.Retry(4*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyLaunchConfigurationAttributes(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
 
 	return resourceTencentCloudAsScalingConfigRead(d, meta)
