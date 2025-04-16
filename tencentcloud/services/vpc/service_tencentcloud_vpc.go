@@ -5929,6 +5929,7 @@ func (me *VpcService) DescribeVpcEndPointById(ctx context.Context, endPointId st
 	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDescribeVpcEndPointRequest()
+	response := vpc.NewDescribeVpcEndPointResponse()
 	request.EndPointId = []*string{&endPointId}
 
 	defer func() {
@@ -5947,12 +5948,28 @@ func (me *VpcService) DescribeVpcEndPointById(ctx context.Context, endPointId st
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseVpcClient().DescribeVpcEndPoint(request)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseVpcClient().DescribeVpcEndPoint(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe vpc endPoint failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.EndPointSet) < 1 {
 			break
