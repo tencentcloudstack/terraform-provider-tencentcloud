@@ -7099,6 +7099,7 @@ func (me *VpcService) DeleteEniIpv4AddressById(ctx context.Context, networkInter
 	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewUnassignPrivateIpAddressesRequest()
+	response := vpc.NewUnassignPrivateIpAddressesResponse()
 	request.NetworkInterfaceId = &networkInterfaceId
 
 	for _, ipv4Address := range ipv4Addresses {
@@ -7113,14 +7114,37 @@ func (me *VpcService) DeleteEniIpv4AddressById(ctx context.Context, networkInter
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().UnassignPrivateIpAddresses(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseVpcClient().UnassignPrivateIpAddresses(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete vpc eniIpv4Address failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
-		return
+		log.Printf("[CRITAL]%s delete vpc eniIpv4Address failed, reason:%+v", logId, err)
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	// wait
+	if response.Response.RequestId != nil {
+		err = me.DescribeVpcTaskResult(ctx, response.Response.RequestId)
+		if err != nil {
+			return err
+		}
+	} else {
+		time.Sleep(15 * time.Second)
+	}
 
 	return
 }
