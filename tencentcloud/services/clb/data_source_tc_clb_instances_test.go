@@ -32,6 +32,7 @@ func TestAccTencentCloudClbInstancesDataSource_internal(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.status_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.status"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.tags.test", "tf"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.numerical_vpc_id"),
 				),
 			},
 		},

@@ -1,0 +1,3 @@
+```release-note:enhancement
+datasource/tencentcloud_clb_instances: Supported fields `numerical_vpc_id`.
+```
