@@ -420,6 +420,13 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Description: "CAM role name authorized to access.",
 			},
+			"hpc_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.",
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -507,6 +514,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("cam_role_name"); ok {
 		request.CamRoleName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("hpc_cluster_id"); ok {
+		request.HpcClusterId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("instance_charge_type"); ok {
@@ -959,6 +970,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("cpu", instance.CPU)
 	_ = d.Set("memory", instance.Memory)
 	_ = d.Set("os_name", instance.OsName)
+	_ = d.Set("hpc_cluster_id", instance.HpcClusterId)
 
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)
