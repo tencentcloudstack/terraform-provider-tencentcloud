@@ -34,6 +34,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  tags = {
+    createBy = "Terraform"
+  }
 }
 
 # create postpaid rabbitmq instance
@@ -50,6 +53,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
   time_span                             = 1
   pay_mode                              = 0
   cluster_version                       = "3.11.8"
+  tags = {
+    createBy = "Terraform1"
+  }
 }
 ```
 

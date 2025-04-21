@@ -45,6 +45,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  tags = {
+    createBy = "Terraform"
+  }
 }
 
 # create postpaid rabbitmq instance
@@ -61,6 +64,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
   time_span                             = 1
   pay_mode                              = 0
   cluster_version                       = "3.11.8"
+  tags = {
+    createBy = "Terraform1"
+  }
 }
 ```
 
@@ -79,6 +85,7 @@ The following arguments are supported:
 * `node_spec` - (Optional, String) Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.
 * `pay_mode` - (Optional, Int) Payment method: 0 indicates postpaid; 1 indicates prepaid. Default: prepaid.
 * `storage_size` - (Optional, Int) Single node storage specification, the default is 200G.
+* `tags` - (Optional, Map) Tag description list.
 * `time_span` - (Optional, Int) Purchase duration, the default is 1 (month).
 
 ## Attributes Reference
