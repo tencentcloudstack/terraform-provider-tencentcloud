@@ -207,8 +207,9 @@ func (me *DcdbService) DeleteDcdbHourdbInstanceById(ctx context.Context, instanc
 // dc_sg
 func (me *DcdbService) DescribeDcdbSecurityGroup(ctx context.Context, instanceId string) (securityGroup *dcdb.DescribeDBSecurityGroupsResponseParams, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = dcdb.NewDescribeDBSecurityGroupsRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = dcdb.NewDescribeDBSecurityGroupsRequest()
+		response = dcdb.NewDescribeDBSecurityGroupsResponse()
 	)
 
 	defer func() {
@@ -220,16 +221,24 @@ func (me *DcdbService) DescribeDcdbSecurityGroup(ctx context.Context, instanceId
 
 	request.InstanceId = &instanceId
 	request.Product = helper.String("dcdb") // api only use this fixed value
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().DescribeDBSecurityGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseDcdbClient().DescribeDBSecurityGroups(request)
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	securityGroup = response.Response
 
 	return
@@ -267,8 +276,9 @@ func (me *DcdbService) DeleteDcdbSecurityGroupAttachmentById(ctx context.Context
 // tencentcloud_dcdb_instances
 func (me *DcdbService) DescribeDcdbInstancesByFilter(ctx context.Context, params map[string]interface{}) (instances []*dcdb.DCDBInstanceInfo, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = dcdb.NewDescribeDCDBInstancesRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = dcdb.NewDescribeDCDBInstancesRequest()
+		response = dcdb.NewDescribeDCDBInstancesResponse()
 	)
 
 	defer func() {
@@ -328,17 +338,24 @@ func (me *DcdbService) DescribeDcdbInstancesByFilter(ctx context.Context, params
 	for {
 		request.Offset = &offset
 		request.Limit = &pageSize
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseDcdbClient().DescribeDCDBInstances(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
 
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseDcdbClient().DescribeDCDBInstances(request)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.Instances) < 1 {
 			break
@@ -604,6 +621,7 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 	logId := tccommon.GetLogId(ctx)
 
 	request := dcdb.NewDescribeDcnDetailRequest()
+	response := dcdb.NewDescribeDcnDetailResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -613,13 +631,21 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 	}()
 
 	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().DescribeDcnDetail(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseDcdbClient().DescribeDcnDetail(request)
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.DcnDetails) < 1 {
 		return
@@ -926,6 +952,7 @@ func (me *DcdbService) DescribeDcdbDbInstanceDetailById(ctx context.Context, ins
 	logId := tccommon.GetLogId(ctx)
 
 	request := dcdb.NewDescribeDCDBInstanceDetailRequest()
+	response := dcdb.NewDescribeDCDBInstanceDetailResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -934,14 +961,22 @@ func (me *DcdbService) DescribeDcdbDbInstanceDetailById(ctx context.Context, ins
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDcdbClient().DescribeDCDBInstanceDetail(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseDcdbClient().DescribeDCDBInstanceDetail(request)
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	dedicatedClusterDbInstance = response.Response
 	return
