@@ -48,6 +48,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Deprecated:  "It has been deprecated from version 1.81.184. Please use `precise_match_rules` or `basic_access_rules` instead.",
 										Description: "List of custom rule definitions. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the parameter value of CustomRules in the SecurityPolicy parameter is not specified: keep the existing custom rule configuration without modification.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -140,6 +141,214 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"rule_type": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Description: "Type of custom rule. valid values: <li>BasicAccessRule: basic access control;</li> <li>PreciseMatchRule: exact matching rule, default;</li> <li>ManagedAccessRule: expert customized rule, for output only.</li> the default value is PreciseMatchRule.",
+												},
+												"priority": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: "Customizes the priority of rules. value range: 0-100. it defaults to 0. only supports `rule_type` is `PreciseMatchRule`.",
+												},
+											},
+										},
+									},
+									"precise_match_rules": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "List of custom rule definitions. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the parameter value of CustomRules in the SecurityPolicy parameter is not specified: keep the existing custom rule configuration without modification.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"name": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "The name of the custom rule.",
+												},
+												"condition": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "The specific content of the custom rule must comply with the expression grammar. please refer to the product document for detailed specifications.",
+												},
+												"action": {
+													Type:        schema.TypeList,
+													Required:    true,
+													MaxItems:    1,
+													Description: "Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.",
+															},
+															"block_ip_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameter when Name is BlockIP.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"duration": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Penalty duration for blocking ips. supported units: <li>s: second, value range 1-120;</li> <li>m: minute, value range 1-120;</li> <li>h: hour, value range 1-48.</li>.",
+																		},
+																	},
+																},
+															},
+															"return_custom_page_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameter when Name is ReturnCustomPage.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"response_code": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Response status code.",
+																		},
+																		"error_page_id": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Response custom page ID.",
+																		},
+																	},
+																},
+															},
+															"redirect_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameter when Name is Redirect.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"url": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Redirect URL.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"enabled": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Indicates whether the custom rule is enabled. valid values: <li>on: enabled</li> <li>off: disabled</li>.",
+												},
+												"id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "The ID of a custom rule. <br> the rule ID supports different rule configuration operations: <br> - add a new rule: ID is empty or the ID parameter is not specified; <br> - modify an existing rule: specify the rule ID that needs to be updated/modified; <br> - delete an existing rule: existing Rules not included in the Rules list of the CustomRules parameter will be deleted.",
+												},
+												"rule_type": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Type of custom rule. valid values: <li>BasicAccessRule: basic access control;</li> <li>PreciseMatchRule: exact matching rule, default;</li> <li>ManagedAccessRule: expert customized rule, for output only.</li> the default value is PreciseMatchRule.",
+												},
+												"priority": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: "Customizes the priority of rules. value range: 0-100. it defaults to 0. only supports `rule_type` is `PreciseMatchRule`.",
+												},
+											},
+										},
+									},
+									"basic_access_rules": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "List of custom rule definitions. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the parameter value of CustomRules in the SecurityPolicy parameter is not specified: keep the existing custom rule configuration without modification.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"name": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "The name of the custom rule.",
+												},
+												"condition": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "The specific content of the custom rule must comply with the expression grammar. please refer to the product document for detailed specifications.",
+												},
+												"action": {
+													Type:        schema.TypeList,
+													Required:    true,
+													MaxItems:    1,
+													Description: "Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.",
+															},
+															"block_ip_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameter when Name is BlockIP.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"duration": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Penalty duration for blocking ips. supported units: <li>s: second, value range 1-120;</li> <li>m: minute, value range 1-120;</li> <li>h: hour, value range 1-48.</li>.",
+																		},
+																	},
+																},
+															},
+															"return_custom_page_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameter when Name is ReturnCustomPage.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"response_code": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Response status code.",
+																		},
+																		"error_page_id": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Response custom page ID.",
+																		},
+																	},
+																},
+															},
+															"redirect_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameter when Name is Redirect.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"url": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Redirect URL.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"enabled": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Indicates whether the custom rule is enabled. valid values: <li>on: enabled</li> <li>off: disabled</li>.",
+												},
+												"id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "The ID of a custom rule. <br> the rule ID supports different rule configuration operations: <br> - add a new rule: ID is empty or the ID parameter is not specified; <br> - modify an existing rule: specify the rule ID that needs to be updated/modified; <br> - delete an existing rule: existing Rules not included in the Rules list of the CustomRules parameter will be deleted.",
+												},
+												"rule_type": {
+													Type:        schema.TypeString,
+													Computed:    true,
 													Description: "Type of custom rule. valid values: <li>BasicAccessRule: basic access control;</li> <li>PreciseMatchRule: exact matching rule, default;</li> <li>ManagedAccessRule: expert customized rule, for output only.</li> the default value is PreciseMatchRule.",
 												},
 												"priority": {
@@ -539,10 +748,12 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 	securityPolicyMap := map[string]interface{}{}
 	if respData.CustomRules != nil {
 		customRulesMap := map[string]interface{}{}
-		rulesList := make([]map[string]interface{}, 0, len(respData.CustomRules.Rules))
+		preciseMatchRulesList := make([]map[string]interface{}, 0, len(respData.CustomRules.Rules))
+		basicAccessRulesList := make([]map[string]interface{}, 0, len(respData.CustomRules.Rules))
 		if respData.CustomRules.Rules != nil {
 			for _, rules := range respData.CustomRules.Rules {
 				rulesMap := map[string]interface{}{}
+				ruleType := ""
 				if rules.Name != nil {
 					rulesMap["name"] = rules.Name
 				}
@@ -601,20 +812,25 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 
 				if rules.RuleType != nil {
 					rulesMap["rule_type"] = rules.RuleType
+					ruleType = *rules.RuleType
 				}
 
 				if rules.Priority != nil {
 					rulesMap["priority"] = rules.Priority
 				}
 
-				rulesList = append(rulesList, rulesMap)
+				if ruleType == "PreciseMatchRule" {
+					preciseMatchRulesList = append(preciseMatchRulesList, rulesMap)
+				} else if ruleType == "BasicAccessRule" {
+					basicAccessRulesList = append(basicAccessRulesList, rulesMap)
+				} else {
+					continue
+				}
 			}
-
-			customRulesMap["rules"] = rulesList
-		} else {
-			customRulesMap["rules"] = rulesList
 		}
 
+		customRulesMap["precise_match_rules"] = preciseMatchRulesList
+		customRulesMap["basic_access_rules"] = basicAccessRulesList
 		securityPolicyMap["custom_rules"] = []interface{}{customRulesMap}
 	}
 
@@ -849,6 +1065,12 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 		if customRulesMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["custom_rules"]); ok {
 			customRules := teov20220901.CustomRules{}
 			if v, ok := customRulesMap["rules"]; ok {
+				if len(v.([]interface{})) > 0 {
+					return fmt.Errorf("`rules` has been deprecated from version 1.81.184. Please use `precise_match_rules` or `basic_access_rules` instead.")
+				}
+			}
+
+			if v, ok := customRulesMap["precise_match_rules"]; ok {
 				for _, item := range v.([]interface{}) {
 					rulesMap := item.(map[string]interface{})
 					customRule := teov20220901.CustomRule{}
@@ -908,9 +1130,77 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 						customRule.Id = helper.String(v)
 					}
 
-					if v, ok := rulesMap["rule_type"].(string); ok && v != "" {
-						customRule.RuleType = helper.String(v)
+					customRule.RuleType = helper.String("PreciseMatchRule")
+
+					if v, ok := rulesMap["priority"].(int); ok {
+						customRule.Priority = helper.IntInt64(v)
 					}
+
+					customRules.Rules = append(customRules.Rules, &customRule)
+				}
+			}
+
+			if v, ok := customRulesMap["basic_access_rules"]; ok {
+				for _, item := range v.([]interface{}) {
+					rulesMap := item.(map[string]interface{})
+					customRule := teov20220901.CustomRule{}
+					if v, ok := rulesMap["name"].(string); ok && v != "" {
+						customRule.Name = helper.String(v)
+					}
+
+					if v, ok := rulesMap["condition"].(string); ok && v != "" {
+						customRule.Condition = helper.String(v)
+					}
+
+					if actionMap, ok := helper.ConvertInterfacesHeadToMap(rulesMap["action"]); ok {
+						securityAction := teov20220901.SecurityAction{}
+						if v, ok := actionMap["name"].(string); ok && v != "" {
+							securityAction.Name = helper.String(v)
+						}
+
+						if blockIPActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionMap["block_ip_action_parameters"]); ok {
+							blockIPActionParameters := teov20220901.BlockIPActionParameters{}
+							if v, ok := blockIPActionParametersMap["duration"].(string); ok && v != "" {
+								blockIPActionParameters.Duration = helper.String(v)
+							}
+
+							securityAction.BlockIPActionParameters = &blockIPActionParameters
+						}
+
+						if returnCustomPageActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionMap["return_custom_page_action_parameters"]); ok {
+							returnCustomPageActionParameters := teov20220901.ReturnCustomPageActionParameters{}
+							if v, ok := returnCustomPageActionParametersMap["response_code"].(string); ok && v != "" {
+								returnCustomPageActionParameters.ResponseCode = helper.String(v)
+							}
+
+							if v, ok := returnCustomPageActionParametersMap["error_page_id"].(string); ok && v != "" {
+								returnCustomPageActionParameters.ErrorPageId = helper.String(v)
+							}
+
+							securityAction.ReturnCustomPageActionParameters = &returnCustomPageActionParameters
+						}
+
+						if redirectActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionMap["redirect_action_parameters"]); ok {
+							redirectActionParameters := teov20220901.RedirectActionParameters{}
+							if v, ok := redirectActionParametersMap["url"].(string); ok && v != "" {
+								redirectActionParameters.URL = helper.String(v)
+							}
+
+							securityAction.RedirectActionParameters = &redirectActionParameters
+						}
+
+						customRule.Action = &securityAction
+					}
+
+					if v, ok := rulesMap["enabled"].(string); ok && v != "" {
+						customRule.Enabled = helper.String(v)
+					}
+
+					if v, ok := rulesMap["id"].(string); ok && v != "" {
+						customRule.Id = helper.String(v)
+					}
+
+					customRule.RuleType = helper.String("BasicAccessRule")
 
 					if v, ok := rulesMap["priority"].(int); ok {
 						customRule.Priority = helper.IntInt64(v)

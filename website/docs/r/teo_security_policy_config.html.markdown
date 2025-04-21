@@ -23,11 +23,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
   entity  = "ZoneDefaultPolicy"
   security_policy {
     custom_rules {
-      rules {
+      precise_match_rules {
         name      = "rule1"
         condition = "$${http.request.host} contain ['abc']"
         enabled   = "on"
-        rule_type = "PreciseMatchRule"
         priority  = 50
         action {
           name = "BlockIP"
@@ -37,12 +36,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
 
-      rules {
+      basic_access_rules {
         name      = "rule2"
         condition = "$${http.request.ip} in ['119.28.103.58']"
         enabled   = "off"
-        id        = "2182252647"
-        rule_type = "BasicAccessRule"
         action {
           name = "Deny"
         }
@@ -206,11 +203,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
   host    = "www.example.com"
   security_policy {
     custom_rules {
-      rules {
+      precise_match_rules {
         name      = "rule1"
         condition = "$${http.request.host} contain ['abc']"
         enabled   = "on"
-        rule_type = "PreciseMatchRule"
         priority  = 50
         action {
           name = "BlockIP"
@@ -220,12 +216,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
 
-      rules {
+      basic_access_rules {
         name      = "rule2"
         condition = "$${http.request.ip} in ['119.28.103.58']"
         enabled   = "off"
-        id        = "2182252647"
-        rule_type = "BasicAccessRule"
         action {
           name = "Deny"
         }
@@ -389,11 +383,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
   template_id = "temp-05dtxkyw"
   security_policy {
     custom_rules {
-      rules {
+      precise_match_rules {
         name      = "rule1"
         condition = "$${http.request.host} contain ['abc']"
         enabled   = "on"
-        rule_type = "PreciseMatchRule"
         priority  = 50
         action {
           name = "BlockIP"
@@ -403,12 +396,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
 
-      rules {
+      basic_access_rules {
         name      = "rule2"
         condition = "$${http.request.ip} in ['119.28.103.58']"
         enabled   = "off"
-        id        = "2182252647"
-        rule_type = "BasicAccessRule"
         action {
           name = "Deny"
         }
@@ -573,7 +564,23 @@ The following arguments are supported:
 * `security_policy` - (Optional, List) Security policy configuration. it is recommended to use for custom policies and managed rule configurations of Web protection. it supports configuring security policies with expression grammar.
 * `template_id` - (Optional, String, ForceNew) Specify the policy Template ID. use this parameter to specify the ID of the policy Template when the Entity parameter value is Template.
 
+The `action` object of `basic_access_rules` supports the following:
+
+* `name` - (Required, String) Specific actions for safe execution. valid values:.
+<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.
+* `block_ip_action_parameters` - (Optional, List) Additional parameter when Name is BlockIP.
+* `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
+* `return_custom_page_action_parameters` - (Optional, List) Additional parameter when Name is ReturnCustomPage.
+
 The `action` object of `managed_rule_groups` supports the following:
+
+* `name` - (Required, String) Specific actions for safe execution. valid values:.
+<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.
+* `block_ip_action_parameters` - (Optional, List) Additional parameter when Name is BlockIP.
+* `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
+* `return_custom_page_action_parameters` - (Optional, List) Additional parameter when Name is ReturnCustomPage.
+
+The `action` object of `precise_match_rules` supports the following:
 
 * `name` - (Required, String) Specific actions for safe execution. valid values:.
 <li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.
@@ -601,13 +608,23 @@ The `auto_update` object of `managed_rules` supports the following:
 
 * `auto_update_to_latest_version` - (Required, String) Indicates whether to enable automatic update to the latest version. valid values: <li>on: enabled</li> <li>off: disabled</li>.
 
+The `basic_access_rules` object of `custom_rules` supports the following:
+
+* `action` - (Required, List) Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.
+* `condition` - (Required, String) The specific content of the custom rule must comply with the expression grammar. please refer to the product document for detailed specifications.
+* `enabled` - (Required, String) Indicates whether the custom rule is enabled. valid values: <li>on: enabled</li> <li>off: disabled</li>.
+* `name` - (Required, String) The name of the custom rule.
+* `priority` - (Optional, Int) Customizes the priority of rules. value range: 0-100. it defaults to 0. only supports `rule_type` is `PreciseMatchRule`.
+
 The `block_ip_action_parameters` object of `action` supports the following:
 
 * `duration` - (Required, String) Penalty duration for blocking ips. supported units: <li>s: second, value range 1-120;</li> <li>m: minute, value range 1-120;</li> <li>h: hour, value range 1-48.</li>.
 
 The `custom_rules` object of `security_policy` supports the following:
 
-* `rules` - (Optional, List) List of custom rule definitions. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the parameter value of CustomRules in the SecurityPolicy parameter is not specified: keep the existing custom rule configuration without modification.
+* `basic_access_rules` - (Optional, List) List of custom rule definitions. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the parameter value of CustomRules in the SecurityPolicy parameter is not specified: keep the existing custom rule configuration without modification.
+* `precise_match_rules` - (Optional, List) List of custom rule definitions. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the parameter value of CustomRules in the SecurityPolicy parameter is not specified: keep the existing custom rule configuration without modification.
+* `rules` - (Optional, List, **Deprecated**) It has been deprecated from version 1.81.184. Please use `precise_match_rules` or `basic_access_rules` instead. List of custom rule definitions. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the parameter value of CustomRules in the SecurityPolicy parameter is not specified: keep the existing custom rule configuration without modification.
 
 The `managed_rule_groups` object of `managed_rules` supports the following:
 
@@ -626,6 +643,14 @@ The `managed_rules` object of `security_policy` supports the following:
 
 The `meta_data` object of `managed_rule_groups` supports the following:
 
+
+The `precise_match_rules` object of `custom_rules` supports the following:
+
+* `action` - (Required, List) Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.
+* `condition` - (Required, String) The specific content of the custom rule must comply with the expression grammar. please refer to the product document for detailed specifications.
+* `enabled` - (Required, String) Indicates whether the custom rule is enabled. valid values: <li>on: enabled</li> <li>off: disabled</li>.
+* `name` - (Required, String) The name of the custom rule.
+* `priority` - (Optional, Int) Customizes the priority of rules. value range: 0-100. it defaults to 0. only supports `rule_type` is `PreciseMatchRule`.
 
 The `redirect_action_parameters` object of `action` supports the following:
 
