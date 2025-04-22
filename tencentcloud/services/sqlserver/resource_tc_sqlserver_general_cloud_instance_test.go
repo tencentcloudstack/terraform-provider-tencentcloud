@@ -101,3 +101,63 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   time_zone = "China Standard Time"
 }
 `
+
+func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_multiZonesAndMultiNodes(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSqlserverGeneralCloudInstance_multiZonesAndMultiNodes,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "multi_zones", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "multi_nodes", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "dr_zones.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "disk_encrypt_flag", "1"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"period"},
+			},
+		},
+	})
+}
+
+const testAccSqlserverGeneralCloudInstance_multiZonesAndMultiNodes = tcacctest.DefaultVpcSubnets + tcacctest.DefaultSecurityGroupData + `
+resource "tencentcloud_sqlserver_general_cloud_instance" "multi_zones_multi_nodes" {
+  name                 = "multi_zones_multi_nodes"
+  zone                 = "ap-guangzhou-3"
+  memory               = 4
+  storage              = 20
+  cpu                  = 2
+  machine_type         = "CLOUD_BSSD"
+  instance_charge_type = "POSTPAID"
+  project_id           = 0
+  subnet_id            = local.subnet_id
+  vpc_id               = local.vpc_id
+  db_version           = "2017"
+  security_group_list  = [local.sg_id]
+  weekly               = [1, 2, 3, 5, 6, 7]
+  start_time           = "00:00"
+  span                 = 6
+  resource_tags {
+    tag_key   = "test"
+    tag_value = "test"
+  }
+  collation = "Chinese_PRC_CI_AS"
+  time_zone = "China Standard Time"
+  multi_zones = true
+  multi_nodes = true
+  dr_zones = ["ap-guangzhou-6", "ap-guangzhou-7"]
+  disk_encrypt_flag = 1
+}
+`

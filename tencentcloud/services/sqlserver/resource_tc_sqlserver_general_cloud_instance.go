@@ -160,6 +160,32 @@ func ResourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "External port number.",
 			},
+			"multi_zones": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to deploy across availability zones, the default value is false.",
+			},
+			"multi_nodes": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether it is a multi-node architecture instance, the default value is false. When MultiNodes = true, the parameter MultiZones must be true.",
+			},
+			"dr_zones": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "The standby node availability area is empty by default. When MultiNodes = true, the primary node and standby node availability areas cannot all be the same. The minimum number of standby availability areas set is 2, and the maximum number is no more than 5.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"disk_encrypt_flag": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Disk encryption identification, 0-not encrypted, 1-encrypted.",
+			},
 		},
 	}
 }
@@ -277,6 +303,23 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceCreate(d *schema.ResourceD
 
 	if v, ok := d.GetOk("time_zone"); ok {
 		request.TimeZone = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("multi_zones"); ok {
+		request.MultiZones = helper.Bool(v.(bool))
+	}
+	if v, ok := d.GetOkExists("multi_nodes"); ok {
+		request.MultiNodes = helper.Bool(v.(bool))
+	}
+	if v, ok := d.GetOk("dr_zones"); ok {
+		drZones := v.(*schema.Set).List()
+		for i := range drZones {
+			drZone := drZones[i].(string)
+			request.DrZones = append(request.DrZones, &drZone)
+		}
+	}
+	if v, ok := d.GetOkExists("disk_encrypt_flag"); ok {
+		request.DiskEncryptFlag = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -430,6 +473,44 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 		_ = d.Set("tgw_wan_vport", generalCloudInstance.TgwWanVPort)
 	}
 
+	if generalCloudInstance.IsDrZone != nil {
+		_ = d.Set("multi_zones", generalCloudInstance.IsDrZone)
+	}
+
+	if len(generalCloudInstance.MultiSlaveZones) > 0 {
+		_ = d.Set("multi_nodes", true)
+		drZones := make([]string, 0)
+		for _, multiSlaveZone := range generalCloudInstance.MultiSlaveZones {
+			drZones = append(drZones, *multiSlaveZone.SlaveZone)
+		}
+		if len(drZones) > 0 {
+			_ = d.Set("dr_zones", drZones)
+		}
+	} else {
+		_ = d.Set("multi_nodes", false)
+	}
+
+	var insAttribute *sqlserver.DescribeDBInstancesAttributeResponseParams
+	paramMap := map[string]interface{}{
+		"InstanceId": helper.String(instanceId),
+	}
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeSqlserverInsAttributeByFilter(ctx, paramMap)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		insAttribute = result
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if insAttribute.IsDiskEncryptFlag != nil {
+		_ = d.Set("disk_encrypt_flag", insAttribute.IsDiskEncryptFlag)
+	}
 	maintenanceSpan, err := service.DescribeMaintenanceSpanById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -488,7 +569,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceUpdate(d *schema.ResourceD
 	)
 
 	request.InstanceId = &instanceId
-	immutableArgs := []string{"zone", "machine_type", "instance_charge_type", "project_id", "subnet_id", "vpc_id", "period", "security_group_list", "weekly", "start_time", "span", "resource_tags", "collation", "time_zone"}
+	immutableArgs := []string{"zone", "machine_type", "instance_charge_type", "project_id", "subnet_id", "vpc_id", "period", "security_group_list", "weekly", "start_time", "span", "resource_tags", "collation", "time_zone", "multi_zones", "multi_nodes", "dr_zones", "disk_encrypt_flag"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
