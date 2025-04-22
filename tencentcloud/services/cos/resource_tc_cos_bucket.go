@@ -1489,41 +1489,45 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 
 		if v, ok := w["routing_rules"]; ok {
 			websiteRoutingRules := cos.WebsiteRoutingRules{}
-			for _, item := range v.([]interface{}) {
-				rules := item.(map[string]interface{})
-				if v, ok := rules["rules"]; ok {
-					wbRules := []cos.WebsiteRoutingRule{}
-					for _, rule := range v.([]interface{}) {
-						dMap := rule.(map[string]interface{})
-						wbRule := cos.WebsiteRoutingRule{}
-						if v, ok := dMap["condition_error_code"].(string); ok && v != "" {
-							wbRule.ConditionErrorCode = v
-						}
+			if len(v.([]interface{})) > 0 {
+				for _, item := range v.([]interface{}) {
+					if rules, ok := item.(map[string]interface{}); ok && rules != nil {
+						if v, ok := rules["rules"]; ok {
+							wbRules := []cos.WebsiteRoutingRule{}
+							for _, rule := range v.([]interface{}) {
+								if dMap, ok := rule.(map[string]interface{}); ok && rules != nil {
+									wbRule := cos.WebsiteRoutingRule{}
+									if v, ok := dMap["condition_error_code"].(string); ok && v != "" {
+										wbRule.ConditionErrorCode = v
+									}
 
-						if v, ok := dMap["condition_prefix"].(string); ok && v != "" {
-							wbRule.ConditionPrefix = v
-						}
+									if v, ok := dMap["condition_prefix"].(string); ok && v != "" {
+										wbRule.ConditionPrefix = v
+									}
 
-						if v, ok := dMap["redirect_protocol"].(string); ok && v != "" {
-							wbRule.RedirectProtocol = v
-						}
+									if v, ok := dMap["redirect_protocol"].(string); ok && v != "" {
+										wbRule.RedirectProtocol = v
+									}
 
-						if v, ok := dMap["redirect_replace_key"].(string); ok && v != "" {
-							wbRule.RedirectReplaceKey = v
-						}
+									if v, ok := dMap["redirect_replace_key"].(string); ok && v != "" {
+										wbRule.RedirectReplaceKey = v
+									}
 
-						if v, ok := dMap["redirect_replace_key_prefix"].(string); ok && v != "" {
-							wbRule.RedirectReplaceKeyPrefix = v
-						}
+									if v, ok := dMap["redirect_replace_key_prefix"].(string); ok && v != "" {
+										wbRule.RedirectReplaceKeyPrefix = v
+									}
 
-						wbRules = append(wbRules, wbRule)
+									wbRules = append(wbRules, wbRule)
+								}
+							}
+
+							websiteRoutingRules.Rules = wbRules
+						}
 					}
-
-					websiteRoutingRules.Rules = wbRules
 				}
-			}
 
-			websiteConfiguration.RoutingRules = &websiteRoutingRules
+				websiteConfiguration.RoutingRules = &websiteRoutingRules
+			}
 		}
 
 		request := websiteConfiguration
