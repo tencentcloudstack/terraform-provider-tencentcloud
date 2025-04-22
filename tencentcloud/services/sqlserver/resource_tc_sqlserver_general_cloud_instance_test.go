@@ -145,7 +145,7 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "multi_zones_multi_node
   subnet_id            = local.subnet_id
   vpc_id               = local.vpc_id
   db_version           = "2017"
-  security_group_list  = [local.sg_id]
+  security_group_list  = ["sg-kensue7b"]
   weekly               = [1, 2, 3, 5, 6, 7]
   start_time           = "00:00"
   span                 = 6
