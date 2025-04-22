@@ -193,7 +193,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 												Description: "Whether to enable feature. values: on: enable; off: disable.",
 											},
 											"action": {
-												Type:        schema.TypeInt,
+												Type:        schema.TypeString,
 												Optional:    true,
 												Description: "Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.",
 											},
@@ -748,7 +748,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 												Description: "Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.",
 											},
 											"action": {
-												Type:        schema.TypeInt,
+												Type:        schema.TypeString,
 												Optional:    true,
 												Description: "Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.",
 											},
@@ -776,7 +776,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 												Description: "Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.",
 											},
 											"action": {
-												Type:        schema.TypeInt,
+												Type:        schema.TypeString,
 												Optional:    true,
 												Description: "Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.",
 											},
