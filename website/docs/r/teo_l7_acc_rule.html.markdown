@@ -476,13 +476,13 @@ The `compression_parameters` object of `actions` supports the following:
 
 The `cookie` object of `cache_key_parameters` supports the following:
 
-* `action` - (Optional, Int) Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+* `action` - (Optional, String) Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
 * `switch` - (Optional, String) Whether to enable feature. values: on: enable; off: disable.
 * `values` - (Optional, List) Custom cache key cookie name list.
 
 The `cookie` object of `upstream_request_parameters` supports the following:
 
-* `action` - (Optional, Int) Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+* `action` - (Optional, String) Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
 * `switch` - (Optional, String) Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
 * `values` - (Optional, List) Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
 
@@ -619,7 +619,7 @@ The `query_string` object of `cache_key_parameters` supports the following:
 
 The `query_string` object of `upstream_request_parameters` supports the following:
 
-* `action` - (Optional, Int) Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+* `action` - (Optional, String) Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
 * `switch` - (Optional, String) Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
 * `values` - (Optional, List) Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
 
