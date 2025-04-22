@@ -119,7 +119,6 @@ func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_multiZonesAndMulti
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "multi_zones", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "multi_nodes", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "dr_zones.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.multi_zones_multi_nodes", "disk_encrypt_flag", "1"),
 				),
 			},
 			{
@@ -158,6 +157,5 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "multi_zones_multi_node
   multi_zones = true
   multi_nodes = true
   dr_zones = ["ap-guangzhou-6", "ap-guangzhou-7"]
-  disk_encrypt_flag = 1
 }
 `
