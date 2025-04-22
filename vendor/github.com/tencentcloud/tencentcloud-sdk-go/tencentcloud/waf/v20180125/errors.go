@@ -74,6 +74,12 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 命名重复
+	INVALIDPARAMETER_BOTNAMEREPEATERR = "InvalidParameter.BotNameRepeatErr"
+
+	// Bot场景不存在
+	INVALIDPARAMETER_BOTSCENENOTEXISTERR = "InvalidParameter.BotSceneNotExistErr"
+
 	// 证书信息参数错误
 	INVALIDPARAMETER_CERTIFICATIONPARAMETERERR = "InvalidParameter.CertificationParameterErr"
 
@@ -128,6 +134,12 @@ const (
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// 自定义规则CEL逻辑表达式长度超过10240字符
+	INVALIDPARAMETERVALUE_CELLENGTHEXCEEDLIMIT = "InvalidParameterValue.CELLengthExceedLimit"
+
+	// 自定义规则CEL逻辑表达式语法错误
+	INVALIDPARAMETERVALUE_CELSYNTAXERR = "InvalidParameterValue.CELSyntaxErr"
+
 	// InvalidRequest
 	INVALIDPARAMETERVALUE_INVALIDREQUEST = "InvalidParameterValue.InvalidRequest"
 
@@ -175,6 +187,9 @@ const (
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// Bot套餐未购买
+	UNSUPPORTEDOPERATION_BOTSERVICENOTSUBSCRIBEERR = "UnsupportedOperation.BotServiceNotSubscribeErr"
 
 	// InvalidRequest
 	UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"

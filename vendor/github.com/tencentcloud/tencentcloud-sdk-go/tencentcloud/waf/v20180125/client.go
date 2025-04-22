@@ -346,6 +346,7 @@ func NewAddCustomRuleResponse() (response *AddCustomRuleResponse) {
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETERVALUE_CELSYNTAXERR = "InvalidParameterValue.CELSyntaxErr"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_SPECIFICATIONERR = "LimitExceeded.SpecificationErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -359,6 +360,7 @@ func (c *Client) AddCustomRule(request *AddCustomRuleRequest) (response *AddCust
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETERVALUE_CELSYNTAXERR = "InvalidParameterValue.CELSyntaxErr"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_SPECIFICATIONERR = "LimitExceeded.SpecificationErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -595,6 +597,103 @@ func (c *Client) AddSpartaProtectionWithContext(ctx context.Context, request *Ad
     return
 }
 
+func NewBatchOperateUserSignatureRulesRequest() (request *BatchOperateUserSignatureRulesRequest) {
+    request = &BatchOperateUserSignatureRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "BatchOperateUserSignatureRules")
+    
+    
+    return
+}
+
+func NewBatchOperateUserSignatureRulesResponse() (response *BatchOperateUserSignatureRulesResponse) {
+    response = &BatchOperateUserSignatureRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// BatchOperateUserSignatureRules
+// 批量操作tiga子规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_REDISOPERATIONFAILED = "FailedOperation.RedisOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ASYNCHRONOUSCALLFAILED = "InternalError.AsynchronousCallFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CERTIFICATIONPARAMETERERR = "InvalidParameter.CertificationParameterErr"
+//  INVALIDPARAMETER_DOMAINEXCEEDSLIMITERR = "InvalidParameter.DomainExceedsLimitErr"
+//  INVALIDPARAMETER_DOMAINNOTRECORD = "InvalidParameter.DomainNotRecord"
+//  INVALIDPARAMETER_PORTPARAMETERERR = "InvalidParameter.PortParameterErr"
+//  INVALIDPARAMETER_PROTECTIONDOMAINPARAMETERERR = "InvalidParameter.ProtectionDomainParameterErr"
+//  INVALIDPARAMETER_TLSPARAMETERERR = "InvalidParameter.TLSParameterErr"
+//  INVALIDPARAMETER_UNAUTHORIZEDOPERATIONPARAMETERERR = "InvalidParameter.UnauthorizedOperationParameterErr"
+//  INVALIDPARAMETER_UPSTREAMPARAMETERERR = "InvalidParameter.UpstreamParameterErr"
+//  INVALIDPARAMETER_XFFRESETPARAMETERERR = "InvalidParameter.XFFResetParameterErr"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_EMPTYERR = "ResourceInUse.EmptyErr"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) BatchOperateUserSignatureRules(request *BatchOperateUserSignatureRulesRequest) (response *BatchOperateUserSignatureRulesResponse, err error) {
+    return c.BatchOperateUserSignatureRulesWithContext(context.Background(), request)
+}
+
+// BatchOperateUserSignatureRules
+// 批量操作tiga子规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_REDISOPERATIONFAILED = "FailedOperation.RedisOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ASYNCHRONOUSCALLFAILED = "InternalError.AsynchronousCallFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CERTIFICATIONPARAMETERERR = "InvalidParameter.CertificationParameterErr"
+//  INVALIDPARAMETER_DOMAINEXCEEDSLIMITERR = "InvalidParameter.DomainExceedsLimitErr"
+//  INVALIDPARAMETER_DOMAINNOTRECORD = "InvalidParameter.DomainNotRecord"
+//  INVALIDPARAMETER_PORTPARAMETERERR = "InvalidParameter.PortParameterErr"
+//  INVALIDPARAMETER_PROTECTIONDOMAINPARAMETERERR = "InvalidParameter.ProtectionDomainParameterErr"
+//  INVALIDPARAMETER_TLSPARAMETERERR = "InvalidParameter.TLSParameterErr"
+//  INVALIDPARAMETER_UNAUTHORIZEDOPERATIONPARAMETERERR = "InvalidParameter.UnauthorizedOperationParameterErr"
+//  INVALIDPARAMETER_UPSTREAMPARAMETERERR = "InvalidParameter.UpstreamParameterErr"
+//  INVALIDPARAMETER_XFFRESETPARAMETERERR = "InvalidParameter.XFFResetParameterErr"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_EMPTYERR = "ResourceInUse.EmptyErr"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) BatchOperateUserSignatureRulesWithContext(ctx context.Context, request *BatchOperateUserSignatureRulesRequest) (response *BatchOperateUserSignatureRulesResponse, err error) {
+    if request == nil {
+        request = NewBatchOperateUserSignatureRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BatchOperateUserSignatureRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBatchOperateUserSignatureRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateAccessExportRequest() (request *CreateAccessExportRequest) {
     request = &CreateAccessExportRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -678,6 +777,83 @@ func (c *Client) CreateAccessExportWithContext(ctx context.Context, request *Cre
     request.SetContext(ctx)
     
     response = NewCreateAccessExportResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAreaBanRuleRequest() (request *CreateAreaBanRuleRequest) {
+    request = &CreateAreaBanRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "CreateAreaBanRule")
+    
+    
+    return
+}
+
+func NewCreateAreaBanRuleResponse() (response *CreateAreaBanRuleResponse) {
+    response = &CreateAreaBanRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAreaBanRule
+// 添加（编辑）地域封禁中的地域信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAreaBanRule(request *CreateAreaBanRuleRequest) (response *CreateAreaBanRuleResponse, err error) {
+    return c.CreateAreaBanRuleWithContext(context.Background(), request)
+}
+
+// CreateAreaBanRule
+// 添加（编辑）地域封禁中的地域信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAreaBanRuleWithContext(ctx context.Context, request *CreateAreaBanRuleRequest) (response *CreateAreaBanRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateAreaBanRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAreaBanRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAreaBanRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -901,6 +1077,172 @@ func (c *Client) CreateIpAccessControlWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewCreateIpAccessControlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreatePostCKafkaFlowRequest() (request *CreatePostCKafkaFlowRequest) {
+    request = &CreatePostCKafkaFlowRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "CreatePostCKafkaFlow")
+    
+    
+    return
+}
+
+func NewCreatePostCKafkaFlowResponse() (response *CreatePostCKafkaFlowResponse) {
+    response = &CreatePostCKafkaFlowResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreatePostCKafkaFlow
+// 创建CKafka投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreatePostCKafkaFlow(request *CreatePostCKafkaFlowRequest) (response *CreatePostCKafkaFlowResponse, err error) {
+    return c.CreatePostCKafkaFlowWithContext(context.Background(), request)
+}
+
+// CreatePostCKafkaFlow
+// 创建CKafka投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreatePostCKafkaFlowWithContext(ctx context.Context, request *CreatePostCKafkaFlowRequest) (response *CreatePostCKafkaFlowResponse, err error) {
+    if request == nil {
+        request = NewCreatePostCKafkaFlowRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePostCKafkaFlow require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreatePostCKafkaFlowResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreatePostCLSFlowRequest() (request *CreatePostCLSFlowRequest) {
+    request = &CreatePostCLSFlowRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "CreatePostCLSFlow")
+    
+    
+    return
+}
+
+func NewCreatePostCLSFlowResponse() (response *CreatePostCLSFlowResponse) {
+    response = &CreatePostCLSFlowResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreatePostCLSFlow
+// 创建CLS投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreatePostCLSFlow(request *CreatePostCLSFlowRequest) (response *CreatePostCLSFlowResponse, err error) {
+    return c.CreatePostCLSFlowWithContext(context.Background(), request)
+}
+
+// CreatePostCLSFlow
+// 创建CLS投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreatePostCLSFlowWithContext(ctx context.Context, request *CreatePostCLSFlowRequest) (response *CreatePostCLSFlowResponse, err error) {
+    if request == nil {
+        request = NewCreatePostCLSFlowRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePostCLSFlow require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreatePostCLSFlowResponse()
     err = c.Send(request, response)
     return
 }
@@ -1234,6 +1576,55 @@ func (c *Client) DeleteAttackWhiteRuleWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDeleteAttackWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteBotSceneUCBRuleRequest() (request *DeleteBotSceneUCBRuleRequest) {
+    request = &DeleteBotSceneUCBRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DeleteBotSceneUCBRule")
+    
+    
+    return
+}
+
+func NewDeleteBotSceneUCBRuleResponse() (response *DeleteBotSceneUCBRuleResponse) {
+    response = &DeleteBotSceneUCBRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteBotSceneUCBRule
+// 场景化后删除Bot的UCB自定义规则
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DeleteBotSceneUCBRule(request *DeleteBotSceneUCBRuleRequest) (response *DeleteBotSceneUCBRuleResponse, err error) {
+    return c.DeleteBotSceneUCBRuleWithContext(context.Background(), request)
+}
+
+// DeleteBotSceneUCBRule
+// 场景化后删除Bot的UCB自定义规则
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DeleteBotSceneUCBRuleWithContext(ctx context.Context, request *DeleteBotSceneUCBRuleRequest) (response *DeleteBotSceneUCBRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteBotSceneUCBRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteBotSceneUCBRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteBotSceneUCBRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -1609,6 +2000,8 @@ func NewDeleteIpAccessControlV2Response() (response *DeleteIpAccessControlV2Resp
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteIpAccessControlV2(request *DeleteIpAccessControlV2Request) (response *DeleteIpAccessControlV2Response, err error) {
     return c.DeleteIpAccessControlV2WithContext(context.Background(), request)
@@ -1622,6 +2015,8 @@ func (c *Client) DeleteIpAccessControlV2(request *DeleteIpAccessControlV2Request
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteIpAccessControlV2WithContext(ctx context.Context, request *DeleteIpAccessControlV2Request) (response *DeleteIpAccessControlV2Response, err error) {
     if request == nil {
@@ -2360,6 +2755,57 @@ func (c *Client) DescribeAreaBanAreasWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeAreaBanRuleRequest() (request *DescribeAreaBanRuleRequest) {
+    request = &DescribeAreaBanRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeAreaBanRule")
+    
+    
+    return
+}
+
+func NewDescribeAreaBanRuleResponse() (response *DescribeAreaBanRuleResponse) {
+    response = &DescribeAreaBanRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAreaBanRule
+// 获取地域封禁规则配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAreaBanRule(request *DescribeAreaBanRuleRequest) (response *DescribeAreaBanRuleResponse, err error) {
+    return c.DescribeAreaBanRuleWithContext(context.Background(), request)
+}
+
+// DescribeAreaBanRule
+// 获取地域封禁规则配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAreaBanRuleWithContext(ctx context.Context, request *DescribeAreaBanRuleRequest) (response *DescribeAreaBanRuleResponse, err error) {
+    if request == nil {
+        request = NewDescribeAreaBanRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAreaBanRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAreaBanRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAreaBanSupportAreasRequest() (request *DescribeAreaBanSupportAreasRequest) {
     request = &DescribeAreaBanSupportAreasRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2718,6 +3164,8 @@ func NewDescribeBatchIpAccessControlResponse() (response *DescribeBatchIpAccessC
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeBatchIpAccessControl(request *DescribeBatchIpAccessControlRequest) (response *DescribeBatchIpAccessControlResponse, err error) {
     return c.DescribeBatchIpAccessControlWithContext(context.Background(), request)
 }
@@ -2728,6 +3176,8 @@ func (c *Client) DescribeBatchIpAccessControl(request *DescribeBatchIpAccessCont
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeBatchIpAccessControlWithContext(ctx context.Context, request *DescribeBatchIpAccessControlRequest) (response *DescribeBatchIpAccessControlResponse, err error) {
     if request == nil {
         request = NewDescribeBatchIpAccessControlRequest()
@@ -2740,6 +3190,175 @@ func (c *Client) DescribeBatchIpAccessControlWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDescribeBatchIpAccessControlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBotSceneListRequest() (request *DescribeBotSceneListRequest) {
+    request = &DescribeBotSceneListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeBotSceneList")
+    
+    
+    return
+}
+
+func NewDescribeBotSceneListResponse() (response *DescribeBotSceneListResponse) {
+    response = &DescribeBotSceneListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBotSceneList
+// 获取BOT场景列表与概览
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BOTSERVICENOTSUBSCRIBEERR = "UnsupportedOperation.BotServiceNotSubscribeErr"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeBotSceneList(request *DescribeBotSceneListRequest) (response *DescribeBotSceneListResponse, err error) {
+    return c.DescribeBotSceneListWithContext(context.Background(), request)
+}
+
+// DescribeBotSceneList
+// 获取BOT场景列表与概览
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BOTSERVICENOTSUBSCRIBEERR = "UnsupportedOperation.BotServiceNotSubscribeErr"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeBotSceneListWithContext(ctx context.Context, request *DescribeBotSceneListRequest) (response *DescribeBotSceneListResponse, err error) {
+    if request == nil {
+        request = NewDescribeBotSceneListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBotSceneList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBotSceneListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBotSceneOverviewRequest() (request *DescribeBotSceneOverviewRequest) {
+    request = &DescribeBotSceneOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeBotSceneOverview")
+    
+    
+    return
+}
+
+func NewDescribeBotSceneOverviewResponse() (response *DescribeBotSceneOverviewResponse) {
+    response = &DescribeBotSceneOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBotSceneOverview
+// 获取Bot场景全局概览
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeBotSceneOverview(request *DescribeBotSceneOverviewRequest) (response *DescribeBotSceneOverviewResponse, err error) {
+    return c.DescribeBotSceneOverviewWithContext(context.Background(), request)
+}
+
+// DescribeBotSceneOverview
+// 获取Bot场景全局概览
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeBotSceneOverviewWithContext(ctx context.Context, request *DescribeBotSceneOverviewRequest) (response *DescribeBotSceneOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeBotSceneOverviewRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBotSceneOverview require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBotSceneOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBotSceneUCBRuleRequest() (request *DescribeBotSceneUCBRuleRequest) {
+    request = &DescribeBotSceneUCBRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeBotSceneUCBRule")
+    
+    
+    return
+}
+
+func NewDescribeBotSceneUCBRuleResponse() (response *DescribeBotSceneUCBRuleResponse) {
+    response = &DescribeBotSceneUCBRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBotSceneUCBRule
+// 场景化后Bot获取UCB自定义规则策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MONGOOPERATIONFAILED = "FailedOperation.MongoOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BOTSCENENOTEXISTERR = "InvalidParameter.BotSceneNotExistErr"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BOTSERVICENOTSUBSCRIBEERR = "UnsupportedOperation.BotServiceNotSubscribeErr"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeBotSceneUCBRule(request *DescribeBotSceneUCBRuleRequest) (response *DescribeBotSceneUCBRuleResponse, err error) {
+    return c.DescribeBotSceneUCBRuleWithContext(context.Background(), request)
+}
+
+// DescribeBotSceneUCBRule
+// 场景化后Bot获取UCB自定义规则策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MONGOOPERATIONFAILED = "FailedOperation.MongoOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BOTSCENENOTEXISTERR = "InvalidParameter.BotSceneNotExistErr"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BOTSERVICENOTSUBSCRIBEERR = "UnsupportedOperation.BotServiceNotSubscribeErr"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeBotSceneUCBRuleWithContext(ctx context.Context, request *DescribeBotSceneUCBRuleRequest) (response *DescribeBotSceneUCBRuleResponse, err error) {
+    if request == nil {
+        request = NewDescribeBotSceneUCBRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBotSceneUCBRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBotSceneUCBRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -4208,6 +4827,8 @@ func NewDescribeIpAccessControlResponse() (response *DescribeIpAccessControlResp
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeIpAccessControl(request *DescribeIpAccessControlRequest) (response *DescribeIpAccessControlResponse, err error) {
     return c.DescribeIpAccessControlWithContext(context.Background(), request)
 }
@@ -4218,6 +4839,8 @@ func (c *Client) DescribeIpAccessControl(request *DescribeIpAccessControlRequest
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeIpAccessControlWithContext(ctx context.Context, request *DescribeIpAccessControlRequest) (response *DescribeIpAccessControlResponse, err error) {
     if request == nil {
         request = NewDescribeIpAccessControlRequest()
@@ -4667,6 +5290,172 @@ func (c *Client) DescribePortsWithContext(ctx context.Context, request *Describe
     return
 }
 
+func NewDescribePostCKafkaFlowsRequest() (request *DescribePostCKafkaFlowsRequest) {
+    request = &DescribePostCKafkaFlowsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribePostCKafkaFlows")
+    
+    
+    return
+}
+
+func NewDescribePostCKafkaFlowsResponse() (response *DescribePostCKafkaFlowsResponse) {
+    response = &DescribePostCKafkaFlowsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePostCKafkaFlows
+// 获取CKafka投递流任务列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePostCKafkaFlows(request *DescribePostCKafkaFlowsRequest) (response *DescribePostCKafkaFlowsResponse, err error) {
+    return c.DescribePostCKafkaFlowsWithContext(context.Background(), request)
+}
+
+// DescribePostCKafkaFlows
+// 获取CKafka投递流任务列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePostCKafkaFlowsWithContext(ctx context.Context, request *DescribePostCKafkaFlowsRequest) (response *DescribePostCKafkaFlowsResponse, err error) {
+    if request == nil {
+        request = NewDescribePostCKafkaFlowsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePostCKafkaFlows require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePostCKafkaFlowsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePostCLSFlowsRequest() (request *DescribePostCLSFlowsRequest) {
+    request = &DescribePostCLSFlowsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribePostCLSFlows")
+    
+    
+    return
+}
+
+func NewDescribePostCLSFlowsResponse() (response *DescribePostCLSFlowsResponse) {
+    response = &DescribePostCLSFlowsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePostCLSFlows
+// 获取CLS投递流任务列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePostCLSFlows(request *DescribePostCLSFlowsRequest) (response *DescribePostCLSFlowsResponse, err error) {
+    return c.DescribePostCLSFlowsWithContext(context.Background(), request)
+}
+
+// DescribePostCLSFlows
+// 获取CLS投递流任务列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePostCLSFlowsWithContext(ctx context.Context, request *DescribePostCLSFlowsRequest) (response *DescribePostCLSFlowsResponse, err error) {
+    if request == nil {
+        request = NewDescribePostCLSFlowsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePostCLSFlows require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePostCLSFlowsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeProtectionModesRequest() (request *DescribeProtectionModesRequest) {
     request = &DescribeProtectionModesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4690,7 +5479,24 @@ func NewDescribeProtectionModesResponse() (response *DescribeProtectionModesResp
 // 查询Tiga引擎大类规则及其防护模式
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeProtectionModes(request *DescribeProtectionModesRequest) (response *DescribeProtectionModesResponse, err error) {
     return c.DescribeProtectionModesWithContext(context.Background(), request)
 }
@@ -4699,7 +5505,24 @@ func (c *Client) DescribeProtectionModes(request *DescribeProtectionModesRequest
 // 查询Tiga引擎大类规则及其防护模式
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeProtectionModesWithContext(ctx context.Context, request *DescribeProtectionModesRequest) (response *DescribeProtectionModesResponse, err error) {
     if request == nil {
         request = NewDescribeProtectionModesRequest()
@@ -5336,6 +6159,69 @@ func (c *Client) DescribeUserLevelWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeUserSignatureClassRequest() (request *DescribeUserSignatureClassRequest) {
+    request = &DescribeUserSignatureClassRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeUserSignatureClass")
+    
+    
+    return
+}
+
+func NewDescribeUserSignatureClassResponse() (response *DescribeUserSignatureClassResponse) {
+    response = &DescribeUserSignatureClassResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeUserSignatureClass
+// 查询Tiga引擎规则类型及状态
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeUserSignatureClass(request *DescribeUserSignatureClassRequest) (response *DescribeUserSignatureClassResponse, err error) {
+    return c.DescribeUserSignatureClassWithContext(context.Background(), request)
+}
+
+// DescribeUserSignatureClass
+// 查询Tiga引擎规则类型及状态
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeUserSignatureClassWithContext(ctx context.Context, request *DescribeUserSignatureClassRequest) (response *DescribeUserSignatureClassResponse, err error) {
+    if request == nil {
+        request = NewDescribeUserSignatureClassRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeUserSignatureClass require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeUserSignatureClassResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeUserSignatureRuleRequest() (request *DescribeUserSignatureRuleRequest) {
     request = &DescribeUserSignatureRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5419,6 +6305,93 @@ func (c *Client) DescribeUserSignatureRuleWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeUserSignatureRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeUserSignatureRuleV2Request() (request *DescribeUserSignatureRuleV2Request) {
+    request = &DescribeUserSignatureRuleV2Request{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeUserSignatureRuleV2")
+    
+    
+    return
+}
+
+func NewDescribeUserSignatureRuleV2Response() (response *DescribeUserSignatureRuleV2Response) {
+    response = &DescribeUserSignatureRuleV2Response{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeUserSignatureRuleV2
+// 获取用户特征规则列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeUserSignatureRuleV2(request *DescribeUserSignatureRuleV2Request) (response *DescribeUserSignatureRuleV2Response, err error) {
+    return c.DescribeUserSignatureRuleV2WithContext(context.Background(), request)
+}
+
+// DescribeUserSignatureRuleV2
+// 获取用户特征规则列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeUserSignatureRuleV2WithContext(ctx context.Context, request *DescribeUserSignatureRuleV2Request) (response *DescribeUserSignatureRuleV2Response, err error) {
+    if request == nil {
+        request = NewDescribeUserSignatureRuleV2Request()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeUserSignatureRuleV2 require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeUserSignatureRuleV2Response()
     err = c.Send(request, response)
     return
 }
@@ -5581,6 +6554,10 @@ func NewDescribeWafAutoDenyStatusResponse() (response *DescribeWafAutoDenyStatus
 }
 
 // DescribeWafAutoDenyStatus
+// 废弃接口
+//
+// 
+//
 // 描述WAF自动封禁模块详情
 //
 // 可能返回的错误码:
@@ -5591,6 +6568,10 @@ func (c *Client) DescribeWafAutoDenyStatus(request *DescribeWafAutoDenyStatusReq
 }
 
 // DescribeWafAutoDenyStatus
+// 废弃接口
+//
+// 
+//
 // 描述WAF自动封禁模块详情
 //
 // 可能返回的错误码:
@@ -5736,6 +6717,172 @@ func (c *Client) DescribeWebshellStatusWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeWebshellStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDestroyPostCKafkaFlowRequest() (request *DestroyPostCKafkaFlowRequest) {
+    request = &DestroyPostCKafkaFlowRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DestroyPostCKafkaFlow")
+    
+    
+    return
+}
+
+func NewDestroyPostCKafkaFlowResponse() (response *DestroyPostCKafkaFlowResponse) {
+    response = &DestroyPostCKafkaFlowResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DestroyPostCKafkaFlow
+// 销毁CKafka投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DestroyPostCKafkaFlow(request *DestroyPostCKafkaFlowRequest) (response *DestroyPostCKafkaFlowResponse, err error) {
+    return c.DestroyPostCKafkaFlowWithContext(context.Background(), request)
+}
+
+// DestroyPostCKafkaFlow
+// 销毁CKafka投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DestroyPostCKafkaFlowWithContext(ctx context.Context, request *DestroyPostCKafkaFlowRequest) (response *DestroyPostCKafkaFlowResponse, err error) {
+    if request == nil {
+        request = NewDestroyPostCKafkaFlowRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DestroyPostCKafkaFlow require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDestroyPostCKafkaFlowResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDestroyPostCLSFlowRequest() (request *DestroyPostCLSFlowRequest) {
+    request = &DestroyPostCLSFlowRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DestroyPostCLSFlow")
+    
+    
+    return
+}
+
+func NewDestroyPostCLSFlowResponse() (response *DestroyPostCLSFlowResponse) {
+    response = &DestroyPostCLSFlowResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DestroyPostCLSFlow
+// 销毁CLS投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DestroyPostCLSFlow(request *DestroyPostCLSFlowRequest) (response *DestroyPostCLSFlowResponse, err error) {
+    return c.DestroyPostCLSFlowWithContext(context.Background(), request)
+}
+
+// DestroyPostCLSFlow
+// 销毁CLS投递流任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CKAFKAINTERNALERROR = "FailedOperation.CKafkaInternalError"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DestroyPostCLSFlowWithContext(ctx context.Context, request *DestroyPostCLSFlowRequest) (response *DestroyPostCLSFlowResponse, err error) {
+    if request == nil {
+        request = NewDestroyPostCLSFlowRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DestroyPostCLSFlow require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDestroyPostCLSFlowResponse()
     err = c.Send(request, response)
     return
 }
@@ -6566,6 +7713,83 @@ func (c *Client) ModifyAreaBanAreasWithContext(ctx context.Context, request *Mod
     return
 }
 
+func NewModifyAreaBanRuleRequest() (request *ModifyAreaBanRuleRequest) {
+    request = &ModifyAreaBanRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyAreaBanRule")
+    
+    
+    return
+}
+
+func NewModifyAreaBanRuleResponse() (response *ModifyAreaBanRuleResponse) {
+    response = &ModifyAreaBanRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyAreaBanRule
+// 添加（编辑）地域封禁中的地域信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAreaBanRule(request *ModifyAreaBanRuleRequest) (response *ModifyAreaBanRuleResponse, err error) {
+    return c.ModifyAreaBanRuleWithContext(context.Background(), request)
+}
+
+// ModifyAreaBanRule
+// 添加（编辑）地域封禁中的地域信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAreaBanRuleWithContext(ctx context.Context, request *ModifyAreaBanRuleRequest) (response *ModifyAreaBanRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyAreaBanRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAreaBanRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAreaBanRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAreaBanStatusRequest() (request *ModifyAreaBanStatusRequest) {
     request = &ModifyAreaBanStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6704,6 +7928,112 @@ func (c *Client) ModifyAttackWhiteRuleWithContext(ctx context.Context, request *
     return
 }
 
+func NewModifyBotSceneStatusRequest() (request *ModifyBotSceneStatusRequest) {
+    request = &ModifyBotSceneStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyBotSceneStatus")
+    
+    
+    return
+}
+
+func NewModifyBotSceneStatusResponse() (response *ModifyBotSceneStatusResponse) {
+    response = &ModifyBotSceneStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyBotSceneStatus
+// bot子场景开关
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BOTSCENENOTEXISTERR = "InvalidParameter.BotSceneNotExistErr"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) ModifyBotSceneStatus(request *ModifyBotSceneStatusRequest) (response *ModifyBotSceneStatusResponse, err error) {
+    return c.ModifyBotSceneStatusWithContext(context.Background(), request)
+}
+
+// ModifyBotSceneStatus
+// bot子场景开关
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BOTSCENENOTEXISTERR = "InvalidParameter.BotSceneNotExistErr"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) ModifyBotSceneStatusWithContext(ctx context.Context, request *ModifyBotSceneStatusRequest) (response *ModifyBotSceneStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyBotSceneStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBotSceneStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBotSceneStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyBotSceneUCBRuleRequest() (request *ModifyBotSceneUCBRuleRequest) {
+    request = &ModifyBotSceneUCBRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyBotSceneUCBRule")
+    
+    
+    return
+}
+
+func NewModifyBotSceneUCBRuleResponse() (response *ModifyBotSceneUCBRuleResponse) {
+    response = &ModifyBotSceneUCBRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyBotSceneUCBRule
+// 【接口复用】场景化后更新Bot的UCB自定义规则，两个调用位置：1.BOT全局白名单 2.BOT场景配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BOTNAMEREPEATERR = "InvalidParameter.BotNameRepeatErr"
+func (c *Client) ModifyBotSceneUCBRule(request *ModifyBotSceneUCBRuleRequest) (response *ModifyBotSceneUCBRuleResponse, err error) {
+    return c.ModifyBotSceneUCBRuleWithContext(context.Background(), request)
+}
+
+// ModifyBotSceneUCBRule
+// 【接口复用】场景化后更新Bot的UCB自定义规则，两个调用位置：1.BOT全局白名单 2.BOT场景配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BOTNAMEREPEATERR = "InvalidParameter.BotNameRepeatErr"
+func (c *Client) ModifyBotSceneUCBRuleWithContext(ctx context.Context, request *ModifyBotSceneUCBRuleRequest) (response *ModifyBotSceneUCBRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyBotSceneUCBRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBotSceneUCBRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBotSceneUCBRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyBotStatusRequest() (request *ModifyBotStatusRequest) {
     request = &ModifyBotStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6785,6 +8115,8 @@ func NewModifyCustomRuleResponse() (response *ModifyCustomRuleResponse) {
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_CELLENGTHEXCEEDLIMIT = "InvalidParameterValue.CELLengthExceedLimit"
+//  INVALIDPARAMETERVALUE_CELSYNTAXERR = "InvalidParameterValue.CELSyntaxErr"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -6808,6 +8140,8 @@ func (c *Client) ModifyCustomRule(request *ModifyCustomRuleRequest) (response *M
 //  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_CELLENGTHEXCEEDLIMIT = "InvalidParameterValue.CELLengthExceedLimit"
+//  INVALIDPARAMETERVALUE_CELSYNTAXERR = "InvalidParameterValue.CELSyntaxErr"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -8181,7 +9515,7 @@ func NewModifyProtectionStatusResponse() (response *ModifyProtectionStatusRespon
 }
 
 // ModifyProtectionStatus
-// 获取基础安全防护（WAF开关）状态
+// 开启、关闭WAF开关
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -8193,7 +9527,7 @@ func (c *Client) ModifyProtectionStatus(request *ModifyProtectionStatusRequest) 
 }
 
 // ModifyProtectionStatus
-// 获取基础安全防护（WAF开关）状态
+// 开启、关闭WAF开关
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -8443,6 +9777,69 @@ func (c *Client) ModifyUserLevelWithContext(ctx context.Context, request *Modify
     request.SetContext(ctx)
     
     response = NewModifyUserLevelResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyUserSignatureClassRequest() (request *ModifyUserSignatureClassRequest) {
+    request = &ModifyUserSignatureClassRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyUserSignatureClass")
+    
+    
+    return
+}
+
+func NewModifyUserSignatureClassResponse() (response *ModifyUserSignatureClassResponse) {
+    response = &ModifyUserSignatureClassResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyUserSignatureClass
+// 切换Tiga引擎规则类型的生效开关
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyUserSignatureClass(request *ModifyUserSignatureClassRequest) (response *ModifyUserSignatureClassResponse, err error) {
+    return c.ModifyUserSignatureClassWithContext(context.Background(), request)
+}
+
+// ModifyUserSignatureClass
+// 切换Tiga引擎规则类型的生效开关
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyUserSignatureClassWithContext(ctx context.Context, request *ModifyUserSignatureClassRequest) (response *ModifyUserSignatureClassResponse, err error) {
+    if request == nil {
+        request = NewModifyUserSignatureClassRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyUserSignatureClass require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyUserSignatureClassResponse()
     err = c.Send(request, response)
     return
 }
@@ -9146,6 +10543,61 @@ func (c *Client) SwitchElasticModeWithContext(ctx context.Context, request *Swit
     request.SetContext(ctx)
     
     response = NewSwitchElasticModeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateProtectionModesRequest() (request *UpdateProtectionModesRequest) {
+    request = &UpdateProtectionModesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "UpdateProtectionModes")
+    
+    
+    return
+}
+
+func NewUpdateProtectionModesResponse() (response *UpdateProtectionModesResponse) {
+    response = &UpdateProtectionModesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateProtectionModes
+// 更新Tiga引擎下大类规则的防护模式
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) UpdateProtectionModes(request *UpdateProtectionModesRequest) (response *UpdateProtectionModesResponse, err error) {
+    return c.UpdateProtectionModesWithContext(context.Background(), request)
+}
+
+// UpdateProtectionModes
+// 更新Tiga引擎下大类规则的防护模式
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) UpdateProtectionModesWithContext(ctx context.Context, request *UpdateProtectionModesRequest) (response *UpdateProtectionModesResponse, err error) {
+    if request == nil {
+        request = NewUpdateProtectionModesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateProtectionModes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateProtectionModesResponse()
     err = c.Send(request, response)
     return
 }

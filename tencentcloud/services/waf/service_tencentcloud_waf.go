@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1492,6 +1493,75 @@ func (me *WafService) DescribeWafIpAccessControlV2ById(ctx context.Context, doma
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafLogPostClsFlowById(ctx context.Context, logType int64) (ret *waf.DescribePostCLSFlowsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := waf.NewDescribePostCLSFlowsRequest()
+	response := waf.NewDescribePostCLSFlowsResponse()
+	request.LogType = &logType
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribePostCLSFlows(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafLogPostCkafkaFlowById(ctx context.Context, logType int64) (ret *waf.DescribePostCKafkaFlowsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribePostCKafkaFlowsRequest()
+	response := waf.NewDescribePostCKafkaFlowsResponse()
+	request.LogType = &logType
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribePostCKafkaFlows(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
 
 	ret = response.Response
 	return
