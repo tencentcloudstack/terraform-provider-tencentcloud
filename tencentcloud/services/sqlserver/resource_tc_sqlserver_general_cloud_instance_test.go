@@ -159,3 +159,51 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "multi_zones_multi_node
   dr_zones = ["ap-guangzhou-6", "ap-guangzhou-7"]
 }
 `
+
+func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_encrypt(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSqlserverGeneralCloudInstance_encrypt,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.encrypt"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.encrypt", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_general_cloud_instance.encrypt", "disk_encrypt_flag", "1"),
+				),
+			},
+		},
+	})
+}
+
+const testAccSqlserverGeneralCloudInstance_encrypt = `
+resource "tencentcloud_sqlserver_general_cloud_instance" "encrypt" {
+  name                 = "encrypt"
+  zone                 = "ap-shanghai-5"
+  memory               = 4
+  storage              = 100
+  cpu                  = 2
+  machine_type         = "CLOUD_BSSD"
+  instance_charge_type = "POSTPAID"
+  project_id           = 0
+  subnet_id            = "subnet-oea7530b"
+  vpc_id               = "vpc-8av1vyby"
+  db_version           = "2019"
+  security_group_list  = ["sg-q4d821qk"]
+  weekly               = [1, 2, 3, 5, 6, 7]
+  start_time           = "00:00"
+  span                 = 6
+  resource_tags {
+    tag_key   = "test"
+    tag_value = "test"
+  }
+  collation = "Chinese_PRC_CI_AS"
+  time_zone = "China Standard Time"
+  disk_encrypt_flag = 1
+}
+`
