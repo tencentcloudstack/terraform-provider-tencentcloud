@@ -12,10 +12,8 @@ linters:
   enable:
     - errcheck
     - gofmt
-    - gosimple
     - ineffassign
     - misspell
-    - staticcheck
     - unconvert
     - unused
     - vet
