@@ -132,7 +132,7 @@ func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_multiZonesAndMulti
 	})
 }
 
-const testAccSqlserverGeneralCloudInstance_multiZonesAndMultiNodes = tcacctest.DefaultVpcSubnets + tcacctest.DefaultSecurityGroupData + `
+const testAccSqlserverGeneralCloudInstance_multiZonesAndMultiNodes = tcacctest.DefaultVpcSubnets + `
 resource "tencentcloud_sqlserver_general_cloud_instance" "multi_zones_multi_nodes" {
   name                 = "multi_zones_multi_nodes"
   zone                 = "ap-guangzhou-3"
