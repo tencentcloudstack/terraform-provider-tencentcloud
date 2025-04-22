@@ -1,3 +1,13 @@
+## 1.81.184(April 22 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: optimize `website` params ([#3323](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3323))
+* resource/tencentcloud_dcdb_hourdb_instance: support modify `shard_memory`, `shard_storage` ([#3320](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3320))
+* resource/tencentcloud_sqlserver_general_cloud_instance: add multi_zones, multi_nodes, dr_zones, disk_encrypt_flag ([#3315](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3315))
+* resource/tencentcloud_teo_l7_acc_rule: update fields properties ([#3322](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3322))
+* resource/tencentcloud_teo_security_policy_config: add `precise_match_rules`, `basic_access_rules` params; deprecated `rules` ([#3318](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3318))
+
 ## 1.81.183(April 16 , 2025)
 
 ENHANCEMENTS:
