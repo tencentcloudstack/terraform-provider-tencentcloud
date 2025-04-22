@@ -12,11 +12,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
   entity  = "ZoneDefaultPolicy"
   security_policy {
     custom_rules {
-      rules {
+      precise_match_rules {
         name      = "rule1"
         condition = "$${http.request.host} contain ['abc']"
         enabled   = "on"
-        rule_type = "PreciseMatchRule"
         priority  = 50
         action {
           name = "BlockIP"
@@ -26,12 +25,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
 
-      rules {
+      basic_access_rules {
         name      = "rule2"
         condition = "$${http.request.ip} in ['119.28.103.58']"
         enabled   = "off"
-        id        = "2182252647"
-        rule_type = "BasicAccessRule"
         action {
           name = "Deny"
         }
@@ -195,11 +192,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
   host    = "www.example.com"
   security_policy {
     custom_rules {
-      rules {
+      precise_match_rules {
         name      = "rule1"
         condition = "$${http.request.host} contain ['abc']"
         enabled   = "on"
-        rule_type = "PreciseMatchRule"
         priority  = 50
         action {
           name = "BlockIP"
@@ -209,12 +205,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
 
-      rules {
+      basic_access_rules {
         name      = "rule2"
         condition = "$${http.request.ip} in ['119.28.103.58']"
         enabled   = "off"
-        id        = "2182252647"
-        rule_type = "BasicAccessRule"
         action {
           name = "Deny"
         }
@@ -378,11 +372,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
   template_id = "temp-05dtxkyw"
   security_policy {
     custom_rules {
-      rules {
+      precise_match_rules {
         name      = "rule1"
         condition = "$${http.request.host} contain ['abc']"
         enabled   = "on"
-        rule_type = "PreciseMatchRule"
         priority  = 50
         action {
           name = "BlockIP"
@@ -392,12 +385,10 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
 
-      rules {
+      basic_access_rules {
         name      = "rule2"
         condition = "$${http.request.ip} in ['119.28.103.58']"
         enabled   = "off"
-        id        = "2182252647"
-        rule_type = "BasicAccessRule"
         action {
           name = "Deny"
         }
