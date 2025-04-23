@@ -332,6 +332,7 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 Import
 
 TEO l7 acc rule can be imported using the zone_id, e.g.
+
 ````
-terraform import tencentcloud_teo_l7_acc_rule.example zone-297z8rf93cfw
+terraform import tencentcloud_teo_l7_acc_rule.example zone-36bjhygh1bxe
 ````
