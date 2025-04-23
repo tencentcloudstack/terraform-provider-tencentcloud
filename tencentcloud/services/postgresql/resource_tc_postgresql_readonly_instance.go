@@ -324,7 +324,28 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	if err != nil {
 		return err
 	}
-	instanceId := *response.Response.DBInstanceIdSet[0]
+	var instanceId string
+	if len(response.Response.DBInstanceIdSet) == 0 {
+		if len(response.Response.DealNames) == 0 {
+			return fmt.Errorf("TencentCloud SDK returns empty postgresql ID and Deals")
+		}
+		dealId := response.Response.DealNames[0]
+		service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+		deals, err := service.DescribeOrders(ctx, []*string{dealId})
+		if err != nil {
+			return err
+		}
+		if len(deals) > 0 && len(deals[0].DBInstanceIdSet) > 0 {
+			if deals[0].DBInstanceIdSet[0] != nil {
+				instanceId = *deals[0].DBInstanceIdSet[0]
+			}
+		}
+	} else {
+		if response.Response.DBInstanceIdSet[0] != nil {
+			instanceId = *response.Response.DBInstanceIdSet[0]
+		}
+	}
 	d.SetId(instanceId)
 
 	// check creation done
