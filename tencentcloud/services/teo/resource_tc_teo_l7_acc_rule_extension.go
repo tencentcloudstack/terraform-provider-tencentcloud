@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -837,14 +838,16 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Description: "Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: Http: use http protocol; Https: use https protocol; Follow: follow the protocol.",
 								},
 								"http_origin_port": {
-									Type:        schema.TypeInt,
-									Optional:    true,
-									Description: "Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.",
+									Type:         schema.TypeInt,
+									Optional:     true,
+									ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
+									Description:  "Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.",
 								},
 								"https_origin_port": {
-									Type:        schema.TypeInt,
-									Optional:    true,
-									Description: "Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.",
+									Type:         schema.TypeInt,
+									Optional:     true,
+									ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
+									Description:  "Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.",
 								},
 								"private_access": {
 									Type:        schema.TypeString,
@@ -1539,10 +1542,10 @@ func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{})
 						if v, ok := modifyOriginParametersMap["origin_protocol"].(string); ok && v != "" {
 							modifyOriginParameters.OriginProtocol = helper.String(v)
 						}
-						if v, ok := modifyOriginParametersMap["http_origin_port"].(int); ok {
+						if v, ok := modifyOriginParametersMap["http_origin_port"].(int); ok && v != 0 {
 							modifyOriginParameters.HTTPOriginPort = helper.IntInt64(v)
 						}
-						if v, ok := modifyOriginParametersMap["https_origin_port"].(int); ok {
+						if v, ok := modifyOriginParametersMap["https_origin_port"].(int); ok && v != 0 {
 							modifyOriginParameters.HTTPSOriginPort = helper.IntInt64(v)
 						}
 						if v, ok := modifyOriginParametersMap["private_access"].(string); ok && v != "" {
