@@ -38,7 +38,7 @@ resource "tencentcloud_waf_log_post_ckafka_flow" "example" {
   compression   = "snappy"
   vip_type      = 2
   log_type      = 1
-  topic         = "tf-test"
+  topic         = "tf-example"
   kafka_version = "2.8.1"
 }
 ```
@@ -55,6 +55,16 @@ The following arguments are supported:
 * `log_type` - (Required, Int) 1- Access log, 2- Attack log, the default is access log.
 * `topic` - (Required, String) Theme name, default not to pass or pass empty string, default value is waf_post_access_log.
 * `vip_type` - (Required, Int) 1. External network TGW, 2. Supporting environment, default is supporting environment.
+* `sasl_enable` - (Optional, Int) Whether to enable SASL verification, default not enabled, 0-off, 1-on.
+* `sasl_password` - (Optional, String) SASL password.
+* `sasl_user` - (Optional, String) SASL username.
+* `write_config` - (Optional, List) Enable access to certain fields of the log and check if they have been delivered.
+
+The `write_config` object supports the following:
+
+* `enable_body` - (Optional, Int) 1: Enable 0: Do not enable.
+* `enable_bot` - (Optional, Int) 1: Enable 0: Do not enable.
+* `enable_headers` - (Optional, Int) 1: Enable 0: Do not enable.
 
 ## Attributes Reference
 

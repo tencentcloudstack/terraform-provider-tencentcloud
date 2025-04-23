@@ -27,7 +27,7 @@ resource "tencentcloud_waf_log_post_ckafka_flow" "example" {
   compression   = "snappy"
   vip_type      = 2
   log_type      = 1
-  topic         = "tf-test"
+  topic         = "tf-example"
   kafka_version = "2.8.1"
 }
 ```

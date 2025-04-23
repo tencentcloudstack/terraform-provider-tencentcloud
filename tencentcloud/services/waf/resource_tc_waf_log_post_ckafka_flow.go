@@ -71,6 +71,52 @@ func ResourceTencentCloudWafLogPostCkafkaFlow() *schema.Resource {
 				Description: "Version number of Kafka cluster.",
 			},
 
+			"sasl_enable": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Whether to enable SASL verification, default not enabled, 0-off, 1-on.",
+			},
+
+			"sasl_user": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "SASL username.",
+			},
+
+			"sasl_password": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "SASL password.",
+			},
+
+			"write_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Enable access to certain fields of the log and check if they have been delivered.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enable_headers": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "1: Enable 0: Do not enable.",
+						},
+
+						"enable_body": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "1: Enable 0: Do not enable.",
+						},
+
+						"enable_bot": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "1: Enable 0: Do not enable.",
+						},
+					},
+				},
+			},
+
 			"flow_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -131,6 +177,39 @@ func resourceTencentCloudWafLogPostCkafkaFlowCreate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("kafka_version"); ok {
 		request.KafkaVersion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("sasl_enable"); ok {
+		request.SASLEnable = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("sasl_user"); ok {
+		request.SASLUser = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("sasl_password"); ok {
+		request.SASLPassword = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("write_config"); ok {
+		for _, item := range v.([]interface{}) {
+			if dMap, ok := item.(map[string]interface{}); ok && dMap != nil {
+				config := wafv20180125.FieldWriteConfig{}
+				if v, ok := dMap["enable_headers"].(int); ok {
+					config.EnableHeaders = helper.IntInt64(v)
+				}
+
+				if v, ok := dMap["enable_body"].(int); ok {
+					config.EnableBody = helper.IntInt64(v)
+				}
+
+				if v, ok := dMap["enable_bot"].(int); ok {
+					config.EnableBot = helper.IntInt64(v)
+				}
+
+				request.WriteConfig = &config
+			}
+		}
 	}
 
 	// check unique first
@@ -234,6 +313,10 @@ func resourceTencentCloudWafLogPostCkafkaFlowRead(d *schema.ResourceData, meta i
 				_ = d.Set("compression", item.Compression)
 			}
 
+			if item.VipType != nil {
+				_ = d.Set("vip_type", item.VipType)
+			}
+
 			if item.LogType != nil {
 				_ = d.Set("log_type", item.LogType)
 			}
@@ -244,6 +327,36 @@ func resourceTencentCloudWafLogPostCkafkaFlowRead(d *schema.ResourceData, meta i
 
 			if item.Version != nil {
 				_ = d.Set("kafka_version", item.Version)
+			}
+
+			if item.SASLEnable != nil {
+				_ = d.Set("sasl_enable", item.SASLEnable)
+			}
+
+			if item.SASLUser != nil {
+				_ = d.Set("sasl_user", item.SASLUser)
+			}
+
+			if item.SASLPassword != nil {
+				_ = d.Set("sasl_password", item.SASLPassword)
+			}
+
+			if item.WriteConfig != nil {
+				tmpList := make([]map[string]interface{}, 0, 1)
+				dMap := make(map[string]interface{})
+				if item.WriteConfig.EnableHeaders != nil {
+					dMap["enable_headers"] = item.WriteConfig.EnableHeaders
+				}
+
+				if item.WriteConfig.EnableBody != nil {
+					dMap["enable_body"] = item.WriteConfig.EnableBody
+				}
+
+				if item.WriteConfig.EnableBot != nil {
+					dMap["enable_bot"] = item.WriteConfig.EnableBot
+				}
+
+				tmpList = append(tmpList, dMap)
 			}
 
 			if item.FlowId != nil {
@@ -276,7 +389,7 @@ func resourceTencentCloudWafLogPostCkafkaFlowUpdate(d *schema.ResourceData, meta
 		request = wafv20180125.NewCreatePostCKafkaFlowRequest()
 	)
 
-	immutableArgs := []string{"log_type"}
+	immutableArgs := []string{"vip_type", "log_type"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -317,6 +430,39 @@ func resourceTencentCloudWafLogPostCkafkaFlowUpdate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("kafka_version"); ok {
 		request.KafkaVersion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("sasl_enable"); ok {
+		request.SASLEnable = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("sasl_user"); ok {
+		request.SASLUser = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("sasl_password"); ok {
+		request.SASLPassword = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("write_config"); ok {
+		for _, item := range v.([]interface{}) {
+			if dMap, ok := item.(map[string]interface{}); ok && dMap != nil {
+				config := wafv20180125.FieldWriteConfig{}
+				if v, ok := dMap["enable_headers"].(int); ok {
+					config.EnableHeaders = helper.IntInt64(v)
+				}
+
+				if v, ok := dMap["enable_body"].(int); ok {
+					config.EnableBody = helper.IntInt64(v)
+				}
+
+				if v, ok := dMap["enable_bot"].(int); ok {
+					config.EnableBot = helper.IntInt64(v)
+				}
+
+				request.WriteConfig = &config
+			}
+		}
 	}
 
 	request.LogType = helper.StrToInt64Point(logType)
