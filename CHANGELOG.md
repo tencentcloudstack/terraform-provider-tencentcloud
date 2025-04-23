@@ -1,3 +1,10 @@
+## 1.81.185(April 23 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_postgresql_readonly_instance: fixed the issue of returning an empty id when creating ([#3324](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3324))
+* resource/tencentcloud_teo_l7_acc_rule: update fileds ([#3325](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3325))
+
 ## 1.81.184(April 22 , 2025)
 
 ENHANCEMENTS:
