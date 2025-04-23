@@ -4,19 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_l7_acc_rule"
 sidebar_current: "docs-tencentcloud-resource-teo_l7_acc_rule"
 description: |-
-  Provides a resource to create a teo l7_acc_rule
+  Provides a resource to create a TEO l7 acc rule
 ---
 
 # tencentcloud_teo_l7_acc_rule
 
-Provides a resource to create a teo l7_acc_rule
+Provides a resource to create a TEO l7 acc rule
 
 ~> **NOTE:** This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
+resource "tencentcloud_teo_l7_acc_rule" "example" {
   zone_id = "zone-36bjhygh1bxe"
   rules {
     description = ["1"]
@@ -33,6 +33,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       actions {
         name = "CacheKey"
         cache_key_parameters {
@@ -46,6 +47,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       sub_rules {
         description = ["1-1"]
         branches {
@@ -60,6 +62,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       sub_rules {
         description = ["1-2"]
         branches {
@@ -75,6 +78,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
       }
     }
   }
+
   rules {
     description = ["2"]
     rule_name   = "音视频直播"
@@ -95,6 +99,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
             }
           }
         }
+
         branches {
           condition = "$${http.request.file_extension} in ['ts', 'mp4', 'm4a', 'm4s']"
           actions {
@@ -108,6 +113,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
             }
           }
         }
+
         branches {
           condition = "*"
           actions {
@@ -125,6 +131,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
       }
     }
   }
+
   rules {
     description = ["3"]
     rule_name   = "大文件下载"
@@ -140,6 +147,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       actions {
         name = "CacheKey"
         cache_key_parameters {
@@ -153,12 +161,14 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       actions {
         name = "RangeOriginPull"
         range_origin_pull_parameters {
           switch = "on"
         }
       }
+
       sub_rules {
         description = ["3-1"]
         branches {
@@ -175,6 +185,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
       }
     }
   }
+
   rules {
     description = ["4"]
     rule_name   = "音视频点播"
@@ -190,6 +201,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       actions {
         name = "CacheKey"
         cache_key_parameters {
@@ -203,12 +215,14 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       actions {
         name = "RangeOriginPull"
         range_origin_pull_parameters {
           switch = "on"
         }
       }
+
       sub_rules {
         description = ["4-1"]
         branches {
@@ -225,6 +239,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
       }
     }
   }
+
   rules {
     description = ["5"]
     rule_name   = "API 加速"
@@ -238,6 +253,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
           }
         }
       }
+
       actions {
         name = "SmartRouting"
         smart_routing_parameters {
@@ -246,6 +262,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
       }
     }
   }
+
   rules {
     description = ["6"]
     rule_name   = "WordPress 建站"
@@ -266,6 +283,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
             }
           }
         }
+
         branches {
           condition = "$${http.request.uri.path} in ['/']"
           actions {
@@ -277,6 +295,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
             }
           }
         }
+
         branches {
           condition = "$${http.request.file_extension} in ['aspx', 'jsp', 'php', 'asp', 'do', 'dwr', 'cgi', 'fcgi', 'action', 'ashx', 'axd']"
           actions {
@@ -288,6 +307,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
             }
           }
         }
+
         branches {
           condition = "$${http.request.uri.path} in ['/wp-admin/']"
           actions {
@@ -299,6 +319,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
             }
           }
         }
+
         branches {
           condition = "*"
           actions {
@@ -712,8 +733,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-teo l7_acc_rule can be imported using the zone_id, e.g.
+TEO l7 acc rule can be imported using the zone_id, e.g.
+
 ````
-terraform import tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule zone-297z8rf93cfw
+terraform import tencentcloud_teo_l7_acc_rule.example zone-36bjhygh1bxe
 ````
 
