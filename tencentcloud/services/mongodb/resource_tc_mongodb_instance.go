@@ -109,11 +109,10 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
-			Description: `A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
-			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
-			- Version 4.2 and above are not supported.
-			- Read-only disaster recovery instances are not supported.
-			- Basic network cannot be selected.`,
+			Description: "If cloud database instances are deployed in multiple availability zones, specify a list of multiple availability zones.\n" +
+				"	- To deploy an instance with multiple availability zones, the parameter Zone specifies the primary availability zone information of the instance; Availability ZoneList specifies all availability zone information, including the primary availability zone. The input format is as follows: [ap-Guangzhou-2,ap-Guangzhou-3,ap-Guangzhou-4].\n" +
+				"	- You can obtain availability zone information planned in different regions of the cloud database through the interface DescribeSpecInfo, so as to specify effective availability zones.\n" +
+				"	- Multiple availability zone deployment nodes can only be deployed in 3 different availability zones. Deploying most nodes of a cluster in the same availability zone is not supported. For example, a 3-node cluster does not support 2 nodes deployed in the same zone.",
 		},
 		"hidden_zone": {
 			Type:        schema.TypeString,
