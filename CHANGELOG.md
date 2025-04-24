@@ -1,3 +1,16 @@
+## 1.81.186(April 24 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_kms_service_status` ([#3327](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3327))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_kms_keys: support `hsm_cluster_id` ([#3327](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3327))
+* resource/tencentcloud_kms_external_key: support `hsm_cluster_id` ([#3327](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3327))
+* resource/tencentcloud_kms_key: support `hsm_cluster_id` ([#3327](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3327))
+* resource/tencentcloud_vpc_ipv6_cidr_block: support `address_type` ([#3328](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3328))
+
 ## 1.81.185(April 23 , 2025)
 
 ENHANCEMENTS:
