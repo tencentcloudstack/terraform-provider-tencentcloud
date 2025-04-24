@@ -23,11 +23,20 @@ func ResourceTencentCloudVpcIpv6CidrBlock() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {
-				Required:    true,
 				Type:        schema.TypeString,
+				Required:    true,
 				ForceNew:    true,
 				Description: "`VPC` instance `ID`, in the form of `vpc-f49l6u0z`.",
 			},
+
+			"address_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Apply for the type of IPv6 Cidr, GUA (Global Unicast Address), ULA (Unique Local Address).",
+			},
+
 			"ipv6_cidr_block": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -41,15 +50,19 @@ func resourceTencentCloudVpcIpv6CidrBlockCreate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_ipv6_cidr_block.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = vpc.NewAssignIpv6CidrBlockRequest()
 		vpcId   string
 	)
+
 	if v, ok := d.GetOk("vpc_id"); ok {
 		vpcId = v.(string)
 		request.VpcId = helper.String(vpcId)
+	}
+
+	if v, ok := d.GetOk("address_type"); ok {
+		request.AddressType = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -59,8 +72,10 @@ func resourceTencentCloudVpcIpv6CidrBlockCreate(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create vpc ipv6CidrBlock failed, reason:%+v", logId, err)
 		return err
@@ -75,13 +90,12 @@ func resourceTencentCloudVpcIpv6CidrBlockRead(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_ipv6_cidr_block.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	vpcId := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		vpcId   = d.Id()
+	)
 
 	instance, err := service.DescribeVpcById(ctx, vpcId)
 	if err != nil {
@@ -98,6 +112,10 @@ func resourceTencentCloudVpcIpv6CidrBlockRead(d *schema.ResourceData, meta inter
 		_ = d.Set("vpc_id", instance.VpcId)
 	}
 
+	if instance.Ipv6CidrBlockSet != nil && len(instance.Ipv6CidrBlockSet) != 0 {
+		_ = d.Set("address_type", instance.Ipv6CidrBlockSet[0].AddressType)
+	}
+
 	if instance.Ipv6CidrBlock != nil {
 		_ = d.Set("ipv6_cidr_block", instance.Ipv6CidrBlock)
 	}
@@ -109,11 +127,12 @@ func resourceTencentCloudVpcIpv6CidrBlockDelete(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_ipv6_cidr_block.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	vpcId := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		vpcId   = d.Id()
+	)
 
 	if err := service.DeleteVpcIpv6CidrBlockById(ctx, vpcId); err != nil {
 		return err
