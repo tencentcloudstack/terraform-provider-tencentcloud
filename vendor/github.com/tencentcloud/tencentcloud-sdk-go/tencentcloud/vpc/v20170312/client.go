@@ -802,7 +802,7 @@ func NewAssignIpv6AddressesResponse() (response *AssignIpv6AddressesResponse) {
 // AssignIpv6Addresses
 // 本接口（AssignIpv6Addresses）用于弹性网卡申请`IPv6`地址。<br />
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)接口。
 //
 // * 一个弹性网卡支持绑定的IP地址是有限制的，更多资源限制信息详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 //
@@ -836,7 +836,7 @@ func (c *Client) AssignIpv6Addresses(request *AssignIpv6AddressesRequest) (respo
 // AssignIpv6Addresses
 // 本接口（AssignIpv6Addresses）用于弹性网卡申请`IPv6`地址。<br />
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)接口。
 //
 // * 一个弹性网卡支持绑定的IP地址是有限制的，更多资源限制信息详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 //
@@ -1956,7 +1956,9 @@ func NewAttachNetworkInterfaceResponse() (response *AttachNetworkInterfaceRespon
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
@@ -1992,7 +1994,9 @@ func (c *Client) AttachNetworkInterface(request *AttachNetworkInterfaceRequest) 
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
@@ -3906,6 +3910,65 @@ func (c *Client) CreateFlowLogWithContext(ctx context.Context, request *CreateFl
     request.SetContext(ctx)
     
     response = NewCreateFlowLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGlobalRoutesRequest() (request *CreateGlobalRoutesRequest) {
+    request = &CreateGlobalRoutesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CreateGlobalRoutes")
+    
+    
+    return
+}
+
+func NewCreateGlobalRoutesResponse() (response *CreateGlobalRoutesResponse) {
+    response = &CreateGlobalRoutesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateGlobalRoutes
+// 本接口（CreateGlobalRoutes）用于创建全局路由。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateGlobalRoutes(request *CreateGlobalRoutesRequest) (response *CreateGlobalRoutesResponse, err error) {
+    return c.CreateGlobalRoutesWithContext(context.Background(), request)
+}
+
+// CreateGlobalRoutes
+// 本接口（CreateGlobalRoutes）用于创建全局路由。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateGlobalRoutesWithContext(ctx context.Context, request *CreateGlobalRoutesRequest) (response *CreateGlobalRoutesResponse, err error) {
+    if request == nil {
+        request = NewCreateGlobalRoutesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGlobalRoutes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGlobalRoutesResponse()
     err = c.Send(request, response)
     return
 }
@@ -7147,6 +7210,7 @@ func NewCreateVpnConnectionResponse() (response *CreateVpnConnectionResponse) {
 //  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
 //  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
+//  UNSUPPORTEDOPERATION_VPNCONNCIDRNOTSUPPORTEDHEALTHCHECK = "UnsupportedOperation.VpnConnCidrNotSupportedHealthCheck"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPASNEQUAL = "UnsupportedOperation.VpnUnsupportedBgpAsnEqual"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDNOTEXISTBGPASN = "UnsupportedOperation.VpnUnsupportedNotExistBgpAsn"
@@ -7201,6 +7265,7 @@ func (c *Client) CreateVpnConnection(request *CreateVpnConnectionRequest) (respo
 //  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
 //  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
+//  UNSUPPORTEDOPERATION_VPNCONNCIDRNOTSUPPORTEDHEALTHCHECK = "UnsupportedOperation.VpnConnCidrNotSupportedHealthCheck"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPASNEQUAL = "UnsupportedOperation.VpnUnsupportedBgpAsnEqual"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDNOTEXISTBGPASN = "UnsupportedOperation.VpnUnsupportedNotExistBgpAsn"
@@ -7368,11 +7433,13 @@ func NewCreateVpnGatewayRoutesResponse() (response *CreateVpnGatewayRoutesRespon
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_VPNGATEWAYROUTEDUPLICATE = "InvalidParameterValue.VpnGatewayRouteDuplicate"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDROUTEECMPFORCVMVPN = "UnsupportedOperation.VpnUnsupportedRouteEcmpForCvmVpn"
 func (c *Client) CreateVpnGatewayRoutes(request *CreateVpnGatewayRoutesRequest) (response *CreateVpnGatewayRoutesResponse, err error) {
     return c.CreateVpnGatewayRoutesWithContext(context.Background(), request)
 }
@@ -7385,11 +7452,13 @@ func (c *Client) CreateVpnGatewayRoutes(request *CreateVpnGatewayRoutesRequest) 
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_VPNGATEWAYROUTEDUPLICATE = "InvalidParameterValue.VpnGatewayRouteDuplicate"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDROUTEECMPFORCVMVPN = "UnsupportedOperation.VpnUnsupportedRouteEcmpForCvmVpn"
 func (c *Client) CreateVpnGatewayRoutesWithContext(ctx context.Context, request *CreateVpnGatewayRoutesRequest) (response *CreateVpnGatewayRoutesResponse, err error) {
     if request == nil {
         request = NewCreateVpnGatewayRoutesRequest()
@@ -7731,7 +7800,7 @@ func NewDeleteBandwidthPackageResponse() (response *DeleteBandwidthPackageRespon
 }
 
 // DeleteBandwidthPackage
-// 接口支持删除共享带宽包，包括[设备带宽包](https://cloud.tencent.com/document/product/684/15246#.E8.AE.BE.E5.A4.87.E5.B8.A6.E5.AE.BD.E5.8C.85)和[IP带宽包](https://cloud.tencent.com/document/product/684/15246#ip-.E5.B8.A6.E5.AE.BD.E5.8C.85)
+// 接口支持删除共享带宽包，包括[设备带宽包](https://cloud.tencent.com/document/product/684/15245#bwptype)和[IP带宽包](https://cloud.tencent.com/document/product/684/15245#bwptype)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDREGION = "FailedOperation.InvalidRegion"
@@ -7749,7 +7818,7 @@ func (c *Client) DeleteBandwidthPackage(request *DeleteBandwidthPackageRequest) 
 }
 
 // DeleteBandwidthPackage
-// 接口支持删除共享带宽包，包括[设备带宽包](https://cloud.tencent.com/document/product/684/15246#.E8.AE.BE.E5.A4.87.E5.B8.A6.E5.AE.BD.E5.8C.85)和[IP带宽包](https://cloud.tencent.com/document/product/684/15246#ip-.E5.B8.A6.E5.AE.BD.E5.8C.85)
+// 接口支持删除共享带宽包，包括[设备带宽包](https://cloud.tencent.com/document/product/684/15245#bwptype)和[IP带宽包](https://cloud.tencent.com/document/product/684/15245#bwptype)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDREGION = "FailedOperation.InvalidRegion"
@@ -8325,6 +8394,57 @@ func (c *Client) DeleteFlowLogWithContext(ctx context.Context, request *DeleteFl
     request.SetContext(ctx)
     
     response = NewDeleteFlowLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGlobalRoutesRequest() (request *DeleteGlobalRoutesRequest) {
+    request = &DeleteGlobalRoutesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DeleteGlobalRoutes")
+    
+    
+    return
+}
+
+func NewDeleteGlobalRoutesResponse() (response *DeleteGlobalRoutesResponse) {
+    response = &DeleteGlobalRoutesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGlobalRoutes
+// 删除全局路由。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+func (c *Client) DeleteGlobalRoutes(request *DeleteGlobalRoutesRequest) (response *DeleteGlobalRoutesResponse, err error) {
+    return c.DeleteGlobalRoutesWithContext(context.Background(), request)
+}
+
+// DeleteGlobalRoutes
+// 删除全局路由。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+func (c *Client) DeleteGlobalRoutesWithContext(ctx context.Context, request *DeleteGlobalRoutesRequest) (response *DeleteGlobalRoutesResponse, err error) {
+    if request == nil {
+        request = NewDeleteGlobalRoutesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGlobalRoutes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGlobalRoutesResponse()
     err = c.Send(request, response)
     return
 }
@@ -9079,7 +9199,9 @@ func NewDeleteNetworkInterfaceResponse() (response *DeleteNetworkInterfaceRespon
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) 
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -9101,7 +9223,9 @@ func (c *Client) DeleteNetworkInterface(request *DeleteNetworkInterfaceRequest) 
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) 
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -12549,7 +12673,9 @@ func NewDescribeFlowLogResponse() (response *DescribeFlowLogResponse) {
 }
 
 // DescribeFlowLog
-// 本接口（DescribeFlowLog）用于查询流日志实例信息。
+// 本接口（DescribeFlowLog）用于查询VPC流日志实例信息。
+//
+// 该接口只支持VPC流日志（即将下线）。云联网以及VPC流日志，通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -12560,7 +12686,9 @@ func (c *Client) DescribeFlowLog(request *DescribeFlowLogRequest) (response *Des
 }
 
 // DescribeFlowLog
-// 本接口（DescribeFlowLog）用于查询流日志实例信息。
+// 本接口（DescribeFlowLog）用于查询VPC流日志实例信息。
+//
+// 该接口只支持VPC流日志（即将下线）。云联网以及VPC流日志，通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -12753,6 +12881,63 @@ func (c *Client) DescribeGatewayFlowQosWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeGatewayFlowQosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGlobalRoutesRequest() (request *DescribeGlobalRoutesRequest) {
+    request = &DescribeGlobalRoutesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeGlobalRoutes")
+    
+    
+    return
+}
+
+func NewDescribeGlobalRoutesResponse() (response *DescribeGlobalRoutesResponse) {
+    response = &DescribeGlobalRoutesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGlobalRoutes
+// 查询全局路由列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGlobalRoutes(request *DescribeGlobalRoutesRequest) (response *DescribeGlobalRoutesResponse, err error) {
+    return c.DescribeGlobalRoutesWithContext(context.Background(), request)
+}
+
+// DescribeGlobalRoutes
+// 查询全局路由列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGlobalRoutesWithContext(ctx context.Context, request *DescribeGlobalRoutesRequest) (response *DescribeGlobalRoutesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGlobalRoutesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGlobalRoutes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGlobalRoutesResponse()
     err = c.Send(request, response)
     return
 }
@@ -13017,6 +13202,69 @@ func (c *Client) DescribeIPv6AddressesWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDescribeIPv6AddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceJumboRequest() (request *DescribeInstanceJumboRequest) {
+    request = &DescribeInstanceJumboRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeInstanceJumbo")
+    
+    
+    return
+}
+
+func NewDescribeInstanceJumboResponse() (response *DescribeInstanceJumboResponse) {
+    response = &DescribeInstanceJumboResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceJumbo
+// 本接口用于检查云服务器是否支持巨帧。
+//
+// 使用限制：
+//
+// 1. 需要CAM策略授权该接口的操作权限，并且授权对应实例的读取权限(该接口会访问CVM实例，所以会校验是否有实例的CAM权限)。例如：CAM action放通vpc:DescribeInstanceJumbo；resourc放通qcs::cvm:ap-guangzhou:uin/2126195383:instance/*。
+//
+// 2. 实例迁移前后，可能会出现该接口返回的巨帧状态前后不一致（需要检查迁移前后实例所在的宿主机是否都支持巨帧，一种可能的原因为实例迁移到了不支持巨帧的宿主机）。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeInstanceJumbo(request *DescribeInstanceJumboRequest) (response *DescribeInstanceJumboResponse, err error) {
+    return c.DescribeInstanceJumboWithContext(context.Background(), request)
+}
+
+// DescribeInstanceJumbo
+// 本接口用于检查云服务器是否支持巨帧。
+//
+// 使用限制：
+//
+// 1. 需要CAM策略授权该接口的操作权限，并且授权对应实例的读取权限(该接口会访问CVM实例，所以会校验是否有实例的CAM权限)。例如：CAM action放通vpc:DescribeInstanceJumbo；resourc放通qcs::cvm:ap-guangzhou:uin/2126195383:instance/*。
+//
+// 2. 实例迁移前后，可能会出现该接口返回的巨帧状态前后不一致（需要检查迁移前后实例所在的宿主机是否都支持巨帧，一种可能的原因为实例迁移到了不支持巨帧的宿主机）。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeInstanceJumboWithContext(ctx context.Context, request *DescribeInstanceJumboRequest) (response *DescribeInstanceJumboResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceJumboRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceJumbo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceJumboResponse()
     err = c.Send(request, response)
     return
 }
@@ -13343,6 +13591,7 @@ func NewDescribeLocalGatewayResponse() (response *DescribeLocalGatewayResponse) 
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeLocalGateway(request *DescribeLocalGatewayRequest) (response *DescribeLocalGatewayResponse, err error) {
@@ -13357,6 +13606,7 @@ func (c *Client) DescribeLocalGateway(request *DescribeLocalGatewayRequest) (res
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeLocalGatewayWithContext(ctx context.Context, request *DescribeLocalGatewayRequest) (response *DescribeLocalGatewayResponse, err error) {
@@ -13495,6 +13745,77 @@ func (c *Client) DescribeNatGatewayDirectConnectGatewayRouteWithContext(ctx cont
     request.SetContext(ctx)
     
     response = NewDescribeNatGatewayDirectConnectGatewayRouteResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNatGatewayFlowMonitorDetailRequest() (request *DescribeNatGatewayFlowMonitorDetailRequest) {
+    request = &DescribeNatGatewayFlowMonitorDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeNatGatewayFlowMonitorDetail")
+    
+    
+    return
+}
+
+func NewDescribeNatGatewayFlowMonitorDetailResponse() (response *DescribeNatGatewayFlowMonitorDetailResponse) {
+    response = &DescribeNatGatewayFlowMonitorDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNatGatewayFlowMonitorDetail
+// 本接口（DescribeNatGatewayFlowMonitorDetail）用于查询NAT网关流量监控明细。
+//
+// 
+//
+// - 只支持单个网关实例查询。即入参 `NatGatewayId` 最多只支持传一个，且必须传一个。
+//
+// - 如果网关有流量，但调用本接口没有返回数据，请在控制台对应网关详情页确认是否开启网关流量监控。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeNatGatewayFlowMonitorDetail(request *DescribeNatGatewayFlowMonitorDetailRequest) (response *DescribeNatGatewayFlowMonitorDetailResponse, err error) {
+    return c.DescribeNatGatewayFlowMonitorDetailWithContext(context.Background(), request)
+}
+
+// DescribeNatGatewayFlowMonitorDetail
+// 本接口（DescribeNatGatewayFlowMonitorDetail）用于查询NAT网关流量监控明细。
+//
+// 
+//
+// - 只支持单个网关实例查询。即入参 `NatGatewayId` 最多只支持传一个，且必须传一个。
+//
+// - 如果网关有流量，但调用本接口没有返回数据，请在控制台对应网关详情页确认是否开启网关流量监控。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeNatGatewayFlowMonitorDetailWithContext(ctx context.Context, request *DescribeNatGatewayFlowMonitorDetailRequest) (response *DescribeNatGatewayFlowMonitorDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeNatGatewayFlowMonitorDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNatGatewayFlowMonitorDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNatGatewayFlowMonitorDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -15700,6 +16021,7 @@ func NewDescribeSubnetsResponse() (response *DescribeSubnetsResponse) {
 //  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -15720,6 +16042,7 @@ func (c *Client) DescribeSubnets(request *DescribeSubnetsRequest) (response *Des
 //  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_NOTUTF8ENCODINGERROR = "InvalidParameterValue.NotUtf8EncodingError"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -17468,7 +17791,9 @@ func NewDetachNetworkInterfaceResponse() (response *DetachNetworkInterfaceRespon
 // DetachNetworkInterface
 // 本接口（DetachNetworkInterface）用于弹性网卡解绑云服务器。
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
@@ -17486,7 +17811,9 @@ func (c *Client) DetachNetworkInterface(request *DetachNetworkInterfaceRequest) 
 // DetachNetworkInterface
 // 本接口（DetachNetworkInterface）用于弹性网卡解绑云服务器。
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
@@ -19680,6 +20007,67 @@ func (c *Client) LockCcnsWithContext(ctx context.Context, request *LockCcnsReque
     return
 }
 
+func NewMigrateBandwidthPackageResourcesRequest() (request *MigrateBandwidthPackageResourcesRequest) {
+    request = &MigrateBandwidthPackageResourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "MigrateBandwidthPackageResources")
+    
+    
+    return
+}
+
+func NewMigrateBandwidthPackageResourcesResponse() (response *MigrateBandwidthPackageResourcesResponse) {
+    response = &MigrateBandwidthPackageResourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// MigrateBandwidthPackageResources
+// 本接口 (MigrateBandwidthPackageResources) 用于共享带宽包之间迁移资源
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
+//  INVALIDPARAMETERVALUE_RESOURCEIDMALFORMED = "InvalidParameterValue.ResourceIdMalformed"
+//  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
+//  LIMITEXCEEDED_BANDWIDTHPACKAGERESOURCEQUOTA = "LimitExceeded.BandwidthPackageResourceQuota"
+//  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+func (c *Client) MigrateBandwidthPackageResources(request *MigrateBandwidthPackageResourcesRequest) (response *MigrateBandwidthPackageResourcesResponse, err error) {
+    return c.MigrateBandwidthPackageResourcesWithContext(context.Background(), request)
+}
+
+// MigrateBandwidthPackageResources
+// 本接口 (MigrateBandwidthPackageResources) 用于共享带宽包之间迁移资源
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
+//  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
+//  INVALIDPARAMETERVALUE_RESOURCEIDMALFORMED = "InvalidParameterValue.ResourceIdMalformed"
+//  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
+//  LIMITEXCEEDED_BANDWIDTHPACKAGERESOURCEQUOTA = "LimitExceeded.BandwidthPackageResourceQuota"
+//  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+func (c *Client) MigrateBandwidthPackageResourcesWithContext(ctx context.Context, request *MigrateBandwidthPackageResourcesRequest) (response *MigrateBandwidthPackageResourcesResponse, err error) {
+    if request == nil {
+        request = NewMigrateBandwidthPackageResourcesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("MigrateBandwidthPackageResources require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewMigrateBandwidthPackageResourcesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewMigrateNetworkInterfaceRequest() (request *MigrateNetworkInterfaceRequest) {
     request = &MigrateNetworkInterfaceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -19702,7 +20090,7 @@ func NewMigrateNetworkInterfaceResponse() (response *MigrateNetworkInterfaceResp
 // MigrateNetworkInterface
 // 本接口（MigrateNetworkInterface）用于弹性网卡迁移。
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) `接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -19718,7 +20106,7 @@ func (c *Client) MigrateNetworkInterface(request *MigrateNetworkInterfaceRequest
 // MigrateNetworkInterface
 // 本接口（MigrateNetworkInterface）用于弹性网卡迁移。
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) `接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -19771,7 +20159,7 @@ func NewMigratePrivateIpAddressResponse() (response *MigratePrivateIpAddressResp
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) 接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -19795,7 +20183,7 @@ func (c *Client) MigratePrivateIpAddress(request *MigratePrivateIpAddressRequest
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) 接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -20371,7 +20759,7 @@ func NewModifyBandwidthPackageAttributeResponse() (response *ModifyBandwidthPack
 }
 
 // ModifyBandwidthPackageAttribute
-// 接口用于修改带宽包属性，包括带宽包名字等
+// 接口用于修改带宽包属性，包括带宽包名称和计费模式
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -20384,7 +20772,7 @@ func (c *Client) ModifyBandwidthPackageAttribute(request *ModifyBandwidthPackage
 }
 
 // ModifyBandwidthPackageAttribute
-// 接口用于修改带宽包属性，包括带宽包名字等
+// 接口用于修改带宽包属性，包括带宽包名称和计费模式
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -21108,6 +21496,120 @@ func (c *Client) ModifyGatewayFlowQosWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyGatewayFlowQosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGlobalRouteECMPAlgorithmRequest() (request *ModifyGlobalRouteECMPAlgorithmRequest) {
+    request = &ModifyGlobalRouteECMPAlgorithmRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyGlobalRouteECMPAlgorithm")
+    
+    
+    return
+}
+
+func NewModifyGlobalRouteECMPAlgorithmResponse() (response *ModifyGlobalRouteECMPAlgorithmResponse) {
+    response = &ModifyGlobalRouteECMPAlgorithmResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGlobalRouteECMPAlgorithm
+// 修改全局路由表ECMP算法 HASH 策略。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGlobalRouteECMPAlgorithm(request *ModifyGlobalRouteECMPAlgorithmRequest) (response *ModifyGlobalRouteECMPAlgorithmResponse, err error) {
+    return c.ModifyGlobalRouteECMPAlgorithmWithContext(context.Background(), request)
+}
+
+// ModifyGlobalRouteECMPAlgorithm
+// 修改全局路由表ECMP算法 HASH 策略。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGlobalRouteECMPAlgorithmWithContext(ctx context.Context, request *ModifyGlobalRouteECMPAlgorithmRequest) (response *ModifyGlobalRouteECMPAlgorithmResponse, err error) {
+    if request == nil {
+        request = NewModifyGlobalRouteECMPAlgorithmRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGlobalRouteECMPAlgorithm require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGlobalRouteECMPAlgorithmResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGlobalRoutesRequest() (request *ModifyGlobalRoutesRequest) {
+    request = &ModifyGlobalRoutesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyGlobalRoutes")
+    
+    
+    return
+}
+
+func NewModifyGlobalRoutesResponse() (response *ModifyGlobalRoutesResponse) {
+    response = &ModifyGlobalRoutesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGlobalRoutes
+// 修改全局路由。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyGlobalRoutes(request *ModifyGlobalRoutesRequest) (response *ModifyGlobalRoutesResponse, err error) {
+    return c.ModifyGlobalRoutesWithContext(context.Background(), request)
+}
+
+// ModifyGlobalRoutes
+// 修改全局路由。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyGlobalRoutesWithContext(ctx context.Context, request *ModifyGlobalRoutesRequest) (response *ModifyGlobalRoutesResponse, err error) {
+    if request == nil {
+        request = NewModifyGlobalRoutesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGlobalRoutes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGlobalRoutesResponse()
     err = c.Send(request, response)
     return
 }
@@ -23763,9 +24265,12 @@ func NewModifyVpnConnectionAttributeResponse() (response *ModifyVpnConnectionAtt
 //  INVALIDPARAMETERVALUE_VPNCONNCIDRCONFLICT = "InvalidParameterValue.VpnConnCidrConflict"
 //  INVALIDPARAMETERVALUE_VPNCONNHEALTHCHECKIPCONFLICT = "InvalidParameterValue.VpnConnHealthCheckIpConflict"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INVALIDSTATE = "UnsupportedOperation.InvalidState"
+//  UNSUPPORTEDOPERATION_VPNCONNCIDRNOTSUPPORTEDHEALTHCHECK = "UnsupportedOperation.VpnConnCidrNotSupportedHealthCheck"
 //  UNSUPPORTEDOPERATION_VPNCONNINVALIDSTATE = "UnsupportedOperation.VpnConnInvalidState"
 //  UNSUPPORTEDOPERATION_VPNCONNSPDOVERLAP = "UnsupportedOperation.VpnConnSPDOverlap"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDUSRGWNOTEXISTBGPASN = "UnsupportedOperation.VpnUnsupportedUsrGwNotExistBgpAsn"
 func (c *Client) ModifyVpnConnectionAttribute(request *ModifyVpnConnectionAttributeRequest) (response *ModifyVpnConnectionAttributeResponse, err error) {
     return c.ModifyVpnConnectionAttributeWithContext(context.Background(), request)
 }
@@ -23779,9 +24284,12 @@ func (c *Client) ModifyVpnConnectionAttribute(request *ModifyVpnConnectionAttrib
 //  INVALIDPARAMETERVALUE_VPNCONNCIDRCONFLICT = "InvalidParameterValue.VpnConnCidrConflict"
 //  INVALIDPARAMETERVALUE_VPNCONNHEALTHCHECKIPCONFLICT = "InvalidParameterValue.VpnConnHealthCheckIpConflict"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INVALIDSTATE = "UnsupportedOperation.InvalidState"
+//  UNSUPPORTEDOPERATION_VPNCONNCIDRNOTSUPPORTEDHEALTHCHECK = "UnsupportedOperation.VpnConnCidrNotSupportedHealthCheck"
 //  UNSUPPORTEDOPERATION_VPNCONNINVALIDSTATE = "UnsupportedOperation.VpnConnInvalidState"
 //  UNSUPPORTEDOPERATION_VPNCONNSPDOVERLAP = "UnsupportedOperation.VpnConnSPDOverlap"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDUSRGWNOTEXISTBGPASN = "UnsupportedOperation.VpnUnsupportedUsrGwNotExistBgpAsn"
 func (c *Client) ModifyVpnConnectionAttributeWithContext(ctx context.Context, request *ModifyVpnConnectionAttributeRequest) (response *ModifyVpnConnectionAttributeResponse, err error) {
     if request == nil {
         request = NewModifyVpnConnectionAttributeRequest()
@@ -23938,6 +24446,7 @@ func NewModifyVpnGatewayRoutesResponse() (response *ModifyVpnGatewayRoutesRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_RECORDNOTEXISTS = "UnsupportedOperation.RecordNotExists"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDROUTEECMPFORCVMVPN = "UnsupportedOperation.VpnUnsupportedRouteEcmpForCvmVpn"
 func (c *Client) ModifyVpnGatewayRoutes(request *ModifyVpnGatewayRoutesRequest) (response *ModifyVpnGatewayRoutesResponse, err error) {
     return c.ModifyVpnGatewayRoutesWithContext(context.Background(), request)
 }
@@ -23953,6 +24462,7 @@ func (c *Client) ModifyVpnGatewayRoutes(request *ModifyVpnGatewayRoutesRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_RECORDNOTEXISTS = "UnsupportedOperation.RecordNotExists"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDROUTEECMPFORCVMVPN = "UnsupportedOperation.VpnUnsupportedRouteEcmpForCvmVpn"
 func (c *Client) ModifyVpnGatewayRoutesWithContext(ctx context.Context, request *ModifyVpnGatewayRoutesRequest) (response *ModifyVpnGatewayRoutesResponse, err error) {
     if request == nil {
         request = NewModifyVpnGatewayRoutesRequest()
@@ -26549,7 +27059,7 @@ func NewUnassignIpv6AddressesResponse() (response *UnassignIpv6AddressesResponse
 // UnassignIpv6Addresses
 // 本接口（UnassignIpv6Addresses）用于释放弹性网卡`IPv6`地址。<br />
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)接口。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -26566,7 +27076,7 @@ func (c *Client) UnassignIpv6Addresses(request *UnassignIpv6AddressesRequest) (r
 // UnassignIpv6Addresses
 // 本接口（UnassignIpv6Addresses）用于释放弹性网卡`IPv6`地址。<br />
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)接口。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -26734,7 +27244,9 @@ func NewUnassignPrivateIpAddressesResponse() (response *UnassignPrivateIpAddress
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_DUPLICATEPARA = "InvalidParameterValue.DuplicatePara"
@@ -26757,7 +27269,9 @@ func (c *Client) UnassignPrivateIpAddresses(request *UnassignPrivateIpAddressesR
 //
 // 
 //
-// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`DescribeVpcTaskResult`接口。
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询[DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+//
+// 接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_DUPLICATEPARA = "InvalidParameterValue.DuplicatePara"

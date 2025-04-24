@@ -1,4 +1,4 @@
-Provides a resource to create a vpc ipv6_cidr_block
+Provides a resource to create a VPC ipv6 cidr block
 
 Example Usage
 
@@ -13,10 +13,19 @@ resource "tencentcloud_vpc_ipv6_cidr_block" "example" {
 }
 ```
 
+Or
+
+```hcl
+resource "tencentcloud_vpc_ipv6_cidr_block" "example" {
+  vpc_id       = tencentcloud_vpc.vpc.id
+  address_type = "ULA"
+}
+```
+
 Import
 
 vpc ipv6_cidr_block can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_vpc_ipv6_cidr_block.ipv6_cidr_block vpc_id
+terraform import tencentcloud_vpc_ipv6_cidr_block.example vpc-826mi3hd
 ```

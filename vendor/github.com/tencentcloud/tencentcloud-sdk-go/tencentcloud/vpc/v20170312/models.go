@@ -165,16 +165,24 @@ type AccountAttribute struct {
 
 // Predefined struct for user
 type AddBandwidthPackageResourcesRequestParams struct {
-	// 资源唯一ID，当前支持EIP资源和LB资源，形如'eip-xxxx', 'lb-xxxx'
+	// 资源唯一ID，当前支持EIP资源和LB资源，形如'eip-xxxx', 'lb-xxxx'。EIP资源列表可通过[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取，LB资源列表可通过[DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)接口获取。
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
-	// 带宽包唯一标识ID，形如'bwp-xxxx'
+	// 带宽包唯一标识ID，形如'bwp-xxxx'，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 带宽包类型，当前支持'BGP'、'HIGH_QUALITY_BGP'、'ANYCAST'、'SINGLEISP_CUCC'、'SINGLEISP_CMCC'、'SINGLEISP_CTCC'等类型。
+	// 带宽包类型，可选值：
+	// <li>BGP: 普通BGP共享带宽包</li>
+	// <li>HIGH_QUALITY_BGP: 精品BGP共享带宽包</li>
+	// <li>ANYCAST：公网加速带宽包</li>
+	// <li>SINGLEISP_CMCC: 中国移动共享带宽包</li>
+	// <li>SINGLEISP_CTCC: 中国电信共享带宽包</li>
+	// <li>SINGLEISP_CUCC: 中国联通共享带宽包</li>
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
-	// 资源类型，包括'Address', 'LoadBalance'
+	// 资源类型，可选值：
+	// <li>Address：弹性公网IP</li>
+	// <li>LoadBalance：负载均衡</li>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 带宽包协议类型。当前支持'ipv4'和'ipv6'协议类型。
@@ -184,16 +192,24 @@ type AddBandwidthPackageResourcesRequestParams struct {
 type AddBandwidthPackageResourcesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 资源唯一ID，当前支持EIP资源和LB资源，形如'eip-xxxx', 'lb-xxxx'
+	// 资源唯一ID，当前支持EIP资源和LB资源，形如'eip-xxxx', 'lb-xxxx'。EIP资源列表可通过[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取，LB资源列表可通过[DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)接口获取。
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
-	// 带宽包唯一标识ID，形如'bwp-xxxx'
+	// 带宽包唯一标识ID，形如'bwp-xxxx'，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 带宽包类型，当前支持'BGP'、'HIGH_QUALITY_BGP'、'ANYCAST'、'SINGLEISP_CUCC'、'SINGLEISP_CMCC'、'SINGLEISP_CTCC'等类型。
+	// 带宽包类型，可选值：
+	// <li>BGP: 普通BGP共享带宽包</li>
+	// <li>HIGH_QUALITY_BGP: 精品BGP共享带宽包</li>
+	// <li>ANYCAST：公网加速带宽包</li>
+	// <li>SINGLEISP_CMCC: 中国移动共享带宽包</li>
+	// <li>SINGLEISP_CTCC: 中国电信共享带宽包</li>
+	// <li>SINGLEISP_CUCC: 中国联通共享带宽包</li>
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
-	// 资源类型，包括'Address', 'LoadBalance'
+	// 资源类型，可选值：
+	// <li>Address：弹性公网IP</li>
+	// <li>LoadBalance：负载均衡</li>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 带宽包协议类型。当前支持'ipv4'和'ipv6'协议类型。
@@ -1135,7 +1151,7 @@ func (r *AllocateIp6AddressesBandwidthResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignIpv6AddressesRequestParams struct {
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。
+	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的`IPv6`地址列表，单次最多指定10个。与入参`Ipv6AddressCount`合并计算配额。与Ipv6AddressCount必填一个。
@@ -1151,7 +1167,7 @@ type AssignIpv6AddressesRequestParams struct {
 type AssignIpv6AddressesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。
+	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的`IPv6`地址列表，单次最多指定10个。与入参`Ipv6AddressCount`合并计算配额。与Ipv6AddressCount必填一个。
@@ -1215,6 +1231,9 @@ func (r *AssignIpv6AddressesResponse) FromJsonString(s string) error {
 type AssignIpv6CidrBlockRequestParams struct {
 	// `VPC`实例`ID`，形如：`vpc-f49l6u0z`。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 申请IPv6 Cidr 的类型，`GUA`(全球单播地址), `ULA`(唯一本地地址)。
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 }
 
 type AssignIpv6CidrBlockRequest struct {
@@ -1222,6 +1241,9 @@ type AssignIpv6CidrBlockRequest struct {
 	
 	// `VPC`实例`ID`，形如：`vpc-f49l6u0z`。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 申请IPv6 Cidr 的类型，`GUA`(全球单播地址), `ULA`(唯一本地地址)。
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 }
 
 func (r *AssignIpv6CidrBlockRequest) ToJsonString() string {
@@ -1237,6 +1259,7 @@ func (r *AssignIpv6CidrBlockRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "VpcId")
+	delete(f, "AddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssignIpv6CidrBlockRequest has unknown keys!", "")
 	}
@@ -1247,6 +1270,9 @@ func (r *AssignIpv6CidrBlockRequest) FromJsonString(s string) error {
 type AssignIpv6CidrBlockResponseParams struct {
 	// 分配的 `IPv6` 网段。形如：`3402:4e00:20:1000::/56`。
 	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
+
+	// 申请IPv6 Cidr 的类型，`GUA`,  `ULA`
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -1341,7 +1367,7 @@ func (r *AssignIpv6SubnetCidrBlockResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignPrivateIpAddressesRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IP信息，单次最多指定10个。与SecondaryPrivateIpAddressCount至少提供一个。
@@ -1350,7 +1376,7 @@ type AssignPrivateIpAddressesRequestParams struct {
 	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
@@ -1360,7 +1386,7 @@ type AssignPrivateIpAddressesRequestParams struct {
 type AssignPrivateIpAddressesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IP信息，单次最多指定10个。与SecondaryPrivateIpAddressCount至少提供一个。
@@ -1369,7 +1395,7 @@ type AssignPrivateIpAddressesRequest struct {
 	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
@@ -1955,20 +1981,20 @@ func (r *AssociateNetworkAclSubnetsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssociateNetworkInterfaceSecurityGroupsRequestParams struct {
-	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。本接口不支持主网卡绑定安全组。
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。本接口不支持主网卡绑定安全组。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
-	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
+	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 }
 
 type AssociateNetworkInterfaceSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。本接口不支持主网卡绑定安全组。
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。本接口不支持主网卡绑定安全组。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
-	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
+	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 }
 
@@ -2145,10 +2171,10 @@ func (r *AttachClassicLinkVpcResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AttachNetworkInterfaceRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// CVM实例ID。形如：ins-r8hr2upy。
+	// CVM实例ID。形如：ins-r8hr2upy。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 网卡的挂载类型：0 标准型，1扩展型，默认值0。
@@ -2161,10 +2187,10 @@ type AttachNetworkInterfaceRequestParams struct {
 type AttachNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// CVM实例ID。形如：ins-r8hr2upy。
+	// CVM实例ID。形如：ins-r8hr2upy。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 网卡的挂载类型：0 标准型，1扩展型，默认值0。
@@ -2359,10 +2385,22 @@ type BandwidthPackage struct {
 	// 带宽包唯一标识Id
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 带宽包类型，包括'BGP','SINGLEISP','ANYCAST','SINGLEISP_CMCC','SINGLEISP_CTCC','SINGLEISP_CUCC'
+	// 带宽包类型，包括：
+	// <li>BGP: 普通BGP共享带宽包</li>
+	// <li>HIGH_QUALITY_BGP: 精品BGP共享带宽包</li>
+	// <li>ANYCAST：公网加速带宽包</li>
+	// <li>SINGLEISP_CMCC: 中国移动共享带宽包</li>
+	// <li>SINGLEISP_CTCC: 中国电信共享带宽包</li>
+	// <li>SINGLEISP_CUCC: 中国联通共享带宽包</li>
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
-	// 带宽包计费类型，包括:<li>'TOP5_POSTPAID_BY_MONTH':按月后付费TOP5计费</li><li> 'PERCENT95_POSTPAID_BY_MONTH':按月后付费月95计费</li><li>'ENHANCED95_POSTPAID_BY_MONTH':按月后付费增强型95计费</li><li>'FIXED_PREPAID_BY_MONTH':包月预付费计费</li><li>‘PEAK_BANDWIDTH_POSTPAID_BY_DAY’: 后付费日结按带宽计费</li>
+	// 带宽包计费类型, 包括:
+	// <li>ENHANCED95_POSTPAID_BY_MONTH: 后付费-增强型95计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费-按主流量计费</li>
+	// <li>BANDWIDTH_POSTPAID_BY_DAY: 常规BGP-后付费-按带宽计费</li>
+	// <li>FIXED_PREPAID_BY_MONTH: 常规BGP-预付费</li>
+	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 静态单线-后付费-按日结算</li>
+	// <li>TOP5_POSTPAID_BY_MONTH: 后付费-TOP5计费，如需使用，请提交工单申请</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
 	// 带宽包名称
@@ -2398,10 +2436,22 @@ type BandwidthRange struct {
 	// 资源ID。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 带宽下限，单位：Mbps。
+	// 带宽下限，单位：Mbps。计费类型以及对应的带宽下限：
+	// - TOP5_POSTPAID_BY_MONTH: 默认无下限
+	// - BANDWIDTH_POSTPAID_BY_DAY: 50
+	// - FIXED_PREPAID_BY_MONTH: 100
+	// - ENHANCED95_POSTPAID_BY_MONTH: 300
+	// - PEAK_BANDWIDTH_POSTPAID_BY_DAY: 50
+	// - PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 50
 	BandwidthLowerLimit *uint64 `json:"BandwidthLowerLimit,omitnil,omitempty" name:"BandwidthLowerLimit"`
 
-	// 带宽上限，单位：Mbps。
+	// 带宽上限，单位：Mbps。计费类型以及对应的带宽上限：
+	// - TOP5_POSTPAID_BY_MONTH: 默认无上限
+	// - BANDWIDTH_POSTPAID_BY_DAY: 300
+	// - FIXED_PREPAID_BY_MONTH: 5000
+	// - ENHANCED95_POSTPAID_BY_MONTH: 5000
+	// - PEAK_BANDWIDTH_POSTPAID_BY_DAY: 300
+	// - PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 2000
 	BandwidthUpperLimit *uint64 `json:"BandwidthUpperLimit,omitnil,omitempty" name:"BandwidthUpperLimit"`
 }
 
@@ -3310,11 +3360,9 @@ func (r *CheckTrafficMirrorResponse) FromJsonString(s string) error {
 
 type CidrForCcn struct {
 	// local cidr值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cidr *string `json:"Cidr,omitnil,omitempty" name:"Cidr"`
 
 	// 是否发布到了云联网。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PublishedToVbc *bool `json:"PublishedToVbc,omitnil,omitempty" name:"PublishedToVbc"`
 }
 
@@ -3647,16 +3695,16 @@ func (r *CreateAddressTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAndAttachNetworkInterfaceRequestParams struct {
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 弹性网卡名称，最大长度不能超过60个字节。
+	// 弹性网卡名称，最大长度不能超过60个字符。
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。
+	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 云服务器实例ID。
+	// 云服务器实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 指定的内网IP信息，单次最多指定10个。
@@ -3665,10 +3713,10 @@ type CreateAndAttachNetworkInterfaceRequestParams struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。
+	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 弹性网卡描述，可任意命名，但不得超过60个字符。
@@ -3690,16 +3738,16 @@ type CreateAndAttachNetworkInterfaceRequestParams struct {
 type CreateAndAttachNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 弹性网卡名称，最大长度不能超过60个字节。
+	// 弹性网卡名称，最大长度不能超过60个字符。
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。
+	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 云服务器实例ID。
+	// 云服务器实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 指定的内网IP信息，单次最多指定10个。
@@ -3708,10 +3756,10 @@ type CreateAndAttachNetworkInterfaceRequest struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。
+	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 弹性网卡描述，可任意命名，但不得超过60个字符。
@@ -3858,24 +3906,25 @@ type CreateBandwidthPackageRequestParams struct {
 	// <li>SINGLEISP_CMCC: 中国移动共享带宽包</li>
 	// <li>SINGLEISP_CTCC: 中国电信共享带宽包</li>
 	// <li>SINGLEISP_CUCC: 中国联通共享带宽包</li>
+	// 注意：仅部分地域支持三网带宽包和精品BGP带宽包。
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// 带宽包计费类型, 默认为: ENHANCED95_POSTPAID_BY_MONTH, 可选值:
-	// <li>TOP5_POSTPAID_BY_MONTH: 按月后付费TOP5计费</li>
-	// <li>PERCENT95_POSTPAID_BY_MONTH: 按月后付费月95计费</li>
-	// <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
-	// <li>ENHANCED95_POSTPAID_BY_MONTH: 按月后付费增强型95计费</li>
-	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 后付费日结按带宽计费</li>
-	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费按主流量计费</li>
+	// <li>ENHANCED95_POSTPAID_BY_MONTH: 后付费-增强型95计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费-按主流量计费</li>
+	// <li>BANDWIDTH_POSTPAID_BY_DAY: 常规BGP-后付费-按带宽计费</li>
+	// <li>FIXED_PREPAID_BY_MONTH: 常规BGP-预付费</li>
+	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 静态单线-后付费-按日结算</li>
+	// <li>TOP5_POSTPAID_BY_MONTH: 后付费-TOP5计费，如需使用，请提交工单申请</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
-	// 带宽包名称。
+	// 带宽包名称。名称长度小于60，只包含数字、字母和下划线。
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitnil,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包数量(传统账户类型只能填1), 标准账户类型取值范围为1~20。
+	// 带宽包数量(传统账户类型只能填1), 标准账户类型取值范围为1~20。默认为1。
 	BandwidthPackageCount *uint64 `json:"BandwidthPackageCount,omitnil,omitempty" name:"BandwidthPackageCount"`
 
-	// 带宽包限速大小。单位：Mbps，-1表示不限速。不同计费类型的带宽包对应不同的带宽上下限。
+	// 带宽包限速大小。单位：Mbps，-1表示不限速。带宽包计费类型对应的带宽上下限可参考：[BandwidthRange](https://cloud.tencent.com/document/api/215/15824#BandwidthRange)
 	InternetMaxBandwidth *int64 `json:"InternetMaxBandwidth,omitnil,omitempty" name:"InternetMaxBandwidth"`
 
 	// 需要关联的标签列表。
@@ -3884,10 +3933,10 @@ type CreateBandwidthPackageRequestParams struct {
 	// 带宽包协议类型。当前支持'ipv4'和'ipv6'协议带宽包，默认值是'ipv4'。
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 预付费包月带宽包的购买时长，单位: 月，取值范围: 1~60。
+	// 预付费包月带宽包的购买时长，单位: 月，取值范围: 1~60。预付费计费类型必传。
 	TimeSpan *uint64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 网络出口，默认值：center_egress1
+	// 网络出口，默认值：center_egress1，其它可选值：center_egress2、center_egress3。
 	Egress *string `json:"Egress,omitnil,omitempty" name:"Egress"`
 }
 
@@ -3900,24 +3949,25 @@ type CreateBandwidthPackageRequest struct {
 	// <li>SINGLEISP_CMCC: 中国移动共享带宽包</li>
 	// <li>SINGLEISP_CTCC: 中国电信共享带宽包</li>
 	// <li>SINGLEISP_CUCC: 中国联通共享带宽包</li>
+	// 注意：仅部分地域支持三网带宽包和精品BGP带宽包。
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// 带宽包计费类型, 默认为: ENHANCED95_POSTPAID_BY_MONTH, 可选值:
-	// <li>TOP5_POSTPAID_BY_MONTH: 按月后付费TOP5计费</li>
-	// <li>PERCENT95_POSTPAID_BY_MONTH: 按月后付费月95计费</li>
-	// <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
-	// <li>ENHANCED95_POSTPAID_BY_MONTH: 按月后付费增强型95计费</li>
-	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 后付费日结按带宽计费</li>
-	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费按主流量计费</li>
+	// <li>ENHANCED95_POSTPAID_BY_MONTH: 后付费-增强型95计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费-按主流量计费</li>
+	// <li>BANDWIDTH_POSTPAID_BY_DAY: 常规BGP-后付费-按带宽计费</li>
+	// <li>FIXED_PREPAID_BY_MONTH: 常规BGP-预付费</li>
+	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 静态单线-后付费-按日结算</li>
+	// <li>TOP5_POSTPAID_BY_MONTH: 后付费-TOP5计费，如需使用，请提交工单申请</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
-	// 带宽包名称。
+	// 带宽包名称。名称长度小于60，只包含数字、字母和下划线。
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitnil,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包数量(传统账户类型只能填1), 标准账户类型取值范围为1~20。
+	// 带宽包数量(传统账户类型只能填1), 标准账户类型取值范围为1~20。默认为1。
 	BandwidthPackageCount *uint64 `json:"BandwidthPackageCount,omitnil,omitempty" name:"BandwidthPackageCount"`
 
-	// 带宽包限速大小。单位：Mbps，-1表示不限速。不同计费类型的带宽包对应不同的带宽上下限。
+	// 带宽包限速大小。单位：Mbps，-1表示不限速。带宽包计费类型对应的带宽上下限可参考：[BandwidthRange](https://cloud.tencent.com/document/api/215/15824#BandwidthRange)
 	InternetMaxBandwidth *int64 `json:"InternetMaxBandwidth,omitnil,omitempty" name:"InternetMaxBandwidth"`
 
 	// 需要关联的标签列表。
@@ -3926,10 +3976,10 @@ type CreateBandwidthPackageRequest struct {
 	// 带宽包协议类型。当前支持'ipv4'和'ipv6'协议带宽包，默认值是'ipv4'。
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 预付费包月带宽包的购买时长，单位: 月，取值范围: 1~60。
+	// 预付费包月带宽包的购买时长，单位: 月，取值范围: 1~60。预付费计费类型必传。
 	TimeSpan *uint64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 网络出口，默认值：center_egress1
+	// 网络出口，默认值：center_egress1，其它可选值：center_egress2、center_egress3。
 	Egress *string `json:"Egress,omitnil,omitempty" name:"Egress"`
 }
 
@@ -4709,31 +4759,33 @@ func (r *CreateDirectConnectGatewayResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateFlowLogRequestParams struct {
-	// 流日志实例名字。
+	// 流日志实例名字。长度为不超过60个字节。
 	FlowLogName *string `json:"FlowLogName,omitnil,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN|NAT|DCG。
+	// 流日志所属资源类型，VPC(私有网络)，SUBNET（子网），NETWORKINTERFACE（网卡），CCN（云联网），NAT（网络地址转化），DCG（专线网关）。当选择VPC， SUBNET，CCN，DCG时，请通过工单加入白名单。
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 流日志采集类型，ACCEPT|REJECT|ALL。
+	// 流日志采集类型，ACCEPT（允许），REJECT（拒绝），ALL（全部）。
 	TrafficType *string `json:"TrafficType,omitnil,omitempty" name:"TrafficType"`
 
-	// 私用网络ID或者统一ID，建议使用统一ID，当ResourceType为CCN时不填，其他类型必填。
+	// 私用网络唯一ID。当ResourceType为CCN时不填，其他类型必填。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 流日志实例描述。
 	FlowLogDescription *string `json:"FlowLogDescription,omitnil,omitempty" name:"FlowLogDescription"`
 
-	// 流日志存储ID。
+	// 流日志存储ID（cls的日志主题ID，
+	// 可通过[DescribeTopics](https://cloud.tencent.com/document/api/1179/46086)接口获取。
+	// ）。当StorageType为cls时，CloudLogId为必选。
 	CloudLogId *string `json:"CloudLogId,omitnil,omitempty" name:"CloudLogId"`
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 消费端类型：cls、ckafka。默认值cls。
+	// 消费端类型：cls、ckafka。默认值cls。当选择kafka时，请通过工单加入白名单。
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
 	// 流日志消费端信息，当消费端类型为ckafka时，必填。
@@ -4746,31 +4798,33 @@ type CreateFlowLogRequestParams struct {
 type CreateFlowLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 流日志实例名字。
+	// 流日志实例名字。长度为不超过60个字节。
 	FlowLogName *string `json:"FlowLogName,omitnil,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN|NAT|DCG。
+	// 流日志所属资源类型，VPC(私有网络)，SUBNET（子网），NETWORKINTERFACE（网卡），CCN（云联网），NAT（网络地址转化），DCG（专线网关）。当选择VPC， SUBNET，CCN，DCG时，请通过工单加入白名单。
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 流日志采集类型，ACCEPT|REJECT|ALL。
+	// 流日志采集类型，ACCEPT（允许），REJECT（拒绝），ALL（全部）。
 	TrafficType *string `json:"TrafficType,omitnil,omitempty" name:"TrafficType"`
 
-	// 私用网络ID或者统一ID，建议使用统一ID，当ResourceType为CCN时不填，其他类型必填。
+	// 私用网络唯一ID。当ResourceType为CCN时不填，其他类型必填。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 流日志实例描述。
 	FlowLogDescription *string `json:"FlowLogDescription,omitnil,omitempty" name:"FlowLogDescription"`
 
-	// 流日志存储ID。
+	// 流日志存储ID（cls的日志主题ID，
+	// 可通过[DescribeTopics](https://cloud.tencent.com/document/api/1179/46086)接口获取。
+	// ）。当StorageType为cls时，CloudLogId为必选。
 	CloudLogId *string `json:"CloudLogId,omitnil,omitempty" name:"CloudLogId"`
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 消费端类型：cls、ckafka。默认值cls。
+	// 消费端类型：cls、ckafka。默认值cls。当选择kafka时，请通过工单加入白名单。
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
 	// 流日志消费端信息，当消费端类型为ckafka时，必填。
@@ -4831,6 +4885,70 @@ func (r *CreateFlowLogResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateFlowLogResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGlobalRoutesRequestParams struct {
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 全局路由对象。创建时必填参数： 'GatewayType'，'GatewayId'，'DestinationCidrBlock'。
+	GlobalRoutes []*GlobalRoute `json:"GlobalRoutes,omitnil,omitempty" name:"GlobalRoutes"`
+}
+
+type CreateGlobalRoutesRequest struct {
+	*tchttp.BaseRequest
+	
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 全局路由对象。创建时必填参数： 'GatewayType'，'GatewayId'，'DestinationCidrBlock'。
+	GlobalRoutes []*GlobalRoute `json:"GlobalRoutes,omitnil,omitempty" name:"GlobalRoutes"`
+}
+
+func (r *CreateGlobalRoutesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGlobalRoutesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "GlobalRoutes")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateGlobalRoutesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGlobalRoutesResponseParams struct {
+	// 全局路由对象。
+	GlobalRouteSet []*GlobalRoute `json:"GlobalRouteSet,omitnil,omitempty" name:"GlobalRouteSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateGlobalRoutesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateGlobalRoutesResponseParams `json:"Response"`
+}
+
+func (r *CreateGlobalRoutesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGlobalRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5835,13 +5953,13 @@ func (r *CreateNetworkAclResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateNetworkInterfaceRequestParams struct {
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 弹性网卡名称，最大长度不能超过60个字节。
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。
+	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 弹性网卡描述，可任意命名，但不得超过60个字符。
@@ -5851,10 +5969,10 @@ type CreateNetworkInterfaceRequestParams struct {
 	// 配额数查询：[DescribeVpcLimits](https://cloud.tencent.com/document/api/215/42942)。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。
+	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 指定的内网IP信息，单次最多指定10个。
@@ -5876,13 +5994,13 @@ type CreateNetworkInterfaceRequestParams struct {
 type CreateNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 弹性网卡名称，最大长度不能超过60个字节。
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。
+	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 弹性网卡描述，可任意命名，但不得超过60个字符。
@@ -5892,10 +6010,10 @@ type CreateNetworkInterfaceRequest struct {
 	// 配额数查询：[DescribeVpcLimits](https://cloud.tencent.com/document/api/215/42942)。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。
+	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 指定的内网IP信息，单次最多指定10个。
@@ -7384,6 +7502,9 @@ type CreateVpcEndPointRequestParams struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type CreateVpcEndPointRequest struct {
@@ -7409,6 +7530,9 @@ type CreateVpcEndPointRequest struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *CreateVpcEndPointRequest) ToJsonString() string {
@@ -7430,6 +7554,7 @@ func (r *CreateVpcEndPointRequest) FromJsonString(s string) error {
 	delete(f, "EndPointVip")
 	delete(f, "SecurityGroupId")
 	delete(f, "Tags")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpcEndPointRequest has unknown keys!", "")
 	}
@@ -7483,6 +7608,9 @@ type CreateVpcEndPointServiceRequestParams struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type CreateVpcEndPointServiceRequest struct {
@@ -7508,6 +7636,9 @@ type CreateVpcEndPointServiceRequest struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *CreateVpcEndPointServiceRequest) ToJsonString() string {
@@ -7529,6 +7660,7 @@ func (r *CreateVpcEndPointServiceRequest) FromJsonString(s string) error {
 	delete(f, "IsPassService")
 	delete(f, "ServiceType")
 	delete(f, "Tags")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpcEndPointServiceRequest has unknown keys!", "")
 	}
@@ -8798,14 +8930,14 @@ func (r *DeleteAssistantCidrResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteBandwidthPackageRequestParams struct {
-	// 待删除带宽包唯一ID
+	// 待删除带宽包唯一ID，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 }
 
 type DeleteBandwidthPackageRequest struct {
 	*tchttp.BaseRequest
 	
-	// 待删除带宽包唯一ID
+	// 待删除带宽包唯一ID，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 }
 
@@ -9292,20 +9424,20 @@ func (r *DeleteDirectConnectGatewayResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteFlowLogRequestParams struct {
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 
-	// 私用网络ID或者统一ID，建议使用统一ID，删除云联网流日志时，可不填，其他流日志类型必填。
+	// 私用网络唯一ID。删除云联网流日志时，可不填，其他流日志类型必填。可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取流日志对应的私有网络唯一ID。也可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取当前账户的私有网络唯一ID。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 }
 
 type DeleteFlowLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 
-	// 私用网络ID或者统一ID，建议使用统一ID，删除云联网流日志时，可不填，其他流日志类型必填。
+	// 私用网络唯一ID。删除云联网流日志时，可不填，其他流日志类型必填。可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取流日志对应的私有网络唯一ID。也可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取当前账户的私有网络唯一ID。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 }
 
@@ -9348,6 +9480,67 @@ func (r *DeleteFlowLogResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteFlowLogResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGlobalRoutesRequestParams struct {
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 全局路由实例唯一Id列表。
+	GlobalRouteIds []*string `json:"GlobalRouteIds,omitnil,omitempty" name:"GlobalRouteIds"`
+}
+
+type DeleteGlobalRoutesRequest struct {
+	*tchttp.BaseRequest
+	
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 全局路由实例唯一Id列表。
+	GlobalRouteIds []*string `json:"GlobalRouteIds,omitnil,omitempty" name:"GlobalRouteIds"`
+}
+
+func (r *DeleteGlobalRoutesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGlobalRoutesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "GlobalRouteIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGlobalRoutesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGlobalRoutesResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteGlobalRoutesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGlobalRoutesResponseParams `json:"Response"`
+}
+
+func (r *DeleteGlobalRoutesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGlobalRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10053,14 +10246,14 @@ func (r *DeleteNetworkAclResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteNetworkInterfaceRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 }
 
 type DeleteNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 }
 
@@ -11063,6 +11256,9 @@ func (r *DeleteTrafficPackagesResponse) FromJsonString(s string) error {
 type DeleteVpcEndPointRequestParams struct {
 	// 终端节点ID。
 	EndPointId *string `json:"EndPointId,omitnil,omitempty" name:"EndPointId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type DeleteVpcEndPointRequest struct {
@@ -11070,6 +11266,9 @@ type DeleteVpcEndPointRequest struct {
 	
 	// 终端节点ID。
 	EndPointId *string `json:"EndPointId,omitnil,omitempty" name:"EndPointId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *DeleteVpcEndPointRequest) ToJsonString() string {
@@ -11085,6 +11284,7 @@ func (r *DeleteVpcEndPointRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "EndPointId")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteVpcEndPointRequest has unknown keys!", "")
 	}
@@ -11117,6 +11317,9 @@ func (r *DeleteVpcEndPointResponse) FromJsonString(s string) error {
 type DeleteVpcEndPointServiceRequestParams struct {
 	// 终端节点ID。
 	EndPointServiceId *string `json:"EndPointServiceId,omitnil,omitempty" name:"EndPointServiceId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type DeleteVpcEndPointServiceRequest struct {
@@ -11124,6 +11327,9 @@ type DeleteVpcEndPointServiceRequest struct {
 	
 	// 终端节点ID。
 	EndPointServiceId *string `json:"EndPointServiceId,omitnil,omitempty" name:"EndPointServiceId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *DeleteVpcEndPointServiceRequest) ToJsonString() string {
@@ -11139,6 +11345,7 @@ func (r *DeleteVpcEndPointServiceRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "EndPointServiceId")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteVpcEndPointServiceRequest has unknown keys!", "")
 	}
@@ -12220,14 +12427,14 @@ func (r *DescribeAssistantCidrResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBandwidthPackageBandwidthRangeRequestParams struct {
-	// 带宽包资源ID列表，单次查询上限20。
+	// 带宽包资源ID列表，单次查询上限20。可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageIds []*string `json:"BandwidthPackageIds,omitnil,omitempty" name:"BandwidthPackageIds"`
 }
 
 type DescribeBandwidthPackageBandwidthRangeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 带宽包资源ID列表，单次查询上限20。
+	// 带宽包资源ID列表，单次查询上限20。可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageIds []*string `json:"BandwidthPackageIds,omitnil,omitempty" name:"BandwidthPackageIds"`
 }
 
@@ -12252,7 +12459,7 @@ func (r *DescribeBandwidthPackageBandwidthRangeRequest) FromJsonString(s string)
 
 // Predefined struct for user
 type DescribeBandwidthPackageBandwidthRangeResponseParams struct {
-	// 带宽包带宽上下限详细信息。
+	// 带宽包带宽上下限详细信息。ResourceId：带宽包id、BandwidthLowerLimit：带宽下限、BandwidthUpperLimit：带宽上限。
 	BandwidthRangeSet []*BandwidthRange `json:"BandwidthRangeSet,omitnil,omitempty" name:"BandwidthRangeSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -12277,14 +12484,14 @@ func (r *DescribeBandwidthPackageBandwidthRangeResponse) FromJsonString(s string
 
 // Predefined struct for user
 type DescribeBandwidthPackageBillUsageRequestParams struct {
-	// 后付费共享带宽包的唯一ID
+	// 后付费共享带宽包的唯一ID，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209)接口获取BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 }
 
 type DescribeBandwidthPackageBillUsageRequest struct {
 	*tchttp.BaseRequest
 	
-	// 后付费共享带宽包的唯一ID
+	// 后付费共享带宽包的唯一ID，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209)接口获取BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 }
 
@@ -12391,7 +12598,7 @@ type DescribeBandwidthPackageResourcesRequestParams struct {
 	// 标识 共享带宽包 的唯一 ID 列表。共享带宽包 唯一 ID 形如：`bwp-11112222`。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`AddressIds`和`Filters`。详细的过滤条件如下：
+	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。详细的过滤条件如下：
 	// <li> resource-id - String - 是否必填：否 - （过滤条件）按照 共享带宽包内资源 的唯一 ID 过滤。共享带宽包内资源 唯一 ID 形如：eip-11112222。</li>
 	// <li> resource-type - String - 是否必填：否 - （过滤条件）按照 共享带宽包内资源 类型过滤，目前仅支持 弹性IP 和 负载均衡 两种类型，可选值为 Address 和 LoadBalance。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
@@ -12409,7 +12616,7 @@ type DescribeBandwidthPackageResourcesRequest struct {
 	// 标识 共享带宽包 的唯一 ID 列表。共享带宽包 唯一 ID 形如：`bwp-11112222`。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`AddressIds`和`Filters`。详细的过滤条件如下：
+	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。详细的过滤条件如下：
 	// <li> resource-id - String - 是否必填：否 - （过滤条件）按照 共享带宽包内资源 的唯一 ID 过滤。共享带宽包内资源 唯一 ID 形如：eip-11112222。</li>
 	// <li> resource-type - String - 是否必填：否 - （过滤条件）按照 共享带宽包内资源 类型过滤，目前仅支持 弹性IP 和 负载均衡 两种类型，可选值为 Address 和 LoadBalance。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
@@ -12479,8 +12686,8 @@ type DescribeBandwidthPackagesRequestParams struct {
 	// 每次请求的`Filters`的上限为10。参数不支持同时指定`BandwidthPackageIds`和`Filters`。详细的过滤条件如下：
 	// <li> bandwidth-package-id - String - 是否必填：否 - （过滤条件）按照带宽包的唯一标识ID过滤。</li>
 	// <li> bandwidth-package-name - String - 是否必填：否 - （过滤条件）按照 带宽包名称过滤。不支持模糊过滤。</li>
-	// <li> network-type - String - 是否必填：否 - （过滤条件）按照带宽包的类型过滤。类型包括'HIGH_QUALITY_BGP','BGP','SINGLEISP'和'ANYCAST'。</li>
-	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型包括: <li>'TOP5_POSTPAID_BY_MONTH':按月后付费TOP5计费</li><li> 'PERCENT95_POSTPAID_BY_MONTH':按月后付费月95计费</li><li>'ENHANCED95_POSTPAID_BY_MONTH':按月后付费增强型95计费</li><li>'FIXED_PREPAID_BY_MONTH':包月预付费计费</li><li>‘PEAK_BANDWIDTH_POSTPAID_BY_DAY’: 后付费日结按带宽计费</li>
+	// <li> network-type - String - 是否必填：否 - （过滤条件）按照带宽包的类型过滤。网络类型可参考[BandwidthPackage](https://cloud.tencent.com/document/api/215/15824#BandwidthPackage)。</li>
+	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型可参考[BandwidthPackage](https://cloud.tencent.com/document/api/215/15824#BandwidthPackage)。</li>
 	// <li> resource.resource-type - String - 是否必填：否 - （过滤条件）按照带宽包资源类型过滤。资源类型包括'Address'和'LoadBalance'</li>
 	// <li> resource.resource-id - String - 是否必填：否 - （过滤条件）按照带宽包资源Id过滤。资源Id形如'eip-xxxx','lb-xxxx'</li>
 	// <li> resource.address-ip - String - 是否必填：否 - （过滤条件）按照带宽包资源Ip过滤。</li>
@@ -12505,8 +12712,8 @@ type DescribeBandwidthPackagesRequest struct {
 	// 每次请求的`Filters`的上限为10。参数不支持同时指定`BandwidthPackageIds`和`Filters`。详细的过滤条件如下：
 	// <li> bandwidth-package-id - String - 是否必填：否 - （过滤条件）按照带宽包的唯一标识ID过滤。</li>
 	// <li> bandwidth-package-name - String - 是否必填：否 - （过滤条件）按照 带宽包名称过滤。不支持模糊过滤。</li>
-	// <li> network-type - String - 是否必填：否 - （过滤条件）按照带宽包的类型过滤。类型包括'HIGH_QUALITY_BGP','BGP','SINGLEISP'和'ANYCAST'。</li>
-	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型包括: <li>'TOP5_POSTPAID_BY_MONTH':按月后付费TOP5计费</li><li> 'PERCENT95_POSTPAID_BY_MONTH':按月后付费月95计费</li><li>'ENHANCED95_POSTPAID_BY_MONTH':按月后付费增强型95计费</li><li>'FIXED_PREPAID_BY_MONTH':包月预付费计费</li><li>‘PEAK_BANDWIDTH_POSTPAID_BY_DAY’: 后付费日结按带宽计费</li>
+	// <li> network-type - String - 是否必填：否 - （过滤条件）按照带宽包的类型过滤。网络类型可参考[BandwidthPackage](https://cloud.tencent.com/document/api/215/15824#BandwidthPackage)。</li>
+	// <li> charge-type - String - 是否必填：否 - （过滤条件）按照带宽包的计费类型过滤。计费类型可参考[BandwidthPackage](https://cloud.tencent.com/document/api/215/15824#BandwidthPackage)。</li>
 	// <li> resource.resource-type - String - 是否必填：否 - （过滤条件）按照带宽包资源类型过滤。资源类型包括'Address'和'LoadBalance'</li>
 	// <li> resource.resource-id - String - 是否必填：否 - （过滤条件）按照带宽包资源Id过滤。资源Id形如'eip-xxxx','lb-xxxx'</li>
 	// <li> resource.address-ip - String - 是否必填：否 - （过滤条件）按照带宽包资源Ip过滤。</li>
@@ -14182,20 +14389,20 @@ func (r *DescribeDirectConnectGatewaysResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeFlowLogRequestParams struct {
-	// 私用网络ID或者统一ID，建议使用统一ID。
+	// 私用网络唯一ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。该接口不支持拉取CCN类型的流日志，所以该字段为必选。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取；
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 }
 
 type DescribeFlowLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 私用网络ID或者统一ID，建议使用统一ID。
+	// 私用网络唯一ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。该接口不支持拉取CCN类型的流日志，所以该字段为必选。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取；
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 }
 
@@ -14246,31 +14453,31 @@ func (r *DescribeFlowLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeFlowLogsRequestParams struct {
-	// 私用网络ID或者统一ID，建议使用统一ID。
+	// 私用网络唯一ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建。
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 
 	// 流日志实例名字。
 	FlowLogName *string `json:"FlowLogName,omitnil,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE。
+	// 流日志所属资源类型：VPC(私有网络)，SUBNET（子网），NETWORKINTERFACE（网卡），CCN（云联网），NAT（网络地址转化），DCG（专线网关）。
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 流日志采集类型，ACCEPT|REJECT|ALL。
+	// 流日志采集类型，ACCEPT（允许），REJECT（拒绝），ALL（全部）。
 	TrafficType *string `json:"TrafficType,omitnil,omitempty" name:"TrafficType"`
 
 	// 流日志存储ID。
 	CloudLogId *string `json:"CloudLogId,omitnil,omitempty" name:"CloudLogId"`
 
-	// 流日志存储ID状态。
+	// 流日志存储ID状态。SUCCESS（成功），DELETED（删除）
 	CloudLogState *string `json:"CloudLogState,omitnil,omitempty" name:"CloudLogState"`
 
-	// 按某个字段排序,支持字段：flowLogName,createTime，默认按CreatedTime。
+	// 按某个字段排序,支持字段：flowLogName,createTime，默认按createTime。
 	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
 
 	// 升序（ASC）还是降序（DESC）,默认：DESC。
@@ -14279,7 +14486,7 @@ type DescribeFlowLogsRequestParams struct {
 	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 每页行数，默认为10。
+	// 每页行数，默认为10。范围1-100。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，参数不支持同时指定FlowLogId和Filters。
@@ -14294,31 +14501,31 @@ type DescribeFlowLogsRequestParams struct {
 type DescribeFlowLogsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 私用网络ID或者统一ID，建议使用统一ID。
+	// 私用网络唯一ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建。
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 
 	// 流日志实例名字。
 	FlowLogName *string `json:"FlowLogName,omitnil,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE。
+	// 流日志所属资源类型：VPC(私有网络)，SUBNET（子网），NETWORKINTERFACE（网卡），CCN（云联网），NAT（网络地址转化），DCG（专线网关）。
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 流日志采集类型，ACCEPT|REJECT|ALL。
+	// 流日志采集类型，ACCEPT（允许），REJECT（拒绝），ALL（全部）。
 	TrafficType *string `json:"TrafficType,omitnil,omitempty" name:"TrafficType"`
 
 	// 流日志存储ID。
 	CloudLogId *string `json:"CloudLogId,omitnil,omitempty" name:"CloudLogId"`
 
-	// 流日志存储ID状态。
+	// 流日志存储ID状态。SUCCESS（成功），DELETED（删除）
 	CloudLogState *string `json:"CloudLogState,omitnil,omitempty" name:"CloudLogState"`
 
-	// 按某个字段排序,支持字段：flowLogName,createTime，默认按CreatedTime。
+	// 按某个字段排序,支持字段：flowLogName,createTime，默认按createTime。
 	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
 
 	// 升序（ASC）还是降序（DESC）,默认：DESC。
@@ -14327,7 +14534,7 @@ type DescribeFlowLogsRequest struct {
 	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 每页行数，默认为10。
+	// 每页行数，默认为10。范围1-100。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，参数不支持同时指定FlowLogId和Filters。
@@ -14606,6 +14813,117 @@ func (r *DescribeGatewayFlowQosResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeGatewayFlowQosResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGlobalRoutesRequestParams struct {
+	// 过滤条件。
+	// <li>global-route-id - String - （过滤条件）如全局路由唯一 Id，形如：gr-bmenrwu2。</li>
+	// <li>vpc-id - String - （过滤条件）VPC唯一Id， 形如： vpc-mcqaoy0f。</li>
+	// <li>gateway-id - String - （过滤条件）下一跳对象。</li>
+	// <li>gateway-type - String -  是否必填：否 - （过滤条件）按下一跳类型进行过滤。支持 NORMAL_CVM
+	// </li>
+	// <li>cdc-id - String - （过滤条件）CDC实例ID，形如：cluster-gbo27yc4。</li>
+	// <li>description - String - （过滤条件）描述。</li>
+	// <li>dest-cidr - String - （过滤条件）Ipv4目标网段。</li>
+	// <li>subnet-route-algorithm - String - （过滤条件）支持的 ECMP算法有：
+	// 
+	//    - ECMP_QUINTUPLE_HASH：五元组hash
+	//    - ECMP_SOURCE_DESTINATION_IP_HASH：源和目的IP hash
+	//    - ECMP_DESTINATION_IP_HASH：目的IP hash
+	//    - ECMP_SOURCE_IP_HASH：源IP hash
+	// </li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 请求对象个数。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 全局路由唯一Id列表。
+	GlobalRouteIds []*string `json:"GlobalRouteIds,omitnil,omitempty" name:"GlobalRouteIds"`
+}
+
+type DescribeGlobalRoutesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 过滤条件。
+	// <li>global-route-id - String - （过滤条件）如全局路由唯一 Id，形如：gr-bmenrwu2。</li>
+	// <li>vpc-id - String - （过滤条件）VPC唯一Id， 形如： vpc-mcqaoy0f。</li>
+	// <li>gateway-id - String - （过滤条件）下一跳对象。</li>
+	// <li>gateway-type - String -  是否必填：否 - （过滤条件）按下一跳类型进行过滤。支持 NORMAL_CVM
+	// </li>
+	// <li>cdc-id - String - （过滤条件）CDC实例ID，形如：cluster-gbo27yc4。</li>
+	// <li>description - String - （过滤条件）描述。</li>
+	// <li>dest-cidr - String - （过滤条件）Ipv4目标网段。</li>
+	// <li>subnet-route-algorithm - String - （过滤条件）支持的 ECMP算法有：
+	// 
+	//    - ECMP_QUINTUPLE_HASH：五元组hash
+	//    - ECMP_SOURCE_DESTINATION_IP_HASH：源和目的IP hash
+	//    - ECMP_DESTINATION_IP_HASH：目的IP hash
+	//    - ECMP_SOURCE_IP_HASH：源IP hash
+	// </li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 请求对象个数。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 全局路由唯一Id列表。
+	GlobalRouteIds []*string `json:"GlobalRouteIds,omitnil,omitempty" name:"GlobalRouteIds"`
+}
+
+func (r *DescribeGlobalRoutesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGlobalRoutesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "GlobalRouteIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGlobalRoutesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGlobalRoutesResponseParams struct {
+	// 全局路由对象。
+	GlobalRouteSet []*GlobalRoute `json:"GlobalRouteSet,omitnil,omitempty" name:"GlobalRouteSet"`
+
+	// 符合条件的实例数量。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGlobalRoutesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGlobalRoutesResponseParams `json:"Response"`
+}
+
+func (r *DescribeGlobalRoutesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGlobalRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -15016,6 +15334,63 @@ func (r *DescribeIPv6AddressesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeInstanceJumboRequestParams struct {
+	// CVM实例ID列表。限制每次i最多查询10个实例。
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+}
+
+type DescribeInstanceJumboRequest struct {
+	*tchttp.BaseRequest
+	
+	// CVM实例ID列表。限制每次i最多查询10个实例。
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+}
+
+func (r *DescribeInstanceJumboRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstanceJumboRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceJumboRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeInstanceJumboResponseParams struct {
+	// 云服务器巨帧状态
+	InstanceJumboSet []*InstanceJumbo `json:"InstanceJumboSet,omitnil,omitempty" name:"InstanceJumboSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeInstanceJumboResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeInstanceJumboResponseParams `json:"Response"`
+}
+
+func (r *DescribeInstanceJumboResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstanceJumboResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeIp6AddressesRequestParams struct {
 	// 标识 IPv6 的唯一 ID 列表。IPv6 唯一 ID 形如：`eip-11112222`。参数不支持同时指定`Ip6AddressIds`和`Filters`。
 	Ip6AddressIds []*string `json:"Ip6AddressIds,omitnil,omitempty" name:"Ip6AddressIds"`
@@ -15376,8 +15751,7 @@ func (r *DescribeIpGeolocationInfosResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeLocalGatewayRequestParams struct {
-	// 查询条件：
-	// vpc-id：按照VPCID过滤，local-gateway-name：按照本地网关名称过滤，名称支持模糊搜索，local-gateway-id：按照本地网关实例ID过滤，cdc-id：按照cdc实例ID过滤查询。
+	// 支持的过滤条件如下:\n<li>vpc-id:按照VPCID过滤。</li>\n<li>local-gateway-name:本地网关名称,支持模糊查询。</li>\n<li>local-gateway-id:本地网关实例ID。</li>\n<li>cdc-id:cdc实例ID。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/11646)中的相关小节。
@@ -15390,8 +15764,7 @@ type DescribeLocalGatewayRequestParams struct {
 type DescribeLocalGatewayRequest struct {
 	*tchttp.BaseRequest
 	
-	// 查询条件：
-	// vpc-id：按照VPCID过滤，local-gateway-name：按照本地网关名称过滤，名称支持模糊搜索，local-gateway-id：按照本地网关实例ID过滤，cdc-id：按照cdc实例ID过滤查询。
+	// 支持的过滤条件如下:\n<li>vpc-id:按照VPCID过滤。</li>\n<li>local-gateway-name:本地网关名称,支持模糊查询。</li>\n<li>local-gateway-id:本地网关实例ID。</li>\n<li>cdc-id:cdc实例ID。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/11646)中的相关小节。
@@ -15625,6 +15998,101 @@ func (r *DescribeNatGatewayDirectConnectGatewayRouteResponse) ToJsonString() str
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeNatGatewayDirectConnectGatewayRouteResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeNatGatewayFlowMonitorDetailRequestParams struct {
+	// 时间点。表示要查询的时刻。聚合粒度为60、300时，会查询最近一个整分钟开始的聚合周期；聚合粒度为3600时，会查询最近一个整点开始的聚合周期；聚合粒度为86400时，会查询最近一个整天开始的聚合周期。形如：`2019-03-24T10:51:23+08:00`。
+	TimePoint *string `json:"TimePoint,omitnil,omitempty" name:"TimePoint"`
+
+	// NAT网关的ID，形如：`nat-ig8xpno8`。
+	NatGatewayId *string `json:"NatGatewayId,omitnil,omitempty" name:"NatGatewayId"`
+
+	// 展示排序靠前的数据。默认值：10，表示默认展示排序前 10 的数据。最大值：100。
+	TopN *int64 `json:"TopN,omitnil,omitempty" name:"TopN"`
+
+	// 排序字段。支持：入包量`InPkg`、出包量`OutPkg`、入流量`InTraffic`、出流量`OutTraffic`，标准型nat额外支持 并发连接数`ConcurrentConnectionCount` 、新建连接速率`NewConnectionRate`。默认值`OutTraffic`。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 聚合时间粒度。支持：60、300、3600、86400，即按照1分钟、5分钟、1小时、1天进行聚合查询。
+	AggregationTimeRange *int64 `json:"AggregationTimeRange,omitnil,omitempty" name:"AggregationTimeRange"`
+
+	// 是否查询全部指标。默认值：True，表示查询全部指标。
+	AllMetricMode *bool `json:"AllMetricMode,omitnil,omitempty" name:"AllMetricMode"`
+}
+
+type DescribeNatGatewayFlowMonitorDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// 时间点。表示要查询的时刻。聚合粒度为60、300时，会查询最近一个整分钟开始的聚合周期；聚合粒度为3600时，会查询最近一个整点开始的聚合周期；聚合粒度为86400时，会查询最近一个整天开始的聚合周期。形如：`2019-03-24T10:51:23+08:00`。
+	TimePoint *string `json:"TimePoint,omitnil,omitempty" name:"TimePoint"`
+
+	// NAT网关的ID，形如：`nat-ig8xpno8`。
+	NatGatewayId *string `json:"NatGatewayId,omitnil,omitempty" name:"NatGatewayId"`
+
+	// 展示排序靠前的数据。默认值：10，表示默认展示排序前 10 的数据。最大值：100。
+	TopN *int64 `json:"TopN,omitnil,omitempty" name:"TopN"`
+
+	// 排序字段。支持：入包量`InPkg`、出包量`OutPkg`、入流量`InTraffic`、出流量`OutTraffic`，标准型nat额外支持 并发连接数`ConcurrentConnectionCount` 、新建连接速率`NewConnectionRate`。默认值`OutTraffic`。
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 聚合时间粒度。支持：60、300、3600、86400，即按照1分钟、5分钟、1小时、1天进行聚合查询。
+	AggregationTimeRange *int64 `json:"AggregationTimeRange,omitnil,omitempty" name:"AggregationTimeRange"`
+
+	// 是否查询全部指标。默认值：True，表示查询全部指标。
+	AllMetricMode *bool `json:"AllMetricMode,omitnil,omitempty" name:"AllMetricMode"`
+}
+
+func (r *DescribeNatGatewayFlowMonitorDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNatGatewayFlowMonitorDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TimePoint")
+	delete(f, "NatGatewayId")
+	delete(f, "TopN")
+	delete(f, "OrderField")
+	delete(f, "AggregationTimeRange")
+	delete(f, "AllMetricMode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeNatGatewayFlowMonitorDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeNatGatewayFlowMonitorDetailResponseParams struct {
+	// 符合条件的对象数。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 网关流量监控明细。
+	NatGatewayFlowMonitorDetailSet []*NatGatewayFlowMonitorDetail `json:"NatGatewayFlowMonitorDetailSet,omitnil,omitempty" name:"NatGatewayFlowMonitorDetailSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeNatGatewayFlowMonitorDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeNatGatewayFlowMonitorDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeNatGatewayFlowMonitorDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNatGatewayFlowMonitorDetailResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -16301,15 +16769,20 @@ func (r *DescribeNetworkInterfaceLimitResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeNetworkInterfacesRequestParams struct {
-	// 弹性网卡实例ID查询。形如：eni-pxir56ns。每次请求的实例的上限为100。参数不支持同时指定NetworkInterfaceIds和Filters。
+	// 弹性网卡实例ID查询。形如：eni-pxir56ns。每次请求的实例的上限为100。参数不支持同时指定NetworkInterfaceIds和Filters。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
 	// 过滤条件，参数不支持同时指定NetworkInterfaceIds和Filters。
-	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。</li>
-	// <li>subnet-id - String - （过滤条件）所属子网实例ID，形如：subnet-f49l6u0z。</li>
-	// <li>network-interface-id - String - （过滤条件）弹性网卡实例ID，形如：eni-5k56k7k7。</li>
-	// <li>attachment.instance-id - String - （过滤条件）绑定的云服务器实例ID，形如：ins-3nqpdn3i。</li>
-	// <li>groups.security-group-id - String - （过滤条件）绑定的安全组实例ID，例如：sg-f9ekbxeq。</li>
+	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
+	// </li>
+	// <li>subnet-id - String - （过滤条件）所属子网实例ID，形如：subnet-f49l6u0z。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
+	// </li>
+	// <li>network-interface-id - String - （过滤条件）弹性网卡实例ID，形如：eni-5k56k7k7。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
+	// </li>
+	// <li>attachment.instance-id - String - （过滤条件）绑定的云服务器实例ID，形如：ins-3nqpdn3i。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
+	// </li>
+	// <li>groups.security-group-id - String - （过滤条件）绑定的安全组实例ID，例如：sg-f9ekbxeq。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
+	// </li>
 	// <li>network-interface-name - String - （过滤条件）网卡实例名称。</li>
 	// <li>network-interface-description - String - （过滤条件）网卡实例描述。</li>
 	// <li>address-ip - String - （过滤条件）内网IPv4地址，单IP后缀模糊匹配，多IP精确匹配。可以与`ip-exact-match`配合做单IP的精确匹配查询。</li>
@@ -16318,9 +16791,10 @@ type DescribeNetworkInterfacesRequestParams struct {
 	// <li>tag:tag-key - String - 是否必填：否 - （过滤条件）按照标签键值对进行过滤。 tag-key使用具体的标签键进行替换。使用请参考示例2。</li>
 	// <li>is-primary - Boolean - 是否必填：否 - （过滤条件）按照是否主网卡进行过滤。值为true时，仅过滤主网卡；值为false时，仅过滤辅助网卡；此过滤参数未提供时，同时过滤主网卡和辅助网卡。</li>
 	// <li>eni-type - String -是否必填：否- （过滤条件）按照网卡类型进行过滤。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡。</li>
-	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。“AG”-服务质量为云铜，“AU”-服务质量为云银。</li>
+	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</li>
 	// <li>address-ipv6 - String - 是否必填：否 -（过滤条件）内网IPv6地址过滤，支持多ipv6地址查询，如果和address-ip一起使用取交集。</li>
 	// <li>public-address-ip - String - （过滤条件）公网IPv4地址，精确匹配。</li>
+	// <li>address-type - String - （过滤条件）IPv6 Cidr 的类型，精确匹配。`GUA`(全球单播地址), `ULA`(唯一本地地址)。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -16333,15 +16807,20 @@ type DescribeNetworkInterfacesRequestParams struct {
 type DescribeNetworkInterfacesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID查询。形如：eni-pxir56ns。每次请求的实例的上限为100。参数不支持同时指定NetworkInterfaceIds和Filters。
+	// 弹性网卡实例ID查询。形如：eni-pxir56ns。每次请求的实例的上限为100。参数不支持同时指定NetworkInterfaceIds和Filters。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
 	// 过滤条件，参数不支持同时指定NetworkInterfaceIds和Filters。
-	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。</li>
-	// <li>subnet-id - String - （过滤条件）所属子网实例ID，形如：subnet-f49l6u0z。</li>
-	// <li>network-interface-id - String - （过滤条件）弹性网卡实例ID，形如：eni-5k56k7k7。</li>
-	// <li>attachment.instance-id - String - （过滤条件）绑定的云服务器实例ID，形如：ins-3nqpdn3i。</li>
-	// <li>groups.security-group-id - String - （过滤条件）绑定的安全组实例ID，例如：sg-f9ekbxeq。</li>
+	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
+	// </li>
+	// <li>subnet-id - String - （过滤条件）所属子网实例ID，形如：subnet-f49l6u0z。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
+	// </li>
+	// <li>network-interface-id - String - （过滤条件）弹性网卡实例ID，形如：eni-5k56k7k7。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
+	// </li>
+	// <li>attachment.instance-id - String - （过滤条件）绑定的云服务器实例ID，形如：ins-3nqpdn3i。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
+	// </li>
+	// <li>groups.security-group-id - String - （过滤条件）绑定的安全组实例ID，例如：sg-f9ekbxeq。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
+	// </li>
 	// <li>network-interface-name - String - （过滤条件）网卡实例名称。</li>
 	// <li>network-interface-description - String - （过滤条件）网卡实例描述。</li>
 	// <li>address-ip - String - （过滤条件）内网IPv4地址，单IP后缀模糊匹配，多IP精确匹配。可以与`ip-exact-match`配合做单IP的精确匹配查询。</li>
@@ -16350,9 +16829,10 @@ type DescribeNetworkInterfacesRequest struct {
 	// <li>tag:tag-key - String - 是否必填：否 - （过滤条件）按照标签键值对进行过滤。 tag-key使用具体的标签键进行替换。使用请参考示例2。</li>
 	// <li>is-primary - Boolean - 是否必填：否 - （过滤条件）按照是否主网卡进行过滤。值为true时，仅过滤主网卡；值为false时，仅过滤辅助网卡；此过滤参数未提供时，同时过滤主网卡和辅助网卡。</li>
 	// <li>eni-type - String -是否必填：否- （过滤条件）按照网卡类型进行过滤。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡。</li>
-	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。“AG”-服务质量为云铜，“AU”-服务质量为云银。</li>
+	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</li>
 	// <li>address-ipv6 - String - 是否必填：否 -（过滤条件）内网IPv6地址过滤，支持多ipv6地址查询，如果和address-ip一起使用取交集。</li>
 	// <li>public-address-ip - String - （过滤条件）公网IPv4地址，精确匹配。</li>
+	// <li>address-type - String - （过滤条件）IPv6 Cidr 的类型，精确匹配。`GUA`(全球单播地址), `ULA`(唯一本地地址)。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -18764,6 +19244,7 @@ type DescribeSubnetsRequestParams struct {
 	// <li>is-cdc-subnet - String - 是否必填：否 - （过滤条件）按照是否是cdc子网进行过滤。取值：“0”-非cdc子网，“1”--cdc子网</li>
 	// <li>ipv6-cidr-block - String - （过滤条件）IPv6子网网段，形如: 2402:4e00:1717:8700::/64 。</li>
 	// <li>isp-type  - String - （过滤条件）运营商类型，形如: BGP 。</li>
+	// <li>address-type - String - （过滤条件）IPv6 Cidr 的类型，精确匹配。`GUA`(全球单播地址), `ULA`(唯一本地地址)。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -18793,6 +19274,7 @@ type DescribeSubnetsRequest struct {
 	// <li>is-cdc-subnet - String - 是否必填：否 - （过滤条件）按照是否是cdc子网进行过滤。取值：“0”-非cdc子网，“1”--cdc子网</li>
 	// <li>ipv6-cidr-block - String - （过滤条件）IPv6子网网段，形如: 2402:4e00:1717:8700::/64 。</li>
 	// <li>isp-type  - String - （过滤条件）运营商类型，形如: BGP 。</li>
+	// <li>address-type - String - （过滤条件）IPv6 Cidr 的类型，精确匹配。`GUA`(全球单播地址), `ULA`(唯一本地地址)。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -19401,6 +19883,9 @@ type DescribeVpcEndPointRequestParams struct {
 
 	// 终端节点ID列表。
 	EndPointId []*string `json:"EndPointId,omitnil,omitempty" name:"EndPointId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type DescribeVpcEndPointRequest struct {
@@ -19421,6 +19906,9 @@ type DescribeVpcEndPointRequest struct {
 
 	// 终端节点ID列表。
 	EndPointId []*string `json:"EndPointId,omitnil,omitempty" name:"EndPointId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *DescribeVpcEndPointRequest) ToJsonString() string {
@@ -19439,6 +19927,7 @@ func (r *DescribeVpcEndPointRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "EndPointId")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVpcEndPointRequest has unknown keys!", "")
 	}
@@ -19493,6 +19982,9 @@ type DescribeVpcEndPointServiceRequestParams struct {
 
 	// <li>不支持同时传入参数 Filters 。</li> <li>列出授权给当前账号的终端节点服务信息。可以配合EndPointServiceIds参数进行过滤，哪些终端节点服务授权了该账户。</li>
 	IsListAuthorizedEndPointService *bool `json:"IsListAuthorizedEndPointService,omitnil,omitempty" name:"IsListAuthorizedEndPointService"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type DescribeVpcEndPointServiceRequest struct {
@@ -19516,6 +20008,9 @@ type DescribeVpcEndPointServiceRequest struct {
 
 	// <li>不支持同时传入参数 Filters 。</li> <li>列出授权给当前账号的终端节点服务信息。可以配合EndPointServiceIds参数进行过滤，哪些终端节点服务授权了该账户。</li>
 	IsListAuthorizedEndPointService *bool `json:"IsListAuthorizedEndPointService,omitnil,omitempty" name:"IsListAuthorizedEndPointService"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *DescribeVpcEndPointServiceRequest) ToJsonString() string {
@@ -19535,6 +20030,7 @@ func (r *DescribeVpcEndPointServiceRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "EndPointServiceIds")
 	delete(f, "IsListAuthorizedEndPointService")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVpcEndPointServiceRequest has unknown keys!", "")
 	}
@@ -20174,6 +20670,7 @@ type DescribeVpcsRequestParams struct {
 	//   **说明：**若同一个过滤条件（Filter）存在多个Values，则同一Filter下Values间的关系为逻辑或（OR）关系；若存在多个过滤条件（Filter），Filter之间的关系为逻辑与（AND）关系。
 	// <li>ipv6-cidr-block - String - （过滤条件）IPv6子网网段，形如: 2402:4e00:1717:8700::/64 。</li>
 	// <li>isp-type  - String - （过滤条件）运营商类型，形如: BGP 取值范围：'BGP'-默认, 'CMCC'-中国移动, 'CTCC'-中国电信, 'CUCC'-中国联通。</li>
+	// <li>address-type - String - （过滤条件）IPv6 Cidr 的类型，精确匹配。`GUA`(全球单播地址), `ULA`(唯一本地地址)。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -20200,6 +20697,7 @@ type DescribeVpcsRequest struct {
 	//   **说明：**若同一个过滤条件（Filter）存在多个Values，则同一Filter下Values间的关系为逻辑或（OR）关系；若存在多个过滤条件（Filter），Filter之间的关系为逻辑与（AND）关系。
 	// <li>ipv6-cidr-block - String - （过滤条件）IPv6子网网段，形如: 2402:4e00:1717:8700::/64 。</li>
 	// <li>isp-type  - String - （过滤条件）运营商类型，形如: BGP 取值范围：'BGP'-默认, 'CMCC'-中国移动, 'CTCC'-中国电信, 'CUCC'-中国联通。</li>
+	// <li>address-type - String - （过滤条件）IPv6 Cidr 的类型，精确匹配。`GUA`(全球单播地址), `ULA`(唯一本地地址)。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -20967,10 +21465,10 @@ func (r *DetachClassicLinkVpcResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DetachNetworkInterfaceRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// CVM实例ID。形如：ins-r8hr2upy。
+	// CVM实例ID。形如：ins-r8hr2upy。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
@@ -20980,10 +21478,10 @@ type DetachNetworkInterfaceRequestParams struct {
 type DetachNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// CVM实例ID。形如：ins-r8hr2upy。
+	// CVM实例ID。形如：ins-r8hr2upy。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
@@ -21306,14 +21804,14 @@ func (r *DisableCcnRoutesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisableFlowLogsRequestParams struct {
-	// 流日志Id。
+	// 流日志Id。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogIds []*string `json:"FlowLogIds,omitnil,omitempty" name:"FlowLogIds"`
 }
 
 type DisableFlowLogsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 流日志Id。
+	// 流日志Id。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogIds []*string `json:"FlowLogIds,omitnil,omitempty" name:"FlowLogIds"`
 }
 
@@ -21975,20 +22473,20 @@ func (r *DisassociateNetworkAclSubnetsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisassociateNetworkInterfaceSecurityGroupsRequestParams struct {
-	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
-	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
+	// 安全组实例ID，例如：sg-33ocnj9n，可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。每次请求的实例的上限为100。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 }
 
 type DisassociateNetworkInterfaceSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
-	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
+	// 安全组实例ID，例如：sg-33ocnj9n，可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。每次请求的实例的上限为100。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 }
 
@@ -22320,14 +22818,14 @@ func (r *EnableCcnRoutesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type EnableFlowLogsRequestParams struct {
-	// 流日志Id。
+	// 流日志Id。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogIds []*string `json:"FlowLogIds,omitnil,omitempty" name:"FlowLogIds"`
 }
 
 type EnableFlowLogsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 流日志Id。
+	// 流日志Id。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogIds []*string `json:"FlowLogIds,omitnil,omitempty" name:"FlowLogIds"`
 }
 
@@ -22565,6 +23063,9 @@ type EnableVpcEndPointConnectRequestParams struct {
 	// 是否接受终端节点连接请求。
 	// <li> true：自动接受。</li> <li> false：不自动接受。</li>
 	AcceptFlag *bool `json:"AcceptFlag,omitnil,omitempty" name:"AcceptFlag"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type EnableVpcEndPointConnectRequest struct {
@@ -22579,6 +23080,9 @@ type EnableVpcEndPointConnectRequest struct {
 	// 是否接受终端节点连接请求。
 	// <li> true：自动接受。</li> <li> false：不自动接受。</li>
 	AcceptFlag *bool `json:"AcceptFlag,omitnil,omitempty" name:"AcceptFlag"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *EnableVpcEndPointConnectRequest) ToJsonString() string {
@@ -22596,6 +23100,7 @@ func (r *EnableVpcEndPointConnectRequest) FromJsonString(s string) error {
 	delete(f, "EndPointServiceId")
 	delete(f, "EndPointId")
 	delete(f, "AcceptFlag")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableVpcEndPointConnectRequest has unknown keys!", "")
 	}
@@ -22808,7 +23313,7 @@ type FilterObject struct {
 }
 
 type FlowLog struct {
-	// 私用网络ID或者统一ID，建议使用统一ID。
+	// 私用网络唯一ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/1108/43663)接口获取。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 流日志唯一ID。
@@ -22817,19 +23322,19 @@ type FlowLog struct {
 	// 流日志实例名字。
 	FlowLogName *string `json:"FlowLogName,omitnil,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN|NAT|DCG。
+	// 流日志所属资源类型：VPC(私有网络)，SUBNET（子网），NETWORKINTERFACE（网卡），CCN（云联网），NAT（网络地址转化），DCG（专线网关）。
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 流日志采集类型，ACCEPT|REJECT|ALL。
+	// 流日志采集类型，ACCEPT（允许），REJECT（拒绝），ALL（全部）。
 	TrafficType *string `json:"TrafficType,omitnil,omitempty" name:"TrafficType"`
 
 	// 流日志存储ID。
 	CloudLogId *string `json:"CloudLogId,omitnil,omitempty" name:"CloudLogId"`
 
-	// 流日志存储ID状态。
+	// 流日志存储ID状态。SUCCESS（成功），DELETED（删除）。
 	CloudLogState *string `json:"CloudLogState,omitnil,omitempty" name:"CloudLogState"`
 
 	// 流日志描述信息。
@@ -22845,15 +23350,12 @@ type FlowLog struct {
 	Enable *bool `json:"Enable,omitnil,omitempty" name:"Enable"`
 
 	// 消费端类型：cls、ckafka。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
 	// 消费端信息，当消费端类型为ckafka时返回。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FlowLogStorage *FlowLogStorage `json:"FlowLogStorage,omitnil,omitempty" name:"FlowLogStorage"`
 
 	// 流日志存储ID对应的地域信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CloudLogRegion *string `json:"CloudLogRegion,omitnil,omitempty" name:"CloudLogRegion"`
 }
 
@@ -22862,7 +23364,6 @@ type FlowLogStorage struct {
 	StorageId *string `json:"StorageId,omitnil,omitempty" name:"StorageId"`
 
 	// 主题Id，当流日志存储类型为ckafka时，必填。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageTopic *string `json:"StorageTopic,omitnil,omitempty" name:"StorageTopic"`
 }
 
@@ -23062,6 +23563,37 @@ func (r *GetCcnRegionBandwidthLimitsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type GlobalRoute struct {
+	// 作为出参展示，表示VPC唯一Id，。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 全局路由唯一Id。
+	GlobalRouteId *string `json:"GlobalRouteId,omitnil,omitempty" name:"GlobalRouteId"`
+
+	// Ipv4目标网段。
+	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
+
+	// 下一跳类型，支持 NORMAL_CVM。
+	GatewayType *string `json:"GatewayType,omitnil,omitempty" name:"GatewayType"`
+
+	// 下一跳对象，如果GatewayType类型是NORMAL_CVM填写子机IP。
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 备注。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 创建时间。
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
+
+	// 支持的 ECMP算法有：
+	// 
+	// - ECMP_QUINTUPLE_HASH：五元组hash
+	// - ECMP_SOURCE_DESTINATION_IP_HASH：源和目的IP hash
+	// - ECMP_DESTINATION_IP_HASH：目的IP hash
+	// - ECMP_SOURCE_IP_HASH：源IP hash。
+	SubnetRouteAlgorithm *string `json:"SubnetRouteAlgorithm,omitnil,omitempty" name:"SubnetRouteAlgorithm"`
+}
+
 type HaVip struct {
 	// `HAVIP`的`ID`，是`HAVIP`的唯一标识。
 	HaVipId *string `json:"HaVipId,omitnil,omitempty" name:"HaVipId"`
@@ -23099,23 +23631,18 @@ type HaVip struct {
 	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
 
 	// `HAVIP`的飘移范围。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HaVipAssociationSet []*HaVipAssociation `json:"HaVipAssociationSet,omitnil,omitempty" name:"HaVipAssociationSet"`
 
 	// 是否开启`HAVIP`的飘移范围校验。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CheckAssociate *bool `json:"CheckAssociate,omitnil,omitempty" name:"CheckAssociate"`
 
 	// CDC实例ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 
 	// HAVIP 刷新时间。该参数只作为出参数。以下场景会触发 FlushTime 被刷新：1）子机发出免费 ARP 触发 HAVIP 漂移；2）手动HAVIP解绑网卡; 没有更新时默认值：0000-00-00 00:00:00
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FlushedTime *string `json:"FlushedTime,omitnil,omitempty" name:"FlushedTime"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -23182,15 +23709,12 @@ func (r *HaVipAssociateAddressIpResponse) FromJsonString(s string) error {
 
 type HaVipAssociation struct {
 	// HaVip绑定的子机或网卡唯一ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// HaVip实例唯一ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HaVipId *string `json:"HaVipId,omitnil,omitempty" name:"HaVipId"`
 
 	// HaVip绑定的类型。取值:CVM, ENI。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 }
 
@@ -23272,69 +23796,53 @@ type HighPriorityModifyItem struct {
 
 type HighPriorityRoute struct {
 	// 高优路由表唯一 ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HighPriorityRouteTableId *string `json:"HighPriorityRouteTableId,omitnil,omitempty" name:"HighPriorityRouteTableId"`
 
 	// 高优路由表条目唯一 ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HighPriorityRouteId *string `json:"HighPriorityRouteId,omitnil,omitempty" name:"HighPriorityRouteId"`
 
 	// 目标网段
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
 
 	// 网关类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GatewayType *string `json:"GatewayType,omitnil,omitempty" name:"GatewayType"`
 
 	// 网关唯一ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 高优路由条目描述
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// ECMP算法，支持的算法有：ECMP_QUINTUPLE_HASH：五元组hash，ECMP_SOURCE_DESTINATION_IP_HASH：源和目的IP hash，ECMP_DESTINATION_IP_HASH：目的IP hash，ECMP_SOURCE_IP_HASH：源IP hash。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetRouteAlgorithm *string `json:"SubnetRouteAlgorithm,omitnil,omitempty" name:"SubnetRouteAlgorithm"`
 
 	// 出参展示，是否为CDC属性高优路由
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsCdc *bool `json:"IsCdc,omitnil,omitempty" name:"IsCdc"`
 
 	// 出参展示，CDC 唯一ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 }
 
 type HighPriorityRouteTable struct {
 	// 高优路由表唯一 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HighPriorityRouteTableId *string `json:"HighPriorityRouteTableId,omitnil,omitempty" name:"HighPriorityRouteTableId"`
 
 	// VPC实例ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 高优路由表名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 高优路由表关联的子网列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetSet []*string `json:"SubnetSet,omitnil,omitempty" name:"SubnetSet"`
 
 	// 高优路由表条目信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HighPriorityRouteSet []*HighPriorityRoute `json:"HighPriorityRouteSet,omitnil,omitempty" name:"HighPriorityRouteSet"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 }
 
@@ -23397,6 +23905,11 @@ type IPSECOptionsSpecification struct {
 
 	// 认证算法：可选值：'MD5', 'SHA1'，'SHA-256' 默认为
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
+}
+
+type ISPIPv6CidrBlock struct {
+	// IPv6 Cidr 的类型：`GUA`(全球单播地址), `ULA`(唯一本地地址)
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 }
 
 // Predefined struct for user
@@ -23955,6 +24468,14 @@ type InstanceChargePrepaid struct {
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 }
 
+type InstanceJumbo struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 实例是否支持巨帧。
+	JumboState *bool `json:"JumboState,omitnil,omitempty" name:"JumboState"`
+}
+
 type InstanceStatistic struct {
 	// 实例的类型
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
@@ -23973,11 +24494,9 @@ type InternetPriceDetail struct {
 	UnitPrice *float64 `json:"UnitPrice,omitnil,omitempty" name:"UnitPrice"`
 
 	// 折扣后的价格，单位：元。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiscountPrice *float64 `json:"DiscountPrice,omitnil,omitempty" name:"DiscountPrice"`
 
 	// 计价单元，可取值范围：<ul> <li>HOUR：表示计价单元是按每小时来计算。当前涉及该计价单元的场景有：流量按小时后付费（TRAFFIC_POSTPAID_BY_HOUR）、带宽按小时后付费（BANDWIDTH_POSTPAID_BY_HOUR）。</li></ul>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ChargeUnit *string `json:"ChargeUnit,omitnil,omitempty" name:"ChargeUnit"`
 
 	// 原价，单位：元，仅预付费价格查询返回。
@@ -24098,39 +24617,30 @@ type IpField struct {
 
 type IpGeolocationInfo struct {
 	// 国家信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Country *string `json:"Country,omitnil,omitempty" name:"Country"`
 
 	// 省、州、郡一级行政区域信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Province *string `json:"Province,omitnil,omitempty" name:"Province"`
 
 	// 市一级行政区域信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	City *string `json:"City,omitnil,omitempty" name:"City"`
 
 	// 市内区域信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 接入运营商信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Isp *string `json:"Isp,omitnil,omitempty" name:"Isp"`
 
 	// 骨干运营商名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AsName *string `json:"AsName,omitnil,omitempty" name:"AsName"`
 
 	// 骨干运营商AS号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AsId *string `json:"AsId,omitnil,omitempty" name:"AsId"`
 
 	// 注释信息。目前的填充值为移动接入用户的APN值，如无APN属性则为空
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
 	// IP地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AddressIp *string `json:"AddressIp,omitnil,omitempty" name:"AddressIp"`
 }
 
@@ -24141,7 +24651,7 @@ type Ipv6Address struct {
 	// 是否是主`IP`。
 	Primary *bool `json:"Primary,omitnil,omitempty" name:"Primary"`
 
-	// `EIP`实例`ID`，形如：`eip-hxlqja90`。
+	// `EIP`实例`ID`，形如：`eip-hxlqja90`。作为入参数时，可通过[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取。
 	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
 
 	// 描述信息。
@@ -24158,11 +24668,9 @@ type Ipv6Address struct {
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
 	// 如果 IPv6地址是 ULA 类型，绑定的公网IP地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PublicIpAddress *string `json:"PublicIpAddress,omitnil,omitempty" name:"PublicIpAddress"`
 
-	// `IPv6`地址的类型: `GUA`, `OTHER`, `ULA`
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// `IPv6`地址的类型: `GUA`(全球单播地址), `ULA`(唯一本地地址)
 	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 }
 
@@ -24232,7 +24740,6 @@ type LocalGateway struct {
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 标签键值对。	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// 本地网关实例ID（计划起用）
@@ -24353,33 +24860,101 @@ type MemberInfo struct {
 }
 
 // Predefined struct for user
+type MigrateBandwidthPackageResourcesRequestParams struct {
+	// 当前资源所在的共享带宽包ID
+	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
+
+	// 要迁移的目标共享带宽包的ID
+	TargetBandwidthPackageId *string `json:"TargetBandwidthPackageId,omitnil,omitempty" name:"TargetBandwidthPackageId"`
+
+	// 要迁移的资源的ID列表
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
+}
+
+type MigrateBandwidthPackageResourcesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 当前资源所在的共享带宽包ID
+	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
+
+	// 要迁移的目标共享带宽包的ID
+	TargetBandwidthPackageId *string `json:"TargetBandwidthPackageId,omitnil,omitempty" name:"TargetBandwidthPackageId"`
+
+	// 要迁移的资源的ID列表
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
+}
+
+func (r *MigrateBandwidthPackageResourcesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *MigrateBandwidthPackageResourcesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "BandwidthPackageId")
+	delete(f, "TargetBandwidthPackageId")
+	delete(f, "ResourceIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "MigrateBandwidthPackageResourcesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type MigrateBandwidthPackageResourcesResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type MigrateBandwidthPackageResourcesResponse struct {
+	*tchttp.BaseResponse
+	Response *MigrateBandwidthPackageResourcesResponseParams `json:"Response"`
+}
+
+func (r *MigrateBandwidthPackageResourcesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *MigrateBandwidthPackageResourcesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type MigrateNetworkInterfaceRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 弹性网卡当前绑定的CVM实例ID。形如：ins-r8hr2upy。
+	// 弹性网卡当前绑定的CVM实例ID。形如：ins-r8hr2upy。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	SourceInstanceId *string `json:"SourceInstanceId,omitnil,omitempty" name:"SourceInstanceId"`
 
-	// 待迁移的目的CVM实例ID。
+	// 待迁移的目的CVM实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	DestinationInstanceId *string `json:"DestinationInstanceId,omitnil,omitempty" name:"DestinationInstanceId"`
 
-	// 网卡绑定类型：0 标准型 1 扩展型。
+	// 网卡绑定类型：0 标准型 1 扩展型。默认：0。
 	AttachType *uint64 `json:"AttachType,omitnil,omitempty" name:"AttachType"`
 }
 
 type MigrateNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 弹性网卡当前绑定的CVM实例ID。形如：ins-r8hr2upy。
+	// 弹性网卡当前绑定的CVM实例ID。形如：ins-r8hr2upy。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	SourceInstanceId *string `json:"SourceInstanceId,omitnil,omitempty" name:"SourceInstanceId"`
 
-	// 待迁移的目的CVM实例ID。
+	// 待迁移的目的CVM实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	DestinationInstanceId *string `json:"DestinationInstanceId,omitnil,omitempty" name:"DestinationInstanceId"`
 
-	// 网卡绑定类型：0 标准型 1 扩展型。
+	// 网卡绑定类型：0 标准型 1 扩展型。默认：0。
 	AttachType *uint64 `json:"AttachType,omitnil,omitempty" name:"AttachType"`
 }
 
@@ -24429,10 +25004,10 @@ func (r *MigrateNetworkInterfaceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type MigratePrivateIpAddressRequestParams struct {
-	// 当内网IP绑定的弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 当内网IP绑定的弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	SourceNetworkInterfaceId *string `json:"SourceNetworkInterfaceId,omitnil,omitempty" name:"SourceNetworkInterfaceId"`
 
-	// 待迁移的目的弹性网卡实例ID。
+	// 待迁移的目的弹性网卡实例ID。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	DestinationNetworkInterfaceId *string `json:"DestinationNetworkInterfaceId,omitnil,omitempty" name:"DestinationNetworkInterfaceId"`
 
 	// 迁移的内网IP地址，例如：10.0.0.6。
@@ -24442,10 +25017,10 @@ type MigratePrivateIpAddressRequestParams struct {
 type MigratePrivateIpAddressRequest struct {
 	*tchttp.BaseRequest
 	
-	// 当内网IP绑定的弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 当内网IP绑定的弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	SourceNetworkInterfaceId *string `json:"SourceNetworkInterfaceId,omitnil,omitempty" name:"SourceNetworkInterfaceId"`
 
-	// 待迁移的目的弹性网卡实例ID。
+	// 待迁移的目的弹性网卡实例ID。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	DestinationNetworkInterfaceId *string `json:"DestinationNetworkInterfaceId,omitnil,omitempty" name:"DestinationNetworkInterfaceId"`
 
 	// 迁移的内网IP地址，例如：10.0.0.6。
@@ -24999,8 +25574,13 @@ type ModifyBandwidthPackageAttributeRequestParams struct {
 	// 带宽包名称
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitnil,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包计费模式，示例 ：
-	// 'TOP5_POSTPAID_BY_MONTH'（后付费-TOP5计费）
+	// 带宽包计费模式，可选值:
+	// <li>ENHANCED95_POSTPAID_BY_MONTH: 后付费-增强型95计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费-按主流量计费</li>
+	// <li>BANDWIDTH_POSTPAID_BY_DAY: 常规BGP-后付费-按带宽计费</li>
+	// <li>FIXED_PREPAID_BY_MONTH: 常规BGP-预付费</li>
+	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 静态单线-后付费-按日结算</li>
+	// <li>TOP5_POSTPAID_BY_MONTH: 后付费-TOP5计费，如需使用，请提交工单申请</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 }
 
@@ -25013,8 +25593,13 @@ type ModifyBandwidthPackageAttributeRequest struct {
 	// 带宽包名称
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitnil,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包计费模式，示例 ：
-	// 'TOP5_POSTPAID_BY_MONTH'（后付费-TOP5计费）
+	// 带宽包计费模式，可选值:
+	// <li>ENHANCED95_POSTPAID_BY_MONTH: 后付费-增强型95计费</li>
+	// <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费-按主流量计费</li>
+	// <li>BANDWIDTH_POSTPAID_BY_DAY: 常规BGP-后付费-按带宽计费</li>
+	// <li>FIXED_PREPAID_BY_MONTH: 常规BGP-预付费</li>
+	// <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 静态单线-后付费-按日结算</li>
+	// <li>TOP5_POSTPAID_BY_MONTH: 后付费-TOP5计费，如需使用，请提交工单申请</li>
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 }
 
@@ -25063,20 +25648,20 @@ func (r *ModifyBandwidthPackageAttributeResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type ModifyBandwidthPackageBandwidthRequestParams struct {
-	// 带宽包限速大小。单位：Mbps。
+	// 带宽包限速大小。单位：Mbps。带宽包计费类型对应的带宽上下限可参考：[BandwidthRange](https://cloud.tencent.com/document/api/215/15824#BandwidthRange) 
 	InternetMaxBandwidth *int64 `json:"InternetMaxBandwidth,omitnil,omitempty" name:"InternetMaxBandwidth"`
 
-	// 共享带宽包ID
+	// 共享带宽包ID，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 }
 
 type ModifyBandwidthPackageBandwidthRequest struct {
 	*tchttp.BaseRequest
 	
-	// 带宽包限速大小。单位：Mbps。
+	// 带宽包限速大小。单位：Mbps。带宽包计费类型对应的带宽上下限可参考：[BandwidthRange](https://cloud.tencent.com/document/api/215/15824#BandwidthRange) 
 	InternetMaxBandwidth *int64 `json:"InternetMaxBandwidth,omitnil,omitempty" name:"InternetMaxBandwidth"`
 
-	// 共享带宽包ID
+	// 共享带宽包ID，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 }
 
@@ -25688,32 +26273,32 @@ func (r *ModifyDirectConnectGatewayAttributeResponse) FromJsonString(s string) e
 
 // Predefined struct for user
 type ModifyFlowLogAttributeRequestParams struct {
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 
-	// 私用网络ID或者统一ID，建议使用统一ID，修改云联网流日志属性时可不填，其他流日志类型必填。
+	// 私用网络唯一ID。修改云联网流日志属性时可不填，其他流日志类型必填。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 流日志实例名字。
+	// 流日志实例名字。长度为不超过60字节。
 	FlowLogName *string `json:"FlowLogName,omitnil,omitempty" name:"FlowLogName"`
 
-	// 流日志实例描述。
+	// 流日志实例描述。长度为不超过512字节。
 	FlowLogDescription *string `json:"FlowLogDescription,omitnil,omitempty" name:"FlowLogDescription"`
 }
 
 type ModifyFlowLogAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 流日志唯一ID。
+	// 流日志唯一ID。可通过[CreateFlowLog](https://cloud.tencent.com/document/product/215/35015)接口创建；可通过[DescribeFlowLogs](https://cloud.tencent.com/document/product/215/35012)接口获取。
 	FlowLogId *string `json:"FlowLogId,omitnil,omitempty" name:"FlowLogId"`
 
-	// 私用网络ID或者统一ID，建议使用统一ID，修改云联网流日志属性时可不填，其他流日志类型必填。
+	// 私用网络唯一ID。修改云联网流日志属性时可不填，其他流日志类型必填。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 流日志实例名字。
+	// 流日志实例名字。长度为不超过60字节。
 	FlowLogName *string `json:"FlowLogName,omitnil,omitempty" name:"FlowLogName"`
 
-	// 流日志实例描述。
+	// 流日志实例描述。长度为不超过512字节。
 	FlowLogDescription *string `json:"FlowLogDescription,omitnil,omitempty" name:"FlowLogDescription"`
 }
 
@@ -25832,6 +26417,142 @@ func (r *ModifyGatewayFlowQosResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyGatewayFlowQosResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGlobalRouteECMPAlgorithmRequestParams struct {
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// Ipv4目标网段。
+	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
+
+	// 支持的 ECMP算法有：ECMP_QUINTUPLE_HASH：五元组hash，ECMP_SOURCE_DESTINATION_IP_HASH：源和目的IP hash，ECMP_DESTINATION_IP_HASH：目的IP hash，ECMP_SOURCE_IP_HASH：源IP hash。
+	SubnetRouteAlgorithm *string `json:"SubnetRouteAlgorithm,omitnil,omitempty" name:"SubnetRouteAlgorithm"`
+
+	// CDC 集群唯一 ID。
+	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+}
+
+type ModifyGlobalRouteECMPAlgorithmRequest struct {
+	*tchttp.BaseRequest
+	
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// Ipv4目标网段。
+	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
+
+	// 支持的 ECMP算法有：ECMP_QUINTUPLE_HASH：五元组hash，ECMP_SOURCE_DESTINATION_IP_HASH：源和目的IP hash，ECMP_DESTINATION_IP_HASH：目的IP hash，ECMP_SOURCE_IP_HASH：源IP hash。
+	SubnetRouteAlgorithm *string `json:"SubnetRouteAlgorithm,omitnil,omitempty" name:"SubnetRouteAlgorithm"`
+
+	// CDC 集群唯一 ID。
+	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+}
+
+func (r *ModifyGlobalRouteECMPAlgorithmRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGlobalRouteECMPAlgorithmRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "DestinationCidrBlock")
+	delete(f, "SubnetRouteAlgorithm")
+	delete(f, "CdcId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGlobalRouteECMPAlgorithmRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGlobalRouteECMPAlgorithmResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGlobalRouteECMPAlgorithmResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGlobalRouteECMPAlgorithmResponseParams `json:"Response"`
+}
+
+func (r *ModifyGlobalRouteECMPAlgorithmResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGlobalRouteECMPAlgorithmResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGlobalRoutesRequestParams struct {
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 全局路由对象。仅支持修改：'Description'，其他字段暂不支持。
+	GlobalRoutes []*GlobalRoute `json:"GlobalRoutes,omitnil,omitempty" name:"GlobalRoutes"`
+}
+
+type ModifyGlobalRoutesRequest struct {
+	*tchttp.BaseRequest
+	
+	// VPC唯一Id。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 全局路由对象。仅支持修改：'Description'，其他字段暂不支持。
+	GlobalRoutes []*GlobalRoute `json:"GlobalRoutes,omitnil,omitempty" name:"GlobalRoutes"`
+}
+
+func (r *ModifyGlobalRoutesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGlobalRoutesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "GlobalRoutes")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGlobalRoutesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGlobalRoutesResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGlobalRoutesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGlobalRoutesResponseParams `json:"Response"`
+}
+
+func (r *ModifyGlobalRoutesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGlobalRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -26417,7 +27138,7 @@ func (r *ModifyIp6TranslatorResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyIpv6AddressesAttributeRequestParams struct {
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。
+	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IPv6地址信息。
@@ -26427,7 +27148,7 @@ type ModifyIpv6AddressesAttributeRequestParams struct {
 type ModifyIpv6AddressesAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。
+	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IPv6地址信息。
@@ -27078,7 +27799,7 @@ func (r *ModifyNetworkAclQuintupleEntriesResponse) FromJsonString(s string) erro
 
 // Predefined struct for user
 type ModifyNetworkInterfaceAttributeRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-pxir56ns。
+	// 弹性网卡实例ID，例如：eni-pxir56ns。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 弹性网卡名称，最大长度不能超过60个字节。
@@ -27087,7 +27808,7 @@ type ModifyNetworkInterfaceAttributeRequestParams struct {
 	// 弹性网卡描述，可任意命名，但不得超过60个字符。
 	NetworkInterfaceDescription *string `json:"NetworkInterfaceDescription,omitnil,omitempty" name:"NetworkInterfaceDescription"`
 
-	// 指定绑定的安全组，例如:['sg-1dd51d']。
+	// 指定绑定的安全组，例如:['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。
@@ -27097,7 +27818,7 @@ type ModifyNetworkInterfaceAttributeRequestParams struct {
 type ModifyNetworkInterfaceAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-pxir56ns。
+	// 弹性网卡实例ID，例如：eni-pxir56ns。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 弹性网卡名称，最大长度不能超过60个字节。
@@ -27106,7 +27827,7 @@ type ModifyNetworkInterfaceAttributeRequest struct {
 	// 弹性网卡描述，可任意命名，但不得超过60个字符。
 	NetworkInterfaceDescription *string `json:"NetworkInterfaceDescription,omitnil,omitempty" name:"NetworkInterfaceDescription"`
 
-	// 指定绑定的安全组，例如:['sg-1dd51d']。
+	// 指定绑定的安全组，例如:['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。
@@ -27160,26 +27881,26 @@ func (r *ModifyNetworkInterfaceAttributeResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type ModifyNetworkInterfaceQosRequestParams struct {
-	// 弹性网卡ID，支持批量修改。
+	// 弹性网卡ID，支持批量修改。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
-	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// 服务质量，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// DirectSend端口范围最大值。
+	// DirectSend端口范围最大值。最大值: 65535。
 	DirectSendMaxPort *uint64 `json:"DirectSendMaxPort,omitnil,omitempty" name:"DirectSendMaxPort"`
 }
 
 type ModifyNetworkInterfaceQosRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡ID，支持批量修改。
+	// 弹性网卡ID，支持批量修改。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitnil,omitempty" name:"NetworkInterfaceIds"`
 
-	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// 服务质量，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// DirectSend端口范围最大值。
+	// DirectSend端口范围最大值。最大值: 65535。
 	DirectSendMaxPort *uint64 `json:"DirectSendMaxPort,omitnil,omitempty" name:"DirectSendMaxPort"`
 }
 
@@ -27228,7 +27949,7 @@ func (r *ModifyNetworkInterfaceQosResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyPrivateIpAddressesAttributeRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IP信息。
@@ -27238,7 +27959,7 @@ type ModifyPrivateIpAddressesAttributeRequestParams struct {
 type ModifyPrivateIpAddressesAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IP信息。
@@ -28410,6 +29131,9 @@ type ModifyVpcEndPointAttributeRequestParams struct {
 
 	// 安全组ID列表。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type ModifyVpcEndPointAttributeRequest struct {
@@ -28423,6 +29147,9 @@ type ModifyVpcEndPointAttributeRequest struct {
 
 	// 安全组ID列表。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *ModifyVpcEndPointAttributeRequest) ToJsonString() string {
@@ -28440,6 +29167,7 @@ func (r *ModifyVpcEndPointAttributeRequest) FromJsonString(s string) error {
 	delete(f, "EndPointId")
 	delete(f, "EndPointName")
 	delete(f, "SecurityGroupIds")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpcEndPointAttributeRequest has unknown keys!", "")
 	}
@@ -28484,6 +29212,9 @@ type ModifyVpcEndPointServiceAttributeRequestParams struct {
 
 	// 后端服务的ID，比如lb-xxx。
 	ServiceInstanceId *string `json:"ServiceInstanceId,omitnil,omitempty" name:"ServiceInstanceId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 type ModifyVpcEndPointServiceAttributeRequest struct {
@@ -28503,6 +29234,9 @@ type ModifyVpcEndPointServiceAttributeRequest struct {
 
 	// 后端服务的ID，比如lb-xxx。
 	ServiceInstanceId *string `json:"ServiceInstanceId,omitnil,omitempty" name:"ServiceInstanceId"`
+
+	// 协议类型，支持 Ipv4，Ipv6，默认 Ipv4。
+	IpAddressType *string `json:"IpAddressType,omitnil,omitempty" name:"IpAddressType"`
 }
 
 func (r *ModifyVpcEndPointServiceAttributeRequest) ToJsonString() string {
@@ -28522,6 +29256,7 @@ func (r *ModifyVpcEndPointServiceAttributeRequest) FromJsonString(s string) erro
 	delete(f, "EndPointServiceName")
 	delete(f, "AutoAcceptFlag")
 	delete(f, "ServiceInstanceId")
+	delete(f, "IpAddressType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpcEndPointServiceAttributeRequest has unknown keys!", "")
 	}
@@ -28739,6 +29474,9 @@ type ModifyVpnConnectionAttributeRequestParams struct {
 
 	// 健康检查配置
 	HealthCheckConfig *HealthCheckConfig `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
+
+	// BGP隧道配置
+	BgpConfig *BgpConfig `json:"BgpConfig,omitnil,omitempty" name:"BgpConfig"`
 }
 
 type ModifyVpnConnectionAttributeRequest struct {
@@ -28788,6 +29526,9 @@ type ModifyVpnConnectionAttributeRequest struct {
 
 	// 健康检查配置
 	HealthCheckConfig *HealthCheckConfig `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
+
+	// BGP隧道配置
+	BgpConfig *BgpConfig `json:"BgpConfig,omitnil,omitempty" name:"BgpConfig"`
 }
 
 func (r *ModifyVpnConnectionAttributeRequest) ToJsonString() string {
@@ -28817,6 +29558,7 @@ func (r *ModifyVpnConnectionAttributeRequest) FromJsonString(s string) error {
 	delete(f, "DpdAction")
 	delete(f, "CustomerGatewayId")
 	delete(f, "HealthCheckConfig")
+	delete(f, "BgpConfig")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpnConnectionAttributeRequest has unknown keys!", "")
 	}
@@ -29380,6 +30122,29 @@ type NatGatewayDestinationIpPortTranslationNatRule struct {
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 }
 
+type NatGatewayFlowMonitorDetail struct {
+	// 来源`IP`。
+	PrivateIpAddress *string `json:"PrivateIpAddress,omitnil,omitempty" name:"PrivateIpAddress"`
+
+	// 入包量。
+	InPkg *uint64 `json:"InPkg,omitnil,omitempty" name:"InPkg"`
+
+	// 出包量。
+	OutPkg *uint64 `json:"OutPkg,omitnil,omitempty" name:"OutPkg"`
+
+	// 入流量，单位：`Byte`。
+	InTraffic *uint64 `json:"InTraffic,omitnil,omitempty" name:"InTraffic"`
+
+	// 出流量，单位：`Byte`。
+	OutTraffic *uint64 `json:"OutTraffic,omitnil,omitempty" name:"OutTraffic"`
+
+	// 并发连接数。仅标准型nat支持此参数。
+	ConcurrentConnectionCount *uint64 `json:"ConcurrentConnectionCount,omitnil,omitempty" name:"ConcurrentConnectionCount"`
+
+	// 新建连接速率。仅标准型nat支持此参数。
+	NewConnectionRate *uint64 `json:"NewConnectionRate,omitnil,omitempty" name:"NewConnectionRate"`
+}
+
 type NatRegionInfoWithArea struct {
 
 }
@@ -29526,11 +30291,9 @@ type NetworkAclEntry struct {
 	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
 
 	// IPv4网络ACL条目唯一ID。当修改ACL条目时，NetworkAclIpv4EntryId和NetworkAclIpv6EntryID至少提供一个。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetworkAclIpv4EntryId *string `json:"NetworkAclIpv4EntryId,omitnil,omitempty" name:"NetworkAclIpv4EntryId"`
 
 	// IPv6网络ACL条目唯一ID。当修改ACL条目时，NetworkAclIpv4EntryId和NetworkAclIpv6EntryId至少提供一个。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetworkAclIpv6EntryId *string `json:"NetworkAclIpv6EntryId,omitnil,omitempty" name:"NetworkAclIpv6EntryId"`
 }
 
@@ -29637,7 +30400,7 @@ type NetworkInterface struct {
 	// 可用区。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 创建时间。
+	// 创建时间。格式：YYYY-MM-DD hh:mm:ss。示例值：2020-10-28 08:23:59
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// `IPv6`地址列表。
@@ -29646,10 +30409,10 @@ type NetworkInterface struct {
 	// 标签键值对。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
-	// 网卡类型。0 - 弹性网卡；1 - evm弹性网卡。
+	// 网卡类型。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡
 	EniType *uint64 `json:"EniType,omitnil,omitempty" name:"EniType"`
 
-	// 网卡绑定的子机类型：cvm，eks。
+	// 网卡绑定的子机类型：cvm（普通CVM子机），eks（弹性容器服务Elastic Kubernetes Service）， hai（高性能应用服务Hyper Application Inventor）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
 
@@ -29666,10 +30429,10 @@ type NetworkInterface struct {
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 服务质量级别：
-	// <li>`DEFAULT`：默认</li>
-	// <li>`PT`：云金</li>
-	// <li>`AU`：云银</li>
-	// <li>`AG`：云铜</li>
+	// PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// 
+	// 可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 }
@@ -29810,19 +30573,15 @@ type PeerConnection struct {
 
 type PolicyStatistics struct {
 	// 入站IPv4总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IngressIPv4TotalCount *uint64 `json:"IngressIPv4TotalCount,omitnil,omitempty" name:"IngressIPv4TotalCount"`
 
 	// 入站IPv6总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IngressIPv6TotalCount *uint64 `json:"IngressIPv6TotalCount,omitnil,omitempty" name:"IngressIPv6TotalCount"`
 
 	// 出站IPv4总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EgressIPv4TotalCount *uint64 `json:"EgressIPv4TotalCount,omitnil,omitempty" name:"EgressIPv4TotalCount"`
 
 	// 出站IPv6总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EgressIPv6TotalCount *uint64 `json:"EgressIPv6TotalCount,omitnil,omitempty" name:"EgressIPv6TotalCount"`
 }
 
@@ -29860,7 +30619,7 @@ type PrivateIpAddressSpecification struct {
 	// AVAILABLE：可用的
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// IP服务质量等级，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
+	// IP服务质量等级，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 }
 
@@ -29985,6 +30744,11 @@ type Quota struct {
 	// - `TOTAL_EIP6_QUOTA`：用户当前地域下，传统弹性公网IPv6的配额数；
 	// - `BGP_EIPv6_QUOTA`：用户当前地域下，可申请的 BGP 弹性公网IPv6 的配额数；
 	// - `SINGLEISP_EIPv6_QUOTA`：用户当前地域下，可申请的静态单线弹性公网IPv6 的配额数；
+	// - `TOTAL_BANDWIDTHPKG_QUOTA`：用户当前地域下，可申请的带宽包总配额；
+	// - `PRIMARY_TRAFFIC_SINGLE_BWP_QUOTA`：用户当前地域下，可申请的静态单线主流量带宽包配额数；
+	// - `PRIMARY_TRAFFIC_BGP_BWP_QUOTA`：用户当前地域下，可申请的BGP主流量带宽包配额数；
+	// - `BandwidthGuaranteedRatio`：用户当前地域下，保底带宽包默认保底比例；
+	// - `TezBandwidthGuaranteedRatio`：用户当前地域下，边缘可用区保底带宽包默认保底比例；
 	QuotaId *string `json:"QuotaId,omitnil,omitempty" name:"QuotaId"`
 
 	// 当前数量
@@ -29994,7 +30758,6 @@ type Quota struct {
 	QuotaLimit *int64 `json:"QuotaLimit,omitnil,omitempty" name:"QuotaLimit"`
 
 	// 配额所属的网络组
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	QuotaGroup *string `json:"QuotaGroup,omitnil,omitempty" name:"QuotaGroup"`
 }
 
@@ -30369,27 +31132,31 @@ func (r *ReleaseIp6AddressesBandwidthResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RemoveBandwidthPackageResourcesRequestParams struct {
-	// 带宽包唯一标识ID，形如'bwp-xxxx'
+	// 资源唯一ID，当前支持EIP资源和LB资源，形如'eip-xxxx', 'lb-xxxx'。EIP资源列表可通过[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取，LB资源列表可通过[DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)接口获取。
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
+
+	// 带宽包唯一标识ID，形如'bwp-xxxx'，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 资源类型，包括‘Address’, ‘LoadBalance’
+	// 资源类型，可选值：
+	// <li>Address：弹性公网IP</li>
+	// <li>LoadBalance：负载均衡</li>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
-
-	// 资源ID，可支持资源形如'eip-xxxx', 'lb-xxxx'
-	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 }
 
 type RemoveBandwidthPackageResourcesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 带宽包唯一标识ID，形如'bwp-xxxx'
+	// 资源唯一ID，当前支持EIP资源和LB资源，形如'eip-xxxx', 'lb-xxxx'。EIP资源列表可通过[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取，LB资源列表可通过[DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)接口获取。
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
+
+	// 带宽包唯一标识ID，形如'bwp-xxxx'，可以使用[DescribeBandwidthPackages](https://cloud.tencent.com/document/product/215/19209)接口查询BandwidthPackageId。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 资源类型，包括‘Address’, ‘LoadBalance’
+	// 资源类型，可选值：
+	// <li>Address：弹性公网IP</li>
+	// <li>LoadBalance：负载均衡</li>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
-
-	// 资源ID，可支持资源形如'eip-xxxx', 'lb-xxxx'
-	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 }
 
 func (r *RemoveBandwidthPackageResourcesRequest) ToJsonString() string {
@@ -30404,9 +31171,9 @@ func (r *RemoveBandwidthPackageResourcesRequest) FromJsonString(s string) error 
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	delete(f, "ResourceIds")
 	delete(f, "BandwidthPackageId")
 	delete(f, "ResourceType")
-	delete(f, "ResourceIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveBandwidthPackageResourcesRequest has unknown keys!", "")
 	}
@@ -32195,11 +32962,9 @@ type RouteConflict struct {
 
 type RouteECMPAlgorithm struct {
 	//  目标网段
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
 
 	// 支持的 ECMP算法有：ECMP_QUINTUPLE_HASH：五元组hash，ECMP_SOURCE_DESTINATION_IP_HASH：源和目的IP hash，ECMP_DESTINATION_IP_HASH：目的IP hash，ECMP_SOURCE_IP_HASH：源IP hash。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetRouteAlgorithm *string `json:"SubnetRouteAlgorithm,omitnil,omitempty" name:"SubnetRouteAlgorithm"`
 }
 
@@ -32258,17 +33023,14 @@ type RouteTable struct {
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// local路由是否发布云联网。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalCidrForCcn []*CidrForCcn `json:"LocalCidrForCcn,omitnil,omitempty" name:"LocalCidrForCcn"`
 }
 
 type RouteTableAssociation struct {
 	// 子网实例ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 路由表实例ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 }
 
@@ -32295,7 +33057,6 @@ type SecurityGroup struct {
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// 安全组更新时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
@@ -32353,66 +33114,51 @@ type SecurityGroupLimitSet struct {
 
 type SecurityGroupPolicy struct {
 	// 安全组规则索引号，值会随着安全组规则的变更动态变化。使用PolicyIndex时，请先调用`DescribeSecurityGroupPolicies`获取到规则的PolicyIndex，并且结合返回值中的Version一起使用处理规则。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyIndex *int64 `json:"PolicyIndex,omitnil,omitempty" name:"PolicyIndex"`
 
 	// 协议, 取值: TCP,UDP,ICMP,ICMPv6,ALL。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 端口(all, 离散port,  range)。
 	// 说明：如果Protocol设置为ALL，则Port也需要设置为all。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Port *string `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 协议端口ID或者协议端口组ID。ServiceTemplate和Protocol+Port互斥。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceTemplate *ServiceTemplateSpecification `json:"ServiceTemplate,omitnil,omitempty" name:"ServiceTemplate"`
 
 	// 网段或IP(互斥)，特殊说明：0.0.0.0/n 都会映射为0.0.0.0/0。作为入参时，可使用字符串`MY_PUBLIC_IP`指代发起请求的公网IP地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
 	// 网段或IPv6(互斥)。作为入参时，可使用字符串`MY_PUBLIC_IP`指代发起请求的公网IPv6地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
 
 	// 安全组实例ID，例如：sg-ohuuioma。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 
 	// IP地址ID或者IP地址组ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AddressTemplate *AddressTemplateSpecification `json:"AddressTemplate,omitnil,omitempty" name:"AddressTemplate"`
 
 	// ACCEPT 或 DROP。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
 	// 安全组规则描述。作为入参时，当未传递该参数或值为空，且参数CidrBlock或Ipv6CidrBlock值为MY_PUBLIC_IP时，该参数的值将会被自动填充为Replaced-From-MY_PUBLIC_IP。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyDescription *string `json:"PolicyDescription,omitnil,omitempty" name:"PolicyDescription"`
 
 	// 安全组最近修改时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
 }
 
 type SecurityGroupPolicySet struct {
 	// 安全组规则当前版本。用户每次更新安全规则版本会自动加1，防止更新的路由规则已过期，不填不考虑冲突。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
 
 	// 出站规则。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Egress []*SecurityGroupPolicy `json:"Egress,omitnil,omitempty" name:"Egress"`
 
 	// 入站规则。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ingress []*SecurityGroupPolicy `json:"Ingress,omitnil,omitempty" name:"Ingress"`
 
 	// 安全组策略条目统计。只用于出参。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyStatistics *PolicyStatistics `json:"PolicyStatistics,omitnil,omitempty" name:"PolicyStatistics"`
 }
 
@@ -33014,11 +33760,9 @@ type Subnet struct {
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// CDC实例ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 
 	// 是否是CDC所属子网。0:否 1:是
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsCdcSubnet *int64 `json:"IsCdcSubnet,omitnil,omitempty" name:"IsCdcSubnet"`
 }
 
@@ -33075,11 +33819,9 @@ type TrafficFlow struct {
 	Value *uint64 `json:"Value,omitnil,omitempty" name:"Value"`
 
 	// 格式化后的流量，单位见参数 FormatUnit
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FormatValue *float64 `json:"FormatValue,omitnil,omitempty" name:"FormatValue"`
 
 	// 格式化后流量的单位
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FormatUnit *string `json:"FormatUnit,omitnil,omitempty" name:"FormatUnit"`
 }
 
@@ -33118,15 +33860,12 @@ type TrafficMirror struct {
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 流量镜像的类型。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 流量镜像所属的子网ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 流量镜接收目标资源信息，当接收目标为ENI和CLB时返回。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TargetInfo []*TrafficMirrorTargetResourceInfo `json:"TargetInfo,omitnil,omitempty" name:"TargetInfo"`
 }
 
@@ -33155,11 +33894,9 @@ type TrafficMirrorTarget struct {
 	AlgHash *string `json:"AlgHash,omitnil,omitempty" name:"AlgHash"`
 
 	// 流量镜像的接收endpoint（公网IP）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TargetEndPoints []*string `json:"TargetEndPoints,omitnil,omitempty" name:"TargetEndPoints"`
 
 	// 流量镜像的接收类型，分别为：IP/ENI/CLB
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 }
 
@@ -33176,7 +33913,6 @@ type TrafficPackage struct {
 	TrafficPackageId *string `json:"TrafficPackageId,omitnil,omitempty" name:"TrafficPackageId"`
 
 	// 流量包名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrafficPackageName *string `json:"TrafficPackageName,omitnil,omitempty" name:"TrafficPackageName"`
 
 	// 流量包总量，单位GB
@@ -33198,7 +33934,6 @@ type TrafficPackage struct {
 	UsedAmount *float64 `json:"UsedAmount,omitnil,omitempty" name:"UsedAmount"`
 
 	// 流量包标签
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// 区分闲时流量包与全时流量包
@@ -33378,7 +34113,7 @@ type TranslationNatRuleInput struct {
 
 // Predefined struct for user
 type UnassignIpv6AddressesRequestParams struct {
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。
+	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的`IPv6`地址列表，单次最多指定10个。
@@ -33388,7 +34123,7 @@ type UnassignIpv6AddressesRequestParams struct {
 type UnassignIpv6AddressesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。
+	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的`IPv6`地址列表，单次最多指定10个。
@@ -33561,26 +34296,26 @@ func (r *UnassignIpv6SubnetCidrBlockResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UnassignPrivateIpAddressesRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IP信息，单次最多指定10个。
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 网卡绑定的子机实例ID，该参数仅用于指定网卡退还IP并解绑子机的场景，如果不涉及解绑子机，请勿填写。
+	// 网卡绑定的子机实例ID，该参数仅用于指定网卡退还IP并解绑子机的场景，如果不涉及解绑子机，请勿填写。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type UnassignPrivateIpAddressesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。
+	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
 	// 指定的内网IP信息，单次最多指定10个。
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 网卡绑定的子机实例ID，该参数仅用于指定网卡退还IP并解绑子机的场景，如果不涉及解绑子机，请勿填写。
+	// 网卡绑定的子机实例ID，该参数仅用于指定网卡退还IP并解绑子机的场景，如果不涉及解绑子机，请勿填写。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -33880,7 +34615,6 @@ type UsedDetail struct {
 	TrafficPackageId *string `json:"TrafficPackageId,omitnil,omitempty" name:"TrafficPackageId"`
 
 	// 流量包名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrafficPackageName *string `json:"TrafficPackageName,omitnil,omitempty" name:"TrafficPackageName"`
 
 	// 流量包总量
@@ -33948,6 +34682,10 @@ type Vpc struct {
 	// 辅助CIDR
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AssistantCidrSet []*AssistantCidr `json:"AssistantCidrSet,omitnil,omitempty" name:"AssistantCidrSet"`
+
+	// 返回多运营商IPv6 Cidr Block
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ipv6CidrBlockSet []*ISPIPv6CidrBlock `json:"Ipv6CidrBlockSet,omitnil,omitempty" name:"Ipv6CidrBlockSet"`
 }
 
 type VpcEndPointServiceUser struct {
@@ -34005,11 +34743,9 @@ type VpcPrivateIpAddress struct {
 
 type VpcTaskResultDetailInfo struct {
 	// 资源ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 状态。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
