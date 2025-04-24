@@ -19,6 +19,7 @@ data "tencentcloud_kms_keys" "example" {
   key_state        = 0
   origin           = "TENCENT_KMS"
   key_usage        = "ALL"
+  hsm_cluster_id   = "cls-hsm-mwpd9cjm"
 }
 ```
 

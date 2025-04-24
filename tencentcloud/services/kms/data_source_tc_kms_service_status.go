@@ -88,12 +88,12 @@ func DataSourceTencentCloudKmsServiceStatus() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"hsm_cluster_id": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Exclusive cluster ID.",
 						},
 						"hsm_cluster_name": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Exclusive cluster name.",
 						},
