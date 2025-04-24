@@ -2,7 +2,6 @@ package postgresql
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -24,32 +23,34 @@ func ResourceTencentCloudPostgresqlParameterTemplate() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"template_name": {
-				Required:    true,
 				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Template name, which can contain 1-60 letters, digits, and symbols (-_./()+=:@).",
 			},
 
 			"db_major_version": {
-				Required:    true,
 				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 				Description: "The major database version number, such as 11, 12, 13.",
 			},
 
 			"db_engine": {
-				Required:    true,
 				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 				Description: "Database engine, such as postgresql, mssql_compatible.",
 			},
 
 			"template_description": {
-				Optional:    true,
 				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Parameter template description, which can contain 1-60 letters, digits, and symbols (-_./()+=:@).",
 			},
 
 			"modify_param_entry_set": {
-				Optional:    true,
 				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "The set of parameters that need to be modified or added. Note: the same parameter cannot appear in the set of modifying and adding and deleting at the same time.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -217,15 +218,6 @@ func resourceTencentCloudPostgresqlParameterTemplateUpdate(d *schema.ResourceDat
 	request := postgresql.NewModifyParameterTemplateRequest()
 
 	request.TemplateId = helper.String(d.Id())
-
-	immutableArgs := []string{"db_major_version", "db_engine"}
-
-	// do not care the param_info_set attribute
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	if d.HasChange("template_name") {
 		if v, ok := d.GetOk("template_name"); ok {

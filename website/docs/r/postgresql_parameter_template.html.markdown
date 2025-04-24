@@ -37,8 +37,8 @@ resource "tencentcloud_postgresql_parameter_template" "parameter_template" {
 
 The following arguments are supported:
 
-* `db_engine` - (Required, String) Database engine, such as postgresql, mssql_compatible.
-* `db_major_version` - (Required, String) The major database version number, such as 11, 12, 13.
+* `db_engine` - (Required, String, ForceNew) Database engine, such as postgresql, mssql_compatible.
+* `db_major_version` - (Required, String, ForceNew) The major database version number, such as 11, 12, 13.
 * `template_name` - (Required, String) Template name, which can contain 1-60 letters, digits, and symbols (-_./()+=:@).
 * `delete_param_set` - (Optional, Set: [`String`]) The set of parameters that need to be deleted.
 * `modify_param_entry_set` - (Optional, Set) The set of parameters that need to be modified or added. Note: the same parameter cannot appear in the set of modifying and adding and deleting at the same time.

@@ -58,6 +58,7 @@ func ResourceTencentCloudClsCloudProductLogTask() *schema.Resource {
 			"logset_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Log set name, it will be automatically created.",
 			},
 
@@ -70,6 +71,7 @@ func ResourceTencentCloudClsCloudProductLogTask() *schema.Resource {
 			"topic_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "The name of the log topic, it will be automatically created.",
 			},
 
@@ -233,7 +235,7 @@ func resourceTencentCloudClsCloudProductLogTaskUpdate(d *schema.ResourceData, me
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"instance_id", "assumer_name", "log_type", "cloud_product_region", "cls_region", "logset_name", "topic_name"}
+	immutableArgs := []string{"instance_id", "assumer_name", "log_type", "cloud_product_region", "cls_region"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

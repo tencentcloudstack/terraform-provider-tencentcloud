@@ -49,8 +49,8 @@ The following arguments are supported:
 * `instance_id` - (Required, String) Instance ID.
 * `log_type` - (Required, String) Log type, Values: CDS-AUDIT, CDS-RISK, CDB-AUDIT, TDSQL-C-AUDIT, MongoDB-AUDIT, MongoDB-SlowLog, MongoDB-ErrorLog, TDMYSQL-SLOW, DCDB-AUDIT, DCDB-SLOW, DCDB-ERROR, MariaDB-AUDIT, MariaDB-SLOW, MariaDB-ERROR, PostgreSQL-SLOW, PostgreSQL-ERROR, PostgreSQL-AUDIT, BH-FILELOG, BH-COMMANDLOG, APIS-ACCESS.
 * `extend` - (Optional, String) Log configuration extension information, generally used to store additional log delivery configurations.
-* `logset_name` - (Optional, String) Log set name, it will be automatically created.
-* `topic_name` - (Optional, String) The name of the log topic, it will be automatically created.
+* `logset_name` - (Optional, String, ForceNew) Log set name, it will be automatically created.
+* `topic_name` - (Optional, String, ForceNew) The name of the log topic, it will be automatically created.
 
 ## Attributes Reference
 
