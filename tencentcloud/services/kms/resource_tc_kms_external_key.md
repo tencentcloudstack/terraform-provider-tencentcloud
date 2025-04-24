@@ -6,11 +6,25 @@ Create a basic instance.
 
 ```hcl
 resource "tencentcloud_kms_external_key" "example" {
-  alias               = "tf-example-kms-externalkey"
-  description         = "example of kms external key"
+  alias       = "tf-example-kms-externalkey"
+  description = "example of kms external key"
 
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
+  }
+}
+```
+
+Create kms instance with HSM
+
+```hcl
+resource "tencentcloud_kms_external_key" "example" {
+  alias          = "tf-example-kms-externalkey"
+  description    = "example of kms external key"
+  hsm_cluster_id = "cls-hsm-mwpd9cjm"
+  
+  tags = {
+    createdBy = "terraform"
   }
 }
 ```
@@ -26,7 +40,7 @@ resource "tencentcloud_kms_external_key" "example" {
   is_enabled          = true
 
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
   }
 }
 ```
@@ -42,7 +56,7 @@ resource "tencentcloud_kms_external_key" "example" {
   is_enabled          = false
 
   tags = {
-    "test-tag" = "unit-test"
+    createdBy = "terraform"
   }
 }
 ```
@@ -52,5 +66,5 @@ Import
 KMS external keys can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_kms_external_key.example 287e8f40-7cbb-11eb-9a3a-xxxxx
+$ terraform import tencentcloud_kms_external_key.example 25068921-2101-11f0-bf1f-5254000328e1
 ```

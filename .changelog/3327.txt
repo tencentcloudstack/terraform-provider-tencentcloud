@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_kms_service_status
+```
+
+```release-note:enhancement
+resource/tencentcloud_kms_key: support `hsm_cluster_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_kms_external_key: support `hsm_cluster_id`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_kms_keys: support `hsm_cluster_id`
+```

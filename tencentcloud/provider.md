@@ -664,6 +664,7 @@ tencentcloud_kms_list_keys
 tencentcloud_kms_white_box_decrypt_key
 tencentcloud_kms_white_box_device_fingerprints
 tencentcloud_kms_list_algorithms
+tencentcloud_kms_service_status
 
 Resource
 tencentcloud_kms_key

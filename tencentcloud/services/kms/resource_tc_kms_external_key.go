@@ -34,6 +34,11 @@ func ResourceTencentCloudKmsExternalKey() *schema.Resource {
 			Optional:    true,
 			Description: "This value means the effective timestamp of the key material, 0 means it does not expire. Need to be greater than the current timestamp, the maximum support is 2147443200.",
 		},
+		"hsm_cluster_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The HSM cluster ID corresponding to KMS Advanced Edition (only valid for KMS Exclusive/Managed Edition service instances).",
+		},
 	}
 
 	basic := TencentKmsBasicInfo()
@@ -66,15 +71,20 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 	keyType := KMS_ORIGIN_TYPE[KMS_ORIGIN_EXTERNAL]
 	alias := d.Get("alias").(string)
 	description := ""
+	hsmClusterId := ""
 	keyUsage := KMS_KEY_USAGE_ENCRYPT_DECRYPT
 	if v, ok := d.GetOk("description"); ok {
 		description = v.(string)
 	}
 
+	if v, ok := d.GetOk("hsm_cluster_id"); ok {
+		hsmClusterId = v.(string)
+	}
+
 	var keyId string
 	var outErr, inErr error
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		keyId, inErr = kmsService.CreateKey(ctx, keyType, alias, description, keyUsage)
+		keyId, inErr = kmsService.CreateKey(ctx, keyType, alias, description, keyUsage, hsmClusterId)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
@@ -185,6 +195,10 @@ func resourceTencentCloudKmsExternalKeyRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("description", key.Description)
 	_ = d.Set("valid_to", key.ValidTo)
 	_ = d.Set("key_state", key.KeyState)
+	if key.HsmClusterId != nil {
+		_ = d.Set("hsm_cluster_id", key.HsmClusterId)
+	}
+
 	transformKeyState(d)
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -206,6 +220,14 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 	kmsService := KmsService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
+
+	immutableArgs := []string{"hsm_cluster_id"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	d.Partial(true)
 
 	if d.HasChange("description") {

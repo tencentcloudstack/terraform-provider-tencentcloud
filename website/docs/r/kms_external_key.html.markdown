@@ -21,7 +21,21 @@ resource "tencentcloud_kms_external_key" "example" {
   description = "example of kms external key"
 
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
+  }
+}
+```
+
+### Create kms instance with HSM
+
+```hcl
+resource "tencentcloud_kms_external_key" "example" {
+  alias          = "tf-example-kms-externalkey"
+  description    = "example of kms external key"
+  hsm_cluster_id = "cls-hsm-mwpd9cjm"
+
+  tags = {
+    createdBy = "terraform"
   }
 }
 ```
@@ -37,7 +51,7 @@ resource "tencentcloud_kms_external_key" "example" {
   is_enabled          = true
 
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
   }
 }
 ```
@@ -53,7 +67,7 @@ resource "tencentcloud_kms_external_key" "example" {
   is_enabled          = false
 
   tags = {
-    "test-tag" = "unit-test"
+    createdBy = "terraform"
   }
 }
 ```
@@ -64,6 +78,7 @@ The following arguments are supported:
 
 * `alias` - (Required, String) Name of CMK. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
 * `description` - (Optional, String) Description of CMK. The maximum is 1024 bytes.
+* `hsm_cluster_id` - (Optional, String) The HSM cluster ID corresponding to KMS Advanced Edition (only valid for KMS Exclusive/Managed Edition service instances).
 * `is_archived` - (Optional, Bool) Specify whether to archive key. Default value is `false`. This field is conflict with `is_enabled`, valid when key_state is `Enabled`, `Disabled`, `Archived`.
 * `is_enabled` - (Optional, Bool) Specify whether to enable key. Default value is `false`. This field is conflict with `is_archived`, valid when key_state is `Enabled`, `Disabled`, `Archived`.
 * `key_material_base64` - (Optional, String) The base64-encoded key material encrypted with the public_key. For regions using the national secret version, the length of the imported key material is required to be 128 bits, and for regions using the FIPS version, the length of the imported key material is required to be 256 bits.
@@ -85,6 +100,6 @@ In addition to all arguments above, the following attributes are exported:
 KMS external keys can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_kms_external_key.example 287e8f40-7cbb-11eb-9a3a-xxxxx
+$ terraform import tencentcloud_kms_external_key.example 25068921-2101-11f0-bf1f-5254000328e1
 ```
 
