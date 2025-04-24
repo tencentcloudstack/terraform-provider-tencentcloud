@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cls_cloud_product_log_task: update fileds `logset_name`, `logset_name` attribuite
+```
+
+```release-note:enhancement
+resource/tencentcloud_postgresql_parameter_template: update fileds `db_major_version`, `db_engine` attribuite
+```
