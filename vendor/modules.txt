@@ -1231,7 +1231,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.1145
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
