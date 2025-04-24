@@ -6842,6 +6842,7 @@ func (me *VpcService) DescribeVpcById(ctx context.Context, vpcId string) (instan
 	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDescribeVpcsRequest()
+	response := vpc.NewDescribeVpcsResponse()
 	request.VpcIds = []*string{&vpcId}
 
 	defer func() {
@@ -6860,16 +6861,27 @@ func (me *VpcService) DescribeVpcById(ctx context.Context, vpcId string) (instan
 	for {
 		request.Offset = helper.Int64ToStrPoint(offset)
 		request.Limit = helper.Int64ToStrPoint(limit)
-		response, err := me.client.UseVpcClient().DescribeVpcs(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseVpcClient().DescribeVpcs(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.VpcSet) < 1 {
 			break
 		}
+
 		instances = append(instances, response.Response.VpcSet...)
 		if len(response.Response.VpcSet) < int(limit) {
 			break
@@ -6897,14 +6909,22 @@ func (me *VpcService) DeleteVpcIpv6CidrBlockById(ctx context.Context, vpcId stri
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().UnassignIpv6CidrBlock(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseVpcClient().UnassignIpv6CidrBlock(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
