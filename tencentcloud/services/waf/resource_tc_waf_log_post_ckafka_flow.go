@@ -20,6 +20,9 @@ func ResourceTencentCloudWafLogPostCkafkaFlow() *schema.Resource {
 		Read:   resourceTencentCloudWafLogPostCkafkaFlowRead,
 		Update: resourceTencentCloudWafLogPostCkafkaFlowUpdate,
 		Delete: resourceTencentCloudWafLogPostCkafkaFlowDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"ckafka_region": {
 				Type:        schema.TypeString,
@@ -74,6 +77,7 @@ func ResourceTencentCloudWafLogPostCkafkaFlow() *schema.Resource {
 			"sasl_enable": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to enable SASL verification, default not enabled, 0-off, 1-on.",
 			},
 
@@ -86,12 +90,14 @@ func ResourceTencentCloudWafLogPostCkafkaFlow() *schema.Resource {
 			"sasl_password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "SASL password.",
 			},
 
 			"write_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Enable access to certain fields of the log and check if they have been delivered.",
 				Elem: &schema.Resource{
@@ -99,18 +105,21 @@ func ResourceTencentCloudWafLogPostCkafkaFlow() *schema.Resource {
 						"enable_headers": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "1: Enable 0: Do not enable.",
 						},
 
 						"enable_body": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "1: Enable 0: Do not enable.",
 						},
 
 						"enable_bot": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "1: Enable 0: Do not enable.",
 						},
 					},
@@ -357,6 +366,7 @@ func resourceTencentCloudWafLogPostCkafkaFlowRead(d *schema.ResourceData, meta i
 				}
 
 				tmpList = append(tmpList, dMap)
+				_ = d.Set("write_config", tmpList)
 			}
 
 			if item.FlowId != nil {
@@ -389,7 +399,7 @@ func resourceTencentCloudWafLogPostCkafkaFlowUpdate(d *schema.ResourceData, meta
 		request = wafv20180125.NewCreatePostCKafkaFlowRequest()
 	)
 
-	immutableArgs := []string{"vip_type", "log_type"}
+	immutableArgs := []string{"log_type"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

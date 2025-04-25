@@ -7,13 +7,22 @@ If vip_type is 1
 ```hcl
 resource "tencentcloud_waf_log_post_ckafka_flow" "example" {
   ckafka_region = "ap-guangzhou"
-  ckafka_id     = "ckafka-k9m5vwar"
-  brokers       = "ckafka-k9m5vwar.ap-guangzhou.ckafka.tencentcloudmq.com:50000"
+  ckafka_id     = "ckafka-qzoeajkz"
+  brokers       = "ckafka-qzoeajkz.ap-guangzhou.ckafka.tencentcloudmq.com:50000"
   compression   = "snappy"
   vip_type      = 1
   log_type      = 2
-  topic         = "tf-test"
+  topic         = "tf-example"
   kafka_version = "2.8.1"
+  sasl_enable   = 1
+  sasl_user     = "ckafka-qzoeajkz#root"
+  sasl_password = "Password@123"
+
+  write_config {
+    enable_body    = 1
+    enable_bot     = 1
+    enable_headers = 1
+  }
 }
 ```
 
@@ -29,6 +38,12 @@ resource "tencentcloud_waf_log_post_ckafka_flow" "example" {
   log_type      = 1
   topic         = "tf-example"
   kafka_version = "2.8.1"
+
+  write_config {
+    enable_body    = 0
+    enable_bot     = 1
+    enable_headers = 0
+  }
 }
 ```
 

@@ -1168,6 +1168,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1148
 =======
 <<<<<<< HEAD
@@ -1179,6 +1180,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
 =======
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1148
 >>>>>>> 04ea02554 (add)
+=======
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1149
+>>>>>>> 605e9f3bc (add)
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1364,7 +1368,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1148
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.1148
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.1149
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.792
