@@ -1,3 +1,15 @@
+## 1.81.187(April 27 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_waf_log_post_ckafka_flow` ([#3321](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3321))
+* **New Resource:** `tencentcloud_waf_log_post_cls_flow` ([#3321](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3321))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dlc_user: add read retry ([#3333](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3333))
+* resource/tencentcloud_postgresql_parameter_template: update fileds `db_major_version`, `db_engine` attribuite ([#3331](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3331))
+
 ## 1.81.186(April 24 , 2025)
 
 FEATURES:
