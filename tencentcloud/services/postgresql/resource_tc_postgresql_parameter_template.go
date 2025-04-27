@@ -2,7 +2,6 @@ package postgresql
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -31,12 +30,14 @@ func ResourceTencentCloudPostgresqlParameterTemplate() *schema.Resource {
 
 			"db_major_version": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The major database version number, such as 11, 12, 13.",
 			},
 
 			"db_engine": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Database engine, such as postgresql, mssql_compatible.",
 			},
@@ -217,15 +218,6 @@ func resourceTencentCloudPostgresqlParameterTemplateUpdate(d *schema.ResourceDat
 	request := postgresql.NewModifyParameterTemplateRequest()
 
 	request.TemplateId = helper.String(d.Id())
-
-	immutableArgs := []string{"db_major_version", "db_engine"}
-
-	// do not care the param_info_set attribute
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	if d.HasChange("template_name") {
 		if v, ok := d.GetOk("template_name"); ok {
