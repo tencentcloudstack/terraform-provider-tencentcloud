@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_dlc_user: add read retry
+```
