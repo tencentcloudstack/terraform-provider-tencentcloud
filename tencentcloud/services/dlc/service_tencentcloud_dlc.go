@@ -76,6 +76,7 @@ func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string) (u
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDescribeUsersRequest()
+	response := dlc.NewDescribeUsersResponse()
 	request.UserId = &userId
 
 	defer func() {
@@ -84,9 +85,19 @@ func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string) (u
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeUsers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().DescribeUsers(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
