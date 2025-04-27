@@ -2179,6 +2179,8 @@ tencentcloud_waf_cc_auto_status
 tencentcloud_waf_cc_session
 tencentcloud_waf_ip_access_control
 tencentcloud_waf_ip_access_control_v2
+tencentcloud_waf_log_post_cls_flow
+tencentcloud_waf_log_post_ckafka_flow
 
 Wedata
 Data Source
