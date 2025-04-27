@@ -1475,6 +1475,7 @@ func (me *MysqlService) DescribeMysqlTimeWindowById(ctx context.Context, instanc
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdb.NewDescribeTimeWindowRequest()
+	response := cdb.NewDescribeTimeWindowResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -1483,14 +1484,23 @@ func (me *MysqlService) DescribeMysqlTimeWindowById(ctx context.Context, instanc
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMysqlClient().DescribeTimeWindow(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseMysqlClient().DescribeTimeWindow(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	timeWindow = response
 	return
@@ -1533,14 +1543,22 @@ func (me *MysqlService) DeleteMysqlTimeWindowById(ctx context.Context, instanceI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMysqlClient().DeleteTimeWindow(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseMysqlClient().DeleteTimeWindow(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
