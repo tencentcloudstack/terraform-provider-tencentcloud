@@ -652,7 +652,7 @@ func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId str
 	request.Operation = &op
 	request.InstanceId = &redisId
 
-	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().ModifyInstance(request)
 		if e != nil {
@@ -757,7 +757,7 @@ func (me *RedisService) ModifyDBInstanceSecurityGroups(ctx context.Context, prod
 		}
 	}()
 
-	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().ModifyDBInstanceSecurityGroups(request)
 		if e != nil {
@@ -784,7 +784,7 @@ func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId str
 		}
 	}()
 
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DestroyPostpaidInstance(request)
 		if e != nil {
@@ -2057,7 +2057,7 @@ func (me *RedisService) DeleteRedisReplicateAttachmentById(ctx context.Context, 
 		}
 	}()
 
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().RemoveReplicationInstance(request)
 		if e != nil {
