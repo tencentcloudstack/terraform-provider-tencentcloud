@@ -1425,6 +1425,7 @@ tencentcloud_cls_data_transform
 tencentcloud_cls_cloud_product_log_task
 tencentcloud_cls_notice_content
 tencentcloud_cls_web_callback
+tencentcloud_cls_cloud_product_log_task_v2
 
 Data Source
 tencentcloud_cls_shipper_tasks
