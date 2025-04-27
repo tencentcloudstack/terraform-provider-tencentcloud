@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_parameter_template: update fileds `db_major_version`, `db_engine` attribuite
+```
