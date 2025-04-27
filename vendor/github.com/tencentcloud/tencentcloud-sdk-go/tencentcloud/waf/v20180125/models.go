@@ -530,6 +530,8 @@ type AddCustomRuleRequestParams struct {
 	Edition *string `json:"Edition,omitnil,omitempty" name:"Edition"`
 
 	// 放行时是否继续执行其它检查逻辑，继续执行地域封禁防护：geoip、继续执行CC策略防护：cc、继续执行WEB应用防护：owasp、继续执行AI引擎防护：ai、继续执行信息防泄漏防护：antileakage。如果多个勾选那么以,串接。默认是"geoip,cc,owasp,ai,antileakage"
+	//
+	// Deprecated: Bypass is deprecated.
 	Bypass *string `json:"Bypass,omitnil,omitempty" name:"Bypass"`
 
 	// 添加规则的来源，默认为空
@@ -552,6 +554,9 @@ type AddCustomRuleRequestParams struct {
 
 	// 拦截页面id
 	PageId *string `json:"PageId,omitnil,omitempty" name:"PageId"`
+
+	// 匹配条件的逻辑关系，支持and、or，分别表示多个逻辑匹配条件是与、或的关系
+	LogicalOp *string `json:"LogicalOp,omitnil,omitempty" name:"LogicalOp"`
 }
 
 type AddCustomRuleRequest struct {
@@ -604,6 +609,9 @@ type AddCustomRuleRequest struct {
 
 	// 拦截页面id
 	PageId *string `json:"PageId,omitnil,omitempty" name:"PageId"`
+
+	// 匹配条件的逻辑关系，支持and、or，分别表示多个逻辑匹配条件是与、或的关系
+	LogicalOp *string `json:"LogicalOp,omitnil,omitempty" name:"LogicalOp"`
 }
 
 func (r *AddCustomRuleRequest) ToJsonString() string {
@@ -634,6 +642,7 @@ func (r *AddCustomRuleRequest) FromJsonString(s string) error {
 	delete(f, "Label")
 	delete(f, "Status")
 	delete(f, "PageId")
+	delete(f, "LogicalOp")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddCustomRuleRequest has unknown keys!", "")
 	}
@@ -676,17 +685,17 @@ type AddCustomWhiteRuleRequestParams struct {
 	// 优先级
 	SortId *string `json:"SortId,omitnil,omitempty" name:"SortId"`
 
-	// 过期时间
-	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
-
 	// 策略详情
 	Strategies []*Strategy `json:"Strategies,omitnil,omitempty" name:"Strategies"`
 
 	// 需要添加策略的域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 放行的详情
+	// 放行的模块，多个模块之间用逗号连接。支持的模块：acl（自定义规则）、owasp（规则引擎）、webshell（恶意文件检测）、geoip（地域封禁）、bwip（IP黑白名单）、cc、botrpc（BOT防护）、antileakage（信息防泄露）、api（API安全）、ai（AI引擎）、ip_auto_deny（IP封禁）、applet（小程序流量风控）
 	Bypass *string `json:"Bypass,omitnil,omitempty" name:"Bypass"`
+
+	// 如果没有设置JobDateTime字段则用此字段，0表示永久生效，其它表示定时生效的截止时间（单位为秒）
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 规则执行的方式，TimedJob为定时执行，CronJob为周期执行
 	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
@@ -704,17 +713,17 @@ type AddCustomWhiteRuleRequest struct {
 	// 优先级
 	SortId *string `json:"SortId,omitnil,omitempty" name:"SortId"`
 
-	// 过期时间
-	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
-
 	// 策略详情
 	Strategies []*Strategy `json:"Strategies,omitnil,omitempty" name:"Strategies"`
 
 	// 需要添加策略的域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 放行的详情
+	// 放行的模块，多个模块之间用逗号连接。支持的模块：acl（自定义规则）、owasp（规则引擎）、webshell（恶意文件检测）、geoip（地域封禁）、bwip（IP黑白名单）、cc、botrpc（BOT防护）、antileakage（信息防泄露）、api（API安全）、ai（AI引擎）、ip_auto_deny（IP封禁）、applet（小程序流量风控）
 	Bypass *string `json:"Bypass,omitnil,omitempty" name:"Bypass"`
+
+	// 如果没有设置JobDateTime字段则用此字段，0表示永久生效，其它表示定时生效的截止时间（单位为秒）
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 规则执行的方式，TimedJob为定时执行，CronJob为周期执行
 	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
@@ -737,10 +746,10 @@ func (r *AddCustomWhiteRuleRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Name")
 	delete(f, "SortId")
-	delete(f, "ExpireTime")
 	delete(f, "Strategies")
 	delete(f, "Domain")
 	delete(f, "Bypass")
+	delete(f, "ExpireTime")
 	delete(f, "JobType")
 	delete(f, "JobDateTime")
 	if len(f) > 0 {
@@ -1038,6 +1047,12 @@ type AddSpartaProtectionRequestParams struct {
 
 	// GmCertType为2时，需要填充此参数，表示腾讯云SSL平台托管的证书id
 	GmSSLId *string `json:"GmSSLId,omitnil,omitempty" name:"GmSSLId"`
+
+	// 回源策略，支持负载均衡回源和分流回源两种方式。0：默认值，负载均衡回源；1：分流回源
+	UpstreamPolicy *int64 `json:"UpstreamPolicy,omitnil,omitempty" name:"UpstreamPolicy"`
+
+	// 分流回源时生效，分流回源的规则。
+	UpstreamRules []*UpstreamRule `json:"UpstreamRules,omitnil,omitempty" name:"UpstreamRules"`
 }
 
 type AddSpartaProtectionRequest struct {
@@ -1217,6 +1232,12 @@ type AddSpartaProtectionRequest struct {
 
 	// GmCertType为2时，需要填充此参数，表示腾讯云SSL平台托管的证书id
 	GmSSLId *string `json:"GmSSLId,omitnil,omitempty" name:"GmSSLId"`
+
+	// 回源策略，支持负载均衡回源和分流回源两种方式。0：默认值，负载均衡回源；1：分流回源
+	UpstreamPolicy *int64 `json:"UpstreamPolicy,omitnil,omitempty" name:"UpstreamPolicy"`
+
+	// 分流回源时生效，分流回源的规则。
+	UpstreamRules []*UpstreamRule `json:"UpstreamRules,omitnil,omitempty" name:"UpstreamRules"`
 }
 
 func (r *AddSpartaProtectionRequest) ToJsonString() string {
@@ -1276,6 +1297,8 @@ func (r *AddSpartaProtectionRequest) FromJsonString(s string) error {
 	delete(f, "GmEncCert")
 	delete(f, "GmEncPrivateKey")
 	delete(f, "GmSSLId")
+	delete(f, "UpstreamPolicy")
+	delete(f, "UpstreamRules")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddSpartaProtectionRequest has unknown keys!", "")
 	}
@@ -1448,6 +1471,40 @@ type ApiSecKey struct {
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 }
 
+type Area struct {
+	// 国家，除了标准的国家外还支持国内、国外这两个特殊的标识
+	Country *string `json:"Country,omitnil,omitempty" name:"Country"`
+
+	// 省份
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 城市
+	City *string `json:"City,omitnil,omitempty" name:"City"`
+}
+
+type AreaBanRule struct {
+	// 状态 0：未开启地域封禁、1：开启地域封禁
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 数据来源 custom：自定义(默认)、batch：批量防护
+	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
+
+	// 配置的地域列表
+	Areas []*Area `json:"Areas,omitnil,omitempty" name:"Areas"`
+
+	// 规则执行的方式，TimedJob为定时执行，CronJob为周期执行
+	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
+
+	// 定时任务配置
+	JobDateTime *JobDateTime `json:"JobDateTime,omitnil,omitempty" name:"JobDateTime"`
+
+	// 如果是周期任务类型，那么表示周期的类型，支持 Week：按周、Month：按月
+	CronType *string `json:"CronType,omitnil,omitempty" name:"CronType"`
+
+	// 地域信息的语言，支持cn、en，默认为中文cn
+	Lang *string `json:"Lang,omitnil,omitempty" name:"Lang"`
+}
+
 type AttackLogInfo struct {
 	// 攻击日志的详情内容
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
@@ -1492,18 +1549,22 @@ type BatchIpAccessControlData struct {
 
 type BatchIpAccessControlItem struct {
 	// mongo表自增Id
+	//
+	// Deprecated: Id is deprecated.
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 黑名单42或白名单40
 	ActionType *int64 `json:"ActionType,omitnil,omitempty" name:"ActionType"`
 
 	// 黑白名单的IP
+	//
+	// Deprecated: Ip is deprecated.
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
 	// 备注
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 添加路径
+	// batch为批量域名，batch-group为防护对象组
 	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
 
 	// 修改时间
@@ -1535,6 +1596,118 @@ type BatchIpAccessControlItem struct {
 
 	// 生效状态
 	ValidStatus *int64 `json:"ValidStatus,omitnil,omitempty" name:"ValidStatus"`
+
+	// 防护对象组ID列表，如果绑定的是防护对象组
+	GroupIds []*uint64 `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
+}
+
+// Predefined struct for user
+type BatchOperateUserSignatureRulesRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 0:关闭，1:开启，2:仅观察
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 如果SelectedAll为true，则表示反选的规则，否则表示手动选择的规则ID
+	RuleIds []*string `json:"RuleIds,omitnil,omitempty" name:"RuleIds"`
+
+	// 仅观察原因
+	Reason *int64 `json:"Reason,omitnil,omitempty" name:"Reason"`
+
+	// 是否全选
+	SelectedAll *bool `json:"SelectedAll,omitnil,omitempty" name:"SelectedAll"`
+
+	// 过滤
+	Filters []*FiltersItemNew `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type BatchOperateUserSignatureRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 0:关闭，1:开启，2:仅观察
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 如果SelectedAll为true，则表示反选的规则，否则表示手动选择的规则ID
+	RuleIds []*string `json:"RuleIds,omitnil,omitempty" name:"RuleIds"`
+
+	// 仅观察原因
+	Reason *int64 `json:"Reason,omitnil,omitempty" name:"Reason"`
+
+	// 是否全选
+	SelectedAll *bool `json:"SelectedAll,omitnil,omitempty" name:"SelectedAll"`
+
+	// 过滤
+	Filters []*FiltersItemNew `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *BatchOperateUserSignatureRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *BatchOperateUserSignatureRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Status")
+	delete(f, "RuleIds")
+	delete(f, "Reason")
+	delete(f, "SelectedAll")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "BatchOperateUserSignatureRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type BatchOperateUserSignatureRulesResponseParams struct {
+	// 操作结果
+	CommonRsp *CommonRspData `json:"CommonRsp,omitnil,omitempty" name:"CommonRsp"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type BatchOperateUserSignatureRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *BatchOperateUserSignatureRulesResponseParams `json:"Response"`
+}
+
+func (r *BatchOperateUserSignatureRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *BatchOperateUserSignatureRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type BotActionScopeRuleEntry struct {
+	// 参数
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 匹配符
+	Op *string `json:"Op,omitnil,omitempty" name:"Op"`
+
+	// 参数值
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// 对于头部字段匹配value的时候指定的头部名
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 470后使用此字段存储多值
+	ValueArray []*string `json:"ValueArray,omitnil,omitempty" name:"ValueArray"`
 }
 
 type BotPkg struct {
@@ -1595,6 +1768,173 @@ type BotQPS struct {
 	RenewFlag *uint64 `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 }
 
+type BotSceneActionRule struct {
+	// 动作策略ID
+	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
+
+	// 动作策略名称
+	RuleName *string `json:"RuleName,omitnil,omitempty" name:"RuleName"`
+
+	// 策略优先级
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 策略生效状态
+	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 分数范围
+	Score []*BotScoreRuleEntry `json:"Score,omitnil,omitempty" name:"Score"`
+
+	// 100-宽松、200-中等、300-严格、0-自定义
+	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
+
+	// 生效范围，为空表示全部范围
+	Scope []*BotActionScopeRuleEntry `json:"Scope,omitnil,omitempty" name:"Scope"`
+
+	// default：默认创建 custom：自定义创建
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 匹配范围类型：全局匹配 or 自定义匹配范围
+	ScopeType *string `json:"ScopeType,omitnil,omitempty" name:"ScopeType"`
+
+	// 匹配条件间的与或关系
+	ActionMatchType *string `json:"ActionMatchType,omitnil,omitempty" name:"ActionMatchType"`
+}
+
+type BotSceneInfo struct {
+	// 场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// 场景类型，default:默认场景,custom:非默认场景
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 场景名
+	SceneName *string `json:"SceneName,omitnil,omitempty" name:"SceneName"`
+
+	// 更新时间
+	UpdateTime *int64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// 场景模板类型，登录: login  秒杀:seckill  爬内容：crawl 自定义: custom
+	BusinessType []*string `json:"BusinessType,omitnil,omitempty" name:"BusinessType"`
+
+	// 客户端类型，浏览器/H5 : browser  小程序: miniApp  App:
+	ClientType []*string `json:"ClientType,omitnil,omitempty" name:"ClientType"`
+
+	// 优先级
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 匹配范围
+	MatchCondition []*BotSceneMatchCondition `json:"MatchCondition,omitnil,omitempty" name:"MatchCondition"`
+
+	// 场景开关
+	SceneStatus *bool `json:"SceneStatus,omitnil,omitempty" name:"SceneStatus"`
+
+	// 前端对抗开关
+	JsInjectStatus *bool `json:"JsInjectStatus,omitnil,omitempty" name:"JsInjectStatus"`
+
+	// AI开关
+	AIStatus *bool `json:"AIStatus,omitnil,omitempty" name:"AIStatus"`
+
+	// TI开关
+	TIStatus *bool `json:"TIStatus,omitnil,omitempty" name:"TIStatus"`
+
+	// 智能统计开关
+	StatisticStatus *bool `json:"StatisticStatus,omitnil,omitempty" name:"StatisticStatus"`
+
+	// 动作策略数量
+	ActionRuleCount *int64 `json:"ActionRuleCount,omitnil,omitempty" name:"ActionRuleCount"`
+
+	// 自定义规则数量
+	UCBCount *int64 `json:"UCBCount,omitnil,omitempty" name:"UCBCount"`
+
+	// 场景的匹配范围，global-全部匹配 custom-自定义匹配范围
+	MatchType *string `json:"MatchType,omitnil,omitempty" name:"MatchType"`
+
+	// 匹配条件间的与或关系
+	ActionMatchType *string `json:"ActionMatchType,omitnil,omitempty" name:"ActionMatchType"`
+
+	// UA模块开关
+	UAStatus *bool `json:"UAStatus,omitnil,omitempty" name:"UAStatus"`
+
+	// 简易模式场景：前端对抗对应mysql的记录id
+	JsInjectRuleId *int64 `json:"JsInjectRuleId,omitnil,omitempty" name:"JsInjectRuleId"`
+
+	// 简易模式场景：前端对抗配置动作
+	JsInjectAction *int64 `json:"JsInjectAction,omitnil,omitempty" name:"JsInjectAction"`
+
+	// 简易模式场景：前端对抗重定向路径
+	JsInjectRedirect *string `json:"JsInjectRedirect,omitnil,omitempty" name:"JsInjectRedirect"`
+
+	// 简易模式场景：动作策略信息  PS:简易模式只有一个动作策略
+	ActionRuleList []*BotSceneActionRule `json:"ActionRuleList,omitnil,omitempty" name:"ActionRuleList"`
+
+	// 简易模式场景：monitor-观察 intercept-拦截 custom-自定义
+	BotIdPattern *string `json:"BotIdPattern,omitnil,omitempty" name:"BotIdPattern"`
+
+	// 简易模式场景：bot_id规则总数
+	BotIdCount *int64 `json:"BotIdCount,omitnil,omitempty" name:"BotIdCount"`
+
+	// 简易模式场景：观察动作的规则总数
+	BotIdMonitorCount *int64 `json:"BotIdMonitorCount,omitnil,omitempty" name:"BotIdMonitorCount"`
+
+	// 简易模式场景：拦截动作的规则总数
+	BotIdInterceptCount *int64 `json:"BotIdInterceptCount,omitnil,omitempty" name:"BotIdInterceptCount"`
+
+	// 创建场景时选择的规则集
+	RuleSetSelection []*string `json:"RuleSetSelection,omitnil,omitempty" name:"RuleSetSelection"`
+
+	// 改场景的bot token列表
+	TokenList []*BotToken `json:"TokenList,omitnil,omitempty" name:"TokenList"`
+
+	// 简易模式场景：重定向动作的规则总数
+	BotIdRedirectCount *int64 `json:"BotIdRedirectCount,omitnil,omitempty" name:"BotIdRedirectCount"`
+
+	// 简易模式场景：人机识别动作的规则总数
+	BotIdCaptchaCount *int64 `json:"BotIdCaptchaCount,omitnil,omitempty" name:"BotIdCaptchaCount"`
+
+	// 简易模式场景：防护等级
+	BotIdProtectLevel *string `json:"BotIdProtectLevel,omitnil,omitempty" name:"BotIdProtectLevel"`
+
+	// 简易模式场景：全局重定向路径
+	BotIdGlobalRedirect *string `json:"BotIdGlobalRedirect,omitnil,omitempty" name:"BotIdGlobalRedirect"`
+
+	// 简易模式场景：JS校验动作的规则总数
+	BotIdJsChallengeCount *int64 `json:"BotIdJsChallengeCount,omitnil,omitempty" name:"BotIdJsChallengeCount"`
+}
+
+type BotSceneMatchCondition struct {
+	// 匹配参数
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 匹配符
+	Op *string `json:"Op,omitnil,omitempty" name:"Op"`
+
+	// 匹配值
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// 对于头部字段匹配value的时候指定的头部名
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 470后使用此入参存在多值
+	ValueArray []*string `json:"ValueArray,omitnil,omitempty" name:"ValueArray"`
+}
+
+type BotScoreRuleEntry struct {
+	// 分数区间上限
+	Upper *string `json:"Upper,omitnil,omitempty" name:"Upper"`
+
+	// 分数区间下限
+	Lower *string `json:"Lower,omitnil,omitempty" name:"Lower"`
+
+	// 处置动作
+	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 流量标签
+	Label *string `json:"Label,omitnil,omitempty" name:"Label"`
+
+	// 重定向
+	Redirect *string `json:"Redirect,omitnil,omitempty" name:"Redirect"`
+}
+
 type BotStatPointItem struct {
 	// 横坐标
 	TimeStamp *string `json:"TimeStamp,omitnil,omitempty" name:"TimeStamp"`
@@ -1607,6 +1947,38 @@ type BotStatPointItem struct {
 
 	// Key对应的页面展示内容
 	Label *string `json:"Label,omitnil,omitempty" name:"Label"`
+}
+
+type BotToken struct {
+	// 会话名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 会话描述
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 会话id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 策略的开关状态
+	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 会话位置
+	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
+
+	// 会话key
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 会话匹配方式，前缀匹配、后缀匹配等
+	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
+
+	// 会话更新的时间戳
+	Timestamp *int64 `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
+
+	// 场景列表，内容为空表示全部场景应用
+	Scene []*string `json:"Scene,omitnil,omitempty" name:"Scene"`
+
+	// 优先级
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
 }
 
 type CCRuleData struct {
@@ -1902,6 +2274,14 @@ type ClbWafRegionItem struct {
 	Code *string `json:"Code,omitnil,omitempty" name:"Code"`
 }
 
+type CommonRspData struct {
+	// 操作结果
+	Code *int64 `json:"Code,omitnil,omitempty" name:"Code"`
+
+	// 输出信息
+	Msg *string `json:"Msg,omitnil,omitempty" name:"Msg"`
+}
+
 // Predefined struct for user
 type CreateAccessExportRequestParams struct {
 	// 客户要查询的日志主题ID，每个客户都有对应的一个主题
@@ -1998,6 +2378,88 @@ func (r *CreateAccessExportResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAccessExportResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAreaBanRuleRequestParams struct {
+	// 需要修改的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 需要新增的封禁地域
+	Areas []*Area `json:"Areas,omitnil,omitempty" name:"Areas"`
+
+	// 规则执行的方式，TimedJob为定时执行，CronJob为周期执行
+	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
+
+	// 定时任务配置
+	JobDateTime *JobDateTime `json:"JobDateTime,omitnil,omitempty" name:"JobDateTime"`
+
+	// 地域信息的语言，支持cn、en，默认为中文cn
+	Lang *string `json:"Lang,omitnil,omitempty" name:"Lang"`
+}
+
+type CreateAreaBanRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 需要修改的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 需要新增的封禁地域
+	Areas []*Area `json:"Areas,omitnil,omitempty" name:"Areas"`
+
+	// 规则执行的方式，TimedJob为定时执行，CronJob为周期执行
+	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
+
+	// 定时任务配置
+	JobDateTime *JobDateTime `json:"JobDateTime,omitnil,omitempty" name:"JobDateTime"`
+
+	// 地域信息的语言，支持cn、en，默认为中文cn
+	Lang *string `json:"Lang,omitnil,omitempty" name:"Lang"`
+}
+
+func (r *CreateAreaBanRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAreaBanRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Areas")
+	delete(f, "JobType")
+	delete(f, "JobDateTime")
+	delete(f, "Lang")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAreaBanRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAreaBanRuleResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateAreaBanRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateAreaBanRuleResponseParams `json:"Response"`
+}
+
+func (r *CreateAreaBanRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAreaBanRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2356,6 +2818,212 @@ func (r *CreateIpAccessControlResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreatePostCKafkaFlowRequestParams struct {
+	// 投递的CKafka所在区域
+	CKafkaRegion *string `json:"CKafkaRegion,omitnil,omitempty" name:"CKafkaRegion"`
+
+	// 客户的CKafka 实例ID
+	CKafkaID *string `json:"CKafkaID,omitnil,omitempty" name:"CKafkaID"`
+
+	// 支撑环境是IP:PORT，外网环境是domain:PORT
+	Brokers *string `json:"Brokers,omitnil,omitempty" name:"Brokers"`
+
+	// 默认为none，支持snappy、gzip和lz4压缩，推荐snappy
+	Compression *string `json:"Compression,omitnil,omitempty" name:"Compression"`
+
+	// 1-外网TGW，2-支撑环境，默认为支撑环境
+	VipType *int64 `json:"VipType,omitnil,omitempty" name:"VipType"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 主题名称，默认不传或者传空字符串，默认值为waf_post_access_log
+	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// kafka集群的版本号
+	KafkaVersion *string `json:"KafkaVersion,omitnil,omitempty" name:"KafkaVersion"`
+
+	// 是否开启SASL校验，默认不开启，0-关闭，1-开启
+	SASLEnable *int64 `json:"SASLEnable,omitnil,omitempty" name:"SASLEnable"`
+
+	// SASL用户名
+	SASLUser *string `json:"SASLUser,omitnil,omitempty" name:"SASLUser"`
+
+	// SASL密码
+	SASLPassword *string `json:"SASLPassword,omitnil,omitempty" name:"SASLPassword"`
+
+	// 开启访问日志某些字段是否投递
+	WriteConfig *FieldWriteConfig `json:"WriteConfig,omitnil,omitempty" name:"WriteConfig"`
+}
+
+type CreatePostCKafkaFlowRequest struct {
+	*tchttp.BaseRequest
+	
+	// 投递的CKafka所在区域
+	CKafkaRegion *string `json:"CKafkaRegion,omitnil,omitempty" name:"CKafkaRegion"`
+
+	// 客户的CKafka 实例ID
+	CKafkaID *string `json:"CKafkaID,omitnil,omitempty" name:"CKafkaID"`
+
+	// 支撑环境是IP:PORT，外网环境是domain:PORT
+	Brokers *string `json:"Brokers,omitnil,omitempty" name:"Brokers"`
+
+	// 默认为none，支持snappy、gzip和lz4压缩，推荐snappy
+	Compression *string `json:"Compression,omitnil,omitempty" name:"Compression"`
+
+	// 1-外网TGW，2-支撑环境，默认为支撑环境
+	VipType *int64 `json:"VipType,omitnil,omitempty" name:"VipType"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 主题名称，默认不传或者传空字符串，默认值为waf_post_access_log
+	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// kafka集群的版本号
+	KafkaVersion *string `json:"KafkaVersion,omitnil,omitempty" name:"KafkaVersion"`
+
+	// 是否开启SASL校验，默认不开启，0-关闭，1-开启
+	SASLEnable *int64 `json:"SASLEnable,omitnil,omitempty" name:"SASLEnable"`
+
+	// SASL用户名
+	SASLUser *string `json:"SASLUser,omitnil,omitempty" name:"SASLUser"`
+
+	// SASL密码
+	SASLPassword *string `json:"SASLPassword,omitnil,omitempty" name:"SASLPassword"`
+
+	// 开启访问日志某些字段是否投递
+	WriteConfig *FieldWriteConfig `json:"WriteConfig,omitnil,omitempty" name:"WriteConfig"`
+}
+
+func (r *CreatePostCKafkaFlowRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePostCKafkaFlowRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CKafkaRegion")
+	delete(f, "CKafkaID")
+	delete(f, "Brokers")
+	delete(f, "Compression")
+	delete(f, "VipType")
+	delete(f, "LogType")
+	delete(f, "Topic")
+	delete(f, "KafkaVersion")
+	delete(f, "SASLEnable")
+	delete(f, "SASLUser")
+	delete(f, "SASLPassword")
+	delete(f, "WriteConfig")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePostCKafkaFlowRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreatePostCKafkaFlowResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreatePostCKafkaFlowResponse struct {
+	*tchttp.BaseResponse
+	Response *CreatePostCKafkaFlowResponseParams `json:"Response"`
+}
+
+func (r *CreatePostCKafkaFlowResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePostCKafkaFlowResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreatePostCLSFlowRequestParams struct {
+	// 投递的CLS所在区域，默认为ap-shanghai
+	CLSRegion *string `json:"CLSRegion,omitnil,omitempty" name:"CLSRegion"`
+
+	// 投递的CLS所在日志集合名称，默认为 waf_post_logset
+	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 投递的CLS所在日志主题的名称，默认为 waf_post_logtopic
+	LogTopicName *string `json:"LogTopicName,omitnil,omitempty" name:"LogTopicName"`
+}
+
+type CreatePostCLSFlowRequest struct {
+	*tchttp.BaseRequest
+	
+	// 投递的CLS所在区域，默认为ap-shanghai
+	CLSRegion *string `json:"CLSRegion,omitnil,omitempty" name:"CLSRegion"`
+
+	// 投递的CLS所在日志集合名称，默认为 waf_post_logset
+	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 投递的CLS所在日志主题的名称，默认为 waf_post_logtopic
+	LogTopicName *string `json:"LogTopicName,omitnil,omitempty" name:"LogTopicName"`
+}
+
+func (r *CreatePostCLSFlowRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePostCLSFlowRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CLSRegion")
+	delete(f, "LogsetName")
+	delete(f, "LogType")
+	delete(f, "LogTopicName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePostCLSFlowRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreatePostCLSFlowResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreatePostCLSFlowResponse struct {
+	*tchttp.BaseResponse
+	Response *CreatePostCLSFlowResponseParams `json:"Response"`
+}
+
+func (r *CreatePostCLSFlowResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePostCLSFlowResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CronJob struct {
 	// 每个月的几号执行
 	Days []*uint64 `json:"Days,omitnil,omitempty" name:"Days"`
@@ -2676,6 +3344,78 @@ func (r *DeleteAttackWhiteRuleResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAttackWhiteRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteBotSceneUCBRuleRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 自定义规则ID
+	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
+
+	// 1.BOT全局白名单处调用时，传"global";2.BOT场景配置时，传具体的场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+}
+
+type DeleteBotSceneUCBRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 自定义规则ID
+	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
+
+	// 1.BOT全局白名单处调用时，传"global";2.BOT场景配置时，传具体的场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+}
+
+func (r *DeleteBotSceneUCBRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteBotSceneUCBRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "RuleId")
+	delete(f, "SceneId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteBotSceneUCBRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteBotSceneUCBRuleResponseParams struct {
+	// 正常情况下为null
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Data *string `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteBotSceneUCBRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteBotSceneUCBRuleResponseParams `json:"Response"`
+}
+
+func (r *DeleteBotSceneUCBRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteBotSceneUCBRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3689,7 +4429,7 @@ type DescribeAntiFakeRulesRequestParams struct {
 	// asc或者desc
 	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
 
-	// 目前支持根据ts排序
+	// 目前支持根据create_time、modify_time、id排序
 	By *string `json:"By,omitnil,omitempty" name:"By"`
 }
 
@@ -3711,7 +4451,7 @@ type DescribeAntiFakeRulesRequest struct {
 	// asc或者desc
 	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
 
-	// 目前支持根据ts排序
+	// 目前支持根据create_time、modify_time、id排序
 	By *string `json:"By,omitnil,omitempty" name:"By"`
 }
 
@@ -4199,6 +4939,63 @@ type DescribeAreaBanAreasRsp struct {
 
 	// 周期任务配置
 	CronType *string `json:"CronType,omitnil,omitempty" name:"CronType"`
+}
+
+// Predefined struct for user
+type DescribeAreaBanRuleRequestParams struct {
+	// 需要查询的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+}
+
+type DescribeAreaBanRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 需要查询的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+}
+
+func (r *DescribeAreaBanRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAreaBanRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAreaBanRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAreaBanRuleResponseParams struct {
+	// 规则内容
+	Data *AreaBanRule `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAreaBanRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAreaBanRuleResponseParams `json:"Response"`
+}
+
+func (r *DescribeAreaBanRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAreaBanRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -4700,7 +5497,7 @@ func (r *DescribeAutoDenyIPResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBatchIpAccessControlRequestParams struct {
-	// 筛选条件，支持 ActionType，可选的值为40（白名单）42（黑名单），ValidStatus，可选的值为1（生效）0（过期）
+	// 筛选条件，支持 ActionType（可选的值为40：白名单，42：黑名单），ValidStatus（可选的值0：全部，1：生效，2：过期），Ip，Domains（域名列表），GroupId（防护对象组ID），GroupName（防护对象组名），RuleId（规则ID），TimerType（生效方式，1：永久生效，2：定时生效，3：按周周期生效，4：按月周期生效）
 	Filters []*FiltersItemNew `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移
@@ -4716,7 +5513,7 @@ type DescribeBatchIpAccessControlRequestParams struct {
 type DescribeBatchIpAccessControlRequest struct {
 	*tchttp.BaseRequest
 	
-	// 筛选条件，支持 ActionType，可选的值为40（白名单）42（黑名单），ValidStatus，可选的值为1（生效）0（过期）
+	// 筛选条件，支持 ActionType（可选的值为40：白名单，42：黑名单），ValidStatus（可选的值0：全部，1：生效，2：过期），Ip，Domains（域名列表），GroupId（防护对象组ID），GroupName（防护对象组名），RuleId（规则ID），TimerType（生效方式，1：永久生效，2：定时生效，3：按周周期生效，4：按月周期生效）
 	Filters []*FiltersItemNew `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移
@@ -4774,6 +5571,310 @@ func (r *DescribeBatchIpAccessControlResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *DescribeBatchIpAccessControlResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBotSceneListRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 每页数量
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 页码
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 场景模板类型，通过此下拉字段进行场景筛选。全部: all 登录: login  秒杀:seckill  爬内容：crawl 自定义: custom
+	BusinessType []*string `json:"BusinessType,omitnil,omitempty" name:"BusinessType"`
+
+	// 通过场景名称模糊搜索
+	SceneName *string `json:"SceneName,omitnil,omitempty" name:"SceneName"`
+
+	// 是否只显示默认场景
+	IsDefault *bool `json:"IsDefault,omitnil,omitempty" name:"IsDefault"`
+
+	// 是否仅显示生效场景
+	IsValid *bool `json:"IsValid,omitnil,omitempty" name:"IsValid"`
+}
+
+type DescribeBotSceneListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 每页数量
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 页码
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 场景模板类型，通过此下拉字段进行场景筛选。全部: all 登录: login  秒杀:seckill  爬内容：crawl 自定义: custom
+	BusinessType []*string `json:"BusinessType,omitnil,omitempty" name:"BusinessType"`
+
+	// 通过场景名称模糊搜索
+	SceneName *string `json:"SceneName,omitnil,omitempty" name:"SceneName"`
+
+	// 是否只显示默认场景
+	IsDefault *bool `json:"IsDefault,omitnil,omitempty" name:"IsDefault"`
+
+	// 是否仅显示生效场景
+	IsValid *bool `json:"IsValid,omitnil,omitempty" name:"IsValid"`
+}
+
+func (r *DescribeBotSceneListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBotSceneListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "BusinessType")
+	delete(f, "SceneName")
+	delete(f, "IsDefault")
+	delete(f, "IsValid")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBotSceneListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBotSceneListResponseParams struct {
+	// 符合筛选条件的场景数目
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 当TotalCount为0时，返回空
+	BotSceneList []*BotSceneInfo `json:"BotSceneList,omitnil,omitempty" name:"BotSceneList"`
+
+	// true-简易模式
+	SimpleFlag *bool `json:"SimpleFlag,omitnil,omitempty" name:"SimpleFlag"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeBotSceneListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBotSceneListResponseParams `json:"Response"`
+}
+
+func (r *DescribeBotSceneListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBotSceneListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBotSceneOverviewRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+}
+
+type DescribeBotSceneOverviewRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+}
+
+func (r *DescribeBotSceneOverviewRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBotSceneOverviewRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBotSceneOverviewRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBotSceneOverviewResponseParams struct {
+	// BOT总开关
+	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 场景总数
+	SceneCount *int64 `json:"SceneCount,omitnil,omitempty" name:"SceneCount"`
+
+	// 生效场景数
+	ValidSceneCount *int64 `json:"ValidSceneCount,omitnil,omitempty" name:"ValidSceneCount"`
+
+	// 当前开启的、匹配范围为全局、优先级最高的场景
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentGlobalScene *GlobalSceneInfo `json:"CurrentGlobalScene,omitnil,omitempty" name:"CurrentGlobalScene"`
+
+	// 自定义规则总数，不包括BOT白名单
+	CustomRuleNums *int64 `json:"CustomRuleNums,omitnil,omitempty" name:"CustomRuleNums"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeBotSceneOverviewResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBotSceneOverviewResponseParams `json:"Response"`
+}
+
+func (r *DescribeBotSceneOverviewResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBotSceneOverviewResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBotSceneUCBRuleRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 翻页组件的起始页
+	Skip *uint64 `json:"Skip,omitnil,omitempty" name:"Skip"`
+
+	// 翻页组件的页数据条数
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 排序参数
+	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
+
+	// 1.BOT全局白名单处调用时，传"global";2.BOT场景配置处调用时，传具体的场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// 需要过滤的动作
+	Operate *string `json:"Operate,omitnil,omitempty" name:"Operate"`
+
+	// 需要过滤的规则名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 兼容老数据和新旧版前端
+	VersionFlag *string `json:"VersionFlag,omitnil,omitempty" name:"VersionFlag"`
+
+	// 生效方式：0-全部 1-永久生效 2-定时生效 3-周粒度生效 4-月粒度生效
+	TimerType *uint64 `json:"TimerType,omitnil,omitempty" name:"TimerType"`
+
+	// 0-全部 1-生效中 2-已过期
+	ValidStatus *uint64 `json:"ValidStatus,omitnil,omitempty" name:"ValidStatus"`
+}
+
+type DescribeBotSceneUCBRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 翻页组件的起始页
+	Skip *uint64 `json:"Skip,omitnil,omitempty" name:"Skip"`
+
+	// 翻页组件的页数据条数
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 排序参数
+	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
+
+	// 1.BOT全局白名单处调用时，传"global";2.BOT场景配置处调用时，传具体的场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// 需要过滤的动作
+	Operate *string `json:"Operate,omitnil,omitempty" name:"Operate"`
+
+	// 需要过滤的规则名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 兼容老数据和新旧版前端
+	VersionFlag *string `json:"VersionFlag,omitnil,omitempty" name:"VersionFlag"`
+
+	// 生效方式：0-全部 1-永久生效 2-定时生效 3-周粒度生效 4-月粒度生效
+	TimerType *uint64 `json:"TimerType,omitnil,omitempty" name:"TimerType"`
+
+	// 0-全部 1-生效中 2-已过期
+	ValidStatus *uint64 `json:"ValidStatus,omitnil,omitempty" name:"ValidStatus"`
+}
+
+func (r *DescribeBotSceneUCBRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBotSceneUCBRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Skip")
+	delete(f, "Limit")
+	delete(f, "Sort")
+	delete(f, "SceneId")
+	delete(f, "Operate")
+	delete(f, "Name")
+	delete(f, "VersionFlag")
+	delete(f, "TimerType")
+	delete(f, "ValidStatus")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBotSceneUCBRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBotSceneUCBRuleResponseParams struct {
+	// 返回数据包
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Data *DescribeBotUCBRuleRsp `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeBotSceneUCBRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBotSceneUCBRuleResponseParams `json:"Response"`
+}
+
+func (r *DescribeBotSceneUCBRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBotSceneUCBRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeBotUCBRuleRsp struct {
+	// 规则列表
+	Res []*InOutputBotUCBRule `json:"Res,omitnil,omitempty" name:"Res"`
+
+	// 规则总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 }
 
 // Predefined struct for user
@@ -5375,6 +6476,9 @@ type DescribeCustomRulesRspRuleListItem struct {
 
 	// 域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 匹配条件的逻辑关系，支持and、or，分别表示多个逻辑匹配条件是与、或的关系
+	LogicalOp *string `json:"LogicalOp,omitnil,omitempty" name:"LogicalOp"`
 }
 
 // Predefined struct for user
@@ -6598,7 +7702,7 @@ type DescribeIpAccessControlRequestParams struct {
 	// IP
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
-	// 生效状态
+	// 生效状态，1表示生效中，2表示过期，0表示全部
 	ValidStatus *int64 `json:"ValidStatus,omitnil,omitempty" name:"ValidStatus"`
 
 	// 最小有效时间的时间戳
@@ -6610,7 +7714,7 @@ type DescribeIpAccessControlRequestParams struct {
 	// 规则ID
 	RuleId *uint64 `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 
-	// 定时任务类型筛选0 1 2 3 4
+	// 0表示全部，1表示永久生效，2表示定时生效，3表示周粒度生效，4表示月粒度生效
 	TimerType *int64 `json:"TimerType,omitnil,omitempty" name:"TimerType"`
 }
 
@@ -6653,7 +7757,7 @@ type DescribeIpAccessControlRequest struct {
 	// IP
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
-	// 生效状态
+	// 生效状态，1表示生效中，2表示过期，0表示全部
 	ValidStatus *int64 `json:"ValidStatus,omitnil,omitempty" name:"ValidStatus"`
 
 	// 最小有效时间的时间戳
@@ -6665,7 +7769,7 @@ type DescribeIpAccessControlRequest struct {
 	// 规则ID
 	RuleId *uint64 `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 
-	// 定时任务类型筛选0 1 2 3 4
+	// 0表示全部，1表示永久生效，2表示定时生效，3表示周粒度生效，4表示月粒度生效
 	TimerType *int64 `json:"TimerType,omitnil,omitempty" name:"TimerType"`
 }
 
@@ -6762,7 +7866,7 @@ type DescribeIpHitItemsRequestParams struct {
 	// 偏移参数
 	Skip *uint64 `json:"Skip,omitnil,omitempty" name:"Skip"`
 
-	// 限制数目
+	// 限制数目，category不等于threat_intelligence时，该值需要必传
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 策略名称
@@ -6771,7 +7875,7 @@ type DescribeIpHitItemsRequestParams struct {
 	// 排序参数
 	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
 
-	// IP
+	// IP,category传threat_intelligence的时候，该值必传
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
 	// 有效时间最小时间戳
@@ -6808,7 +7912,7 @@ type DescribeIpHitItemsRequest struct {
 	// 偏移参数
 	Skip *uint64 `json:"Skip,omitnil,omitempty" name:"Skip"`
 
-	// 限制数目
+	// 限制数目，category不等于threat_intelligence时，该值需要必传
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 策略名称
@@ -6817,7 +7921,7 @@ type DescribeIpHitItemsRequest struct {
 	// 排序参数
 	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
 
-	// IP
+	// IP,category传threat_intelligence的时候，该值必传
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
 	// 有效时间最小时间戳
@@ -7377,6 +8481,120 @@ func (r *DescribePortsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePortsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribePostCKafkaFlowsRequestParams struct {
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+type DescribePostCKafkaFlowsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+func (r *DescribePostCKafkaFlowsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePostCKafkaFlowsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePostCKafkaFlowsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribePostCKafkaFlowsResponseParams struct {
+	// 客户的投递流列表
+	PostCKafkaFlows []*PostCKafkaFlowInfo `json:"PostCKafkaFlows,omitnil,omitempty" name:"PostCKafkaFlows"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribePostCKafkaFlowsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribePostCKafkaFlowsResponseParams `json:"Response"`
+}
+
+func (r *DescribePostCKafkaFlowsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePostCKafkaFlowsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribePostCLSFlowsRequestParams struct {
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+type DescribePostCLSFlowsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+func (r *DescribePostCLSFlowsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePostCLSFlowsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePostCLSFlowsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribePostCLSFlowsResponseParams struct {
+	// 客户的投递流列表
+	PostCLSFlows []*PostCLSFlowInfo `json:"PostCLSFlows,omitnil,omitempty" name:"PostCLSFlows"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribePostCLSFlowsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribePostCLSFlowsResponseParams `json:"Response"`
+}
+
+func (r *DescribePostCLSFlowsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePostCLSFlowsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8173,6 +9391,66 @@ func (r *DescribeUserLevelResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeUserSignatureClassRequestParams struct {
+	// 查询域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+}
+
+type DescribeUserSignatureClassRequest struct {
+	*tchttp.BaseRequest
+	
+	// 查询域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+}
+
+func (r *DescribeUserSignatureClassRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUserSignatureClassRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUserSignatureClassRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUserSignatureClassResponseParams struct {
+	// 规则类型数量
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 规则类型列表及信息
+	RuleTypeList []*RuleType `json:"RuleTypeList,omitnil,omitempty" name:"RuleTypeList"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeUserSignatureClassResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeUserSignatureClassResponseParams `json:"Response"`
+}
+
+func (r *DescribeUserSignatureClassResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUserSignatureClassResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeUserSignatureRuleRequestParams struct {
 	// 需要查询的域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
@@ -8264,6 +9542,101 @@ func (r *DescribeUserSignatureRuleResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeUserSignatureRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUserSignatureRuleV2RequestParams struct {
+	// 需要查询的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 分页
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 每页容量
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 排序字段，支持 signature_id, modify_time
+	By *string `json:"By,omitnil,omitempty" name:"By"`
+
+	// 排序方式
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 筛选条件，支持 MainClassName，SubClassID ,CveID, Status, ID;  ID为规则id
+	Filters []*FiltersItemNew `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeUserSignatureRuleV2Request struct {
+	*tchttp.BaseRequest
+	
+	// 需要查询的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 分页
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 每页容量
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 排序字段，支持 signature_id, modify_time
+	By *string `json:"By,omitnil,omitempty" name:"By"`
+
+	// 排序方式
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 筛选条件，支持 MainClassName，SubClassID ,CveID, Status, ID;  ID为规则id
+	Filters []*FiltersItemNew `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeUserSignatureRuleV2Request) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUserSignatureRuleV2Request) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "By")
+	delete(f, "Order")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUserSignatureRuleV2Request has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUserSignatureRuleV2ResponseParams struct {
+	// 规则总数
+	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 规则列表
+	Rules []*UserSignatureRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeUserSignatureRuleV2Response struct {
+	*tchttp.BaseResponse
+	Response *DescribeUserSignatureRuleV2ResponseParams `json:"Response"`
+}
+
+func (r *DescribeUserSignatureRuleV2Response) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUserSignatureRuleV2Response) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8568,6 +9941,128 @@ func (r *DescribeWebshellStatusResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeWebshellStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DestroyPostCKafkaFlowRequestParams struct {
+	// 投递流的流ID
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+type DestroyPostCKafkaFlowRequest struct {
+	*tchttp.BaseRequest
+	
+	// 投递流的流ID
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+func (r *DestroyPostCKafkaFlowRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DestroyPostCKafkaFlowRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "FlowId")
+	delete(f, "LogType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DestroyPostCKafkaFlowRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DestroyPostCKafkaFlowResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DestroyPostCKafkaFlowResponse struct {
+	*tchttp.BaseResponse
+	Response *DestroyPostCKafkaFlowResponseParams `json:"Response"`
+}
+
+func (r *DestroyPostCKafkaFlowResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DestroyPostCKafkaFlowResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DestroyPostCLSFlowRequestParams struct {
+	// 投递流的流ID
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+type DestroyPostCLSFlowRequest struct {
+	*tchttp.BaseRequest
+	
+	// 投递流的流ID
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 1-访问日志，2-攻击日志，默认为访问日志。
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+func (r *DestroyPostCLSFlowRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DestroyPostCLSFlowRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "FlowId")
+	delete(f, "LogType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DestroyPostCLSFlowRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DestroyPostCLSFlowResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DestroyPostCLSFlowResponse struct {
+	*tchttp.BaseResponse
+	Response *DestroyPostCLSFlowResponseParams `json:"Response"`
+}
+
+func (r *DestroyPostCLSFlowResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DestroyPostCLSFlowResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8989,6 +10484,17 @@ type DomainsPartInfo struct {
 
 	// 域名标签
 	Labels []*string `json:"Labels,omitnil,omitempty" name:"Labels"`
+
+	// 拨测状态。 0: 禁用拨测, 1: 启用拨测
+	ProbeStatus *int64 `json:"ProbeStatus,omitnil,omitempty" name:"ProbeStatus"`
+
+	// 回源策略。
+	// 0：负载均衡回源
+	// 1：分流回源
+	UpstreamPolicy *int64 `json:"UpstreamPolicy,omitnil,omitempty" name:"UpstreamPolicy"`
+
+	// 分流回源策略
+	UpstreamRules []*UpstreamRule `json:"UpstreamRules,omitnil,omitempty" name:"UpstreamRules"`
 }
 
 type DownloadAttackRecordInfo struct {
@@ -9062,6 +10568,17 @@ type ExportAccessInfo struct {
 
 	// 日志导出创建时间
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+}
+
+type FieldWriteConfig struct {
+	// 1:开启 0:不开启
+	EnableHeaders *int64 `json:"EnableHeaders,omitnil,omitempty" name:"EnableHeaders"`
+
+	// 1:开启 0:不开启
+	EnableBody *int64 `json:"EnableBody,omitnil,omitempty" name:"EnableBody"`
+
+	// 1:开启 0:不开启
+	EnableBot *int64 `json:"EnableBot,omitnil,omitempty" name:"EnableBot"`
 }
 
 type FiltersItemNew struct {
@@ -9538,6 +11055,20 @@ func (r *GetInstanceQpsLimitResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type GlobalSceneInfo struct {
+	// 场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// 场景名称
+	SceneName *string `json:"SceneName,omitnil,omitempty" name:"SceneName"`
+
+	// 场景优先级
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 场景更新时间
+	UpdateTime *int64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
 type GoodNews struct {
 	// 商品数量
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
@@ -9938,6 +11469,106 @@ func (r *ImportIpAccessControlResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type InOutputBotUCBRule struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 规则名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// UCB的具体规则项
+	Rule []*InOutputUCBRuleEntry `json:"Rule,omitnil,omitempty" name:"Rule"`
+
+	// 处置动作
+	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 规则开关
+	OnOff *string `json:"OnOff,omitnil,omitempty" name:"OnOff"`
+
+	// 规则类型
+	RuleType *int64 `json:"RuleType,omitnil,omitempty" name:"RuleType"`
+
+	// 规则优先级
+	Prior *int64 `json:"Prior,omitnil,omitempty" name:"Prior"`
+
+	// 修改时间戳
+	Timestamp *int64 `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
+
+	// 标签
+	Label *string `json:"Label,omitnil,omitempty" name:"Label"`
+
+	// 入参ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// 生效时间
+	ValidTime *int64 `json:"ValidTime,omitnil,omitempty" name:"ValidTime"`
+
+	// 传入的appid
+	Appid *uint64 `json:"Appid,omitnil,omitempty" name:"Appid"`
+
+	// 额外参数
+	AdditionArg *string `json:"AdditionArg,omitnil,omitempty" name:"AdditionArg"`
+
+	// 规则描述
+	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
+
+	// 规则ID
+	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
+
+	// true-系统预设规则 false-自定义规则
+	PreDefine *bool `json:"PreDefine,omitnil,omitempty" name:"PreDefine"`
+
+	// 定时任务类型
+	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
+
+	// 定时任务配置
+	JobDateTime *JobDateTime `json:"JobDateTime,omitnil,omitempty" name:"JobDateTime"`
+
+	// 生效截止时间
+	ExpireTime *uint64 `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+
+	// 生效-1,失效-0
+	ValidStatus *int64 `json:"ValidStatus,omitnil,omitempty" name:"ValidStatus"`
+
+	// 自定义拦截页面ID
+	BlockPageId *uint64 `json:"BlockPageId,omitnil,omitempty" name:"BlockPageId"`
+
+	// 当Action=intercept时，此字段必填
+	ActionList []*UCBActionProportion `json:"ActionList,omitnil,omitempty" name:"ActionList"`
+}
+
+type InOutputUCBRuleEntry struct {
+	// 键
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 操作符
+	Op *string `json:"Op,omitnil,omitempty" name:"Op"`
+
+	// 值
+	Value *UCBEntryValue `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// 可选的补充操作符
+	OpOp *string `json:"OpOp,omitnil,omitempty" name:"OpOp"`
+
+	// 可选的补充参数
+	OpArg []*string `json:"OpArg,omitnil,omitempty" name:"OpArg"`
+
+	// 可选的补充值
+	OpValue *float64 `json:"OpValue,omitnil,omitempty" name:"OpValue"`
+
+	// Header参数值时使用
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 区域选择
+	Areas []*Area `json:"Areas,omitnil,omitempty" name:"Areas"`
+
+	// 语言环境
+	Lang *string `json:"Lang,omitnil,omitempty" name:"Lang"`
+}
+
 type InstanceInfo struct {
 	// 实例唯一ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -10071,6 +11702,15 @@ type InstanceInfo struct {
 
 	// 实例延期释放标识
 	FreeDelayFlag *uint64 `json:"FreeDelayFlag,omitnil,omitempty" name:"FreeDelayFlag"`
+
+	// 最近3天最大qps
+	Last3MaxQPS *uint64 `json:"Last3MaxQPS,omitnil,omitempty" name:"Last3MaxQPS"`
+
+	// 最近3天最大带宽
+	Last3MaxBandwidth *uint64 `json:"Last3MaxBandwidth,omitnil,omitempty" name:"Last3MaxBandwidth"`
+
+	// 重保增强包
+	MajorEventsProPkg *MajorEventsProPkg `json:"MajorEventsProPkg,omitnil,omitempty" name:"MajorEventsProPkg"`
 }
 
 type IpAccessControlData struct {
@@ -10328,6 +11968,35 @@ type MajorEventsPkg struct {
 
 	// 护网包状态
 	HWState *int64 `json:"HWState,omitnil,omitempty" name:"HWState"`
+}
+
+type MajorEventsProPkg struct {
+	// 资源id
+	ResourceIds *string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
+
+	// 状态
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 地域
+	Region *int64 `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 开始时间
+	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 申请数量
+	InquireNum *int64 `json:"InquireNum,omitnil,omitempty" name:"InquireNum"`
+
+	// 使用数量
+	UsedNum *int64 `json:"UsedNum,omitnil,omitempty" name:"UsedNum"`
+
+	// 续费标志
+	RenewFlag *uint64 `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+
+	// 计费项
+	BillingItem *string `json:"BillingItem,omitnil,omitempty" name:"BillingItem"`
 }
 
 type MiniExtendPkg struct {
@@ -10934,6 +12603,88 @@ func (r *ModifyAreaBanAreasResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyAreaBanRuleRequestParams struct {
+	// 需要修改的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 需要新增的封禁地域
+	Areas []*Area `json:"Areas,omitnil,omitempty" name:"Areas"`
+
+	// 规则执行的方式，TimedJob为定时执行，CronJob为周期执行
+	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
+
+	// 定时任务配置
+	JobDateTime *JobDateTime `json:"JobDateTime,omitnil,omitempty" name:"JobDateTime"`
+
+	// 地域信息的语言，支持cn、en，默认为中文cn
+	Lang *string `json:"Lang,omitnil,omitempty" name:"Lang"`
+}
+
+type ModifyAreaBanRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 需要修改的域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 需要新增的封禁地域
+	Areas []*Area `json:"Areas,omitnil,omitempty" name:"Areas"`
+
+	// 规则执行的方式，TimedJob为定时执行，CronJob为周期执行
+	JobType *string `json:"JobType,omitnil,omitempty" name:"JobType"`
+
+	// 定时任务配置
+	JobDateTime *JobDateTime `json:"JobDateTime,omitnil,omitempty" name:"JobDateTime"`
+
+	// 地域信息的语言，支持cn、en，默认为中文cn
+	Lang *string `json:"Lang,omitnil,omitempty" name:"Lang"`
+}
+
+func (r *ModifyAreaBanRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAreaBanRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Areas")
+	delete(f, "JobType")
+	delete(f, "JobDateTime")
+	delete(f, "Lang")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAreaBanRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyAreaBanRuleResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyAreaBanRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyAreaBanRuleResponseParams `json:"Response"`
+}
+
+func (r *ModifyAreaBanRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAreaBanRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyAreaBanStatusRequestParams struct {
 	// 需要修改的域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
@@ -11108,6 +12859,152 @@ func (r *ModifyAttackWhiteRuleResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyBotSceneStatusRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// true-开启 false-关闭
+	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+type ModifyBotSceneStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// true-开启 false-关闭
+	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+func (r *ModifyBotSceneStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBotSceneStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "SceneId")
+	delete(f, "Status")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBotSceneStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyBotSceneStatusResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyBotSceneStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyBotSceneStatusResponseParams `json:"Response"`
+}
+
+func (r *ModifyBotSceneStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBotSceneStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyBotSceneUCBRuleRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 1.BOT全局白名单处调用时，传"global";2.BOT场景配置时，传具体的场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// 规则内容, 增加编码SceneId信息,1.BOT全局白名单处调用时，SceneId为"global", RuleType传10, Action为"permit";2.BOT场景配置时，SceneId为场景ID
+	Rule *InOutputBotUCBRule `json:"Rule,omitnil,omitempty" name:"Rule"`
+
+	// 530改批量操作
+	BatchRules []*InOutputBotUCBRule `json:"BatchRules,omitnil,omitempty" name:"BatchRules"`
+}
+
+type ModifyBotSceneUCBRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 1.BOT全局白名单处调用时，传"global";2.BOT场景配置时，传具体的场景ID
+	SceneId *string `json:"SceneId,omitnil,omitempty" name:"SceneId"`
+
+	// 规则内容, 增加编码SceneId信息,1.BOT全局白名单处调用时，SceneId为"global", RuleType传10, Action为"permit";2.BOT场景配置时，SceneId为场景ID
+	Rule *InOutputBotUCBRule `json:"Rule,omitnil,omitempty" name:"Rule"`
+
+	// 530改批量操作
+	BatchRules []*InOutputBotUCBRule `json:"BatchRules,omitnil,omitempty" name:"BatchRules"`
+}
+
+func (r *ModifyBotSceneUCBRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBotSceneUCBRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "SceneId")
+	delete(f, "Rule")
+	delete(f, "BatchRules")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBotSceneUCBRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyBotSceneUCBRuleResponseParams struct {
+	// 正常情况下为null
+	Data *string `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyBotSceneUCBRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyBotSceneUCBRuleResponseParams `json:"Response"`
+}
+
+func (r *ModifyBotSceneUCBRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBotSceneUCBRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyBotStatusRequestParams struct {
 	// 类别
 	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
@@ -11240,6 +13137,8 @@ type ModifyCustomRuleRequestParams struct {
 
 	// 放行时是否继续执行其它检查逻辑，继续执行地域封禁防护：geoip、继续执行CC策略防护：cc、继续执行WEB应用防护：owasp、继续执行AI引擎防护：ai、继续执行信息防泄漏防护：antileakage。如果多个勾选那么以,串接。
 	// 默认是"geoip,cc,owasp,ai,antileakage"
+	//
+	// Deprecated: Bypass is deprecated.
 	Bypass *string `json:"Bypass,omitnil,omitempty" name:"Bypass"`
 
 	// 优先级，1~100的整数，数字越小，代表这条规则的执行优先级越高。
@@ -11264,6 +13163,9 @@ type ModifyCustomRuleRequestParams struct {
 
 	// 拦截页面id
 	PageId *string `json:"PageId,omitnil,omitempty" name:"PageId"`
+
+	// 匹配条件的逻辑关系，支持and、or，分别表示多个逻辑匹配条件是与、或的关系
+	LogicalOp *string `json:"LogicalOp,omitnil,omitempty" name:"LogicalOp"`
 }
 
 type ModifyCustomRuleRequest struct {
@@ -11316,6 +13218,9 @@ type ModifyCustomRuleRequest struct {
 
 	// 拦截页面id
 	PageId *string `json:"PageId,omitnil,omitempty" name:"PageId"`
+
+	// 匹配条件的逻辑关系，支持and、or，分别表示多个逻辑匹配条件是与、或的关系
+	LogicalOp *string `json:"LogicalOp,omitnil,omitempty" name:"LogicalOp"`
 }
 
 func (r *ModifyCustomRuleRequest) ToJsonString() string {
@@ -11345,6 +13250,7 @@ func (r *ModifyCustomRuleRequest) FromJsonString(s string) error {
 	delete(f, "Source")
 	delete(f, "Status")
 	delete(f, "PageId")
+	delete(f, "LogicalOp")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCustomRuleRequest has unknown keys!", "")
 	}
@@ -11478,7 +13384,7 @@ type ModifyCustomWhiteRuleRequestParams struct {
 	// 优先级，1~100的整数，数字越小，代表这条规则的执行优先级越高。
 	SortId *uint64 `json:"SortId,omitnil,omitempty" name:"SortId"`
 
-	// 规则生效截止时间，0：永久生效，其它值为对应时间的时间戳。
+	// 如果没有设置JobDateTime字段则用此字段，0表示永久生效，其它表示定时生效的截止时间（单位为秒）
 	ExpireTime *uint64 `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 匹配条件数组
@@ -11509,7 +13415,7 @@ type ModifyCustomWhiteRuleRequest struct {
 	// 优先级，1~100的整数，数字越小，代表这条规则的执行优先级越高。
 	SortId *uint64 `json:"SortId,omitnil,omitempty" name:"SortId"`
 
-	// 规则生效截止时间，0：永久生效，其它值为对应时间的时间戳。
+	// 如果没有设置JobDateTime字段则用此字段，0表示永久生效，其它表示定时生效的截止时间（单位为秒）
 	ExpireTime *uint64 `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 匹配条件数组
@@ -12882,7 +14788,7 @@ type ModifyProtectionStatusRequestParams struct {
 	// 域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 状态
+	// 1：开启WAF开关，0：关闭WAF开关
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// WAF的版本，clb-waf代表负载均衡WAF、sparta-waf代表SaaS WAF，默认是sparta-waf。
@@ -12895,7 +14801,7 @@ type ModifyProtectionStatusRequest struct {
 	// 域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 状态
+	// 1：开启WAF开关，0：关闭WAF开关
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// WAF的版本，clb-waf代表负载均衡WAF、sparta-waf代表SaaS WAF，默认是sparta-waf。
@@ -13170,6 +15076,12 @@ type ModifySpartaProtectionRequestParams struct {
 
 	// GmCertType为2时，需要填充此参数，表示腾讯云SSL平台托管的证书id
 	GmSSLId *string `json:"GmSSLId,omitnil,omitempty" name:"GmSSLId"`
+
+	// 回源策略，支持负载均衡回源和分流回源两种方式。0：默认值，负载均衡回源；1：分流回源
+	UpstreamPolicy *int64 `json:"UpstreamPolicy,omitnil,omitempty" name:"UpstreamPolicy"`
+
+	// 分流回源时生效，分流回源的规则。
+	UpstreamRules []*UpstreamRule `json:"UpstreamRules,omitnil,omitempty" name:"UpstreamRules"`
 }
 
 type ModifySpartaProtectionRequest struct {
@@ -13312,6 +15224,12 @@ type ModifySpartaProtectionRequest struct {
 
 	// GmCertType为2时，需要填充此参数，表示腾讯云SSL平台托管的证书id
 	GmSSLId *string `json:"GmSSLId,omitnil,omitempty" name:"GmSSLId"`
+
+	// 回源策略，支持负载均衡回源和分流回源两种方式。0：默认值，负载均衡回源；1：分流回源
+	UpstreamPolicy *int64 `json:"UpstreamPolicy,omitnil,omitempty" name:"UpstreamPolicy"`
+
+	// 分流回源时生效，分流回源的规则。
+	UpstreamRules []*UpstreamRule `json:"UpstreamRules,omitnil,omitempty" name:"UpstreamRules"`
 }
 
 func (r *ModifySpartaProtectionRequest) ToJsonString() string {
@@ -13370,6 +15288,8 @@ func (r *ModifySpartaProtectionRequest) FromJsonString(s string) error {
 	delete(f, "GmEncCert")
 	delete(f, "GmEncPrivateKey")
 	delete(f, "GmSSLId")
+	delete(f, "UpstreamPolicy")
+	delete(f, "UpstreamRules")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifySpartaProtectionRequest has unknown keys!", "")
 	}
@@ -13456,6 +15376,80 @@ func (r *ModifyUserLevelResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyUserLevelResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyUserSignatureClassRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 规则类型ID
+	TypeID *string `json:"TypeID,omitnil,omitempty" name:"TypeID"`
+
+	// 规则类型状态，0:关闭，1:开启
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+type ModifyUserSignatureClassRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 规则类型ID
+	TypeID *string `json:"TypeID,omitnil,omitempty" name:"TypeID"`
+
+	// 规则类型状态，0:关闭，1:开启
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+func (r *ModifyUserSignatureClassRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyUserSignatureClassRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "TypeID")
+	delete(f, "Status")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyUserSignatureClassRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyUserSignatureClassResponseParams struct {
+	// 规则类型ID
+	TypeID *string `json:"TypeID,omitnil,omitempty" name:"TypeID"`
+
+	// 规则类型状态，0：关闭，1：开启
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyUserSignatureClassResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyUserSignatureClassResponseParams `json:"Response"`
+}
+
+func (r *ModifyUserSignatureClassResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyUserSignatureClassResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -14017,6 +16011,79 @@ func (r *PostAttackDownloadTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type PostCKafkaFlowInfo struct {
+	// 投递流唯一ID
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 1-访问日志 2-攻击日志
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 状态 0-为关闭 1-为启用
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// CKafka所在区域
+	CKafkaRegion *string `json:"CKafkaRegion,omitnil,omitempty" name:"CKafkaRegion"`
+
+	// CKafka实例ID
+	CKafkaID *string `json:"CKafkaID,omitnil,omitempty" name:"CKafkaID"`
+
+	// ckafka地址信息
+	Brokers *string `json:"Brokers,omitnil,omitempty" name:"Brokers"`
+
+	// ckafka版本号
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// 主题名称
+	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// 压缩算法，支持gzip 和 lz4
+	Compression *string `json:"Compression,omitnil,omitempty" name:"Compression"`
+
+	// 是否支持SASL,0-关闭，1-开启
+	SASLEnable *int64 `json:"SASLEnable,omitnil,omitempty" name:"SASLEnable"`
+
+	// SASL用户名
+	SASLUser *string `json:"SASLUser,omitnil,omitempty" name:"SASLUser"`
+
+	// SALS密码
+	SASLPassword *string `json:"SASLPassword,omitnil,omitempty" name:"SASLPassword"`
+
+	// 描述信息
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 1-外网TGW，2-支撑环境，默认为支撑环境
+	VipType *int64 `json:"VipType,omitnil,omitempty" name:"VipType"`
+
+	// 配置状态
+	WriteConfig *FieldWriteConfig `json:"WriteConfig,omitnil,omitempty" name:"WriteConfig"`
+}
+
+type PostCLSFlowInfo struct {
+	// 投递流唯一ID
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 1-访问日志 2-攻击日志
+	LogType *int64 `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 状态 0-为关闭 1-为启用
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// CLS所在区域
+	CLSRegion *string `json:"CLSRegion,omitnil,omitempty" name:"CLSRegion"`
+
+	// CLS日志集合名称
+	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
+
+	// CLS日志集合ID
+	LogsetID *string `json:"LogsetID,omitnil,omitempty" name:"LogsetID"`
+
+	// CLS日志主题名称
+	LogTopicName *string `json:"LogTopicName,omitnil,omitempty" name:"LogTopicName"`
+
+	// CLS日志集合ID
+	LogTopicID *string `json:"LogTopicID,omitnil,omitempty" name:"LogTopicID"`
+}
+
 type ProductInfo struct {
 	// 产品名称
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
@@ -14190,6 +16257,26 @@ type RuleList struct {
 
 	// 创建时间
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+}
+
+type RuleType struct {
+	// 规则ID
+	TypeID *string `json:"TypeID,omitnil,omitempty" name:"TypeID"`
+
+	// 规则名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 规则类型描述
+	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
+
+	// 规则类型状态，即类型生效开关，0：关闭，1：开启
+	RuleTypeStatus *int64 `json:"RuleTypeStatus,omitnil,omitempty" name:"RuleTypeStatus"`
+
+	// 类型下生效的规则数量
+	ActiveRuleCount *int64 `json:"ActiveRuleCount,omitnil,omitempty" name:"ActiveRuleCount"`
+
+	// 类型下的规则总数量
+	TotalRuleCount *int64 `json:"TotalRuleCount,omitnil,omitempty" name:"TotalRuleCount"`
 }
 
 type ScanIpInfo struct {
@@ -14531,7 +16618,8 @@ type Strategy struct {
 	// 
 	//     匹配字段不同，相应的匹配参数、逻辑符号、匹配内容有所不同
 	// 具体如下所示：
-	// <table><thead><tr><th>匹配字段</th><th>匹配参数</th><th>逻辑符号</th><th>匹配内容</th></tr></thead><tbody><tr><td>IP（来源IP）</td><td>不支持参数</td><td>ipmatch（匹配）<br/>ipnmatch（不匹配）</td><td>多个IP以英文逗号隔开,最多20个</td></tr><tr><td>IPV6（来源IPv6）</td><td>不支持参数</td><td>ipmatch（匹配）<br/>ipnmatch（不匹配）</td><td>支持单个IPV6地址</td></tr><tr><td>Referer（Referer）</td><td>不支持参数</td><td>empty（内容为空）<br/>null（不存在）<br/>eq（等于）<br/>neq（不等于）<br/>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）</td><td>请输入内容,512个字符以内</td></tr><tr><td>URL（请求路径）</td><td>不支持参数</td><td>eq（等于）<br/>neq（不等于）<br/>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）<br/></td><td>请以/开头,512个字符以内</td></tr><tr><td>UserAgent（UserAgent）</td><td>不支持参数</td><td>同匹配字段<font color="Red">Referer</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>HTTP_METHOD（HTTP请求方法）</td><td>不支持参数</td><td>eq（等于）<br/>neq（不等于）</td><td>请输入方法名称,建议大写</td></tr><tr><td>QUERY_STRING（请求字符串）</td><td>不支持参数</td><td>同匹配字段<font color="Red">请求路径</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET（GET参数值）</td><td>支持参数录入</td><td>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET_PARAMS_NAMES（GET参数名）</td><td>不支持参数</td><td>exsit（存在参数）<br/>nexsit（不存在参数）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）</td><td>请输入内容,512个字符以内</td></tr><tr><td>POST（POST参数值）</td><td>支持参数录入</td><td>同匹配字段<font color="Red">GET参数值</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET_POST_NAMES（POST参数名）</td><td>不支持参数</td><td>同匹配字段<font color="Red">GET参数名</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>POST_BODY（完整BODY）</td><td>不支持参数</td><td>同匹配字段<font color="Red">请求路径</font>逻辑符号</td><td>请输入BODY内容,512个字符以内</td></tr><tr><td>COOKIE（Cookie）</td><td>不支持参数</td><td>empty（内容为空）<br/>null（不存在）<br/>rematch（正则匹配）</td><td><font color="Red">暂不支持</font></td></tr><tr><td>GET_COOKIES_NAMES（Cookie参数名）</td><td>不支持参数</td><td>同匹配字段<font color="Red">GET参数名</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>ARGS_COOKIE（Cookie参数值）</td><td>支持参数录入</td><td>同匹配字段<font color="Red">GET参数值</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET_HEADERS_NAMES（Header参数名）</td><td>不支持参数</td><td>exsit（存在参数）<br/>nexsit（不存在参数）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）</td><td>请输入内容,建议小写,512个字符以内</td></tr><tr><td>ARGS_HEADER（Header参数值）</td><td>支持参数录入</td><td>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）</td><td>请输入内容,512个字符以内</td></tr></tbody></table>
+	// <table><thead><tr><th>匹配字段</th><th>匹配参数</th><th>逻辑符号</th><th>匹配内容</th></tr></thead><tbody><tr><td>IP（来源IP）</td><td>不支持参数</td><td>ipmatch（匹配）<br/>ipnmatch（不匹配）</td><td>多个IP以英文逗号隔开,最多20个</td></tr><tr><td>IPV6（来源IPv6）</td><td>不支持参数</td><td>ipmatch（匹配）<br/>ipnmatch（不匹配）</td><td>支持单个IPV6地址</td></tr><tr><td>Referer（Referer）</td><td>不支持参数</td><td>empty（内容为空）<br/>null（不存在）<br/>eq（等于）<br/>neq（不等于）<br/>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）</td><td>请输入内容,512个字符以内</td></tr><tr><td>URL（请求路径）</td><td>不支持参数</td><td>eq（等于）<br/>neq（不等于）<br/>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）<br/></td><td>请以/开头,512个字符以内</td></tr><tr><td>UserAgent（UserAgent）</td><td>不支持参数</td><td>同匹配字段<font color="Red">Referer</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>HTTP_METHOD（HTTP请求方法）</td><td>不支持参数</td><td>eq（等于）<br/>neq（不等于）</td><td>请输入方法名称,建议大写</td></tr><tr><td>QUERY_STRING（请求字符串）</td><td>不支持参数</td><td>同匹配字段<font color="Red">请求路径</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET（GET参数值）</td><td>支持参数录入</td><td>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET_PARAMS_NAMES（GET参数名）</td><td>不支持参数</td><td>exsit（存在参数）<br/>nexsit（不存在参数）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）</td><td>请输入内容,512个字符以内</td></tr><tr><td>POST（POST参数值）</td><td>支持参数录入</td><td>同匹配字段<font color="Red">GET参数值</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET_POST_NAMES（POST参数名）</td><td>不支持参数</td><td>同匹配字段<font color="Red">GET参数名</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>POST_BODY（完整BODY）</td><td>不支持参数</td><td>同匹配字段<font color="Red">请求路径</font>逻辑符号</td><td>请输入BODY内容,512个字符以内</td></tr><tr><td>COOKIE（Cookie）</td><td>不支持参数</td><td>empty（内容为空）<br/>null（不存在）<br/>rematch（正则匹配）</td><td><font color="Red">暂不支持</font></td></tr><tr><td>GET_COOKIES_NAMES（Cookie参数名）</td><td>不支持参数</td><td>同匹配字段<font color="Red">GET参数名</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>ARGS_COOKIE（Cookie参数值）</td><td>支持参数录入</td><td>同匹配字段<font color="Red">GET参数值</font>逻辑符号</td><td>请输入内容,512个字符以内</td></tr><tr><td>GET_HEADERS_NAMES（Header参数名）</td><td>不支持参数</td><td>exsit（存在参数）<br/>nexsit（不存在参数）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）</td><td>请输入内容,建议小写,512个字符以内</td></tr><tr><td>ARGS_HEADER（Header参数值）</td><td>支持参数录入</td><td>contains（包含）<br/>ncontains（不包含）<br/>len_eq（长度等于）<br/>len_gt（长度大于）<br/>len_lt（长度小于）<br/>strprefix（前缀匹配）<br/>strsuffix（后缀匹配）<br/>rematch（正则匹配）</td><td>请输入内容,512个字符以内</td></tr><tr><td>CONTENT_LENGTH（Content-length）</td><td>支持参数录入</td><td>numgt（数值大于）<br/>numlt（数值小于）<br/>numeq（数值等于）<br/></td><td>请输入0-9999999999999之间的整数</td></tr><tr><td>IP_GEO（来源IP归属地）</td><td>支持参数录入</td><td>geo_in（属于）<br/>geo_not_in（不属于）<br/></td><td>请输入内容,10240字符以内，格式为序列化的JSON，格式为：[{"Country":"中国","Region":"广东","City":"深圳"}]</td></tr>
+	// </tbody></table>
 	Field *string `json:"Field,omitnil,omitempty" name:"Field"`
 
 	// 逻辑符号 
@@ -14550,6 +16638,11 @@ type Strategy struct {
 	//         len_lt （ 长度小于）
 	//         ipmatch （ 属于）
 	//         ipnmatch （ 不属于）
+	//         numgt （ 数值大于）
+	//         numlt （ 数值小于）
+	//         numeq （ 数值等于）
+	//         geo_in （ IP地理属于）
+	//         geo_not_in （ IP地理不属于）
 	//     各匹配字段对应的逻辑符号不同，详见上述匹配字段表格
 	CompareFunc *string `json:"CompareFunc,omitnil,omitempty" name:"CompareFunc"`
 
@@ -14781,6 +16874,110 @@ type TimedJob struct {
 	EndDateTime *uint64 `json:"EndDateTime,omitnil,omitempty" name:"EndDateTime"`
 }
 
+type UCBActionProportion struct {
+	// 动作
+	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 比例
+	Proportion *float64 `json:"Proportion,omitnil,omitempty" name:"Proportion"`
+}
+
+type UCBEntryValue struct {
+	// string类型值
+	BasicValue *string `json:"BasicValue,omitnil,omitempty" name:"BasicValue"`
+
+	// 布尔类型值
+	LogicValue *bool `json:"LogicValue,omitnil,omitempty" name:"LogicValue"`
+
+	// string数组类型值
+	BelongValue []*string `json:"BelongValue,omitnil,omitempty" name:"BelongValue"`
+
+	// 指示有效的字段
+	ValidKey *string `json:"ValidKey,omitnil,omitempty" name:"ValidKey"`
+
+	// string数组类型值
+	MultiValue []*string `json:"MultiValue,omitnil,omitempty" name:"MultiValue"`
+}
+
+// Predefined struct for user
+type UpdateProtectionModesRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 资源类型
+	Edition *string `json:"Edition,omitnil,omitempty" name:"Edition"`
+
+	// 大类规则ID
+	TypeIDs []*string `json:"TypeIDs,omitnil,omitempty" name:"TypeIDs"`
+
+	// 0表示观察，1表示拦截
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
+}
+
+type UpdateProtectionModesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 资源类型
+	Edition *string `json:"Edition,omitnil,omitempty" name:"Edition"`
+
+	// 大类规则ID
+	TypeIDs []*string `json:"TypeIDs,omitnil,omitempty" name:"TypeIDs"`
+
+	// 0表示观察，1表示拦截
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
+}
+
+func (r *UpdateProtectionModesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateProtectionModesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Edition")
+	delete(f, "TypeIDs")
+	delete(f, "Mode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateProtectionModesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateProtectionModesResponseParams struct {
+	// 操作结果
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CommonRsp *CommonRspData `json:"CommonRsp,omitnil,omitempty" name:"CommonRsp"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateProtectionModesResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateProtectionModesResponseParams `json:"Response"`
+}
+
+func (r *UpdateProtectionModesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateProtectionModesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 // Predefined struct for user
 type UpsertCCAutoStatusRequestParams struct {
 	// 域名
@@ -14875,7 +17072,7 @@ type UpsertCCRuleRequestParams struct {
 	// 检测Url
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
 
-	// 匹配方法，0表示等于，1表示前缀匹配，2表示包含
+	// 匹配方法，0表示等于，1表示前缀匹配，2表示包含，3表示不等于，6表示后缀匹配，7表示不包含
 	MatchFunc *int64 `json:"MatchFunc,omitnil,omitempty" name:"MatchFunc"`
 
 	// 动作，20表示观察，21表示人机识别，22表示拦截，23表示精准拦截，26表示精准人机识别，27表示JS校验
@@ -14887,7 +17084,7 @@ type UpsertCCRuleRequestParams struct {
 	// 动作有效时间
 	ValidTime *int64 `json:"ValidTime,omitnil,omitempty" name:"ValidTime"`
 
-	// 附加参数
+	// CC的匹配条件JSON序列化的字符串，示例：[{\"key\":\"Method\",\"args\":[\"=R0VU\"],\"match\":\"0\",\"encodeflag\":true}] Key可选值为 Method、Post、Referer、Cookie、User-Agent、CustomHeader match可选值为，当Key为Method的时候可选值为0（等于）、3（不等于）。 Key为Post的时候可选值为0（等于）、3（不等于），Key为Cookie的时候可选值为0（等于）、2（包含），3（不等于）、7（不包含）、 当Key为Referer的时候可选值为0（等于）、3（不等于）、1（前缀匹配）、6（后缀匹配）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）， 当Key为Cookie的时候可选值为0（等于）、3（不等于）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）， 当Key为User-Agent的时候可选值为0（等于）、3（不等于）、1（前缀匹配）、6（后缀匹配）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）， 当Key为CustomHeader的时候可选值为0（等于）、3（不等于）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）。 args用来表示匹配内容，需要设置encodeflag为true，当Key为Post、Cookie、CustomHeader时，用等号=来分别串接Key和Value，并分别用Base64编码，类似YWJj=YWJj。当Key为Referer、User-Agent时，用等号=来串接Value，类似=YWJj。
 	OptionsArr *string `json:"OptionsArr,omitnil,omitempty" name:"OptionsArr"`
 
 	// waf版本，sparta-waf或者clb-waf
@@ -14936,7 +17133,7 @@ type UpsertCCRuleRequest struct {
 	// 检测Url
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
 
-	// 匹配方法，0表示等于，1表示前缀匹配，2表示包含
+	// 匹配方法，0表示等于，1表示前缀匹配，2表示包含，3表示不等于，6表示后缀匹配，7表示不包含
 	MatchFunc *int64 `json:"MatchFunc,omitnil,omitempty" name:"MatchFunc"`
 
 	// 动作，20表示观察，21表示人机识别，22表示拦截，23表示精准拦截，26表示精准人机识别，27表示JS校验
@@ -14948,7 +17145,7 @@ type UpsertCCRuleRequest struct {
 	// 动作有效时间
 	ValidTime *int64 `json:"ValidTime,omitnil,omitempty" name:"ValidTime"`
 
-	// 附加参数
+	// CC的匹配条件JSON序列化的字符串，示例：[{\"key\":\"Method\",\"args\":[\"=R0VU\"],\"match\":\"0\",\"encodeflag\":true}] Key可选值为 Method、Post、Referer、Cookie、User-Agent、CustomHeader match可选值为，当Key为Method的时候可选值为0（等于）、3（不等于）。 Key为Post的时候可选值为0（等于）、3（不等于），Key为Cookie的时候可选值为0（等于）、2（包含），3（不等于）、7（不包含）、 当Key为Referer的时候可选值为0（等于）、3（不等于）、1（前缀匹配）、6（后缀匹配）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）， 当Key为Cookie的时候可选值为0（等于）、3（不等于）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）， 当Key为User-Agent的时候可选值为0（等于）、3（不等于）、1（前缀匹配）、6（后缀匹配）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）， 当Key为CustomHeader的时候可选值为0（等于）、3（不等于）、2（包含）、7（不包含）、12（存在）、5（不存在）、4（内容为空）。 args用来表示匹配内容，需要设置encodeflag为true，当Key为Post、Cookie、CustomHeader时，用等号=来分别串接Key和Value，并分别用Base64编码，类似YWJj=YWJj。当Key为Referer、User-Agent时，用等号=来串接Value，类似=YWJj。
 	OptionsArr *string `json:"OptionsArr,omitnil,omitempty" name:"OptionsArr"`
 
 	// waf版本，sparta-waf或者clb-waf
@@ -15252,6 +17449,29 @@ func (r *UpsertSessionResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *UpsertSessionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpstreamRule struct {
+	// 匹配的关键字。目前支持host、uri两种
+	KeyName *string `json:"KeyName,omitnil,omitempty" name:"KeyName"`
+
+	// 逻辑符号。
+	// equal：等于
+	// not equal：不等于
+	// belong：属于
+	// not belong：不属于
+	Symbol *string `json:"Symbol,omitnil,omitempty" name:"Symbol"`
+
+	// 匹配的内容。equal和not equal时，数组只能有一个元素
+	ContentList []*string `json:"ContentList,omitnil,omitempty" name:"ContentList"`
+
+	// 规则匹配后生效的回源地址。
+	AddressList []*string `json:"AddressList,omitnil,omitempty" name:"AddressList"`
+
+	// 回源负载均衡类型，仅多个回源地址时生效。
+	// 0：轮询
+	// 1：IP_HASH
+	BalanceType *uint64 `json:"BalanceType,omitnil,omitempty" name:"BalanceType"`
 }
 
 type UserDomainInfo struct {
