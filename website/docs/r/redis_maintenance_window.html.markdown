@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_redis_maintenance_window"
 sidebar_current: "docs-tencentcloud-resource-redis_maintenance_window"
 description: |-
-  Provides a resource to create a redis maintenance_window
+  Provides a resource to create a redis maintenance window
 ---
 
 # tencentcloud_redis_maintenance_window
 
-Provides a resource to create a redis maintenance_window
+Provides a resource to create a redis maintenance window
 
 ## Example Usage
 
@@ -30,21 +30,21 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_redis_instance" "foo" {
+resource "tencentcloud_redis_instance" "example" {
   availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
   type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
-  password           = "test12345789"
+  password           = "Password@123"
   mem_size           = 8192
   redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
   redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
-  name               = "terrform_test"
+  name               = "tf_example"
   port               = 6379
   vpc_id             = tencentcloud_vpc.vpc.id
   subnet_id          = tencentcloud_subnet.subnet.id
 }
 
-resource "tencentcloud_redis_maintenance_window" "foo" {
-  instance_id = tencentcloud_redis_instance.foo.id
+resource "tencentcloud_redis_maintenance_window" "example" {
+  instance_id = tencentcloud_redis_instance.example.id
   start_time  = "17:00"
   end_time    = "19:00"
 }
@@ -68,9 +68,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-redis maintenance_window can be imported using the id, e.g.
+redis maintenance window can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_redis_maintenance_window.foo instance_id
+terraform import tencentcloud_redis_maintenance_window.example crs-cqdfdzvt
 ```
 
