@@ -114,10 +114,7 @@ func resourceTencentCloudVpcIpv6CidrBlockRead(d *schema.ResourceData, meta inter
 
 	if instance.Ipv6CidrBlockSet != nil && len(instance.Ipv6CidrBlockSet) != 0 {
 		_ = d.Set("address_type", instance.Ipv6CidrBlockSet[0].AddressType)
-	}
-
-	if instance.Ipv6CidrBlock != nil {
-		_ = d.Set("ipv6_cidr_block", instance.Ipv6CidrBlock)
+		_ = d.Set("ipv6_cidr_block", instance.Ipv6CidrBlockSet[0].IPv6CidrBlock)
 	}
 
 	return nil
