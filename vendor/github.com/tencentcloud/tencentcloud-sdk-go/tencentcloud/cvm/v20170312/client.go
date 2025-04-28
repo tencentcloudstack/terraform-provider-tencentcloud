@@ -138,6 +138,12 @@ func NewAssociateInstancesKeyPairsResponse() (response *AssociateInstancesKeyPai
 //
 // 
 //
+// * 仅支持对 `Linux` 操作系统实例进行绑定操作。
+//
+// * 非强制关机场景下，仅支持对 [STOPPED](https://cloud.tencent.com/document/product/213/15753#InstanceStatus) 状态实例进行绑定操作。
+//
+// * 强制关机场景下，先执行强制关机，再绑定密钥；如实例原状态为 [RUNNING](https://cloud.tencent.com/document/product/213/15753#InstanceStatus)，绑定完成后实例会自动开机。
+//
 // * 将密钥的公钥写入到实例的`SSH`配置当中，用户就可以通过该密钥的私钥来登录实例。
 //
 // * 如果实例原来绑定过密钥，那么原来的密钥将失效。
@@ -184,6 +190,12 @@ func (c *Client) AssociateInstancesKeyPairs(request *AssociateInstancesKeyPairsR
 // 本接口 (AssociateInstancesKeyPairs) 用于将密钥绑定到实例上。
 //
 // 
+//
+// * 仅支持对 `Linux` 操作系统实例进行绑定操作。
+//
+// * 非强制关机场景下，仅支持对 [STOPPED](https://cloud.tencent.com/document/product/213/15753#InstanceStatus) 状态实例进行绑定操作。
+//
+// * 强制关机场景下，先执行强制关机，再绑定密钥；如实例原状态为 [RUNNING](https://cloud.tencent.com/document/product/213/15753#InstanceStatus)，绑定完成后实例会自动开机。
 //
 // * 将密钥的公钥写入到实例的`SSH`配置当中，用户就可以通过该密钥的私钥来登录实例。
 //
@@ -4032,7 +4044,11 @@ func NewDisassociateInstancesKeyPairsResponse() (response *DisassociateInstances
 //
 // 
 //
-// * 只支持[`STOPPED`](https://cloud.tencent.com/document/product/213/15753#InstanceStatus)状态的`Linux`操作系统的实例。
+// * 仅支持对 Linux 操作系统实例进行解绑操作。
+//
+// * 非强制关机场景下，仅支持对 [STOPPED](https://cloud.tencent.com/document/product/213/15753#InstanceStatus) 状态实例进行解绑操作。
+//
+// * 强制关机场景下，先执行强制关机，再解绑密钥；如实例原状态为 [RUNNING](https://cloud.tencent.com/document/product/213/15753#InstanceStatus)，解绑完成后实例会自动开机。
 //
 // * 解绑密钥后，实例可以通过原来设置的密码登录。
 //
@@ -4075,7 +4091,11 @@ func (c *Client) DisassociateInstancesKeyPairs(request *DisassociateInstancesKey
 //
 // 
 //
-// * 只支持[`STOPPED`](https://cloud.tencent.com/document/product/213/15753#InstanceStatus)状态的`Linux`操作系统的实例。
+// * 仅支持对 Linux 操作系统实例进行解绑操作。
+//
+// * 非强制关机场景下，仅支持对 [STOPPED](https://cloud.tencent.com/document/product/213/15753#InstanceStatus) 状态实例进行解绑操作。
+//
+// * 强制关机场景下，先执行强制关机，再解绑密钥；如实例原状态为 [RUNNING](https://cloud.tencent.com/document/product/213/15753#InstanceStatus)，解绑完成后实例会自动开机。
 //
 // * 解绑密钥后，实例可以通过原来设置的密码登录。
 //
@@ -4218,7 +4238,7 @@ func NewEnterRescueModeResponse() (response *EnterRescueModeResponse) {
 }
 
 // EnterRescueMode
-// 进入救援模式
+// 本接口（EnterRescueMode）用于进入救援模式。
 //
 // 可能返回的错误码:
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -4251,7 +4271,7 @@ func (c *Client) EnterRescueMode(request *EnterRescueModeRequest) (response *Ent
 }
 
 // EnterRescueMode
-// 进入救援模式
+// 本接口（EnterRescueMode）用于进入救援模式。
 //
 // 可能返回的错误码:
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -4315,7 +4335,7 @@ func NewExitRescueModeResponse() (response *ExitRescueModeResponse) {
 }
 
 // ExitRescueMode
-// 退出救援模式
+// 本接口（ExitRescueMode）用于退出救援模式。
 //
 // 可能返回的错误码:
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -4337,7 +4357,7 @@ func (c *Client) ExitRescueMode(request *ExitRescueModeRequest) (response *ExitR
 }
 
 // ExitRescueMode
-// 退出救援模式
+// 本接口（ExitRescueMode）用于退出救援模式。
 //
 // 可能返回的错误码:
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
@@ -4556,7 +4576,7 @@ func NewImportInstancesActionTimerResponse() (response *ImportInstancesActionTim
 }
 
 // ImportInstancesActionTimer
-// 导入定时任务
+// 本接口（ImportInstancesActionTimer）用于导入定时任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_MUTACTIONTIMEREXIST = "FailedOperation.MutActionTimerExist"
@@ -4571,7 +4591,7 @@ func (c *Client) ImportInstancesActionTimer(request *ImportInstancesActionTimerR
 }
 
 // ImportInstancesActionTimer
-// 导入定时任务
+// 本接口（ImportInstancesActionTimer）用于导入定时任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_MUTACTIONTIMEREXIST = "FailedOperation.MutActionTimerExist"
@@ -4621,7 +4641,7 @@ func NewImportKeyPairResponse() (response *ImportKeyPairResponse) {
 //
 // 
 //
-// * 本接口的功能是将密钥对导入到用户账户，并不会自动绑定到实例。如需绑定可以使用[AssociasteInstancesKeyPair](https://cloud.tencent.com/document/api/213/9404)接口。
+// * 本接口的功能是将密钥对导入到用户账户，并不会自动绑定到实例。如需绑定可以使用[AssociateInstancesKeyPairs](https://cloud.tencent.com/document/product/213/15698)接口。
 //
 // * 需指定密钥对名称以及该密钥对的公钥文本。
 //
@@ -4649,7 +4669,7 @@ func (c *Client) ImportKeyPair(request *ImportKeyPairRequest) (response *ImportK
 //
 // 
 //
-// * 本接口的功能是将密钥对导入到用户账户，并不会自动绑定到实例。如需绑定可以使用[AssociasteInstancesKeyPair](https://cloud.tencent.com/document/api/213/9404)接口。
+// * 本接口的功能是将密钥对导入到用户账户，并不会自动绑定到实例。如需绑定可以使用[AssociateInstancesKeyPairs](https://cloud.tencent.com/document/product/213/15698)接口。
 //
 // * 需指定密钥对名称以及该密钥对的公钥文本。
 //
@@ -5280,6 +5300,7 @@ func NewInquiryPriceResetInstancesTypeResponse() (response *InquiryPriceResetIns
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDRESETINSTANCETYPE = "UnsupportedOperation.InstanceMixedResetInstanceType"
 //  UNSUPPORTEDOPERATION_LOCALDATADISKCHANGEINSTANCEFAMILY = "UnsupportedOperation.LocalDataDiskChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
@@ -5337,6 +5358,7 @@ func (c *Client) InquiryPriceResetInstancesType(request *InquiryPriceResetInstan
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDRESETINSTANCETYPE = "UnsupportedOperation.InstanceMixedResetInstanceType"
 //  UNSUPPORTEDOPERATION_LOCALDATADISKCHANGEINSTANCEFAMILY = "UnsupportedOperation.LocalDataDiskChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
@@ -5385,9 +5407,11 @@ func NewInquiryPriceResizeInstanceDisksResponse() (response *InquiryPriceResizeI
 //
 // 
 //
-// * 目前只支持扩容非弹性数据盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价。
+// * 目前只支持扩容非弹性数据盘（[DescribeDisks ](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价。
 //
-// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口扩容数据盘询价。* 仅支持包年包月实例随机器购买的数据盘。* 目前只支持扩容一块数据盘询价。
+// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口扩容数据盘询价。
+//
+// * 目前只支持扩容一块数据盘询价。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
@@ -5417,9 +5441,11 @@ func (c *Client) InquiryPriceResizeInstanceDisks(request *InquiryPriceResizeInst
 //
 // 
 //
-// * 目前只支持扩容非弹性数据盘（[`DescribeDisks`](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价。
+// * 目前只支持扩容非弹性数据盘（[DescribeDisks ](https://cloud.tencent.com/document/api/362/16315)接口返回值中的`Portable`为`false`表示非弹性）询价。
 //
-// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口扩容数据盘询价。* 仅支持包年包月实例随机器购买的数据盘。* 目前只支持扩容一块数据盘询价。
+// * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口扩容数据盘询价。
+//
+// * 目前只支持扩容一块数据盘询价。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
@@ -6200,7 +6226,7 @@ func NewModifyInstanceDiskTypeResponse() (response *ModifyInstanceDiskTypeRespon
 //
 // * 若实例同时存在本地系统盘和本地数据盘，需同时调整系统盘和数据盘的介质类型，不支持单独针对本地系统盘或本地数据盘修改介质类型。
 //
-// * 修改前请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/378/4397)接口查询账户余额。
+// * 修改前请确保账户余额充足。可通过[ DescribeAccountBalance ](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -6243,7 +6269,7 @@ func (c *Client) ModifyInstanceDiskType(request *ModifyInstanceDiskTypeRequest) 
 //
 // * 若实例同时存在本地系统盘和本地数据盘，需同时调整系统盘和数据盘的介质类型，不支持单独针对本地系统盘或本地数据盘修改介质类型。
 //
-// * 修改前请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/378/4397)接口查询账户余额。
+// * 修改前请确保账户余额充足。可通过[ DescribeAccountBalance ](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
 // 可能返回的错误码:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -6305,7 +6331,7 @@ func NewModifyInstancesAttributeResponse() (response *ModifyInstancesAttributeRe
 }
 
 // ModifyInstancesAttribute
-// 本接口 (ModifyInstancesAttribute) 用于修改实例的属性（目前只支持修改实例的名称和关联的安全组）。
+// 本接口 (ModifyInstancesAttribute) 用于修改实例的属性。
 //
 // 
 //
@@ -6371,7 +6397,7 @@ func (c *Client) ModifyInstancesAttribute(request *ModifyInstancesAttributeReque
 }
 
 // ModifyInstancesAttribute
-// 本接口 (ModifyInstancesAttribute) 用于修改实例的属性（目前只支持修改实例的名称和关联的安全组）。
+// 本接口 (ModifyInstancesAttribute) 用于修改实例的属性。
 //
 // 
 //
@@ -6499,6 +6525,7 @@ func NewModifyInstancesChargeTypeResponse() (response *ModifyInstancesChargeType
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  UNSUPPORTEDOPERATION_COMMERCIALIMAGECHANGECHARGETYPE = "UnsupportedOperation.CommercialImageChangeChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
@@ -6547,6 +6574,7 @@ func (c *Client) ModifyInstancesChargeType(request *ModifyInstancesChargeTypeReq
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  UNSUPPORTEDOPERATION_COMMERCIALIMAGECHANGECHARGETYPE = "UnsupportedOperation.CommercialImageChangeChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
 //  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
@@ -8553,6 +8581,8 @@ func NewResizeInstanceDisksResponse() (response *ResizeInstanceDisksResponse) {
 //
 // * 如果是系统盘，目前只支持扩容，不支持缩容。
 //
+// *  如果是运行中的实例，必须指定ForceStop或ResizeOnline任意一个参数为true，否则操作失败。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
 //  INTERNALERROR = "InternalError"
@@ -8609,6 +8639,8 @@ func (c *Client) ResizeInstanceDisks(request *ResizeInstanceDisksRequest) (respo
 // * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // * 如果是系统盘，目前只支持扩容，不支持缩容。
+//
+// *  如果是运行中的实例，必须指定ForceStop或ResizeOnline任意一个参数为true，否则操作失败。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
@@ -9327,7 +9359,11 @@ func NewSyncImagesResponse() (response *SyncImagesResponse) {
 //
 // * 该接口每次调用只支持同步一个镜像。
 //
-// * 该接口支持多个同步地域。
+// * 该接口支持自定义镜像向多个地域同步。
+//
+// * 共享镜像仅支持同步为源地域（单个）的自定义镜像。
+//
+// * 自定义镜像仅支持同步为源地域（单个）的加密自定义镜像。
 //
 // * 单个账号在每个地域最多支持存在500个自定义镜像。
 //
@@ -9362,7 +9398,11 @@ func (c *Client) SyncImages(request *SyncImagesRequest) (response *SyncImagesRes
 //
 // * 该接口每次调用只支持同步一个镜像。
 //
-// * 该接口支持多个同步地域。
+// * 该接口支持自定义镜像向多个地域同步。
+//
+// * 共享镜像仅支持同步为源地域（单个）的自定义镜像。
+//
+// * 自定义镜像仅支持同步为源地域（单个）的加密自定义镜像。
 //
 // * 单个账号在每个地域最多支持存在500个自定义镜像。
 //

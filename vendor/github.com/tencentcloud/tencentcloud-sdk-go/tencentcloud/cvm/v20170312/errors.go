@@ -146,7 +146,7 @@ const (
 	// 无效的过滤器。
 	INVALIDFILTER = "InvalidFilter"
 
-	// [`Filter`](/document/api/213/15753#Filter)。
+	// [`Filter`](/document/api/213/15753#Filter)传值超出限制。
 	INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
 
 	// 不支持该宿主机实例执行指定的操作。
@@ -877,6 +877,9 @@ const (
 
 	// cbs远端ssd盘不支持该操作
 	UNSUPPORTEDOPERATION_CBSREMOTESSDNOTSUPPORT = "UnsupportedOperation.CbsRemoteSsdNotSupport"
+
+	// 实例使用商业镜像暂不支持调整付费模式。
+	UNSUPPORTEDOPERATION_COMMERCIALIMAGECHANGECHARGETYPE = "UnsupportedOperation.CommercialImageChangeChargeType"
 
 	// 实例创建快照的时间距今不到24小时。
 	UNSUPPORTEDOPERATION_DISKSNAPCREATETIMETOOOLD = "UnsupportedOperation.DiskSnapCreateTimeTooOld"

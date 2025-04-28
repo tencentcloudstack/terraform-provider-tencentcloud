@@ -47,7 +47,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1154
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1128
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1153
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.1111
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
@@ -107,7 +107,7 @@ require (
 
 require (
 	github.com/hashicorp/go-uuid v1.0.3
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.1126
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.0.993

@@ -2,9 +2,12 @@ package cdc
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -311,4 +314,67 @@ func (me *CdcService) DescribeCdcDedicatedClustersByFilter(ctx context.Context, 
 	}
 
 	return
+}
+
+func (me *CdcService) DescribeImages(ctx context.Context, dedicatedClusterId string, imageId string, cdcCacheStatus string) (images []*cvm.Image, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cvm.NewDescribeImagesRequest()
+	request.Filters = []*cvm.Filter{
+		{
+			Name:   helper.String("image-id"),
+			Values: helper.Strings([]string{imageId}),
+		},
+		{
+			Name:   helper.String("image-state"),
+			Values: helper.Strings([]string{"NORMAL", "SYNCING", "EXPORTING"}),
+		},
+		{
+			Name:   helper.String("dedicated-cluster-id"),
+			Values: helper.Strings([]string{dedicatedClusterId}),
+		},
+		{
+			Name:   helper.String("cdc-cache-status"),
+			Values: helper.Strings([]string{cdcCacheStatus}),
+		},
+	}
+
+	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeImages(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		if response != nil && response.Response != nil {
+			if len(response.Response.ImageSet) > 0 {
+				images = response.Response.ImageSet
+			}
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("response is null"))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *CdcService) DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId string, imageId string, cdcCacheStatus string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+		images, err := me.DescribeImages(ctx, dedicatedClusterId, imageId, cdcCacheStatus)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if len(images) < 1 {
+			return nil, "", fmt.Errorf("Not found image.")
+		}
+
+		return images[0], helper.PString(images[0].CdcCacheStatus), nil
+	}
 }

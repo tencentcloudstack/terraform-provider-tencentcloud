@@ -48,6 +48,70 @@ type CosInfo struct {
 }
 
 // Predefined struct for user
+type CreateDedicatedClusterImageCacheRequestParams struct {
+	// 集群ID
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
+	// 镜像ID
+	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
+}
+
+type CreateDedicatedClusterImageCacheRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
+	// 镜像ID
+	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
+}
+
+func (r *CreateDedicatedClusterImageCacheRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDedicatedClusterImageCacheRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DedicatedClusterId")
+	delete(f, "ImageId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDedicatedClusterImageCacheRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDedicatedClusterImageCacheResponseParams struct {
+	// 任务id
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateDedicatedClusterImageCacheResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDedicatedClusterImageCacheResponseParams `json:"Response"`
+}
+
+func (r *CreateDedicatedClusterImageCacheResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDedicatedClusterImageCacheResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateDedicatedClusterOrderRequestParams struct {
 	// 专用集群id
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
@@ -64,7 +128,7 @@ type CreateDedicatedClusterOrderRequestParams struct {
 	// 购买来源，默认为cloudApi
 	PurchaseSource *string `json:"PurchaseSource,omitnil,omitempty" name:"PurchaseSource"`
 
-	// 当调用API接口提交订单时，需要提交DedicatedClusterOrderId
+	// 当调用API接口提交订单时，需要提交DedicatedClusterOrderId，此处DedicatedClusterOrderId是之前创建的订单，可通过DescribeDedicatedClusterOrders接口查询，这里传入DedicatedClusterOrderId用于调整订单和支付。
 	DedicatedClusterOrderId *string `json:"DedicatedClusterOrderId,omitnil,omitempty" name:"DedicatedClusterOrderId"`
 }
 
@@ -86,7 +150,7 @@ type CreateDedicatedClusterOrderRequest struct {
 	// 购买来源，默认为cloudApi
 	PurchaseSource *string `json:"PurchaseSource,omitnil,omitempty" name:"PurchaseSource"`
 
-	// 当调用API接口提交订单时，需要提交DedicatedClusterOrderId
+	// 当调用API接口提交订单时，需要提交DedicatedClusterOrderId，此处DedicatedClusterOrderId是之前创建的订单，可通过DescribeDedicatedClusterOrders接口查询，这里传入DedicatedClusterOrderId用于调整订单和支付。
 	DedicatedClusterOrderId *string `json:"DedicatedClusterOrderId,omitnil,omitempty" name:"DedicatedClusterOrderId"`
 }
 
@@ -117,7 +181,6 @@ func (r *CreateDedicatedClusterOrderRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateDedicatedClusterOrderResponseParams struct {
 	// 专用集群订单id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DedicatedClusterOrderId *string `json:"DedicatedClusterOrderId,omitnil,omitempty" name:"DedicatedClusterOrderId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -241,7 +304,7 @@ type CreateSiteRequestParams struct {
 	// 注意事项
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 您将使用光纤类型将CDC设备连接到网络。有单模和多模两种选项。
+	// 您将使用光纤类型将CDC设备连接到网络。有单模和多模两种选项。取值范围："MM","SM"
 	FiberType *string `json:"FiberType,omitnil,omitempty" name:"FiberType"`
 
 	// 您将CDC连接到网络时采用的光学标准。此字段取决于上行链路速度、光纤类型和到上游设备的距离。
@@ -250,7 +313,7 @@ type CreateSiteRequestParams struct {
 	// 电源连接器类型
 	PowerConnectors *string `json:"PowerConnectors,omitnil,omitempty" name:"PowerConnectors"`
 
-	// 从机架上方还是下方供电。
+	// 从机架上方还是下方供电。取值范围：["UP","DOWN"]
 	PowerFeedDrop *string `json:"PowerFeedDrop,omitnil,omitempty" name:"PowerFeedDrop"`
 
 	// 最大承重(KG)
@@ -259,7 +322,7 @@ type CreateSiteRequestParams struct {
 	// 功耗(KW)
 	PowerDrawKva *int64 `json:"PowerDrawKva,omitnil,omitempty" name:"PowerDrawKva"`
 
-	// 网络到腾讯云Region区域的上行链路速度
+	// 网络到腾讯云Region区域的上行链路速度(Gbps)
 	UplinkSpeedGbps *int64 `json:"UplinkSpeedGbps,omitnil,omitempty" name:"UplinkSpeedGbps"`
 
 	// 将CDC连接到网络时，每台CDC网络设备(每个机架 2 台设备)使用的上行链路数量。
@@ -322,7 +385,7 @@ type CreateSiteRequest struct {
 	// 注意事项
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 您将使用光纤类型将CDC设备连接到网络。有单模和多模两种选项。
+	// 您将使用光纤类型将CDC设备连接到网络。有单模和多模两种选项。取值范围："MM","SM"
 	FiberType *string `json:"FiberType,omitnil,omitempty" name:"FiberType"`
 
 	// 您将CDC连接到网络时采用的光学标准。此字段取决于上行链路速度、光纤类型和到上游设备的距离。
@@ -331,7 +394,7 @@ type CreateSiteRequest struct {
 	// 电源连接器类型
 	PowerConnectors *string `json:"PowerConnectors,omitnil,omitempty" name:"PowerConnectors"`
 
-	// 从机架上方还是下方供电。
+	// 从机架上方还是下方供电。取值范围：["UP","DOWN"]
 	PowerFeedDrop *string `json:"PowerFeedDrop,omitnil,omitempty" name:"PowerFeedDrop"`
 
 	// 最大承重(KG)
@@ -340,7 +403,7 @@ type CreateSiteRequest struct {
 	// 功耗(KW)
 	PowerDrawKva *int64 `json:"PowerDrawKva,omitnil,omitempty" name:"PowerDrawKva"`
 
-	// 网络到腾讯云Region区域的上行链路速度
+	// 网络到腾讯云Region区域的上行链路速度(Gbps)
 	UplinkSpeedGbps *int64 `json:"UplinkSpeedGbps,omitnil,omitempty" name:"UplinkSpeedGbps"`
 
 	// 将CDC连接到网络时，每台CDC网络设备(每个机架 2 台设备)使用的上行链路数量。
@@ -453,7 +516,6 @@ type DedicatedCluster struct {
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 专用集群的描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 专用集群的名称。
@@ -467,6 +529,9 @@ type DedicatedCluster struct {
 
 	// 专用集群所属的站点id。
 	SiteId *string `json:"SiteId,omitnil,omitempty" name:"SiteId"`
+
+	// 专用集群的运营状态
+	RunningStatus *string `json:"RunningStatus,omitnil,omitempty" name:"RunningStatus"`
 }
 
 type DedicatedClusterInstanceType struct {
@@ -512,7 +577,7 @@ type DedicatedClusterInstanceType struct {
 	// 机型描述
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 实例是否售卖。取值范围： <br><li>SELL：表示实例可购买<br><li>SOLD_OUT：表示实例已售罄。
+	// 实例是否售卖。取值范围： <br><li>SELL：表示实例可购买<br></li><li>SOLD_OUT：表示实例已售罄。</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
@@ -551,39 +616,30 @@ type DedicatedClusterOrder struct {
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
 	// 子订单详情列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DedicatedClusterOrderItems []*DedicatedClusterOrderItem `json:"DedicatedClusterOrderItems,omitnil,omitempty" name:"DedicatedClusterOrderItems"`
 
 	// cpu值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
 	// mem值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Mem *int64 `json:"Mem,omitnil,omitempty" name:"Mem"`
 
 	// gpu值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Gpu *int64 `json:"Gpu,omitnil,omitempty" name:"Gpu"`
 
 	// 0代表未支付，1代表已支付
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PayStatus *int64 `json:"PayStatus,omitnil,omitempty" name:"PayStatus"`
 
 	// 支付方式，一次性、按月、按年
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PayType *string `json:"PayType,omitnil,omitempty" name:"PayType"`
 
 	// 购买时长的单位
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
 	// 购买时长
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
 	// 订单类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
 	// 验收状态
@@ -665,15 +721,12 @@ type DedicatedClusterOrderItem struct {
 	TypeName *string `json:"TypeName,omitnil,omitempty" name:"TypeName"`
 
 	// 规格展示
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ComputeFormat *string `json:"ComputeFormat,omitnil,omitempty" name:"ComputeFormat"`
 
 	// 规格类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TypeFamily *string `json:"TypeFamily,omitnil,omitempty" name:"TypeFamily"`
 
 	// 0未支付，1已支付
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubOrderPayStatus *int64 `json:"SubOrderPayStatus,omitnil,omitempty" name:"SubOrderPayStatus"`
 }
 
@@ -682,7 +735,6 @@ type DedicatedClusterType struct {
 	DedicatedClusterTypeId *string `json:"DedicatedClusterTypeId,omitnil,omitempty" name:"DedicatedClusterTypeId"`
 
 	// 配置描述，对应描述
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 配置名称，对应计算资源类型
@@ -716,6 +768,67 @@ type DedicatedClusterTypeInfo struct {
 
 	// 集群类型个数
 	Count *int64 `json:"Count,omitnil,omitempty" name:"Count"`
+}
+
+// Predefined struct for user
+type DeleteDedicatedClusterImageCacheRequestParams struct {
+	// 集群id
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
+	// 镜像id
+	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
+}
+
+type DeleteDedicatedClusterImageCacheRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群id
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
+	// 镜像id
+	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
+}
+
+func (r *DeleteDedicatedClusterImageCacheRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDedicatedClusterImageCacheRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DedicatedClusterId")
+	delete(f, "ImageId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteDedicatedClusterImageCacheRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteDedicatedClusterImageCacheResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteDedicatedClusterImageCacheResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteDedicatedClusterImageCacheResponseParams `json:"Response"`
+}
+
+func (r *DeleteDedicatedClusterImageCacheResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDedicatedClusterImageCacheResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -840,7 +953,7 @@ type DescribeDedicatedClusterCbsStatisticsRequestParams struct {
 	// 结束时间
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 时间范围精度，1分钟/5分钟
+	// 时间范围精度，1分钟(ONE_MINUTE)/5分钟(FIVE_MINUTE)
 	Period *string `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 偏移量，默认为0。
@@ -865,7 +978,7 @@ type DescribeDedicatedClusterCbsStatisticsRequest struct {
 	// 结束时间
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 时间范围精度，1分钟/5分钟
+	// 时间范围精度，1分钟(ONE_MINUTE)/5分钟(FIVE_MINUTE)
 	Period *string `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 偏移量，默认为0。
@@ -903,11 +1016,9 @@ func (r *DescribeDedicatedClusterCbsStatisticsRequest) FromJsonString(s string) 
 // Predefined struct for user
 type DescribeDedicatedClusterCbsStatisticsResponseParams struct {
 	// 云硬盘仓库信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetList []*SetInfo `json:"SetList,omitnil,omitempty" name:"SetList"`
 
 	// 总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1001,7 +1112,7 @@ type DescribeDedicatedClusterHostStatisticsRequestParams struct {
 	// 结束时间
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 时间范围精度，1分钟/5分钟
+	// 时间范围精度，1分钟(ONE_MINUTE)/5分钟(FIVE_MINUTE)
 	Period *string `json:"Period,omitnil,omitempty" name:"Period"`
 }
 
@@ -1020,7 +1131,7 @@ type DescribeDedicatedClusterHostStatisticsRequest struct {
 	// 结束时间
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 时间范围精度，1分钟/5分钟
+	// 时间范围精度，1分钟(ONE_MINUTE)/5分钟(FIVE_MINUTE)
 	Period *string `json:"Period,omitnil,omitempty" name:"Period"`
 }
 
@@ -1121,7 +1232,6 @@ func (r *DescribeDedicatedClusterHostsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeDedicatedClusterHostsResponseParams struct {
 	// 宿主机信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostInfoSet []*HostInfo `json:"HostInfoSet,omitnil,omitempty" name:"HostInfoSet"`
 
 	// 宿主机总数
@@ -1347,31 +1457,24 @@ type DescribeDedicatedClusterOverviewResponseParams struct {
 	HostCount *uint64 `json:"HostCount,omitnil,omitempty" name:"HostCount"`
 
 	// vpn通道状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpnConnectionState *string `json:"VpnConnectionState,omitnil,omitempty" name:"VpnConnectionState"`
 
 	// vpn网关监控数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpngwBandwidthData *VpngwBandwidthData `json:"VpngwBandwidthData,omitnil,omitempty" name:"VpngwBandwidthData"`
 
 	// 本地网关信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalNetInfo *LocalNetInfo `json:"LocalNetInfo,omitnil,omitempty" name:"LocalNetInfo"`
 
 	// vpn网关通道监控数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpnConnectionBandwidthData []*VpngwBandwidthData `json:"VpnConnectionBandwidthData,omitnil,omitempty" name:"VpnConnectionBandwidthData"`
 
 	// 宿主机资源概览信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostDetailInfo []*HostDetailInfo `json:"HostDetailInfo,omitnil,omitempty" name:"HostDetailInfo"`
 
 	// 热备宿主机数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostStandbyCount *uint64 `json:"HostStandbyCount,omitnil,omitempty" name:"HostStandbyCount"`
 
 	// 普通宿主机数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostNormalCount *uint64 `json:"HostNormalCount,omitnil,omitempty" name:"HostNormalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1805,33 +1908,26 @@ func (r *DescribeSitesResponse) FromJsonString(s string) error {
 
 type DetailData struct {
 	// 时间戳
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Timestamps []*float64 `json:"Timestamps,omitnil,omitempty" name:"Timestamps"`
 
 	// 对应的具体值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Values []*float64 `json:"Values,omitnil,omitempty" name:"Values"`
 }
 
 type HostDetailInfo struct {
 	// 类型族
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostTypeFamily *string `json:"HostTypeFamily,omitnil,omitempty" name:"HostTypeFamily"`
 
 	// 总CPU
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CpuTotal *float64 `json:"CpuTotal,omitnil,omitempty" name:"CpuTotal"`
 
 	// 可用CPU
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CpuAvailable *float64 `json:"CpuAvailable,omitnil,omitempty" name:"CpuAvailable"`
 
 	// 总内存
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemTotal *float64 `json:"MemTotal,omitnil,omitempty" name:"MemTotal"`
 
 	// 可用内存
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemAvailable *float64 `json:"MemAvailable,omitnil,omitempty" name:"MemAvailable"`
 }
 
@@ -1867,7 +1963,6 @@ type HostInfo struct {
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 宿主机id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostId *string `json:"HostId,omitnil,omitempty" name:"HostId"`
 }
 
@@ -1888,59 +1983,46 @@ type HostStatistic struct {
 	Count *uint64 `json:"Count,omitnil,omitempty" name:"Count"`
 
 	// 平均cpu负载百分比
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CpuAverage *float64 `json:"CpuAverage,omitnil,omitempty" name:"CpuAverage"`
 
 	// 平均内存使用率百分比
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemAverage *float64 `json:"MemAverage,omitnil,omitempty" name:"MemAverage"`
 
 	// 平均网络流量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetAverage *float64 `json:"NetAverage,omitnil,omitempty" name:"NetAverage"`
 
 	// cpu详细监控数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CpuDetailData *DetailData `json:"CpuDetailData,omitnil,omitempty" name:"CpuDetailData"`
 
 	// 内存详细数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemDetailData *DetailData `json:"MemDetailData,omitnil,omitempty" name:"MemDetailData"`
 
 	// 网络速率详细数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetRateDetailData *DetailData `json:"NetRateDetailData,omitnil,omitempty" name:"NetRateDetailData"`
 
 	// 网速包详细数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetPacketDetailData *DetailData `json:"NetPacketDetailData,omitnil,omitempty" name:"NetPacketDetailData"`
 }
 
 type InBandwidth struct {
 	// 时间戳
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Timestamps []*float64 `json:"Timestamps,omitnil,omitempty" name:"Timestamps"`
 
 	// 时间对应的值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Values []*float64 `json:"Values,omitnil,omitempty" name:"Values"`
 }
 
 type LocalNetInfo struct {
 	// 协议
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 网络id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 路由信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BGPRoute *string `json:"BGPRoute,omitnil,omitempty" name:"BGPRoute"`
 
 	// 本地IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalIp *string `json:"LocalIp,omitnil,omitempty" name:"LocalIp"`
 }
 
@@ -2031,10 +2113,10 @@ type ModifyOrderStatusRequestParams struct {
 	// 要更新成的状态
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 大订单ID
+	// 大订单ID，可以在本地专用集群的基础信息页获取大订单ID
 	DedicatedClusterOrderId *string `json:"DedicatedClusterOrderId,omitnil,omitempty" name:"DedicatedClusterOrderId"`
 
-	// 小订单ID
+	// 小订单ID，进入大订单的详情页，可以看到小订单ID
 	SubOrderIds []*string `json:"SubOrderIds,omitnil,omitempty" name:"SubOrderIds"`
 }
 
@@ -2044,10 +2126,10 @@ type ModifyOrderStatusRequest struct {
 	// 要更新成的状态
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 大订单ID
+	// 大订单ID，可以在本地专用集群的基础信息页获取大订单ID
 	DedicatedClusterOrderId *string `json:"DedicatedClusterOrderId,omitnil,omitempty" name:"DedicatedClusterOrderId"`
 
-	// 小订单ID
+	// 小订单ID，进入大订单的详情页，可以看到小订单ID
 	SubOrderIds []*string `json:"SubOrderIds,omitnil,omitempty" name:"SubOrderIds"`
 }
 
@@ -2108,7 +2190,7 @@ type ModifySiteDeviceInfoRequestParams struct {
 	// 电源连接器类型
 	PowerConnectors *string `json:"PowerConnectors,omitnil,omitempty" name:"PowerConnectors"`
 
-	// 从机架上方还是下方供电。
+	// 从机架上方还是下方供电。取值范围：["UP","DOWN"]
 	PowerFeedDrop *string `json:"PowerFeedDrop,omitnil,omitempty" name:"PowerFeedDrop"`
 
 	// 最大承重(KG)
@@ -2117,7 +2199,7 @@ type ModifySiteDeviceInfoRequestParams struct {
 	// 功耗(KW)
 	PowerDrawKva *int64 `json:"PowerDrawKva,omitnil,omitempty" name:"PowerDrawKva"`
 
-	// 网络到腾讯云Region区域的上行链路速度
+	// 网络到腾讯云Region区域的上行链路速度(Gbps)
 	UplinkSpeedGbps *int64 `json:"UplinkSpeedGbps,omitnil,omitempty" name:"UplinkSpeedGbps"`
 
 	// 将CDC连接到网络时，每台CDC网络设备(每个机架 2 台设备)使用的上行链路数量。
@@ -2165,7 +2247,7 @@ type ModifySiteDeviceInfoRequest struct {
 	// 电源连接器类型
 	PowerConnectors *string `json:"PowerConnectors,omitnil,omitempty" name:"PowerConnectors"`
 
-	// 从机架上方还是下方供电。
+	// 从机架上方还是下方供电。取值范围：["UP","DOWN"]
 	PowerFeedDrop *string `json:"PowerFeedDrop,omitnil,omitempty" name:"PowerFeedDrop"`
 
 	// 最大承重(KG)
@@ -2174,7 +2256,7 @@ type ModifySiteDeviceInfoRequest struct {
 	// 功耗(KW)
 	PowerDrawKva *int64 `json:"PowerDrawKva,omitnil,omitempty" name:"PowerDrawKva"`
 
-	// 网络到腾讯云Region区域的上行链路速度
+	// 网络到腾讯云Region区域的上行链路速度(Gbps)
 	UplinkSpeedGbps *int64 `json:"UplinkSpeedGbps,omitnil,omitempty" name:"UplinkSpeedGbps"`
 
 	// 将CDC连接到网络时，每台CDC网络设备(每个机架 2 台设备)使用的上行链路数量。
@@ -2374,11 +2456,9 @@ func (r *ModifySiteInfoResponse) FromJsonString(s string) error {
 
 type OutBandwidth struct {
 	// 时间戳
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Timestamps []*float64 `json:"Timestamps,omitnil,omitempty" name:"Timestamps"`
 
 	// 对应时间的值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Values []*float64 `json:"Values,omitnil,omitempty" name:"Values"`
 }
 
@@ -2392,51 +2472,39 @@ type RegionZoneInfo struct {
 
 type SetInfo struct {
 	// 云硬盘仓库id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetId *string `json:"SetId,omitnil,omitempty" name:"SetId"`
 
 	// 云硬盘仓库名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetName *string `json:"SetName,omitnil,omitempty" name:"SetName"`
 
 	// 云硬盘仓库类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetType *string `json:"SetType,omitnil,omitempty" name:"SetType"`
 
 	// 云硬盘仓库容量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetSize *float64 `json:"SetSize,omitnil,omitempty" name:"SetSize"`
 
 	// 云硬盘仓库状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetStatus *string `json:"SetStatus,omitnil,omitempty" name:"SetStatus"`
 
 	// 云硬盘仓库创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 读流量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReadTraffic *DetailData `json:"ReadTraffic,omitnil,omitempty" name:"ReadTraffic"`
 
 	// 写流量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WriteTraffic *DetailData `json:"WriteTraffic,omitnil,omitempty" name:"WriteTraffic"`
 
 	// 读IO
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReadIO *DetailData `json:"ReadIO,omitnil,omitempty" name:"ReadIO"`
 
 	// 写IO
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WriteIO *DetailData `json:"WriteIO,omitnil,omitempty" name:"WriteIO"`
 
 	// 平均等待时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Await *DetailData `json:"Await,omitnil,omitempty" name:"Await"`
 
 	// 利用率
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Util *DetailData `json:"Util,omitnil,omitempty" name:"Util"`
 }
 
@@ -2448,7 +2516,6 @@ type Site struct {
 	SiteId *string `json:"SiteId,omitnil,omitempty" name:"SiteId"`
 
 	// 站点描述
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 站点创建时间
@@ -2539,7 +2606,6 @@ type SiteDetail struct {
 
 type VpngwBandwidthData struct {
 	// 出带宽流量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OutBandwidth *OutBandwidth `json:"OutBandwidth,omitnil,omitempty" name:"OutBandwidth"`
 
 	// 入带宽流量
