@@ -1431,7 +1431,7 @@ func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context, in
 		}
 	}()
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, e := me.client.UseClsV20201016Client().DescribeCloudProductLogTasks(request)
 		if e != nil {
@@ -1439,6 +1439,7 @@ func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context, in
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		}
+
 		ret = response.Response
 		return nil
 	})
