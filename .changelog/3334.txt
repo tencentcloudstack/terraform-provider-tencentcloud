@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_cbs_storage: support `kms_key_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_cbs_storage_set: support `kms_key_id`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_cbs_storages: add return value `kms_key_id`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_cbs_storages_set: add return value `kms_key_id`
+```
