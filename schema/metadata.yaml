@@ -127,9 +127,34 @@ resource_metas:
           widget: select_remote
           filter:
             enable: true
+          batch_add:
+            display_name: 记录类型
+            val_source:
+              method: GET
+              path: >-
+                /api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}
+              values:
+                label_path: '$.Data.Types[*]'
+                value_path: '$.Data.Types[*]'
+              rely_resources:
+                - name: domain
+                  source: owner
+                  required: true
+            widget: multi_select_remote
+            filter:
+              enable: true
+            batch_add_mode: one_to_one
         remark:
           display_name: 备注
           widget: text
+          batch_add:
+            display_name: 备注
+            batch_add_mode: one_to_one
+            delimiter: |-
+              [\s
+              ,;]
+            help: 多个备注以英文逗号、英文分号、空格或换行分割
+            widget: textarea
         status:
           display_name: 记录初始状态
           widget: select
@@ -147,6 +172,16 @@ resource_metas:
           widget: text
           filter:
             enable: true
+          batch_add:
+            display_name: 主机记录
+            batch_add_mode: one_to_one
+            filter:
+              enable: true
+            delimiter: |-
+              [\s
+              ,;]
+            help: 多个主机记录以英文逗号、英文分号、空格或换行分割，重复将去重
+            widget: textarea
         ttl:
           display_name: TTL
           widget: text
