@@ -119,7 +119,7 @@ func ResourceTencentCloudCdcDedicatedClusterImageCacheRead(d *schema.ResourceDat
 
 	if images[0].CdcCacheStatus != nil && *images[0].CdcCacheStatus == CDC_CACHE_STATUS_CACHED {
 		_ = d.Set("dedicated_cluster_id", idSplit[0])
-		_ = d.Set("image_id", idSplit[0])
+		_ = d.Set("image_id", idSplit[1])
 	} else {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `CdcDedicatedClusterImageCache` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
