@@ -59,8 +59,9 @@ func NewApplyDiskBackupRequest() (request *ApplyDiskBackupRequest) {
 func NewApplyDiskBackupResponse() (response *ApplyDiskBackupResponse) {
     response = &ApplyDiskBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplyDiskBackup
@@ -141,8 +142,9 @@ func NewApplySnapshotRequest() (request *ApplySnapshotRequest) {
 func NewApplySnapshotResponse() (response *ApplySnapshotResponse) {
     response = &ApplySnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplySnapshot
@@ -227,6 +229,73 @@ func (c *Client) ApplySnapshotWithContext(ctx context.Context, request *ApplySna
     return
 }
 
+func NewApplySnapshotGroupRequest() (request *ApplySnapshotGroupRequest) {
+    request = &ApplySnapshotGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cbs", APIVersion, "ApplySnapshotGroup")
+    
+    
+    return
+}
+
+func NewApplySnapshotGroupResponse() (response *ApplySnapshotGroupResponse) {
+    response = &ApplySnapshotGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ApplySnapshotGroup
+// 本接口（ApplySnapshotGroup）用于回滚快照组，将实例恢复到创建快照组时刻的状态。
+//
+// * 1.可选择快照组全部或部分盘进行回滚；
+//
+// * 2.如果回滚的盘中包含已挂载的盘，要求这些盘必须挂载在同一实例上，且要求该实例已关机才能回滚；
+//
+// * 3.回滚为异步操作，接口返回成功不代表回滚成功，可通过调DescribeSnapshotGroups接口查询快照组的状态。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION_SNAPSHOTGROUPDISKATTACHMULTIINSTANCE = "UnsupportedOperation.SnapshotGroupDiskAttachMultiInstance"
+//  UNSUPPORTEDOPERATION_STATEERROR = "UnsupportedOperation.StateError"
+func (c *Client) ApplySnapshotGroup(request *ApplySnapshotGroupRequest) (response *ApplySnapshotGroupResponse, err error) {
+    return c.ApplySnapshotGroupWithContext(context.Background(), request)
+}
+
+// ApplySnapshotGroup
+// 本接口（ApplySnapshotGroup）用于回滚快照组，将实例恢复到创建快照组时刻的状态。
+//
+// * 1.可选择快照组全部或部分盘进行回滚；
+//
+// * 2.如果回滚的盘中包含已挂载的盘，要求这些盘必须挂载在同一实例上，且要求该实例已关机才能回滚；
+//
+// * 3.回滚为异步操作，接口返回成功不代表回滚成功，可通过调DescribeSnapshotGroups接口查询快照组的状态。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION_SNAPSHOTGROUPDISKATTACHMULTIINSTANCE = "UnsupportedOperation.SnapshotGroupDiskAttachMultiInstance"
+//  UNSUPPORTEDOPERATION_STATEERROR = "UnsupportedOperation.StateError"
+func (c *Client) ApplySnapshotGroupWithContext(ctx context.Context, request *ApplySnapshotGroupRequest) (response *ApplySnapshotGroupResponse, err error) {
+    if request == nil {
+        request = NewApplySnapshotGroupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ApplySnapshotGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewApplySnapshotGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAttachDisksRequest() (request *AttachDisksRequest) {
     request = &AttachDisksRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -241,8 +310,9 @@ func NewAttachDisksRequest() (request *AttachDisksRequest) {
 func NewAttachDisksResponse() (response *AttachDisksResponse) {
     response = &AttachDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachDisks
@@ -255,6 +325,7 @@ func NewAttachDisksResponse() (response *AttachDisksResponse) {
 // * 本接口为异步接口，当挂载云盘的请求成功返回时，表示后台已发起挂载云盘的操作，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态由“ATTACHING”变为“ATTACHED”，则为挂载成功。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INTERNALERROR_RESOURCEOPFAILED = "InternalError.ResourceOpFailed"
 //  INVALIDDISK_NOTPORTABLE = "InvalidDisk.NotPortable"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
@@ -288,6 +359,7 @@ func (c *Client) AttachDisks(request *AttachDisksRequest) (response *AttachDisks
 // * 本接口为异步接口，当挂载云盘的请求成功返回时，表示后台已发起挂载云盘的操作，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态由“ATTACHING”变为“ATTACHED”，则为挂载成功。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INTERNALERROR_RESOURCEOPFAILED = "InternalError.ResourceOpFailed"
 //  INVALIDDISK_NOTPORTABLE = "InvalidDisk.NotPortable"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
@@ -337,8 +409,9 @@ func NewBindAutoSnapshotPolicyRequest() (request *BindAutoSnapshotPolicyRequest)
 func NewBindAutoSnapshotPolicyResponse() (response *BindAutoSnapshotPolicyResponse) {
     response = &BindAutoSnapshotPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindAutoSnapshotPolicy
@@ -415,8 +488,9 @@ func NewCopySnapshotCrossRegionsRequest() (request *CopySnapshotCrossRegionsRequ
 func NewCopySnapshotCrossRegionsResponse() (response *CopySnapshotCrossRegionsResponse) {
     response = &CopySnapshotCrossRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CopySnapshotCrossRegions
@@ -491,8 +565,9 @@ func NewCreateAutoSnapshotPolicyRequest() (request *CreateAutoSnapshotPolicyRequ
 func NewCreateAutoSnapshotPolicyResponse() (response *CreateAutoSnapshotPolicyResponse) {
     response = &CreateAutoSnapshotPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAutoSnapshotPolicy
@@ -559,8 +634,9 @@ func NewCreateDiskBackupRequest() (request *CreateDiskBackupRequest) {
 func NewCreateDiskBackupResponse() (response *CreateDiskBackupResponse) {
     response = &CreateDiskBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDiskBackup
@@ -570,7 +646,9 @@ func NewCreateDiskBackupResponse() (response *CreateDiskBackupResponse) {
 //  INVALIDDISK_BUSY = "InvalidDisk.Busy"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
@@ -586,7 +664,9 @@ func (c *Client) CreateDiskBackup(request *CreateDiskBackupRequest) (response *C
 //  INVALIDDISK_BUSY = "InvalidDisk.Busy"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
@@ -621,8 +701,9 @@ func NewCreateDisksRequest() (request *CreateDisksRequest) {
 func NewCreateDisksResponse() (response *CreateDisksResponse) {
     response = &CreateDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDisks
@@ -639,11 +720,13 @@ func NewCreateDisksResponse() (response *CreateDisksResponse) {
 // 可能返回的错误码:
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETER_DISKCONFIGNOTSUPPORTED = "InvalidParameter.DiskConfigNotSupported"
 //  INVALIDPARAMETER_PROJECTIDNOTEXIST = "InvalidParameter.ProjectIdNotExist"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
+//  LIMITEXCEEDED_INSTANCEATTACHEDDISK = "LimitExceeded.InstanceAttachedDisk"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -670,11 +753,13 @@ func (c *Client) CreateDisks(request *CreateDisksRequest) (response *CreateDisks
 // 可能返回的错误码:
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETER_DISKCONFIGNOTSUPPORTED = "InvalidParameter.DiskConfigNotSupported"
 //  INVALIDPARAMETER_PROJECTIDNOTEXIST = "InvalidParameter.ProjectIdNotExist"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
+//  LIMITEXCEEDED_INSTANCEATTACHEDDISK = "LimitExceeded.InstanceAttachedDisk"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -713,8 +798,9 @@ func NewCreateSnapshotRequest() (request *CreateSnapshotRequest) {
 func NewCreateSnapshotResponse() (response *CreateSnapshotResponse) {
     response = &CreateSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSnapshot
@@ -744,6 +830,7 @@ func NewCreateSnapshotResponse() (response *CreateSnapshotResponse) {
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKMIGRATING = "ResourceInUse.DiskMigrating"
 //  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
@@ -783,6 +870,7 @@ func (c *Client) CreateSnapshot(request *CreateSnapshotRequest) (response *Creat
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKMIGRATING = "ResourceInUse.DiskMigrating"
 //  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
@@ -807,6 +895,91 @@ func (c *Client) CreateSnapshotWithContext(ctx context.Context, request *CreateS
     return
 }
 
+func NewCreateSnapshotGroupRequest() (request *CreateSnapshotGroupRequest) {
+    request = &CreateSnapshotGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cbs", APIVersion, "CreateSnapshotGroup")
+    
+    
+    return
+}
+
+func NewCreateSnapshotGroupResponse() (response *CreateSnapshotGroupResponse) {
+    response = &CreateSnapshotGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateSnapshotGroup
+// 本接口（CreateSnapshotGroup）用于创建快照组。
+//
+// * 创建快照组的云硬盘列表必须挂载在同一实例上；
+//
+// * 可选择挂载在实例上的全部或部分盘创建快照组。
+//
+// 可能返回的错误码:
+//  INSUFFICIENTSNAPSHOTQUOTA = "InsufficientSnapshotQuota"
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
+//  INVALIDDISK_SNAPSHOTCREATING = "InvalidDisk.SnapshotCreating"
+//  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKMIGRATING = "ResourceInUse.DiskMigrating"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
+func (c *Client) CreateSnapshotGroup(request *CreateSnapshotGroupRequest) (response *CreateSnapshotGroupResponse, err error) {
+    return c.CreateSnapshotGroupWithContext(context.Background(), request)
+}
+
+// CreateSnapshotGroup
+// 本接口（CreateSnapshotGroup）用于创建快照组。
+//
+// * 创建快照组的云硬盘列表必须挂载在同一实例上；
+//
+// * 可选择挂载在实例上的全部或部分盘创建快照组。
+//
+// 可能返回的错误码:
+//  INSUFFICIENTSNAPSHOTQUOTA = "InsufficientSnapshotQuota"
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
+//  INVALIDDISK_SNAPSHOTCREATING = "InvalidDisk.SnapshotCreating"
+//  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DISKMIGRATING = "ResourceInUse.DiskMigrating"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
+func (c *Client) CreateSnapshotGroupWithContext(ctx context.Context, request *CreateSnapshotGroupRequest) (response *CreateSnapshotGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateSnapshotGroupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSnapshotGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSnapshotGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteAutoSnapshotPoliciesRequest() (request *DeleteAutoSnapshotPoliciesRequest) {
     request = &DeleteAutoSnapshotPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -821,8 +994,9 @@ func NewDeleteAutoSnapshotPoliciesRequest() (request *DeleteAutoSnapshotPolicies
 func NewDeleteAutoSnapshotPoliciesResponse() (response *DeleteAutoSnapshotPoliciesResponse) {
     response = &DeleteAutoSnapshotPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAutoSnapshotPolicies
@@ -833,6 +1007,8 @@ func NewDeleteAutoSnapshotPoliciesResponse() (response *DeleteAutoSnapshotPolici
 // *  支持批量操作。如果多个定期快照策略存在无法删除的，则操作不执行，以特定错误码返回。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
 //  INVALIDAUTOSNAPSHOTPOLICYID_NOTFOUND = "InvalidAutoSnapshotPolicyId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
@@ -849,6 +1025,8 @@ func (c *Client) DeleteAutoSnapshotPolicies(request *DeleteAutoSnapshotPoliciesR
 // *  支持批量操作。如果多个定期快照策略存在无法删除的，则操作不执行，以特定错误码返回。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
 //  INVALIDAUTOSNAPSHOTPOLICYID_NOTFOUND = "InvalidAutoSnapshotPolicyId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
@@ -883,8 +1061,9 @@ func NewDeleteDiskBackupsRequest() (request *DeleteDiskBackupsRequest) {
 func NewDeleteDiskBackupsResponse() (response *DeleteDiskBackupsResponse) {
     response = &DeleteDiskBackupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDiskBackups
@@ -892,6 +1071,7 @@ func NewDeleteDiskBackupsResponse() (response *DeleteDiskBackupsResponse) {
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 func (c *Client) DeleteDiskBackups(request *DeleteDiskBackupsRequest) (response *DeleteDiskBackupsResponse, err error) {
@@ -903,6 +1083,7 @@ func (c *Client) DeleteDiskBackups(request *DeleteDiskBackupsRequest) (response 
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 func (c *Client) DeleteDiskBackupsWithContext(ctx context.Context, request *DeleteDiskBackupsRequest) (response *DeleteDiskBackupsResponse, err error) {
@@ -921,6 +1102,71 @@ func (c *Client) DeleteDiskBackupsWithContext(ctx context.Context, request *Dele
     return
 }
 
+func NewDeleteSnapshotGroupRequest() (request *DeleteSnapshotGroupRequest) {
+    request = &DeleteSnapshotGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cbs", APIVersion, "DeleteSnapshotGroup")
+    
+    
+    return
+}
+
+func NewDeleteSnapshotGroupResponse() (response *DeleteSnapshotGroupResponse) {
+    response = &DeleteSnapshotGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteSnapshotGroup
+// 本接口（DeleteSnapshotGroup）用于删除快照组，一次调用仅支持删除一个快照组。
+//
+// * 默认会删除快照组内的所有快照；
+//
+// * 如果快照组内的快照有关联镜像，则删除失败，所有快照均不会删除；如果需要同时删除快照绑定的镜像，可传入参数DeleteBindImages等于true。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION_SNAPSHOTHASBINDEDIMAGE = "UnsupportedOperation.SnapshotHasBindedImage"
+//  UNSUPPORTEDOPERATION_STATEERROR = "UnsupportedOperation.StateError"
+func (c *Client) DeleteSnapshotGroup(request *DeleteSnapshotGroupRequest) (response *DeleteSnapshotGroupResponse, err error) {
+    return c.DeleteSnapshotGroupWithContext(context.Background(), request)
+}
+
+// DeleteSnapshotGroup
+// 本接口（DeleteSnapshotGroup）用于删除快照组，一次调用仅支持删除一个快照组。
+//
+// * 默认会删除快照组内的所有快照；
+//
+// * 如果快照组内的快照有关联镜像，则删除失败，所有快照均不会删除；如果需要同时删除快照绑定的镜像，可传入参数DeleteBindImages等于true。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION_SNAPSHOTHASBINDEDIMAGE = "UnsupportedOperation.SnapshotHasBindedImage"
+//  UNSUPPORTEDOPERATION_STATEERROR = "UnsupportedOperation.StateError"
+func (c *Client) DeleteSnapshotGroupWithContext(ctx context.Context, request *DeleteSnapshotGroupRequest) (response *DeleteSnapshotGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteSnapshotGroupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteSnapshotGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteSnapshotGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteSnapshotsRequest() (request *DeleteSnapshotsRequest) {
     request = &DeleteSnapshotsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -935,8 +1181,9 @@ func NewDeleteSnapshotsRequest() (request *DeleteSnapshotsRequest) {
 func NewDeleteSnapshotsResponse() (response *DeleteSnapshotsResponse) {
     response = &DeleteSnapshotsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSnapshots
@@ -1013,8 +1260,9 @@ func NewDescribeAutoSnapshotPoliciesRequest() (request *DescribeAutoSnapshotPoli
 func NewDescribeAutoSnapshotPoliciesResponse() (response *DescribeAutoSnapshotPoliciesResponse) {
     response = &DescribeAutoSnapshotPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoSnapshotPolicies
@@ -1079,8 +1327,9 @@ func NewDescribeDiskAssociatedAutoSnapshotPolicyRequest() (request *DescribeDisk
 func NewDescribeDiskAssociatedAutoSnapshotPolicyResponse() (response *DescribeDiskAssociatedAutoSnapshotPolicyResponse) {
     response = &DescribeDiskAssociatedAutoSnapshotPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskAssociatedAutoSnapshotPolicy
@@ -1131,8 +1380,9 @@ func NewDescribeDiskBackupsRequest() (request *DescribeDiskBackupsRequest) {
 func NewDescribeDiskBackupsResponse() (response *DescribeDiskBackupsResponse) {
     response = &DescribeDiskBackupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskBackups
@@ -1193,8 +1443,9 @@ func NewDescribeDiskConfigQuotaRequest() (request *DescribeDiskConfigQuotaReques
 func NewDescribeDiskConfigQuotaResponse() (response *DescribeDiskConfigQuotaResponse) {
     response = &DescribeDiskConfigQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskConfigQuota
@@ -1231,64 +1482,6 @@ func (c *Client) DescribeDiskConfigQuotaWithContext(ctx context.Context, request
     return
 }
 
-func NewDescribeDiskOperationLogsRequest() (request *DescribeDiskOperationLogsRequest) {
-    request = &DescribeDiskOperationLogsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cbs", APIVersion, "DescribeDiskOperationLogs")
-    
-    
-    return
-}
-
-func NewDescribeDiskOperationLogsResponse() (response *DescribeDiskOperationLogsResponse) {
-    response = &DescribeDiskOperationLogsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeDiskOperationLogs
-// 查询云盘操作日志功能已迁移至LookUpEvents接口（https://cloud.tencent.com/document/product/629/12359），本接口（DescribeDiskOperationLogs）即将下线，后续不再提供调用，请知悉。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
-//  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeDiskOperationLogs(request *DescribeDiskOperationLogsRequest) (response *DescribeDiskOperationLogsResponse, err error) {
-    return c.DescribeDiskOperationLogsWithContext(context.Background(), request)
-}
-
-// DescribeDiskOperationLogs
-// 查询云盘操作日志功能已迁移至LookUpEvents接口（https://cloud.tencent.com/document/product/629/12359），本接口（DescribeDiskOperationLogs）即将下线，后续不再提供调用，请知悉。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
-//  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeDiskOperationLogsWithContext(ctx context.Context, request *DescribeDiskOperationLogsRequest) (response *DescribeDiskOperationLogsResponse, err error) {
-    if request == nil {
-        request = NewDescribeDiskOperationLogsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDiskOperationLogs require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDiskOperationLogsResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeDiskStoragePoolRequest() (request *DescribeDiskStoragePoolRequest) {
     request = &DescribeDiskStoragePoolRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1303,8 +1496,9 @@ func NewDescribeDiskStoragePoolRequest() (request *DescribeDiskStoragePoolReques
 func NewDescribeDiskStoragePoolResponse() (response *DescribeDiskStoragePoolResponse) {
     response = &DescribeDiskStoragePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskStoragePool
@@ -1367,8 +1561,9 @@ func NewDescribeDisksRequest() (request *DescribeDisksRequest) {
 func NewDescribeDisksResponse() (response *DescribeDisksResponse) {
     response = &DescribeDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDisks
@@ -1433,8 +1628,9 @@ func NewDescribeInstancesDiskNumRequest() (request *DescribeInstancesDiskNumRequ
 func NewDescribeInstancesDiskNumResponse() (response *DescribeInstancesDiskNumResponse) {
     response = &DescribeInstancesDiskNumResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesDiskNum
@@ -1481,60 +1677,112 @@ func (c *Client) DescribeInstancesDiskNumWithContext(ctx context.Context, reques
     return
 }
 
-func NewDescribeSnapshotOperationLogsRequest() (request *DescribeSnapshotOperationLogsRequest) {
-    request = &DescribeSnapshotOperationLogsRequest{
+func NewDescribeSnapshotGroupsRequest() (request *DescribeSnapshotGroupsRequest) {
+    request = &DescribeSnapshotGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cbs", APIVersion, "DescribeSnapshotOperationLogs")
+    request.Init().WithApiInfo("cbs", APIVersion, "DescribeSnapshotGroups")
     
     
     return
 }
 
-func NewDescribeSnapshotOperationLogsResponse() (response *DescribeSnapshotOperationLogsResponse) {
-    response = &DescribeSnapshotOperationLogsResponse{
+func NewDescribeSnapshotGroupsResponse() (response *DescribeSnapshotGroupsResponse) {
+    response = &DescribeSnapshotGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
-// DescribeSnapshotOperationLogs
-// 查询快照操作日志功能已迁移至LookUpEvents接口（https://cloud.tencent.com/document/product/629/12359），本接口（DescribeSnapshotOperationLogs）即将下线，后续不再提供调用，请知悉。
+// DescribeSnapshotGroups
+// 本接口（DescribeSnapshotGroups）用于查询快照组列表。
+//
+// * 可以根据快照组ID、快照组状态、快照组关联的快照ID等来查询快照组列表，不同条件之间为与(AND)的关系，过滤信息详细请见过滤器`Filter`。
+//
+// * 如果参数为空，返回当前用户一定数量（`Limit`所指定的数量，默认为20）的快照组列表。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
+//  INVALIDFILTER = "InvalidFilter"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeSnapshotOperationLogs(request *DescribeSnapshotOperationLogsRequest) (response *DescribeSnapshotOperationLogsResponse, err error) {
-    return c.DescribeSnapshotOperationLogsWithContext(context.Background(), request)
+func (c *Client) DescribeSnapshotGroups(request *DescribeSnapshotGroupsRequest) (response *DescribeSnapshotGroupsResponse, err error) {
+    return c.DescribeSnapshotGroupsWithContext(context.Background(), request)
 }
 
-// DescribeSnapshotOperationLogs
-// 查询快照操作日志功能已迁移至LookUpEvents接口（https://cloud.tencent.com/document/product/629/12359），本接口（DescribeSnapshotOperationLogs）即将下线，后续不再提供调用，请知悉。
+// DescribeSnapshotGroups
+// 本接口（DescribeSnapshotGroups）用于查询快照组列表。
+//
+// * 可以根据快照组ID、快照组状态、快照组关联的快照ID等来查询快照组列表，不同条件之间为与(AND)的关系，过滤信息详细请见过滤器`Filter`。
+//
+// * 如果参数为空，返回当前用户一定数量（`Limit`所指定的数量，默认为20）的快照组列表。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
+//  INVALIDFILTER = "InvalidFilter"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeSnapshotOperationLogsWithContext(ctx context.Context, request *DescribeSnapshotOperationLogsRequest) (response *DescribeSnapshotOperationLogsResponse, err error) {
+func (c *Client) DescribeSnapshotGroupsWithContext(ctx context.Context, request *DescribeSnapshotGroupsRequest) (response *DescribeSnapshotGroupsResponse, err error) {
     if request == nil {
-        request = NewDescribeSnapshotOperationLogsRequest()
+        request = NewDescribeSnapshotGroupsRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeSnapshotOperationLogs require credential")
+        return nil, errors.New("DescribeSnapshotGroups require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeSnapshotOperationLogsResponse()
+    response = NewDescribeSnapshotGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSnapshotOverviewRequest() (request *DescribeSnapshotOverviewRequest) {
+    request = &DescribeSnapshotOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cbs", APIVersion, "DescribeSnapshotOverview")
+    
+    
+    return
+}
+
+func NewDescribeSnapshotOverviewResponse() (response *DescribeSnapshotOverviewResponse) {
+    response = &DescribeSnapshotOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSnapshotOverview
+// 该接口用于查询用户快照使用概览，包括快照总容量、计费容量等信息。
+//
+// 可能返回的错误码:
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeSnapshotOverview(request *DescribeSnapshotOverviewRequest) (response *DescribeSnapshotOverviewResponse, err error) {
+    return c.DescribeSnapshotOverviewWithContext(context.Background(), request)
+}
+
+// DescribeSnapshotOverview
+// 该接口用于查询用户快照使用概览，包括快照总容量、计费容量等信息。
+//
+// 可能返回的错误码:
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeSnapshotOverviewWithContext(ctx context.Context, request *DescribeSnapshotOverviewRequest) (response *DescribeSnapshotOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeSnapshotOverviewRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSnapshotOverview require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSnapshotOverviewResponse()
     err = c.Send(request, response)
     return
 }
@@ -1553,8 +1801,9 @@ func NewDescribeSnapshotSharePermissionRequest() (request *DescribeSnapshotShare
 func NewDescribeSnapshotSharePermissionResponse() (response *DescribeSnapshotSharePermissionResponse) {
     response = &DescribeSnapshotSharePermissionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshotSharePermission
@@ -1605,8 +1854,9 @@ func NewDescribeSnapshotsRequest() (request *DescribeSnapshotsRequest) {
 func NewDescribeSnapshotsResponse() (response *DescribeSnapshotsResponse) {
     response = &DescribeSnapshotsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshots
@@ -1671,8 +1921,9 @@ func NewDetachDisksRequest() (request *DetachDisksRequest) {
 func NewDetachDisksResponse() (response *DetachDisksResponse) {
     response = &DetachDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachDisks
@@ -1685,6 +1936,7 @@ func NewDetachDisksResponse() (response *DetachDisksResponse) {
 // * 本接口为异步接口，当请求成功返回时，云盘并未立即从主机卸载，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态由“ATTACHED”变为“UNATTACHED”，则为卸载成功。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INTERNALERROR_RESOURCEOPFAILED = "InternalError.ResourceOpFailed"
 //  INVALIDDISK_NOTPORTABLE = "InvalidDisk.NotPortable"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
@@ -1718,6 +1970,7 @@ func (c *Client) DetachDisks(request *DetachDisksRequest) (response *DetachDisks
 // * 本接口为异步接口，当请求成功返回时，云盘并未立即从主机卸载，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态由“ATTACHED”变为“UNATTACHED”，则为卸载成功。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INTERNALERROR_RESOURCEOPFAILED = "InternalError.ResourceOpFailed"
 //  INVALIDDISK_NOTPORTABLE = "InvalidDisk.NotPortable"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
@@ -1767,11 +2020,16 @@ func NewGetSnapOverviewRequest() (request *GetSnapOverviewRequest) {
 func NewGetSnapOverviewResponse() (response *GetSnapOverviewResponse) {
     response = &GetSnapOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetSnapOverview
+// 为进一步规范化API命名，该接口决定预下线，新接口命名为：DescribeSnapshotOverview
+//
+// 
+//
 // 获取快照概览信息
 //
 // 可能返回的错误码:
@@ -1782,6 +2040,10 @@ func (c *Client) GetSnapOverview(request *GetSnapOverviewRequest) (response *Get
 }
 
 // GetSnapOverview
+// 为进一步规范化API命名，该接口决定预下线，新接口命名为：DescribeSnapshotOverview
+//
+// 
+//
 // 获取快照概览信息
 //
 // 可能返回的错误码:
@@ -1817,8 +2079,9 @@ func NewInitializeDisksRequest() (request *InitializeDisksRequest) {
 func NewInitializeDisksResponse() (response *InitializeDisksResponse) {
     response = &InitializeDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InitializeDisks
@@ -1883,8 +2146,9 @@ func NewInquirePriceModifyDiskBackupQuotaRequest() (request *InquirePriceModifyD
 func NewInquirePriceModifyDiskBackupQuotaResponse() (response *InquirePriceModifyDiskBackupQuotaResponse) {
     response = &InquirePriceModifyDiskBackupQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceModifyDiskBackupQuota
@@ -1937,8 +2201,9 @@ func NewInquirePriceModifyDiskExtraPerformanceRequest() (request *InquirePriceMo
 func NewInquirePriceModifyDiskExtraPerformanceResponse() (response *InquirePriceModifyDiskExtraPerformanceResponse) {
     response = &InquirePriceModifyDiskExtraPerformanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceModifyDiskExtraPerformance
@@ -1993,8 +2258,9 @@ func NewInquiryPriceCreateDisksRequest() (request *InquiryPriceCreateDisksReques
 func NewInquiryPriceCreateDisksResponse() (response *InquiryPriceCreateDisksResponse) {
     response = &InquiryPriceCreateDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceCreateDisks
@@ -2051,8 +2317,9 @@ func NewInquiryPriceRenewDisksRequest() (request *InquiryPriceRenewDisksRequest)
 func NewInquiryPriceRenewDisksResponse() (response *InquiryPriceRenewDisksResponse) {
     response = &InquiryPriceRenewDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceRenewDisks
@@ -2129,16 +2396,13 @@ func NewInquiryPriceResizeDiskRequest() (request *InquiryPriceResizeDiskRequest)
 func NewInquiryPriceResizeDiskResponse() (response *InquiryPriceResizeDiskResponse) {
     response = &InquiryPriceResizeDiskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceResizeDisk
 // 本接口（InquiryPriceResizeDisk）用于扩容云硬盘询价。
-//
-// 
-//
-// * 只支持预付费模式的云硬盘扩容询价。
 //
 // 可能返回的错误码:
 //  INVALIDDISK_EXPIRE = "InvalidDisk.Expire"
@@ -2153,10 +2417,6 @@ func (c *Client) InquiryPriceResizeDisk(request *InquiryPriceResizeDiskRequest) 
 
 // InquiryPriceResizeDisk
 // 本接口（InquiryPriceResizeDisk）用于扩容云硬盘询价。
-//
-// 
-//
-// * 只支持预付费模式的云硬盘扩容询价。
 //
 // 可能返回的错误码:
 //  INVALIDDISK_EXPIRE = "InvalidDisk.Expire"
@@ -2195,8 +2455,9 @@ func NewModifyAutoSnapshotPolicyAttributeRequest() (request *ModifyAutoSnapshotP
 func NewModifyAutoSnapshotPolicyAttributeResponse() (response *ModifyAutoSnapshotPolicyAttributeResponse) {
     response = &ModifyAutoSnapshotPolicyAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAutoSnapshotPolicyAttribute
@@ -2263,12 +2524,13 @@ func NewModifyDiskAttributesRequest() (request *ModifyDiskAttributesRequest) {
 func NewModifyDiskAttributesResponse() (response *ModifyDiskAttributesResponse) {
     response = &ModifyDiskAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDiskAttributes
-// * 只支持修改弹性云盘的项目ID。随云主机创建的云硬盘项目ID与云主机联动。可以通过[DescribeDisks](/document/product/362/16315)接口查询，见输出参数中Portable字段解释。
+// * 只支持修改弹性云盘的项目ID。随云主机创建的云硬盘项目ID与云主机联动。是否是弹性云盘可以通过[DescribeDisks](/document/product/362/16315)接口查询，见输出参数中Portable字段解释。
 //
 // * “云硬盘名称”仅为方便用户自己管理之用，腾讯云并不以此名称作为提交工单或是进行云盘管理操作的依据。
 //
@@ -2279,6 +2541,7 @@ func NewModifyDiskAttributesResponse() (response *ModifyDiskAttributesResponse) 
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETER_DISKCONFIGNOTSUPPORTED = "InvalidParameter.DiskConfigNotSupported"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
@@ -2287,12 +2550,13 @@ func NewModifyDiskAttributesResponse() (response *ModifyDiskAttributesResponse) 
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  TRADEDEALCONFLICT = "TradeDealConflict"
 func (c *Client) ModifyDiskAttributes(request *ModifyDiskAttributesRequest) (response *ModifyDiskAttributesResponse, err error) {
     return c.ModifyDiskAttributesWithContext(context.Background(), request)
 }
 
 // ModifyDiskAttributes
-// * 只支持修改弹性云盘的项目ID。随云主机创建的云硬盘项目ID与云主机联动。可以通过[DescribeDisks](/document/product/362/16315)接口查询，见输出参数中Portable字段解释。
+// * 只支持修改弹性云盘的项目ID。随云主机创建的云硬盘项目ID与云主机联动。是否是弹性云盘可以通过[DescribeDisks](/document/product/362/16315)接口查询，见输出参数中Portable字段解释。
 //
 // * “云硬盘名称”仅为方便用户自己管理之用，腾讯云并不以此名称作为提交工单或是进行云盘管理操作的依据。
 //
@@ -2303,6 +2567,7 @@ func (c *Client) ModifyDiskAttributes(request *ModifyDiskAttributesRequest) (res
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDPARAMETER_DISKCONFIGNOTSUPPORTED = "InvalidParameter.DiskConfigNotSupported"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
@@ -2311,6 +2576,7 @@ func (c *Client) ModifyDiskAttributes(request *ModifyDiskAttributesRequest) (res
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  TRADEDEALCONFLICT = "TradeDealConflict"
 func (c *Client) ModifyDiskAttributesWithContext(ctx context.Context, request *ModifyDiskAttributesRequest) (response *ModifyDiskAttributesResponse, err error) {
     if request == nil {
         request = NewModifyDiskAttributesRequest()
@@ -2341,16 +2607,20 @@ func NewModifyDiskBackupQuotaRequest() (request *ModifyDiskBackupQuotaRequest) {
 func NewModifyDiskBackupQuotaResponse() (response *ModifyDiskBackupQuotaResponse) {
     response = &ModifyDiskBackupQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDiskBackupQuota
 // 此接口 (ModifyDiskBackupQuota) 用于修改云硬盘备份点配额。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_ATTACHED = "ResourceUnavailable.Attached"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
@@ -2362,8 +2632,11 @@ func (c *Client) ModifyDiskBackupQuota(request *ModifyDiskBackupQuotaRequest) (r
 // 此接口 (ModifyDiskBackupQuota) 用于修改云硬盘备份点配额。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_ATTACHED = "ResourceUnavailable.Attached"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
@@ -2397,8 +2670,9 @@ func NewModifyDiskExtraPerformanceRequest() (request *ModifyDiskExtraPerformance
 func NewModifyDiskExtraPerformanceResponse() (response *ModifyDiskExtraPerformanceResponse) {
     response = &ModifyDiskExtraPerformanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDiskExtraPerformance
@@ -2406,7 +2680,7 @@ func NewModifyDiskExtraPerformanceResponse() (response *ModifyDiskExtraPerforman
 //
 // 
 //
-// * 目前仅支持极速型SSD云硬盘（CLOUD_TSSD）和高性能SSD云硬盘(CLOUD_HSSD)。
+// * 目前仅支持增强型SSD云硬盘(CLOUD_HSSD)和极速型SSD云硬盘（CLOUD_TSSD）。
 //
 // 可能返回的错误码:
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
@@ -2426,7 +2700,7 @@ func (c *Client) ModifyDiskExtraPerformance(request *ModifyDiskExtraPerformanceR
 //
 // 
 //
-// * 目前仅支持极速型SSD云硬盘（CLOUD_TSSD）和高性能SSD云硬盘(CLOUD_HSSD)。
+// * 目前仅支持增强型SSD云硬盘(CLOUD_HSSD)和极速型SSD云硬盘（CLOUD_TSSD）。
 //
 // 可能返回的错误码:
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
@@ -2467,20 +2741,17 @@ func NewModifyDisksChargeTypeRequest() (request *ModifyDisksChargeTypeRequest) {
 func NewModifyDisksChargeTypeResponse() (response *ModifyDisksChargeTypeResponse) {
     response = &ModifyDisksChargeTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDisksChargeType
-// 接口请求域名： cbs.tencentcloudapi.com 。
+// 本接口 (ModifyDisksChargeType) 用于切换云硬盘的计费模式。
 //
 // 
 //
-// 本接口 (ModifyDisksChargeType) 用于切换云盘的计费模式。
-//
-// 
-//
-// 非弹性云盘不支持此接口，请通过修改实例计费模式接口将实例连同非弹性云盘一起转换。
+// 非弹性云硬盘不支持此接口，请通过修改实例计费模式接口将实例连同非弹性云硬盘一起转换。
 //
 // 默认接口请求频率限制：10次/秒。
 //
@@ -2503,15 +2774,11 @@ func (c *Client) ModifyDisksChargeType(request *ModifyDisksChargeTypeRequest) (r
 }
 
 // ModifyDisksChargeType
-// 接口请求域名： cbs.tencentcloudapi.com 。
+// 本接口 (ModifyDisksChargeType) 用于切换云硬盘的计费模式。
 //
 // 
 //
-// 本接口 (ModifyDisksChargeType) 用于切换云盘的计费模式。
-//
-// 
-//
-// 非弹性云盘不支持此接口，请通过修改实例计费模式接口将实例连同非弹性云盘一起转换。
+// 非弹性云硬盘不支持此接口，请通过修改实例计费模式接口将实例连同非弹性云硬盘一起转换。
 //
 // 默认接口请求频率限制：10次/秒。
 //
@@ -2559,8 +2826,9 @@ func NewModifyDisksRenewFlagRequest() (request *ModifyDisksRenewFlagRequest) {
 func NewModifyDisksRenewFlagResponse() (response *ModifyDisksRenewFlagResponse) {
     response = &ModifyDisksRenewFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDisksRenewFlag
@@ -2569,6 +2837,7 @@ func NewModifyDisksRenewFlagResponse() (response *ModifyDisksRenewFlagResponse) 
 // 可能返回的错误码:
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
@@ -2582,6 +2851,7 @@ func (c *Client) ModifyDisksRenewFlag(request *ModifyDisksRenewFlagRequest) (res
 // 可能返回的错误码:
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
@@ -2615,8 +2885,9 @@ func NewModifySnapshotAttributeRequest() (request *ModifySnapshotAttributeReques
 func NewModifySnapshotAttributeResponse() (response *ModifySnapshotAttributeResponse) {
     response = &ModifySnapshotAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySnapshotAttribute
@@ -2624,9 +2895,9 @@ func NewModifySnapshotAttributeResponse() (response *ModifySnapshotAttributeResp
 //
 // 
 //
-// * 当前仅支持修改快照名称及将非永久快照修改为永久快照。
+// * 本接口支持修改快照名称及到期时间，以及将非永久快照修改为永久快照。
 //
-// * “快照名称”仅为方便用户自己管理之用，腾讯云并不以此名称作为提交工单或是进行快照管理操作的依据。
+// * “快照名称”仅为方便用户管理之用，腾讯云并不以此名称作为提交工单或是进行快照管理操作的依据。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2644,9 +2915,9 @@ func (c *Client) ModifySnapshotAttribute(request *ModifySnapshotAttributeRequest
 //
 // 
 //
-// * 当前仅支持修改快照名称及将非永久快照修改为永久快照。
+// * 本接口支持修改快照名称及到期时间，以及将非永久快照修改为永久快照。
 //
-// * “快照名称”仅为方便用户自己管理之用，腾讯云并不以此名称作为提交工单或是进行快照管理操作的依据。
+// * “快照名称”仅为方便用户管理之用，腾讯云并不以此名称作为提交工单或是进行快照管理操作的依据。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2685,8 +2956,9 @@ func NewModifySnapshotsSharePermissionRequest() (request *ModifySnapshotsSharePe
 func NewModifySnapshotsSharePermissionResponse() (response *ModifySnapshotsSharePermissionResponse) {
     response = &ModifySnapshotsSharePermissionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySnapshotsSharePermission
@@ -2765,8 +3037,9 @@ func NewRenewDiskRequest() (request *RenewDiskRequest) {
 func NewRenewDiskResponse() (response *RenewDiskResponse) {
     response = &RenewDiskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewDisk
@@ -2851,8 +3124,9 @@ func NewResizeDiskRequest() (request *ResizeDiskRequest) {
 func NewResizeDiskResponse() (response *ResizeDiskResponse) {
     response = &ResizeDiskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResizeDisk
@@ -2862,7 +3136,7 @@ func NewResizeDiskResponse() (response *ResizeDiskResponse) {
 //
 // * 只支持扩容弹性云盘。云硬盘类型可以通过[DescribeDisks](/document/product/362/16315)接口查询，见输出参数中Portable字段解释。非弹性云硬盘需通过[ResizeInstanceDisks](/document/product/213/15731)接口扩容。
 //
-// * 本接口为异步接口，接口成功返回时，云盘并未立即扩容到指定大小，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态为“EXPANDING”，表示正在扩容中。 
+// * 本接口为异步接口，接口成功返回时，云盘并未立即扩容到指定大小，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态为“EXPANDING”，表示正在扩容中。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
@@ -2878,6 +3152,7 @@ func NewResizeDiskResponse() (response *ResizeDiskResponse) {
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_EXPIRE = "ResourceUnavailable.Expire"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
 //  UNSUPPORTEDOPERATION_INSTANCENOTSTOPPED = "UnsupportedOperation.InstanceNotStopped"
@@ -2892,7 +3167,7 @@ func (c *Client) ResizeDisk(request *ResizeDiskRequest) (response *ResizeDiskRes
 //
 // * 只支持扩容弹性云盘。云硬盘类型可以通过[DescribeDisks](/document/product/362/16315)接口查询，见输出参数中Portable字段解释。非弹性云硬盘需通过[ResizeInstanceDisks](/document/product/213/15731)接口扩容。
 //
-// * 本接口为异步接口，接口成功返回时，云盘并未立即扩容到指定大小，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态为“EXPANDING”，表示正在扩容中。 
+// * 本接口为异步接口，接口成功返回时，云盘并未立即扩容到指定大小，可通过接口[DescribeDisks](/document/product/362/16315)来查询对应云盘的状态，如果云盘的状态为“EXPANDING”，表示正在扩容中。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
@@ -2908,6 +3183,7 @@ func (c *Client) ResizeDisk(request *ResizeDiskRequest) (response *ResizeDiskRes
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_EXPIRE = "ResourceUnavailable.Expire"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
 //  UNSUPPORTEDOPERATION_INSTANCENOTSTOPPED = "UnsupportedOperation.InstanceNotStopped"
@@ -2941,8 +3217,9 @@ func NewTerminateDisksRequest() (request *TerminateDisksRequest) {
 func NewTerminateDisksResponse() (response *TerminateDisksResponse) {
     response = &TerminateDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateDisks
@@ -2961,6 +3238,7 @@ func NewTerminateDisksResponse() (response *TerminateDisksResponse) {
 //  INTERNALERROR_FAILQUERYRESOURCE = "InternalError.FailQueryResource"
 //  INVALIDDISK_EXPIRE = "InvalidDisk.Expire"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINSUFFICIENT_OVERREFUNDQUOTA = "ResourceInsufficient.OverRefundQuota"
@@ -2990,6 +3268,7 @@ func (c *Client) TerminateDisks(request *TerminateDisksRequest) (response *Termi
 //  INTERNALERROR_FAILQUERYRESOURCE = "InternalError.FailQueryResource"
 //  INVALIDDISK_EXPIRE = "InvalidDisk.Expire"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINSUFFICIENT_OVERREFUNDQUOTA = "ResourceInsufficient.OverRefundQuota"
@@ -3029,8 +3308,9 @@ func NewUnbindAutoSnapshotPolicyRequest() (request *UnbindAutoSnapshotPolicyRequ
 func NewUnbindAutoSnapshotPolicyResponse() (response *UnbindAutoSnapshotPolicyResponse) {
     response = &UnbindAutoSnapshotPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnbindAutoSnapshotPolicy
