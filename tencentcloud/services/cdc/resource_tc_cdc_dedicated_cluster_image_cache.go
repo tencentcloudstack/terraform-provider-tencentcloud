@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -78,12 +79,17 @@ func ResourceTencentCloudCdcDedicatedClusterImageCacheCreate(d *schema.ResourceD
 	d.SetId(strings.Join([]string{dedicatedClusterId, image}, tccommon.FILED_SP))
 
 	service := CdcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"CACHED"}, 20*tccommon.ReadRetryTimeout, time.Second, service.DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId, image, []string{}))
-	if _, e := conf.WaitForState(); e != nil {
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"CACHED", "CACHE_FAILED"}, 20*tccommon.ReadRetryTimeout, time.Second, service.DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId, image, []string{}))
+	if object, e := conf.WaitForState(); e != nil {
 		return e
+	} else {
+		imageCacheState := object.(*cvm.Image)
+		if imageCacheState.CdcCacheStatus != nil && *imageCacheState.CdcCacheStatus == "CACHE_FAILED" {
+			return fmt.Errorf("cache failed")
+		}
 	}
 
-	return ResourceTencentCloudCdcDedicatedClusterRead(d, meta)
+	return ResourceTencentCloudCdcDedicatedClusterImageCacheRead(d, meta)
 }
 
 func ResourceTencentCloudCdcDedicatedClusterImageCacheRead(d *schema.ResourceData, meta interface{}) error {
