@@ -316,7 +316,7 @@ func (me *CdcService) DescribeCdcDedicatedClustersByFilter(ctx context.Context, 
 	return
 }
 
-func (me *CdcService) DescribeImages(ctx context.Context, dedicatedClusterId string, imageId string) (images []*cvm.Image, errRet error) {
+func (me *CdcService) DescribeImages(ctx context.Context, dedicatedClusterId string, imageId string, cdcCacheStatus string) (images []*cvm.Image, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewDescribeImagesRequest()
 	request.Filters = []*cvm.Filter{
@@ -334,7 +334,7 @@ func (me *CdcService) DescribeImages(ctx context.Context, dedicatedClusterId str
 		},
 		{
 			Name:   helper.String("cdc-cache-status"),
-			Values: helper.Strings([]string{"CACHED_ALL"}),
+			Values: helper.Strings([]string{cdcCacheStatus}),
 		},
 	}
 
@@ -362,10 +362,10 @@ func (me *CdcService) DescribeImages(ctx context.Context, dedicatedClusterId str
 	return
 }
 
-func (me *CdcService) DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId string, imageId string, failStates []string) resource.StateRefreshFunc {
+func (me *CdcService) DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId string, imageId string, cdcCacheStatus string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := tccommon.ContextNil
-		images, err := me.DescribeImages(ctx, dedicatedClusterId, imageId)
+		images, err := me.DescribeImages(ctx, dedicatedClusterId, imageId, cdcCacheStatus)
 
 		if err != nil {
 			return nil, "", err

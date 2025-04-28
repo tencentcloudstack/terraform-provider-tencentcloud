@@ -19,8 +19,8 @@ func TestAccTencentCloudCdcDedicatedClusterImageCacheResource_basic(t *testing.T
 				Config: testAccCdcDedicatedCluster,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "dedicated_cluster_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "image_id"),
+					resource.TestCheckResourceAttr("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "dedicated_cluster_id", "cluster-262n63e8"),
+					resource.TestCheckResourceAttr("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "image_id", "img-eb30mz89"),
 				),
 			},
 		},
@@ -29,7 +29,7 @@ func TestAccTencentCloudCdcDedicatedClusterImageCacheResource_basic(t *testing.T
 
 const testAccCdcDedicatedClusterImageCache = `
 resource "tencentcloud_cdc_dedicated_cluster_image_cache" "cdc_dedicated_cluster_image_cache" {
-  dedicated_cluster_id = ""
-  image_id = ""
+  dedicated_cluster_id = "cluster-262n63e8"
+  image_id = "img-eb30mz89"
 }
 `

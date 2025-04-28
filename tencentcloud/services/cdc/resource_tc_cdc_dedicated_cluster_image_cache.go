@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -79,12 +80,12 @@ func ResourceTencentCloudCdcDedicatedClusterImageCacheCreate(d *schema.ResourceD
 	d.SetId(strings.Join([]string{dedicatedClusterId, image}, tccommon.FILED_SP))
 
 	service := CdcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"CACHED", "CACHE_FAILED"}, 20*tccommon.ReadRetryTimeout, time.Second, service.DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId, image, []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{CDC_CACHE_STATUS_CACHED, CDC_CACHE_STATUS_CACHE_FAILED}, 20*tccommon.ReadRetryTimeout, time.Second, service.DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId, image, CDC_CACHE_STATUS_CACHED_ALL, []string{}))
 	if object, e := conf.WaitForState(); e != nil {
 		return e
 	} else {
 		imageCacheState := object.(*cvm.Image)
-		if imageCacheState.CdcCacheStatus != nil && *imageCacheState.CdcCacheStatus == "CACHE_FAILED" {
+		if imageCacheState.CdcCacheStatus != nil && *imageCacheState.CdcCacheStatus == CDC_CACHE_STATUS_CACHE_FAILED {
 			return fmt.Errorf("cache failed")
 		}
 	}
@@ -105,7 +106,7 @@ func ResourceTencentCloudCdcDedicatedClusterImageCacheRead(d *schema.ResourceDat
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	images, err := service.DescribeImages(ctx, idSplit[0], idSplit[1])
+	images, err := service.DescribeImages(ctx, idSplit[0], idSplit[1], CDC_CACHE_STATUS_CACHED_ALL)
 	if err != nil {
 		return err
 	}
@@ -116,8 +117,14 @@ func ResourceTencentCloudCdcDedicatedClusterImageCacheRead(d *schema.ResourceDat
 		return nil
 	}
 
-	_ = d.Set("dedicated_cluster_id", idSplit[0])
-	_ = d.Set("image_id", idSplit[0])
+	if images[0].CdcCacheStatus != nil && *images[0].CdcCacheStatus == CDC_CACHE_STATUS_CACHED {
+		_ = d.Set("dedicated_cluster_id", idSplit[0])
+		_ = d.Set("image_id", idSplit[0])
+	} else {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `CdcDedicatedClusterImageCache` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
 
 	return nil
 }
@@ -141,6 +148,11 @@ func ResourceTencentCloudCdcDedicatedClusterImageCacheDelete(d *schema.ResourceD
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdcClient().DeleteDedicatedClusterImageCache(request)
 		if e != nil {
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "InvalidParameter.ImageNotCacheInCdc" {
+					return nil
+				}
+			}
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -152,6 +164,12 @@ func ResourceTencentCloudCdcDedicatedClusterImageCacheDelete(d *schema.ResourceD
 	if err != nil {
 		log.Printf("[CRITAL]%s delete cdc dedicatedClusterImageCache failed, reason:%+v", logId, err)
 		return err
+	}
+
+	service := CdcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{CDC_CACHE_STATUS_NO_CACHE}, 20*tccommon.ReadRetryTimeout, time.Second, service.DedicatedClusterImageCacheStateRefreshFunc(idSplit[0], idSplit[1], CDC_CACHE_STATUS_NO_CACHE, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil
