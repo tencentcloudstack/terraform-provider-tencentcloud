@@ -58,6 +58,7 @@ func ResourceTencentCloudClsCloudProductLogTaskV2() *schema.Resource {
 			"logset_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Description: "Log set name, required if `logset_id` is not filled in. If the log set does not exist, it will be automatically created.",
 			},
@@ -65,6 +66,7 @@ func ResourceTencentCloudClsCloudProductLogTaskV2() *schema.Resource {
 			"topic_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Description: "The name of the log topic is required when `topic_id` is not filled in. If the log theme does not exist, it will be automatically created.",
 			},
@@ -79,6 +81,7 @@ func ResourceTencentCloudClsCloudProductLogTaskV2() *schema.Resource {
 			"logset_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Description: "Log set ID.",
 			},
@@ -86,6 +89,7 @@ func ResourceTencentCloudClsCloudProductLogTaskV2() *schema.Resource {
 			"topic_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Description: "Log theme ID.",
 			},
@@ -215,7 +219,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 		return err
 	}
 
-	if respData == nil {
+	if respData == nil || len(respData.Tasks) < 1 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `cls_cloud_product_log_task` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
@@ -226,37 +230,35 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 	_ = d.Set("log_type", logType)
 	_ = d.Set("cloud_product_region", cloudProductRegion)
 
-	if len(respData.Tasks) > 0 {
-		if respData.Tasks[0].ClsRegion != nil {
-			_ = d.Set("cls_region", respData.Tasks[0].ClsRegion)
+	if respData.Tasks[0].ClsRegion != nil {
+		_ = d.Set("cls_region", respData.Tasks[0].ClsRegion)
+	}
+
+	if respData.Tasks[0].Extend != nil {
+		_ = d.Set("extend", respData.Tasks[0].Extend)
+	}
+
+	if respData.Tasks[0].LogsetId != nil {
+		_ = d.Set("logset_id", respData.Tasks[0].LogsetId)
+		info, err := service.DescribeClsLogset(ctx, *respData.Tasks[0].LogsetId)
+		if err != nil {
+			return err
 		}
 
-		if respData.Tasks[0].Extend != nil {
-			_ = d.Set("extend", respData.Tasks[0].Extend)
+		if info.LogsetName != nil {
+			_ = d.Set("logset_name", info.LogsetName)
+		}
+	}
+
+	if respData.Tasks[0].TopicId != nil {
+		_ = d.Set("topic_id", respData.Tasks[0].TopicId)
+		info, err := service.DescribeClsTopicById(ctx, *respData.Tasks[0].TopicId)
+		if err != nil {
+			return err
 		}
 
-		if respData.Tasks[0].LogsetId != nil {
-			_ = d.Set("logset_id", respData.Tasks[0].LogsetId)
-			info, err := service.DescribeClsLogset(ctx, *respData.Tasks[0].LogsetId)
-			if err != nil {
-				return err
-			}
-
-			if info.LogsetName != nil {
-				_ = d.Set("logset_name", info.LogsetName)
-			}
-		}
-
-		if respData.Tasks[0].TopicId != nil {
-			_ = d.Set("topic_id", respData.Tasks[0].TopicId)
-			info, err := service.DescribeClsTopicById(ctx, *respData.Tasks[0].TopicId)
-			if err != nil {
-				return err
-			}
-
-			if info.TopicName != nil {
-				_ = d.Set("topic_name", info.TopicName)
-			}
+		if info.TopicName != nil {
+			_ = d.Set("topic_name", info.TopicName)
 		}
 	}
 
@@ -278,7 +280,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Update(d *schema.ResourceData, 
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
-	immutableArgs := []string{"instance_id", "assumer_name", "log_type", "cloud_product_region", "cls_region", "logset_name", "topic_name", "logset_id", "topic_id"}
+	immutableArgs := []string{"instance_id", "assumer_name", "log_type", "cloud_product_region", "cls_region"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

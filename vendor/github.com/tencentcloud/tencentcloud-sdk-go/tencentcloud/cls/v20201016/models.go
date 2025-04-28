@@ -173,6 +173,9 @@ type AlarmInfo struct {
 	// 分组触发条件。
 	GroupTriggerCondition []*string `json:"GroupTriggerCondition,omitnil,omitempty" name:"GroupTriggerCondition"`
 
+	// 告警策略绑定的标签信息。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
 	// 监控对象类型。0:执行语句共用监控对象;1:每个执行语句单独选择监控对象。 
 	MonitorObjectType *uint64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
 
@@ -4631,6 +4634,67 @@ func (r *DeleteConsumerResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteCosRechargeRequestParams struct {
+	// COS导入配置Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 日志主题Id
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+}
+
+type DeleteCosRechargeRequest struct {
+	*tchttp.BaseRequest
+	
+	// COS导入配置Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 日志主题Id
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+}
+
+func (r *DeleteCosRechargeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCosRechargeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Id")
+	delete(f, "TopicId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCosRechargeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCosRechargeResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCosRechargeResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCosRechargeResponseParams `json:"Response"`
+}
+
+func (r *DeleteCosRechargeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCosRechargeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteDashboardSubscribeRequestParams struct {
 	// 仪表盘订阅记录id。
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
@@ -8707,10 +8771,10 @@ type GroupTriggerConditionInfo struct {
 }
 
 type HighLightItem struct {
-	// 高亮的日志Key
+	// 高亮的日志字段名称
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
-	// 高亮的语法
+	// 高亮的关键词
 	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
 }
 
@@ -8925,6 +8989,9 @@ type LogInfo struct {
 
 	// 请求包内日志的ID
 	PkgLogId *string `json:"PkgLogId,omitnil,omitempty" name:"PkgLogId"`
+
+	// 符合检索条件的关键词，一般用于高亮显示。仅支持键值检索，不支持全文检索	
+	HighLights []*HighLightItem `json:"HighLights,omitnil,omitempty" name:"HighLights"`
 
 	// 日志内容的Json序列化字符串
 	LogJson *string `json:"LogJson,omitnil,omitempty" name:"LogJson"`
@@ -12772,6 +12839,9 @@ type SearchLogRequestParams struct {
 	// 为false时代表使用老的检索结果返回方式, 输出AnalysisResults和ColNames有效
 	// 两种返回方式在编码格式上有少量区别，建议使用true
 	UseNewAnalysis *bool `json:"UseNewAnalysis,omitnil,omitempty" name:"UseNewAnalysis"`
+
+	// 是否高亮符合检索条件的关键词，一般用于高亮显示。仅支持键值检索，不支持全文检索
+	HighLight *bool `json:"HighLight,omitnil,omitempty" name:"HighLight"`
 }
 
 type SearchLogRequest struct {
@@ -12848,6 +12918,9 @@ type SearchLogRequest struct {
 	// 为false时代表使用老的检索结果返回方式, 输出AnalysisResults和ColNames有效
 	// 两种返回方式在编码格式上有少量区别，建议使用true
 	UseNewAnalysis *bool `json:"UseNewAnalysis,omitnil,omitempty" name:"UseNewAnalysis"`
+
+	// 是否高亮符合检索条件的关键词，一般用于高亮显示。仅支持键值检索，不支持全文检索
+	HighLight *bool `json:"HighLight,omitnil,omitempty" name:"HighLight"`
 }
 
 func (r *SearchLogRequest) ToJsonString() string {
@@ -12874,6 +12947,7 @@ func (r *SearchLogRequest) FromJsonString(s string) error {
 	delete(f, "Context")
 	delete(f, "SamplingRate")
 	delete(f, "UseNewAnalysis")
+	delete(f, "HighLight")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SearchLogRequest has unknown keys!", "")
 	}
@@ -13333,6 +13407,9 @@ type ValueInfo struct {
 
 	// 是否包含中文，long及double类型字段需为false
 	ContainZH *bool `json:"ContainZH,omitnil,omitempty" name:"ContainZH"`
+
+	// 字段别名
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
 }
 
 type WebCallback struct {

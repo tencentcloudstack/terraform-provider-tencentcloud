@@ -869,6 +869,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1078 h1:6yf63s
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1078/go.mod h1:D0n69Y0uDnHt31Wp5Z+uqmgBzr8xTZhrXPJ6d6KJL6E=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1135 h1:FTWpacOgtZCLC3Kwdf9gOpG2yYzfEzjKHsCR2k89LD0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1135/go.mod h1:upjXJ5ISzUgxChOoUUcr9tQd8PB7FG3rFtMrxhozYzU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148 h1:tPQHJE07DGCJWrQJklrkrF0CasB86M7AEb0PrkXNjAM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148/go.mod h1:dnj7aObyt7kqbM7vgHsvSpubXLjGc70Wos708PsdcEo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.414/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.486/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.524/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
