@@ -11,6 +11,10 @@ description: |-
 
 Provides a resource to create a CBS storage.
 
+-> **NOTE:** When creating an encrypted disk, if `kms_key_id` is not entered, the product side will generate a key by default.
+
+-> **NOTE:** When using CBS encrypted disk, it is necessary to add `CVM_QcsRole` role and `QcloudKMSAccessForCVMRole` strategy to the account.
+
 ## Example Usage
 
 ### Create a standard CBS storage
@@ -25,7 +29,42 @@ resource "tencentcloud_cbs_storage" "example" {
   encrypt           = false
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
+  }
+}
+```
+
+### Create an encrypted CBS storage with customize kms_key_id
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  kms_key_id        = "2e860789-7ef0-11ef-8d1c-5254001955d1"
+  encrypt           = true
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
+### Create an encrypted CBS storage with default generated kms_key_id
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  encrypt           = true
+
+  tags = {
+    createBy = "Terraform"
   }
 }
 ```
@@ -44,7 +83,7 @@ resource "tencentcloud_cbs_storage" "example" {
   encrypt              = false
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
@@ -60,8 +99,9 @@ The following arguments are supported:
 * `charge_type` - (Optional, String) The charge type of CBS instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `CDCPAID` and `DEDICATED_CLUSTER_PAID`. The default is `POSTPAID_BY_HOUR`.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disk_backup_quota` - (Optional, Int) The quota of backup points of cloud disk.
-* `encrypt` - (Optional, Bool, ForceNew) Indicates whether CBS is encrypted.
+* `encrypt` - (Optional, Bool, ForceNew) Pass in this parameter to create an encrypted cloud disk.
 * `force_delete` - (Optional, Bool) Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
+* `kms_key_id` - (Optional, String, ForceNew) Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.
 * `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.33.0. Set `prepaid_period` instead. The purchased usage period of CBS. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
 * `prepaid_renew_flag` - (Optional, String) Auto Renewal flag. Value range: `NOTIFY_AND_AUTO_RENEW`: Notify expiry and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: Notify expiry but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: Neither notify expiry nor renew automatically. Default value range: `NOTIFY_AND_MANUAL_RENEW`: Notify expiry but do not renew automatically. NOTE: it only works when charge_type is set to `PREPAID`.

@@ -34,7 +34,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.1071
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.825
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1153
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.944
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.1010
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.0.1129
@@ -45,8 +45,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.1073
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1107
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1153
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1128
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.1111

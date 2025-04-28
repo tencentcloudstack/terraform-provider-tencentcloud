@@ -80,6 +80,13 @@ func ResourceTencentCloudCbsStorageSet() *schema.Resource {
 				Default:     0,
 				Description: "ID of the project to which the instance belongs.",
 			},
+			"kms_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.",
+			},
 			"encrypt": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -146,6 +153,10 @@ func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOk("snapshot_id"); ok {
 		request.SnapshotId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("kms_key_id"); ok {
+		request.KmsKeyId = helper.String(v.(string))
 	}
 
 	if _, ok := d.GetOk("encrypt"); ok {
@@ -233,6 +244,10 @@ func resourceTencentCloudCbsStorageSetRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("attached", storage.Attached)
 	_ = d.Set("charge_type", storage.DiskChargeType)
 	_ = d.Set("throughput_performance", storage.ThroughputPerformance)
+
+	if storage.KmsKeyId != nil {
+		_ = d.Set("kms_key_id", storage.KmsKeyId)
+	}
 
 	return nil
 }
