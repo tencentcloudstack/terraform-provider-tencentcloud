@@ -40,7 +40,32 @@ func ResourceTencentCloudVpcIpv6CidrBlock() *schema.Resource {
 			"ipv6_cidr_block": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "ipv6 cidr block.",
+				Description: "Ipv6 cidr block.",
+			},
+
+			"ipv6_cidr_block_set": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Ipv6 cidr block set.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ipv6_cidr_block": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Ipv6 cidr block.",
+						},
+						"address_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Apply for the type of IPv6 Cidr, GUA (Global Unicast Address), ULA (Unique Local Address).",
+						},
+						"isp_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Range of network operator types: 'BGP' - default, 'CMCC' - China Mobile, 'CTCC' - China Telecom, 'CUCC' - China Joint Debugging.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -112,9 +137,31 @@ func resourceTencentCloudVpcIpv6CidrBlockRead(d *schema.ResourceData, meta inter
 		_ = d.Set("vpc_id", instance.VpcId)
 	}
 
-	if instance.Ipv6CidrBlockSet != nil && len(instance.Ipv6CidrBlockSet) != 0 {
-		_ = d.Set("address_type", instance.Ipv6CidrBlockSet[0].AddressType)
-		_ = d.Set("ipv6_cidr_block", instance.Ipv6CidrBlockSet[0].IPv6CidrBlock)
+	if instance.Ipv6CidrBlock != nil {
+		_ = d.Set("ipv6_cidr_block", instance.Ipv6CidrBlock)
+	}
+
+	if instance.Ipv6CidrBlockSet != nil && len(instance.Ipv6CidrBlockSet) > 0 {
+		tmpList := make([]map[string]interface{}, 0, len(instance.Ipv6CidrBlockSet))
+		for _, item := range instance.Ipv6CidrBlockSet {
+			dMap := make(map[string]interface{})
+			if item.IPv6CidrBlock != nil {
+				dMap["ipv6_cidr_block"] = item.IPv6CidrBlock
+			}
+
+			if item.AddressType != nil {
+				dMap["address_type"] = item.AddressType
+				_ = d.Set("address_type", item.AddressType)
+			}
+
+			if item.ISPType != nil {
+				dMap["isp_type"] = item.ISPType
+			}
+
+			tmpList = append(tmpList, dMap)
+		}
+
+		_ = d.Set("ipv6_cidr_block_set", tmpList)
 	}
 
 	return nil

@@ -45,7 +45,11 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `ipv6_cidr_block` - ipv6 cidr block.
+* `ipv6_cidr_block_set` - Ipv6 cidr block set.
+  * `address_type` - Apply for the type of IPv6 Cidr, GUA (Global Unicast Address), ULA (Unique Local Address).
+  * `ipv6_cidr_block` - Ipv6 cidr block.
+  * `isp_type` - Range of network operator types: 'BGP' - default, 'CMCC' - China Mobile, 'CTCC' - China Telecom, 'CUCC' - China Joint Debugging.
+* `ipv6_cidr_block` - Ipv6 cidr block.
 
 
 ## Import
