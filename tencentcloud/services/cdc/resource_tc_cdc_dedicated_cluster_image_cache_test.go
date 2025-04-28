@@ -23,6 +23,11 @@ func TestAccTencentCloudCdcDedicatedClusterImageCacheResource_basic(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "image_id", "img-eb30mz89"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
