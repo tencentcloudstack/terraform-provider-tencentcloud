@@ -2323,6 +2323,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_native_node_pool":                                              tke.ResourceTencentCloudKubernetesNativeNodePool(),
 			"tencentcloud_cdc_site":                                                                 cdc.ResourceTencentCloudCdcSite(),
 			"tencentcloud_cdc_dedicated_cluster":                                                    cdc.ResourceTencentCloudCdcDedicatedCluster(),
+			"tencentcloud_cdc_dedicated_cluster_image_cache":                                        cdc.ResourceTencentCloudDedicatedClusterImageCache(),
 			"tencentcloud_cdwdoris_instance":                                                        cdwdoris.ResourceTencentCloudCdwdorisInstance(),
 			"tencentcloud_cdwdoris_workload_group":                                                  cdwdoris.ResourceTencentCloudCdwdorisWorkloadGroup(),
 			//"tencentcloud_cdwdoris_user":                                       cdwdoris.ResourceTencentCloudCdwdorisUser(),

@@ -2289,6 +2289,7 @@ tencentcloud_cdc_dedicated_clusters
 Resource
 tencentcloud_cdc_site
 tencentcloud_cdc_dedicated_cluster
+tencentcloud_cdc_dedicated_cluster_image_cache
 
 CdwDoris
 Data Source
