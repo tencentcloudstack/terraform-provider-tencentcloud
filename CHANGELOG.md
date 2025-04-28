@@ -1,3 +1,18 @@
+## 1.81.188(April 28 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cls_cloud_product_log_task_v2` ([#3335](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3335))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_cbs_storages: add return value `kms_key_id` ([#3334](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3334))
+* datasource/tencentcloud_cbs_storages_set: add return value `kms_key_id` ([#3334](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3334))
+* resource/tencentcloud_cbs_storage: support `kms_key_id` ([#3334](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3334))
+* resource/tencentcloud_cbs_storage_set: support `kms_key_id` ([#3334](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3334))
+* resource/tencentcloud_cls_cloud_product_log_task: This resource has been deprecated in Terraform TencentCloud provider version 1.81.188. Please use `tencentcloud_cls_cloud_product_log_task_v2` instead. ([#3335](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3335))
+* resource/tencentcloud_vpc_ipv6_cidr_block: update `ipv6_cidr_block` return value ([#3336](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3336))
+
 ## 1.81.187(April 27 , 2025)
 
 FEATURES:
