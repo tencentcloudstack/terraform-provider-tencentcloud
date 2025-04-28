@@ -13,6 +13,8 @@ Provides a resource to create CBS set.
 
 -> **NOTE:** When creating encrypted disks, if `kms_key_id` is not entered, the product side will generate a key by default.
 
+-> **NOTE:** When using CBS encrypted disk, it is necessary to add `CVM_QcsRole` role and `QcloudKMSAccessForCVMRole` strategy to the account.
+
 ## Example Usage
 
 ### Create 3 standard CBS storages
