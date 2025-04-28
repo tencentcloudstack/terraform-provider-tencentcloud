@@ -16,7 +16,7 @@ func TestAccTencentCloudCdcDedicatedClusterImageCacheResource_basic(t *testing.T
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCdcDedicatedCluster,
+				Config: testAccCdcDedicatedClusterImageCache,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_cdc_dedicated_cluster_image_cache.cdc_dedicated_cluster_image_cache", "dedicated_cluster_id", "cluster-262n63e8"),
