@@ -49,8 +49,8 @@ resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {
 
 The following arguments are supported:
 
-* `assumer_name` - (Required, String) Cloud product identification, Values: CDS, CWP, CDB, TDSQL-C, MongoDB, TDStore, DCDB, MariaDB, PostgreSQL, BH, APIS.
-* `cloud_product_region` - (Required, String) Cloud product region. There are differences in the input format of different log types in different regions. Please refer to the following example:
+* `assumer_name` - (Required, String, ForceNew) Cloud product identification, Values: CDS, CWP, CDB, TDSQL-C, MongoDB, TDStore, DCDB, MariaDB, PostgreSQL, BH, APIS.
+* `cloud_product_region` - (Required, String, ForceNew) Cloud product region. There are differences in the input format of different log types in different regions. Please refer to the following example:
 - CDS(all log type): ap-guangzhou
 - CDB-AUDIT: gz
 - TDSQL-C-AUDIT: gz
@@ -64,8 +64,8 @@ The following arguments are supported:
 - BH(all log type): overseas-polaris(Domestic sites overseas)/fsi-polaris(Domestic sites finance)/general-polaris(Domestic sites)/intl-sg-prod(International sites)
 - APIS(all log type): gz.
 * `cls_region` - (Required, String) CLS target region.
-* `instance_id` - (Required, String) Instance ID.
-* `log_type` - (Required, String) Log type, Values: CDS-AUDIT, CDS-RISK, CDB-AUDIT, TDSQL-C-AUDIT, MongoDB-AUDIT, MongoDB-SlowLog, MongoDB-ErrorLog, TDMYSQL-SLOW, DCDB-AUDIT, DCDB-SLOW, DCDB-ERROR, MariaDB-AUDIT, MariaDB-SLOW, MariaDB-ERROR, PostgreSQL-SLOW, PostgreSQL-ERROR, PostgreSQL-AUDIT, BH-FILELOG, BH-COMMANDLOG, APIS-ACCESS.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
+* `log_type` - (Required, String, ForceNew) Log type, Values: CDS-AUDIT, CDS-RISK, CDB-AUDIT, TDSQL-C-AUDIT, MongoDB-AUDIT, MongoDB-SlowLog, MongoDB-ErrorLog, TDMYSQL-SLOW, DCDB-AUDIT, DCDB-SLOW, DCDB-ERROR, MariaDB-AUDIT, MariaDB-SLOW, MariaDB-ERROR, PostgreSQL-SLOW, PostgreSQL-ERROR, PostgreSQL-AUDIT, BH-FILELOG, BH-COMMANDLOG, APIS-ACCESS.
 * `extend` - (Optional, String) Log configuration extension information, generally used to store additional log delivery configurations.
 * `force_delete` - (Optional, Bool) Indicate whether to forcibly delete the corresponding logset and topic. If set to true, it will be forcibly deleted. Default is false.
 * `logset_id` - (Optional, String, ForceNew) Log set ID.
