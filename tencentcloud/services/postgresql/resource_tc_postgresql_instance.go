@@ -203,6 +203,12 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Region of the custom key.",
 			},
+			"kms_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Specify the cluster served by KMS. If KMSClusterId is blank, use the KMS of the default cluster. If you choose to specify a KMS cluster, you need to pass in KMSClusterId.",
+			},
 			"public_access_switch": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -390,6 +396,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		needSupportTde  = 0
 		kmsKeyId        = ""
 		kmsRegion       = ""
+		kmsClusterId    = ""
 		period          = 1
 		autoRenewFlag   = 0
 		autoVoucher     = 0
@@ -430,6 +437,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	if v, ok := d.GetOk("kms_region"); ok {
 		kmsRegion = v.(string)
+	}
+
+	if v, ok := d.GetOk("kms_cluster_id"); ok {
+		kmsClusterId = v.(string)
 	}
 
 	if v, ok := d.GetOkExists("auto_renew_flag"); ok {
@@ -562,6 +573,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			needSupportTde,
 			kmsKeyId,
 			kmsRegion,
+			kmsClusterId,
 			autoVoucher,
 			voucherIds,
 		)
@@ -925,6 +937,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	if has {
 		_ = d.Set("kms_key_id", kms.KeyId)
 		_ = d.Set("kms_region", kms.KeyRegion)
+		_ = d.Set("kms_cluster_id", kms.KMSClusterId)
 	}
 
 	// Uid, must use
@@ -1084,7 +1097,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") {
+	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") || d.HasChange("kms_cluster_id") {
 		return fmt.Errorf("Not support change params contact with data transparent encryption.")
 	}
 

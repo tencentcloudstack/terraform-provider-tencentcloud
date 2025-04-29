@@ -403,6 +403,30 @@ func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudPostgresqlInstanceResource_kms(t *testing.T) {
+	// t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPostgresqlInstanceKMS,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists("tencentcloud_postgresql_instance.pg_kms"),
+					resource.TestCheckResourceAttrSet("tencentcloud_postgresql_instance.pg_kms", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_postgresql_instance.pg_kms", "need_support_tde", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_postgresql_instance.pg_kms", "kms_cluster_id", "cls-hsm-mwpd9cjm"),
+					resource.TestCheckResourceAttr("tencentcloud_postgresql_instance.pg_kms", "kms_key_id", "4fc08855-24ee-11f0-b8ff-5254003580da"),
+					resource.TestCheckResourceAttr("tencentcloud_postgresql_instance.pg_kms", "kms_region", "ap-hongkong"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckPostgresqlInstanceDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != testPostgresqlInstanceResourceName {
@@ -762,5 +786,37 @@ resource "tencentcloud_postgresql_instance" "test" {
   db_node_set {
     zone = "ap-guangzhou-6"
   }
+}
+`
+
+const testAccPostgresqlInstanceKMS string = `
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-hongkong-2"
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_postgresql_instance" "pg_kms" {
+  name              = "tf_postsql_kms"
+  availability_zone = "ap-hongkong-2"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  engine_version    = "17.4"
+  root_password     = "t1qaA2k1wgvfa3?ZZZ"
+  charset           = "UTF8"
+  project_id        = 0
+  memory            = 2
+  storage           = 20
+  need_support_tde  = 1
+  kms_cluster_id    = "cls-hsm-mwpd9cjm"
+  kms_key_id        = "4fc08855-24ee-11f0-b8ff-5254003580da"
+  kms_region        = "ap-hongkong"
+  db_kernel_version = "v17.4_r1.3"
 }
 `

@@ -37,7 +37,7 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 	storage int,
 	username, password, charset string,
 	dbNodeSet []*postgresql.DBNode,
-	needSupportTde int, kmsKeyId, kmsRegion string, autoVoucher int, voucherIds []*string,
+	needSupportTde int, kmsKeyId, kmsRegion string, kmsClusterId string, autoVoucher int, voucherIds []*string,
 ) (instanceId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewCreateInstancesRequest()
@@ -75,6 +75,9 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 		}
 		if kmsRegion != "" {
 			request.KMSRegion = helper.String(kmsRegion)
+		}
+		if kmsClusterId != "" {
+			request.KMSClusterId = helper.String(kmsClusterId)
 		}
 	}
 
