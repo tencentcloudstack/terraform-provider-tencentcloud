@@ -53,6 +53,7 @@ resource_metas:
     metadata:
       display_name: 域名记录
       order: 1
+      is_batch_add: true
       attr_orders:
       - name: domain
       - name: record_line
@@ -127,23 +128,6 @@ resource_metas:
           widget: select_remote
           filter:
             enable: true
-          batch_add:
-            display_name: 记录类型
-            val_source:
-              method: GET
-              path: >-
-                /api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}
-              values:
-                label_path: '$.Data.Types[*]'
-                value_path: '$.Data.Types[*]'
-              rely_resources:
-                - name: domain
-                  source: owner
-                  required: true
-            widget: multi_select_remote
-            filter:
-              enable: true
-            batch_add_mode: one_to_one
         remark:
           display_name: 备注
           widget: text
