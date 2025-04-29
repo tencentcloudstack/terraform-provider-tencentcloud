@@ -1,3 +1,12 @@
+## 1.81.189(April 29 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_postgresql_instance: support kms_cluster_id ([#3341](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3341))
+* resource/tencentcloud_vpn_connection: update e2e ([#3342](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3342))
+* resource/tencentcloud_vpn_customer_gateway: update code ([#3343](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3343))
+* resource/tencentcloud_waf_custom_rule: add read retry ([#3340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3340))
+
 ## 1.81.188(April 28 , 2025)
 
 FEATURES:
