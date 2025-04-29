@@ -25,6 +25,7 @@ func (me *WafService) DescribeWafCustomRuleById(ctx context.Context, domain, rul
 	logId := tccommon.GetLogId(ctx)
 
 	request := waf.NewDescribeCustomRuleListRequest()
+	response := waf.NewDescribeCustomRuleListResponse()
 	request.Domain = &domain
 	request.Offset = common.Uint64Ptr(0)
 	request.Limit = common.Uint64Ptr(20)
@@ -42,15 +43,23 @@ func (me *WafService) DescribeWafCustomRuleById(ctx context.Context, domain, rul
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribeCustomRuleList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseWafClient().DescribeCustomRuleList(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.RuleList) < 1 {
 		return
@@ -73,15 +82,22 @@ func (me *WafService) DeleteWafCustomRuleById(ctx context.Context, domain, ruleI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DeleteCustomRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseWafClient().DeleteCustomRule(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
