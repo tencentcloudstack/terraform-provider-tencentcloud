@@ -178,7 +178,8 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 			if ee.Code == svcvpc.VPCNotFound {
 				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return nil
+				d.SetId("")
+				return resource.NonRetryableError(fmt.Errorf("Vpc not found."))
 			} else {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
