@@ -322,6 +322,7 @@ The following arguments are supported:
 * `db_node_set` - (Optional, Set) Specify instance node info for disaster migration.
 * `delete_protection` - (Optional, Bool) Whether to enable instance deletion protection. Default: false.
 * `engine_version` - (Optional, String) Version of the postgresql database engine. Valid values: `10.4`, `10.17`, `10.23`, `11.8`, `11.12`, `11.22`, `12.4`, `12.7`, `12.18`, `13.3`, `14.2`, `14.11`, `15.1`, `16.0`.
+* `kms_cluster_id` - (Optional, String) Specify the cluster served by KMS. If KMSClusterId is blank, use the KMS of the default cluster. If you choose to specify a KMS cluster, you need to pass in KMSClusterId.
 * `kms_key_id` - (Optional, String) KeyId of the custom key.
 * `kms_region` - (Optional, String) Region of the custom key.
 * `max_standby_archive_delay` - (Optional, Int) max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.
