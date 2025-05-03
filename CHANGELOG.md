@@ -1,3 +1,9 @@
+## 1.81.190(May 3 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_private_dns_record: Optimize the creation logic ([#3344](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3344))
+
 ## 1.81.189(April 29 , 2025)
 
 ENHANCEMENTS:
