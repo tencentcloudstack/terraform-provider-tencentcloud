@@ -72,6 +72,8 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 
 	var (
 		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = PrivateDnsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request  = privatedns.NewCreatePrivateZoneRecordRequest()
 		response = privatedns.NewCreatePrivateZoneRecordResponse()
 		zoneId   string
@@ -114,8 +116,8 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil {
-			e = fmt.Errorf("create PrivateDns record failed")
+		if result == nil || result.Response == nil || result.Response.RecordId == nil {
+			e = fmt.Errorf("create PrivateDns record failed, Response is nil.")
 			return resource.NonRetryableError(e)
 		}
 
@@ -129,6 +131,37 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 	}
 
 	recordId := *response.Response.RecordId
+
+	// wait
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		records, e := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, nil)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if len(records) < 1 {
+			return resource.RetryableError(fmt.Errorf("[WARN]%s resource `PrivateDnsRecord` [%s] wait creating...\n", logId, zoneId))
+		}
+
+		var record *privatedns.PrivateZoneRecord
+		for _, item := range records {
+			if item.RecordId != nil && *item.RecordId == recordId {
+				record = item
+			}
+		}
+
+		if record != nil {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("[WARN]%s resource `PrivateDnsRecord` [%s] wait creating...\n", logId, recordId))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe PrivateDns record failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+
 	d.SetId(strings.Join([]string{zoneId, recordId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudDPrivateDnsRecordRead(d, meta)
@@ -165,7 +198,7 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 
 	var record *privatedns.PrivateZoneRecord
 	for _, item := range records {
-		if *item.RecordId == recordId {
+		if item.RecordId != nil && *item.RecordId == recordId {
 			record = item
 		}
 	}
