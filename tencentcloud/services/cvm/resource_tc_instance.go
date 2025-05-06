@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -308,6 +309,13 @@ func ResourceTencentCloudInstance() *schema.Resource {
 							Default:     false,
 							ForceNew:    true,
 							Description: "Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `PREPAID` instance), default is false.",
+						},
+						"kms_key_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
+							Description: "Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.",
 						},
 						"encrypt": {
 							Type:        schema.TypeBool,
@@ -678,6 +686,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				dataDisk.DeleteWithInstance = &deleteWithInstanceBool
 			}
 
+			if v, ok := value["kms_key_id"]; ok && v != "" {
+				dataDisk.KmsKeyId = helper.String(v.(string))
+			}
+
 			if encrypt, ok := value["encrypt"]; ok {
 				encryptBool := encrypt.(bool)
 				dataDisk.Encrypt = &encryptBool
@@ -1024,7 +1036,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// set data_disks
-	var hasDataDisks, isCombineDataDisks, hasDataDisksId, hasDataDisksName bool
+	var hasDataDisks, isCombineDataDisks, hasDataDisksId bool
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	diskSizeMap := map[string]*uint64{}
 	diskOrderMap := make(map[string]int)
@@ -1042,13 +1054,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				if diskId != "" && strings.HasPrefix(diskId, "disk-") {
 					dataDiskIds = append(dataDiskIds, &diskId)
 					hasDataDisksId = true
-				}
-			}
-
-			if v, ok := value["data_disk_name"]; ok && v != nil {
-				diskName := v.(string)
-				if diskName != "" {
-					hasDataDisksName = true
 				}
 			}
 		}
@@ -1070,6 +1075,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 						if value["data_disk_id"].(string) == *item.DiskId {
 							value["data_disk_name"] = *item.DiskName
 							value["data_disk_size"] = int(*item.DiskSize)
+							value["data_disk_type"] = *item.DiskType
+							if item.KmsKeyId != nil {
+								value["kms_key_id"] = *item.KmsKeyId
+							}
+
+							value["encrypt"] = *item.Encrypt
+							value["throughput_performance"] = *item.ThroughputPerformance
+							value["delete_with_instance"] = *item.DeleteWithInstance
 							break
 						}
 					}
@@ -1087,7 +1100,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// scene with has disks name
-	if len(instance.DataDisks) > 0 && !hasDataDisksName {
+	if len(instance.DataDisks) > 0 && !hasDataDisksId {
 		var diskIds []*string
 		for i := range instance.DataDisks {
 			id := instance.DataDisks[i].DiskId
@@ -1143,7 +1156,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 
 			for _, disk := range instance.DataDisks {
-				dataDisk := make(map[string]interface{}, 5)
+				dataDisk := make(map[string]interface{})
 				if !strings.HasPrefix(*disk.DiskId, "disk-") {
 					continue
 				}
@@ -1158,6 +1171,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				dataDisk["data_disk_type"] = disk.DiskType
 				dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
 				dataDisk["delete_with_instance"] = disk.DeleteWithInstance
+				dataDisk["kms_key_id"] = disk.KmsKeyId
 				dataDisk["encrypt"] = disk.Encrypt
 				dataDisk["throughput_performance"] = disk.ThroughputPerformance
 				dataDiskList = append(dataDiskList, dataDisk)
@@ -1169,17 +1183,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 					dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
 					return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
 				})
-			}
-
-			// set data disk delete_with_instance_prepaid
-			for i := range dataDiskList {
-				dataDiskList[i]["delete_with_instance_prepaid"] = false
-				if hasDataDisks {
-					tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
-					if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
-						dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
-					}
-				}
 			}
 
 			// set data disk name
@@ -1215,9 +1218,25 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				}
 			}
 
-			_ = d.Set("data_disks", dataDiskList)
+			sortedDataDiskList, err := sortDataDisks(tmpDataDisks, dataDiskList)
+			if err != nil {
+				return err
+			}
+
+			// set data disk delete_with_instance_prepaid
+			for i := range sortedDataDiskList {
+				sortedDataDiskList[i]["delete_with_instance_prepaid"] = false
+				if hasDataDisks {
+					tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
+					if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
+						sortedDataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+					}
+				}
+			}
+
+			_ = d.Set("data_disks", sortedDataDiskList)
 		}
-	} else if len(instance.DataDisks) > 0 && hasDataDisksName {
+	} else if len(instance.DataDisks) > 0 && hasDataDisksId {
 		// scene with no disks name
 		dDiskHash := make([]map[string]interface{}, 0)
 		// get source disk hash
@@ -1234,6 +1253,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				diskType := value["data_disk_type"].(string)
 				diskSize := int64(value["data_disk_size"].(int))
 				deleteWithInstance := value["delete_with_instance"].(bool)
+				kmsKeyId := value["kms_key_id"].(string)
 				encrypt := value["encrypt"].(bool)
 				if tmpV, ok := value["data_disk_name"].(string); ok && tmpV != "" {
 					diskName = tmpV
@@ -1243,6 +1263,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 					diskType:           diskType,
 					diskSize:           diskSize,
 					deleteWithInstance: deleteWithInstance,
+					kmsKeyId:           kmsKeyId,
 					encrypt:            encrypt,
 				}
 
@@ -1301,6 +1322,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 						dataDisk["data_disk_type"] = cvmDisk.DiskType
 						dataDisk["data_disk_snapshot_id"] = cvmDisk.SnapshotId
 						dataDisk["delete_with_instance"] = cvmDisk.DeleteWithInstance
+						dataDisk["kms_key_id"] = cvmDisk.KmsKeyId
 						dataDisk["encrypt"] = cvmDisk.Encrypt
 						dataDisk["throughput_performance"] = cvmDisk.ThroughputPerformance
 						dataDisk["flag"] = 0
@@ -1313,17 +1335,24 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			// has set disk name first
 			for v := range sourceDataDisks {
 				for i := range dDiskHash {
+					var kmsKeyId *string
 					disk := *sourceDataDisks[v]
 					diskFlag := disk["flag"].(int)
 					diskName := disk["data_disk_name"].(*string)
 					diskType := disk["data_disk_type"].(*string)
 					diskSize := disk["data_disk_size"].(*int64)
 					deleteWithInstance := disk["delete_with_instance"].(*bool)
+					if v, ok := disk["kms_key_id"].(*string); ok && v != nil {
+						kmsKeyId = v
+					} else {
+						kmsKeyId = helper.String("")
+					}
 					encrypt := disk["encrypt"].(*bool)
 					tmpHash := getDataDiskHash(diskHash{
 						diskType:           *diskType,
 						diskSize:           *diskSize,
 						deleteWithInstance: *deleteWithInstance,
+						kmsKeyId:           *kmsKeyId,
 						encrypt:            *encrypt,
 					})
 
@@ -1339,6 +1368,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 							dataDisk["data_disk_type"] = disk["data_disk_type"]
 							dataDisk["data_disk_snapshot_id"] = disk["data_disk_snapshot_id"]
 							dataDisk["delete_with_instance"] = disk["delete_with_instance"]
+							dataDisk["kms_key_id"] = disk["kms_key_id"]
 							dataDisk["encrypt"] = disk["encrypt"]
 							dataDisk["throughput_performance"] = disk["throughput_performance"]
 							tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
@@ -1353,16 +1383,23 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			// no set disk name last
 			for v := range sourceDataDisks {
 				for i := range dDiskHash {
+					var kmsKeyId *string
 					disk := *sourceDataDisks[v]
 					diskFlag := disk["flag"].(int)
 					diskType := disk["data_disk_type"].(*string)
 					diskSize := disk["data_disk_size"].(*int64)
 					deleteWithInstance := disk["delete_with_instance"].(*bool)
+					if v, ok := disk["kms_key_id"].(*string); ok && v != nil {
+						kmsKeyId = v
+					} else {
+						kmsKeyId = helper.String("")
+					}
 					encrypt := disk["encrypt"].(*bool)
 					tmpHash := getDataDiskHash(diskHash{
 						diskType:           *diskType,
 						diskSize:           *diskSize,
 						deleteWithInstance: *deleteWithInstance,
+						kmsKeyId:           *kmsKeyId,
 						encrypt:            *encrypt,
 					})
 
@@ -1376,6 +1413,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 						dataDisk["data_disk_type"] = disk["data_disk_type"]
 						dataDisk["data_disk_snapshot_id"] = disk["data_disk_snapshot_id"]
 						dataDisk["delete_with_instance"] = disk["delete_with_instance"]
+						dataDisk["kms_key_id"] = disk["kms_key_id"]
 						dataDisk["encrypt"] = disk["encrypt"]
 						dataDisk["throughput_performance"] = disk["throughput_performance"]
 						tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
@@ -2533,6 +2571,7 @@ type diskHash struct {
 	diskType           string
 	diskSize           int64
 	deleteWithInstance bool
+	kmsKeyId           string
 	encrypt            bool
 }
 
@@ -2541,6 +2580,121 @@ func getDataDiskHash(obj diskHash) string {
 	h.Write([]byte(obj.diskType))
 	h.Write([]byte(fmt.Sprintf("%d", obj.diskSize)))
 	h.Write([]byte(fmt.Sprintf("%t", obj.deleteWithInstance)))
+	h.Write([]byte(obj.kmsKeyId))
 	h.Write([]byte(fmt.Sprintf("%t", obj.encrypt)))
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+func sortDataDisks(tmpDataDisks []interface{}, dataDiskList []map[string]interface{}) (sortedList []map[string]interface{}, err error) {
+	// import
+	if len(tmpDataDisks) == 0 {
+		return dataDiskList, nil
+	}
+
+	if len(tmpDataDisks) != len(dataDiskList) {
+		err = fmt.Errorf("Inconsistent number of data disks.")
+		return
+	}
+
+	remainingDisks := make([]map[string]interface{}, len(dataDiskList))
+	copy(remainingDisks, dataDiskList)
+
+	for _, tmpDisk := range tmpDataDisks {
+		dMap := tmpDisk.(map[string]interface{})
+		tmpName, _ := dMap["data_disk_name"].(string)
+		tmpSizeRaw := dMap["data_disk_size"]
+		tmpSize, e := extractInt(tmpSizeRaw)
+		if e != nil {
+			return nil, e
+		}
+
+		tmpType, _ := dMap["data_disk_type"].(string)
+		tmpKmsKeyId, _ := dMap["kms_key_id"].(string)
+		tmpEncrypt, _ := dMap["encrypt"].(bool)
+		tmpDelWithIns, _ := dMap["delete_with_instance"].(bool)
+		tmpTpRaw := dMap["throughput_performance"]
+		tmpTp, e := extractInt(tmpTpRaw)
+		if e != nil {
+			return nil, e
+		}
+
+		var matchedDisk map[string]interface{}
+		matchedIndex := -1
+
+		for i, dataDisk := range remainingDisks {
+			dataName, _ := dataDisk["data_disk_name"].(*string)
+			dataSizeRaw := dataDisk["data_disk_size"]
+			dataSize, e := extractInt(dataSizeRaw)
+			if e != nil {
+				return nil, e
+			}
+
+			dataType, _ := dataDisk["data_disk_type"].(*string)
+			dataKmsKeyId, _ := dataDisk["kms_key_id"].(*string)
+			dataEncrypt, _ := dataDisk["encrypt"].(*bool)
+			dataDelWithIns, _ := dataDisk["delete_with_instance"].(*bool)
+			dataTpRaw := dataDisk["throughput_performance"]
+			dataTp, e := extractInt(dataTpRaw)
+			if e != nil {
+				return nil, e
+			}
+
+			match := true
+			if tmpName != "" && *dataName != tmpName {
+				match = false
+			}
+
+			if tmpKmsKeyId != "" && dataKmsKeyId != nil {
+				if tmpKmsKeyId != *dataKmsKeyId {
+					match = false
+				}
+			}
+
+			if dataSize != tmpSize || *dataType != tmpType || *dataEncrypt != tmpEncrypt || *dataDelWithIns != tmpDelWithIns || dataTp != tmpTp {
+				match = false
+			}
+
+			if match {
+				matchedDisk = dataDisk
+				matchedIndex = i
+				break
+			}
+		}
+
+		if matchedIndex == -1 {
+			err = fmt.Errorf("Unable to find match: tmpDisk = %v", tmpDisk)
+			return
+		}
+
+		sortedList = append(sortedList, matchedDisk)
+		remainingDisks = append(remainingDisks[:matchedIndex], remainingDisks[matchedIndex+1:]...)
+	}
+
+	return
+}
+
+func extractInt(value interface{}) (int, error) {
+	if value == nil {
+		return 0, fmt.Errorf("value is nil.")
+	}
+
+	if reflect.TypeOf(value).Kind() == reflect.Ptr {
+		ptrValue := reflect.ValueOf(value).Elem().Interface()
+		return extractInt(ptrValue)
+	}
+
+	switch v := value.(type) {
+	case int:
+		return v, nil
+	case float64:
+		return int(v), nil
+	case uint64:
+		return int(v), nil
+	case int32:
+		return int(v), nil
+	case int64:
+		return int(v), nil
+	default:
+		return 0, fmt.Errorf("Unrecognized numerical type: %T.", value)
+	}
 }
