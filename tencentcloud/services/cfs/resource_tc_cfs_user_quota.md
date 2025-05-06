@@ -1,5 +1,7 @@
 Provides a resource to create a cfs user_quota
 
+~> **NOTE:** Only some Turbo instances can be used. If you need to call it, please submit a ticket to contact us.
+
 Example Usage
 
 ```hcl

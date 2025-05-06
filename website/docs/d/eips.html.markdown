@@ -57,9 +57,10 @@ data "tencentcloud_eips" "example" {
 
 The following arguments are supported:
 
+* `address_ip` - (Optional, String) The elastic ip address.
 * `eip_id` - (Optional, String) ID of the EIP to be queried.
 * `eip_name` - (Optional, String) Name of the EIP to be queried.
-* `public_ip` - (Optional, String) The elastic ip address.
+* `public_ip` - (Optional, String, **Deprecated**) Use 'address_ip' instead. The elastic ip address.
 * `result_output_file` - (Optional, String) Used to save results.
 * `tags` - (Optional, Map) The tags of EIP.
 
@@ -68,6 +69,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `eip_list` - An information list of EIP. Each element contains the following attributes:
+  * `address_ip` - The elastic ip address.
   * `create_time` - Creation time of the EIP.
   * `eip_id` - ID of the EIP.
   * `eip_name` - Name of the EIP.
