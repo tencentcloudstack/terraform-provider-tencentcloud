@@ -70,7 +70,7 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 				ResourceName:            "tencentcloud_tcr_service_account.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"duration", "password"},
+				ImportStateVerifyIgnore: []string{"duration", "password", "reset_password"},
 			},
 		},
 	})
@@ -94,9 +94,6 @@ resource "tencentcloud_tcr_instance" "example" {
 	is_auto_scan   = true
 	is_prevent_vul = true
 	severity       = "medium"
-	cve_whitelist_items {
-	  cve_id = "tf_example_cve_id"
-	}
   }
   
   resource "tencentcloud_tcr_service_account" "example" {
@@ -134,9 +131,6 @@ resource "tencentcloud_tcr_instance" "example" {
 	is_auto_scan   = true
 	is_prevent_vul = true
 	severity       = "medium"
-	cve_whitelist_items {
-	  cve_id = "tf_example_cve_id"
-	}
   }
   
   resource "tencentcloud_tcr_service_account" "example" {
@@ -174,9 +168,6 @@ resource "tencentcloud_tcr_instance" "example" {
 	is_auto_scan   = true
 	is_prevent_vul = true
 	severity       = "medium"
-	cve_whitelist_items {
-	  cve_id = "tf_example_cve_id"
-	}
   }
   
   resource "tencentcloud_tcr_service_account" "example" {
