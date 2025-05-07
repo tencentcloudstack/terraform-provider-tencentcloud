@@ -83,6 +83,7 @@ The following arguments are supported:
 * `disable` - (Optional, Bool) whether to disable Service accounts.
 * `duration` - (Optional, Int) expiration date (unit: day), calculated from the current time, priority is higher than ExpiresAt Service account description.
 * `expires_at` - (Optional, Int) Service account expiration time (time stamp, unit: milliseconds).
+* `reset_password` - (Optional, Bool) Reset password.
 * `tags` - (Optional, Map) Tag description list.
 
 The `permissions` object supports the following:
