@@ -249,7 +249,7 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("common_spec", []map[string]interface{}{commonSpec})
 	}
 
-	if instanceInfo.SecondaryZoneInfo != nil {
+	if instanceInfo.SecondaryZoneInfo != nil && *instanceInfo.SecondaryZoneInfo != "" {
 
 		data := make([]secondaryZoneInfo, 0)
 		err := json.Unmarshal([]byte(*instanceInfo.SecondaryZoneInfo), &data)
