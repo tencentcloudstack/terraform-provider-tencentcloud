@@ -1582,3 +1582,65 @@ func (me *WafService) DescribeWafLogPostCkafkaFlowById(ctx context.Context, logT
 	ret = response.Response
 	return
 }
+
+func (me *WafService) DescribeWafDomainPostActionById(ctx context.Context, domain string) (domains []*waf.DomainInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeDomainsRequest()
+	response := waf.NewDescribeDomainsResponse()
+	tmpFilter := []*waf.FiltersItemNew{}
+	if domain != "" {
+		tmpFilter = append(tmpFilter, &waf.FiltersItemNew{
+			Name:       common.StringPtr("Domain"),
+			Values:     common.StringPtrs([]string{domain}),
+			ExactMatch: common.BoolPtr(true),
+		})
+	}
+
+	request.Filters = tmpFilter
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWafV20180125Client().DescribeDomains(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.Domains) < 1 {
+			break
+		}
+
+		domains = append(domains, response.Response.Domains...)
+		if len(response.Response.Domains) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

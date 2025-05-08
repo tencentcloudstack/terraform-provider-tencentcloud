@@ -2183,6 +2183,7 @@ tencentcloud_waf_ip_access_control
 tencentcloud_waf_ip_access_control_v2
 tencentcloud_waf_log_post_cls_flow
 tencentcloud_waf_log_post_ckafka_flow
+tencentcloud_waf_domain_post_action
 
 Wedata
 Data Source

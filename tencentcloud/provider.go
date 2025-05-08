@@ -2238,6 +2238,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_ip_access_control_v2":                                                 waf.ResourceTencentCloudWafIpAccessControlV2(),
 			"tencentcloud_waf_log_post_cls_flow":                                                    waf.ResourceTencentCloudWafLogPostClsFlow(),
 			"tencentcloud_waf_log_post_ckafka_flow":                                                 waf.ResourceTencentCloudWafLogPostCkafkaFlow(),
+			"tencentcloud_waf_domain_post_action":                                                   waf.ResourceTencentCloudWafDomainPostAction(),
 			"tencentcloud_wedata_rule_template":                                                     wedata.ResourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_wedata_datasource":                                                        wedata.ResourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                                          wedata.ResourceTencentCloudWedataFunction(),
