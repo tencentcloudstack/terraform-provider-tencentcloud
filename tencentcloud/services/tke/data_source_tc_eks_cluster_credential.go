@@ -158,6 +158,7 @@ func DataSourceTencentCloudEksClusterCredential() *schema.Resource {
 			"kube_config": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "EKS cluster kubeconfig.",
 			},
 		},
