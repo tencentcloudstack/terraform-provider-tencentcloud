@@ -243,7 +243,7 @@ func (me *CbsService) DescribeDisksInParallelByFilter(ctx context.Context, param
 	return
 }
 
-func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName string, projectId int) error {
+func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName string, projectId int, burstPerformanceOperation string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cbs.NewModifyDiskAttributesRequest()
 	request.DiskIds = []*string{&diskId}
@@ -252,6 +252,9 @@ func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName
 	}
 	if projectId >= 0 {
 		request.ProjectId = helper.IntUint64(projectId)
+	}
+	if burstPerformanceOperation != "" {
+		request.BurstPerformanceOperation = helper.String(burstPerformanceOperation)
 	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ModifyDiskAttributes(request)

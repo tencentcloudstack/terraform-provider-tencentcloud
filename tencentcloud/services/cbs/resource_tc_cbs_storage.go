@@ -131,6 +131,12 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Computed:    true,
 				Description: "The quota of backup points of cloud disk.",
 			},
+			"burst_performance": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable performance burst when creating a cloud disk.",
+			},
 			// computed
 			"storage_status": {
 				Type:        schema.TypeString,
@@ -215,6 +221,10 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 			request.Tags = append(request.Tags, &tag)
 		}
+	}
+
+	if v, ok := d.GetOkExists("burst_performance"); ok {
+		request.BurstPerformance = helper.Bool(v.(bool))
 	}
 
 	storageId := ""
@@ -324,6 +334,7 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("charge_type", storage.DiskChargeType)
 	_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
 	_ = d.Set("throughput_performance", storage.ThroughputPerformance)
+	_ = d.Set("burst_performance", storage.BurstPerformance)
 
 	if storage.KmsKeyId != nil {
 		_ = d.Set("kms_key_id", storage.KmsKeyId)
@@ -380,9 +391,21 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		projectId = d.Get("project_id").(int)
 	}
 
+	var burstPerformanceOperation string
+	if d.HasChange("burst_performance") {
+		if v, ok := d.GetOkExists("burst_performance"); ok {
+			if v.(bool) {
+				burstPerformanceOperation = "CREATE"
+			} else {
+				burstPerformanceOperation = "CANCEL"
+			}
+			changed = true
+		}
+	}
+
 	if changed {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			e := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId)
+			e := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId, burstPerformanceOperation)
 			if e != nil {
 				return tccommon.RetryError(e)
 			}
