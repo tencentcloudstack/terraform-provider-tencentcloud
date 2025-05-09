@@ -27,36 +27,44 @@ func ResourceTencentCloudMqttDeviceCertificate() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance ID.",
 			},
 
 			"device_certificate": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Device certificate.",
 			},
 
 			"ca_sn": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Associated CA certificate SN.",
 			},
 
 			"client_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
 				Description: "Client ID.",
 			},
 
 			"format": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
 				Description: "Certificate format, Default is PEM.",
 			},
 
 			"status": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"ACTIVE", "INACTIVE"}),
 				Description:  "Certificate status, Default is ACTIVE.\\n  ACTIVE activation;\\n  INACTIVE not active.",
 			},
