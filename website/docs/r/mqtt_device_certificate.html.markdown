@@ -50,11 +50,11 @@ EOF
 
 The following arguments are supported:
 
-* `ca_sn` - (Required, String) Associated CA certificate SN.
-* `device_certificate` - (Required, String) Device certificate.
-* `instance_id` - (Required, String) Instance ID.
-* `client_id` - (Optional, String) Client ID.
-* `format` - (Optional, String) Certificate format, Default is PEM.
+* `ca_sn` - (Required, String, ForceNew) Associated CA certificate SN.
+* `device_certificate` - (Required, String, ForceNew) Device certificate.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
+* `client_id` - (Optional, String, ForceNew) Client ID.
+* `format` - (Optional, String, ForceNew) Certificate format, Default is PEM.
 * `status` - (Optional, String) Certificate status, Default is ACTIVE.\n  ACTIVE activation;\n  INACTIVE not active.
 
 ## Attributes Reference
