@@ -1,3 +1,17 @@
+## 1.81.191(May 9 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cynosdb_ssl` ([#3350](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3350))
+* **New Resource:** `tencentcloud_mqtt_authorization_policy` ([#3351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3351))
+* **New Resource:** `tencentcloud_mqtt_ca_certificate` ([#3351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3351))
+* **New Resource:** `tencentcloud_mqtt_device_certificate` ([#3351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3351))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_storage: support burst_performance ([#3345](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3345))
+* resource/tencentcloud_key_pair: add computed attr `private_key` and `create_time` ([#3353](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3353))
+
 ## 1.81.190(May 3 , 2025)
 
 ENHANCEMENTS:
