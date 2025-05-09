@@ -92,6 +92,12 @@ func ResourceTencentCloudTcrServiceAccount() *schema.Resource {
 				Description: "Password of the service account.",
 			},
 
+			"reset_password": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Reset password.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -277,6 +283,8 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	request := tcr.NewModifyServiceAccountRequest()
 
@@ -370,6 +378,15 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
+	if d.HasChange("reset_password") {
+		if v, ok := d.GetOkExists("reset_password"); ok && v.(bool) {
+			password, err := service.ModifyServiceAccountPassword(ctx, registryId, name)
+			if err != nil {
+				return err
+			}
+			_ = d.Set("password", password)
+		}
+	}
 	return resourceTencentCloudTcrServiceAccountRead(d, meta)
 }
 
