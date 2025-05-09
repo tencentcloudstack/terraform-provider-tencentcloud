@@ -423,3 +423,41 @@ func (me *MqttService) DescribeMqttHttpAuthenticatorById(ctx context.Context, in
 
 	return
 }
+
+func (me *MqttService) DescribeMqttAuthorizationPolicyById(ctx context.Context, instanceId string) (ret *mqttv20240516.DescribeAuthorizationPoliciesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDescribeAuthorizationPoliciesRequest()
+	response := mqttv20240516.NewDescribeAuthorizationPoliciesResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMqttV20240516Client().DescribeAuthorizationPolicies(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}

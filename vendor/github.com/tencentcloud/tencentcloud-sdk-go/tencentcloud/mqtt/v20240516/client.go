@@ -1739,7 +1739,7 @@ func NewDescribeMessageListResponse() (response *DescribeMessageListResponse) {
 }
 
 // DescribeMessageList
-// 查询消息列表，如查询死信，请设置ConsumerGroup参数
+// 根据一级Topic查询消息列表
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
@@ -1748,7 +1748,7 @@ func (c *Client) DescribeMessageList(request *DescribeMessageListRequest) (respo
 }
 
 // DescribeMessageList
-// 查询消息列表，如查询死信，请设置ConsumerGroup参数
+// 根据一级Topic查询消息列表
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
@@ -2204,22 +2204,26 @@ func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
 }
 
 // ModifyInstance
-// 修改实例属性
+// 修改实例属性，只有运行中的集群可以调用该接口进行变更配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
 //  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
+//  FAILEDOPERATION_NOTSUPPORTDISABLEAUTHORIZATIONPOLICY = "FailedOperation.NotSupportDisableAuthorizationPolicy"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyInstance(request *ModifyInstanceRequest) (response *ModifyInstanceResponse, err error) {
     return c.ModifyInstanceWithContext(context.Background(), request)
 }
 
 // ModifyInstance
-// 修改实例属性
+// 修改实例属性，只有运行中的集群可以调用该接口进行变更配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
 //  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
+//  FAILEDOPERATION_NOTSUPPORTDISABLEAUTHORIZATIONPOLICY = "FailedOperation.NotSupportDisableAuthorizationPolicy"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyInstanceWithContext(ctx context.Context, request *ModifyInstanceRequest) (response *ModifyInstanceResponse, err error) {
     if request == nil {
@@ -2263,7 +2267,9 @@ func NewModifyInstanceCertBindingResponse() (response *ModifyInstanceCertBinding
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
 //  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
+//  FAILEDOPERATION_NOTSUPPORTDISABLEAUTHORIZATIONPOLICY = "FailedOperation.NotSupportDisableAuthorizationPolicy"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyInstanceCertBinding(request *ModifyInstanceCertBindingRequest) (response *ModifyInstanceCertBindingResponse, err error) {
     return c.ModifyInstanceCertBindingWithContext(context.Background(), request)
@@ -2276,7 +2282,9 @@ func (c *Client) ModifyInstanceCertBinding(request *ModifyInstanceCertBindingReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
 //  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
+//  FAILEDOPERATION_NOTSUPPORTDISABLEAUTHORIZATIONPOLICY = "FailedOperation.NotSupportDisableAuthorizationPolicy"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyInstanceCertBindingWithContext(ctx context.Context, request *ModifyInstanceCertBindingRequest) (response *ModifyInstanceCertBindingResponse, err error) {
     if request == nil {
@@ -2561,7 +2569,7 @@ func NewRegisterCaCertificateResponse() (response *RegisterCaCertificateResponse
 }
 
 // RegisterCaCertificate
-// 注册ca证书
+// 注册CA证书（仅一机一证场景支持），可参考 [自定义 X.509 证书实现 “一机一证”](https://cloud.tencent.com/document/product/1778/114817)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CERTIFICATEVERIFICATIONFAILED = "FailedOperation.CertificateVerificationFailed"
@@ -2574,7 +2582,7 @@ func (c *Client) RegisterCaCertificate(request *RegisterCaCertificateRequest) (r
 }
 
 // RegisterCaCertificate
-// 注册ca证书
+// 注册CA证书（仅一机一证场景支持），可参考 [自定义 X.509 证书实现 “一机一证”](https://cloud.tencent.com/document/product/1778/114817)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CERTIFICATEVERIFICATIONFAILED = "FailedOperation.CertificateVerificationFailed"
@@ -2618,7 +2626,7 @@ func NewRegisterDeviceCertificateResponse() (response *RegisterDeviceCertificate
 }
 
 // RegisterDeviceCertificate
-// 注册设备证书
+// 注册设备证书（仅一机一证场景生效），可参考 [自定义 X.509 证书实现 “一机一证”](https://cloud.tencent.com/document/product/1778/114817#6cb39d46-efad-4220-8f11-2e7fab207bc8)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
@@ -2628,7 +2636,7 @@ func (c *Client) RegisterDeviceCertificate(request *RegisterDeviceCertificateReq
 }
 
 // RegisterDeviceCertificate
-// 注册设备证书
+// 注册设备证书（仅一机一证场景生效），可参考 [自定义 X.509 证书实现 “一机一证”](https://cloud.tencent.com/document/product/1778/114817#6cb39d46-efad-4220-8f11-2e7fab207bc8)
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
