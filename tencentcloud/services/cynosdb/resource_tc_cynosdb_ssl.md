@@ -9,3 +9,11 @@ resource "tencentcloud_cynosdb_ssl" "cynosdb_ssl" {
   status = "ON"
 }
 ```
+
+Import
+
+cynosdb ssl can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_ssl.cynosdb_ssl ${cluster_id}#${instance_id}
+```

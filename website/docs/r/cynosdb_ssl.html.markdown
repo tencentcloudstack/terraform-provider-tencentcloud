@@ -37,3 +37,11 @@ In addition to all arguments above, the following attributes are exported:
 * `download_url` - Certificate download address.
 
 
+## Import
+
+cynosdb ssl can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_ssl.cynosdb_ssl ${cluster_id}#${instance_id}
+```
+
