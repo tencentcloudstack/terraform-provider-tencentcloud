@@ -118,11 +118,13 @@ func ResourceTencentCloudTkeClusterEndpoint() *schema.Resource {
 			"kube_config": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "The Intranet address used for access.",
 			},
 			"kube_config_intranet": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "Kubernetes config of private network.",
 			},
 		},
